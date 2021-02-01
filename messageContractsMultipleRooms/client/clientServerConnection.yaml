@@ -20,5 +20,9 @@ components:
           serverRoomCode:
             type: string
             description: Room code to connect to the server
+          playerIds:
+            type: array
+            items: string
+            description: Array of player ids connected to the client
           
 
