@@ -23,7 +23,7 @@
         "eject": "react-scripts eject",
         "lint": "eslint . --ext .ts",
         "lint-fix": "eslint . --ext .ts --fix",
-        "pretest": "./node_modules/.bin/eslint --ignore-path .gitignore . --fix"
+        "tsc": "tsc --project ./tsconfig.json && :"
     },
     "eslintConfig": {
         "extends": [
@@ -48,17 +48,7 @@
         "@typescript-eslint/parser": "^4.14.1",
         "eslint": "^7.19.0",
         "husky": "^4.3.8",
-        "lint-staged": "^10.5.3"
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged"
-        }
-    },
-    "lint-staged": {
-        "*.ts": [
-            "npm run lint-fix",
-            "git add"
-        ]
+        "lint-staged": "^10.5.3",
+        "prettier": "^2.2.1"
     }
 }
