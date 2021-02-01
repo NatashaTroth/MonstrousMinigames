@@ -117,6 +117,7 @@ dist
 .vscode-test
 
 ### vscode ###
+.vscode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
