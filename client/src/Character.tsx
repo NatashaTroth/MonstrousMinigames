@@ -1,97 +1,105 @@
 /* eslint-disable no-console */
 import * as React from 'react'
-import { Player } from './Character.sc'
+import { Container, ObstacleButton, Player } from './Character.sc'
 
 const windowWidth = window.innerWidth
+let counter = 0
 
 const Character: React.FunctionComponent = () => {
     const [permissionGranted, setPermissionGranted] = React.useState(false)
+    const [obstacle, setObstacle] = React.useState(false)
+    const [obstacleRemoved, setObstacleRemoved] = React.useState(false)
+
+    const player = document.getElementById('player')
+
+    if (permissionGranted) {
+        window.addEventListener(
+            'devicemotion',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (event: any) => {
+                if (
+                    event?.acceleration?.x &&
+                    (event.acceleration.x < -2 || event.acceleration.x > 2) &&
+                    player &&
+                    !obstacle
+                ) {
+                    console.log(obstacleRemoved)
+                    movePlayer({ setObstacle, obstacleRemoved, obstacle })
+                    // console.log('RUN - DeviceMotion: ' + event.acceleration.x + ' m/s2')
+                } else {
+                    // console.log('STOP')
+                }
+            }
+        )
+    }
 
     return (
         <>
             {!permissionGranted && (
-                <button onClick={() => ClickRequestDeviceMotion(setPermissionGranted)}>Start Game</button>
+                <button onClick={async () => setPermissionGranted(await ClickRequestDeviceMotion())}>Start Game</button>
             )}
-            <Player id="player">Player</Player>
-            {/* <button onClick={movePlayer}>move</button> */}
+
+            {obstacle && (
+                <ObstacleButton
+                    onClick={() => {
+                        setObstacle(false)
+                        setObstacleRemoved(true)
+                        movePlayer({ setObstacle, obstacleRemoved: true, obstacle: false })
+                        console.log('OBSTACLE REMOVED')
+                    }}
+                >
+                    Click me!!!!
+                </ObstacleButton>
+            )}
+            <Container inVisible={obstacle}>
+                <Player id="player">Player</Player>
+            </Container>
         </>
     )
 }
 
 export default Character
 
-function movePlayer() {
+interface IMovePlayer {
+    setObstacle: (val: boolean) => void
+    obstacleRemoved: boolean
+    obstacle: boolean
+}
+
+function movePlayer({ setObstacle, obstacleRemoved, obstacle }: IMovePlayer) {
     const d = document.getElementById('player')
 
     if (d) {
-        if (d.offsetLeft >= windowWidth - d.offsetWidth) {
-            d.style.left = Number(windowWidth - d.offsetWidth) + 'px'
-            const newPos = d.offsetTop + 2
-            d.style.top = newPos + 'px'
-        } else {
-            const newPos = d.offsetLeft + 2
-            d.style.left = newPos + 'px'
+        if (!obstacleRemoved && d.offsetLeft >= windowWidth / 2 && counter === 0) {
+            console.log('OBSTACLE')
+            setObstacle(true)
+            counter++
+        } else if (!obstacle) {
+            if (d.offsetLeft >= windowWidth - d.offsetWidth) {
+                d.style.left = Number(windowWidth - d.offsetWidth) + 'px'
+                const newPos = d.offsetTop + 5
+                d.style.top = newPos + 'px'
+            } else {
+                const newPos = d.offsetLeft + 5
+                d.style.left = newPos + 'px'
+            }
         }
     }
 }
 
-export function ClickRequestDeviceMotion(setPermissionGranted?: (val: boolean) => void) {
-    const d = document.getElementById('player')
+export async function ClickRequestDeviceMotion() {
+    let permission = false
 
     // iOS: Requests permission for device orientation
     if (window.DeviceMotionEvent && typeof window.DeviceMotionEvent.requestPermission === 'function') {
-        window.DeviceMotionEvent.requestPermission()
-            .then(response => {
-                if (response === 'granted') {
-                    window.addEventListener(
-                        'devicemotion',
-                        (event: DeviceMotionEvent) => {
-                            if (
-                                event?.acceleration?.x &&
-                                (event.acceleration.x < -2 || event.acceleration.x > 2) &&
-                                d
-                            ) {
-                                setPermissionGranted && setPermissionGranted(true)
-                                movePlayer()
-                                // console.log('RUN - DeviceMotion: ' + event.acceleration.x + ' m/s2')
-                            } else {
-                                // console.log('STOP')
-                            }
-                        }
-                        // (e: boolean | AddEventListenerOptions | undefined) => {
-                        //     throw e;
-                        // }
-                    )
-
-                    // window.addEventListener('deviceorientation', e => {
-                    //     console.log('Deviceorientation: ');
-                    //     console.log(e);
-                    // })
-                } else {
-                    // eslint-disable-next-line no-console
-                    console.log('DeviceMotion permissions not granted.')
-                }
-            })
-            .catch(e => {
-                // eslint-disable-next-line no-console
-                console.error(e)
-            })
+        const permissionReq = await window.DeviceMotionEvent.requestPermission()
+        if (permissionReq === 'granted') {
+            permission = true
+        }
     } else {
         // every OS than Safari
-        window.addEventListener(
-            'devicemotion',
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (event: any) => {
-                if (event?.acceleration?.x && (event.acceleration.x < -2 || event.acceleration.x > 2) && d) {
-                    movePlayer()
-                    // console.log('RUN - DeviceMotion: ' + event.acceleration.x + ' m/s2')
-                } else {
-                    // console.log('STOP')
-                }
-            }
-            // (e: boolean | AddEventListenerOptions | undefined) => {
-            //     throw e;
-            // }
-        )
+        permission = true
     }
+
+    return permission
 }
