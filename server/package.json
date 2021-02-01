@@ -39,7 +39,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run prettier && npm test"
+      "pre-commit": "npm run prettier && jest"
     }
   }
 }

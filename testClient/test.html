@@ -1,0 +1,90 @@
+<html>
+
+<head>
+
+</head>
+
+<body>
+
+    <h2>Socket.io Test</h2>
+
+    <div id="output"></div>
+
+    <button onclick="input('up')">UP</button>
+    <br>
+    <button onclick="input('down')">DOWN</button>
+
+
+</body>
+
+
+<!-- test-io-client.html -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"
+    integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ=="
+    crossorigin="anonymous"></script>
+<script>
+
+    const socket = io("http://localhost:5000", {
+        secure: true, reconnection: true, rejectUnauthorized: false,
+        reconnectionDelayMax: 10000,
+    })
+    function init() {
+        output = document.getElementById("output");
+        testSocket();
+    }
+
+
+    function input(dir) {
+        socket.emit('direction', dir)
+    }
+
+    function testSocket() {
+        const socket = io("http://localhost:5000", {
+            secure: true, reconnection: true, rejectUnauthorized: false,
+            reconnectionDelayMax: 10000,
+            query: {
+                auth: "123"
+            }
+        })
+        socket.on('test', onMessage);
+        socket.on('connect', onConnect);
+        socket.on('disconnect', onDisconnect);
+        socket.on('connect_error', onError);
+        socket.on('reconnect_error', onError);
+
+        function onConnect(evt) {
+            writeToScreen("CONNECTED");
+            doSend("Allo?");
+        }
+
+        function onDisconnect(evt) {
+            writeToScreen("DISCONNECTED");
+        }
+
+        function onMessage(data) {
+            writeToScreen('<span style="color: blue;">RESPONSE: ' + data + '</span>');
+            socket.close();
+        }
+
+        function onError(message) {
+            writeToScreen('<span style="color: red;">ERROR:</span> ' + message);
+        }
+
+        function doSend(message) {
+            writeToScreen("SENT: " + message);
+            socket.emit('test', message);
+        }
+
+        function writeToScreen(message) {
+            var pre = document.createElement("p");
+            pre.style.wordWrap = "break-word";
+            pre.innerHTML = message;
+            output.appendChild(pre);
+        }
+    }
+
+    window.addEventListener("load", init, false);
+</script>
+
+
+</html>
