@@ -1,0 +1,28 @@
+asyncapi: 2.0.0
+info:
+  title: Client to Server Connection
+  version: 1.0.0
+  description: This services allows clients (screen) to connect to the server service
+channels:
+ /client-connection:
+    subscribe:
+      message:
+        $ref: '#/components/messages/clientConnection'
+    publish:
+      message:
+        $ref: '#/components/messages/clientConnection'
+components:
+  messages:
+    clientConnection:
+      payload:
+        type: object
+        properties:
+          serverRoomCode:
+            type: string
+            description: Room code to connect to the server
+          playerIds:
+            type: array
+            items: string
+            description: Array of player ids connected to the client
+          
+

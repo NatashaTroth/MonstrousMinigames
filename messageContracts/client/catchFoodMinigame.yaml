@@ -1,0 +1,37 @@
+asyncapi: 2.0.0
+info:
+  title: Catch food (working title) minigame
+  version: 1.0.0
+  description: The food has run away - monsters have to run after it to catch it 
+channels:
+ runForward:
+    publish:
+      message:
+        $ref: '#/components/messages/runForward'
+    subscribe:
+      message:
+        $ref: '#/components/messages/runForward'
+ solveObstacle:
+    publish:
+      message:
+        $ref: '#/components/messages/solveObstacle'
+    subscribe:
+      message:
+        $ref: '#/components/messages/solveObstacle'
+components:
+  messages:
+    runForward:
+      payload:
+        type: object
+        properties:
+         playerId:
+            type: string
+            description: Player id sending the message
+    solveObstacle:
+      payload:
+        type: object
+        properties:
+          obstacleSolved:
+            type: boolean
+            description: True when obstacle has been solved
+             
