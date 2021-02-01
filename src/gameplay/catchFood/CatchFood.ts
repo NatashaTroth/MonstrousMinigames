@@ -1,12 +1,15 @@
 import { PlayerState } from "./PlayerState";
+import { HashTable } from "../HashTable";
 import { Player } from "../../Player";
 
 export default class CatchFood {
-  players: Array<PlayerState>;
+  playersState: HashTable<PlayerState>;
+  trackLength: number;
 
   constructor(players: Array<Player>) {
-    this.players = players.map((player) => {
-      return {
+    this.playersState = {};
+    players.forEach((player) => {
+      this.playersState[player.id] = {
         id: player.id,
         name: player.name,
         positionX: 0,
@@ -14,5 +17,22 @@ export default class CatchFood {
         rank: 0,
       };
     });
+    // this.players = players.map((player) => {
+    //   return {
+    //     id: player.id,
+    //     name: player.name,
+    //     positionX: 0,
+    //     finished: false,
+    //     rank: 0,
+    //   };
+    // });
+
+    this.trackLength = 500;
+  }
+
+  movePlayer(playerId: string) {
+    this.playersState[playerId].positionX += 5;
+
+    //TODO: broadcast new player position
   }
 }
