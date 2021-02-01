@@ -4,30 +4,30 @@ info:
   version: 1.0.0
   description: The food has run away - monsters have to run after it to catch it 
 channels:
- runForward:
+ game1/runForward:
     publish:
       message:
-        $ref: '#/components/messages/runForward'
+        $ref: '#/components/messages/game1/runForward'
     subscribe:
       message:
-        $ref: '#/components/messages/runForward'
- solveObstacle:
+        $ref: '#/components/messages/game1/runForward'
+ game1/solveObstacle:
     publish:
       message:
-        $ref: '#/components/messages/solveObstacle'
+        $ref: '#/components/messages/game1/solveObstacle'
     subscribe:
       message:
-        $ref: '#/components/messages/solveObstacle'
+        $ref: '#/components/messages/game1/solveObstacle'
 components:
   messages:
-    runForward:
+    game1/runForward:
       payload:
         type: object
         properties:
          playerId:
             type: string
             description: Player id sending the message
-    solveObstacle:
+    game1/solveObstacle:
       payload:
         type: object
         properties:

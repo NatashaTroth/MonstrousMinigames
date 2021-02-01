@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: This services allows users to start a minigame
 channels:
- /[minigame-name]:
+ game1/playerReady:
     publish:
       message:
         $ref: '#/components/messages/playerReady'

@@ -31,7 +31,7 @@ components:
         playerId:
             type: string
             description: Player id of referenced player 
-    newObstacle:
+    game1/newObstacle:
       description: Broadcast obstacle type (e.g. tree stump) that player id has 
       payload:
         type: object
@@ -42,7 +42,7 @@ components:
               name:
                 type: string
                 value: TREE-STUMP, BEAR-TRAP, SPIDER, HOLE
-    playerFinished:
+    game1/playerFinished:
       description: Player with player id has finished the game
       payload:
         type: object
@@ -50,7 +50,7 @@ components:
           playerId:
             type: string
             description: Player id of referenced player 
-    gameOver:
+    game1/gameOver:
       description: The game has finished - all players have finished the game, or a player has timed out
       payload:
         type: object
