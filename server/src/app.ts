@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import User from "./classes/user";
 import RoomService from "./services/roomService";
+const socketIO = require("socket.io");
 
 // load the environment variables from the .env file
 dotenv.config({
@@ -16,12 +17,14 @@ class Server {
 const server = new Server();
 const http = require("http").Server(server.app);
 
-const io = require("socket.io")(http, {
-  cors: {
-    origin: ["http://localhost:5050", "http://127.0.0.1:5500"],
-    methods: ["GET", "POST"],
-  },
-});
+const io = socketIO(server);
+
+// const io = require("socket.io")(http, {
+//   cors: {
+//     origin: ["http://localhost:5050", "http://127.0.0.1:5500"],
+//     methods: ["GET", "POST"],
+//   },
+// });
 
 server.app.get("/", (req, res) => {
   res.send("GAAAAME");
