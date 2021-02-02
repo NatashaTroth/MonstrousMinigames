@@ -38,15 +38,19 @@ io.on("connection", function (socket: any) {
     console.log("Client disconnected");
   });
 
-
   socket.on("message", function (message: any) {
     console.log(message);
     // todo react on different message types
     socket.broadcast.emit("response", message);
-
   });
 });
 
-((port = process.env.APP_PORT || 5000) => {
-  http.listen(port, () => console.log(`> Listening on port ${port}`));
-})();
+const PORT = process.env.PORT || 5000;
+
+server.app.listen({ port: PORT }, () =>
+  console.log(`> 🚀 Listening on port ${PORT}`)
+);
+
+// ((port = process.env.APP_PORT || 5000) => {
+//   http.listen(port, () => console.log(`> Listening on port ${port}`));
+// })();
