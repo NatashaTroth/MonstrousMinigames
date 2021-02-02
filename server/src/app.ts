@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 import express from "express";
 import User from "./classes/user";
 import RoomService from "./services/roomService";
-const socketIO = require("socket.io");
 
 // load the environment variables from the .env file
 dotenv.config({
@@ -21,8 +20,6 @@ class Server {
 const server = new Server();
 const http = require("http").Server(server.app);
 
-const io = socketIO(server);
-
 // const io = require("socket.io")(http, {
 //   cors: {
 //     origin: ["http://localhost:5050", "http://127.0.0.1:5500"],
@@ -39,7 +36,20 @@ let room = rs.createRoom();
 let user = new User(room.id, "Reinhold");
 console.log(rs);
 
+const PORT = process.env.PORT || 5000;
+
+const expresServer = server.app.listen({ port: PORT }, () =>
+  console.log(`> 🚀 Listening on port ${PORT}`)
+);
+
+// ((port = process.env.APP_PORT || 5000) => {
+//   http.listen(port, () => console.log(`> Listening on port ${port}`));
+// })();
+const io = require("socket.io")(expresServer);
+//const io = socketIO(server);
+
 io.on("connection", function (socket: any) {
+  console.log("Client connected");
   // socket.handshake.query.roomId
   console.log(rs.getRoomById(socket.handshake.query.roomId));
 
@@ -77,13 +87,3 @@ io.on("connection", function (socket: any) {
     });
   }
 });
-
-const PORT = process.env.PORT || 5000;
-
-server.app.listen({ port: PORT }, () =>
-  console.log(`> 🚀 Listening on port ${PORT}`)
-);
-
-// ((port = process.env.APP_PORT || 5000) => {
-//   http.listen(port, () => console.log(`> Listening on port ${port}`));
-// })();
