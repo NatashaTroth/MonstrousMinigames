@@ -38,17 +38,15 @@ io.on("connection", function (socket: any) {
     console.log("Client disconnected");
   });
 
-  socket.on("direction", (pos: any) => {
-    console.log("Direction: " + pos);
-    socket.broadcast.emit("direction", { position: pos, id: socket.id });
-  });
 
   socket.on("message", function (message: any) {
     console.log(message);
+    // todo react on different message types
+    socket.broadcast.emit("response", message);
+
   });
 });
 
-// make server listen on some port
 ((port = process.env.APP_PORT || 5000) => {
   http.listen(port, () => console.log(`> Listening on port ${port}`));
 })();
