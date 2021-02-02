@@ -11,14 +11,18 @@ export default class CatchFoodGame {
 
   constructor(
     players: Array<User>,
-    trackLength: number,
-    numberOfObstacles: number
+    trackLength: number = 2000,
+    numberOfObstacles: number = 4
   ) {
     this.trackLength = trackLength;
     this.numberOfObstacles = numberOfObstacles;
     this.currentRank = 1;
     this.playersState = {};
     this.gameOver = false;
+    this.initiatePlayersState(players);
+  }
+
+  private initiatePlayersState(players: Array<User>) {
     players.forEach((player) => {
       this.playersState[player.id] = {
         id: player.id,
@@ -53,7 +57,22 @@ export default class CatchFoodGame {
     return [...obstacles];
   }
 
-  movePlayer(playerId: string, speed: number = 5) {
+  getObstaclePositions(): HashTable<Array<Obstacle>> {
+    const obstaclePositions: HashTable<Array<Obstacle>> = {};
+    for (const [key, playerState] of Object.entries(this.playersState)) {
+      // const obstacles = []
+      obstaclePositions[playerState.id] = playerState.obstacles;
+
+      // for(let i = 0; i < playerState.obstacles.length; i++){
+      //   obstacles.push({type ob
+      //     positionX: number;})
+      // }
+    }
+
+    return obstaclePositions;
+  }
+
+  movePlayer(playerId: string, speed: number = 1) {
     if (this.playersState[playerId].atObstacle) return;
 
     this.playersState[playerId].positionX += speed;
@@ -80,6 +99,7 @@ export default class CatchFoodGame {
   }
 
   playerCompletedObstacle(playerId: string) {
+    //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
     this.playersState[playerId].atObstacle = false;
     this.playersState[playerId].obstacles.shift();
   }
@@ -98,5 +118,18 @@ export default class CatchFoodGame {
   private handleGameOver() {
     this.gameOver = true;
     //Broadcast, stop game, return ranks
+  }
+
+  resetGame(
+    players: Array<User>,
+    trackLength: number = 2000,
+    numberOfObstacles: number = 4
+  ) {
+    this.trackLength = trackLength;
+    this.numberOfObstacles = numberOfObstacles;
+    this.currentRank = 1;
+    this.playersState = {};
+    this.gameOver = false;
+    this.initiatePlayersState(players);
   }
 }
