@@ -6,8 +6,9 @@ class User {
   public name: string;
   public timestamp: number;
 
-  constructor(roomId: string, name: string) {
-    this.id = uuidv4();
+  constructor(id: string, roomId: string, name: string) {
+   // this.id = uuidv4();
+    this.id = id;
     this.roomId = roomId;
     this.name = name;
     this.timestamp = Date.now();

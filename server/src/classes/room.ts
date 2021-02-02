@@ -6,8 +6,8 @@ class Room {
   public users: Array<User>;
   public timestamp: number;
 
-  constructor() {
-    this.id = "ABCDE";
+  constructor(id: string = "ABCDE") {
+    this.id = id;
     this.users = [];
     this.timestamp = Date.now();
   }
