@@ -1,7 +1,6 @@
 import { User } from "../../src/interfaces/interfaces";
 import { CatchFoodGame } from "../../src/gameplay/";
 import { Obstacle } from "../../src/gameplay/catchFood/interfaces";
-import { placeholder } from "sequelize/types/lib/operators";
 
 describe("Test catch food gameplay", () => {
   // beforeAll(async () => {
