@@ -3,11 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "test": "jest --watchAll",
     "dev": "nodemon src/app.ts",
     "prettier": "prettier --write src/**/*.ts",
-    "lint": "eslint \"**/*.ts\" --fix"
+    "lint": "eslint \"**/*.ts\" --fix",
+    "tsc": "tsc",
+
+    "postinstall": "npm run tsc",
+    "start": "node src/app.js"
   },
   "repository": {
     "type": "git",
