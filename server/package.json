@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "test": "jest --watchAll",
     "dev": "nodemon src/app.ts",
@@ -11,8 +14,7 @@
 
     "build": "tsc && npm run start",
     "postinstall": "npm run build",
-    "start": "node src/app.js",
-    "deploy": "git add . && git commit -m 'Heroku' && git subtree push --prefix server heroku master"
+    "start": "node src/app.js"
   },
   "repository": {
     "type": "git",
