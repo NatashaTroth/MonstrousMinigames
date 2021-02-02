@@ -23,8 +23,10 @@
     integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ=="
     crossorigin="anonymous"></script>
 <script>
-
-    const socket = io("http://localhost:5000", {
+    let url = "ws://monstrous-minigames.herokuapp.com:14691/socket.io/?EIO=4&transport=websocket"
+    url = 'localhost:5000?type=controller&roomId=ABCDE&userId=user1'
+    url = 'wss://minigames.herokuapp.com:14691/socket.io/?EIO=4&transport=websocket'
+    const socket = io(url, {
         secure: true, reconnection: true, rejectUnauthorized: false,
         reconnectionDelayMax: 10000,
     })
@@ -35,22 +37,17 @@
 
 
     function input(dir) {
-        socket.emit('direction', dir)
+        socket.emit('message', { type: 'game1/runForward', roomId: '', userId: '' })
     }
 
     function testSocket() {
-        const socket = io("http://localhost:5000", {
-            secure: true, reconnection: true, rejectUnauthorized: false,
-            reconnectionDelayMax: 10000,
-            query: {
-                auth: "123"
-            }
-        })
+
         socket.on('test', onMessage);
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
         socket.on('connect_error', onError);
         socket.on('reconnect_error', onError);
+        socket.on('response', onResponse);
 
         function onConnect(evt) {
             writeToScreen("CONNECTED");
@@ -59,6 +56,10 @@
 
         function onDisconnect(evt) {
             writeToScreen("DISCONNECTED");
+        }
+        function onResponse(response) {
+            writeToScreen(response);
+            console.log(response)
         }
 
         function onMessage(data) {
