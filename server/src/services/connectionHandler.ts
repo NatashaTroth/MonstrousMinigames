@@ -3,20 +3,29 @@ import RoomService from "./roomService";
 
 function handleConnection(io: any) {
   const rs = new RoomService();
-  let room = rs.createRoom();
-  let user = new User(room.id, "Reinhold");
   console.log(rs);
 
   io.on("connection", function (socket: any) {
-    // socket.handshake.query.roomId
-    console.log(rs.getRoomById(socket.handshake.query.roomId));
+    let roomId = socket.handshake.query.roomId
+      ? socket.handshake.query.roomId
+      : "ABCDE";
+    let room = rs.getRoomById(roomId);
 
     if (socket.handshake.query.type === "controller") {
       // params name, userId
+      console.log("Controller connected");
+
+      let userId = socket.handshake.query.name
+        ? socket.handshake.query.userId
+        : "user1";
+      let name = socket.handshake.query.name
+        ? socket.handshake.query.name
+        : "Reinhold";
+      room.addUser(new User(userId, room.id, name));
+
       if (socket.handshake.query.userId) {
         // todo find user with id
       }
-      console.log("Controller connected");
 
       socket.on("disconnect", () => {
         console.log("Controller disconnected");
@@ -24,6 +33,22 @@ function handleConnection(io: any) {
 
       socket.on("message", function (message: any) {
         console.log(message);
+
+        let type = message.type;
+
+        switch (type) {
+          case "game1/start": {
+            if (!room.game) {
+                console.log('start game - roomId: ' + roomId)
+              rs.startGame(room);
+            }
+            break;
+          }
+          case "game1/runForward": {
+            room.game?.movePlayer(userId);
+            break;
+          }
+        }
 
         // todo react on different message types
         socket.broadcast.emit("response", message);
@@ -46,6 +71,7 @@ function handleConnection(io: any) {
     }
   });
 }
+
 export = {
-    handleConnection
+  handleConnection,
 };
