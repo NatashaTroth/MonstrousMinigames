@@ -22,7 +22,7 @@ class RoomService {
   }
 
   public startGame(room: Room){
-      
+      room.createGame()
   }
 }
 export default RoomService;

@@ -10,9 +10,9 @@
 
     <div id="output"></div>
 
-    <button onclick="input('up')">UP</button>
+    <button onclick="input('start')">START</button>
     <br>
-    <button onclick="input('down')">DOWN</button>
+    <button onclick="input('move')">MOVE</button>
 
 
 </body>
@@ -36,8 +36,9 @@
     }
 
 
-    function input(dir) {
-        socket.emit('message', { type: 'game1/runForward', roomId: '', userId: '' })
+    function input(type) {
+        if(type == 'start') socket.emit('message', { type: 'game1/start', roomId: 'ABCDE', userId: 'user1' })
+        if(type == 'move') socket.emit('message', { type: 'game1/runForward', roomId: 'ABCDE', userId: 'user1' })
     }
 
     function testSocket() {

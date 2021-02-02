@@ -23,8 +23,6 @@ function handleConnection(io: any) {
         : "Reinhold";
       room.addUser(new User(userId, room.id, name));
 
-      
-
       if (socket.handshake.query.userId) {
         // todo find user with id
       }
@@ -35,6 +33,22 @@ function handleConnection(io: any) {
 
       socket.on("message", function (message: any) {
         console.log(message);
+
+        let type = message.type;
+
+        switch (type) {
+          case "game1/start": {
+            if (!room.game) {
+                console.log('start game - roomId: ' + roomId)
+              rs.startGame(room);
+            }
+            break;
+          }
+          case "game1/runForward": {
+            room.game?.movePlayer(userId);
+            break;
+          }
+        }
 
         // todo react on different message types
         socket.broadcast.emit("response", message);
@@ -57,9 +71,6 @@ function handleConnection(io: any) {
     }
   });
 }
-
-
-
 
 export = {
   handleConnection,
