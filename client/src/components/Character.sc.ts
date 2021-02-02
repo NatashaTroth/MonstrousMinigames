@@ -13,13 +13,3 @@ interface IContainerProps {
 export const Container = styled.div<IContainerProps>`
     visibility: ${({ inVisible }) => (inVisible ? 'hidden' : 'visible')};
 `
-
-export const ObstacleButton = styled.button`
-    border: none;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background-color: blueviolet;
-    color: white;
-    font-weight: 700;
-`
