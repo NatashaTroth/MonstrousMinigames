@@ -22,6 +22,8 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
 
         socketClient.on('connect', () => {
             if (socketClient) {
+                // eslint-disable-next-line no-console
+                console.log('Socket connected')
                 setSocket(socketClient)
             }
         })
