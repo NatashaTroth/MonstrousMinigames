@@ -7,25 +7,16 @@ import Button from '../common/Button'
 
 const Controller: React.FunctionComponent = () => {
     const [permissionGranted, setPermissionGranted] = React.useState(false)
-    const [obstacle, setObstacle] = React.useState(false)
 
     const { socket } = React.useContext(SocketContext)
-
-    const player = document.getElementById('player')
 
     if (permissionGranted) {
         window.addEventListener(
             'devicemotion',
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (event: any) => {
-                if (
-                    event?.acceleration?.x &&
-                    (event.acceleration.x < -2 || event.acceleration.x > 2) &&
-                    player &&
-                    !obstacle
-                ) {
+                if (event?.acceleration?.x && (event.acceleration.x < -2 || event.acceleration.x > 2)) {
                     sendMessage(socket)
-                    console.log('send message')
                     // console.log('RUN - DeviceMotion: ' + event.acceleration.x + ' m/s2')
                 } else {
                     // console.log('STOP')
