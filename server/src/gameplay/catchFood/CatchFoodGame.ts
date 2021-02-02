@@ -30,7 +30,7 @@ export default class CatchFoodGame {
     });
   }
 
-  createObstacles(): Array<Obstacle> {
+  private createObstacles(): Array<Obstacle> {
     const obstacles: Array<Obstacle> = [];
     const quadrantRange =
       Math.floor(this.trackLength / (this.numberOfObstacles + 1)) - 10; //e.g. 500/4 = 125, +10 to avoid obstacle being at the very beginning, - 10 to stop 2 being right next to eachother
@@ -71,7 +71,7 @@ export default class CatchFoodGame {
     //TODO return obstacle positions
   }
 
-  handlePlayerReachedObstacle(playerId: string) {
+  private handlePlayerReachedObstacle(playerId: string) {
     // block player from running when obstacle is reached
     this.playersState[playerId].atObstacle = true;
     //TODO send obstacle type
@@ -82,7 +82,7 @@ export default class CatchFoodGame {
     this.playersState[playerId].obstacles.shift();
   }
 
-  playerFinishedGame(playerId: string) {
+  private playerFinishedGame(playerId: string) {
     this.playersState[playerId].finished = true;
     this.playersState[playerId].rank = this.currentRank++;
 
@@ -93,7 +93,7 @@ export default class CatchFoodGame {
     //TODO Broadcast
   }
 
-  gameOver() {
+  private gameOver() {
     //Broadcast, stop game, return ranks
   }
 }
