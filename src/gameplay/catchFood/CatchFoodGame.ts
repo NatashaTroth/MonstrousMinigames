@@ -7,6 +7,7 @@ export default class CatchFoodGame {
   trackLength: number;
   numberOfObstacles: number;
   currentRank: number;
+  gameOver: boolean;
 
   constructor(
     players: Array<User>,
@@ -17,6 +18,7 @@ export default class CatchFoodGame {
     this.numberOfObstacles = numberOfObstacles;
     this.currentRank = 1;
     this.playersState = {};
+    this.gameOver = false;
     players.forEach((player) => {
       this.playersState[player.id] = {
         id: player.id,
@@ -87,13 +89,14 @@ export default class CatchFoodGame {
     this.playersState[playerId].rank = this.currentRank++;
 
     if (this.currentRank > Object.keys(this.playersState).length) {
-      this.gameOver();
+      this.handleGameOver();
     }
 
     //TODO Broadcast
   }
 
-  private gameOver() {
+  private handleGameOver() {
+    this.gameOver = true;
     //Broadcast, stop game, return ranks
   }
 }
