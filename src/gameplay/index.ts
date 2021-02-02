@@ -1,5 +1,3 @@
-import CatchFood from "./catchFood/CatchFood"
+import CatchFood from "./catchFood/CatchFood";
 
-export{
-  CatchFood
-}
+export { CatchFood };

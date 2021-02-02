@@ -4,3 +4,8 @@ export interface User {
   name: string;
   timestamp: number;
 }
+export interface Room {
+  id: string;
+  users: Array<User>;
+  timestamp: number;
+}
