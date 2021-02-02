@@ -10,6 +10,7 @@ interface IResponse {
 }
 
 const windowWidth = window.innerWidth
+const step = windowWidth / 2000
 // let counter = 0
 
 const Player: React.FunctionComponent = () => {
@@ -41,31 +42,13 @@ export interface IMovePlayer {
 function movePlayer() {
     const d = document.getElementById('player')
 
-    // if (d) {
-    //     if (!obstacleRemoved && d.offsetLeft >= windowWidth / 2 && counter === 0) {
-    //         // eslint-disable-next-line no-console
-    //         console.log('OBSTACLE')
-    //         setObstacle(true)
-    //         counter++
-    //     } else if (!obstacle) {
-    //         if (d.offsetLeft >= windowWidth - d.offsetWidth) {
-    //             d.style.left = Number(windowWidth - d.offsetWidth) + 'px'
-    //             const newPos = d.offsetTop + 5
-    //             d.style.top = newPos + 'px'
-    //         } else {
-    //             const newPos = d.offsetLeft + 5
-    //             d.style.left = newPos + 'px'
-    //         }
-    //     }
-    // }
-
     if (d) {
         if (d.offsetLeft >= windowWidth - d.offsetWidth) {
             d.style.left = Number(windowWidth - d.offsetWidth) + 'px'
-            const newPos = d.offsetTop + 5
+            const newPos = d.offsetTop + step
             d.style.top = newPos + 'px'
         } else {
-            const newPos = d.offsetLeft + 5
+            const newPos = d.offsetLeft + step
             d.style.left = newPos + 'px'
         }
     }
