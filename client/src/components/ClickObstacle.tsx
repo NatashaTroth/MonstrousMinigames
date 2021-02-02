@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { IMovePlayer } from './Character'
 import { ObstacleButton } from './ClickObstacle.sc'
+import Test from 'test'
 
 interface IClickObstacle {
     setObstacle: (value: boolean) => void
