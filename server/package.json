@@ -3,11 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "test": "jest --watchAll",
     "dev": "nodemon src/app.ts",
     "prettier": "prettier --write src/**/*.ts",
-    "lint": "eslint \"**/*.ts\" --fix"
+    "lint": "eslint \"**/*.ts\" --fix",
+    "tsc": "tsc",
+
+    "postinstall": "npm run tsc",
+    "start": "node src/app.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +28,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "phaser": "^3.52.0",
+    "seedrandom": "^3.0.5",
     "socket.io": "^3.1.0",
     "uuid": "^8.3.2"
   },

@@ -1,10 +1,11 @@
 import styled from 'styled-components'
 
-export const PlayerCharacter = styled.div`
-    background-color: red;
+export const Container = styled.div`
+    top: 20px;
+    left: 20px;
     position: absolute;
-    left: 0;
-    top: 0;
 `
-
-export const Container = styled.div``
+export const PlayerCharacter = styled.img`
+    width: 80px;
+    height: auto;
+`
