@@ -6,9 +6,13 @@
   "scripts": {
     "test": "jest --watchAll",
     "dev": "nodemon src/app.ts",
-    "start": "node src/app.ts",
     "prettier": "prettier --write src/**/*.ts",
-    "lint": "eslint \"**/*.ts\" --fix"
+    "lint": "eslint \"**/*.ts\" --fix",
+
+    "build": "tsc && npm run start",
+    "postinstall": "npm run build",
+    "start": "node src/app.js",
+    "deploy": "git add . && git commit -m 'Heroku' && git subtree push --prefix server heroku master"
   },
   "repository": {
     "type": "git",
