@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import ScreenRotationIcon from '@material-ui/icons/ScreenRotation'
 
-const color = '#aadd22'
+const color = '#e98f23'
 
 export const StyledShakeInstruction = styled.div`
     border: 5px solid ${color};
@@ -16,6 +16,7 @@ export const StyledShakeInstruction = styled.div`
     flex-direction: column;
     text-align: center;
     box-shadow: 8px 8px 0 #888;
+    border-radius: 4px;
 `
 export const Container = styled.div`
     display: flex;
@@ -29,6 +30,6 @@ export const StyledRotationIcon = styled(ScreenRotationIcon)`
         margin-top: -40px;
         height: 100px;
         margin-bottom: 20px;
-        color: #90ba20;
+        color: ${color};
     }
 `

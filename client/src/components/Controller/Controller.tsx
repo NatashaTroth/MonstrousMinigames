@@ -4,7 +4,7 @@ import { Socket } from 'socket.io-client'
 import { SocketContext } from '../../contexts/SocketContextProvider'
 import { ClickRequestDeviceMotion } from '../../utils/permissions'
 import Button from '../common/Button'
-import { ControllerContainer } from './Controller.sc'
+import { ControllerContainer, StartScreen } from './Controller.sc'
 import ShakeInstruction from './ShakeInstruction'
 
 const Controller: React.FunctionComponent = () => {
@@ -30,10 +30,12 @@ const Controller: React.FunctionComponent = () => {
     return (
         <ControllerContainer>
             {!permissionGranted && (
-                <Button
-                    text="Start Game"
-                    onClick={async () => setPermissionGranted(await ClickRequestDeviceMotion())}
-                />
+                <StartScreen>
+                    <Button
+                        text="Start Game"
+                        onClick={async () => setPermissionGranted(await ClickRequestDeviceMotion())}
+                    />
+                </StartScreen>
             )}
             {permissionGranted && <ShakeInstruction />}
             {/* {obstacle && <ClickObstacle setObstacle={setObstacle} setObstacleRemoved={setObstacleRemoved} />} */}
