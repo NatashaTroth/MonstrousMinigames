@@ -24,7 +24,7 @@ class Room {
   }
 
   public createGame() {
-    this.game = new CatchFoodGame(this.users, 100, 0);
+    this.game = new CatchFoodGame(this.users);
   }
 }
 

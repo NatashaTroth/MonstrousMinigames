@@ -39,13 +39,15 @@ function handleConnection(io: any) {
         switch (type) {
           case "game1/start": {
             if (!room.game) {
-                console.log('start game - roomId: ' + roomId)
-              rs.startGame(room);
+              let gameState = rs.startGame(room);
+              io.of("screen").to(roomId).emit("message", gameState);
+              console.log("start game - roomId: " + roomId);
             }
             break;
           }
           case "game1/runForward": {
             room.game?.movePlayer(userId);
+            io.of("screen").to(roomId).emit("message", room.game?.getGameState());
             break;
           }
         }
