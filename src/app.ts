@@ -17,9 +17,9 @@ class Server {
 
 // initialize server app
 const server = new Server();
-let http = require("http").Server(server.app);
+const http = require("http").Server(server.app);
 
-let io = require("socket.io")(http, {
+const io = require("socket.io")(http, {
   cors: {
     origin: ["http://localhost:5050", "http://127.0.0.1:5500"],
     methods: ["GET", "POST"],

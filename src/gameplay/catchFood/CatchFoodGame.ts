@@ -2,7 +2,7 @@ import { PlayerState, Obstacle, ObstacleType } from "./interfaces";
 import { HashTable } from "../interfaces";
 import { User } from "../../interfaces/interfaces";
 
-export default class CatchFood {
+export default class CatchFoodGame {
   playersState: HashTable<PlayerState>;
   trackLength: number;
   numberOfObstacles: number;
@@ -13,39 +13,42 @@ export default class CatchFood {
     trackLength: number,
     numberOfObstacles: number
   ) {
+    this.trackLength = trackLength;
+    this.numberOfObstacles = numberOfObstacles;
+    this.currentRank = 1;
     this.playersState = {};
     players.forEach((player) => {
       this.playersState[player.id] = {
         id: player.id,
         name: player.name,
         positionX: 0,
-        obstacles: this.setObstacles(),
+        obstacles: this.createObstacles(),
         atObstacle: false,
         finished: false,
         rank: 0,
       };
     });
-
-    this.trackLength = trackLength;
-    this.numberOfObstacles = numberOfObstacles;
-    this.currentRank = 1;
   }
 
-  setObstacles(): Array<Obstacle> {
+  createObstacles(): Array<Obstacle> {
     const obstacles: Array<Obstacle> = [];
-    const quadrantRange = this.trackLength / this.numberOfObstacles + 1 - 10; //e.g. 500/4 = 125, +1 to avoid obstacle being at the very beginning, - 10 to stop 2 being right next to eachother
+    const quadrantRange =
+      Math.floor(this.trackLength / (this.numberOfObstacles + 1)) - 10; //e.g. 500/4 = 125, +10 to avoid obstacle being at the very beginning, - 10 to stop 2 being right next to eachother
+
     for (let i = 0; i < this.numberOfObstacles; i++) {
       // TODO: need to be deterministic??
-      let position =
-        Math.floor(Math.random() * (quadrantRange * (i + 2))) + quadrantRange;
+      let randomNr = 0 * quadrantRange;
+
+      let position = randomNr + quadrantRange * (i + 1);
       position = Math.round(position / 10) * 10; //round to nearest 10 (to stop exactly at it)
+
       obstacles.push({
         positionX: position,
         type: ObstacleType.TreeStump, //TODO
       });
     }
 
-    return obstacles;
+    return [...obstacles];
   }
 
   movePlayer(playerId: string) {
@@ -80,8 +83,7 @@ export default class CatchFood {
 
   playerFinishedGame(playerId: string) {
     this.playersState[playerId].finished = true;
-    this.playersState[playerId].rank = this.currentRank;
-    this.currentRank++;
+    this.playersState[playerId].rank = this.currentRank++;
 
     if (this.currentRank > Object.keys(this.playersState).length) {
       this.gameOver();
