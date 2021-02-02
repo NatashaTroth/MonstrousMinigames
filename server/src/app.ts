@@ -9,6 +9,10 @@ dotenv.config({
   path: ".env",
 });
 
+/**
+ * Express server application class.
+ * @description Will later contain the routing system.
+ */
 class Server {
   public app = express();
 }
