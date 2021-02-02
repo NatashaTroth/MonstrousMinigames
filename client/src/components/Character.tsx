@@ -1,5 +1,8 @@
 /* eslint-disable no-console */
 import * as React from 'react'
+import { Socket } from 'socket.io-client'
+import { SocketContext } from '../contexts/SocketContextProvider'
+import { ClickRequestDeviceMotion } from '../utils/permissions'
 import { Container, ObstacleButton, Player } from './Character.sc'
 
 const windowWidth = window.innerWidth
@@ -9,6 +12,8 @@ const Character: React.FunctionComponent = () => {
     const [permissionGranted, setPermissionGranted] = React.useState(false)
     const [obstacle, setObstacle] = React.useState(false)
     const [obstacleRemoved, setObstacleRemoved] = React.useState(false)
+
+    const { socket } = React.useContext(SocketContext)
 
     const player = document.getElementById('player')
 
@@ -23,7 +28,7 @@ const Character: React.FunctionComponent = () => {
                     player &&
                     !obstacle
                 ) {
-                    console.log(obstacleRemoved)
+                    sendMessage(socket)
                     movePlayer({ setObstacle, obstacleRemoved, obstacle })
                     // console.log('RUN - DeviceMotion: ' + event.acceleration.x + ' m/s2')
                 } else {
@@ -38,7 +43,14 @@ const Character: React.FunctionComponent = () => {
             {!permissionGranted && (
                 <button onClick={async () => setPermissionGranted(await ClickRequestDeviceMotion())}>Start Game</button>
             )}
-
+            <button
+                onClick={() => {
+                    sendMessage(socket)
+                    movePlayer({ setObstacle, obstacleRemoved, obstacle })
+                }}
+            >
+                Move
+            </button>
             {obstacle && (
                 <ObstacleButton
                     onClick={() => {
@@ -59,6 +71,10 @@ const Character: React.FunctionComponent = () => {
 }
 
 export default Character
+
+function sendMessage(socket: Socket | undefined) {
+    socket?.emit('message', { type: 'game1/runForward', roomId: '', userId: '' })
+}
 
 interface IMovePlayer {
     setObstacle: (val: boolean) => void
@@ -85,21 +101,4 @@ function movePlayer({ setObstacle, obstacleRemoved, obstacle }: IMovePlayer) {
             }
         }
     }
-}
-
-export async function ClickRequestDeviceMotion() {
-    let permission = false
-
-    // iOS: Requests permission for device orientation
-    if (window.DeviceMotionEvent && typeof window.DeviceMotionEvent.requestPermission === 'function') {
-        const permissionReq = await window.DeviceMotionEvent.requestPermission()
-        if (permissionReq === 'granted') {
-            permission = true
-        }
-    } else {
-        // every OS than Safari
-        permission = true
-    }
-
-    return permission
 }
