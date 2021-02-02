@@ -26,6 +26,8 @@ export default class CatchFoodGame {
     return {
       playersState: this.playersState,
       gameOver: this.gameOver,
+      trackLength: this.trackLength,
+      numberOfObstacles: this.numberOfObstacles,
     };
   }
 
