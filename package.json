@@ -13,9 +13,8 @@
     "lint": "eslint \"**/*.ts\" --fix",
     "tsc": "tsc",
 
-    "postinstall": "npm run build",
-    "start": "node src/app.js",
-    "build": "npm run tsc && npm run start"
+    "postinstall": "npm run tsc",
+    "start": "node src/app.js"
   },
   "repository": {
     "type": "git",
