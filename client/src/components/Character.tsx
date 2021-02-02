@@ -3,7 +3,8 @@ import * as React from 'react'
 import { Socket } from 'socket.io-client'
 import { SocketContext } from '../contexts/SocketContextProvider'
 import { ClickRequestDeviceMotion } from '../utils/permissions'
-import { Container, ObstacleButton, Player } from './Character.sc'
+import { Container, Player } from './Character.sc'
+import ClickObstacle from './ClickObstacle'
 
 const windowWidth = window.innerWidth
 let counter = 0
@@ -52,16 +53,11 @@ const Character: React.FunctionComponent = () => {
                 Move
             </button>
             {obstacle && (
-                <ObstacleButton
-                    onClick={() => {
-                        setObstacle(false)
-                        setObstacleRemoved(true)
-                        movePlayer({ setObstacle, obstacleRemoved: true, obstacle: false })
-                        console.log('OBSTACLE REMOVED')
-                    }}
-                >
-                    Click me!!!!
-                </ObstacleButton>
+                <ClickObstacle
+                    setObstacle={setObstacle}
+                    setObstacleRemoved={setObstacleRemoved}
+                    movePlayer={movePlayer}
+                />
             )}
             <Container inVisible={obstacle}>
                 <Player id="player">Player</Player>
@@ -76,7 +72,7 @@ function sendMessage(socket: Socket | undefined) {
     socket?.emit('message', { type: 'game1/runForward', roomId: '', userId: '' })
 }
 
-interface IMovePlayer {
+export interface IMovePlayer {
     setObstacle: (val: boolean) => void
     obstacleRemoved: boolean
     obstacle: boolean
