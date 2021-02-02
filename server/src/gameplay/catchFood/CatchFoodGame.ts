@@ -51,18 +51,19 @@ export default class CatchFoodGame {
     return [...obstacles];
   }
 
-  movePlayer(playerId: string) {
+  movePlayer(playerId: string, speed: number = 5) {
     if (this.playersState[playerId].atObstacle) return;
 
-    this.playersState[playerId].positionX += 5;
+    this.playersState[playerId].positionX += speed;
 
     //TODO: check if player is at obstacle
     if (
+      this.playersState[playerId].obstacles.length > 0 &&
       this.playersState[playerId].positionX >=
-      this.playersState[playerId].obstacles[0].positionX
+        this.playersState[playerId].obstacles[0].positionX
     )
       this.handlePlayerReachedObstacle(playerId);
-    if (this.playersState[playerId].positionX > this.trackLength)
+    if (this.playersState[playerId].positionX >= this.trackLength)
       // check if player has passed goal
       this.playerFinishedGame(playerId);
 
@@ -76,8 +77,8 @@ export default class CatchFoodGame {
     //TODO send obstacle type
   }
 
-  handlePlayerCompletedObstacle(playerId: string) {
-    this.playersState[playerId].atObstacle = true;
+  playerCompletedObstacle(playerId: string) {
+    this.playersState[playerId].atObstacle = false;
     this.playersState[playerId].obstacles.shift();
   }
 
