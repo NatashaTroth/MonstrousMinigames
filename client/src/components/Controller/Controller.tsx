@@ -25,6 +25,7 @@ const Controller: React.FunctionComponent = () => {
                     !obstacle
                 ) {
                     sendMessage(socket)
+                    console.log('send message')
                     // console.log('RUN - DeviceMotion: ' + event.acceleration.x + ' m/s2')
                 } else {
                     // console.log('STOP')

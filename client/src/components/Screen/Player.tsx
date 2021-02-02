@@ -15,8 +15,9 @@ const windowWidth = window.innerWidth
 const Player: React.FunctionComponent = () => {
     const { socket } = React.useContext(SocketContext)
 
-    // eslint-disable-next-line no-console
     socket?.on('response', (data: IResponse) => {
+        // eslint-disable-next-line no-console
+        console.log('Got response')
         if (data.type === 'game1/runForward') {
             movePlayer()
         }
