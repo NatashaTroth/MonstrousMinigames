@@ -1,4 +1,4 @@
-import { PlayerState, Obstacle, ObstacleType } from "./interfaces";
+import { PlayerState, Obstacle, ObstacleType, GameState } from "./interfaces";
 import { HashTable } from "../interfaces";
 import { User } from "../../interfaces/interfaces";
 
@@ -20,6 +20,13 @@ export default class CatchFoodGame {
     this.playersState = {};
     this.gameOver = false;
     this.initiatePlayersState(players);
+  }
+
+  getGameState(): GameState {
+    return {
+      playersState: this.playersState,
+      gameOver: this.gameOver,
+    };
   }
 
   private initiatePlayersState(players: Array<User>) {
