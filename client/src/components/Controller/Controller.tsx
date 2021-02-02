@@ -3,6 +3,7 @@ import * as React from 'react'
 import { Socket } from 'socket.io-client'
 import { SocketContext } from '../../contexts/SocketContextProvider'
 import { ClickRequestDeviceMotion } from '../../utils/permissions'
+import Button from '../common/Button'
 
 const Controller: React.FunctionComponent = () => {
     const [permissionGranted, setPermissionGranted] = React.useState(false)
@@ -35,15 +36,19 @@ const Controller: React.FunctionComponent = () => {
     return (
         <>
             {!permissionGranted && (
-                <button onClick={async () => setPermissionGranted(await ClickRequestDeviceMotion())}>Start Game</button>
+                <Button
+                    text="Start Game"
+                    onClick={async () => setPermissionGranted(await ClickRequestDeviceMotion())}
+                />
             )}
-            <button
-                onClick={() => {
-                    sendMessage(socket)
-                }}
-            >
-                Move
-            </button>
+            {permissionGranted && (
+                <Button
+                    text="Move"
+                    onClick={() => {
+                        sendMessage(socket)
+                    }}
+                />
+            )}
             {/* {obstacle && <ClickObstacle setObstacle={setObstacle} setObstacleRemoved={setObstacleRemoved} />} */}
         </>
     )

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Container, PlayerCharacter } from './Player.sc'
 import { SocketContext } from '../../contexts/SocketContextProvider'
+import oliver from '../../images/oliver.png'
 
 interface IResponse {
     roomId: string
@@ -22,8 +23,8 @@ const Player: React.FunctionComponent = () => {
     })
 
     return (
-        <Container>
-            <PlayerCharacter id="player">Player</PlayerCharacter>
+        <Container id="player">
+            <PlayerCharacter src={oliver} />
         </Container>
     )
 }
