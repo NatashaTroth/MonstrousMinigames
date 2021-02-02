@@ -11,10 +11,11 @@
     "dev": "nodemon src/app.ts",
     "prettier": "prettier --write src/**/*.ts",
     "lint": "eslint \"**/*.ts\" --fix",
+    "tsc": "tsc",
 
-    "build": "tsc && npm run start",
     "postinstall": "npm run build",
-    "start": "node src/app.js"
+    "start": "node src/app.js",
+    "build": "npm run tsc && npm run start"
   },
   "repository": {
     "type": "git",
