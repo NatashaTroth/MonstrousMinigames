@@ -7,7 +7,7 @@ class Room {
   public timestamp: number;
 
   constructor() {
-    this.id = 'ABCDE';
+    this.id = "ABCDE";
     this.users = [];
     this.timestamp = Date.now();
   }
