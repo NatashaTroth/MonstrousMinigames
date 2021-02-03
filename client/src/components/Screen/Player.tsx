@@ -3,13 +3,32 @@ import * as React from 'react'
 import { Container, PlayerCharacter } from './Player.sc'
 import { SocketContext } from '../../contexts/SocketContextProvider'
 import oliver from '../../images/oliver.png'
+import { OBSTACLES } from '../../utils/constants'
 
 let speed = 1
 let count = 0
-interface IResponse {
+
+interface IObstacle {
+    positionX: number
+    type: OBSTACLES
+}
+
+interface IPlayerState {
+    atObstacle: boolean
+    finished: boolean
+    id: string
+    name: string
+    obstacles: IObstacle
+    positionX: number
+    rank: number
+}
+interface IGameState {
+    // gameState: boolean TODO
+    numberOfObstacles: number
+    type: 'game1/gameState'
     roomId: string
-    type: string
-    userId: string
+    trackLength: number
+    playersState: IPlayerState[]
 }
 
 const windowWidth = window.innerWidth
@@ -32,12 +51,9 @@ const Player: React.FunctionComponent = () => {
         }
     }, [])
 
-    screenSocket?.on('response', (data: IResponse) => {
-        console.log('Got response')
-        if (data.type === 'game1/runForward') {
-            movePlayer()
-            count++
-        }
+    screenSocket?.on('message', (data: IGameState) => {
+        // movePlayer()
+        // count++
     })
 
     return (
