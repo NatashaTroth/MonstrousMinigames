@@ -70,9 +70,9 @@ function handleConnection(io: any) {
                 (data: ObstacleReachedInfo) => {
                   console.log(data);
                   let r = rs.getRoomById(data.roomId)
-                  let u = r.getUserById(data.playerId)
+                  let u = r.getUserById(data.userId)
                   if (u) {
-                    io.to(u.socketId).emit('message', {type: 'game1/obstacle', obstacleType:data.type})
+                    io.to(u.socketId).emit('message', {type: 'game1/obstacle', obstacleType:data.obstacleType})
                   }
 
                 }
