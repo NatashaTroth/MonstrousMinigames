@@ -4,29 +4,22 @@ import {
   ObstacleType,
   GameStateInfo,
 } from "./interfaces";
-import { HashTable, GameEventTypes, GameState } from "../interfaces";
+import {
+  HashTable,
+  GameEventTypes,
+  GameState,
+  GameInterface,
+} from "../interfaces";
 import { User } from "../../interfaces/interfaces";
 import GameEventEmitter from "../../classes/GameEventEmitter";
 import { Game } from "phaser";
 import { verifyGameState } from "../helperFunctions/verifyGameState";
 import { verifyUserId } from "../helperFunctions/verifyUserId";
 
-interface GameInterface {
-  roomId: string;
-  gameState: GameState;
-
-  startGame(): void;
-  stopGame(): void;
-  // resetGame(): void;
-}
 interface CatchFoodGameInterface extends GameInterface {
   playersState: HashTable<PlayerState>;
   trackLength: number;
   numberOfObstacles: number;
-  currentRank: number;
-  gameEventEmitter: GameEventEmitter;
-  roomId: string;
-  gameState: GameState;
 
   getGameStateInfo(): GameStateInfo;
   getObstaclePositions(): HashTable<Array<Obstacle>>;
