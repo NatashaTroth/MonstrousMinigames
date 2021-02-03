@@ -53,9 +53,11 @@ function handleControllers(io: any, controllerNamespace: any) {
     } else {
       let user = new User(room.id, socket.id, name);
       userId = user.id;
+      /** for now new user gets old user's id */
       if (!room.addUser(user)) {
-        socket.emit("message", { type: "error" });
-        return;
+        socket.emit("message", { type: "error", msg: 'Cannot join. Game already started' });
+        console.error('User tried to join. Game already started: ' + userId)
+        userId = room.users[0].id
       }
     }
     console.log("Room: " + roomId + " | Controller connected: " + userId);
@@ -70,7 +72,7 @@ function handleControllers(io: any, controllerNamespace: any) {
     socket.join(roomId);
 
     socket.on("disconnect", () => {
-      console.log("Controller disconnected");
+      console.log("Room: " + roomId + " | Controller disconnected: " + userId);
     });
 
     socket.on("message", function (message: any) {
