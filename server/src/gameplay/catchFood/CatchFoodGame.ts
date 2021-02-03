@@ -22,6 +22,7 @@ interface GameInterface {
 
   startGame(): void;
   stopGame(): void;
+  // resetGame(): void;
 }
 interface CatchFoodGameInterface extends GameInterface {
   playersState: HashTable<PlayerState>;
