@@ -4,12 +4,21 @@ import { ENDPOINT } from '../utils/config'
 
 interface ISocketContext {
     socket: Socket | undefined
+    controllerSocket: Socket | undefined
+    setControllerSocket: (val: Socket | undefined) => void
 }
 
-export const SocketContext = React.createContext<ISocketContext>({ socket: undefined })
+export const SocketContext = React.createContext<ISocketContext>({
+    socket: undefined,
+    controllerSocket: undefined,
+    setControllerSocket: () => {
+        // do nothing
+    },
+})
 
 const SocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [socket, setSocket] = React.useState<Socket | undefined>(undefined)
+    const [controllerSocket, setControllerSocket] = React.useState<Socket | undefined>(undefined)
 
     React.useEffect(() => {
         const socketClient = io(ENDPOINT, {
@@ -29,7 +38,12 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
         })
     }, [])
 
-    return <SocketContext.Provider value={{ socket }}>{children}</SocketContext.Provider>
+    const content = {
+        socket,
+        controllerSocket,
+        setControllerSocket,
+    }
+    return <SocketContext.Provider value={content}>{children}</SocketContext.Provider>
 }
 
 export default SocketContextProvider
