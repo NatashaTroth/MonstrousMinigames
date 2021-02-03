@@ -11,7 +11,34 @@ import { Game } from "phaser";
 import { verifyGameState } from "../helperFunctions/verifyGameState";
 import { verifyUserId } from "../helperFunctions/verifyUserId";
 
-export default class CatchFoodGame {
+interface GameInterface {
+  roomId: string;
+  gameState: GameState;
+
+  startGame(): void;
+  stopGame(): void;
+}
+interface CatchFoodGameInterface extends GameInterface {
+  playersState: HashTable<PlayerState>;
+  trackLength: number;
+  numberOfObstacles: number;
+  currentRank: number;
+  gameEventEmitter: GameEventEmitter;
+  roomId: string;
+  gameState: GameState;
+
+  getGameStateInfo(): GameStateInfo;
+  getObstaclePositions(): HashTable<Array<Obstacle>>;
+  movePlayer(userId: string, speed: number): void;
+  playerHasCompletedObstacle(userId: string): void;
+  resetGame(
+    players: Array<User>,
+    trackLength: number,
+    numberOfObstacles: number
+  ): void;
+}
+
+export default class CatchFoodGame implements CatchFoodGameInterface {
   playersState: HashTable<PlayerState>;
   trackLength: number;
   numberOfObstacles: number;
