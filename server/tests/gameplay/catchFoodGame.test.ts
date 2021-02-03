@@ -1,6 +1,8 @@
 import { User } from "../../src/interfaces/interfaces";
 import { CatchFoodGame } from "../../src/gameplay/";
 import { Obstacle } from "../../src/gameplay/catchFood/interfaces";
+import GameEventEmitter from "../../src/classes/GameEventEmitter";
+import { ObstacleReachedInfo } from "../../src/gameplay/catchFood/interfaces";
 
 describe("Test catch food gameplay", () => {
   // beforeAll(async () => {
@@ -77,7 +79,7 @@ describe("Test catch food gameplay", () => {
     expect(Object.keys(obstacles["1"][0])).toContain("type");
   });
 
-  it("moves players and stop when they come to an obstacle", async () => {
+  it("moves players and stops when they come to an obstacle", async () => {
     const catchFoodGame = new CatchFoodGame(users, 500, 4);
     expect(catchFoodGame.playersState["1"].positionX).toBe(0);
     catchFoodGame.movePlayer("1", 10);
@@ -89,7 +91,16 @@ describe("Test catch food gameplay", () => {
       catchFoodGame.playersState["1"].obstacles[0].positionX -
       catchFoodGame.playersState["1"].positionX;
 
+    //expect obstacle event to be fired when Obstacle is reached
+    const gameEventEmitter = GameEventEmitter.getInstance();
+    let obstacleEventReceived = false;
+
+    gameEventEmitter.on("obstacleReached", (data: ObstacleReachedInfo) => {
+      obstacleEventReceived = true;
+    });
+
     catchFoodGame.movePlayer("1", distanceToObstacle);
+    expect(obstacleEventReceived).toBeTruthy();
     expect(catchFoodGame.playersState["1"].atObstacle).toBeTruthy();
     expect(catchFoodGame.playersState["1"].obstacles.length).toBe(4);
     let tmpPlayerPositionX = catchFoodGame.playersState["1"].positionX;

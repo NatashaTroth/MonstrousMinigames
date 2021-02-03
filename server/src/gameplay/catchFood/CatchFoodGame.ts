@@ -1,6 +1,7 @@
 import { PlayerState, Obstacle, ObstacleType, GameState } from "./interfaces";
 import { HashTable } from "../interfaces";
 import { User } from "../../interfaces/interfaces";
+import GameEventEmitter from "../../classes/GameEventEmitter";
 
 export default class CatchFoodGame {
   playersState: HashTable<PlayerState>;
@@ -8,12 +9,14 @@ export default class CatchFoodGame {
   numberOfObstacles: number;
   currentRank: number;
   gameOver: boolean;
+  gameEventEmitter: GameEventEmitter;
 
   constructor(
     players: Array<User>,
     trackLength: number = 2000,
     numberOfObstacles: number = 4
   ) {
+    this.gameEventEmitter = GameEventEmitter.getInstance();
     this.trackLength = trackLength;
     this.numberOfObstacles = numberOfObstacles;
     this.currentRank = 1;
@@ -51,7 +54,6 @@ export default class CatchFoodGame {
       Math.floor(this.trackLength / (this.numberOfObstacles + 1)) - 10; //e.g. 500/4 = 125, +10 to avoid obstacle being at the very beginning, - 10 to stop 2 being right next to eachother
 
     for (let i = 0; i < this.numberOfObstacles; i++) {
-      // TODO: need to be deterministic??
       let randomNr = 0 * quadrantRange;
 
       let position = randomNr + quadrantRange * (i + 1);
@@ -98,13 +100,15 @@ export default class CatchFoodGame {
       this.playerFinishedGame(playerId);
 
     //TODO: broadcast new player position
-    //TODO return obstacle positions
   }
 
   private handlePlayerReachedObstacle(playerId: string) {
     // block player from running when obstacle is reached
     this.playersState[playerId].atObstacle = true;
-    //TODO send obstacle type
+    this.gameEventEmitter.emit("obstacleReached", {
+      playerId,
+      type: this.playersState[playerId].obstacles[0].type,
+    });
   }
 
   playerCompletedObstacle(playerId: string) {
