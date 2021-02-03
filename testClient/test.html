@@ -24,21 +24,29 @@
     crossorigin="anonymous"></script>
 <script>
     let url = "ws://monstrous-minigames.herokuapp.com:14691/socket.io/?EIO=4&transport=websocket"
-    url = 'localhost:5000/controller?roomId=ABCDE&userId='
+    url = 'localhost:5000/controller?roomId=ABCDE&name=Robin&userId='
 
+    let userId=''
     const socket = io(url, {
         secure: true, reconnection: true, rejectUnauthorized: false,
         reconnectionDelayMax: 10000,
     })
+    url = 'localhost:5000/screen?roomId=ABCDE&name=Robin&userId='
+    const socketScreen = io(url, {
+        secure: true, reconnection: true, rejectUnauthorized: false,
+        reconnectionDelayMax: 10000,
+    })
+
+    testSocket();
+
     function init() {
         output = document.getElementById("output");
-        testSocket();
     }
 
 
     function input(type) {
-        if(type == 'start') socket.emit('message', { type: 'game1/start', roomId: 'ABCDE', userId: 'user1' })
-        if(type == 'move') socket.emit('message', { type: 'game1/runForward', roomId: 'ABCDE', userId: 'user1' })
+        if(type == 'start') socket.emit('message', { type: 'game1/start', roomId: 'ABCDE', userId: userId })
+        if(type == 'move') socket.emit('message', { type: 'game1/runForward', roomId: 'ABCDE', userId: userId })
     }
 
     function testSocket() {
@@ -49,6 +57,7 @@
         socket.on('reconnect_error', onError);
         socket.on('response', onResponse);
         socket.on('message', onMessage);
+        socketScreen.on('message', onMessage);
 
 
         function onConnect(evt) {
@@ -64,8 +73,11 @@
             console.log(response)
         }
 
-        function onMessage(data) {
-            console.log(data)
+        function onMessage(msg) {
+            console.log(msg)
+            if(msg.type == 'userInit'){
+                userId = msg.userId
+            }
         }
 
         function onError(message) {
