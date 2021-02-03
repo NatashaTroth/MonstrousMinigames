@@ -9,6 +9,7 @@ import { User } from "../../interfaces/interfaces";
 import GameEventEmitter from "../../classes/GameEventEmitter";
 import { Game } from "phaser";
 import { verifyGameState } from "../helperFunctions/verifyGameState";
+import { verifyUserId } from "../helperFunctions/verifyUserId";
 
 export default class CatchFoodGame {
   playersState: HashTable<PlayerState>;
@@ -116,6 +117,7 @@ export default class CatchFoodGame {
 
   movePlayer(userId: string, speed: number = 1) {
     try {
+      verifyUserId(this.playersState, userId);
       verifyGameState(this.gameState, GameState.Started);
       if (this.playersState[userId].atObstacle) return;
 
@@ -154,6 +156,7 @@ export default class CatchFoodGame {
 
   playerHasCompletedObstacle(userId: string) {
     try {
+      verifyUserId(this.playersState, userId);
       verifyGameState(this.gameState, GameState.Started);
       //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
       this.playersState[userId].atObstacle = false;
