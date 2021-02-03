@@ -1,23 +1,30 @@
 import Room from "../classes/room";
 
 class RoomService {
-    private rooms: Array<Room>;
+  private rooms: Array<Room>;
 
+  constructor() {
+    this.rooms = [];
+  }
 
-    constructor() {
-        this.rooms = [];
-    }
+  private createRoom(roomId: string = "ABCDE") {
+    let room = new Room(roomId);
+    this.rooms.push(room);
+    return room;
+  }
 
-    public createRoom() {
-        let room = new Room();
-        this.rooms.push(room);
-        return room;
-    }
-
-
-    public getRoomById(roomId: string) {
-        console.log(roomId)
-        return this.rooms.filter(function (n) { return n.id === roomId })[0]
-    }
+  /** gets the room by the given id or creates a new room with the id */
+  public getRoomById(roomId: string) {
+    let room = this.rooms.filter(function (n) {
+      return n.id === roomId;
+    })[0];
+    if (!room) return this.createRoom(roomId);
+    return room;
+  }
+  /** starts the game in the room and returns the initial game state */
+  public startGame(room: Room){
+      room.createGame()
+      return room.game?.getGameState()
+  }
 }
-export default RoomService
+export default RoomService;

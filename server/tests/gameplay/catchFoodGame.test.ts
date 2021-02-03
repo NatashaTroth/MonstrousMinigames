@@ -33,17 +33,18 @@ describe("Test catch food gameplay", () => {
     },
   ];
 
-  const catchFoodGame = new CatchFoodGame(users, 500, 4);
+  //const catchFoodGame = new CatchFoodGame(users, 500, 4);
 
   it("initiates players", async () => {
+    const catchFoodGame = new CatchFoodGame(users, 500, 4);
     expect(Object.keys(catchFoodGame.playersState).length).toBe(4);
     expect(catchFoodGame.trackLength).toBe(500);
     expect(catchFoodGame.numberOfObstacles).toBe(4);
     expect(catchFoodGame.currentRank).toBe(1);
     expect(catchFoodGame.playersState["1"].name).toBe("John");
     expect(catchFoodGame.playersState["1"].positionX).toBe(0);
-    expect(catchFoodGame.playersState["1"].atObstacle).toBe(false);
-    expect(catchFoodGame.playersState["1"].finished).toBe(false);
+    expect(catchFoodGame.playersState["1"].atObstacle).toBeFalsy();
+    expect(catchFoodGame.playersState["1"].finished).toBeFalsy();
     expect(catchFoodGame.playersState["1"].obstacles.length).toBe(4);
 
     const obstacleRange = 90;
@@ -66,11 +67,22 @@ describe("Test catch food gameplay", () => {
     }
   });
 
+  it("should return the obstacle positions for each player", async () => {
+    const catchFoodGame = new CatchFoodGame(users, 500, 4);
+    const obstacles = catchFoodGame.getObstaclePositions();
+    expect(Object.keys(obstacles).length).toBe(4);
+    expect(obstacles["1"].length).toBe(4);
+    expect(Object.keys(obstacles["1"][0]).length).toBe(2);
+    expect(Object.keys(obstacles["1"][0])).toContain("positionX");
+    expect(Object.keys(obstacles["1"][0])).toContain("type");
+  });
+
   it("moves players and stop when they come to an obstacle", async () => {
+    const catchFoodGame = new CatchFoodGame(users, 500, 4);
     expect(catchFoodGame.playersState["1"].positionX).toBe(0);
     catchFoodGame.movePlayer("1", 10);
     expect(catchFoodGame.playersState["1"].positionX).toBe(10);
-    catchFoodGame.movePlayer("1");
+    catchFoodGame.movePlayer("1", 5);
     expect(catchFoodGame.playersState["1"].positionX).toBe(15);
 
     let distanceToObstacle =
@@ -98,13 +110,15 @@ describe("Test catch food gameplay", () => {
   });
 
   it("should finish the game when players have reached the goal", async () => {
+    const catchFoodGame = new CatchFoodGame(users, 500, 4);
     // finish player 1
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
       catchFoodGame.playerCompletedObstacle("1");
     }
     expect(catchFoodGame.playersState["1"].obstacles.length).toBe(0);
     catchFoodGame.movePlayer("1", 500);
     expect(catchFoodGame.playersState["1"].finished).toBeTruthy();
+    expect(catchFoodGame.playersState["1"].rank).toBe(1);
 
     for (let i = 0; i < 4; i++) {
       catchFoodGame.playerCompletedObstacle("2");
@@ -116,9 +130,35 @@ describe("Test catch food gameplay", () => {
     catchFoodGame.movePlayer("4", 500);
 
     expect(catchFoodGame.playersState["2"].finished).toBeTruthy();
+    expect(catchFoodGame.playersState["2"].rank).toBe(2);
     expect(catchFoodGame.playersState["3"].finished).toBeTruthy();
+    expect(catchFoodGame.playersState["3"].rank).toBe(3);
     expect(catchFoodGame.playersState["4"].finished).toBeTruthy();
+    expect(catchFoodGame.playersState["4"].rank).toBe(4);
 
     expect(catchFoodGame.gameOver).toBeTruthy();
+  });
+
+  it("should reset the game", async () => {
+    const catchFoodGame = new CatchFoodGame(users, 500, 4);
+
+    for (let i = 0; i < 4; i++) {
+      catchFoodGame.playerCompletedObstacle("1");
+    }
+    expect(catchFoodGame.playersState["1"].obstacles.length).toBe(0);
+    catchFoodGame.movePlayer("1", 500);
+    expect(catchFoodGame.playersState["1"].finished).toBeTruthy();
+    expect(catchFoodGame.playersState["1"].obstacles.length).toBe(0);
+
+    catchFoodGame.resetGame(users, 1000, 6);
+    expect(Object.keys(catchFoodGame.playersState).length).toBe(4);
+    expect(catchFoodGame.trackLength).toBe(1000);
+    expect(catchFoodGame.numberOfObstacles).toBe(6);
+    expect(catchFoodGame.currentRank).toBe(1);
+    expect(catchFoodGame.playersState["1"].name).toBe("John");
+    expect(catchFoodGame.playersState["1"].positionX).toBe(0);
+    expect(catchFoodGame.playersState["1"].atObstacle).toBeFalsy();
+    expect(catchFoodGame.playersState["1"].finished).toBeFalsy();
+    expect(catchFoodGame.playersState["1"].obstacles.length).toBe(6);
   });
 });
