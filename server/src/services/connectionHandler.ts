@@ -13,19 +13,33 @@ function handleConnection(io: any) {
 
     if (socket.handshake.query.type === "controller") {
       // params name, userId
-      console.log("Controller connected");
 
-      let userId = socket.handshake.query.name
-        ? socket.handshake.query.userId
-        : "user1";
       let name = socket.handshake.query.name
         ? socket.handshake.query.name
         : "Reinhold";
-      room.addUser(new User(userId, room.id, name));
 
-      if (socket.handshake.query.userId) {
-        // todo find user with id
+      let userId = socket.handshake.query.name;
+      if (userId) {
+        let user = room.getUserById(userId);
+        if (user) {
+          room.addUser(user);
+        }
+      } else {
+        let user = new User(room.id, name);
+        userId = user.id;
+        room.addUser(user);
       }
+
+      console.log("Room: " + roomId + " | Controller connected: " + userId);
+
+      // send user data
+      socket.emit("message", {
+        type: "userInit",
+        userId: userId,
+        roomId: roomId,
+        name: name,
+      });
+      socket.join(roomId)
 
       socket.on("disconnect", () => {
         console.log("Controller disconnected");
@@ -40,14 +54,19 @@ function handleConnection(io: any) {
           case "game1/start": {
             if (!room.game) {
               let gameState = rs.startGame(room);
-              io.of("screen").to(roomId).emit("message", gameState);
+              io.to(roomId).emit("message", gameState);
               console.log("start game - roomId: " + roomId);
+              setInterval(() => {
+                io.to(roomId).emit("message", gameState);
+              }, 100);
             }
             break;
           }
           case "game1/runForward": {
             room.game?.movePlayer(userId);
-            io.of("screen").to(roomId).emit("message", room.game?.getGameState());
+            io.of("screen")
+              .to(roomId)
+              .emit("message", room.game?.getGameState());
             break;
           }
         }
@@ -56,6 +75,7 @@ function handleConnection(io: any) {
         socket.broadcast.emit("response", message);
       });
     } else {
+      // messages from the screen
       console.log("Client connected");
 
       // Todo user initialisation

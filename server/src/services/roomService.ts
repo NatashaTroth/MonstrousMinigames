@@ -26,5 +26,7 @@ class RoomService {
       room.createGame()
       return room.game?.getGameState()
   }
+
+  
 }
 export default RoomService;

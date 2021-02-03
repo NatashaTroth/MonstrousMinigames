@@ -24,7 +24,7 @@
     crossorigin="anonymous"></script>
 <script>
     let url = "ws://monstrous-minigames.herokuapp.com:14691/socket.io/?EIO=4&transport=websocket"
-    url = 'localhost:5000?type=controller&roomId=ABCDE&userId=user1'
+    url = 'localhost:5000?type=controller&roomId=ABCDE&userId='
 
     const socket = io(url, {
         secure: true, reconnection: true, rejectUnauthorized: false,
@@ -43,12 +43,13 @@
 
     function testSocket() {
 
-        socket.on('test', onMessage);
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
         socket.on('connect_error', onError);
         socket.on('reconnect_error', onError);
         socket.on('response', onResponse);
+        socket.on('message', onMessage);
+
 
         function onConnect(evt) {
             writeToScreen("CONNECTED");
@@ -64,8 +65,8 @@
         }
 
         function onMessage(data) {
+            console.log(data)
             writeToScreen('<span style="color: blue;">RESPONSE: ' + data + '</span>');
-            socket.close();
         }
 
         function onError(message) {

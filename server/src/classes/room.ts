@@ -26,6 +26,13 @@ class Room {
   public createGame() {
     this.game = new CatchFoodGame(this.users);
   }
+
+  public getUserById(userId: string){
+    let user = this.users.filter(function (u) {
+      return u.id === userId;
+    });
+    return user.length === 1 ? user[0] : false;
+  }
 }
 
 export default Room;
