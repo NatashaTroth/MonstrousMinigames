@@ -3,3 +3,6 @@ export enum Namespaces {
     SCREEN = '/screen'
 }
 
+export enum MessageTypes {
+    USER_INIT = 'userInit',
+}
