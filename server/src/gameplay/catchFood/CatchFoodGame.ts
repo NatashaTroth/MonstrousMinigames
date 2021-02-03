@@ -10,6 +10,7 @@ export default class CatchFoodGame {
   currentRank: number;
   gameOver: boolean;
   gameEventEmitter: GameEventEmitter;
+  roomId: string;
 
   constructor(
     players: Array<User>,
@@ -17,6 +18,7 @@ export default class CatchFoodGame {
     numberOfObstacles: number = 4
   ) {
     this.gameEventEmitter = GameEventEmitter.getInstance();
+    this.roomId = players[0].roomId;
     this.trackLength = trackLength;
     this.numberOfObstacles = numberOfObstacles;
     this.currentRank = 1;
@@ -27,6 +29,7 @@ export default class CatchFoodGame {
 
   getGameState(): GameState {
     return {
+      roomId: this.roomId,
       playersState: this.playersState,
       gameOver: this.gameOver,
       trackLength: this.trackLength,
@@ -106,6 +109,7 @@ export default class CatchFoodGame {
     // block player from running when obstacle is reached
     this.playersState[playerId].atObstacle = true;
     this.gameEventEmitter.emit("obstacleReached", {
+      roomId: this.roomId,
       playerId,
       type: this.playersState[playerId].obstacles[0].type,
     });
