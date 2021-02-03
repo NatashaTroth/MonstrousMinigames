@@ -40,9 +40,7 @@ describe("Test catch food gameplay", () => {
     },
   ];
 
-  //const catchFoodGame = new CatchFoodGame(users, 500, 4);
-
-  it("initiates players", async () => {
+  it("initiates players state", async () => {
     const catchFoodGame = new CatchFoodGame(users, 500, 4);
     expect(Object.keys(catchFoodGame.playersState).length).toBe(4);
     expect(catchFoodGame.trackLength).toBe(500);
