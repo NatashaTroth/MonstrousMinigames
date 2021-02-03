@@ -6,16 +6,19 @@ class Room {
   public id: string;
   public users: Array<User>;
   public timestamp: number;
-  public game: CatchFoodGame|null;
+  public game: CatchFoodGame | null;
+  public admin: User | null;
 
   constructor(id: string = "ABCDE") {
     this.id = id;
     this.users = [];
     this.timestamp = Date.now();
     this.game = null;
+    this.admin = null;
   }
 
   public addUser(user: User) {
+    if (this.users.length === 0) this.admin = user;
     this.users.push(user);
   }
 
@@ -27,7 +30,7 @@ class Room {
     this.game = new CatchFoodGame(this.users);
   }
 
-  public getUserById(userId: string){
+  public getUserById(userId: string) {
     let user = this.users.filter(function (u) {
       return u.id === userId;
     });

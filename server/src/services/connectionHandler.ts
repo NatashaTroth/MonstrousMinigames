@@ -2,13 +2,16 @@ import User from "../classes/user";
 import RoomService from "./roomService";
 import { ObstacleReachedInfo } from "../gameplay/catchFood/interfaces";
 import GameEventEmitter from "../classes/GameEventEmitter";
+import { Namespaces } from "../interfaces/enums";
+
+
 
 const gameEventEmitter = GameEventEmitter.getInstance();
 const rs = new RoomService();
 
 function handleConnection(io: any) {
-  const controllerNamespace = io.of("/controller");
-  const screenNameSpace = io.of("/screen");
+  const controllerNamespace = io.of(Namespaces.CONTROLLER);
+  const screenNameSpace = io.of(Namespaces.SCREEN);
 
   handleControllers(io, controllerNamespace);
   handleScreens(io, screenNameSpace);
@@ -65,7 +68,7 @@ function handleControllers(io: any, controllerNamespace: any) {
             let gameState = rs.startGame(room);
             console.log("start game - roomId: " + roomId);
             setInterval(() => {
-              io.of("/screen").to(roomId).emit("message", gameState);
+              io.of(Namespaces.SCREEN).to(roomId).emit("message", gameState);
             }, 100);
             gameEventEmitter.on(
               "obstacleReached",
@@ -86,7 +89,7 @@ function handleControllers(io: any, controllerNamespace: any) {
         }
         case "game1/runForward": {
           room.game?.movePlayer(userId, 200);
-          io.of("/screen")
+          io.of(Namespaces.SCREEN)
             .to(roomId)
             .emit("message", room.game?.getGameState());
           break;
@@ -101,6 +104,13 @@ function handleControllers(io: any, controllerNamespace: any) {
 
 function handleScreens(io: any, screenNameSpace: any) {
   screenNameSpace.on("connection", function (socket: any) {
+    let roomId = socket.handshake.query.roomId
+      ? socket.handshake.query.roomId
+      : "ABCDE";
+    let room = rs.getRoomById(roomId);
+
+    socket.join(room.id)
+    
     console.log("Screen connected");
 
     // Todo user initialisation
