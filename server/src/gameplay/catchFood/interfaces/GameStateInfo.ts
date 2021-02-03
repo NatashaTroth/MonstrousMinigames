@@ -4,7 +4,7 @@ import { Game } from "phaser";
 
 export interface GameStateInfo {
   roomId: string;
-  playersState: HashTable<PlayerState>;
+  playersState: Array<PlayerState>;
   gameState: GameState;
   trackLength: number;
   numberOfObstacles: number;

@@ -90,10 +90,16 @@ export default class CatchFoodGame {
   }
 
   getGameStateInfo(): GameStateInfo {
+    const playerInfoArray = [];
+
+    for (const [key, playerState] of Object.entries(this.playersState)) {
+      playerInfoArray.push(playerState);
+    }
+
     return {
       gameState: this.gameState,
       roomId: this.roomId,
-      playersState: this.playersState, //TODO MAGDA
+      playersState: playerInfoArray,
       trackLength: this.trackLength,
       numberOfObstacles: this.numberOfObstacles,
     };
