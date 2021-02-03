@@ -86,52 +86,52 @@ export default class CatchFoodGame {
     return obstaclePositions;
   }
 
-  movePlayer(playerId: string, speed: number = 1) {
-    if (this.playersState[playerId].atObstacle) return;
+  movePlayer(userId: string, speed: number = 1) {
+    if (this.playersState[userId].atObstacle) return;
 
-    this.playersState[playerId].positionX += speed;
+    this.playersState[userId].positionX += speed;
 
-    if (this.playerHasReachedObstacle(playerId))
-      this.handlePlayerReachedObstacle(playerId);
+    if (this.playerHasReachedObstacle(userId))
+      this.handlePlayerReachedObstacle(userId);
 
-    if (this.playerHasPassedGoal(playerId))
-      this.playerHasFinishedGame(playerId);
+    if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId);
   }
 
-  private playerHasReachedObstacle(playerId: string) {
+  private playerHasReachedObstacle(userId: string) {
     return (
-      this.playersState[playerId].obstacles.length > 0 &&
-      this.playersState[playerId].positionX >=
-        this.playersState[playerId].obstacles[0].positionX
+      this.playersState[userId].obstacles.length > 0 &&
+      this.playersState[userId].positionX >=
+        this.playersState[userId].obstacles[0].positionX
     );
   }
-  private playerHasPassedGoal(playerId: string) {
-    return this.playersState[playerId].positionX >= this.trackLength;
+  private playerHasPassedGoal(userId: string) {
+    return this.playersState[userId].positionX >= this.trackLength;
   }
 
-  private handlePlayerReachedObstacle(playerId: string) {
+  private handlePlayerReachedObstacle(userId: string) {
     // block player from running when obstacle is reached
-    this.playersState[playerId].atObstacle = true;
+    this.playersState[userId].atObstacle = true;
     this.gameEventEmitter.emit("obstacleReached", {
       roomId: this.roomId,
-      playerId,
-      type: this.playersState[playerId].obstacles[0].type,
+      userId,
+      obstacleType: this.playersState[userId].obstacles[0].type,
     });
   }
 
-  playerHasCompletedObstacle(playerId: string) {
+  playerHasCompletedObstacle(userId: string) {
     //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
-    this.playersState[playerId].atObstacle = false;
-    this.playersState[playerId].obstacles.shift();
+    this.playersState[userId].atObstacle = false;
+    this.playersState[userId].obstacles.shift();
   }
 
-  private playerHasFinishedGame(playerId: string) {
-    this.playersState[playerId].finished = true;
-    this.playersState[playerId].rank = this.currentRank++;
+  private playerHasFinishedGame(userId: string) {
+    this.playersState[userId].finished = true;
+    this.playersState[userId].rank = this.currentRank++;
 
     if (this.gameIsOver()) {
       this.handleGameOver();
     } else {
+      this.gameEventEmitter.emit("playerHasFinished");
       //TODO Broadcast
     }
   }
