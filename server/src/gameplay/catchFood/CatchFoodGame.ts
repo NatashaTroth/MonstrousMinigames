@@ -15,7 +15,6 @@ export default class CatchFoodGame {
   trackLength: number;
   numberOfObstacles: number;
   currentRank: number;
-  gameOver: boolean;
   gameEventEmitter: GameEventEmitter;
   roomId: string;
   gameState: GameState;
@@ -32,34 +31,7 @@ export default class CatchFoodGame {
     this.numberOfObstacles = numberOfObstacles;
     this.currentRank = 1;
     this.playersState = {};
-    this.gameOver = false;
     this.initiatePlayersState(players);
-  }
-
-  startGame() {
-    try {
-      verifyGameState(this.gameState, GameState.Created);
-      this.gameState = GameState.Started;
-      this.gameEventEmitter.emit(GameEventTypes.GameStartCountdown, {
-        countdownTime: 3000,
-      });
-    } catch (e) {
-      throw e.Message;
-    }
-  }
-
-  stopGame() {
-    this.gameState = GameState.Stopped;
-  }
-
-  getGameStateInfo(): GameStateInfo {
-    return {
-      gameState: this.gameState,
-      roomId: this.roomId,
-      playersState: this.playersState,
-      trackLength: this.trackLength,
-      numberOfObstacles: this.numberOfObstacles,
-    };
   }
 
   private initiatePlayersState(players: Array<User>) {
@@ -96,30 +68,60 @@ export default class CatchFoodGame {
     return [...obstacles];
   }
 
+  startGame() {
+    try {
+      verifyGameState(this.gameState, GameState.Created);
+      this.gameState = GameState.Started;
+      this.gameEventEmitter.emit(GameEventTypes.GameHasStarted, {
+        countdownTime: 3000,
+      });
+    } catch (e) {
+      throw e.Message;
+    }
+  }
+
+  stopGame() {
+    try {
+      verifyGameState(this.gameState, GameState.Started);
+      this.gameState = GameState.Stopped;
+    } catch (e) {
+      throw e.Message;
+    }
+  }
+
+  getGameStateInfo(): GameStateInfo {
+    return {
+      gameState: this.gameState,
+      roomId: this.roomId,
+      playersState: this.playersState, //TODO MAGDA
+      trackLength: this.trackLength,
+      numberOfObstacles: this.numberOfObstacles,
+    };
+  }
+
   getObstaclePositions(): HashTable<Array<Obstacle>> {
     const obstaclePositions: HashTable<Array<Obstacle>> = {};
     for (const [key, playerState] of Object.entries(this.playersState)) {
-      // const obstacles = []
       obstaclePositions[playerState.id] = playerState.obstacles;
-
-      // for(let i = 0; i < playerState.obstacles.length; i++){
-      //   obstacles.push({type ob
-      //     positionX: number;})
-      // }
     }
 
     return obstaclePositions;
   }
 
   movePlayer(userId: string, speed: number = 1) {
-    if (this.playersState[userId].atObstacle) return;
+    try {
+      verifyGameState(this.gameState, GameState.Started);
+      if (this.playersState[userId].atObstacle) return;
 
-    this.playersState[userId].positionX += speed;
+      this.playersState[userId].positionX += speed;
 
-    if (this.playerHasReachedObstacle(userId))
-      this.handlePlayerReachedObstacle(userId);
+      if (this.playerHasReachedObstacle(userId))
+        this.handlePlayerReachedObstacle(userId);
 
-    if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId);
+      if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId);
+    } catch (e) {
+      throw e.Message;
+    }
   }
 
   private playerHasReachedObstacle(userId: string) {
@@ -129,6 +131,7 @@ export default class CatchFoodGame {
         this.playersState[userId].obstacles[0].positionX
     );
   }
+
   private playerHasPassedGoal(userId: string) {
     return this.playersState[userId].positionX >= this.trackLength;
   }
@@ -144,9 +147,14 @@ export default class CatchFoodGame {
   }
 
   playerHasCompletedObstacle(userId: string) {
-    //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
-    this.playersState[userId].atObstacle = false;
-    this.playersState[userId].obstacles.shift();
+    try {
+      verifyGameState(this.gameState, GameState.Started);
+      //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
+      this.playersState[userId].atObstacle = false;
+      this.playersState[userId].obstacles.shift();
+    } catch (e) {
+      throw e.Message;
+    }
   }
 
   private playerHasFinishedGame(userId: string) {
@@ -159,7 +167,7 @@ export default class CatchFoodGame {
     });
 
     if (this.gameIsOver()) {
-      this.handleGameOver();
+      this.handleGameFinished();
     }
   }
 
@@ -167,8 +175,8 @@ export default class CatchFoodGame {
     return this.currentRank > Object.keys(this.playersState).length;
   }
 
-  private handleGameOver() {
-    this.gameOver = true;
+  private handleGameFinished() {
+    this.gameState = GameState.Finished;
     //Broadcast, stop game, return ranks
   }
 
@@ -177,11 +185,11 @@ export default class CatchFoodGame {
     trackLength: number = 2000,
     numberOfObstacles: number = 4
   ) {
+    this.gameState = GameState.Created;
     this.trackLength = trackLength;
     this.numberOfObstacles = numberOfObstacles;
     this.currentRank = 1;
     this.playersState = {};
-    this.gameOver = false;
     this.initiatePlayersState(players);
   }
 }
