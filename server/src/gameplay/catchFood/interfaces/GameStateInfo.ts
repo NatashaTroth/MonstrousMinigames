@@ -1,10 +1,11 @@
 import { PlayerState } from "./PlayerState";
-import { HashTable } from "../../interfaces";
+import { HashTable, GameState } from "../../interfaces";
+import { Game } from "phaser";
 
-export interface GameState {
+export interface GameStateInfo {
   roomId: string;
   playersState: HashTable<PlayerState>;
-  gameOver: boolean;
+  gameState: GameState;
   trackLength: number;
   numberOfObstacles: number;
 }

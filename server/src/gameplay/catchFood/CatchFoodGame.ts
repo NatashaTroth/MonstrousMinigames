@@ -1,7 +1,14 @@
-import { PlayerState, Obstacle, ObstacleType, GameState } from "./interfaces";
-import { HashTable, GameEventTypes } from "../interfaces";
+import {
+  PlayerState,
+  Obstacle,
+  ObstacleType,
+  GameStateInfo,
+} from "./interfaces";
+import { HashTable, GameEventTypes, GameState } from "../interfaces";
 import { User } from "../../interfaces/interfaces";
 import GameEventEmitter from "../../classes/GameEventEmitter";
+import { Game } from "phaser";
+import { verifyGameState } from "../helperFunctions/verifyGameState";
 
 export default class CatchFoodGame {
   playersState: HashTable<PlayerState>;
@@ -11,6 +18,7 @@ export default class CatchFoodGame {
   gameOver: boolean;
   gameEventEmitter: GameEventEmitter;
   roomId: string;
+  gameState: GameState;
 
   constructor(
     players: Array<User>,
@@ -19,6 +27,7 @@ export default class CatchFoodGame {
   ) {
     this.gameEventEmitter = GameEventEmitter.getInstance();
     this.roomId = players[0].roomId;
+    this.gameState = GameState.Created;
     this.trackLength = trackLength;
     this.numberOfObstacles = numberOfObstacles;
     this.currentRank = 1;
@@ -27,11 +36,27 @@ export default class CatchFoodGame {
     this.initiatePlayersState(players);
   }
 
-  getGameState(): GameState {
+  startGame() {
+    try {
+      verifyGameState(this.gameState, GameState.Created);
+      this.gameState = GameState.Started;
+      this.gameEventEmitter.emit(GameEventTypes.GameStartCountdown, {
+        countdownTime: 3000,
+      });
+    } catch (e) {
+      throw e.Message;
+    }
+  }
+
+  stopGame() {
+    this.gameState = GameState.Stopped;
+  }
+
+  getGameStateInfo(): GameStateInfo {
     return {
+      gameState: this.gameState,
       roomId: this.roomId,
       playersState: this.playersState,
-      gameOver: this.gameOver,
       trackLength: this.trackLength,
       numberOfObstacles: this.numberOfObstacles,
     };

@@ -6,7 +6,7 @@ import {
   ObstacleReachedInfo,
   PlayerFinishedInfo,
 } from "../../src/gameplay/catchFood/interfaces";
-import { GameEventTypes } from "../../src/gameplay/interfaces";
+import { GameEventTypes, GameState } from "../../src/gameplay/interfaces";
 
 describe("Test catch food gameplay", () => {
   // beforeAll(async () => {
@@ -70,6 +70,20 @@ describe("Test catch food gameplay", () => {
 
       expect(obstacles[3].positionX).toBeGreaterThanOrEqual(obstacleRange * 4);
       expect(obstacles[3].positionX).toBeLessThanOrEqual(obstacleRange * 5);
+    }
+  });
+
+  it("should return the obstacle positions for each player", async () => {
+    const catchFoodGame = new CatchFoodGame(users, 500, 4);
+    expect(catchFoodGame.gameState).toBe(GameState.Created);
+    catchFoodGame.startGame();
+    expect(catchFoodGame.gameState).toBe(GameState.Started);
+
+    try {
+      catchFoodGame.startGame();
+      expect(false).toBeTruthy();
+    } catch (e) {
+      //Yaay, error was thrown
     }
   });
 
