@@ -45,12 +45,14 @@ function handleControllers(io: any, controllerNamespace: any) {
       if (user) {
         user.setRoomId(roomId);
         user.setSocketId(socket.id);
-        room.addUser(user);
       }
     } else {
       let user = new User(room.id, socket.id, name);
       userId = user.id;
-      room.addUser(user);
+      if (!room.addUser(user)) {
+        socket.emit("message", {type: 'error'});
+        return;
+      }
     }
     console.log("Room: " + roomId + " | Controller connected: " + userId);
 
@@ -76,12 +78,10 @@ function handleControllers(io: any, controllerNamespace: any) {
             let gameState = rs.startGame(room);
             console.log("start game - roomId: " + roomId);
             setInterval(() => {
-              io.of(Namespaces.SCREEN)
-                .to(roomId)
-                .emit("message", {
-                  type: CatchFoodMsgType.GAME_STATE,
-                  gameState: gameState,
-                });
+              io.of(Namespaces.SCREEN).to(roomId).emit("message", {
+                type: CatchFoodMsgType.GAME_STATE,
+                gameState: gameState,
+              });
             }, 1000);
           }
           break;

@@ -8,7 +8,7 @@ class Room {
   public timestamp: number;
   public game: CatchFoodGame | null;
   public admin: User | null;
-  
+  public state: RoomStates;
 
   constructor(id: string = "ABCDE") {
     this.id = id;
@@ -16,11 +16,16 @@ class Room {
     this.timestamp = Date.now();
     this.game = null;
     this.admin = null;
+    this.state = RoomStates.OPEN;
   }
 
   public addUser(user: User) {
-    if (this.users.length === 0) this.admin = user;
-    this.users.push(user);
+    if (this.state === RoomStates.OPEN) {
+      if (this.users.length === 0) this.admin = user;
+      this.users.push(user);
+      return true;
+    }
+    return false;
   }
 
   public updateTimestamp() {
@@ -28,7 +33,9 @@ class Room {
   }
 
   public createGame() {
+    this.state = RoomStates.PLAYING;
     this.game = new CatchFoodGame(this.users);
+    this.game.startGame()
   }
 
   public getUserById(userId: string) {
@@ -41,10 +48,8 @@ class Room {
 
 export default Room;
 
-
 export enum RoomStates {
-  EMPTY,
   OPEN,
-  GAME1,
-  CLOSED
+  PLAYING,
+  CLOSED,
 }
