@@ -77,7 +77,7 @@ export default class CatchFoodGame {
         countdownTime: 3000,
       });
     } catch (e) {
-      throw e.Message;
+      // throw e.Message;
     }
   }
 
@@ -86,7 +86,7 @@ export default class CatchFoodGame {
       verifyGameState(this.gameState, GameState.Started);
       this.gameState = GameState.Stopped;
     } catch (e) {
-      throw e.Message;
+      // throw e.Message;
     }
   }
 
@@ -128,7 +128,7 @@ export default class CatchFoodGame {
 
       if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId);
     } catch (e) {
-      throw e.Message;
+      // throw e.Message;
     }
   }
 
@@ -162,7 +162,7 @@ export default class CatchFoodGame {
       this.playersState[userId].atObstacle = false;
       this.playersState[userId].obstacles.shift();
     } catch (e) {
-      throw e.Message;
+      // throw e.Message;
     }
   }
 
