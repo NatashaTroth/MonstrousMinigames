@@ -90,7 +90,7 @@ function handleControllers(io: any, controllerNamespace: any) {
           room.game?.movePlayer(userId, 200);
           io.of(Namespaces.SCREEN)
             .to(roomId)
-            .emit("message", room.game?.getGameState());
+            .emit("message", room.game?.getGameStateInfo());
           break;
         }
         default: {
