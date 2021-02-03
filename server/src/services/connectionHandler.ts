@@ -1,5 +1,9 @@
 import User from "../classes/user";
 import RoomService from "./roomService";
+import { ObstacleReachedInfo } from "../gameplay/catchFood/interfaces";
+import GameEventEmitter from "../classes/GameEventEmitter";
+
+const gameEventEmitter = GameEventEmitter.getInstance();
 
 function handleConnection(io: any) {
   const rs = new RoomService();
@@ -22,10 +26,12 @@ function handleConnection(io: any) {
       if (userId) {
         let user = room.getUserById(userId);
         if (user) {
+          user.setRoomId(roomId);
+          user.setSocketId(socket.id);
           room.addUser(user);
         }
       } else {
-        let user = new User(room.id, name);
+        let user = new User(room.id, socket.id, name);
         userId = user.id;
         room.addUser(user);
       }
@@ -39,7 +45,7 @@ function handleConnection(io: any) {
         roomId: roomId,
         name: name,
       });
-      socket.join(roomId)
+      socket.join(roomId);
 
       socket.on("disconnect", () => {
         console.log("Controller disconnected");
@@ -59,11 +65,23 @@ function handleConnection(io: any) {
               setInterval(() => {
                 io.to(roomId).emit("message", gameState);
               }, 100);
+              gameEventEmitter.on(
+                "obstacleReached",
+                (data: ObstacleReachedInfo) => {
+                  console.log(data);
+                  let r = rs.getRoomById(data.roomId)
+                  let u = r.getUserById(data.playerId)
+                  if (u) {
+                    io.to(u.socketId).emit('message', {type: 'game1/obstacle', obstacleType:data.type})
+                  }
+
+                }
+              );
             }
             break;
           }
           case "game1/runForward": {
-            room.game?.movePlayer(userId);
+            room.game?.movePlayer(userId, 200);
             io.of("screen")
               .to(roomId)
               .emit("message", room.game?.getGameState());
