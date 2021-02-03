@@ -24,7 +24,7 @@ class RoomService {
   /** starts the game in the room and returns the initial game state */
   public startGame(room: Room){
       room.createGame()
-      return room.game?.getGameState()
+      return room.game?.getGameStateInfo()
   }
 
   

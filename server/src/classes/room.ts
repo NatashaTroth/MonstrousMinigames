@@ -8,6 +8,7 @@ class Room {
   public timestamp: number;
   public game: CatchFoodGame | null;
   public admin: User | null;
+  
 
   constructor(id: string = "ABCDE") {
     this.id = id;
@@ -39,3 +40,11 @@ class Room {
 }
 
 export default Room;
+
+
+export enum RoomStates {
+  EMPTY,
+  OPEN,
+  GAME1,
+  CLOSED
+}
