@@ -2,9 +2,8 @@ import User from "../classes/user";
 import RoomService from "./roomService";
 import { ObstacleReachedInfo } from "../gameplay/catchFood/interfaces";
 import GameEventEmitter from "../classes/GameEventEmitter";
-import { Namespaces } from "../interfaces/enums";
-
-
+import { MessageTypes, Namespaces } from "../interfaces/enums";
+import { CatchFoodMsgType } from "../gameplay/catchFood/interfaces/CatchFoodMsgType";
 
 const gameEventEmitter = GameEventEmitter.getInstance();
 const rs = new RoomService();
@@ -15,6 +14,18 @@ function handleConnection(io: any) {
 
   handleControllers(io, controllerNamespace);
   handleScreens(io, screenNameSpace);
+
+  gameEventEmitter.on("obstacleReached", (data: ObstacleReachedInfo) => {
+    console.log(data);
+    let r = rs.getRoomById(data.roomId);
+    let u = r.getUserById(data.userId);
+    if (u) {
+      controllerNamespace.to(u.socketId).emit("message", {
+        type: CatchFoodMsgType.OBSTACLE,
+        obstacleType: data.obstacleType,
+      });
+    }
+  });
 }
 
 function handleControllers(io: any, controllerNamespace: any) {
@@ -41,12 +52,11 @@ function handleControllers(io: any, controllerNamespace: any) {
       userId = user.id;
       room.addUser(user);
     }
-
     console.log("Room: " + roomId + " | Controller connected: " + userId);
 
     // send user data
     socket.emit("message", {
-      type: "userInit",
+      type: MessageTypes.USER_INIT,
       userId: userId,
       roomId: roomId,
       name: name,
@@ -58,43 +68,32 @@ function handleControllers(io: any, controllerNamespace: any) {
     });
 
     socket.on("message", function (message: any) {
-      console.log(message);
-
       let type = message.type;
 
       switch (type) {
-        case "game1/start": {
+        case CatchFoodMsgType.START: {
           if (!room.game) {
             let gameState = rs.startGame(room);
             console.log("start game - roomId: " + roomId);
             setInterval(() => {
-              io.of(Namespaces.SCREEN).to(roomId).emit("message", gameState);
-            }, 100);
-            gameEventEmitter.on(
-              "obstacleReached",
-              (data: ObstacleReachedInfo) => {
-                console.log(data);
-                let r = rs.getRoomById(data.roomId);
-                let u = r.getUserById(data.userId);
-                if (u) {
-                  controllerNamespace.to(u.socketId).emit("message", {
-                    type: "game1/obstacle",
-                    obstacleType: data.obstacleType,
-                  });
-                }
-              }
-            );
+              io.of(Namespaces.SCREEN).to(roomId).emit("message", {
+                type: CatchFoodMsgType.GAME_STATE,
+                gameState: gameState,
+              });
+            }, 1000);
           }
           break;
         }
-        case "game1/runForward": {
+        case CatchFoodMsgType.MOVE: {
           room.game?.movePlayer(userId, 200);
           io.of(Namespaces.SCREEN)
             .to(roomId)
-            .emit("message", room.game?.getGameState());
+            .emit("message", room.game?.getGameStateInfo());
           break;
         }
         default: {
+          console.log(message);
+
           socket.broadcast.emit("message", message);
         }
       }
@@ -109,10 +108,8 @@ function handleScreens(io: any, screenNameSpace: any) {
       : "ABCDE";
     let room = rs.getRoomById(roomId);
 
-    socket.join(room.id)
-    
-    console.log("Screen connected");
-
+    socket.join(room.id);
+    console.log("Room: " + roomId + " | Screen connected");
     // Todo user initialisation
 
     socket.on("disconnect", () => {

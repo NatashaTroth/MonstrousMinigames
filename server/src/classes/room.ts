@@ -39,3 +39,10 @@ class Room {
 }
 
 export default Room;
+
+export enum RoomStates {
+  EMPTY,
+  OPEN,
+  GAME1,
+  CLOSED,
+}
