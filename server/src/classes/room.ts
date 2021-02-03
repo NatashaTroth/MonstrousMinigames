@@ -35,7 +35,7 @@ class Room {
   public createGame() {
     this.state = RoomStates.PLAYING;
     this.game = new CatchFoodGame(this.users);
-    this.game.startGame()
+    this.game.startGame();
   }
 
   public getUserById(userId: string) {

@@ -1,19 +1,16 @@
 import * as React from 'react'
 import { ObstacleButton } from './ClickObstacle.sc'
+import { OBSTACLES } from '../../utils/constants'
 
 interface IClickObstacle {
-    setObstacle: (value: boolean) => void
-    setObstacleRemoved: (value: boolean) => void
-    sendMessage: () => void
+    setObstacle: (value: undefined | OBSTACLES) => void
 }
 
-const ClickObstacle: React.FunctionComponent<IClickObstacle> = ({ setObstacle, setObstacleRemoved, sendMessage }) => {
+const ClickObstacle: React.FunctionComponent<IClickObstacle> = ({ setObstacle }) => {
     return (
         <ObstacleButton
             onClick={() => {
-                setObstacle(false)
-                setObstacleRemoved(true)
-                sendMessage()
+                setObstacle(undefined)
                 // eslint-disable-next-line no-console
                 console.log('OBSTACLE REMOVED')
             }}

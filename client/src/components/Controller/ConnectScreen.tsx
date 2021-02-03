@@ -1,52 +1,27 @@
 import * as React from 'react'
-import { ClickRequestDeviceMotion } from '../../utils/permissions'
 import Button from '../common/Button'
-import { FormContainer, StartScreenContainer, StyledInput, StyledLabel } from './StartScreen.sc'
+import { FormContainer, ConnectScreenContainer, StyledInput, StyledLabel } from './ConnectScreen.sc'
 import { SocketContext } from '../../contexts/SocketContextProvider'
 import { io } from 'socket.io-client'
 import { ENDPOINT } from '../../utils/config'
 import { stringify } from 'query-string'
-
-interface IStartScreen {
-    setPermissionGranted: (val: boolean) => void
-}
 
 interface IFormState {
     name?: undefined | string
     roomId?: undefined | string
 }
 
-interface IUserInitMessage {
-    name: string
-    type: string
-    userId: string
-    roomId: string
-}
-const StartScreen: React.FunctionComponent<IStartScreen> = ({ setPermissionGranted }) => {
+const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ name: '', roomId: '' })
     const { setControllerSocket } = React.useContext(SocketContext)
 
     function handleSubmit() {
-        const name = sessionStorage.getItem('name')
-        const roomId = sessionStorage.getItem('roomId')
-        const userId = sessionStorage.getItem('userId')
-
-        if (!name) {
-            sessionStorage.setItem('name', formState?.name || '')
-        }
-
-        if (!roomId) {
-            sessionStorage.setItem('roomId', formState?.roomId || '')
-        }
-
         const controllerSocket = io(
             ENDPOINT +
-                '?' +
+                'controller?' +
                 stringify({
-                    type: 'controller',
                     name: formState?.name,
                     roomId: formState?.roomId,
-                    userId: userId || '',
                 }),
             {
                 secure: true,
@@ -64,15 +39,16 @@ const StartScreen: React.FunctionComponent<IStartScreen> = ({ setPermissionGrant
                 setControllerSocket(controllerSocket)
             }
         })
-
-        controllerSocket.on('message', (data: IUserInitMessage) => {
-            sessionStorage.setItem('userId', data.userId)
-        })
     }
 
     return (
-        <StartScreenContainer>
-            <FormContainer>
+        <ConnectScreenContainer>
+            <FormContainer
+                onSubmit={e => {
+                    e.preventDefault()
+                    handleSubmit()
+                }}
+            >
                 <StyledLabel>
                     Name
                     <StyledInput
@@ -93,17 +69,10 @@ const StartScreen: React.FunctionComponent<IStartScreen> = ({ setPermissionGrant
                         placeholder="Insert a room code"
                     />
                 </StyledLabel>
-                <Button
-                    onClick={async () => {
-                        handleSubmit()
-                        setPermissionGranted(await ClickRequestDeviceMotion())
-                    }}
-                    text="Start Game"
-                    disabled={!formState?.name || !formState?.roomId}
-                />
+                <Button type="submit" text="Connect" disabled={!formState?.name || !formState?.roomId} />
             </FormContainer>
-        </StartScreenContainer>
+        </ConnectScreenContainer>
     )
 }
 
-export default StartScreen
+export default ConnectScreen

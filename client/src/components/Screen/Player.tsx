@@ -3,20 +3,40 @@ import * as React from 'react'
 import { Container, PlayerCharacter } from './Player.sc'
 import { SocketContext } from '../../contexts/SocketContextProvider'
 import oliver from '../../images/oliver.png'
+import { GAMESTATE, OBSTACLES } from '../../utils/constants'
 
 let speed = 1
 let count = 0
-interface IResponse {
+
+interface IObstacle {
+    positionX: number
+    type: OBSTACLES
+}
+
+interface IPlayerState {
+    atObstacle: boolean
+    finished: boolean
+    id: string
+    name: string
+    obstacles: IObstacle
+    positionX: number
+    rank: number
+}
+interface IGameState {
+    gameState: GAMESTATE
+    numberOfObstacles: number
+    type: 'game1/gameState'
     roomId: string
-    type: string
-    userId: string
+    trackLength: number
+    playersState: IPlayerState[]
 }
 
 const windowWidth = window.innerWidth
 const step = windowWidth / 2000
 
 const Player: React.FunctionComponent = () => {
-    const { socket } = React.useContext(SocketContext)
+    const { screenSocket } = React.useContext(SocketContext)
+    const [players, setPlayers] = React.useState<undefined | IPlayerState[]>()
 
     React.useEffect(() => {
         window.setInterval(resetCounter, 500)
@@ -30,20 +50,25 @@ const Player: React.FunctionComponent = () => {
 
             count = 0
         }
-    }, [])
 
-    socket?.on('response', (data: IResponse) => {
-        console.log('Got response')
-        if (data.type === 'game1/runForward') {
-            movePlayer()
-            count++
-        }
+        players?.forEach(player => {
+            movePlayer(player.id, player.positionX)
+        })
+    }, [players])
+
+    screenSocket?.on('message', (data: IGameState) => {
+        setPlayers(data.playersState)
+        // count++
     })
 
     return (
-        <Container id="player">
-            <PlayerCharacter src={oliver} />
-        </Container>
+        <>
+            {players?.map(player => (
+                <Container id={player.id}>
+                    <PlayerCharacter src={oliver} />
+                </Container>
+            ))}
+        </>
     )
 }
 
@@ -55,17 +80,19 @@ export interface IMovePlayer {
     obstacle: boolean
 }
 
-function movePlayer() {
-    const d = document.getElementById('player')
+function movePlayer(playerId: string, positionX: number) {
+    const d = document.getElementById(playerId)
+    console.log('move player to pos ' + positionX)
 
     if (d) {
-        if (d.offsetLeft >= windowWidth - d.offsetWidth) {
-            d.style.left = Number(windowWidth - d.offsetWidth) + 'px'
-            const newPos = d.offsetTop + step * speed
-            d.style.top = newPos + 'px'
-        } else {
-            const newPos = d.offsetLeft + step * speed
-            d.style.left = newPos + 'px'
-        }
+        d.style.left = positionX + 'px'
+        // if (d.offsetLeft >= windowWidth - d.offsetWidth) {
+        //     d.style.left = Number(windowWidth - d.offsetWidth) + 'px'
+        //     const newPos = d.offsetTop + step * speed
+        //     d.style.top = newPos + 'px'
+        // } else {
+        //     const newPos = d.offsetLeft + step * speed
+        //     d.style.left = newPos + 'px'
+        // }
     }
 }

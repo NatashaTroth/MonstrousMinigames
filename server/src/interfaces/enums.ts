@@ -1,8 +1,8 @@
 export enum Namespaces {
-    CONTROLLER = '/controller',
-    SCREEN = '/screen'
+  CONTROLLER = "/controller",
+  SCREEN = "/screen",
 }
 
 export enum MessageTypes {
-    USER_INIT = 'userInit',
+  USER_INIT = "userInit",
 }
