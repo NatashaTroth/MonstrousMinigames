@@ -16,37 +16,18 @@ interface IFormState {
     roomId?: undefined | string
 }
 
-interface IUserInitMessage {
-    name: string
-    type: string
-    userId: string
-    roomId: string
-}
 const StartScreen: React.FunctionComponent<IStartScreen> = ({ setPermissionGranted }) => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ name: '', roomId: '' })
+    const [textFieldDisabled, setTextFieldDisabled] = React.useState<boolean>(false)
     const { setControllerSocket } = React.useContext(SocketContext)
 
     function handleSubmit() {
-        const name = sessionStorage.getItem('name')
-        const roomId = sessionStorage.getItem('roomId')
-        const userId = sessionStorage.getItem('userId')
-
-        if (!name) {
-            sessionStorage.setItem('name', formState?.name || '')
-        }
-
-        if (!roomId) {
-            sessionStorage.setItem('roomId', formState?.roomId || '')
-        }
-
         const controllerSocket = io(
             ENDPOINT +
-                '?' +
+                'controller?' +
                 stringify({
-                    type: 'controller',
                     name: formState?.name,
                     roomId: formState?.roomId,
-                    userId: userId || '',
                 }),
             {
                 secure: true,
@@ -62,11 +43,8 @@ const StartScreen: React.FunctionComponent<IStartScreen> = ({ setPermissionGrant
                 // eslint-disable-next-line no-console
                 console.log('Controller Socket connected')
                 setControllerSocket(controllerSocket)
+                setTextFieldDisabled(true)
             }
-        })
-
-        controllerSocket.on('message', (data: IUserInitMessage) => {
-            sessionStorage.setItem('userId', data.userId)
         })
     }
 
@@ -78,6 +56,7 @@ const StartScreen: React.FunctionComponent<IStartScreen> = ({ setPermissionGrant
                     <StyledInput
                         type="text"
                         name="name"
+                        disabled={textFieldDisabled}
                         value={formState?.name}
                         onChange={e => setFormState({ ...formState, name: e.target.value })}
                         placeholder="Insert your name"
@@ -88,6 +67,7 @@ const StartScreen: React.FunctionComponent<IStartScreen> = ({ setPermissionGrant
                     <StyledInput
                         type="text"
                         name="roomId"
+                        disabled={textFieldDisabled}
                         value={formState?.roomId}
                         onChange={e => setFormState({ ...formState, roomId: e.target.value })}
                         placeholder="Insert a room code"

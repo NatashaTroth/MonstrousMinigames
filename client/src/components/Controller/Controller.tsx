@@ -9,7 +9,7 @@ import StartScreen from './StartScreen'
 const Controller: React.FunctionComponent = () => {
     const [permissionGranted, setPermissionGranted] = React.useState(false)
 
-    const { socket } = React.useContext(SocketContext)
+    const { controllerSocket } = React.useContext(SocketContext)
 
     if (permissionGranted) {
         window.addEventListener(
@@ -17,7 +17,7 @@ const Controller: React.FunctionComponent = () => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (event: any) => {
                 if (event?.acceleration?.x && (event.acceleration.x < -2 || event.acceleration.x > 2)) {
-                    sendMessage(socket)
+                    sendMessage(controllerSocket)
                     // console.log('RUN - DeviceMotion: ' + event.acceleration.x + ' m/s2')
                 } else {
                     // console.log('STOP')
@@ -38,5 +38,10 @@ const Controller: React.FunctionComponent = () => {
 export default Controller
 
 function sendMessage(socket: Socket | undefined) {
-    socket?.emit('message', { type: 'game1/runForward', roomId: '', userId: '' })
+    socket?.emit('message', {
+        type: 'game1/runForward',
+        roomId: sessionStorage.getItem('roomId'),
+        userId: sessionStorage.getItem('userId'),
+    })
+    console.log('move')
 }

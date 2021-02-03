@@ -3,25 +3,37 @@ import { io, Socket } from 'socket.io-client'
 import { ENDPOINT } from '../utils/config'
 
 interface ISocketContext {
-    socket: Socket | undefined
+    screenSocket: Socket | undefined
     controllerSocket: Socket | undefined
     setControllerSocket: (val: Socket | undefined) => void
 }
 
 export const SocketContext = React.createContext<ISocketContext>({
-    socket: undefined,
+    screenSocket: undefined,
     controllerSocket: undefined,
     setControllerSocket: () => {
         // do nothing
     },
 })
 
+interface IUserInitMessage {
+    name: string
+    type: string
+    userId: 'userInit'
+    roomId: string
+}
+
+interface IObstacleMessage {
+    type: 'game1/obstacle'
+    obstacleType: 'TREE-STUMP'
+}
+
 const SocketContextProvider: React.FunctionComponent = ({ children }) => {
-    const [socket, setSocket] = React.useState<Socket | undefined>(undefined)
+    const [screenSocket, setScreenSocket] = React.useState<Socket | undefined>(undefined)
     const [controllerSocket, setControllerSocket] = React.useState<Socket | undefined>(undefined)
 
     React.useEffect(() => {
-        const socketClient = io(ENDPOINT, {
+        const socketClient = io(ENDPOINT + 'screen', {
             secure: true,
             reconnection: true,
             rejectUnauthorized: false,
@@ -32,14 +44,33 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
         socketClient.on('connect', () => {
             if (socketClient) {
                 // eslint-disable-next-line no-console
-                console.log('Socket connected')
-                setSocket(socketClient)
+                console.log('Screen Socket connected')
+                setScreenSocket(socketClient)
             }
         })
     }, [])
 
+    controllerSocket?.on('message', (data: IUserInitMessage | IObstacleMessage) => {
+        // eslint-disable-next-line no-console
+        console.log(data)
+        switch (data.type) {
+            case 'userInit':
+                sessionStorage.setItem('userId', data.userId)
+                sessionStorage.setItem('name', data.name)
+                sessionStorage.setItem('roomId', data.roomId)
+
+                break
+            case 'game1/obstacle':
+                // eslint-disable-next-line no-console
+                console.log('obstacle')
+                break
+            default:
+                break
+        }
+    })
+
     const content = {
-        socket,
+        screenSocket,
         controllerSocket,
         setControllerSocket,
     }

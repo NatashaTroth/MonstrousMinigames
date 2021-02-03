@@ -16,7 +16,7 @@ const windowWidth = window.innerWidth
 const step = windowWidth / 2000
 
 const Player: React.FunctionComponent = () => {
-    const { socket } = React.useContext(SocketContext)
+    const { screenSocket } = React.useContext(SocketContext)
 
     React.useEffect(() => {
         window.setInterval(resetCounter, 500)
@@ -32,7 +32,7 @@ const Player: React.FunctionComponent = () => {
         }
     }, [])
 
-    socket?.on('response', (data: IResponse) => {
+    screenSocket?.on('response', (data: IResponse) => {
         console.log('Got response')
         if (data.type === 'game1/runForward') {
             movePlayer()
