@@ -2,25 +2,23 @@ import styled from 'styled-components'
 
 const borderWidth = 5
 const boxShadowDepth = 8
-const buttonColor = '#aadd22'
+const buttonColor = '#e98f23'
 const fontSize = 2
 const horizontalPadding = 16
 const verticalPadding = 8
-const bg = '#fafafa'
 let clip = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)'
 
-export const Container = styled.div``
+export const Container = styled.div`
+    margin-top: 225px;
+`
 
 export const StyledButton = styled.button`
     color: ${buttonColor};
     font-size: 3;
     border: calc(${borderWidth} * 1px) solid ${buttonColor};
-
     background: white;
-
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
         'Helvetica Neue', sans-serif;
-
     box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 #888;
     color: ${buttonColor};
     cursor: pointer;
@@ -30,6 +28,7 @@ export const StyledButton = styled.button`
     padding: calc(${verticalPadding} * 1px) calc(${horizontalPadding} * 1px);
     position: relative;
     transition: box-shadow 0.15s ease;
+    border-radius: 4px;
 
     &:hover {
         box-shadow: calc(${boxShadowDepth} / 2 * 1px) calc(${boxShadowDepth} / 2 * 1px) 0 #888;
