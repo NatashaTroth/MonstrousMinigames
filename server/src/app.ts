@@ -21,7 +21,7 @@ class Server {
 const server = new Server();
 
 server.app.get("/", (req, res) => {
-  res.send("GAAAAME");
+  res.send("GAAAAME!");
 });
 
 const PORT = process.env.PORT || 5000;
