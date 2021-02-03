@@ -16,14 +16,6 @@ import { Game } from "phaser";
 import { verifyGameState } from "../helperFunctions/verifyGameState";
 import { verifyUserId } from "../helperFunctions/verifyUserId";
 
-interface GameInterface {
-  roomId: string;
-  gameState: GameState;
-
-  startGame(): void;
-  stopGame(): void;
-  // resetGame(): void;
-}
 interface CatchFoodGameInterface extends GameInterface {
   playersState: HashTable<PlayerState>;
   trackLength: number;
