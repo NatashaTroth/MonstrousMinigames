@@ -52,6 +52,7 @@ const Player: React.FunctionComponent = () => {
     }, [])
 
     screenSocket?.on('message', (data: IGameState) => {
+        console.log(data)
         // movePlayer()
         // count++
     })
