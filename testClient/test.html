@@ -24,7 +24,7 @@
     crossorigin="anonymous"></script>
 <script>
     let url = "ws://monstrous-minigames.herokuapp.com:14691/socket.io/?EIO=4&transport=websocket"
-    url = 'localhost:5000/screen?roomId=ABCDE&userId='
+    url = 'localhost:5000/controller?roomId=ABCDE&userId='
 
     const socket = io(url, {
         secure: true, reconnection: true, rejectUnauthorized: false,
