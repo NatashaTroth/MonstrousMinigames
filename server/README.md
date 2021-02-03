@@ -3,6 +3,7 @@
 https://monstrous-minigames.herokuapp.com/
 
 ```
+heroku git:remote -a monstrous-minigames
 git subtree push --prefix server heroku master
 git add . && git commit -m 'Heroku' && git subtree push --prefix server heroku master
 ```
