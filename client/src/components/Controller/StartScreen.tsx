@@ -15,16 +15,39 @@ interface IFormState {
     name?: undefined | string
     roomId?: undefined | string
 }
+
+interface IUserInitMessage {
+    name: string
+    type: string
+    userId: string
+    roomId: string
+}
 const StartScreen: React.FunctionComponent<IStartScreen> = ({ setPermissionGranted }) => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ name: '', roomId: '' })
     const { setControllerSocket } = React.useContext(SocketContext)
 
     function handleSubmit() {
-        sessionStorage.setItem('name', formState?.name || '')
-        sessionStorage.setItem('roomId', formState?.roomId || '')
+        const name = sessionStorage.getItem('name')
+        const roomId = sessionStorage.getItem('roomId')
+        const userId = sessionStorage.getItem('userId')
+
+        if (!name) {
+            sessionStorage.setItem('name', formState?.name || '')
+        }
+
+        if (!roomId) {
+            sessionStorage.setItem('roomId', formState?.roomId || '')
+        }
 
         const controllerSocket = io(
-            ENDPOINT + '?' + stringify({ type: 'controller', name: formState?.name, roomId: formState?.roomId }),
+            ENDPOINT +
+                '?' +
+                stringify({
+                    type: 'controller',
+                    name: formState?.name,
+                    roomId: formState?.roomId,
+                    userId: userId || '',
+                }),
             {
                 secure: true,
                 reconnection: true,
@@ -42,9 +65,8 @@ const StartScreen: React.FunctionComponent<IStartScreen> = ({ setPermissionGrant
             }
         })
 
-        controllerSocket.on('message', (data: unknown) => {
-            // eslint-disable-next-line no-console
-            console.log(data)
+        controllerSocket.on('message', (data: IUserInitMessage) => {
+            sessionStorage.setItem('userId', data.userId)
         })
     }
 
