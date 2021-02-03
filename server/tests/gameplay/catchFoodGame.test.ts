@@ -109,7 +109,7 @@ describe("Test catch food gameplay", () => {
     catchFoodGame.movePlayer("1", 50);
     expect(catchFoodGame.playersState["1"].positionX).toBe(tmpPlayerPositionX);
 
-    catchFoodGame.playerCompletedObstacle("1");
+    catchFoodGame.playerHasCompletedObstacle("1");
     expect(catchFoodGame.playersState["1"].atObstacle).toBeFalsy();
     expect(catchFoodGame.playersState["1"].obstacles.length).toBe(3);
 
@@ -124,7 +124,7 @@ describe("Test catch food gameplay", () => {
     const catchFoodGame = new CatchFoodGame(users, 500, 4);
     // finish player 1
     for (let i = 0; i < 4; i++) {
-      catchFoodGame.playerCompletedObstacle("1");
+      catchFoodGame.playerHasCompletedObstacle("1");
     }
     expect(catchFoodGame.playersState["1"].obstacles.length).toBe(0);
     catchFoodGame.movePlayer("1", 500);
@@ -132,9 +132,9 @@ describe("Test catch food gameplay", () => {
     expect(catchFoodGame.playersState["1"].rank).toBe(1);
 
     for (let i = 0; i < 4; i++) {
-      catchFoodGame.playerCompletedObstacle("2");
-      catchFoodGame.playerCompletedObstacle("3");
-      catchFoodGame.playerCompletedObstacle("4");
+      catchFoodGame.playerHasCompletedObstacle("2");
+      catchFoodGame.playerHasCompletedObstacle("3");
+      catchFoodGame.playerHasCompletedObstacle("4");
     }
     catchFoodGame.movePlayer("2", 500);
     catchFoodGame.movePlayer("3", 500);
@@ -154,7 +154,7 @@ describe("Test catch food gameplay", () => {
     const catchFoodGame = new CatchFoodGame(users, 500, 4);
 
     for (let i = 0; i < 4; i++) {
-      catchFoodGame.playerCompletedObstacle("1");
+      catchFoodGame.playerHasCompletedObstacle("1");
     }
     expect(catchFoodGame.playersState["1"].obstacles.length).toBe(0);
     catchFoodGame.movePlayer("1", 500);

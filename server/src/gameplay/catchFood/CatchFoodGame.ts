@@ -91,18 +91,22 @@ export default class CatchFoodGame {
 
     this.playersState[playerId].positionX += speed;
 
-    //TODO: check if player is at obstacle
-    if (
+    if (this.playerHasReachedObstacle(playerId))
+      this.handlePlayerReachedObstacle(playerId);
+
+    if (this.playerHasPassedGoal(playerId))
+      this.playerHasFinishedGame(playerId);
+  }
+
+  private playerHasReachedObstacle(playerId: string) {
+    return (
       this.playersState[playerId].obstacles.length > 0 &&
       this.playersState[playerId].positionX >=
         this.playersState[playerId].obstacles[0].positionX
-    )
-      this.handlePlayerReachedObstacle(playerId);
-    if (this.playersState[playerId].positionX >= this.trackLength)
-      // check if player has passed goal
-      this.playerFinishedGame(playerId);
-
-    //TODO: broadcast new player position
+    );
+  }
+  private playerHasPassedGoal(playerId: string) {
+    return this.playersState[playerId].positionX >= this.trackLength;
   }
 
   private handlePlayerReachedObstacle(playerId: string) {
@@ -115,21 +119,25 @@ export default class CatchFoodGame {
     });
   }
 
-  playerCompletedObstacle(playerId: string) {
+  playerHasCompletedObstacle(playerId: string) {
     //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
     this.playersState[playerId].atObstacle = false;
     this.playersState[playerId].obstacles.shift();
   }
 
-  private playerFinishedGame(playerId: string) {
+  private playerHasFinishedGame(playerId: string) {
     this.playersState[playerId].finished = true;
     this.playersState[playerId].rank = this.currentRank++;
 
-    if (this.currentRank > Object.keys(this.playersState).length) {
+    if (this.gameIsOver()) {
       this.handleGameOver();
+    } else {
+      //TODO Broadcast
     }
+  }
 
-    //TODO Broadcast
+  private gameIsOver(): boolean {
+    return this.currentRank > Object.keys(this.playersState).length;
   }
 
   private handleGameOver() {
