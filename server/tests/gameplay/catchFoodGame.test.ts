@@ -198,6 +198,24 @@ describe("Test catch food gameplay", () => {
     );
   });
 
+  it("throw an error if userId is not registered to the game", async () => {
+    const catchFoodGame = new CatchFoodGame(users, 500, 4);
+    catchFoodGame.startGame();
+    try {
+      catchFoodGame.movePlayer("notUserId");
+      expect(true).toBeFalsy();
+    } catch (e) {
+      //yaay, error was thrown
+    }
+
+    try {
+      catchFoodGame.playerHasCompletedObstacle("notUserId");
+      expect(true).toBeFalsy();
+    } catch (e) {
+      //yaay, error was thrown
+    }
+  });
+
   it("should finish the game when players have reached the goal", async () => {
     const catchFoodGame = new CatchFoodGame(users, 500, 4);
     catchFoodGame.startGame();
