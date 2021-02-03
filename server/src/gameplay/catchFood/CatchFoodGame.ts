@@ -1,5 +1,5 @@
 import { PlayerState, Obstacle, ObstacleType, GameState } from "./interfaces";
-import { HashTable } from "../interfaces";
+import { HashTable, GameEventTypes } from "../interfaces";
 import { User } from "../../interfaces/interfaces";
 import GameEventEmitter from "../../classes/GameEventEmitter";
 
@@ -111,7 +111,7 @@ export default class CatchFoodGame {
   private handlePlayerReachedObstacle(userId: string) {
     // block player from running when obstacle is reached
     this.playersState[userId].atObstacle = true;
-    this.gameEventEmitter.emit("obstacleReached", {
+    this.gameEventEmitter.emit(GameEventTypes.ObstacleReached, {
       roomId: this.roomId,
       userId,
       obstacleType: this.playersState[userId].obstacles[0].type,
@@ -128,11 +128,13 @@ export default class CatchFoodGame {
     this.playersState[userId].finished = true;
     this.playersState[userId].rank = this.currentRank++;
 
+    this.gameEventEmitter.emit(GameEventTypes.PlayerHasFinished, {
+      userId,
+      rank: this.playersState[userId].rank,
+    });
+
     if (this.gameIsOver()) {
       this.handleGameOver();
-    } else {
-      this.gameEventEmitter.emit("playerHasFinished");
-      //TODO Broadcast
     }
   }
 

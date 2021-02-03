@@ -2,7 +2,11 @@ import { User } from "../../src/interfaces/interfaces";
 import { CatchFoodGame } from "../../src/gameplay/";
 import { Obstacle } from "../../src/gameplay/catchFood/interfaces";
 import GameEventEmitter from "../../src/classes/GameEventEmitter";
-import { ObstacleReachedInfo } from "../../src/gameplay/catchFood/interfaces";
+import {
+  ObstacleReachedInfo,
+  PlayerFinishedInfo,
+} from "../../src/gameplay/catchFood/interfaces";
+import { GameEventTypes } from "../../src/gameplay/interfaces";
 
 describe("Test catch food gameplay", () => {
   // beforeAll(async () => {
@@ -95,9 +99,12 @@ describe("Test catch food gameplay", () => {
     const gameEventEmitter = GameEventEmitter.getInstance();
     let obstacleEventReceived = false;
 
-    gameEventEmitter.on("obstacleReached", (data: ObstacleReachedInfo) => {
-      obstacleEventReceived = true;
-    });
+    gameEventEmitter.on(
+      GameEventTypes.ObstacleReached,
+      (data: ObstacleReachedInfo) => {
+        obstacleEventReceived = true;
+      }
+    );
 
     catchFoodGame.movePlayer("1", distanceToObstacle);
     expect(obstacleEventReceived).toBeTruthy();
@@ -126,9 +133,22 @@ describe("Test catch food gameplay", () => {
     for (let i = 0; i < 4; i++) {
       catchFoodGame.playerHasCompletedObstacle("1");
     }
+
+    //expect obstacle event to be fired when Obstacle is reached
+    const gameEventEmitter = GameEventEmitter.getInstance();
+    let playerFinished = false;
+
+    gameEventEmitter.on(
+      GameEventTypes.PlayerHasFinished,
+      (data: PlayerFinishedInfo) => {
+        playerFinished = true;
+      }
+    );
+
     expect(catchFoodGame.playersState["1"].obstacles.length).toBe(0);
     catchFoodGame.movePlayer("1", 500);
     expect(catchFoodGame.playersState["1"].finished).toBeTruthy();
+    expect(playerFinished).toBeTruthy();
     expect(catchFoodGame.playersState["1"].rank).toBe(1);
 
     for (let i = 0; i < 4; i++) {
