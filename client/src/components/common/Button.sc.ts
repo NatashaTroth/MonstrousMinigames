@@ -3,24 +3,21 @@ import styled from 'styled-components'
 const borderWidth = 5
 const boxShadowDepth = 8
 const buttonColor = '#e98f23'
-const fontSize = 2
+const fontSize = 1
 const horizontalPadding = 16
 const verticalPadding = 8
 let clip = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)'
 
-export const Container = styled.div`
-    margin-top: 225px;
-`
+export const Container = styled.div``
 
 export const StyledButton = styled.button`
-    color: ${buttonColor};
+    color: black;
     font-size: 3;
     border: calc(${borderWidth} * 1px) solid ${buttonColor};
     background: white;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
         'Helvetica Neue', sans-serif;
     box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 #888;
-    color: ${buttonColor};
     cursor: pointer;
     font-size: calc(${fontSize} * 1rem);
     font-weight: bold;
@@ -36,6 +33,11 @@ export const StyledButton = styled.button`
 
     &:active {
         box-shadow: 0 0 0 #888;
+    }
+
+    &:disabled {
+        color: lightgray;
+        border-color: lightgray;
     }
 
     span {
