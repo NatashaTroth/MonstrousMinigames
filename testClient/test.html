@@ -31,8 +31,9 @@
         secure: true, reconnection: true, rejectUnauthorized: false,
         reconnectionDelayMax: 10000,
     })
+
     url = 'localhost:5000/screen?roomId=ABCDE&name=Robin&userId='
-    const socketScreen = io(url, {
+    const ssocket = io(url, {
         secure: true, reconnection: true, rejectUnauthorized: false,
         reconnectionDelayMax: 10000,
     })
@@ -57,7 +58,9 @@
         socket.on('reconnect_error', onError);
         socket.on('response', onResponse);
         socket.on('message', onMessage);
-        socketScreen.on('message', onMessage);
+        ssocket.on('message', onMessage);
+
+
 
 
         function onConnect(evt) {

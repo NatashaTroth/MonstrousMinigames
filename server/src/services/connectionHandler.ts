@@ -4,6 +4,7 @@ import { ObstacleReachedInfo } from "../gameplay/catchFood/interfaces";
 import GameEventEmitter from "../classes/GameEventEmitter";
 import { MessageTypes, Namespaces } from "../interfaces/enums";
 import { CatchFoodMsgType } from "../gameplay/catchFood/interfaces/CatchFoodMsgType";
+import { GameEventTypes } from "../gameplay/interfaces/GameEventTypes";
 
 const gameEventEmitter = GameEventEmitter.getInstance();
 const rs = new RoomService();
@@ -15,17 +16,20 @@ function handleConnection(io: any) {
   handleControllers(io, controllerNamespace);
   handleScreens(io, screenNameSpace);
 
-  gameEventEmitter.on("obstacleReached", (data: ObstacleReachedInfo) => {
-    console.log(data);
-    let r = rs.getRoomById(data.roomId);
-    let u = r.getUserById(data.userId);
-    if (u) {
-      controllerNamespace.to(u.socketId).emit("message", {
-        type: CatchFoodMsgType.OBSTACLE,
-        obstacleType: data.obstacleType,
-      });
+  gameEventEmitter.on(
+    GameEventTypes.ObstacleReached,
+    (data: ObstacleReachedInfo) => {
+      console.log(data);
+      let r = rs.getRoomById(data.roomId);
+      let u = r.getUserById(data.userId);
+      if (u) {
+        controllerNamespace.to(u.socketId).emit("message", {
+          type: CatchFoodMsgType.OBSTACLE,
+          obstacleType: data.obstacleType,
+        });
+      }
     }
-  });
+  );
 }
 
 function handleControllers(io: any, controllerNamespace: any) {
@@ -45,12 +49,14 @@ function handleControllers(io: any, controllerNamespace: any) {
       if (user) {
         user.setRoomId(roomId);
         user.setSocketId(socket.id);
-        room.addUser(user);
       }
     } else {
       let user = new User(room.id, socket.id, name);
       userId = user.id;
-      room.addUser(user);
+      if (!room.addUser(user)) {
+        socket.emit("message", { type: "error" });
+        return;
+      }
     }
     console.log("Room: " + roomId + " | Controller connected: " + userId);
 
@@ -73,22 +79,27 @@ function handleControllers(io: any, controllerNamespace: any) {
       switch (type) {
         case CatchFoodMsgType.START: {
           if (!room.game) {
-            let gameState = rs.startGame(room);
+            rs.startGame(room);
             console.log("start game - roomId: " + roomId);
-            setInterval(() => {
+            io.of(Namespaces.SCREEN).to(roomId).emit("message", {
+              type: CatchFoodMsgType.HAS_STARTED,
+            });
+            /*setInterval(() => {
               io.of(Namespaces.SCREEN).to(roomId).emit("message", {
                 type: CatchFoodMsgType.GAME_STATE,
-                gameState: gameState,
+                data: room.game?.getGameStateInfo(),
               });
-            }, 1000);
+            }, 100000);*/
           }
+
           break;
         }
         case CatchFoodMsgType.MOVE: {
           room.game?.movePlayer(userId, 200);
-          io.of(Namespaces.SCREEN)
-            .to(roomId)
-            .emit("message", room.game?.getGameStateInfo());
+          io.of(Namespaces.SCREEN).to(roomId).emit("message", {
+            type: CatchFoodMsgType.GAME_STATE,
+            data: room.game?.getGameStateInfo(),
+          });
           break;
         }
         default: {
