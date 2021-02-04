@@ -4,4 +4,5 @@ export enum CatchFoodMsgType {
     MOVE = 'game1/runForward',
     OBSTACLE = 'game1/obstacle',
     GAME_STATE = 'game1/gameState',
+    OBSTACLE_SOLVED = 'game1/obstacleSolved'
 }

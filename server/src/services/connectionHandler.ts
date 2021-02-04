@@ -114,6 +114,14 @@ function handleControllers(io: any, controllerNamespace: any) {
           });
           break;
         }
+        case CatchFoodMsgType.OBSTACLE_SOLVED: {
+          room.game?.playerHasCompletedObstacle(userId);
+          io.of(Namespaces.SCREEN).to(roomId).emit("message", {
+            type: CatchFoodMsgType.GAME_STATE,
+            data: room.game?.getGameStateInfo(),
+          });
+          break;
+        }
         case MessageTypes.RESET_GAME: {
           console.log("Room: " + roomId + " | Reset Game");
           room.resetGame();
