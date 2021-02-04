@@ -3,47 +3,89 @@ import * as React from 'react'
 import { Container, PlayerCharacter } from './Player.sc'
 import { SocketContext } from '../../contexts/SocketContextProvider'
 import oliver from '../../images/oliver.png'
+import monster from '../../images/monster.png'
+import monster2 from '../../images/monster2.png'
+import unicorn from '../../images/unicorn.png'
+import { GAMESTATE, OBSTACLES } from '../../utils/constants'
+import Obstacle from './Obstacle'
 
-let speed = 1
-let count = 0
-interface IResponse {
-    roomId: string
-    type: string
-    userId: string
+// let speed = 1
+// let count = 0
+
+interface IObstacle {
+    positionX: number
+    type: OBSTACLES
 }
 
-const windowWidth = window.innerWidth
-const step = windowWidth / 2000
+interface IPlayerState {
+    atObstacle: boolean
+    finished: boolean
+    id: string
+    name: string
+    obstacles: IObstacle[]
+    positionX: number
+    rank: number
+}
+interface IGameState {
+    data?: {
+        gameState: GAMESTATE
+        numberOfObstacles: number
+        roomId: string
+        trackLength: number
+        playersState: IPlayerState[]
+    }
+    type: 'game1/gameState' | 'game1/hasStarted'
+}
+
+// const windowWidth = window.innerWidth
+// const step = windowWidth / 2000
 
 const Player: React.FunctionComponent = () => {
-    const { socket } = React.useContext(SocketContext)
+    const { screenSocket } = React.useContext(SocketContext)
+    const [players, setPlayers] = React.useState<undefined | IPlayerState[]>()
+    const monsters = [oliver, monster, monster2, unicorn]
 
     React.useEffect(() => {
-        window.setInterval(resetCounter, 500)
-
-        function resetCounter() {
-            if (count === 0) {
-                speed = 1
-            } else {
-                speed = count / 10
-            }
-
-            count = 0
-        }
+        // window.setInterval(resetCounter, 500)
+        // function resetCounter() {
+        //     if (count === 0) {
+        //         speed = 1
+        //     } else {
+        //         speed = count / 10
+        //     }
+        //     count = 0
+        // }
     }, [])
 
-    socket?.on('response', (data: IResponse) => {
-        console.log('Got response')
-        if (data.type === 'game1/runForward') {
-            movePlayer()
-            count++
+    screenSocket?.on('message', (message: IGameState) => {
+        if (message && message.data) {
+            setPlayers(message.data.playersState)
         }
+
+        // count++
+    })
+
+    players?.forEach(player => {
+        movePlayer(player.id, player.positionX)
     })
 
     return (
-        <Container id="player">
-            <PlayerCharacter src={oliver} />
-        </Container>
+        <>
+            {players?.map((player, playerIndex) => (
+                <div key={'container' + player.id}>
+                    <Container id={player.id} key={player.id} top={playerIndex}>
+                        <PlayerCharacter src={monsters[playerIndex]} />
+                    </Container>
+                    {player.obstacles.map((obstacle, index) => (
+                        <Obstacle
+                            key={'obstacle' + index + 'player' + player.id}
+                            player={playerIndex}
+                            posX={obstacle.positionX}
+                        />
+                    ))}
+                </div>
+            ))}
+        </>
     )
 }
 
@@ -55,17 +97,18 @@ export interface IMovePlayer {
     obstacle: boolean
 }
 
-function movePlayer() {
-    const d = document.getElementById('player')
+function movePlayer(playerId: string, positionX: number) {
+    const d = document.getElementById(playerId)
 
     if (d) {
-        if (d.offsetLeft >= windowWidth - d.offsetWidth) {
-            d.style.left = Number(windowWidth - d.offsetWidth) + 'px'
-            const newPos = d.offsetTop + step * speed
-            d.style.top = newPos + 'px'
-        } else {
-            const newPos = d.offsetLeft + step * speed
-            d.style.left = newPos + 'px'
-        }
+        d.style.left = positionX / 2 + 'px'
+        // if (d.offsetLeft >= windowWidth - d.offsetWidth) {
+        //     d.style.left = Number(windowWidth - d.offsetWidth) + 'px'
+        //     const newPos = d.offsetTop + step * speed
+        //     d.style.top = newPos + 'px'
+        // } else {
+        //     const newPos = d.offsetLeft + step * speed
+        //     d.style.left = newPos + 'px'
+        // }
     }
 }

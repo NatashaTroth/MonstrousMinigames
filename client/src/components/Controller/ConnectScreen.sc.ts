@@ -8,7 +8,7 @@ const fontSize = 1
 const horizontalPadding = 16
 const verticalPadding = 8
 
-export const StartScreenContainer = styled.div`
+export const ConnectScreenContainer = styled.div`
     height: 100%;
     width: 100%;
     background-repeat: no-repeat;

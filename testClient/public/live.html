@@ -13,6 +13,8 @@
     <button onclick="input('start')">START</button>
     <br>
     <button onclick="input('move')">MOVE</button>
+    <br>
+    <button onclick="input('reset')">RESET</button>
 
 
 </body>
@@ -23,16 +25,16 @@
     integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ=="
     crossorigin="anonymous"></script>
 <script>
-    let url = "ws://monstrous-minigames.herokuapp.com:14691/socket.io/?EIO=4&transport=websocket"
-    url = 'localhost:5000/controller?roomId=ABCDE&name=Robin&userId='
+    let url = "monstrous-minigames.herokuapp.com/controller?roomId=ABCDE&name=Robin&userId="
+    let screenUrl = 'monstrous-minigames.herokuapp.com/screen?roomId=ABCDE&name=Robin&userId='
 
     let userId=''
     const socket = io(url, {
         secure: true, reconnection: true, rejectUnauthorized: false,
         reconnectionDelayMax: 10000,
     })
-    url = 'localhost:5000/screen?roomId=ABCDE&name=Robin&userId='
-    const socketScreen = io(url, {
+
+    const ssocket = io(screenUrl, {
         secure: true, reconnection: true, rejectUnauthorized: false,
         reconnectionDelayMax: 10000,
     })
@@ -47,6 +49,8 @@
     function input(type) {
         if(type == 'start') socket.emit('message', { type: 'game1/start', roomId: 'ABCDE', userId: userId })
         if(type == 'move') socket.emit('message', { type: 'game1/runForward', roomId: 'ABCDE', userId: userId })
+        if(type == 'reset') socket.emit('message', { type: 'resetGame', roomId: 'ABCDE', userId: userId })
+
     }
 
     function testSocket() {
@@ -57,7 +61,9 @@
         socket.on('reconnect_error', onError);
         socket.on('response', onResponse);
         socket.on('message', onMessage);
-        socketScreen.on('message', onMessage);
+        ssocket.on('message', onMessage);
+
+
 
 
         function onConnect(evt) {
