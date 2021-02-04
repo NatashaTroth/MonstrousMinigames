@@ -3,6 +3,9 @@ import * as React from 'react'
 import { Container, PlayerCharacter } from './Player.sc'
 import { SocketContext } from '../../contexts/SocketContextProvider'
 import oliver from '../../images/oliver.png'
+import monster from '../../images/monster.png'
+import monster2 from '../../images/monster2.png'
+import unicorn from '../../images/unicorn.png'
 import { GAMESTATE, OBSTACLES } from '../../utils/constants'
 
 // let speed = 1
@@ -39,6 +42,7 @@ interface IGameState {
 const Player: React.FunctionComponent = () => {
     const { screenSocket } = React.useContext(SocketContext)
     const [players, setPlayers] = React.useState<undefined | IPlayerState[]>()
+    const monsters = [oliver, monster, monster2, unicorn]
 
     React.useEffect(() => {
         // window.setInterval(resetCounter, 500)
@@ -53,6 +57,7 @@ const Player: React.FunctionComponent = () => {
     }, [])
 
     screenSocket?.on('message', (message: IGameState) => {
+        console.log(message)
         setPlayers(message.data.playersState)
 
         // count++
@@ -62,13 +67,11 @@ const Player: React.FunctionComponent = () => {
         movePlayer(player.id, player.positionX)
     })
 
-    console.log(players)
-
     return (
         <>
-            {players?.map(player => (
-                <Container id={player.id}>
-                    <PlayerCharacter src={oliver} />
+            {players?.map((player, index) => (
+                <Container id={player.id} key={player.id}>
+                    <PlayerCharacter src={monsters[index]} />
                 </Container>
             ))}
         </>
