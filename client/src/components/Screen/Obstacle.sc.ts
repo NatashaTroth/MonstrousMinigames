@@ -5,12 +5,15 @@ interface IObstacleProps {
     player: number
 }
 export const StyledObstacle = styled.div<IObstacleProps>`
-    background-color: #795548;
     height: 50px;
     width: 50px;
     position: absolute;
     z-index: 2;
     border-radius: 50%;
     left: ${({ posX }) => posX + 40}px;
-    top: ${({ player }) => 140 + player * 200}px;
+    top: ${({ player }) => 160 + player * 200}px;
+`
+
+export const StyledObstacleImage = styled.img`
+    width: 100%;
 `

@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { StyledObstacle } from './Obstacle.sc'
+import { StyledObstacle, StyledObstacleImage } from './Obstacle.sc'
+import woodFront from '../../images/woodFront.png'
 
 interface IObstacle {
     posX: number
@@ -7,7 +8,11 @@ interface IObstacle {
 }
 
 const Obstacle: React.FunctionComponent<IObstacle> = ({ posX, player }) => {
-    return <StyledObstacle posX={posX} player={player} />
+    return (
+        <StyledObstacle posX={posX} player={player}>
+            <StyledObstacleImage src={woodFront} />
+        </StyledObstacle>
+    )
 }
 
 export default Obstacle
