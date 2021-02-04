@@ -8,7 +8,7 @@ class Room {
   public timestamp: number;
   public game: CatchFoodGame | null;
   public admin: User | null;
-  public state: RoomStates;
+  private state: RoomStates;
 
   constructor(id: string = "ABCDE") {
     this.id = id;
@@ -27,15 +27,22 @@ class Room {
     }
     return false;
   }
+  //TODO remove User, logic
 
   public updateTimestamp() {
     this.timestamp = Date.now();
   }
 
   public createGame() {
-    this.state = RoomStates.PLAYING;
+    this.setState(RoomStates.PLAYING);
     this.game = new CatchFoodGame(this.users);
-    this.game.startGame();
+    this.startGame();
+  }
+
+  private startGame() {
+    if (this.game) {
+      this.game.startGame();
+    }
   }
 
   public getUserById(userId: string) {
@@ -44,6 +51,27 @@ class Room {
     });
     return user.length === 1 ? user[0] : false;
   }
+
+  public resetGame() {
+    this.game?.resetGame(this.users);
+    this.setState(RoomStates.OPEN);
+  }
+
+  private setState(state: RoomStates) {
+    this.state = state;
+  }
+
+  public isOpen() {
+    return this.state === RoomStates.OPEN
+  }
+  public isPlaying() {
+    return this.state === RoomStates.PLAYING
+  }
+  public isClosed() {
+    return this.state === RoomStates.CLOSED
+  }
+
+
 }
 
 export default Room;

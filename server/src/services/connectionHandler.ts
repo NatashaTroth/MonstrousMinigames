@@ -2,9 +2,10 @@ import User from "../classes/user";
 import RoomService from "./roomService";
 import { ObstacleReachedInfo } from "../gameplay/catchFood/interfaces";
 import GameEventEmitter from "../classes/GameEventEmitter";
-import { MessageTypes, Namespaces } from "../interfaces/enums";
 import { CatchFoodMsgType } from "../gameplay/catchFood/interfaces/CatchFoodMsgType";
 import { GameEventTypes } from "../gameplay/interfaces/GameEventTypes";
+import { Namespaces } from "../enums/nameSpaces";
+import { MessageTypes } from "../enums/messageTypes";
 
 const gameEventEmitter = GameEventEmitter.getInstance();
 const rs = new RoomService();
@@ -16,10 +17,11 @@ function handleConnection(io: any) {
   handleControllers(io, controllerNamespace);
   handleScreens(io, screenNameSpace);
 
+
   gameEventEmitter.on(
     GameEventTypes.ObstacleReached,
     (data: ObstacleReachedInfo) => {
-      console.log(data);
+      console.log("Room: " + data.roomId + " | userId: " + data.userId + " | Obstacle: " + data.obstacleType);
       let r = rs.getRoomById(data.roomId);
       let u = r.getUserById(data.userId);
       if (u) {
@@ -55,9 +57,12 @@ function handleControllers(io: any, controllerNamespace: any) {
       userId = user.id;
       /** for now new user gets old user's id */
       if (!room.addUser(user)) {
-        socket.emit("message", { type: "error", msg: 'Cannot join. Game already started' });
-        console.error('User tried to join. Game already started: ' + userId)
-        userId = room.users[0].id
+        socket.emit("message", {
+          type: "error",
+          msg: "Cannot join. Game already started",
+        });
+        console.error("User tried to join. Game already started: " + userId);
+        userId = room.users[0].id;
       }
     }
     console.log("Room: " + roomId + " | Controller connected: " + userId);
@@ -80,12 +85,13 @@ function handleControllers(io: any, controllerNamespace: any) {
 
       switch (type) {
         case CatchFoodMsgType.START: {
-          if (!room.game) {
+          if (room.isOpen()) {
             rs.startGame(room);
             console.log("start game - roomId: " + roomId);
             io.of(Namespaces.SCREEN).to(roomId).emit("message", {
               type: CatchFoodMsgType.HAS_STARTED,
             });
+            // TODO gamestate interval?
             /*setInterval(() => {
               io.of(Namespaces.SCREEN).to(roomId).emit("message", {
                 type: CatchFoodMsgType.GAME_STATE,
@@ -104,10 +110,13 @@ function handleControllers(io: any, controllerNamespace: any) {
           });
           break;
         }
+        case MessageTypes.RESET_GAME: {
+          console.log("Room: " + roomId + " | Reset Game");
+          room.resetGame();
+        }
+        break;
         default: {
           console.log(message);
-
-          socket.broadcast.emit("message", message);
         }
       }
     });

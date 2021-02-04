@@ -13,6 +13,8 @@
     <button onclick="input('start')">START</button>
     <br>
     <button onclick="input('move')">MOVE</button>
+    <br>
+    <button onclick="input('reset')">RESET</button>
 
 
 </body>
@@ -48,6 +50,8 @@
     function input(type) {
         if(type == 'start') socket.emit('message', { type: 'game1/start', roomId: 'ABCDE', userId: userId })
         if(type == 'move') socket.emit('message', { type: 'game1/runForward', roomId: 'ABCDE', userId: userId })
+        if(type == 'reset') socket.emit('message', { type: 'resetGame', roomId: 'ABCDE', userId: userId })
+
     }
 
     function testSocket() {
