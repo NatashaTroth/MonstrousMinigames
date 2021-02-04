@@ -76,6 +76,7 @@ const Player: React.FunctionComponent = () => {
             {players?.map((player, playerIndex) => (
                 <div key={'container' + player.id}>
                     <Container id={player.id} key={player.id} top={playerIndex}>
+                        {player.name}
                         <PlayerCharacter src={monsters[playerIndex]} />
                     </Container>
                     {player.obstacles.map((obstacle, index) => (
@@ -104,13 +105,5 @@ function movePlayer(playerId: string, positionX: number, trackLength: number) {
 
     if (d) {
         d.style.left = (positionX * windowWidth) / (trackLength || 1) + 'px'
-        // if (d.offsetLeft >= windowWidth - d.offsetWidth) {
-        //     d.style.left = Number(windowWidth - d.offsetWidth) + 'px'
-        //     const newPos = d.offsetTop + step * speed
-        //     d.style.top = newPos + 'px'
-        // } else {
-        //     const newPos = d.offsetLeft + step * speed
-        //     d.style.left = newPos + 'px'
-        // }
     }
 }

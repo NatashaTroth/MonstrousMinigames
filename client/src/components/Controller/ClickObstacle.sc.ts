@@ -9,6 +9,7 @@ export const ObstacleContainer = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
+    justify-content: center;
 `
 
 export const ObstacleItem = styled.div`
