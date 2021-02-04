@@ -5,7 +5,7 @@ import { Instruction, StartGameScreenContainer } from './StartGameScreen.sc'
 import { PlayerContext } from '../../contexts/PlayerContextProvider'
 
 const StartGameScreen: React.FunctionComponent = () => {
-    const { controllerSocket, setGameStarted } = React.useContext(SocketContext)
+    const { controllerSocket } = React.useContext(SocketContext)
     const { isPlayerAdmin, permission } = React.useContext(PlayerContext)
 
     function startGame() {
@@ -14,7 +14,6 @@ const StartGameScreen: React.FunctionComponent = () => {
             roomId: sessionStorage.getItem('roomId'),
             userId: sessionStorage.getItem('userId'),
         })
-        setGameStarted(true)
     }
 
     return (

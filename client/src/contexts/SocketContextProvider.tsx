@@ -91,8 +91,6 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
                 setPlayerRank(messageData.rank)
                 break
             case 'game1/hasStarted':
-                // eslint-disable-next-line no-console
-                console.log('Game has started')
                 setGameStarted(true)
                 break
             default:
