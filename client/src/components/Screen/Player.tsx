@@ -58,7 +58,9 @@ const Player: React.FunctionComponent = () => {
 
     screenSocket?.on('message', (message: IGameState) => {
         console.log(message)
-        setPlayers(message.data.playersState)
+        if (message.data) {
+            setPlayers(message.data.playersState)
+        }
 
         // count++
     })
@@ -70,7 +72,7 @@ const Player: React.FunctionComponent = () => {
     return (
         <>
             {players?.map((player, index) => (
-                <Container id={player.id} key={player.id}>
+                <Container id={player.id} key={player.id} top={index}>
                     <PlayerCharacter src={monsters[index]} />
                 </Container>
             ))}

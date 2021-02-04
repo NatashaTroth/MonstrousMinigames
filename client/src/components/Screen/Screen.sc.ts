@@ -4,7 +4,7 @@ import forest from '../../images/forest.png'
 export const Container = styled.div`
     width: 100%;
     position: absolute;
-    height: 500px;
+    height: 100%;
     background-size: cover;
     background-repeat-y: repeat;
     top: 0;
