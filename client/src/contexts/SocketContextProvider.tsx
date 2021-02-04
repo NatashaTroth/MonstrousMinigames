@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { isMobile } from 'react-device-detect'
-import { io, Socket } from 'socket.io-client'
-import { ENDPOINT } from '../utils/config'
-import { OBSTACLES } from '../utils/constants'
+import { Socket } from 'socket.io-client'
+import { GAMESTATE, OBSTACLES } from '../utils/constants'
+import { GameContext, IPlayerState } from './GameContextProvider'
 import { PlayerContext } from './PlayerContextProvider'
 
 export interface IObstacleMessage {
@@ -14,12 +13,16 @@ interface ISocketContext {
     controllerSocket: Socket | undefined
     isControllerConnected: boolean
     setControllerSocket: (val: Socket | undefined) => void
+    setScreenSocket: (val: Socket | undefined) => void
 }
 
 export const SocketContext = React.createContext<ISocketContext>({
     screenSocket: undefined,
     controllerSocket: undefined,
     setControllerSocket: () => {
+        // do nothing
+    },
+    setScreenSocket: () => {
         // do nothing
     },
     isControllerConnected: false,
@@ -38,30 +41,34 @@ interface IGameFinished {
     rank: number
 }
 
+interface IGameState {
+    data?: {
+        gameState: GAMESTATE
+        numberOfObstacles: number
+        roomId: string
+        trackLength: number
+        playersState: IPlayerState[]
+    }
+    type: string
+}
+
 const SocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenSocket, setScreenSocket] = React.useState<Socket | undefined>(undefined)
     const [controllerSocket, setControllerSocket] = React.useState<Socket | undefined>(undefined)
     const { setObstacle, setPlayerFinished, setPlayerRank, setIsPlayerAdmin } = React.useContext(PlayerContext)
+    const { setPlayers, setTrackLength, setFinished, trackLength } = React.useContext(GameContext)
 
-    React.useEffect(() => {
-        if (!isMobile) {
-            const socketClient = io(ENDPOINT + 'screen', {
-                secure: true,
-                reconnection: true,
-                rejectUnauthorized: false,
-                reconnectionDelayMax: 10000,
-                transports: ['websocket'],
-            })
-
-            socketClient.on('connect', () => {
-                if (socketClient) {
-                    // eslint-disable-next-line no-console
-                    console.log('Screen Socket connected')
-                    setScreenSocket(socketClient)
-                }
-            })
+    screenSocket?.on('message', (message: IGameState) => {
+        if (message && message.data) {
+            if (!trackLength) {
+                setTrackLength(message.data.trackLength)
+            }
+            setPlayers(message.data.playersState)
+            if (GAMESTATE.finished === message.data.gameState) {
+                setFinished(true)
+            }
         }
-    }, [])
+    })
 
     controllerSocket?.on('message', (data: IUserInitMessage | IObstacleMessage | IGameFinished) => {
         let messageData
@@ -92,6 +99,7 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
         screenSocket,
         controllerSocket,
         setControllerSocket,
+        setScreenSocket,
         isControllerConnected: controllerSocket ? true : false,
     }
     return <SocketContext.Provider value={content}>{children}</SocketContext.Provider>

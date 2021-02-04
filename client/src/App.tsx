@@ -7,21 +7,24 @@ import { AppContainer } from './App.sc'
 import { isMobileOnly } from 'react-device-detect'
 import PlayerContextProvider from './contexts/PlayerContextProvider'
 import Impressum from './components/common/Impressum'
+import GameContextProvider from './contexts/GameContextProvider'
 
 function App() {
     return (
         <AppContainer className="App">
             <PlayerContextProvider>
-                <SocketContextProvider>
-                    <Router>
-                        <Switch>
-                            <Route path="/impressum">
-                                <Impressum />
-                            </Route>
-                            <Route path="/">{isMobileOnly ? <Controller /> : <Screen />}</Route>
-                        </Switch>
-                    </Router>
-                </SocketContextProvider>
+                <GameContextProvider>
+                    <SocketContextProvider>
+                        <Router>
+                            <Switch>
+                                <Route path="/impressum">
+                                    <Impressum />
+                                </Route>
+                                <Route path="/">{isMobileOnly ? <Controller /> : <Screen />}</Route>
+                            </Switch>
+                        </Router>
+                    </SocketContextProvider>
+                </GameContextProvider>
             </PlayerContextProvider>
         </AppContainer>
     )
