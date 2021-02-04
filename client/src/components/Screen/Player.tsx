@@ -5,8 +5,8 @@ import { SocketContext } from '../../contexts/SocketContextProvider'
 import oliver from '../../images/oliver.png'
 import { GAMESTATE, OBSTACLES } from '../../utils/constants'
 
-let speed = 1
-let count = 0
+// let speed = 1
+// let count = 0
 
 interface IObstacle {
     positionX: number
@@ -23,43 +23,46 @@ interface IPlayerState {
     rank: number
 }
 interface IGameState {
-    gameState: GAMESTATE
-    numberOfObstacles: number
+    data: {
+        gameState: GAMESTATE
+        numberOfObstacles: number
+        roomId: string
+        trackLength: number
+        playersState: IPlayerState[]
+    }
     type: 'game1/gameState'
-    roomId: string
-    trackLength: number
-    playersState: IPlayerState[]
 }
 
-const windowWidth = window.innerWidth
-const step = windowWidth / 2000
+// const windowWidth = window.innerWidth
+// const step = windowWidth / 2000
 
 const Player: React.FunctionComponent = () => {
     const { screenSocket } = React.useContext(SocketContext)
     const [players, setPlayers] = React.useState<undefined | IPlayerState[]>()
 
     React.useEffect(() => {
-        window.setInterval(resetCounter, 500)
+        // window.setInterval(resetCounter, 500)
+        // function resetCounter() {
+        //     if (count === 0) {
+        //         speed = 1
+        //     } else {
+        //         speed = count / 10
+        //     }
+        //     count = 0
+        // }
+    }, [])
 
-        function resetCounter() {
-            if (count === 0) {
-                speed = 1
-            } else {
-                speed = count / 10
-            }
+    screenSocket?.on('message', (message: IGameState) => {
+        setPlayers(message.data.playersState)
 
-            count = 0
-        }
-
-        players?.forEach(player => {
-            movePlayer(player.id, player.positionX)
-        })
-    }, [players])
-
-    screenSocket?.on('message', (data: IGameState) => {
-        setPlayers(data.playersState)
         // count++
     })
+
+    players?.forEach(player => {
+        movePlayer(player.id, player.positionX)
+    })
+
+    console.log(players)
 
     return (
         <>
@@ -82,7 +85,6 @@ export interface IMovePlayer {
 
 function movePlayer(playerId: string, positionX: number) {
     const d = document.getElementById(playerId)
-    console.log('move player to pos ' + positionX)
 
     if (d) {
         d.style.left = positionX + 'px'
