@@ -37,9 +37,7 @@ const windowWidth = window.innerWidth - 100
 
 const Player: React.FunctionComponent = () => {
     const { screenSocket } = React.useContext(SocketContext)
-    const [players, setPlayers] = React.useState<undefined | IPlayerState[]>([
-        { atObstacle: false, finished: false, id: '1', name: 'Magda', obstacles: [], positionX: 0, rank: 0 },
-    ])
+    const [players, setPlayers] = React.useState<undefined | IPlayerState[]>()
     const [trackLength, setTrackLength] = React.useState<undefined | number>()
     const monsters = [oliver, monster, monster2, unicorn]
 
