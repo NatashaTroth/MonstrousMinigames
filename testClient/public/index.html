@@ -41,40 +41,10 @@
     function connect() {
       init(local);
     }
-
-    function init(local = true) {
-      let url = "";
-      let screenUrl = "";
-      if (local) {
-        url = "localhost:5000/controller?roomId=ABCDE&name=Robin&userId=";
-        screenUrl = "localhost:5000/screen?roomId=ABCDE&name=Robin&userId=";
-      } else {
-        url =
-          "monstrous-minigames.herokuapp.com/controller?roomId=ABCDE&name=Robin&userId=";
-
-        screenUrl =
-          "monstrous-minigames.herokuapp.com/screen?roomId=ABCDE&name=Robin&userId=";
-      }
-
       let userId = "";
-      const socket = io(url, {
-        secure: true,
-        reconnection: true,
-        rejectUnauthorized: false,
-        reconnectionDelayMax: 10000,
-      });
+    let socket;
 
-      const ssocket = io(screenUrl, {
-        secure: true,
-        reconnection: true,
-        rejectUnauthorized: false,
-        reconnectionDelayMax: 10000,
-      });
-
-      output = document.getElementById("output");
-      testSocket();
-
-      function input(type) {
+    function input(type) {
         if (type == "start")
           socket.emit("message", {
             type: "game1/start",
@@ -100,6 +70,39 @@
             userId: userId,
           });
       }
+
+
+    function init(local = true) {
+      let url = "";
+      let screenUrl = "";
+      if (local) {
+        url = "localhost:5000/controller?roomId=ABCDE&name=Robin&userId=";
+        screenUrl = "localhost:5000/screen?roomId=ABCDE&name=Robin&userId=";
+      } else {
+        url =
+          "monstrous-minigames.herokuapp.com/controller?roomId=ABCDE&name=Robin&userId=";
+
+        screenUrl =
+          "monstrous-minigames.herokuapp.com/screen?roomId=ABCDE&name=Robin&userId=";
+      }
+
+
+      socket = io(url, {
+        secure: true,
+        reconnection: true,
+        rejectUnauthorized: false,
+        reconnectionDelayMax: 10000,
+      });
+
+      const ssocket = io(screenUrl, {
+        secure: true,
+        reconnection: true,
+        rejectUnauthorized: false,
+        reconnectionDelayMax: 10000,
+      });
+
+      output = document.getElementById("output");
+      testSocket();
 
       function testSocket() {}
 

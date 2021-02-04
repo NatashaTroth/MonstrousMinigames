@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
-import User from "./classes/user";
-import connectionHandler from "./services/connectionHandler";
+import ConnectionHandler from "./services/connectionHandler";
 import RoomService from "./services/roomService";
 
 // load the environment variables from the .env file
@@ -37,4 +36,7 @@ const io = require("socket.io")(expresServer, {
   },
 });
 
-connectionHandler.handleConnection(io);
+const rs = new RoomService();
+
+const ch = new ConnectionHandler(io, rs);
+ch.handle();
