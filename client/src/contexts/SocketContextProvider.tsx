@@ -14,6 +14,8 @@ interface ISocketContext {
     controllerSocket: Socket | undefined
     isControllerConnected: boolean
     setControllerSocket: (val: Socket | undefined) => void
+    gameStarted: boolean
+    setGameStarted: (val: boolean) => void
 }
 
 export const SocketContext = React.createContext<ISocketContext>({
@@ -23,6 +25,10 @@ export const SocketContext = React.createContext<ISocketContext>({
         // do nothing
     },
     isControllerConnected: false,
+    gameStarted: false,
+    setGameStarted: () => {
+        // do nothing
+    },
 })
 
 interface IUserInitMessage {
@@ -42,6 +48,7 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenSocket, setScreenSocket] = React.useState<Socket | undefined>(undefined)
     const [controllerSocket, setControllerSocket] = React.useState<Socket | undefined>(undefined)
     const { setObstacle, setPlayerFinished, setPlayerRank, setIsPlayerAdmin } = React.useContext(PlayerContext)
+    const [gameStarted, setGameStarted] = React.useState<boolean>(false)
 
     React.useEffect(() => {
         if (!isMobile) {
@@ -83,6 +90,11 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
                 setPlayerFinished(true)
                 setPlayerRank(messageData.rank)
                 break
+            case 'game1/hasStarted':
+                // eslint-disable-next-line no-console
+                console.log('Game has started')
+                setGameStarted(true)
+                break
             default:
                 break
         }
@@ -93,6 +105,8 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
         controllerSocket,
         setControllerSocket,
         isControllerConnected: controllerSocket ? true : false,
+        gameStarted,
+        setGameStarted,
     }
     return <SocketContext.Provider value={content}>{children}</SocketContext.Provider>
 }
