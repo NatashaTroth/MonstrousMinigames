@@ -23,7 +23,7 @@ interface CatchFoodGameInterface extends GameInterface {
 
   getGameStateInfo(): GameStateInfo;
   getObstaclePositions(): HashTable<Array<Obstacle>>;
-  movePlayer(userId: string, speed: number): void;
+  runForward(userId: string, speed: number): void;
   playerHasCompletedObstacle(userId: string): void;
   resetGame(
     players: Array<User>,
@@ -73,10 +73,10 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
   private createObstacles(): Array<Obstacle> {
     const obstacles: Array<Obstacle> = [];
     const quadrantRange =
-      Math.floor(this.trackLength / (this.numberOfObstacles + 1)) - 10; //e.g. 500/4 = 125, +10 to avoid obstacle being at the very beginning, - 10 to stop 2 being right next to eachother
+      Math.floor(this.trackLength / (this.numberOfObstacles + 1)) - 30; //e.g. 500/4 = 125, +10 to avoid obstacle being at the very beginning, - 10 to stop 2 being right next to eachother
 
     for (let i = 0; i < this.numberOfObstacles; i++) {
-      let randomNr = 0 * quadrantRange;
+      let randomNr = Math.random() * quadrantRange;
 
       let position = randomNr + quadrantRange * (i + 1);
       position = Math.round(position / 10) * 10; //round to nearest 10 (to stop exactly at it)
@@ -138,7 +138,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     return obstaclePositions;
   }
 
-  movePlayer(userId: string, speed: number = 1) {
+  runForward(userId: string, speed: number = 1) {
     try {
       verifyUserId(this.playersState, userId);
       verifyGameState(this.gameState, GameState.Started);

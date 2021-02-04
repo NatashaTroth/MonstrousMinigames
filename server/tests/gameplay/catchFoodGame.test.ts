@@ -53,7 +53,7 @@ describe("Test catch food gameplay", () => {
     expect(catchFoodGame.playersState["1"].finished).toBeFalsy();
     expect(catchFoodGame.playersState["1"].obstacles.length).toBe(4);
 
-    const obstacleRange = 90;
+    const obstacleRange = 70;
 
     //check obstacles are in correct ranges
     for (const [key, value] of Object.entries(catchFoodGame.playersState)) {
@@ -161,13 +161,23 @@ describe("Test catch food gameplay", () => {
     // expect(gameStoppedEvent).toBeTruthy();
   });
 
+  it("should finish the game when players have reached the goal", async () => {
+    const catchFoodGame = new CatchFoodGame(users, 500, 4);
+    let gameStateInfo = catchFoodGame.getGameStateInfo();
+    //todo
+    // console.log(gameStateInfo.playersState[0].obstacles);
+    // console.log(gameStateInfo.playersState[1].obstacles);
+    // console.log(gameStateInfo.playersState[2].obstacles);
+    // console.log(gameStateInfo.playersState[3].obstacles);
+  });
+
   it("moves players and stops when they come to an obstacle", async () => {
     const catchFoodGame = new CatchFoodGame(users, 500, 4);
     catchFoodGame.startGame();
     expect(catchFoodGame.playersState["1"].positionX).toBe(0);
-    catchFoodGame.movePlayer("1", 10);
+    catchFoodGame.runForward("1", 10);
     expect(catchFoodGame.playersState["1"].positionX).toBe(10);
-    catchFoodGame.movePlayer("1", 5);
+    catchFoodGame.runForward("1", 5);
     expect(catchFoodGame.playersState["1"].positionX).toBe(15);
     let distanceToObstacle =
       catchFoodGame.playersState["1"].obstacles[0].positionX -
@@ -181,19 +191,19 @@ describe("Test catch food gameplay", () => {
         obstacleEventReceived = true;
       }
     );
-    catchFoodGame.movePlayer("1", distanceToObstacle);
+    catchFoodGame.runForward("1", distanceToObstacle);
     expect(obstacleEventReceived).toBeTruthy();
     expect(catchFoodGame.playersState["1"].atObstacle).toBeTruthy();
     expect(catchFoodGame.playersState["1"].obstacles.length).toBe(4);
     let tmpPlayerPositionX = catchFoodGame.playersState["1"].positionX;
     // Player shouldn't move because he's at an obstacle
-    catchFoodGame.movePlayer("1", 50);
+    catchFoodGame.runForward("1", 50);
     expect(catchFoodGame.playersState["1"].positionX).toBe(tmpPlayerPositionX);
     catchFoodGame.playerHasCompletedObstacle("1");
     expect(catchFoodGame.playersState["1"].atObstacle).toBeFalsy();
     expect(catchFoodGame.playersState["1"].obstacles.length).toBe(3);
     // obstacle completed, should be able to move again
-    catchFoodGame.movePlayer("1", 5);
+    catchFoodGame.runForward("1", 5);
     expect(catchFoodGame.playersState["1"].positionX).toBe(
       tmpPlayerPositionX + 5
     );
@@ -237,7 +247,7 @@ describe("Test catch food gameplay", () => {
     );
 
     expect(catchFoodGame.playersState["1"].obstacles.length).toBe(0);
-    catchFoodGame.movePlayer("1", 500);
+    catchFoodGame.runForward("1", 500);
     expect(catchFoodGame.playersState["1"].finished).toBeTruthy();
     expect(playerFinished).toBeTruthy();
     expect(catchFoodGame.playersState["1"].rank).toBe(1);
@@ -258,16 +268,21 @@ describe("Test catch food gameplay", () => {
       catchFoodGame.playerHasCompletedObstacle("3");
       catchFoodGame.playerHasCompletedObstacle("4");
     }
-    catchFoodGame.movePlayer("2", 500);
-    catchFoodGame.movePlayer("3", 500);
-    catchFoodGame.movePlayer("4", 500);
-
+    catchFoodGame.runForward("2", 500);
+    expect(catchFoodGame.gameState).toBe(GameState.Started);
     expect(catchFoodGame.playersState["2"].finished).toBeTruthy();
     expect(catchFoodGame.playersState["2"].rank).toBe(2);
+
+    catchFoodGame.runForward("3", 500);
     expect(catchFoodGame.playersState["3"].finished).toBeTruthy();
     expect(catchFoodGame.playersState["3"].rank).toBe(3);
+    expect(catchFoodGame.gameState).toBe(GameState.Started);
+    expect(catchFoodGame.gameState).not.toBe(GameState.Finished);
+
+    catchFoodGame.runForward("4", 500);
     expect(catchFoodGame.playersState["4"].finished).toBeTruthy();
     expect(catchFoodGame.playersState["4"].rank).toBe(4);
+    expect(catchFoodGame.gameState).not.toBe(GameState.Started);
     expect(catchFoodGame.gameState).toBe(GameState.Finished);
     expect(GameFinished).toBeTruthy();
   });
@@ -280,7 +295,7 @@ describe("Test catch food gameplay", () => {
       catchFoodGame.playerHasCompletedObstacle("1");
     }
     expect(catchFoodGame.playersState["1"].obstacles.length).toBe(0);
-    catchFoodGame.movePlayer("1", 500);
+    catchFoodGame.runForward("1", 500);
     expect(catchFoodGame.playersState["1"].finished).toBeTruthy();
     expect(catchFoodGame.playersState["1"].obstacles.length).toBe(0);
 
