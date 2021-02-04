@@ -5,13 +5,13 @@ import Screen from './components/Screen/Screen'
 import Controller from './components/Controller/Controller'
 import { AppContainer } from './App.sc'
 import { isMobileOnly } from 'react-device-detect'
-import ObstacleContextProvider from './contexts/ObstacleContextProvider'
+import PlayerContextProvider from './contexts/PlayerContextProvider'
 import Impressum from './components/common/Impressum'
 
 function App() {
     return (
         <AppContainer className="App">
-            <ObstacleContextProvider>
+            <PlayerContextProvider>
                 <SocketContextProvider>
                     <Router>
                         <Switch>
@@ -22,7 +22,7 @@ function App() {
                         </Switch>
                     </Router>
                 </SocketContextProvider>
-            </ObstacleContextProvider>
+            </PlayerContextProvider>
         </AppContainer>
     )
 }

@@ -1,10 +1,10 @@
+import { orange } from './../../utils/colors'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import camp from '../../images/camp.svg'
 
 const borderWidth = 5
 const boxShadowDepth = 8
-const inputColor = '#e98f23'
 const fontSize = 1
 const horizontalPadding = 16
 const verticalPadding = 8
@@ -56,7 +56,7 @@ export const StyledLabel = styled.label`
     font-size: calc(${fontSize} * 1rem);
     text-align: left;
     color: black;
-    border: calc(${borderWidth} * 1px) solid ${inputColor};
+    border: calc(${borderWidth} * 1px) solid ${orange};
     background: white;
     box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 #888;
     cursor: pointer;
@@ -69,11 +69,11 @@ export const StyledLabel = styled.label`
 
 export const ImpressumLink = styled(Link)`
     text-decoration: none;
-    border: 2px solid ${inputColor};
+    border: 2px solid ${orange};
     background: white;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
         'Helvetica Neue', sans-serif;
-    color: ${inputColor};
+    color: ${orange};
     font-weight: 700;
     font-size: 12px;
     flex-direction: column;

@@ -1,8 +1,8 @@
 import styled from 'styled-components'
+import { orange } from '../../utils/colors'
 
 const borderWidth = 5
 const boxShadowDepth = 8
-const buttonColor = '#e98f23'
 const fontSize = 1
 const horizontalPadding = 16
 const verticalPadding = 8
@@ -13,7 +13,7 @@ export const Container = styled.div``
 export const StyledButton = styled.button`
     color: black;
     font-size: 3;
-    border: calc(${borderWidth} * 1px) solid ${buttonColor};
+    border: calc(${borderWidth} * 1px) solid ${orange};
     background: white;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
         'Helvetica Neue', sans-serif;

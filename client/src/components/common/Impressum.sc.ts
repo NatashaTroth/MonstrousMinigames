@@ -1,10 +1,10 @@
+import { lightBlue } from './../../utils/colors'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-
-const orange = '#e98f23'
+import { orange } from '../../utils/colors'
 
 export const ImpressumContainer = styled.div`
-    background-color: #bfeff0;
+    background-color: ${lightBlue};
     width: 100%;
     height: 100%;
 `

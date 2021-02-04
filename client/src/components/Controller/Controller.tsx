@@ -8,14 +8,15 @@ import ConnectScreen from './ConnectScreen'
 import StartGameScreen from './StartGameScreen'
 
 import ClickObstacle from './ClickObstacle'
-import { ObstacleContext } from '../../contexts/ObstacleContextProvider'
+import { PlayerContext } from '../../contexts/PlayerContextProvider'
+import FinishedScreen from './FinishedScreen'
 
 const Controller: React.FunctionComponent = () => {
     const [permissionGranted, setPermissionGranted] = React.useState(false)
     const { isControllerConnected } = React.useContext(SocketContext)
 
     const { controllerSocket } = React.useContext(SocketContext)
-    const { obstacle, setObstacle } = React.useContext(ObstacleContext)
+    const { obstacle, setObstacle, playerFinished } = React.useContext(PlayerContext)
 
     if (permissionGranted) {
         window.addEventListener(
@@ -23,7 +24,11 @@ const Controller: React.FunctionComponent = () => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (event: any) => {
                 event.preventDefault()
-                if (event?.acceleration?.x && (event.acceleration.x < -2 || event.acceleration.x > 2)) {
+                if (
+                    event?.acceleration?.x &&
+                    (event.acceleration.x < -2 || event.acceleration.x > 2) &&
+                    !playerFinished
+                ) {
                     sendMessage(controllerSocket)
                     // console.log('RUN - DeviceMotion: ' + event.acceleration.x + ' m/s2')
                 } else {
@@ -35,12 +40,18 @@ const Controller: React.FunctionComponent = () => {
 
     return (
         <ControllerContainer>
-            {!isControllerConnected && <ConnectScreen />}
-            {!permissionGranted && isControllerConnected && (
-                <StartGameScreen setPermissionGranted={setPermissionGranted} />
+            {playerFinished ? (
+                <FinishedScreen />
+            ) : (
+                <>
+                    {!isControllerConnected && <ConnectScreen />}
+                    {!permissionGranted && isControllerConnected && (
+                        <StartGameScreen setPermissionGranted={setPermissionGranted} />
+                    )}
+                    {permissionGranted && !obstacle && <ShakeInstruction />}
+                    {obstacle && <ClickObstacle setObstacle={setObstacle} />}
+                </>
             )}
-            {permissionGranted && <ShakeInstruction />}
-            {obstacle && <ClickObstacle setObstacle={setObstacle} />}
         </ControllerContainer>
     )
 }
