@@ -39,7 +39,7 @@ class ConnectionHandler {
       let roomId = socket.handshake.query.roomId;
       let room = rs.getRoomById(roomId);
       let name = socket.handshake.query.name;
-      let user;
+      let user: User;
 
       let userId = socket.handshake.query.userId;
       if (userId) {
@@ -63,14 +63,13 @@ class ConnectionHandler {
       }
       console.log(roomId + " | Controller connected: " + userId);
 
-
       // send user data
       socket.emit("message", {
         type: MessageTypes.USER_INIT,
         userId: userId,
         roomId: roomId,
         name: name,
-        isAdmin: room.isAdmin(user)
+        isAdmin: room.isAdmin(user),
       });
       socket.join(roomId);
 
@@ -86,7 +85,7 @@ class ConnectionHandler {
             if (room.isOpen()) {
               rs.startGame(room);
               console.log(roomId + " | Start game");
-              io.of(Namespaces.SCREEN).to(roomId).emit("message", {
+              io.in(roomId).to(roomId).emit("message", {
                 type: CatchFoodMsgType.HAS_STARTED,
               });
               io.of(Namespaces.SCREEN).to(roomId).emit("message", {
@@ -94,9 +93,9 @@ class ConnectionHandler {
                 data: room.game?.getGameStateInfo(),
               });
               // TODO gamestate interval?
-             let gameStateInterval = setInterval(() => { 
-                if(!room.isPlaying){
-                  clearInterval(gameStateInterval)
+              let gameStateInterval = setInterval(() => {
+                if (!room.isPlaying) {
+                  clearInterval(gameStateInterval);
                 }
                 io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
                   type: CatchFoodMsgType.GAME_STATE,
@@ -128,8 +127,17 @@ class ConnectionHandler {
           case MessageTypes.RESET_GAME:
             {
               console.log(roomId + " | Reset Game");
-              room.users = [new User(room.id, socket.id, name, userId)];
+              room.users = [];
+              room.addUser(user);
               room.resetGame();
+              // send user data
+              socket.emit("message", {
+                type: MessageTypes.USER_INIT,
+                userId: userId,
+                roomId: roomId,
+                name: name,
+                isAdmin: room.isAdmin(user),
+              });
             }
             break;
           default: {
@@ -200,18 +208,15 @@ class ConnectionHandler {
         }
       }
     );
-    this.gameEventEmitter.on(
-      GameEventTypes.GameHasFinished,
-      (data: any) => {
-        console.log(data.roomId + " | Game has finished");
-        let room = rs.getRoomById(data.roomId);
-        room.setClosed();
-        io.in(data.roomId).emit("message", {
-          type: MessageTypes.GAME_HAS_FINISHED,
-          data: data,
-        });
-      }
-    );
+    this.gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: any) => {
+      console.log(data.roomId + " | Game has finished");
+      let room = rs.getRoomById(data.roomId);
+      room.setClosed();
+      io.in(data.roomId).emit("message", {
+        type: MessageTypes.GAME_HAS_FINISHED,
+        data: data,
+      });
+    });
   }
 }
 export default ConnectionHandler;
