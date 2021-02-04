@@ -1,6 +1,7 @@
 import User from "../classes/user";
 import RoomService from "./roomService";
 import {
+  GameStateInfo,
   ObstacleReachedInfo,
   PlayerFinishedInfo,
 } from "../gameplay/catchFood/interfaces";
@@ -102,7 +103,7 @@ class ConnectionHandler {
             break;
           }
           case CatchFoodMsgType.MOVE: {
-            room.game?.movePlayer(userId, 200);
+            room.game?.movePlayer(userId);
             io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
               type: CatchFoodMsgType.GAME_STATE,
               data: room.game?.getGameStateInfo(),
@@ -155,6 +156,7 @@ class ConnectionHandler {
   }
   private handleGameEvents() {
     let rs = this.rs;
+    let io = this.io;
     this.gameEventEmitter.on(
       GameEventTypes.ObstacleReached,
       (data: ObstacleReachedInfo) => {
@@ -181,14 +183,26 @@ class ConnectionHandler {
         console.log(
           data.roomId + " | userId: " + data.userId + " | Rank: " + data.rank
         );
-        let r = rs.getRoomById(data.roomId);
-        let u = r.getUserById(data.userId);
-        if (u) {
-          this.controllerNamespace.to(u.socketId).emit("message", {
+        let room = rs.getRoomById(data.roomId);
+        let user = room.getUserById(data.userId);
+        if (user) {
+          this.controllerNamespace.to(user.socketId).emit("message", {
             type: CatchFoodMsgType.PLAYER_FINISHED,
             rank: data.rank,
           });
         }
+      }
+    );
+    this.gameEventEmitter.on(
+      GameEventTypes.GameHasFinished,
+      (data: GameStateInfo) => {
+        console.log(data.roomId + " | Game has finished");
+        let room = rs.getRoomById(data.roomId);
+        room.setClosed();
+        io.in(data.roomId).emit("message", {
+          type: MessageTypes.GAME_HAS_FINISHED,
+          data: data,
+        });
       }
     );
   }

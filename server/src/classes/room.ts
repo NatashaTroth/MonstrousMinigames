@@ -34,7 +34,7 @@ class Room {
 
   public createGame() {
     this.setState(RoomStates.PLAYING);
-    this.game = new CatchFoodGame(this.users,5000);
+    this.game = new CatchFoodGame(this.users);
     this.startGame();
   }
 
@@ -61,16 +61,17 @@ class Room {
   }
 
   public isOpen() {
-    return this.state === RoomStates.OPEN
+    return this.state === RoomStates.OPEN;
   }
   public isPlaying() {
-    return this.state === RoomStates.PLAYING
+    return this.state === RoomStates.PLAYING;
   }
   public isClosed() {
-    return this.state === RoomStates.CLOSED
+    return this.state === RoomStates.CLOSED;
   }
-
-
+  public setClosed() {
+    this.setState(RoomStates.CLOSED);
+  }
 }
 
 export default Room;
