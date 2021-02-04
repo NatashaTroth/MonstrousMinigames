@@ -213,8 +213,13 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
   private handleGameFinished() {
     this.gameState = GameState.Finished;
+    const currentGameStateInfo = this.getGameStateInfo();
     this.gameEventEmitter.emit(GameEventTypes.GameHasFinished, {
-      gameStateInfo: this.getGameStateInfo(),
+      roomId: currentGameStateInfo.roomId,
+      playersState: currentGameStateInfo.playersState,
+      gameState: currentGameStateInfo.gameState,
+      trackLength: currentGameStateInfo.trackLength,
+      numberOfObstacles: currentGameStateInfo.numberOfObstacles,
     });
     //Broadcast, stop game, return ranks
   }
