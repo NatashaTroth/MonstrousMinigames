@@ -127,9 +127,10 @@ class ConnectionHandler {
           case MessageTypes.RESET_GAME:
             {
               console.log(roomId + " | Reset Game");
+              room.resetGame();
               room.users = [];
               room.addUser(user);
-              room.resetGame();
+
               // send user data
               socket.emit("message", {
                 type: MessageTypes.USER_INIT,
