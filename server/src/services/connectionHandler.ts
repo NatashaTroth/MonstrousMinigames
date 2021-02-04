@@ -63,14 +63,13 @@ class ConnectionHandler {
       }
       console.log(roomId + " | Controller connected: " + userId);
 
-
       // send user data
       socket.emit("message", {
         type: MessageTypes.USER_INIT,
         userId: userId,
         roomId: roomId,
         name: name,
-        isAdmin: room.isAdmin(user)
+        isAdmin: room.isAdmin(user),
       });
       socket.join(roomId);
 
@@ -89,14 +88,17 @@ class ConnectionHandler {
               io.of(Namespaces.SCREEN).to(roomId).emit("message", {
                 type: CatchFoodMsgType.HAS_STARTED,
               });
+              io.of(Namespaces.CONTROLLER).to(roomId).emit("message", {
+                type: CatchFoodMsgType.HAS_STARTED,
+              });
               io.of(Namespaces.SCREEN).to(roomId).emit("message", {
                 type: CatchFoodMsgType.GAME_STATE,
                 data: room.game?.getGameStateInfo(),
               });
               // TODO gamestate interval?
-             let gameStateInterval = setInterval(() => { 
-                if(!room.isPlaying){
-                  clearInterval(gameStateInterval)
+              let gameStateInterval = setInterval(() => {
+                if (!room.isPlaying) {
+                  clearInterval(gameStateInterval);
                 }
                 io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
                   type: CatchFoodMsgType.GAME_STATE,
