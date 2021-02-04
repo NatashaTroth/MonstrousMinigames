@@ -94,7 +94,7 @@ class ConnectionHandler {
                 data: room.game?.getGameStateInfo(),
               });
               // TODO gamestate interval?
-              let gameStateInterval = setInterval(() => { 
+             let gameStateInterval = setInterval(() => { 
                 if(!room.isPlaying){
                   clearInterval(gameStateInterval)
                 }
@@ -102,7 +102,7 @@ class ConnectionHandler {
                   type: CatchFoodMsgType.GAME_STATE,
                   data: room.game?.getGameStateInfo(),
                 });
-              }, 16);
+              }, 100);
             }
 
             break;
