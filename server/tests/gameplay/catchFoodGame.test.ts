@@ -259,16 +259,22 @@ describe("Test catch food gameplay", () => {
       catchFoodGame.playerHasCompletedObstacle("4");
     }
     catchFoodGame.movePlayer("2", 500);
-    catchFoodGame.movePlayer("3", 500);
-    catchFoodGame.movePlayer("4", 500);
-
+    expect(catchFoodGame.gameState).toBe(GameState.Started);
     expect(catchFoodGame.playersState["2"].finished).toBeTruthy();
     expect(catchFoodGame.playersState["2"].rank).toBe(2);
+
+    catchFoodGame.movePlayer("3", 500);
     expect(catchFoodGame.playersState["3"].finished).toBeTruthy();
     expect(catchFoodGame.playersState["3"].rank).toBe(3);
+    expect(catchFoodGame.gameState).toBe(GameState.Started);
+    expect(catchFoodGame.gameState).not.toBe(GameState.Finished);
+
+    catchFoodGame.movePlayer("4", 500);
     expect(catchFoodGame.playersState["4"].finished).toBeTruthy();
     expect(catchFoodGame.playersState["4"].rank).toBe(4);
+    expect(catchFoodGame.gameState).not.toBe(GameState.Started);
     expect(catchFoodGame.gameState).toBe(GameState.Finished);
+
     expect(GameFinished).toBeTruthy();
   });
 
