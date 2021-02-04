@@ -11,6 +11,7 @@ import { GameEventTypes } from "../gameplay/interfaces/GameEventTypes";
 import { Namespaces } from "../enums/nameSpaces";
 import { MessageTypes } from "../enums/messageTypes";
 import { Server, Namespace } from "socket.io";
+import { GameStartInfo } from "../gameplay/catchFood/interfaces/GameStartInfo";
 
 class ConnectionHandler {
   private io: Server;
@@ -109,7 +110,7 @@ class ConnectionHandler {
           }
           case CatchFoodMsgType.MOVE: {
             if (room.isPlaying()) {
-              room.game?.movePlayer(userId);
+              room.game?.runForward(userId, 200);
               io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
                 type: CatchFoodMsgType.GAME_STATE,
                 data: room.game?.getGameStateInfo(),
@@ -202,7 +203,8 @@ class ConnectionHandler {
     );
     this.gameEventEmitter.on(
       GameEventTypes.GameHasFinished,
-      (data: GameStateInfo) => {
+      (data: any) => {
+        console.log(data);
         console.log(data.roomId + " | Game has finished");
         let room = rs.getRoomById(data.roomId);
         room.setClosed();
