@@ -2,7 +2,8 @@ import * as React from 'react'
 import { ClickRequestDeviceMotion } from '../../utils/permissions'
 import Button from '../common/Button'
 import { SocketContext } from '../../contexts/SocketContextProvider'
-import { StartGameScreenContainer } from './StartGameScreen.sc'
+import { Instruction, StartGameScreenContainer } from './StartGameScreen.sc'
+import { PlayerContext } from '../../contexts/PlayerContextProvider'
 
 interface IStartGameScreen {
     setPermissionGranted: (val: boolean) => void
@@ -10,6 +11,7 @@ interface IStartGameScreen {
 
 const StartGameScreen: React.FunctionComponent<IStartGameScreen> = ({ setPermissionGranted }) => {
     const { controllerSocket } = React.useContext(SocketContext)
+    const { isPlayerAdmin } = React.useContext(PlayerContext)
 
     function startGame() {
         controllerSocket?.emit('message', {
@@ -21,17 +23,26 @@ const StartGameScreen: React.FunctionComponent<IStartGameScreen> = ({ setPermiss
 
     return (
         <StartGameScreenContainer>
-            <Button
-                onClick={async () => {
-                    const permission = await ClickRequestDeviceMotion()
-                    if (permission) {
-                        setPermissionGranted(permission)
-                        startGame()
-                    }
-                }}
-                text="Start Game"
-            />
-            <Button onClick={() => controllerSocket?.emit('message', { type: 'resetGame' })} text="Reset Game" />
+            {isPlayerAdmin ? (
+                <>
+                    <Button
+                        onClick={async () => {
+                            const permission = await ClickRequestDeviceMotion()
+                            if (permission) {
+                                setPermissionGranted(permission)
+                                startGame()
+                            }
+                        }}
+                        text="Start Game"
+                    />
+                    <Button
+                        onClick={() => controllerSocket?.emit('message', { type: 'resetGame' })}
+                        text="Reset Game"
+                    />
+                </>
+            ) : (
+                <Instruction>Wait until the Admin starts the Game</Instruction>
+            )}
         </StartGameScreenContainer>
     )
 }
