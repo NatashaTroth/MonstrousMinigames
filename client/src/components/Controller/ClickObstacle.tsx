@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { ObstacleButton } from './ClickObstacle.sc'
+import { ObstacleItem, ObstacleContainer, StyledObstacleImage, ObstacleInstructions } from './ClickObstacle.sc'
 import { OBSTACLES } from '../../utils/constants'
 import { SocketContext } from '../../contexts/SocketContextProvider'
+import wood from '../../images/wood.png'
 
 interface IClickObstacle {
     setObstacle: (value: undefined | OBSTACLES) => void
@@ -16,7 +17,17 @@ const ClickObstacle: React.FunctionComponent<IClickObstacle> = ({ setObstacle })
         // eslint-disable-next-line no-console
         console.log('OBSTACLE REMOVED')
     }
-    return <ObstacleButton onClick={solveObstacle}>Click me!!!!</ObstacleButton>
+    return (
+        <ObstacleContainer>
+            <ObstacleInstructions>
+                Oh no! A tree trunk is blocking your way. Click on it to remove it!
+            </ObstacleInstructions>
+
+            <ObstacleItem onClick={solveObstacle}>
+                <StyledObstacleImage src={wood} />
+            </ObstacleItem>
+        </ObstacleContainer>
+    )
 }
 
 export default ClickObstacle
