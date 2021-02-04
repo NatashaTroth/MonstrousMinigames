@@ -19,16 +19,19 @@ const StartGameScreen: React.FunctionComponent<IStartGameScreen> = ({ setPermiss
     }
 
     return (
-        <Button
-            onClick={async () => {
-                const permission = await ClickRequestDeviceMotion()
-                if (permission) {
-                    setPermissionGranted(permission)
-                    startGame()
-                }
-            }}
-            text="Start Game"
-        />
+        <>
+            <Button
+                onClick={async () => {
+                    const permission = await ClickRequestDeviceMotion()
+                    if (permission) {
+                        setPermissionGranted(permission)
+                        startGame()
+                    }
+                }}
+                text="Start Game"
+            />
+            <Button onClick={() => controllerSocket?.emit('message', { type: 'resetGame' })} text="Reset Game" />
+        </>
     )
 }
 

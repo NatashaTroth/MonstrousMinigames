@@ -1,7 +1,11 @@
 import styled from 'styled-components'
 
-export const Container = styled.div`
-    top: 380px;
+interface IContainerProps {
+    top: number
+}
+
+export const Container = styled.div<IContainerProps>`
+    top: ${({ top }) => 380 + top * 200}px;
     left: 20px;
     position: absolute;
 `
