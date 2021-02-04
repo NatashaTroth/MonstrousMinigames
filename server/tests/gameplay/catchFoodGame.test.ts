@@ -161,7 +161,15 @@ describe("Test catch food gameplay", () => {
     // expect(gameStoppedEvent).toBeTruthy();
   });
 
-  it("should finish the game when players have reached the goal", async () => {});
+  it("should finish the game when players have reached the goal", async () => {
+    const catchFoodGame = new CatchFoodGame(users, 500, 4);
+    let gameStateInfo = catchFoodGame.getGameStateInfo();
+    //todo
+    // console.log(gameStateInfo.playersState[0].obstacles);
+    // console.log(gameStateInfo.playersState[1].obstacles);
+    // console.log(gameStateInfo.playersState[2].obstacles);
+    // console.log(gameStateInfo.playersState[3].obstacles);
+  });
 
   it("moves players and stops when they come to an obstacle", async () => {
     const catchFoodGame = new CatchFoodGame(users, 500, 4);
