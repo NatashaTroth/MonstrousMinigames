@@ -108,6 +108,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
       this.gameState = GameState.Stopped;
     } catch (e) {
       // throw e.Message;
+      console.error(e.message);
     }
   }
 
@@ -150,6 +151,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
       if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId);
     } catch (e) {
       // throw e.Message;
+      console.error(e.message);
     }
   }
 
@@ -185,6 +187,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
       this.playersState[userId].obstacles.shift();
     } catch (e) {
       // throw e.Message;
+      console.error(e.message);
     }
   }
 
