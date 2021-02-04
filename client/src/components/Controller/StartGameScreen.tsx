@@ -2,6 +2,7 @@ import * as React from 'react'
 import { ClickRequestDeviceMotion } from '../../utils/permissions'
 import Button from '../common/Button'
 import { SocketContext } from '../../contexts/SocketContextProvider'
+import { StartGameScreenContainer } from './StartGameScreen.sc'
 
 interface IStartGameScreen {
     setPermissionGranted: (val: boolean) => void
@@ -19,7 +20,7 @@ const StartGameScreen: React.FunctionComponent<IStartGameScreen> = ({ setPermiss
     }
 
     return (
-        <>
+        <StartGameScreenContainer>
             <Button
                 onClick={async () => {
                     const permission = await ClickRequestDeviceMotion()
@@ -31,7 +32,7 @@ const StartGameScreen: React.FunctionComponent<IStartGameScreen> = ({ setPermiss
                 text="Start Game"
             />
             <Button onClick={() => controllerSocket?.emit('message', { type: 'resetGame' })} text="Reset Game" />
-        </>
+        </StartGameScreenContainer>
     )
 }
 
