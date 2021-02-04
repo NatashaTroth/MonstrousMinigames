@@ -95,6 +95,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
       verifyGameState(this.gameState, GameState.Created);
       this.gameState = GameState.Started;
       this.gameEventEmitter.emit(GameEventTypes.GameHasStarted, {
+        roomId: this.roomId,
         countdownTime: 3000,
       });
     } catch (e) {
@@ -197,20 +198,24 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
     this.gameEventEmitter.emit(GameEventTypes.PlayerHasFinished, {
       userId,
+      roomId: this.roomId,
       rank: this.playersState[userId].rank,
     });
 
-    if (this.gameIsOver()) {
+    if (this.gameHasFinished()) {
       this.handleGameFinished();
     }
   }
 
-  private gameIsOver(): boolean {
+  private gameHasFinished(): boolean {
     return this.currentRank > Object.keys(this.playersState).length;
   }
 
   private handleGameFinished() {
     this.gameState = GameState.Finished;
+    this.gameEventEmitter.emit(GameEventTypes.GameHasFinished, {
+      gameStateInfo: this.getGameStateInfo(),
+    });
     //Broadcast, stop game, return ranks
   }
 

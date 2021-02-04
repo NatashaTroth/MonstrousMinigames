@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import camp from '../../images/camp.svg'
 
@@ -17,7 +18,8 @@ export const ConnectScreenContainer = styled.div`
     background-image: url(${camp});
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
 `
 export const StyledInput = styled.input`
     color: black;
@@ -42,7 +44,7 @@ export const FormContainer = styled.form`
     width: 100%;
     display: flex;
     flex-direction: column;
-    margin-top: -50px;
+    margin-top: 100px;
 `
 
 export const StyledLabel = styled.label`
@@ -63,4 +65,21 @@ export const StyledLabel = styled.label`
     padding: calc(${verticalPadding} * 1px) calc(${horizontalPadding} * 1px);
     position: relative;
     border-radius: 4px;
+`
+
+export const ImpressumLink = styled(Link)`
+    text-decoration: none;
+    border: 2px solid ${inputColor};
+    background: white;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+        'Helvetica Neue', sans-serif;
+    color: ${inputColor};
+    font-weight: 700;
+    font-size: 12px;
+    flex-direction: column;
+    text-align: center;
+    box-shadow: 4px 4px 0 #888;
+    border-radius: 4px;
+    width: 30%;
+    margin-bottom: 20px;
 `

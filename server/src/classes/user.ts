@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
+import shortid from "shortid";
 
 class User {
   public id: string;
@@ -7,7 +7,7 @@ class User {
   public name: string;
   public timestamp: number;
 
-  constructor(roomId: string, socketId: string, name: string, id: string = uuidv4()) {
+  constructor(roomId: string, socketId: string, name: string, id: string = shortid.generate()) {
     this.id = id;
     this.roomId = roomId;
     this.socketId = socketId;
