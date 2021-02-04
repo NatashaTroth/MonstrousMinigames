@@ -1,6 +1,6 @@
 import User from "../classes/user";
 import RoomService from "./roomService";
-import { ObstacleReachedInfo } from "../gameplay/catchFood/interfaces";
+import { ObstacleReachedInfo, PlayerFinishedInfo } from "../gameplay/catchFood/interfaces";
 import GameEventEmitter from "../classes/GameEventEmitter";
 import { CatchFoodMsgType } from "../gameplay/catchFood/interfaces/CatchFoodMsgType";
 import { GameEventTypes } from "../gameplay/interfaces/GameEventTypes";
@@ -17,21 +17,7 @@ function handleConnection(io: any) {
   handleControllers(io, controllerNamespace);
   handleScreens(io, screenNameSpace);
 
-
-  gameEventEmitter.on(
-    GameEventTypes.ObstacleReached,
-    (data: ObstacleReachedInfo) => {
-      console.log(data.roomId + " | userId: " + data.userId + " | Obstacle: " + data.obstacleType);
-      let r = rs.getRoomById(data.roomId);
-      let u = r.getUserById(data.userId);
-      if (u) {
-        controllerNamespace.to(u.socketId).emit("message", {
-          type: CatchFoodMsgType.OBSTACLE,
-          obstacleType: data.obstacleType,
-        });
-      }
-    }
-  );
+  handleGameEvents(io, controllerNamespace, screenNameSpace);
 }
 
 function handleControllers(io: any, controllerNamespace: any) {
@@ -120,13 +106,13 @@ function handleControllers(io: any, controllerNamespace: any) {
           });
           break;
         }
-        case MessageTypes.RESET_GAME: {
-          console.log(roomId + " | Reset Game");
-          room.users = [new User(room.id, socket.id, name, userId)]
-          room.resetGame();
-          
-        }
-        break;
+        case MessageTypes.RESET_GAME:
+          {
+            console.log(roomId + " | Reset Game");
+            room.users = [new User(room.id, socket.id, name, userId)];
+            room.resetGame();
+          }
+          break;
         default: {
           console.log(message);
         }
@@ -157,6 +143,52 @@ function handleScreens(io: any, screenNameSpace: any) {
       socket.broadcast.emit("message", message);
     });
   });
+}
+function handleGameEvents(
+  io: any,
+  controllerNamespace: any,
+  screenNameSpace: any
+) {
+  gameEventEmitter.on(
+    GameEventTypes.ObstacleReached,
+    (data: ObstacleReachedInfo) => {
+      console.log(
+        data.roomId +
+          " | userId: " +
+          data.userId +
+          " | Obstacle: " +
+          data.obstacleType
+      );
+      let r = rs.getRoomById(data.roomId);
+      let u = r.getUserById(data.userId);
+      if (u) {
+        controllerNamespace.to(u.socketId).emit("message", {
+          type: CatchFoodMsgType.OBSTACLE,
+          obstacleType: data.obstacleType,
+        });
+      }
+    }
+  );
+  gameEventEmitter.on(
+    GameEventTypes.PlayerHasFinished,
+    (data: PlayerFinishedInfo) => {
+      console.log(
+        data.roomId +
+          " | userId: " +
+          data.userId +
+          " | Rank: " +
+          data.rank
+      );
+      let r = rs.getRoomById(data.roomId);
+      let u = r.getUserById(data.userId);
+      if (u) {
+        controllerNamespace.to(u.socketId).emit("message", {
+          type: CatchFoodMsgType.PLAYER_FINISHED,
+          rank: data.rank
+        });
+      }
+    }
+  );
 }
 
 export = {
