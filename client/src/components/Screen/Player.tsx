@@ -7,6 +7,7 @@ import monster from '../../images/monster.png'
 import monster2 from '../../images/monster2.png'
 import unicorn from '../../images/unicorn.png'
 import { GAMESTATE, OBSTACLES } from '../../utils/constants'
+import Obstacle from './Obstacle'
 
 // let speed = 1
 // let count = 0
@@ -21,7 +22,7 @@ interface IPlayerState {
     finished: boolean
     id: string
     name: string
-    obstacles: IObstacle
+    obstacles: IObstacle[]
     positionX: number
     rank: number
 }
@@ -70,10 +71,19 @@ const Player: React.FunctionComponent = () => {
 
     return (
         <>
-            {players?.map((player, index) => (
-                <Container id={player.id} key={player.id} top={index}>
-                    <PlayerCharacter src={monsters[index]} />
-                </Container>
+            {players?.map((player, playerIndex) => (
+                <div key={'container' + player.id}>
+                    <Container id={player.id} key={player.id} top={playerIndex}>
+                        <PlayerCharacter src={monsters[playerIndex]} />
+                    </Container>
+                    {player.obstacles.map((obstacle, index) => (
+                        <Obstacle
+                            key={'obstacle' + index + 'player' + player.id}
+                            player={playerIndex}
+                            posX={obstacle.positionX}
+                        />
+                    ))}
+                </div>
             ))}
         </>
     )
@@ -91,7 +101,7 @@ function movePlayer(playerId: string, positionX: number) {
     const d = document.getElementById(playerId)
 
     if (d) {
-        d.style.left = positionX + 'px'
+        d.style.left = positionX / 2 + 'px'
         // if (d.offsetLeft >= windowWidth - d.offsetWidth) {
         //     d.style.left = Number(windowWidth - d.offsetWidth) + 'px'
         //     const newPos = d.offsetTop + step * speed
