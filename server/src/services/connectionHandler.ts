@@ -94,12 +94,15 @@ class ConnectionHandler {
                 data: room.game?.getGameStateInfo(),
               });
               // TODO gamestate interval?
-              /*setInterval(() => {
+              let gameStateInterval = setInterval(() => { 
+                if(!room.isPlaying){
+                  clearInterval(gameStateInterval)
+                }
                 io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
                   type: CatchFoodMsgType.GAME_STATE,
                   data: room.game?.getGameStateInfo(),
                 });
-              }, 16);*/
+              }, 16);
             }
 
             break;
