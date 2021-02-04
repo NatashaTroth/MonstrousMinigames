@@ -34,7 +34,7 @@ class Room {
 
   public createGame() {
     this.setState(RoomStates.PLAYING);
-    this.game = new CatchFoodGame(this.users);
+    this.game = new CatchFoodGame(this.users,5000);
     this.startGame();
   }
 
