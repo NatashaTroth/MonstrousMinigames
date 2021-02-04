@@ -3,7 +3,7 @@ import { isMobile } from 'react-device-detect'
 import { io, Socket } from 'socket.io-client'
 import { ENDPOINT } from '../utils/config'
 import { OBSTACLES } from '../utils/constants'
-import { ObstacleContext } from './ObstacleContextProvider'
+import { PlayerContext } from './PlayerContextProvider'
 
 export interface IObstacleMessage {
     type: 'game1/obstacle'
@@ -35,7 +35,7 @@ interface IUserInitMessage {
 const SocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenSocket, setScreenSocket] = React.useState<Socket | undefined>(undefined)
     const [controllerSocket, setControllerSocket] = React.useState<Socket | undefined>(undefined)
-    const { setObstacle } = React.useContext(ObstacleContext)
+    const { setObstacle, setPlayerFinished } = React.useContext(PlayerContext)
 
     React.useEffect(() => {
         if (!isMobile) {
@@ -58,8 +58,6 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
     }, [])
 
     controllerSocket?.on('message', (data: IUserInitMessage | IObstacleMessage) => {
-        // eslint-disable-next-line no-console
-        console.log(data)
         let obstacleData
         switch (data.type) {
             case 'userInit':
@@ -73,6 +71,11 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
                 // eslint-disable-next-line no-console
                 console.log('obstacle')
                 setObstacle(obstacleData?.obstacleType)
+                break
+            case 'game1/playerFinished':
+                // eslint-disable-next-line no-console
+                console.log('Player Finished')
+                setPlayerFinished(true)
                 break
             default:
                 break
