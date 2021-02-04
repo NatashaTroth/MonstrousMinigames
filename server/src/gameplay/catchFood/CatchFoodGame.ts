@@ -44,7 +44,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
   constructor(
     players: Array<User>,
     trackLength: number = 2000,
-    numberOfObstacles: number = 4
+    numberOfObstacles: number = 2
   ) {
     this.gameEventEmitter = GameEventEmitter.getInstance();
     this.roomId = players[0].roomId;
@@ -176,6 +176,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
   }
 
   playerHasCompletedObstacle(userId: string) {
+    //TODO CHange to stop cheating
     try {
       verifyUserId(this.playersState, userId);
       verifyGameState(this.gameState, GameState.Started);
