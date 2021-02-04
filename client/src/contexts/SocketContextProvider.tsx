@@ -58,6 +58,8 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
     }, [])
 
     controllerSocket?.on('message', (data: IUserInitMessage | IObstacleMessage) => {
+        // eslint-disable-next-line no-console
+        console.log(data)
         let obstacleData
         switch (data.type) {
             case 'userInit':
