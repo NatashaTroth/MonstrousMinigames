@@ -26,14 +26,14 @@ interface IPlayerState {
     rank: number
 }
 interface IGameState {
-    data: {
+    data?: {
         gameState: GAMESTATE
         numberOfObstacles: number
         roomId: string
         trackLength: number
         playersState: IPlayerState[]
     }
-    type: 'game1/gameState'
+    type: 'game1/gameState' | 'game1/hasStarted'
 }
 
 // const windowWidth = window.innerWidth
@@ -57,8 +57,7 @@ const Player: React.FunctionComponent = () => {
     }, [])
 
     screenSocket?.on('message', (message: IGameState) => {
-        console.log(message)
-        if (message.data) {
+        if (message && message.data) {
             setPlayers(message.data.playersState)
         }
 
