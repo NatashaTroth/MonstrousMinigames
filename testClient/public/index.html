@@ -5,13 +5,20 @@
     <h2>Socket.io Test</h2>
 
     <div id="output"></div>
+    <select onchange="changeMode()" name="mode" id="mode">
+      <option selected value="local">local</option>
+      <option value="live">live</option>
+    </select>
+    <button onclick="connect()">CONNECT</button>
+    <br />
+    <br />
 
     <button onclick="input('start')">START</button>
+    <button onclick="input('reset')">RESET</button>
+
     <br />
     <button onclick="input('move')">MOVE</button>
-    <br />
-    <button onclick="input('reset')">RESET</button>
-    <br />
+
     <button onclick="input('obstacleSolved')">SOLVE OBSTACLE</button>
   </body>
 
@@ -22,61 +29,80 @@
     crossorigin="anonymous"
   ></script>
   <script>
-    //let url = "monstrous-minigames.herokuapp.com/controller?roomId=ABCDE&name=Robin&userId="
-    let url = "localhost:5000/controller?roomId=ABCDE&name=Robin&userId=";
+    let local = true;
+    function changeMode() {
+      var e = document.getElementById("mode");
+      if (e.value === "local") {
+        local = true;
+      } else {
+        local = false;
+      }
+    }
+    function connect() {
+      init(local);
+    }
 
-    //let screenUrl = 'monstrous-minigames.herokuapp.com/screen?roomId=ABCDE&name=Robin&userId='
-    let screenUrl = "localhost:5000/screen?roomId=ABCDE&name=Robin&userId=";
+    function init(local = true) {
+      let url = "";
+      let screenUrl = "";
+      if (local) {
+        url = "localhost:5000/controller?roomId=ABCDE&name=Robin&userId=";
+        screenUrl = "localhost:5000/screen?roomId=ABCDE&name=Robin&userId=";
+      } else {
+        url =
+          "monstrous-minigames.herokuapp.com/controller?roomId=ABCDE&name=Robin&userId=";
 
-    let userId = "";
-    const socket = io(url, {
-      secure: true,
-      reconnection: true,
-      rejectUnauthorized: false,
-      reconnectionDelayMax: 10000,
-    });
+        screenUrl =
+          "monstrous-minigames.herokuapp.com/screen?roomId=ABCDE&name=Robin&userId=";
+      }
 
-    const ssocket = io(screenUrl, {
-      secure: true,
-      reconnection: true,
-      rejectUnauthorized: false,
-      reconnectionDelayMax: 10000,
-    });
+      let userId = "";
+      const socket = io(url, {
+        secure: true,
+        reconnection: true,
+        rejectUnauthorized: false,
+        reconnectionDelayMax: 10000,
+      });
 
-    testSocket();
+      const ssocket = io(screenUrl, {
+        secure: true,
+        reconnection: true,
+        rejectUnauthorized: false,
+        reconnectionDelayMax: 10000,
+      });
 
-    function init() {
       output = document.getElementById("output");
-    }
+      testSocket();
 
-    function input(type) {
-      if (type == "start")
-        socket.emit("message", {
-          type: "game1/start",
-          roomId: "ABCDE",
-          userId: userId,
-        });
-      if (type == "move")
-        socket.emit("message", {
-          type: "game1/runForward",
-          roomId: "ABCDE",
-          userId: userId,
-        });
-      if (type == "reset")
-        socket.emit("message", {
-          type: "resetGame",
-          roomId: "ABCDE",
-          userId: userId,
-        });
-      if (type == "obstacleSolved")
-        socket.emit("message", {
-          type: "game1/obstacleSolved",
-          roomId: "ABCDE",
-          userId: userId,
-        });
-    }
+      function input(type) {
+        if (type == "start")
+          socket.emit("message", {
+            type: "game1/start",
+            roomId: "ABCDE",
+            userId: userId,
+          });
+        if (type == "move")
+          socket.emit("message", {
+            type: "game1/runForward",
+            roomId: "ABCDE",
+            userId: userId,
+          });
+        if (type == "reset")
+          socket.emit("message", {
+            type: "resetGame",
+            roomId: "ABCDE",
+            userId: userId,
+          });
+        if (type == "obstacleSolved")
+          socket.emit("message", {
+            type: "game1/obstacleSolved",
+            roomId: "ABCDE",
+            userId: userId,
+          });
+      }
 
-    function testSocket() {
+      function testSocket() {}
+
       socket.on("connect", onConnect);
       socket.on("disconnect", onDisconnect);
       socket.on("connect_error", onError);
@@ -122,6 +148,6 @@
       }
     }
 
-    window.addEventListener("load", init, false);
+    //window.addEventListener("load", init, false);
   </script>
 </html>
