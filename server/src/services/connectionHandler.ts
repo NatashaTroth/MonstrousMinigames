@@ -58,8 +58,7 @@ class ConnectionHandler {
             msg: "Cannot join. Game already started",
           });
           console.error("User tried to join. Game already started: " + userId);
-          //userId = room.users[0].id;
-          return
+          userId = room.users[0].id;
         }
       }
       console.log(roomId + " | Controller connected: " + userId);
