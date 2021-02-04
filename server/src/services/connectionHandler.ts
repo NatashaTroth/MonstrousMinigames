@@ -91,6 +91,10 @@ function handleControllers(io: any, controllerNamespace: any) {
             io.of(Namespaces.SCREEN).to(roomId).emit("message", {
               type: CatchFoodMsgType.HAS_STARTED,
             });
+            io.of(Namespaces.SCREEN).to(roomId).emit("message", {
+              type: CatchFoodMsgType.GAME_STATE,
+              data: room.game?.getGameStateInfo(),
+            });
             // TODO gamestate interval?
             /*setInterval(() => {
               io.of(Namespaces.SCREEN).to(roomId).emit("message", {
@@ -135,7 +139,7 @@ function handleScreens(io: any, screenNameSpace: any) {
     // Todo user initialisation
 
     socket.on("disconnect", () => {
-      console.log("Screen disconnected");
+      console.log("Room: " + roomId + " | Screen disconnected");
     });
 
     socket.on("message", function (message: any) {
