@@ -103,27 +103,27 @@ class ConnectionHandler {
                   type: CatchFoodMsgType.GAME_STATE,
                   data: room.game?.getGameStateInfo(),
                 });
-              }, 100);
+              }, 20);
             }
 
             break;
           }
           case CatchFoodMsgType.MOVE: {
             if (room.isPlaying()) {
-              room.game?.runForward(userId, 200);
-              io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
+              room.game?.runForward(userId, 2);
+              /*io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
                 type: CatchFoodMsgType.GAME_STATE,
                 data: room.game?.getGameStateInfo(),
-              });
+              });*/
             }
             break;
           }
           case CatchFoodMsgType.OBSTACLE_SOLVED: {
             room.game?.playerHasCompletedObstacle(userId);
-            io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
+            /*io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
               type: CatchFoodMsgType.GAME_STATE,
               data: room.game?.getGameStateInfo(),
-            });
+            });*/
             break;
           }
           case MessageTypes.RESET_GAME:
@@ -204,7 +204,6 @@ class ConnectionHandler {
     this.gameEventEmitter.on(
       GameEventTypes.GameHasFinished,
       (data: any) => {
-        console.log(data);
         console.log(data.roomId + " | Game has finished");
         let room = rs.getRoomById(data.roomId);
         room.setClosed();
