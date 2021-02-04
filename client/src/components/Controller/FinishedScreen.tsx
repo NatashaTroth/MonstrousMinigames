@@ -1,10 +1,17 @@
 import * as React from 'react'
 import { FinishedScreenContainer, FinishedScreenText } from './FinishedScreen.sc'
+import { PlayerContext } from '../../contexts/PlayerContextProvider'
 
 const FinishedScreen: React.FunctionComponent = () => {
+    const { playerRank } = React.useContext(PlayerContext)
+
     return (
         <FinishedScreenContainer>
-            <FinishedScreenText>Finished!</FinishedScreenText>
+            <FinishedScreenText>
+                #{playerRank}
+                <br />
+                Finished!
+            </FinishedScreenText>
         </FinishedScreenContainer>
     )
 }

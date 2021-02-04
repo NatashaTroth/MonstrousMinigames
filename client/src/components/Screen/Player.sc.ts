@@ -6,7 +6,7 @@ interface IContainerProps {
 }
 
 export const Container = styled.div<IContainerProps>`
-    top: ${({ top }) => 100 + top * 200}px;
+    top: ${({ top }) => 50 + top * 200}px;
     left: 20px;
     position: absolute;
     transition: left 0.4s;

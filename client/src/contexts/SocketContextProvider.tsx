@@ -6,7 +6,7 @@ import { OBSTACLES } from '../utils/constants'
 import { PlayerContext } from './PlayerContextProvider'
 
 export interface IObstacleMessage {
-    type: 'game1/obstacle'
+    type: string
     obstacleType?: OBSTACLES
 }
 interface ISocketContext {
@@ -30,12 +30,18 @@ interface IUserInitMessage {
     type?: string
     userId?: 'userInit'
     roomId?: string
+    isAdmin?: boolean
+}
+
+interface IGameFinished {
+    type: string
+    rank: number
 }
 
 const SocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenSocket, setScreenSocket] = React.useState<Socket | undefined>(undefined)
     const [controllerSocket, setControllerSocket] = React.useState<Socket | undefined>(undefined)
-    const { setObstacle, setPlayerFinished } = React.useContext(PlayerContext)
+    const { setObstacle, setPlayerFinished, setPlayerRank, setIsPlayerAdmin } = React.useContext(PlayerContext)
 
     React.useEffect(() => {
         if (!isMobile) {
@@ -57,25 +63,25 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
         }
     }, [])
 
-    controllerSocket?.on('message', (data: IUserInitMessage | IObstacleMessage) => {
-        let obstacleData
+    controllerSocket?.on('message', (data: IUserInitMessage | IObstacleMessage | IGameFinished) => {
+        let messageData
+
         switch (data.type) {
             case 'userInit':
-                sessionStorage.setItem('userId', data.userId || '')
-                sessionStorage.setItem('name', data.name || '')
-                sessionStorage.setItem('roomId', data.roomId || '')
-
+                messageData = data as IUserInitMessage
+                sessionStorage.setItem('userId', messageData.userId || '')
+                sessionStorage.setItem('name', messageData.name || '')
+                sessionStorage.setItem('roomId', messageData.roomId || '')
+                setIsPlayerAdmin(messageData.isAdmin || false)
                 break
             case 'game1/obstacle':
-                obstacleData = data as IObstacleMessage
-                // eslint-disable-next-line no-console
-                console.log('obstacle')
-                setObstacle(obstacleData?.obstacleType)
+                messageData = data as IObstacleMessage
+                setObstacle(messageData?.obstacleType)
                 break
             case 'game1/playerFinished':
-                // eslint-disable-next-line no-console
-                console.log('Player Finished')
+                messageData = data as IGameFinished
                 setPlayerFinished(true)
+                setPlayerRank(messageData.rank)
                 break
             default:
                 break

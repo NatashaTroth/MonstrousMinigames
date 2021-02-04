@@ -1,7 +1,11 @@
 import styled from 'styled-components'
 import { orange } from '../../utils/colors'
 
-export const FinishedScreenContainer = styled.div``
+export const FinishedScreenContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`
 
 export const FinishedScreenText = styled.div`
     border: 5px solid ${orange};
