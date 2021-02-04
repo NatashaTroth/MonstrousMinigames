@@ -103,11 +103,13 @@ class ConnectionHandler {
             break;
           }
           case CatchFoodMsgType.MOVE: {
-            room.game?.movePlayer(userId);
-            io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
-              type: CatchFoodMsgType.GAME_STATE,
-              data: room.game?.getGameStateInfo(),
-            });
+            if (room.isPlaying()) {
+              room.game?.movePlayer(userId);
+              io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
+                type: CatchFoodMsgType.GAME_STATE,
+                data: room.game?.getGameStateInfo(),
+              });
+            }
             break;
           }
           case CatchFoodMsgType.OBSTACLE_SOLVED: {
