@@ -11,6 +11,6 @@ export const StyledObstacle = styled.div<IObstacleProps>`
     position: absolute;
     z-index: 2;
     border-radius: 50%;
-    left: ${({ posX }) => posX / 2 + 40}px;
+    left: ${({ posX }) => posX + 40}px;
     top: ${({ player }) => 140 + player * 200}px;
 `

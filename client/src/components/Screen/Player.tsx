@@ -37,12 +37,13 @@ interface IGameState {
     type: 'game1/gameState' | 'game1/hasStarted'
 }
 
-// const windowWidth = window.innerWidth
+const windowWidth = window.innerWidth - 100
 // const step = windowWidth / 2000
 
 const Player: React.FunctionComponent = () => {
     const { screenSocket } = React.useContext(SocketContext)
     const [players, setPlayers] = React.useState<undefined | IPlayerState[]>()
+    const [trackLength, setTrackLength] = React.useState<undefined | number>()
     const monsters = [oliver, monster, monster2, unicorn]
 
     React.useEffect(() => {
@@ -59,6 +60,7 @@ const Player: React.FunctionComponent = () => {
 
     screenSocket?.on('message', (message: IGameState) => {
         if (message && message.data) {
+            setTrackLength(message.data.trackLength)
             setPlayers(message.data.playersState)
         }
 
@@ -66,7 +68,7 @@ const Player: React.FunctionComponent = () => {
     })
 
     players?.forEach(player => {
-        movePlayer(player.id, player.positionX)
+        movePlayer(player.id, player.positionX, trackLength || 1)
     })
 
     return (
@@ -80,7 +82,7 @@ const Player: React.FunctionComponent = () => {
                         <Obstacle
                             key={'obstacle' + index + 'player' + player.id}
                             player={playerIndex}
-                            posX={obstacle.positionX}
+                            posX={(obstacle.positionX * windowWidth) / (trackLength || 1)}
                         />
                     ))}
                 </div>
@@ -97,11 +99,11 @@ export interface IMovePlayer {
     obstacle: boolean
 }
 
-function movePlayer(playerId: string, positionX: number) {
+function movePlayer(playerId: string, positionX: number, trackLength: number) {
     const d = document.getElementById(playerId)
 
     if (d) {
-        d.style.left = positionX / 2 + 'px'
+        d.style.left = (positionX * windowWidth) / (trackLength || 1) + 'px'
         // if (d.offsetLeft >= windowWidth - d.offsetWidth) {
         //     d.style.left = Number(windowWidth - d.offsetWidth) + 'px'
         //     const newPos = d.offsetTop + step * speed
