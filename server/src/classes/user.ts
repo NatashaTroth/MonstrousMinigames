@@ -7,8 +7,8 @@ class User {
   public name: string;
   public timestamp: number;
 
-  constructor(roomId: string, socketId: string, name: string) {
-    this.id = uuidv4();
+  constructor(roomId: string, socketId: string, name: string, id: string = uuidv4()) {
+    this.id = id;
     this.roomId = roomId;
     this.socketId = socketId;
     this.name = name;
