@@ -124,7 +124,9 @@ function handleControllers(io: any, controllerNamespace: any) {
         }
         case MessageTypes.RESET_GAME: {
           console.log("Room: " + roomId + " | Reset Game");
+          room.users = [new User(room.id, socket.id, name)]
           room.resetGame();
+          
         }
         break;
         default: {
