@@ -1,10 +1,12 @@
 import * as React from 'react'
 import Button from '../common/Button'
-import { FormContainer, ConnectScreenContainer, StyledInput, StyledLabel } from './ConnectScreen.sc'
+import { FormContainer, ConnectScreenContainer, StyledInput, StyledLabel, ImpressumLink } from './ConnectScreen.sc'
 import { SocketContext } from '../../contexts/SocketContextProvider'
 import { io } from 'socket.io-client'
 import { ENDPOINT } from '../../utils/config'
 import { stringify } from 'query-string'
+import Impressum from '../common/Impressum'
+import { Link } from 'react-router-dom'
 
 interface IFormState {
     name?: undefined | string
@@ -71,6 +73,7 @@ const ConnectScreen: React.FunctionComponent = () => {
                 </StyledLabel>
                 <Button type="submit" text="Connect" disabled={!formState?.name || !formState?.roomId} />
             </FormContainer>
+            <ImpressumLink to="/impressum">Impressum</ImpressumLink>
         </ConnectScreenContainer>
     )
 }
