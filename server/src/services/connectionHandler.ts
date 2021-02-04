@@ -38,18 +38,18 @@ class ConnectionHandler {
     this.controllerNamespace.on("connection", function (socket: any) {
       let roomId = socket.handshake.query.roomId;
       let room = rs.getRoomById(roomId);
-
       let name = socket.handshake.query.name;
+      let user;
 
       let userId = socket.handshake.query.userId;
       if (userId) {
-        let user = room.getUserById(userId);
+        user = room.getUserById(userId);
         if (user) {
           user.setRoomId(roomId);
           user.setSocketId(socket.id);
         }
       } else {
-        let user = new User(room.id, socket.id, name);
+        user = new User(room.id, socket.id, name);
         userId = user.id;
         /** for now new user gets old user's id */
         if (!room.addUser(user)) {
@@ -63,12 +63,14 @@ class ConnectionHandler {
       }
       console.log(roomId + " | Controller connected: " + userId);
 
+
       // send user data
       socket.emit("message", {
         type: MessageTypes.USER_INIT,
         userId: userId,
         roomId: roomId,
         name: name,
+        isAdmin: room.isAdmin(user)
       });
       socket.join(roomId);
 

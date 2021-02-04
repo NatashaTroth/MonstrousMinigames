@@ -26,6 +26,10 @@ class Room {
     }
     return false;
   }
+  public isAdmin(user: User) {
+    return user === this.admin;
+  }
+
   //TODO remove User, logic
 
   public updateTimestamp() {
@@ -48,7 +52,7 @@ class Room {
     let user = this.users.filter(function (u) {
       return u.id === userId;
     });
-    return user.length === 1 ? user[0] : false;
+    return user[0];
   }
 
   public resetGame() {
