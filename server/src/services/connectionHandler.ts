@@ -21,7 +21,7 @@ function handleConnection(io: any) {
   gameEventEmitter.on(
     GameEventTypes.ObstacleReached,
     (data: ObstacleReachedInfo) => {
-      console.log("Room: " + data.roomId + " | userId: " + data.userId + " | Obstacle: " + data.obstacleType);
+      console.log(data.roomId + " | userId: " + data.userId + " | Obstacle: " + data.obstacleType);
       let r = rs.getRoomById(data.roomId);
       let u = r.getUserById(data.userId);
       if (u) {
@@ -41,9 +41,7 @@ function handleControllers(io: any, controllerNamespace: any) {
       : "ABCDE";
     let room = rs.getRoomById(roomId);
 
-    let name = socket.handshake.query.name
-      ? socket.handshake.query.name
-      : "Reinhold";
+    let name = socket.handshake.query.name;
 
     let userId = socket.handshake.query.userId;
     if (userId) {
@@ -65,7 +63,7 @@ function handleControllers(io: any, controllerNamespace: any) {
         userId = room.users[0].id;
       }
     }
-    console.log("Room: " + roomId + " | Controller connected: " + userId);
+    console.log(roomId + " | Controller connected: " + userId);
 
     // send user data
     socket.emit("message", {
@@ -77,7 +75,7 @@ function handleControllers(io: any, controllerNamespace: any) {
     socket.join(roomId);
 
     socket.on("disconnect", () => {
-      console.log("Room: " + roomId + " | Controller disconnected: " + userId);
+      console.log(roomId + " | Controller disconnected: " + userId);
     });
 
     socket.on("message", function (message: any) {
@@ -87,7 +85,7 @@ function handleControllers(io: any, controllerNamespace: any) {
         case CatchFoodMsgType.START: {
           if (room.isOpen()) {
             rs.startGame(room);
-            console.log("start game - roomId: " + roomId);
+            console.log(roomId + " | Start game");
             io.of(Namespaces.SCREEN).to(roomId).emit("message", {
               type: CatchFoodMsgType.HAS_STARTED,
             });
@@ -123,7 +121,7 @@ function handleControllers(io: any, controllerNamespace: any) {
           break;
         }
         case MessageTypes.RESET_GAME: {
-          console.log("Room: " + roomId + " | Reset Game");
+          console.log(roomId + " | Reset Game");
           room.users = [new User(room.id, socket.id, name, userId)]
           room.resetGame();
           
@@ -145,11 +143,11 @@ function handleScreens(io: any, screenNameSpace: any) {
     let room = rs.getRoomById(roomId);
 
     socket.join(room.id);
-    console.log("Room: " + roomId + " | Screen connected");
+    console.log(roomId + " | Screen connected");
     // Todo user initialisation
 
     socket.on("disconnect", () => {
-      console.log("Room: " + roomId + " | Screen disconnected");
+      console.log(roomId + " | Screen disconnected");
     });
 
     socket.on("message", function (message: any) {
