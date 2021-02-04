@@ -11,7 +11,6 @@ import { GameEventTypes } from "../gameplay/interfaces/GameEventTypes";
 import { Namespaces } from "../enums/nameSpaces";
 import { MessageTypes } from "../enums/messageTypes";
 import { Server, Namespace } from "socket.io";
-import { GameStartInfo } from "../gameplay/catchFood/interfaces/GameStartInfo";
 
 class ConnectionHandler {
   private io: Server;
@@ -95,7 +94,7 @@ class ConnectionHandler {
                 data: room.game?.getGameStateInfo(),
               });
               // TODO gamestate interval?
-             let gameStateInterval = setInterval(() => { 
+             /*let gameStateInterval = setInterval(() => { 
                 if(!room.isPlaying){
                   clearInterval(gameStateInterval)
                 }
@@ -103,7 +102,7 @@ class ConnectionHandler {
                   type: CatchFoodMsgType.GAME_STATE,
                   data: room.game?.getGameStateInfo(),
                 });
-              }, 20);
+              }, 20);*/
             }
 
             break;
@@ -111,19 +110,19 @@ class ConnectionHandler {
           case CatchFoodMsgType.MOVE: {
             if (room.isPlaying()) {
               room.game?.runForward(userId, 2);
-              /*io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
+              io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
                 type: CatchFoodMsgType.GAME_STATE,
                 data: room.game?.getGameStateInfo(),
-              });*/
+              });
             }
             break;
           }
           case CatchFoodMsgType.OBSTACLE_SOLVED: {
             room.game?.playerHasCompletedObstacle(userId);
-            /*io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
+            io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
               type: CatchFoodMsgType.GAME_STATE,
               data: room.game?.getGameStateInfo(),
-            });*/
+            });
             break;
           }
           case MessageTypes.RESET_GAME:
