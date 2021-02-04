@@ -30,9 +30,6 @@ const Controller: React.FunctionComponent = () => {
                     !playerFinished
                 ) {
                     sendMessage(controllerSocket)
-                    // console.log('RUN - DeviceMotion: ' + event.acceleration.x + ' m/s2')
-                } else {
-                    // console.log('STOP')
                 }
             }
         )
