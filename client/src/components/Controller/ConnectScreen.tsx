@@ -45,6 +45,7 @@ const ConnectScreen: React.FunctionComponent = () => {
                 // eslint-disable-next-line no-console
                 console.log('Controller Socket connected')
                 setControllerSocket(controllerSocket)
+                document.getElementById('connectForm')?.remove()
             }
         })
     }
@@ -56,6 +57,7 @@ const ConnectScreen: React.FunctionComponent = () => {
                     e.preventDefault()
                     handleSubmit()
                 }}
+                id="connectForm"
             >
                 <StyledLabel>
                     Name
