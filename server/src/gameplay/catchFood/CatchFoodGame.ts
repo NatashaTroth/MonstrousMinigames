@@ -142,6 +142,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     try {
       verifyUserId(this.playersState, userId);
       verifyGameState(this.gameState, GameState.Started);
+
+      if (this.playersState[userId].finished) return;
       if (this.playersState[userId].atObstacle) return;
 
       this.playersState[userId].positionX += speed;
@@ -193,17 +195,20 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
   }
 
   private playerHasFinishedGame(userId: string) {
-    this.playersState[userId].finished = true;
-    this.playersState[userId].rank = this.currentRank++;
+    //only if player hasn't already been marked as finished
+    if (!this.playersState[userId].finished) {
+      this.playersState[userId].finished = true;
+      this.playersState[userId].rank = this.currentRank++;
 
-    this.gameEventEmitter.emit(GameEventTypes.PlayerHasFinished, {
-      userId,
-      roomId: this.roomId,
-      rank: this.playersState[userId].rank,
-    });
+      this.gameEventEmitter.emit(GameEventTypes.PlayerHasFinished, {
+        userId,
+        roomId: this.roomId,
+        rank: this.playersState[userId].rank,
+      });
 
-    if (this.gameHasFinished()) {
-      this.handleGameFinished();
+      if (this.gameHasFinished()) {
+        this.handleGameFinished();
+      }
     }
   }
 
