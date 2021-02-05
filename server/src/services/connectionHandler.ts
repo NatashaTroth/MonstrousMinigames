@@ -88,6 +88,9 @@ class ConnectionHandler {
               io.in(roomId).to(roomId).emit("message", {
                 type: CatchFoodMsgType.HAS_STARTED,
               });
+              io.of(Namespaces.CONTROLLER).to(roomId).emit("message", {
+                type: CatchFoodMsgType.HAS_STARTED,
+              });
               io.of(Namespaces.SCREEN).to(roomId).emit("message", {
                 type: CatchFoodMsgType.GAME_STATE,
                 data: room.game?.getGameStateInfo(),
