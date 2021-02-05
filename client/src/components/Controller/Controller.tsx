@@ -36,7 +36,7 @@ const Controller: React.FunctionComponent = () => {
     }
 
     return (
-        <ControllerContainer disabled={isControllerConnected}>
+        <ControllerContainer>
             {playerFinished ? (
                 <FinishedScreen />
             ) : (
