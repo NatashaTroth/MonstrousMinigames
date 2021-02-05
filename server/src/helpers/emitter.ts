@@ -14,17 +14,17 @@ function sendUserInit(socket: any, user: User, room: Room) {
   });
 }
 function sendGameState(
-  namespace: Namespace,
+  nsp: Namespace,
   room: Room,
   volatile: boolean = false
 ) {
   if (volatile) {
-    namespace.to(room.id).volatile.emit("message", {
+    nsp.to(room.id).volatile.emit("message", {
       type: CatchFoodMsgType.GAME_STATE,
       data: room.game?.getGameStateInfo(),
     });
   } else {
-    namespace.to(room.id).emit("message", {
+    nsp.to(room.id).emit("message", {
       type: CatchFoodMsgType.GAME_STATE,
       data: room.game?.getGameStateInfo(),
     });
@@ -36,15 +36,15 @@ function sendErrorMessage(socket: any, message: string) {
     msg: message,
   });
 }
-function sendGameHasStarted(namespaces: Array<Namespace>, room: Room) {
-  namespaces.forEach(function (namespace: Namespace) {
+function sendGameHasStarted(nsps: Array<Namespace>, room: Room) {
+    nsps.forEach(function (namespace: Namespace) {
     namespace.to(room.id).emit("message", {
       type: CatchFoodMsgType.HAS_STARTED,
     });
   });
 }
-function sendGameHasFinished(namespaces: Array<Namespace>, data: any) {
-  namespaces.forEach(function (namespace: Namespace) {
+function sendGameHasFinished(nsps: Array<Namespace>, data: any) {
+    nsps.forEach(function (namespace: Namespace) {
     namespace.to(data.roomId).emit("message", {
       type: MessageTypes.GAME_HAS_FINISHED,
       data: data,
@@ -52,8 +52,9 @@ function sendGameHasFinished(namespaces: Array<Namespace>, data: any) {
   });
 }
 
-function sendPlayerFinished(io: any, user: User, data: any) {
-  io.to(user.socketId).emit("message", {
+function sendPlayerFinished(nsp: Namespace, user: User, data: any) {
+    console.log(user)
+    nsp.to(user.socketId).emit("message", {
     type: CatchFoodMsgType.PLAYER_FINISHED,
     rank: data.rank,
   });
