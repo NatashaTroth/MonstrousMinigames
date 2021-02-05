@@ -11,7 +11,6 @@ import { GameEventTypes } from "../gameplay/interfaces/GameEventTypes";
 import { Namespaces } from "../enums/nameSpaces";
 import { MessageTypes } from "../enums/messageTypes";
 import { Server, Namespace } from "socket.io";
-import Room from "../classes/room";
 import emitter from "../helpers/emitter";
 
 class ConnectionHandler {
@@ -52,6 +51,16 @@ class ConnectionHandler {
         if (user) {
           user.setRoomId(roomId);
           user.setSocketId(socket.id);
+        }else{
+          user = new User(room.id, socket.id, name);
+          userId = user.id;
+  
+          if (!room.addUser(user)) {
+            emitter.sendErrorMessage(socket, "Cannot join. Game already started");
+            console.error("User tried to join. Game already started: " + userId);
+            //userId = room.users[0].id;
+            return;
+          }
         }
       } else {
         user = new User(room.id, socket.id, name);
