@@ -11,6 +11,8 @@ import { GameEventTypes } from "../gameplay/interfaces/GameEventTypes";
 import { Namespaces } from "../enums/nameSpaces";
 import { MessageTypes } from "../enums/messageTypes";
 import { Server, Namespace } from "socket.io";
+import Room from "../classes/room";
+import emitter from "../helpers/emitter";
 
 class ConnectionHandler {
   private io: Server;
@@ -58,7 +60,8 @@ class ConnectionHandler {
             msg: "Cannot join. Game already started",
           });
           console.error("User tried to join. Game already started: " + userId);
-          userId = room.users[0].id;
+          //userId = room.users[0].id;
+          return
         }
       }
       console.log(roomId + " | Controller connected: " + userId);
@@ -85,7 +88,7 @@ class ConnectionHandler {
             if (room.isOpen()) {
               rs.startGame(room);
               console.log(roomId + " | Start game");
-              io.in(roomId).to(roomId).emit("message", {
+              io.in(roomId).emit("message", {
                 type: CatchFoodMsgType.HAS_STARTED,
               });
               io.of(Namespaces.CONTROLLER).to(roomId).emit("message", {
@@ -95,7 +98,6 @@ class ConnectionHandler {
                 type: CatchFoodMsgType.GAME_STATE,
                 data: room.game?.getGameStateInfo(),
               });
-              // TODO gamestate interval?
               let gameStateInterval = setInterval(() => {
                 if (!room.isPlaying) {
                   clearInterval(gameStateInterval);
@@ -134,14 +136,8 @@ class ConnectionHandler {
               room.users = [];
               room.addUser(user);
 
-              // send user data
-              socket.emit("message", {
-                type: MessageTypes.USER_INIT,
-                userId: userId,
-                roomId: roomId,
-                name: name,
-                isAdmin: room.isAdmin(user),
-              });
+              
+              emitter.sendUserInit(socket, user, room)
             }
             break;
           default: {
@@ -222,5 +218,10 @@ class ConnectionHandler {
       });
     });
   }
+
+
 }
+
+
+
 export default ConnectionHandler;
