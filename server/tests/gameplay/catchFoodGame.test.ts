@@ -272,6 +272,12 @@ describe("Test catch food gameplay", () => {
     expect(catchFoodGame.gameState).toBe(GameState.Started);
     expect(catchFoodGame.playersState["2"].finished).toBeTruthy();
     expect(catchFoodGame.playersState["2"].rank).toBe(2);
+    expect(catchFoodGame.currentRank).toBe(3);
+
+    //run forward should no longer change anything
+    catchFoodGame.runForward("2", 500);
+    expect(catchFoodGame.playersState["2"].rank).toBe(2);
+    expect(catchFoodGame.currentRank).toBe(3);
 
     catchFoodGame.runForward("3", 500);
     expect(catchFoodGame.playersState["3"].finished).toBeTruthy();
