@@ -1,6 +1,7 @@
 import { stringify } from 'query-string'
 import * as React from 'react'
 import { io } from 'socket.io-client'
+import { GameContext } from '../../contexts/GameContextProvider'
 import { SocketContext } from '../../contexts/SocketContextProvider'
 import { ENDPOINT } from '../../utils/config'
 import Button from '../common/Button'
@@ -12,6 +13,7 @@ interface IFormState {
 const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ roomId: '' })
     const { setScreenSocket } = React.useContext(SocketContext)
+    const { setRoomId } = React.useContext(GameContext)
 
     function handleSubmit() {
         const screenSocket = io(
@@ -28,6 +30,7 @@ const ConnectScreen: React.FunctionComponent = () => {
                 transports: ['websocket'],
             }
         )
+        setRoomId(formState?.roomId || undefined)
 
         screenSocket.on('connect', () => {
             if (screenSocket) {
