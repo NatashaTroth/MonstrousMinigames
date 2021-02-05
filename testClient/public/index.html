@@ -128,7 +128,8 @@
       }
 
       function onMessage(msg) {
-        console.log(msg);
+        if (msg.type !== "game1/gameState")console.log(msg);
+
         if (msg.type == "userInit") {
           userId = msg.userId;
         }

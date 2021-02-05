@@ -11,6 +11,7 @@ import { GameEventTypes } from "../gameplay/interfaces/GameEventTypes";
 import { Namespaces } from "../enums/nameSpaces";
 import { MessageTypes } from "../enums/messageTypes";
 import { Server, Namespace } from "socket.io";
+import emitter from "../helpers/emitter";
 
 class ConnectionHandler {
   private io: Server;
@@ -35,6 +36,9 @@ class ConnectionHandler {
   private handleControllers() {
     let io = this.io;
     let rs = this.rs;
+    let controllerNamespace = this.controllerNamespace;
+
+    let screenNameSpace = this.screenNameSpace;
     this.controllerNamespace.on("connection", function (socket: any) {
       let roomId = socket.handshake.query.roomId;
       let room = rs.getRoomById(roomId);
@@ -47,30 +51,32 @@ class ConnectionHandler {
         if (user) {
           user.setRoomId(roomId);
           user.setSocketId(socket.id);
+        }else{
+          user = new User(room.id, socket.id, name);
+          userId = user.id;
+  
+          if (!room.addUser(user)) {
+            emitter.sendErrorMessage(socket, "Cannot join. Game already started");
+            console.error("User tried to join. Game already started: " + userId);
+            //userId = room.users[0].id;
+            return;
+          }
         }
       } else {
         user = new User(room.id, socket.id, name);
         userId = user.id;
-        /** for now new user gets old user's id */
+
         if (!room.addUser(user)) {
-          socket.emit("message", {
-            type: "error",
-            msg: "Cannot join. Game already started",
-          });
+          emitter.sendErrorMessage(socket, "Cannot join. Game already started");
           console.error("User tried to join. Game already started: " + userId);
-          userId = room.users[0].id;
+          //userId = room.users[0].id;
+          return;
         }
       }
       console.log(roomId + " | Controller connected: " + userId);
 
-      // send user data
-      socket.emit("message", {
-        type: MessageTypes.USER_INIT,
-        userId: userId,
-        roomId: roomId,
-        name: name,
-        isAdmin: room.isAdmin(user),
-      });
+      emitter.sendUserInit(socket, user, room);
+
       socket.join(roomId);
 
       socket.on("disconnect", () => {
@@ -85,25 +91,18 @@ class ConnectionHandler {
             if (room.isOpen()) {
               rs.startGame(room);
               console.log(roomId + " | Start game");
-              io.in(roomId).to(roomId).emit("message", {
-                type: CatchFoodMsgType.HAS_STARTED,
-              });
-              io.of(Namespaces.CONTROLLER).to(roomId).emit("message", {
-                type: CatchFoodMsgType.HAS_STARTED,
-              });
-              io.of(Namespaces.SCREEN).to(roomId).emit("message", {
-                type: CatchFoodMsgType.GAME_STATE,
-                data: room.game?.getGameStateInfo(),
-              });
-              // TODO gamestate interval?
+
+              emitter.sendGameHasStarted(
+                [controllerNamespace, screenNameSpace],
+                room
+              );
+              emitter.sendGameState(screenNameSpace, room);
+
               let gameStateInterval = setInterval(() => {
                 if (!room.isPlaying) {
                   clearInterval(gameStateInterval);
                 }
-                io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
-                  type: CatchFoodMsgType.GAME_STATE,
-                  data: room.game?.getGameStateInfo(),
-                });
+                emitter.sendGameState(screenNameSpace, room, true);
               }, 100);
             }
 
@@ -111,37 +110,21 @@ class ConnectionHandler {
           }
           case CatchFoodMsgType.MOVE: {
             if (room.isPlaying()) {
-              room.game?.runForward(userId, 2);
-              /*io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
-                type: CatchFoodMsgType.GAME_STATE,
-                data: room.game?.getGameStateInfo(),
-              });*/
+              room.game?.runForward(userId, 1);
+              //emitter.sendGameState(screenNameSpace, room, true)
             }
             break;
           }
           case CatchFoodMsgType.OBSTACLE_SOLVED: {
             room.game?.playerHasCompletedObstacle(userId);
-            /*io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
-              type: CatchFoodMsgType.GAME_STATE,
-              data: room.game?.getGameStateInfo(),
-            });*/
+            //emitter.sendGameState(screenNameSpace, room, true)
             break;
           }
           case MessageTypes.RESET_GAME:
             {
               console.log(roomId + " | Reset Game");
-              room.resetGame();
-              room.users = [];
-              room.addUser(user);
-
-              // send user data
-              socket.emit("message", {
-                type: MessageTypes.USER_INIT,
-                userId: userId,
-                roomId: roomId,
-                name: name,
-                isAdmin: room.isAdmin(user),
-              });
+              room.resetGame(user);
+              emitter.sendUserInit(socket, user, room);
             }
             break;
           default: {
@@ -176,6 +159,8 @@ class ConnectionHandler {
   private handleGameEvents() {
     let rs = this.rs;
     let io = this.io;
+    let controllerNamespace = this.controllerNamespace;
+    let screenNameSpace = this.screenNameSpace;
     this.gameEventEmitter.on(
       GameEventTypes.ObstacleReached,
       (data: ObstacleReachedInfo) => {
@@ -205,10 +190,7 @@ class ConnectionHandler {
         let room = rs.getRoomById(data.roomId);
         let user = room.getUserById(data.userId);
         if (user) {
-          this.controllerNamespace.to(user.socketId).emit("message", {
-            type: CatchFoodMsgType.PLAYER_FINISHED,
-            rank: data.rank,
-          });
+          emitter.sendPlayerFinished(io, user, data);
         }
       }
     );
@@ -216,11 +198,9 @@ class ConnectionHandler {
       console.log(data.roomId + " | Game has finished");
       let room = rs.getRoomById(data.roomId);
       room.setClosed();
-      io.in(data.roomId).emit("message", {
-        type: MessageTypes.GAME_HAS_FINISHED,
-        data: data,
-      });
+      emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data);
     });
   }
 }
+
 export default ConnectionHandler;

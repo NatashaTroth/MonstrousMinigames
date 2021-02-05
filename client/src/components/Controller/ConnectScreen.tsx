@@ -30,6 +30,7 @@ const ConnectScreen: React.FunctionComponent = () => {
                 stringify({
                     name: formState?.name,
                     roomId: formState?.roomId,
+                    userId: sessionStorage.getItem('userId') || '',
                 }),
             {
                 secure: true,

@@ -13,7 +13,8 @@
     "lint": "eslint \"**/*.ts\" --fix",
     "tsc": "tsc",
     "postinstall": "npm run tsc",
-    "start": "node src/app.js"
+    "start": "node src/app.js",
+    "deploy": "cd .. && git subtree push --prefix server heroku master"
   },
   "repository": {
     "type": "git",

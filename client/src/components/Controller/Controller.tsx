@@ -10,11 +10,13 @@ import StartGameScreen from './StartGameScreen'
 import ClickObstacle from './ClickObstacle'
 import { PlayerContext } from '../../contexts/PlayerContextProvider'
 import FinishedScreen from './FinishedScreen'
+import { GameContext } from '../../contexts/GameContextProvider'
 
 const Controller: React.FunctionComponent = () => {
     const { isControllerConnected } = React.useContext(SocketContext)
-    const { controllerSocket, gameStarted } = React.useContext(SocketContext)
+    const { controllerSocket } = React.useContext(SocketContext)
     const { obstacle, setObstacle, playerFinished, permission } = React.useContext(PlayerContext)
+    const { gameStarted } = React.useContext(GameContext)
 
     if (permission) {
         window.addEventListener(
