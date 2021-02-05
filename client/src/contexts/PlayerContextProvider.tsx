@@ -16,23 +16,23 @@ interface IPlayerContext {
 
 export const PlayerContext = React.createContext<IPlayerContext>({
     obstacle: undefined,
-    setObstacle: (val: OBSTACLES | undefined) => {
+    setObstacle: () => {
         // do nothing
     },
     playerFinished: false,
-    setPlayerFinished: (val: boolean) => {
+    setPlayerFinished: () => {
         // do nothing
     },
     playerRank: undefined,
-    setPlayerRank: (val: number) => {
+    setPlayerRank: () => {
         // do nothing
     },
     isPlayerAdmin: false,
-    setIsPlayerAdmin: (val: boolean) => {
+    setIsPlayerAdmin: () => {
         // do nothing
     },
     permission: false,
-    setPermissionGranted: (val: boolean) => {
+    setPermissionGranted: () => {
         // do nothing
     },
 })
