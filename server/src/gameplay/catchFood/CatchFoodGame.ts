@@ -196,19 +196,19 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
   private playerHasFinishedGame(userId: string) {
     //only if player hasn't already been marked as finished
-    if (!this.playersState[userId].finished) {
-      this.playersState[userId].finished = true;
-      this.playersState[userId].rank = this.currentRank++;
+    if (this.playersState[userId].finished) return;
 
-      this.gameEventEmitter.emit(GameEventTypes.PlayerHasFinished, {
-        userId,
-        roomId: this.roomId,
-        rank: this.playersState[userId].rank,
-      });
+    this.playersState[userId].finished = true;
+    this.playersState[userId].rank = this.currentRank++;
 
-      if (this.gameHasFinished()) {
-        this.handleGameFinished();
-      }
+    this.gameEventEmitter.emit(GameEventTypes.PlayerHasFinished, {
+      userId,
+      roomId: this.roomId,
+      rank: this.playersState[userId].rank,
+    });
+
+    if (this.gameHasFinished()) {
+      this.handleGameFinished();
     }
   }
 
