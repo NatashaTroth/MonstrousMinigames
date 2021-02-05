@@ -82,6 +82,7 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
 
     screenSocket?.on('message', (data: IGameState | IConnectedUsers) => {
         let messageData
+
         switch (data.type) {
             case 'game1/gameState':
                 messageData = data as IGameState
@@ -103,6 +104,9 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
             case 'connectedUsers':
                 messageData = data as IConnectedUsers
                 setConnectedUsers(messageData.users)
+                break
+            case 'game1/hasStarted':
+                setGameStarted(true)
                 break
         }
     })

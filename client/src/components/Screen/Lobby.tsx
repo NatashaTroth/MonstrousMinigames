@@ -11,7 +11,7 @@ const Lobby: React.FunctionComponent = () => {
             <Subline>Connected Users</Subline>
             <JoinedUsersView>
                 {connectedUsers?.map(user => (
-                    <JoinedUser>{user.name}</JoinedUser>
+                    <JoinedUser key={'LobbyScreen' + roomId + user.name}>{user.name}</JoinedUser>
                 ))}
             </JoinedUsersView>
         </LobbyContainer>
