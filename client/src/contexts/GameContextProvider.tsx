@@ -8,6 +8,8 @@ interface IGameContext {
     setPlayers: (val: IPlayerState[]) => void
     finished: boolean
     setFinished: (val: boolean) => void
+    gameStarted: boolean
+    setGameStarted: (val: boolean) => void
 }
 
 interface IObstacle {
@@ -37,12 +39,17 @@ export const GameContext = React.createContext<IGameContext>({
     setFinished: () => {
         // do nothing
     },
+    gameStarted: false,
+    setGameStarted: () => {
+        // do nothing
+    },
 })
 
 const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [trackLength, setTrackLength] = React.useState<undefined | number>()
     const [players, setPlayers] = React.useState<undefined | IPlayerState[]>()
     const [finished, setFinished] = React.useState<boolean>(false)
+    const [gameStarted, setGameStarted] = React.useState<boolean>(false)
 
     const content = {
         trackLength,
@@ -51,6 +58,8 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setPlayers,
         finished,
         setFinished,
+        gameStarted,
+        setGameStarted,
     }
     return <GameContext.Provider value={content}>{children}</GameContext.Provider>
 }

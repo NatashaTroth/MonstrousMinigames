@@ -10,6 +10,8 @@ interface IPlayerContext {
     setPlayerRank: (val: number) => void
     isPlayerAdmin: boolean
     setIsPlayerAdmin: (val: boolean) => void
+    permission: boolean
+    setPermissionGranted: (val: boolean) => void
 }
 
 export const PlayerContext = React.createContext<IPlayerContext>({
@@ -29,6 +31,10 @@ export const PlayerContext = React.createContext<IPlayerContext>({
     setIsPlayerAdmin: () => {
         // do nothing
     },
+    permission: false,
+    setPermissionGranted: () => {
+        // do nothing
+    },
 })
 
 const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
@@ -36,6 +42,7 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [playerFinished, setPlayerFinished] = React.useState<boolean>(false)
     const [playerRank, setPlayerRank] = React.useState<undefined | number>(undefined)
     const [isPlayerAdmin, setIsPlayerAdmin] = React.useState<boolean>(false)
+    const [permission, setPermissionGranted] = React.useState<boolean>(false)
 
     const content = {
         obstacle,
@@ -46,6 +53,8 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setPlayerRank,
         isPlayerAdmin,
         setIsPlayerAdmin,
+        permission,
+        setPermissionGranted,
     }
     return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>
 }

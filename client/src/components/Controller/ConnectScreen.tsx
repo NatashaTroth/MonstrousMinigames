@@ -5,6 +5,8 @@ import { SocketContext } from '../../contexts/SocketContextProvider'
 import { io } from 'socket.io-client'
 import { ENDPOINT } from '../../utils/config'
 import { stringify } from 'query-string'
+import { ClickRequestDeviceMotion } from '../../utils/permissions'
+import { PlayerContext } from '../../contexts/PlayerContextProvider'
 
 interface IFormState {
     name?: undefined | string
@@ -14,8 +16,14 @@ interface IFormState {
 const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ name: '', roomId: '' })
     const { setControllerSocket } = React.useContext(SocketContext)
+    const { setPermissionGranted } = React.useContext(PlayerContext)
 
-    function handleSubmit() {
+    async function handleSubmit() {
+        const permission = await ClickRequestDeviceMotion()
+        if (permission) {
+            setPermissionGranted(permission)
+        }
+
         const controllerSocket = io(
             ENDPOINT +
                 'controller?' +

@@ -11,6 +11,8 @@ import { GameEventTypes } from "../gameplay/interfaces/GameEventTypes";
 import { Namespaces } from "../enums/nameSpaces";
 import { MessageTypes } from "../enums/messageTypes";
 import { Server, Namespace } from "socket.io";
+import Room from "../classes/room";
+import emitter from "../helpers/emitter";
 
 class ConnectionHandler {
   private io: Server;
@@ -39,7 +41,7 @@ class ConnectionHandler {
       let roomId = socket.handshake.query.roomId;
       let room = rs.getRoomById(roomId);
       let name = socket.handshake.query.name;
-      let user;
+      let user: User;
 
       let userId = socket.handshake.query.userId;
       if (userId) {
@@ -58,11 +60,11 @@ class ConnectionHandler {
             msg: "Cannot join. Game already started",
           });
           console.error("User tried to join. Game already started: " + userId);
-          userId = room.users[0].id;
+          //userId = room.users[0].id;
+          return
         }
       }
       console.log(roomId + " | Controller connected: " + userId);
-
 
       // send user data
       socket.emit("message", {
@@ -70,7 +72,7 @@ class ConnectionHandler {
         userId: userId,
         roomId: roomId,
         name: name,
-        isAdmin: room.isAdmin(user)
+        isAdmin: room.isAdmin(user),
       });
       socket.join(roomId);
 
@@ -86,23 +88,25 @@ class ConnectionHandler {
             if (room.isOpen()) {
               rs.startGame(room);
               console.log(roomId + " | Start game");
-              io.of(Namespaces.SCREEN).to(roomId).emit("message", {
+              io.in(roomId).emit("message", {
+                type: CatchFoodMsgType.HAS_STARTED,
+              });
+              io.of(Namespaces.CONTROLLER).to(roomId).emit("message", {
                 type: CatchFoodMsgType.HAS_STARTED,
               });
               io.of(Namespaces.SCREEN).to(roomId).emit("message", {
                 type: CatchFoodMsgType.GAME_STATE,
                 data: room.game?.getGameStateInfo(),
               });
-              // TODO gamestate interval?
-             /*let gameStateInterval = setInterval(() => { 
-                if(!room.isPlaying){
-                  clearInterval(gameStateInterval)
+              let gameStateInterval = setInterval(() => {
+                if (!room.isPlaying) {
+                  clearInterval(gameStateInterval);
                 }
                 io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
                   type: CatchFoodMsgType.GAME_STATE,
                   data: room.game?.getGameStateInfo(),
                 });
-              }, 20);*/
+              }, 100);
             }
 
             break;
@@ -110,26 +114,30 @@ class ConnectionHandler {
           case CatchFoodMsgType.MOVE: {
             if (room.isPlaying()) {
               room.game?.runForward(userId, 2);
-              io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
+              /*io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
                 type: CatchFoodMsgType.GAME_STATE,
                 data: room.game?.getGameStateInfo(),
-              });
+              });*/
             }
             break;
           }
           case CatchFoodMsgType.OBSTACLE_SOLVED: {
             room.game?.playerHasCompletedObstacle(userId);
-            io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
+            /*io.of(Namespaces.SCREEN).to(roomId).volatile.emit("message", {
               type: CatchFoodMsgType.GAME_STATE,
               data: room.game?.getGameStateInfo(),
-            });
+            });*/
             break;
           }
           case MessageTypes.RESET_GAME:
             {
               console.log(roomId + " | Reset Game");
-              room.users = [new User(room.id, socket.id, name, userId)];
               room.resetGame();
+              room.users = [];
+              room.addUser(user);
+
+              
+              emitter.sendUserInit(socket, user, room)
             }
             break;
           default: {
@@ -200,18 +208,20 @@ class ConnectionHandler {
         }
       }
     );
-    this.gameEventEmitter.on(
-      GameEventTypes.GameHasFinished,
-      (data: any) => {
-        console.log(data.roomId + " | Game has finished");
-        let room = rs.getRoomById(data.roomId);
-        room.setClosed();
-        io.in(data.roomId).emit("message", {
-          type: MessageTypes.GAME_HAS_FINISHED,
-          data: data,
-        });
-      }
-    );
+    this.gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: any) => {
+      console.log(data.roomId + " | Game has finished");
+      let room = rs.getRoomById(data.roomId);
+      room.setClosed();
+      io.in(data.roomId).emit("message", {
+        type: MessageTypes.GAME_HAS_FINISHED,
+        data: data,
+      });
+    });
   }
+
+
 }
+
+
+
 export default ConnectionHandler;

@@ -59,7 +59,7 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenSocket, setScreenSocket] = React.useState<Socket | undefined>(undefined)
     const [controllerSocket, setControllerSocket] = React.useState<Socket | undefined>(undefined)
     const { setObstacle, setPlayerFinished, setPlayerRank, setIsPlayerAdmin } = React.useContext(PlayerContext)
-    const { setPlayers, setTrackLength, setFinished, trackLength } = React.useContext(GameContext)
+    const { setPlayers, setTrackLength, setFinished, trackLength, setGameStarted } = React.useContext(GameContext)
 
     screenSocket?.on('message', (message: IGameState) => {
         if (message && message.data) {
@@ -94,6 +94,9 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
                 messageData = data as IGameFinished
                 setPlayerFinished(true)
                 setPlayerRank(messageData.rank)
+                break
+            case 'game1/hasStarted':
+                setGameStarted(true)
                 break
             default:
                 break

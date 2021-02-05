@@ -10,15 +10,15 @@ import StartGameScreen from './StartGameScreen'
 import ClickObstacle from './ClickObstacle'
 import { PlayerContext } from '../../contexts/PlayerContextProvider'
 import FinishedScreen from './FinishedScreen'
+import { GameContext } from '../../contexts/GameContextProvider'
 
 const Controller: React.FunctionComponent = () => {
-    const [permissionGranted, setPermissionGranted] = React.useState(false)
     const { isControllerConnected } = React.useContext(SocketContext)
-
     const { controllerSocket } = React.useContext(SocketContext)
-    const { obstacle, setObstacle, playerFinished } = React.useContext(PlayerContext)
+    const { obstacle, setObstacle, playerFinished, permission } = React.useContext(PlayerContext)
+    const { gameStarted } = React.useContext(GameContext)
 
-    if (permissionGranted) {
+    if (permission) {
         window.addEventListener(
             'devicemotion',
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,10 +42,8 @@ const Controller: React.FunctionComponent = () => {
             ) : (
                 <>
                     {!isControllerConnected && <ConnectScreen />}
-                    {!permissionGranted && isControllerConnected && (
-                        <StartGameScreen setPermissionGranted={setPermissionGranted} />
-                    )}
-                    {permissionGranted && !obstacle && <ShakeInstruction />}
+                    {!gameStarted && permission && isControllerConnected && <StartGameScreen />}
+                    {gameStarted && permission && !obstacle && <ShakeInstruction />}
                     {obstacle && <ClickObstacle setObstacle={setObstacle} />}
                 </>
             )}
