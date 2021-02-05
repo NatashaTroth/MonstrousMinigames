@@ -37,6 +37,11 @@ const io = require("socket.io")(expresServer, {
 });
 
 const rs = new RoomService();
-
 const ch = new ConnectionHandler(io, rs);
 ch.handle();
+
+server.app.get("/create-room", (req, res) => {
+  let room = rs.createRoom()
+  res.send({roomId: room.id});
+});
+
