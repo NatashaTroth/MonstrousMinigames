@@ -55,23 +55,55 @@ interface IGameState {
     type: string
 }
 
+export interface IUser {
+    id: string
+    name: string
+    roomId: string
+}
+
+interface IConnectedUsers {
+    type: string
+    users: IUser[]
+}
 const SocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenSocket, setScreenSocket] = React.useState<Socket | undefined>(undefined)
     const [controllerSocket, setControllerSocket] = React.useState<Socket | undefined>(undefined)
     const { setObstacle, setPlayerFinished, setPlayerRank, setIsPlayerAdmin } = React.useContext(PlayerContext)
-    const { setPlayers, setTrackLength, setFinished, trackLength, setGameStarted } = React.useContext(GameContext)
+    const {
+        setPlayers,
+        setTrackLength,
+        setFinished,
+        trackLength,
+        setGameStarted,
+        roomId,
+        setRoomId,
+        setConnectedUsers,
+    } = React.useContext(GameContext)
 
-    screenSocket?.on('message', (message: IGameState) => {
-        if (message && message.data) {
-            if (!trackLength) {
-                setTrackLength(message.data.trackLength)
-            }
-            setPlayers(message.data.playersState)
-            if (GAMESTATE.finished === message.data.gameState) {
-                if (!finished) {
-                    setFinished(true)
+    screenSocket?.on('message', (data: IGameState | IConnectedUsers) => {
+        let messageData
+        switch (data.type) {
+            case 'game1/gameState':
+                messageData = data as IGameState
+                if (messageData && messageData.data) {
+                    if (!trackLength) {
+                        setTrackLength(messageData.data.trackLength)
+                    }
+                    if (!roomId) {
+                        setRoomId(messageData.data.roomId)
+                    }
+                    setPlayers(messageData.data.playersState)
+                    if (GAMESTATE.finished === messageData.data.gameState) {
+                        if (!finished) {
+                            setFinished(true)
+                        }
+                    }
                 }
-            }
+                break
+            case 'connectedUsers':
+                messageData = data as IConnectedUsers
+                setConnectedUsers(messageData.users)
+                break
         }
     })
 
