@@ -14,6 +14,7 @@ interface ISocketContext {
     isControllerConnected: boolean
     setControllerSocket: (val: Socket | undefined) => void
     setScreenSocket: (val: Socket | undefined) => void
+    isScreenConnected: boolean
 }
 
 export const SocketContext = React.createContext<ISocketContext>({
@@ -26,6 +27,7 @@ export const SocketContext = React.createContext<ISocketContext>({
         // do nothing
     },
     isControllerConnected: false,
+    isScreenConnected: false,
 })
 
 interface IUserInitMessage {
@@ -101,6 +103,7 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
         setControllerSocket,
         setScreenSocket,
         isControllerConnected: controllerSocket ? true : false,
+        isScreenConnected: screenSocket ? true : false,
     }
     return <SocketContext.Provider value={content}>{children}</SocketContext.Provider>
 }
