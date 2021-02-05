@@ -43,10 +43,27 @@ function sendGameHasStarted(namespaces: Array<Namespace>, room: Room) {
     });
   });
 }
+function sendGameHasFinished(namespaces: Array<Namespace>, data: any) {
+  namespaces.forEach(function (namespace: Namespace) {
+    namespace.to(data.roomId).emit("message", {
+      type: MessageTypes.GAME_HAS_FINISHED,
+      data: data,
+    });
+  });
+}
+
+function sendPlayerFinished(io: any, user: User, data: any) {
+  io.to(user.socketId).emit("message", {
+    type: CatchFoodMsgType.PLAYER_FINISHED,
+    rank: data.rank,
+  });
+}
 
 export default {
   sendUserInit,
   sendGameState,
   sendErrorMessage,
   sendGameHasStarted,
+  sendPlayerFinished,
+  sendGameHasFinished,
 };
