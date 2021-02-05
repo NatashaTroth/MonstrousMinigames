@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Socket } from 'socket.io-client'
+import { finished } from 'stream'
 import { GAMESTATE, OBSTACLES } from '../utils/constants'
 import { GameContext, IPlayerState } from './GameContextProvider'
 import { PlayerContext } from './PlayerContextProvider'
@@ -67,7 +68,9 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
             }
             setPlayers(message.data.playersState)
             if (GAMESTATE.finished === message.data.gameState) {
-                setFinished(true)
+                if (!finished) {
+                    setFinished(true)
+                }
             }
         }
     })

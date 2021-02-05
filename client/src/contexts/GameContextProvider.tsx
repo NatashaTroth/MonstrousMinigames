@@ -26,7 +26,7 @@ export interface IPlayerState {
 }
 export const GameContext = React.createContext<IGameContext>({
     trackLength: undefined,
-    setTrackLength: (val: number) => {
+    setTrackLength: () => {
         // do nothing
     },
     players: undefined,
