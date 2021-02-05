@@ -110,7 +110,7 @@ class ConnectionHandler {
           }
           case CatchFoodMsgType.MOVE: {
             if (room.isPlaying()) {
-              room.game?.runForward(userId, 200);
+              room.game?.runForward(userId, 1);
               //emitter.sendGameState(screenNameSpace, room, true)
             }
             break;
@@ -158,7 +158,6 @@ class ConnectionHandler {
   }
   private handleGameEvents() {
     let rs = this.rs;
-    let io = this.io;
     let controllerNamespace = this.controllerNamespace;
     let screenNameSpace = this.screenNameSpace;
     this.gameEventEmitter.on(
