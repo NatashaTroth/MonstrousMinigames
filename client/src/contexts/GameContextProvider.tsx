@@ -72,9 +72,17 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         players,
         setPlayers,
         finished,
-        setFinished,
+        setFinished: (val: boolean) => {
+            setFinished(val)
+            document.body.style.overflow = 'visible'
+            document.body.style.position = 'static'
+        },
         gameStarted,
-        setGameStarted,
+        setGameStarted: (val: boolean) => {
+            setGameStarted(val)
+            document.body.style.overflow = 'hidden'
+            document.body.style.position = 'fixed'
+        },
         roomId,
         setRoomId,
         connectedUsers,
