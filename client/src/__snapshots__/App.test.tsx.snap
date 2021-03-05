@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test App component render correctly app component 1`] = `
+<div
+  className="sc-citwmv ieXtcO App"
+>
+  <div
+    className="sc-dlfnbm hvnrnz"
+  >
+    <form
+      className="sc-eCssSg fkYglk"
+      onSubmit={[Function]}
+    >
+      <div
+        className="sc-bdfBwQ"
+      >
+        <button
+          className="sc-gsTCUz fBNnYR"
+          disabled={false}
+          name="new"
+          type="submit"
+        >
+          Create new Room
+        </button>
+      </div>
+      <label
+        className="sc-jSgupP cYqUsr"
+      >
+        Join existing Room
+        <input
+          className="sc-hKgILt cqymzH"
+          name="roomId"
+          onChange={[Function]}
+          placeholder="Insert a room code"
+          type="text"
+          value=""
+        />
+      </label>
+      <div
+        className="sc-bdfBwQ"
+      >
+        <button
+          className="sc-gsTCUz fBNnYR"
+          disabled={true}
+          name="join"
+          type="submit"
+        >
+          Connect
+        </button>
+      </div>
+    </form>
+    <a
+      className="sc-gKsewC iKqFl"
+      href="/impressum"
+      onClick={[Function]}
+    >
+      Impressum
+    </a>
+  </div>
+</div>
+`;
