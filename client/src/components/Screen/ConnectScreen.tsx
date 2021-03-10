@@ -5,7 +5,14 @@ import { GameContext } from '../../contexts/GameContextProvider'
 import { SocketContext } from '../../contexts/SocketContextProvider'
 import { ENDPOINT } from '../../utils/config'
 import Button from '../common/Button'
-import { ConnectScreenContainer, ImpressumLink, StyledInput, StyledLabel, FormContainer } from './ConnectScreen.sc'
+import {
+    ConnectScreenContainer,
+    ImpressumLink,
+    StyledInput,
+    StyledLabel,
+    FormContainer,
+    StyledForm,
+} from './ConnectScreen.sc'
 
 interface IFormState {
     roomId: string
@@ -43,25 +50,34 @@ const ConnectScreen: React.FunctionComponent = () => {
 
     return (
         <ConnectScreenContainer>
-            <FormContainer
-                onSubmit={e => {
-                    e.preventDefault()
-                    handleSubmit()
-                }}
-            >
-                <Button type="submit" name="new" text="Create new Room" disabled={Boolean(formState?.roomId)} />
-                <StyledLabel>
-                    Join existing Room
-                    <StyledInput
-                        type="text"
-                        name="roomId"
-                        value={formState?.roomId}
-                        onChange={e => setFormState({ ...formState, roomId: e.target.value })}
-                        placeholder="Insert a room code"
-                    />
-                </StyledLabel>
-                <Button type="submit" name="join" text="Connect" disabled={!formState?.roomId} />
+            <FormContainer>
+                <Button
+                    type="button"
+                    name="new"
+                    text="Create new Room"
+                    disabled={Boolean(formState?.roomId)}
+                    onClick={handleSubmit}
+                />
+                <StyledForm
+                    onSubmit={e => {
+                        e.preventDefault()
+                        handleSubmit()
+                    }}
+                >
+                    <StyledLabel>
+                        Join existing Room
+                        <StyledInput
+                            type="text"
+                            name="roomId"
+                            value={formState?.roomId}
+                            onChange={e => setFormState({ ...formState, roomId: e.target.value })}
+                            placeholder="Insert a room code"
+                        />
+                    </StyledLabel>
+                    <Button type="submit" name="join" text="Connect" disabled={!formState?.roomId} />
+                </StyledForm>
             </FormContainer>
+
             <ImpressumLink to="/impressum">Impressum</ImpressumLink>
         </ConnectScreenContainer>
     )
