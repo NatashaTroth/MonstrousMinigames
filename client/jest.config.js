@@ -7,4 +7,6 @@ module.exports = {
             '<rootDir>/assetTransformer.js',
         '\\.(css|less)$': '<rootDir>/assetTransformer.js',
     },
+    testPathIgnorePatterns: ['lib/', 'node_modules/'],
+    moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 }

@@ -1,9 +1,3 @@
 {
-    "src/**/*.{js,jsx,ts,tsx,json}": [
-        "prettier --write",
-        "npm run lint-fix",
-        "npm run tsc --silent",
-        "npm run test",
-        "git add"
-    ]
+    "src/**/*.{js,jsx,ts,tsx,json}": ["prettier --write", "npm run lint-fix", "npm run tsc --silent", "git add"]
 }
