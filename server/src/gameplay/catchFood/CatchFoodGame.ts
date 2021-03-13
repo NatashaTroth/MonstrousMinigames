@@ -15,6 +15,7 @@ import GameEventEmitter from "../../classes/GameEventEmitter";
 import { Game } from "phaser";
 import { verifyGameState } from "../helperFunctions/verifyGameState";
 import { verifyUserId } from "../helperFunctions/verifyUserId";
+import { shuffleArray } from "../../helpers/shuffleArray";
 
 interface CatchFoodGameInterface extends GameInterface {
   playersState: HashTable<PlayerState>;
@@ -57,12 +58,13 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
   }
 
   private initiatePlayersState(players: Array<User>) {
+    const obstacleTypes = this.getObstacleTypes();
     players.forEach((player) => {
       this.playersState[player.id] = {
         id: player.id,
         name: player.name,
         positionX: 0,
-        obstacles: this.createObstacles(),
+        obstacles: this.createObstacles(obstacleTypes),
         atObstacle: false,
         finished: false,
         rank: 0,
@@ -70,8 +72,12 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     });
   }
 
-  private createObstacles(): Array<Obstacle> {
+  private createObstacles(obstacleTypes: Array<ObstacleType>): Array<Obstacle> {
     const obstacles: Array<Obstacle> = [];
+    const shuffledObstacleTypes: Array<ObstacleType> = shuffleArray(
+      obstacleTypes
+    );
+
     const quadrantRange =
       Math.floor(this.trackLength / (this.numberOfObstacles + 1)) - 30; //e.g. 500/4 = 125, +10 to avoid obstacle being at the very beginning, - 10 to stop 2 being right next to eachother
 
@@ -83,11 +89,24 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
       obstacles.push({
         positionX: position,
-        type: ObstacleType.TreeStump, //TODO
+        type: shuffledObstacleTypes[i],
       });
     }
-
+    console.log(obstacles);
     return [...obstacles];
+  }
+
+  private getObstacleTypes(): Array<ObstacleType> {
+    const obstacleTypeKeys: Array<string> = Object.keys(ObstacleType);
+    const obstacleTypes: Array<ObstacleType> = [];
+    for (let i = 0; i < this.numberOfObstacles; i++) {
+      let randomNr = Math.floor(
+        Math.random() * Math.floor(obstacleTypeKeys.length)
+      );
+      obstacleTypes.push(obstacleTypeKeys[randomNr] as ObstacleType);
+    }
+    console.log(obstacleTypes);
+    return obstacleTypes;
   }
 
   startGame() {
