@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test Button component render correctly Button component 1`] = `
+<div
+  className="sc-bdfBwQ"
+>
+  <button
+    className="sc-gsTCUz fBNnYR"
+    type="button"
+  >
+    Click me
+  </button>
+</div>
+`;
+
+exports[`test Button component render disabled Button component 1`] = `
+<div
+  className="sc-bdfBwQ"
+>
+  <button
+    className="sc-gsTCUz fBNnYR"
+    disabled={true}
+    type="button"
+  >
+    Click me
+  </button>
+</div>
+`;

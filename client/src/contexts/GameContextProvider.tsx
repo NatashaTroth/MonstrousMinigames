@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { OBSTACLES } from '../utils/constants'
+import { IUser } from './SocketContextProvider'
 
 interface IGameContext {
     trackLength?: number
@@ -10,6 +11,10 @@ interface IGameContext {
     setFinished: (val: boolean) => void
     gameStarted: boolean
     setGameStarted: (val: boolean) => void
+    roomId?: string
+    setRoomId: (val?: string) => void
+    connectedUsers?: IUser[]
+    setConnectedUsers: (val: IUser[]) => void
 }
 
 interface IObstacle {
@@ -43,6 +48,14 @@ export const GameContext = React.createContext<IGameContext>({
     setGameStarted: () => {
         // do nothing
     },
+    roomId: undefined,
+    setRoomId: () => {
+        // do nothing
+    },
+    connectedUsers: undefined,
+    setConnectedUsers: () => {
+        // do nothing
+    },
 })
 
 const GameContextProvider: React.FunctionComponent = ({ children }) => {
@@ -50,6 +63,8 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [players, setPlayers] = React.useState<undefined | IPlayerState[]>()
     const [finished, setFinished] = React.useState<boolean>(false)
     const [gameStarted, setGameStarted] = React.useState<boolean>(false)
+    const [roomId, setRoomId] = React.useState<undefined | string>()
+    const [connectedUsers, setConnectedUsers] = React.useState<undefined | IUser[]>()
 
     const content = {
         trackLength,
@@ -57,9 +72,21 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         players,
         setPlayers,
         finished,
-        setFinished,
+        setFinished: (val: boolean) => {
+            setFinished(val)
+            document.body.style.overflow = 'visible'
+            document.body.style.position = 'static'
+        },
         gameStarted,
-        setGameStarted,
+        setGameStarted: (val: boolean) => {
+            setGameStarted(val)
+            document.body.style.overflow = 'hidden'
+            document.body.style.position = 'fixed'
+        },
+        roomId,
+        setRoomId,
+        connectedUsers,
+        setConnectedUsers,
     }
     return <GameContext.Provider value={content}>{children}</GameContext.Provider>
 }

@@ -73,6 +73,7 @@ class ConnectionHandler {
           return;
         }
       }
+      emitter.sendConnectedUsers(screenNameSpace, room);
       console.log(roomId + " | Controller connected: " + userId);
 
       emitter.sendUserInit(socket, user, room);
@@ -136,6 +137,8 @@ class ConnectionHandler {
   }
   private handleScreens() {
     let rs = this.rs;
+    let screenNameSpace = this.screenNameSpace;
+
     this.screenNameSpace.on("connection", function (socket: any) {
       let roomId = socket.handshake.query.roomId
         ? socket.handshake.query.roomId
@@ -144,6 +147,9 @@ class ConnectionHandler {
 
       socket.join(room.id);
       console.log(roomId + " | Screen connected");
+
+
+      emitter.sendConnectedUsers(screenNameSpace, room);
 
       socket.on("disconnect", () => {
         console.log(roomId + " | Screen disconnected");
@@ -158,7 +164,6 @@ class ConnectionHandler {
   }
   private handleGameEvents() {
     let rs = this.rs;
-    let io = this.io;
     let controllerNamespace = this.controllerNamespace;
     let screenNameSpace = this.screenNameSpace;
     this.gameEventEmitter.on(
@@ -190,7 +195,7 @@ class ConnectionHandler {
         let room = rs.getRoomById(data.roomId);
         let user = room.getUserById(data.userId);
         if (user) {
-          emitter.sendPlayerFinished(io, user, data);
+          emitter.sendPlayerFinished(controllerNamespace, user, data);
         }
       }
     );

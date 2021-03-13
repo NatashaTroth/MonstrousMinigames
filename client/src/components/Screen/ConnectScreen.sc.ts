@@ -40,7 +40,14 @@ export const StyledInput = styled.input`
         outline: none;
     }
 `
-export const FormContainer = styled.form`
+export const StyledForm = styled.form`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`
+
+export const FormContainer = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;

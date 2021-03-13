@@ -1,13 +1,17 @@
 import Room from "../classes/room";
-
+var CodeGenerator = require('node-code-generator');
+var generator = new CodeGenerator()
 class RoomService {
   private rooms: Array<Room>;
+  private roomCodes: Array<string>
 
   constructor() {
     this.rooms = [];
+    this.roomCodes = generator.generateCodes('****',100)
+    console.log(this.roomCodes)
   }
 
-  private createRoom(roomId: string = "ABCDE") {
+  public createRoom(roomId: any = this.getSingleRoomCode()) {
     let room = new Room(roomId);
     this.rooms.push(room);
     return room;
@@ -28,6 +32,10 @@ class RoomService {
   public startGame(room: Room) {
     room.createGame();
     return room.game?.getGameStateInfo();
+  }
+
+  public getSingleRoomCode(){
+    return this.roomCodes.pop()
   }
 }
 export default RoomService;
