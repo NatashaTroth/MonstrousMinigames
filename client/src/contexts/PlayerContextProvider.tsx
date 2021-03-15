@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useHistory } from 'react-router'
 import { OBSTACLES } from '../utils/constants'
 
 interface IPlayerContext {
@@ -43,12 +44,23 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [playerRank, setPlayerRank] = React.useState<undefined | number>(undefined)
     const [isPlayerAdmin, setIsPlayerAdmin] = React.useState<boolean>(false)
     const [permission, setPermissionGranted] = React.useState<boolean>(false)
+    const history = useHistory()
 
     const content = {
         obstacle,
-        setObstacle,
+        setObstacle: (val: undefined | OBSTACLES) => {
+            setObstacle(val)
+            if (val) {
+                history.push('/controller/game1-obstacle')
+            } else {
+                history.push('/controller/game1')
+            }
+        },
         playerFinished,
-        setPlayerFinished,
+        setPlayerFinished: (val: boolean) => {
+            setPlayerFinished(val)
+            history.push('/controller/finished')
+        },
         playerRank,
         setPlayerRank,
         isPlayerAdmin,

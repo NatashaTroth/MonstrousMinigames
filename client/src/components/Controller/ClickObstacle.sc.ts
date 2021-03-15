@@ -1,4 +1,4 @@
-import { lightBlue } from './../../utils/colors'
+import { lightBlue } from '../../utils/colors'
 import styled from 'styled-components'
 import { orange } from '../../utils/colors'
 

@@ -1,15 +1,18 @@
 import * as React from 'react'
+import FullScreenContainer from '../common/FullScreenContainer'
 import { Container, StyledRotationIcon, StyledShakeInstruction } from './ShakeInstruction.sc'
 
 const ShakeInstruction: React.FunctionComponent = () => {
     return (
-        <Container>
-            <StyledRotationIcon />
-            <StyledShakeInstruction>
-                <span>SHAKE YOUR PHONE!</span>
-                <span>(and maybe your booty)</span>
-            </StyledShakeInstruction>
-        </Container>
+        <FullScreenContainer>
+            <Container>
+                <StyledRotationIcon />
+                <StyledShakeInstruction>
+                    <span>SHAKE YOUR PHONE!</span>
+                    <span>(and maybe your booty)</span>
+                </StyledShakeInstruction>
+            </Container>
+        </FullScreenContainer>
     )
 }
 

@@ -1,19 +1,20 @@
 import * as React from 'react'
 import { FinishedScreenContainer, FinishedScreenText } from './FinishedScreen.sc'
 import { PlayerContext } from '../../contexts/PlayerContextProvider'
+import FullScreenContainer from '../common/FullScreenContainer'
 
-const FinishedScreen: React.FunctionComponent = () => {
+export const FinishedScreen: React.FunctionComponent = () => {
     const { playerRank } = React.useContext(PlayerContext)
 
     return (
-        <FinishedScreenContainer>
-            <FinishedScreenText>
-                #{playerRank}
-                <br />
-                Finished!
-            </FinishedScreenText>
-        </FinishedScreenContainer>
+        <FullScreenContainer>
+            <FinishedScreenContainer>
+                <FinishedScreenText>
+                    #{playerRank}
+                    <br />
+                    Finished!
+                </FinishedScreenText>
+            </FinishedScreenContainer>
+        </FullScreenContainer>
     )
 }
-
-export default FinishedScreen

@@ -1,5 +1,6 @@
 import { stringify } from 'query-string'
 import * as React from 'react'
+import { useHistory } from 'react-router-dom'
 import { io } from 'socket.io-client'
 import { GameContext } from '../../contexts/GameContextProvider'
 import { SocketContext } from '../../contexts/SocketContextProvider'
@@ -17,7 +18,7 @@ import {
 interface IFormState {
     roomId: string
 }
-const ConnectScreen: React.FunctionComponent = () => {
+export const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ roomId: '' })
     const { setScreenSocket } = React.useContext(SocketContext)
     const { setRoomId } = React.useContext(GameContext)
@@ -82,5 +83,3 @@ const ConnectScreen: React.FunctionComponent = () => {
         </ConnectScreenContainer>
     )
 }
-
-export default ConnectScreen
