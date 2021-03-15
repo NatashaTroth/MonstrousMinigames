@@ -7,16 +7,36 @@ import { ENDPOINT } from '../../utils/config'
 import { stringify } from 'query-string'
 import { ClickRequestDeviceMotion } from '../../utils/permissions'
 import { PlayerContext } from '../../contexts/PlayerContextProvider'
+import { useHistory } from 'react-router-dom'
+import { sendMovement } from '../../utils/sendMovement'
 
 interface IFormState {
     name?: undefined | string
     roomId?: undefined | string
 }
 
-const ConnectScreen: React.FunctionComponent = () => {
+export const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ name: '', roomId: '' })
     const { setControllerSocket } = React.useContext(SocketContext)
-    const { setPermissionGranted } = React.useContext(PlayerContext)
+    const { setPermissionGranted, playerFinished, permission } = React.useContext(PlayerContext)
+    const { controllerSocket } = React.useContext(SocketContext)
+
+    if (permission) {
+        window.addEventListener(
+            'devicemotion',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (event: any) => {
+                event.preventDefault()
+                if (
+                    event?.acceleration?.x &&
+                    (event.acceleration.x < -2 || event.acceleration.x > 2) &&
+                    !playerFinished
+                ) {
+                    sendMovement(controllerSocket)
+                }
+            }
+        )
+    }
 
     async function handleSubmit() {
         const permission = await ClickRequestDeviceMotion()
@@ -84,5 +104,3 @@ const ConnectScreen: React.FunctionComponent = () => {
         </ConnectScreenContainer>
     )
 }
-
-export default ConnectScreen

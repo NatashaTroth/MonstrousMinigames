@@ -1,4 +1,4 @@
-import { orange } from './../../utils/colors'
+import { orange } from '../../utils/colors'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import camp from '../../images/camp.svg'

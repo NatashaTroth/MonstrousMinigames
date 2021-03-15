@@ -1,7 +1,7 @@
-import { lightBlue } from './../../utils/colors'
 import styled from 'styled-components'
+import { lightBlue } from '../../utils/colors'
 
-export const ControllerContainer = styled.div`
+export const StyledFullScreenContainer = styled.div`
     background-color: ${lightBlue};
     width: 100%;
     height: 100%;

@@ -1,4 +1,4 @@
-import { orange } from './../../utils/colors'
+import { orange } from '../../utils/colors'
 import styled from 'styled-components'
 import ScreenRotationIcon from '@material-ui/icons/ScreenRotation'
 
