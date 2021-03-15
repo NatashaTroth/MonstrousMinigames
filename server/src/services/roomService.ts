@@ -8,7 +8,6 @@ class RoomService {
   constructor() {
     this.rooms = [];
     this.roomCodes = generator.generateCodes('****',100)
-    console.log(this.roomCodes)
   }
 
   public createRoom(roomId: any = this.getSingleRoomCode()) {

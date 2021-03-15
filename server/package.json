@@ -30,6 +30,7 @@
     "express": "^4.17.1",
     "node-code-generator": "^1.0.3",
     "phaser": "^3.52.0",
+    "qrcode": "^1.4.4",
     "seedrandom": "^3.0.5",
     "shortid": "^2.2.16",
     "socket.io": "^3.1.0"
