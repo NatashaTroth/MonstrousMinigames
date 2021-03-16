@@ -1,15 +1,54 @@
 {
     "root": true,
+    "env": {
+        "browser": true,
+        "es6": true,
+        "jest": true
+    },
     "parser": "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint"],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "plugins": ["react", "react-hooks", "@typescript-eslint", "simple-import-sort", "unused-imports", "formatjs"],
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react/recommended"
     ],
     "rules": {
         "no-console": 2,
         "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/no-non-null-assertion": "off"
-    }
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "sort-imports": "off",
+        "import/order": "off",
+        "no-unused-vars": ["error", { "args": "none", "ignoreRestSiblings": true }],
+        "prefer-template": "error",
+        "unused-imports/no-unused-imports": "error",
+        "simple-import-sort/imports": "error",
+        "react/display-name": "off",
+        "react/prop-types": "off",
+        "react/jsx-uses-react": "error",
+        "formatjs/enforce-placeholders": "error",
+        "formatjs/enforce-default-message": "error"
+    },
+    "overrides": [
+        {
+            "files": ["*.ts", "*.tsx"],
+            "rules": {
+                "@typescript-eslint/no-unused-vars": ["error", { "args": "none", "ignoreRestSiblings": true }],
+                "react-hooks/rules-of-hooks": "error",
+                "react-hooks/exhaustive-deps": "warn"
+            }
+        }
+    ]
 }

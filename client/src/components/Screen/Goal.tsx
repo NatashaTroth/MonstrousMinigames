@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 import goal from '../../images/goal.svg'
 import { ImageContainer, StyledImage } from './Goal.sc'
 

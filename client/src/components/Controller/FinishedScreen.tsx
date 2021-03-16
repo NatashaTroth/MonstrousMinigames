@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { FinishedScreenContainer, FinishedScreenText } from './FinishedScreen.sc'
+
 import { PlayerContext } from '../../contexts/PlayerContextProvider'
 import FullScreenContainer from '../common/FullScreenContainer'
+import { FinishedScreenContainer, FinishedScreenText } from './FinishedScreen.sc'
 
 export const FinishedScreen: React.FunctionComponent = () => {
     const { playerRank } = React.useContext(PlayerContext)

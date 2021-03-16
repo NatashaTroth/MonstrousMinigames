@@ -1,7 +1,7 @@
-import { lightBlue } from './../../utils/colors'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { orange } from '../../utils/colors'
+
+import { lightBlue, orange } from '../../utils/colors'
 
 export const ImpressumContainer = styled.div`
     background-color: ${lightBlue};

@@ -1,13 +1,12 @@
 import * as React from 'react'
-import { Container, PlayerCharacter, PlayerName } from './Player.sc'
-import { SocketContext } from '../../contexts/SocketContextProvider'
-import oliver from '../../images/oliver.png'
+
+import { GameContext } from '../../contexts/GameContextProvider'
 import monster from '../../images/monster.png'
 import monster2 from '../../images/monster2.png'
+import oliver from '../../images/oliver.png'
 import unicorn from '../../images/unicorn.png'
-import { OBSTACLES } from '../../utils/constants'
 import Obstacle from './Obstacle'
-import { GameContext } from '../../contexts/GameContextProvider'
+import { Container, PlayerCharacter, PlayerName } from './Player.sc'
 
 const windowWidth = window.innerWidth - 100
 
@@ -23,14 +22,14 @@ const Player: React.FunctionComponent = () => {
     return (
         <>
             {players?.map((player, playerIndex) => (
-                <div key={'container' + player.id}>
+                <div key={`container${player.id}`}>
                     <Container id={player.id} key={player.id} top={playerIndex}>
                         <PlayerName>{player.name}</PlayerName>
                         <PlayerCharacter src={monsters[playerIndex]} />
                     </Container>
                     {player.obstacles.map((obstacle, index) => (
                         <Obstacle
-                            key={'obstacle' + index + 'player' + player.id}
+                            key={`obstacle${index}player${player.id}`}
                             player={playerIndex}
                             posX={(obstacle.positionX * windowWidth) / (trackLength || 1)}
                         />
@@ -53,6 +52,6 @@ function movePlayer(playerId: string, positionX: number, trackLength: number) {
     const d = document.getElementById(playerId)
 
     if (d) {
-        d.style.left = (positionX * windowWidth) / (trackLength || 1) + 'px'
+        d.style.left = `${(positionX * windowWidth) / (trackLength || 1)}px`
     }
 }

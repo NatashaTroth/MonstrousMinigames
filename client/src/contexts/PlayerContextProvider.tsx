@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useHistory } from 'react-router'
+
 import { OBSTACLES } from '../utils/constants'
 
 interface IPlayerContext {

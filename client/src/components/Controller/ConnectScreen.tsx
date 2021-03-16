@@ -1,14 +1,14 @@
-import * as React from 'react'
-import Button from '../common/Button'
-import { FormContainer, ConnectScreenContainer, StyledInput, StyledLabel, ImpressumLink } from './ConnectScreen.sc'
-import { SocketContext } from '../../contexts/SocketContextProvider'
-import { io } from 'socket.io-client'
-import { ENDPOINT } from '../../utils/config'
 import { stringify } from 'query-string'
-import { ClickRequestDeviceMotion } from '../../utils/permissions'
+import * as React from 'react'
+import { io } from 'socket.io-client'
+
 import { PlayerContext } from '../../contexts/PlayerContextProvider'
-import { useHistory } from 'react-router-dom'
+import { SocketContext } from '../../contexts/SocketContextProvider'
+import { ENDPOINT } from '../../utils/config'
+import { ClickRequestDeviceMotion } from '../../utils/permissions'
 import { sendMovement } from '../../utils/sendMovement'
+import Button from '../common/Button'
+import { ConnectScreenContainer, FormContainer, ImpressumLink, StyledInput, StyledLabel } from './ConnectScreen.sc'
 
 interface IFormState {
     name?: undefined | string
@@ -45,13 +45,11 @@ export const ConnectScreen: React.FunctionComponent = () => {
         }
 
         const controllerSocket = io(
-            ENDPOINT +
-                'controller?' +
-                stringify({
-                    name: formState?.name,
-                    roomId: formState?.roomId,
-                    userId: sessionStorage.getItem('userId') || '',
-                }),
+            `${ENDPOINT}controller?${stringify({
+                name: formState?.name,
+                roomId: formState?.roomId,
+                userId: sessionStorage.getItem('userId') || '',
+            })}`,
             {
                 secure: true,
                 reconnection: true,
