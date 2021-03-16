@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useHistory } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
 import { finished } from 'stream'
+
 import { GAMESTATE, OBSTACLES } from '../utils/constants'
 import { GameContext, IPlayerState } from './GameContextProvider'
 import { PlayerContext } from './PlayerContextProvider'

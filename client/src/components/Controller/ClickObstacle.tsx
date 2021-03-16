@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { ObstacleItem, ObstacleContainer, StyledObstacleImage, ObstacleInstructions } from './ClickObstacle.sc'
-import { OBSTACLES } from '../../utils/constants'
+
+import { PlayerContext } from '../../contexts/PlayerContextProvider'
 import { SocketContext } from '../../contexts/SocketContextProvider'
 import wood from '../../images/wood.png'
-import { useHistory } from 'react-router-dom'
-import { PlayerContext } from '../../contexts/PlayerContextProvider'
+import { OBSTACLES } from '../../utils/constants'
+import { ObstacleContainer, ObstacleInstructions, ObstacleItem, StyledObstacleImage } from './ClickObstacle.sc'
 
 interface IClickObstacle {
     setObstacle: (value: undefined | OBSTACLES) => void

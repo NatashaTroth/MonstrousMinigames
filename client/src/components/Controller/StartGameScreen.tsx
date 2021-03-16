@@ -1,10 +1,11 @@
 import * as React from 'react'
-import Button from '../common/Button'
-import { SocketContext } from '../../contexts/SocketContextProvider'
-import { Instruction, StartGameScreenContainer } from './StartGameScreen.sc'
-import { PlayerContext } from '../../contexts/PlayerContextProvider'
 import { useHistory } from 'react-router-dom'
+
+import { PlayerContext } from '../../contexts/PlayerContextProvider'
+import { SocketContext } from '../../contexts/SocketContextProvider'
+import Button from '../common/Button'
 import FullScreenContainer from '../common/FullScreenContainer'
+import { Instruction, StartGameScreenContainer } from './StartGameScreen.sc'
 
 const StartGameScreen: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(SocketContext)

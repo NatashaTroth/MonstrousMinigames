@@ -1,22 +1,23 @@
-import React from 'react'
-import SocketContextProvider from './contexts/SocketContextProvider'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { AppContainer } from './App.sc'
+import * as React from 'react'
 import { isMobileOnly } from 'react-device-detect'
-import PlayerContextProvider from './contexts/PlayerContextProvider'
-import Impressum from './components/common/Impressum'
-import GameContextProvider from './contexts/GameContextProvider'
-import StartGameScreen from './components/Controller/StartGameScreen'
-import { ConnectScreen as ControllerConnectScreen } from './components/Controller/ConnectScreen'
-import { ConnectScreen as ScreenConnectScreen } from './components/Screen/ConnectScreen'
-import ClickObstacle from './components/Controller/ClickObstacle'
-import ShakeInstruction from './components/Controller/ShakeInstruction'
-import { FinishedScreen as ControllerFinishedScreen } from './components/Controller/FinishedScreen'
-import { FinishedScreen as ScreenFinishedScreen } from './components/Screen/FinishedScreen'
-import Lobby from './components/Screen/Lobby'
-import Game from './components/Screen/Game'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
-function App() {
+import { AppContainer } from './App.sc'
+import Impressum from './components/common/Impressum'
+import ClickObstacle from './components/Controller/ClickObstacle'
+import { ConnectScreen as ControllerConnectScreen } from './components/Controller/ConnectScreen'
+import { FinishedScreen as ControllerFinishedScreen } from './components/Controller/FinishedScreen'
+import ShakeInstruction from './components/Controller/ShakeInstruction'
+import StartGameScreen from './components/Controller/StartGameScreen'
+import { ConnectScreen as ScreenConnectScreen } from './components/Screen/ConnectScreen'
+import { FinishedScreen as ScreenFinishedScreen } from './components/Screen/FinishedScreen'
+import Game from './components/Screen/Game'
+import Lobby from './components/Screen/Lobby'
+import GameContextProvider from './contexts/GameContextProvider'
+import PlayerContextProvider from './contexts/PlayerContextProvider'
+import SocketContextProvider from './contexts/SocketContextProvider'
+
+const App: React.FunctionComponent = () => {
     return (
         <Router>
             <AppContainer className="App">

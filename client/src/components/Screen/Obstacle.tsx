@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { StyledObstacle, StyledObstacleImage } from './Obstacle.sc'
+
 import woodFront from '../../images/woodFront.png'
+import { StyledObstacle, StyledObstacleImage } from './Obstacle.sc'
 
 interface IObstacle {
     posX: number

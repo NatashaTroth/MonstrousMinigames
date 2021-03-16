@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import { lightBlue } from '../../utils/colors'
 
 export const StyledFullScreenContainer = styled.div`

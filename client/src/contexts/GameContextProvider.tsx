@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useHistory } from 'react-router-dom'
+
 import { OBSTACLES } from '../utils/constants'
 import { IUser } from './SocketContextProvider'
 

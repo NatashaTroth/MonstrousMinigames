@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 import { StyledFullScreenContainer } from './FullScreenContainer.sc'
 
 const FullScreenContainer: React.FunctionComponent = ({ children }) => (
