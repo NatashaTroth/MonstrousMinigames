@@ -12,8 +12,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
             <FinishedScreenContainer>
                 <FinishedScreenText>
                     #{playerRank}
-                    <br />
-                    Finished!
+                    <span>Finished!</span>
                 </FinishedScreenText>
             </FinishedScreenContainer>
         </FullScreenContainer>
