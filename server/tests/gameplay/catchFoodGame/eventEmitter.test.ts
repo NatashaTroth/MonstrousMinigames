@@ -50,30 +50,26 @@ const NUMBER_OF_OBSTACLES = 4;
 let catchFoodGame: CatchFoodGame;
 const OBSTACLE_RANGE = 70;
 let obstacles: HashTable<Array<Obstacle>>;
+let gameEventEmitter: GameEventEmitter;
 
-describe("Get Obstacle Positions test", () => {
-  beforeEach(async () => {
+describe("Event Emitter", () => {
+  beforeAll(() => {
+    gameEventEmitter = GameEventEmitter.getInstance();
+  });
+
+  beforeEach(() => {
     catchFoodGame = new CatchFoodGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES);
-    obstacles = catchFoodGame.getObstaclePositions();
   });
 
-  it("should return the correct number of users", async () => {
-    expect(Object.keys(obstacles).length).toBe(users.length);
+  it("should emit an event when the game is started", async () => {
+    //Game started
+    let gameStartedEvent = false;
+    gameEventEmitter.on(GameEventTypes.GameHasStarted, () => {
+      gameStartedEvent = true;
+    });
+    expect(gameStartedEvent).toBeFalsy();
+    catchFoodGame.startGame();
+    await setTimeout(() => ({}), 100);
+    expect(gameStartedEvent).toBeTruthy();
   });
-
-  it("should return the correct number of obstacles", async () => {
-    expect(obstacles["1"].length).toBe(NUMBER_OF_OBSTACLES);
-  });
-
-  it("should contain the key obstacle positionX", async () => {
-    expect(Object.keys(obstacles["1"][0])).toContain("positionX");
-  });
-
-  it("should contain the obstacle type", async () => {
-    expect(Object.keys(obstacles["1"][0])).toContain("type");
-  });
-
-  // it("should contain the obstacle type", async () => {
-  //   expect(Object.keys(obstacles["1"][0].type)).toBeInstanceOf(ObstacleType);
-  // });
 });
