@@ -1,6 +1,7 @@
-import { orange } from './../../utils/colors'
-import styled from 'styled-components'
 import ScreenRotationIcon from '@material-ui/icons/ScreenRotation'
+import styled from 'styled-components'
+
+import { orange } from '../../utils/colors'
 
 export const StyledShakeInstruction = styled.div`
     border: 5px solid ${orange};

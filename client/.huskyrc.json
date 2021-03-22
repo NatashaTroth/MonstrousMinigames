@@ -1,5 +1,5 @@
 {
     "hooks": {
-        "pre-commit": "npm run test && lint-staged"
+        "pre-commit": "rm -rf /src/common/__snapshots__ && npm run test && lint-staged"
     }
 }

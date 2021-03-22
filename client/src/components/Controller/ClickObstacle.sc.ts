@@ -1,6 +1,6 @@
-import { lightBlue } from './../../utils/colors'
 import styled from 'styled-components'
-import { orange } from '../../utils/colors'
+
+import { lightBlue, orange } from '../../utils/colors'
 
 export const ObstacleContainer = styled.div`
     width: 100%;

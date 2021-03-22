@@ -1,6 +1,8 @@
 import * as React from 'react'
+import { useHistory } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
 import { finished } from 'stream'
+
 import { GAMESTATE, OBSTACLES } from '../utils/constants'
 import { GameContext, IPlayerState } from './GameContextProvider'
 import { PlayerContext } from './PlayerContextProvider'
@@ -69,6 +71,8 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenSocket, setScreenSocket] = React.useState<Socket | undefined>(undefined)
     const [controllerSocket, setControllerSocket] = React.useState<Socket | undefined>(undefined)
     const { setObstacle, setPlayerFinished, setPlayerRank, setIsPlayerAdmin } = React.useContext(PlayerContext)
+    const history = useHistory()
+
     const {
         setPlayers,
         setTrackLength,
@@ -107,6 +111,7 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
                 break
             case 'game1/hasStarted':
                 setGameStarted(true)
+                history.push('/screen/game1')
                 break
         }
     })
@@ -125,14 +130,17 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
             case 'game1/obstacle':
                 messageData = data as IObstacleMessage
                 setObstacle(messageData?.obstacleType)
+
                 break
             case 'game1/playerFinished':
                 messageData = data as IGameFinished
                 setPlayerFinished(true)
                 setPlayerRank(messageData.rank)
+
                 break
             case 'game1/hasStarted':
                 setGameStarted(true)
+                history.push('/controller/game1')
                 break
             default:
                 break
@@ -142,8 +150,14 @@ const SocketContextProvider: React.FunctionComponent = ({ children }) => {
     const content = {
         screenSocket,
         controllerSocket,
-        setControllerSocket,
-        setScreenSocket,
+        setControllerSocket: (val: Socket | undefined) => {
+            setControllerSocket(val)
+            history.push('/controller/start-game')
+        },
+        setScreenSocket: (val: Socket | undefined) => {
+            setScreenSocket(val)
+            history.push('/screen/lobby')
+        },
         isControllerConnected: controllerSocket ? true : false,
         isScreenConnected: screenSocket ? true : false,
     }

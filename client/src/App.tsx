@@ -1,32 +1,51 @@
-import React from 'react'
-import SocketContextProvider from './contexts/SocketContextProvider'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import Screen from './components/Screen/Screen'
-import Controller from './components/Controller/Controller'
-import { AppContainer } from './App.sc'
+import * as React from 'react'
 import { isMobileOnly } from 'react-device-detect'
-import PlayerContextProvider from './contexts/PlayerContextProvider'
-import Impressum from './components/common/Impressum'
-import GameContextProvider from './contexts/GameContextProvider'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
-function App() {
+import { AppContainer } from './App.sc'
+import Impressum from './components/common/Impressum'
+import ClickObstacle from './components/Controller/ClickObstacle'
+import { ConnectScreen as ControllerConnectScreen } from './components/Controller/ConnectScreen'
+import { FinishedScreen as ControllerFinishedScreen } from './components/Controller/FinishedScreen'
+import ShakeInstruction from './components/Controller/ShakeInstruction'
+import StartGameScreen from './components/Controller/StartGameScreen'
+import { ConnectScreen as ScreenConnectScreen } from './components/Screen/ConnectScreen'
+import { FinishedScreen as ScreenFinishedScreen } from './components/Screen/FinishedScreen'
+import Game from './components/Screen/Game'
+import Lobby from './components/Screen/Lobby'
+import GameContextProvider from './contexts/GameContextProvider'
+import PlayerContextProvider from './contexts/PlayerContextProvider'
+import SocketContextProvider from './contexts/SocketContextProvider'
+
+const App: React.FunctionComponent = () => {
     return (
-        <AppContainer className="App">
-            <PlayerContextProvider>
-                <GameContextProvider>
-                    <SocketContextProvider>
-                        <Router>
+        <Router>
+            <AppContainer className="App">
+                <PlayerContextProvider>
+                    <GameContextProvider>
+                        <SocketContextProvider>
                             <Switch>
-                                <Route path="/impressum">
-                                    <Impressum />
-                                </Route>
-                                <Route path="/">{isMobileOnly ? <Controller /> : <Screen />}</Route>
+                                <Route path="/impressum" component={Impressum} exact />
+                                <Route path="/controller/start-game" component={StartGameScreen} exact />
+                                <Route path="/controller/game1" component={ShakeInstruction} exact />
+                                <Route path="/controller/game1-obstacle" component={ClickObstacle} exact />
+                                <Route path="/controller/finished" component={ControllerFinishedScreen} exact />
+
+                                <Route path="/screen/lobby" component={Lobby} exact />
+                                <Route path="/screen/game1" component={Game} exact />
+                                <Route path="/screen/finished" component={ScreenFinishedScreen} exact />
+
+                                <Route
+                                    path="/"
+                                    component={isMobileOnly ? ControllerConnectScreen : ScreenConnectScreen}
+                                    exact
+                                />
                             </Switch>
-                        </Router>
-                    </SocketContextProvider>
-                </GameContextProvider>
-            </PlayerContextProvider>
-        </AppContainer>
+                        </SocketContextProvider>
+                    </GameContextProvider>
+                </PlayerContextProvider>
+            </AppContainer>
+        </Router>
     )
 }
 

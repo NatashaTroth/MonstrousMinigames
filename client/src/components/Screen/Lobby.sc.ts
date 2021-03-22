@@ -1,5 +1,6 @@
-import { lightBlue, orange } from './../../utils/colors'
 import styled from 'styled-components'
+
+import { lightBlue, orange } from '../../utils/colors'
 
 export const LobbyContainer = styled.div`
     background-color: ${lightBlue};

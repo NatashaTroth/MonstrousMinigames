@@ -1,8 +1,9 @@
 import * as React from 'react'
+
 import { GameContext } from '../../contexts/GameContextProvider'
 import { FinishedScreenContainer, FinishedScreenText, Headline, RankTable } from './FinishedScreen.sc'
 
-const FinishedScreen: React.FunctionComponent = () => {
+export const FinishedScreen: React.FunctionComponent = () => {
     const { players } = React.useContext(GameContext)
 
     return (
@@ -12,7 +13,7 @@ const FinishedScreen: React.FunctionComponent = () => {
                 {players
                     ?.sort((a, b) => a.rank - b.rank)
                     .map(player => (
-                        <FinishedScreenText>
+                        <FinishedScreenText key={player.name}>
                             #{player.rank} {player.name}
                         </FinishedScreenText>
                     ))}
@@ -20,5 +21,3 @@ const FinishedScreen: React.FunctionComponent = () => {
         </FinishedScreenContainer>
     )
 }
-
-export default FinishedScreen

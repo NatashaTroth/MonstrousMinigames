@@ -1,7 +1,8 @@
-import { orange } from './../../utils/colors'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+
 import camp from '../../images/camp.svg'
+import { orange } from '../../utils/colors'
 
 const borderWidth = 5
 const boxShadowDepth = 8

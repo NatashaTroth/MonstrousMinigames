@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { Headline, ImpressumContainer, HomeLink } from './Impressum.sc'
+
+import { Headline, HomeLink, ImpressumContainer } from './Impressum.sc'
 
 const Impressum: React.FunctionComponent = () => {
     return (

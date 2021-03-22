@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FullScreenContainer renders given children 1`] = `
+<div
+  className="sc-bdfBwQ fpPOZl"
+>
+  <div>
+    Text
+  </div>
+</div>
+`;

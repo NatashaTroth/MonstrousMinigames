@@ -1,34 +1,33 @@
 import { stringify } from 'query-string'
 import * as React from 'react'
 import { io } from 'socket.io-client'
+
 import { GameContext } from '../../contexts/GameContextProvider'
 import { SocketContext } from '../../contexts/SocketContextProvider'
 import { ENDPOINT } from '../../utils/config'
 import Button from '../common/Button'
 import {
     ConnectScreenContainer,
+    FormContainer,
     ImpressumLink,
+    StyledForm,
     StyledInput,
     StyledLabel,
-    FormContainer,
-    StyledForm,
 } from './ConnectScreen.sc'
 
 interface IFormState {
     roomId: string
 }
-const ConnectScreen: React.FunctionComponent = () => {
+export const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ roomId: '' })
     const { setScreenSocket } = React.useContext(SocketContext)
     const { setRoomId } = React.useContext(GameContext)
 
     function handleSubmit() {
         const screenSocket = io(
-            ENDPOINT +
-                'screen?' +
-                stringify({
-                    roomId: formState?.roomId,
-                }),
+            `${ENDPOINT}screen?${stringify({
+                roomId: formState?.roomId,
+            })}`,
             {
                 secure: true,
                 reconnection: true,
@@ -82,5 +81,3 @@ const ConnectScreen: React.FunctionComponent = () => {
         </ConnectScreenContainer>
     )
 }
-
-export default ConnectScreen
