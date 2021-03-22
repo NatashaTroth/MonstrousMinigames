@@ -6,6 +6,7 @@ class User {
   public socketId: string;
   public name: string;
   public timestamp: number;
+  public active: boolean;
 
   constructor(
     roomId: string,
@@ -18,22 +19,27 @@ class User {
     this.socketId = socketId;
     this.name = name;
     this.timestamp = Date.now();
+    this.active = true;
   }
 
-  public setRoomId(id: string) {
+  public setRoomId(id: string): void {
     this.roomId = id;
   }
 
-  public setSocketId(id: string) {
+  public setSocketId(id: string): void {
     this.socketId = id;
   }
 
-  public setName(name: string) {
+  public setName(name: string): void {
     this.name = name;
   }
 
-  public updateTimestamp() {
+  public updateTimestamp(): void {
     this.timestamp = Date.now();
+  }
+
+  public setActive(active: boolean): void {
+    this.active = active;
   }
 }
 
