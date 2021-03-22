@@ -4,10 +4,10 @@ services:
 
 stages:
   - npm
-  - lint
-  - test
+  # - lint
+  # - test
   - staging
-  - production
+  # - production
 
 # before_script:
 #   - docker login -u natashatroth -p $DOCKER_TOKEN $CI_REGISTRY
