@@ -17,7 +17,7 @@ npm:client:
   except:
     - /^backend-.*$/
 
-lint:server:
+lint:client:
   stage: lint
   tags:
     - node
@@ -28,7 +28,7 @@ lint:server:
   except:
     - /^backend-*$/
 
-test:server:
+test:client:
   stage: test
   tags:
     - node
