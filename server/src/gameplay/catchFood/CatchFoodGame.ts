@@ -15,6 +15,7 @@ import GameEventEmitter from "../../classes/GameEventEmitter";
 import { verifyGameState } from "../helperFunctions/verifyGameState";
 import { verifyUserId } from "../helperFunctions/verifyUserId";
 import {initiatePlayersState} from "./initiatePlayerState"
+import { time } from "console";
 
 
 interface CatchFoodGameInterface extends GameInterface {
@@ -41,6 +42,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
   gameEventEmitter: GameEventEmitter;
   roomId: string;
   gameState: GameState;
+  gameStartedTime: number;
+  // timeOutLimit: number
 
   constructor(
     players: Array<User>,
@@ -54,6 +57,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     this.numberOfObstacles = numberOfObstacles;
     this.currentRank = 1;
     this.playersState = initiatePlayersState(players, this.numberOfObstacles, this.trackLength);
+    this.gameStartedTime = 0
+    // this.timeOutLimit = 300000
   }
 
   startGame() {
@@ -64,10 +69,20 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         roomId: this.roomId,
         countdownTime: 3000,
       });
+      this.gameStartedTime = Date.now()
+      // setInterval(this.onTimerTick, 33); 
     } catch (e) {
       // throw e.Message;
     }
   }
+
+  // private onTimerTick() {
+  //   // console.log(Date.now() - this.gameStartedTime)
+  //   if(Date.now() - this.gameStartedTime > this.timeOutLimit){ //300000ms = 5 min
+      
+  //   }
+
+  // }
 
   stopGame() {
     try {
