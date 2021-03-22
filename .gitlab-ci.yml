@@ -9,5 +9,5 @@ stages:
   # - deployment server
 
 include:
-  - local: "/server/.gitlab-ci.yml"
+  # - local: "/server/.gitlab-ci.yml"
   - local: "/client/.gitlab-ci.yml"
