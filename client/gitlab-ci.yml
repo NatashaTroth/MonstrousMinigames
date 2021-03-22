@@ -1,0 +1,40 @@
+image: node:latest
+
+npm:client:
+  tags:
+    - node
+  stage: npm
+  artifacts:
+    paths:
+      - client/node_modules/
+    expire_in: 1 days
+    when: always
+
+  script:
+    - cd client/
+    - echo "Running npm ci ..."
+    - npm ci
+  except:
+    - /^backend-.*$/
+
+lint:server:
+  stage: lint
+  tags:
+    - node
+  script:
+    - cd client/
+    - echo "Linting.."
+    - npm run lint-fix
+  except:
+    - /^backend-*$/
+
+test:server:
+  stage: test
+  tags:
+    - node
+  script:
+    - cd client/
+    - echo "Testing.."
+    - ./node_modules/.bin/jest ./
+  except:
+    - /^backend-*$/
