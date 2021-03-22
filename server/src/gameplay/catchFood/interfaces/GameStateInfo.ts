@@ -1,6 +1,5 @@
 import { PlayerState } from "./PlayerState";
-import { HashTable, GameState } from "../../interfaces";
-import { Game } from "phaser";
+import { GameState } from "../../interfaces";
 
 export interface GameStateInfo {
   roomId: string;

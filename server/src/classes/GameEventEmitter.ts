@@ -15,7 +15,7 @@
 // });
 // myEmitter.emit('event', 'a', 'b');
 
-const EventEmitter = require("events");
+import EventEmitter from "events"
 
 export default class GameEventEmitter extends EventEmitter {
   private static EventEmitterInstance: GameEventEmitter = new GameEventEmitter();
@@ -23,7 +23,7 @@ export default class GameEventEmitter extends EventEmitter {
     super();
   }
 
-  public static getInstance() {
+  public static getInstance() : GameEventEmitter{
     return this.EventEmitterInstance;
   }
 }

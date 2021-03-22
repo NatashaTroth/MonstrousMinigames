@@ -1,7 +1,7 @@
 import {
   PlayerState,
   Obstacle,
-  ObstacleType,
+  // ObstacleType,
   GameStateInfo,
 } from "./interfaces";
 import {
@@ -15,7 +15,6 @@ import GameEventEmitter from "../../classes/GameEventEmitter";
 import { verifyGameState } from "../helperFunctions/verifyGameState";
 import { verifyUserId } from "../helperFunctions/verifyUserId";
 import {initiatePlayersState} from "./initiatePlayerState"
-import { time } from "console";
 
 
 interface CatchFoodGameInterface extends GameInterface {
@@ -47,8 +46,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
   constructor(
     players: Array<User>,
-    trackLength: number = 2000,
-    numberOfObstacles: number = 2
+    trackLength = 2000,
+    numberOfObstacles = 2
   ) {
     this.gameEventEmitter = GameEventEmitter.getInstance();
     this.roomId = players[0].roomId;
@@ -61,7 +60,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     // this.timeOutLimit = 300000
   }
 
-  startGame() {
+  startGame(): void {
     try {
       verifyGameState(this.gameState, GameState.Created);
       this.gameState = GameState.Started;
@@ -84,7 +83,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
   // }
 
-  stopGame() {
+  stopGame(): void {
     try {
       verifyGameState(this.gameState, GameState.Started);
       this.gameState = GameState.Stopped;
@@ -97,7 +96,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
   getGameStateInfo(): GameStateInfo {
     const playerInfoArray = [];
 
-    for (const [key, playerState] of Object.entries(this.playersState)) {
+    for (const [_, playerState] of Object.entries(this.playersState)) {
       playerInfoArray.push(playerState);
     }
 
@@ -112,14 +111,14 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
   getObstaclePositions(): HashTable<Array<Obstacle>> {
     const obstaclePositions: HashTable<Array<Obstacle>> = {};
-    for (const [key, playerState] of Object.entries(this.playersState)) {
+    for (const [_, playerState] of Object.entries(this.playersState)) {
       obstaclePositions[playerState.id] = playerState.obstacles;
     }
 
     return obstaclePositions;
   }
 
-  runForward(userId: string, speed: number = 1) {
+  runForward(userId: string, speed = 1) : void {
     try {
       verifyUserId(this.playersState, userId);
       verifyGameState(this.gameState, GameState.Started);
@@ -139,7 +138,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     }
   }
 
-  private playerHasReachedObstacle(userId: string) {
+  private playerHasReachedObstacle(userId: string) : boolean{
     return (
       this.playersState[userId].obstacles.length > 0 &&
       this.playersState[userId].positionX >=
@@ -147,11 +146,11 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     );
   }
 
-  private playerHasPassedGoal(userId: string) {
+  private playerHasPassedGoal(userId: string) : boolean {
     return this.playersState[userId].positionX >= this.trackLength;
   }
 
-  private handlePlayerReachedObstacle(userId: string) {
+  private handlePlayerReachedObstacle(userId: string) : void{
     // block player from running when obstacle is reached
     this.playersState[userId].atObstacle = true;
     this.gameEventEmitter.emit(GameEventTypes.ObstacleReached, {
@@ -161,7 +160,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     });
   }
 
-  playerHasCompletedObstacle(userId: string) {
+  playerHasCompletedObstacle(userId: string) : void{
     //TODO CHange to stop cheating
     try {
       verifyUserId(this.playersState, userId);
@@ -175,7 +174,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     }
   }
 
-  private playerHasFinishedGame(userId: string) {
+  private playerHasFinishedGame(userId: string) : void {
     //only if player hasn't already been marked as finished
     if (this.playersState[userId].finished) return;
 
@@ -197,7 +196,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     return this.currentRank > Object.keys(this.playersState).length;
   }
 
-  private handleGameFinished() {
+  private handleGameFinished() : void {
     this.gameState = GameState.Finished;
     const currentGameStateInfo = this.getGameStateInfo();
     this.gameEventEmitter.emit(GameEventTypes.GameHasFinished, {
@@ -212,13 +211,13 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
   resetGame(
     players: Array<User>,
-    trackLength: number = 2000,
-    numberOfObstacles: number = 4
-  ) {
+    trackLength = 2000,
+    numberOfObstacles = 4
+  ) : void {
     this.gameState = GameState.Created;
     this.trackLength = trackLength;
     this.numberOfObstacles = numberOfObstacles;
     this.currentRank = 1;
-    this.playersState = initiatePlayersState(players, this.numberOfObstacles, this.trackLength);;
+    this.playersState = initiatePlayersState(players, this.numberOfObstacles, this.trackLength);
   }
 }
