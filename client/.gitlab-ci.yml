@@ -1,40 +1,40 @@
-image: node:latest
+# image: node:latest
 
-npm:client:
-  tags:
-    - node
-  stage: npm
-  artifacts:
-    paths:
-      - client/node_modules/
-    expire_in: 1 days
-    when: always
+# npm:client:
+#   tags:
+#     - node
+#   stage: npm
+#   artifacts:
+#     paths:
+#       - client/node_modules/
+#     expire_in: 1 days
+#     when: always
 
-  script:
-    - cd client/
-    - echo "Running npm ci ..."
-    - npm ci
-  except:
-    - /^backend-.*$/
+#   script:
+#     - cd client/
+#     - echo "Running npm ci ..."
+#     - npm ci
+#   except:
+#     - /^backend-.*$/
 
-lint:client:
-  stage: lint
-  tags:
-    - node
-  script:
-    - cd client/
-    - echo "Linting.."
-    - npm run lint-fix
-  except:
-    - /^backend-*$/
+# lint:client:
+#   stage: lint
+#   tags:
+#     - node
+#   script:
+#     - cd client/
+#     - echo "Linting.."
+#     - npm run lint-fix
+#   except:
+#     - /^backend-*$/
 
-test:client:
-  stage: test
-  tags:
-    - node
-  script:
-    - cd client/
-    - echo "Testing.."
-    - ./node_modules/.bin/jest ./
-  except:
-    - /^backend-*$/
+# test:client:
+#   stage: test
+#   tags:
+#     - node
+#   script:
+#     - cd client/
+#     - echo "Testing.."
+#     - ./node_modules/.bin/jest ./
+#   except:
+#     - /^backend-*$/

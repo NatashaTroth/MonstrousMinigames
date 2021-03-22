@@ -17,26 +17,26 @@ npm:server:
   except:
     - /^frontend-.*$/
 
-lint:server:
-  stage: lint
-  tags:
-    - node
-  script:
-    - cd server/
-    - echo "Linting.."
-    - npm run lint
-  except:
-    - /^frontend-*$/
+    # lint:server:
+    #   stage: lint
+    #   tags:
+    #     - node
+    #   script:
+    #     - cd server/
+    #     - echo "Linting.."
+    #     - npm run lint
+    #   except:
+    #     - /^frontend-*$/
 
-test:server:
-  stage: test
-  tags:
-    - node
-  script:
-    - cd server/
-    - echo "Testing.."
-    - ./node_modules/.bin/jest ./
-  except:
+    # test:server:
+    #   stage: test
+    #   tags:
+    #     - node
+    #   script:
+    #     - cd server/
+    #     - echo "Testing.."
+    #     - ./node_modules/.bin/jest ./
+    #   except:
     - /^frontend-*$/
 
 staging:server:
