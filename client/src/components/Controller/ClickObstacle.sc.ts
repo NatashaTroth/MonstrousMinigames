@@ -33,9 +33,10 @@ export const ObstacleInstructions = styled.div`
     box-shadow: 8px 8px 0 #888;
     border-radius: 4px;
     margin-top: 50px;
+    margin-bottom: 50px;
 `
 
-export const Line = styled.hr`
+export const Line = styled.div`
     width: 80%;
     position: absolute;
     border-top: 5px dashed red;
