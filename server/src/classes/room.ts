@@ -55,10 +55,9 @@ class Room {
     return user[0];
   }
 
-  public resetGame(user: User) {
+  public async resetGame(user: User) {
     this.game?.resetGame(this.users);
     this.setState(RoomStates.OPEN);
-    this.users = [user];
     this.admin = user;
   }
 

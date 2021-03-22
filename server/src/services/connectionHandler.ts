@@ -51,10 +51,10 @@ class ConnectionHandler {
         if (user) {
           user.setRoomId(roomId);
           user.setSocketId(socket.id);
-        }else{
+        } else {
           user = new User(room.id, socket.id, name);
           userId = user.id;
-  
+
           if (!room.addUser(user)) {
             emitter.sendErrorMessage(socket, "Cannot join. Game already started");
             console.error("User tried to join. Game already started: " + userId);
@@ -123,9 +123,13 @@ class ConnectionHandler {
           }
           case MessageTypes.RESET_GAME:
             {
-              console.log(roomId + " | Reset Game");
-              room.resetGame(user);
-              emitter.sendUserInit(socket, user, room);
+              if (room.isAdmin(user)) {
+                console.log(roomId + " | Reset Game");
+                room.resetGame(user).then(() => {
+                  emitter.sendUserInit(socket, user, room);
+                })
+
+              }
             }
             break;
           default: {
@@ -171,10 +175,10 @@ class ConnectionHandler {
       (data: ObstacleReachedInfo) => {
         console.log(
           data.roomId +
-            " | userId: " +
-            data.userId +
-            " | Obstacle: " +
-            data.obstacleType
+          " | userId: " +
+          data.userId +
+          " | Obstacle: " +
+          data.obstacleType
         );
         let r = rs.getRoomById(data.roomId);
         let u = r.getUserById(data.userId);
