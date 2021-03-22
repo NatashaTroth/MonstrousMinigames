@@ -1,7 +1,6 @@
 import User from "../classes/user";
 import RoomService from "./roomService";
 import {
-  GameStateInfo,
   ObstacleReachedInfo,
   PlayerFinishedInfo,
 } from "../gameplay/catchFood/interfaces";
@@ -28,13 +27,12 @@ class ConnectionHandler {
     this.screenNameSpace = this.io.of(Namespaces.SCREEN);
   }
 
-  public handle() {
+  public handle(): void {
     this.handleControllers();
     this.handleScreens();
     this.handleGameEvents();
   }
   private handleControllers() {
-    const io = this.io;
     const rs = this.rs;
     const controllerNamespace = this.controllerNamespace;
 

@@ -36,7 +36,7 @@ const io = require("socket.io")(expresServer, {
   },
 });
 
-const roomCount: integer = parseInt(`${process.env.ROOM_COUNT}`, 10) || 100
+const roomCount: number = parseInt(`${process.env.ROOM_COUNT}`, 10) || 100;
 
 const rs = new RoomService(roomCount);
 const ch = new ConnectionHandler(io, rs);

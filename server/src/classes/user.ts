@@ -20,19 +20,19 @@ class User {
     this.timestamp = Date.now();
   }
 
-  public setRoomId(id: string) {
+  public setRoomId(id: string): void {
     this.roomId = id;
   }
 
-  public setSocketId(id: string) {
+  public setSocketId(id: string): void {
     this.socketId = id;
   }
 
-  public setName(name: string) {
+  public setName(name: string): void {
     this.name = name;
   }
 
-  public updateTimestamp() {
+  public updateTimestamp(): void {
     this.timestamp = Date.now();
   }
 }

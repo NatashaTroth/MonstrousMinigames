@@ -18,7 +18,7 @@ class Room {
     this.state = RoomStates.OPEN;
   }
 
-  public addUser(user: User) {
+  public addUser(user: User): boolean {
     if (this.state === RoomStates.OPEN) {
       if (this.users.length === 0) this.admin = user;
       this.users.push(user);
@@ -26,34 +26,34 @@ class Room {
     }
     return false;
   }
-  public isAdmin(user: User) {
+  public isAdmin(user: User): boolean {
     return user === this.admin;
   }
 
-  public removeUser(toBeRemoved: User) {
+  public removeUser(toBeRemoved: User): void {
     const index = this.users.indexOf(toBeRemoved);
     this.users.splice(index);
   }
 
   //TODO remove User, logic
 
-  public updateTimestamp() {
+  public updateTimestamp(): void {
     this.timestamp = Date.now();
   }
 
-  public createGame() {
+  public createGame(): void {
     this.setState(RoomStates.PLAYING);
     this.game = new CatchFoodGame(this.users);
     this.startGame();
   }
 
-  private startGame() {
+  private startGame(): void {
     if (this.game) {
       this.game.startGame();
     }
   }
 
-  public getUserById(userId: string) {
+  public getUserById(userId: string): User {
     const user = this.users.filter(function (u) {
       return u.id === userId;
     });
@@ -66,20 +66,20 @@ class Room {
     this.admin = user;
   }
 
-  private setState(state: RoomStates) {
+  private setState(state: RoomStates): void {
     this.state = state;
   }
 
-  public isOpen() {
+  public isOpen(): boolean {
     return this.state === RoomStates.OPEN;
   }
-  public isPlaying() {
+  public isPlaying(): boolean {
     return this.state === RoomStates.PLAYING;
   }
-  public isClosed() {
+  public isClosed(): boolean {
     return this.state === RoomStates.CLOSED;
   }
-  public setClosed() {
+  public setClosed(): void {
     this.setState(RoomStates.CLOSED);
   }
 }
