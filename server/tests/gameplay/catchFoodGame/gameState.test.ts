@@ -67,18 +67,36 @@ describe("Change and verify game state", () => {
     expect(catchFoodGame.gameState).toBe(GameState.Created);
   });
 
-  it("start the game", async () => {
+  it("should have a GameState of Started when the game is started", async () => {
     catchFoodGame.startGame();
     expect(catchFoodGame.gameState).toBe(GameState.Started);
   });
 
-  it("stop the game", async () => {
+  it("should have a GameState of Stopped when the game is stopped", async () => {
     catchFoodGame.startGame();
     catchFoodGame.stopGame();
     expect(catchFoodGame.gameState).toBe(GameState.Stopped);
   });
 
-  it("reset the game", async () => {
+  it("should have a GameState of Finished when the game is finished", async () => {
+    catchFoodGame.startGame();
+    // finish game
+    for (let i = 0; i < 4; i++) {
+      catchFoodGame.playerHasCompletedObstacle("1");
+      catchFoodGame.playerHasCompletedObstacle("2");
+      catchFoodGame.playerHasCompletedObstacle("3");
+      catchFoodGame.playerHasCompletedObstacle("4");
+    }
+
+    catchFoodGame.runForward("1", 500);
+    catchFoodGame.runForward("2", 500);
+    catchFoodGame.runForward("3", 500);
+    catchFoodGame.runForward("4", 500);
+
+    expect(catchFoodGame.gameState).toBe(GameState.Finished);
+  });
+
+  it("should have a GameState of Created when the game is reset", async () => {
     catchFoodGame.startGame();
     catchFoodGame.stopGame();
     catchFoodGame.resetGame(users);
