@@ -12,9 +12,7 @@ class RoomService {
     this.roomCodes = generator.generateCodes("****", roomCount);
   }
 
-  public createRoom(
-    roomId: string | undefined = this.getSingleRoomCode()
-  ): Room {
+  public createRoom(roomId: string = this.getSingleRoomCode()): Room {
     const room = new Room(roomId);
     this.rooms.push(room);
     return room;
@@ -37,8 +35,8 @@ class RoomService {
     return room.game?.getGameStateInfo();
   }
 
-  public getSingleRoomCode(): string | undefined {
-    return this.roomCodes.pop();
+  public getSingleRoomCode(): string {
+    return this.roomCodes.pop() || "XXXX";
   }
 }
 

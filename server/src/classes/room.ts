@@ -9,7 +9,7 @@ class Room {
   public admin: User | null;
   private state: RoomStates;
 
-  constructor(id = "ABCDE") {
+  constructor(id: string) {
     this.id = id;
     this.users = [];
     this.timestamp = Date.now();
@@ -19,7 +19,7 @@ class Room {
   }
 
   public addUser(user: User): boolean {
-    if (this.state === RoomStates.OPEN) {
+    if (this.isOpen()) {
       if (this.users.length === 0) this.admin = user;
       this.users.push(user);
       return true;
@@ -33,9 +33,13 @@ class Room {
   public removeUser(toBeRemoved: User): void {
     const index = this.users.indexOf(toBeRemoved);
     this.users.splice(index);
+    // if user is admin
+    if (this.users.length !== 0) {
+      if (this.isAdmin(toBeRemoved)) {
+        this.admin = this.users[0];
+      }
+    }
   }
-
-  //TODO remove User, logic
 
   public updateTimestamp(): void {
     this.timestamp = Date.now();
