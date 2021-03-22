@@ -68,5 +68,5 @@ production:server:
     - dpl --provider=heroku --app=$HEROKU_APP_PRODUCTION --api-key=$HEROKU_API_KEY --skip-cleanup
   # dependencies:
   #   - staging:client
-  # only:
-  #   - master
+  only:
+    - master
