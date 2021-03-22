@@ -43,6 +43,6 @@ const ch = new ConnectionHandler(io, rs);
 ch.handle();
 
 server.app.get("/create-room", (req, res) => {
-  let room = rs.createRoom();
+  const room = rs.createRoom();
   res.send({ roomId: room.id });
 });

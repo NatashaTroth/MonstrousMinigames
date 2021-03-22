@@ -9,7 +9,7 @@ class Room {
   public admin: User | null;
   private state: RoomStates;
 
-  constructor(id: string = "ABCDE") {
+  constructor(id = "ABCDE") {
     this.id = id;
     this.users = [];
     this.timestamp = Date.now();
@@ -31,7 +31,7 @@ class Room {
   }
 
   public removeUser(toBeRemoved: User) {
-    let index = this.users.indexOf(toBeRemoved);
+    const index = this.users.indexOf(toBeRemoved);
     this.users.splice(index);
   }
 
@@ -54,7 +54,7 @@ class Room {
   }
 
   public getUserById(userId: string) {
-    let user = this.users.filter(function (u) {
+    const user = this.users.filter(function (u) {
       return u.id === userId;
     });
     return user[0];

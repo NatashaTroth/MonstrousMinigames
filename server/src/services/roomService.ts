@@ -1,6 +1,6 @@
 import Room from "../classes/room";
-var CodeGenerator = require("node-code-generator");
-var generator = new CodeGenerator();
+const CodeGenerator = require("node-code-generator");
+const generator = new CodeGenerator();
 
 class RoomService {
   private rooms: Array<Room>;
@@ -12,14 +12,14 @@ class RoomService {
   }
 
   public createRoom(roomId: any = this.getSingleRoomCode()) {
-    let room = new Room(roomId);
+    const room = new Room(roomId);
     this.rooms.push(room);
     return room;
   }
 
   /** gets the room by the given id or creates a new room with the id */
   public getRoomById(roomId: string) {
-    let room = this.rooms.filter(function (n) {
+    const room = this.rooms.filter(function (n) {
       return n.id === roomId;
     })[0];
     if (!room) {

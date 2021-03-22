@@ -13,7 +13,7 @@ function sendUserInit(socket: any, user: User, room: Room) {
     isAdmin: room.isAdmin(user),
   });
 }
-function sendGameState(nsp: Namespace, room: Room, volatile: boolean = false) {
+function sendGameState(nsp: Namespace, room: Room, volatile = false) {
   if (volatile) {
     nsp.to(room.id).volatile.emit("message", {
       type: CatchFoodMsgType.GAME_STATE,

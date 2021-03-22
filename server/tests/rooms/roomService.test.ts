@@ -11,8 +11,8 @@ describe("RoomService", () => {
     })
     it("creates two rooms with different ids", () => {
         const roomService = new RoomService(100);
-        let firstRoom = roomService.createRoom();
-        let secondRoom = roomService.createRoom();
+        const firstRoom = roomService.createRoom();
+        const secondRoom = roomService.createRoom();
         console.log(firstRoom.id)
         expect(firstRoom.id).not.toEqual(secondRoom.id);
     })
