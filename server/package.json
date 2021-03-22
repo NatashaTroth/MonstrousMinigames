@@ -14,7 +14,8 @@
     "tsc": "tsc",
     "postinstall": "npm run tsc",
     "start": "node src/app.js",
-    "deploy": "cd .. && git subtree push --prefix server heroku master"
+    "deploy": "cd .. && git subtree push --prefix server heroku master",
+    "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}"
   },
   "repository": {
     "type": "git",
@@ -45,6 +46,7 @@
     "husky": "^4.3.8",
     "jest": "^26.6.3",
     "nodemon": "^2.0.7",
+    "onchange": "^7.1.0",
     "prettier": "2.2.1",
     "pretty-quick": "^3.1.0",
     "ts-jest": "^26.5.0",
