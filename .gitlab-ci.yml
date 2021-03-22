@@ -3,7 +3,7 @@ stages:
   - lint
   - test
   # - staging client
-  # - staging server
+  - staging
   # - deployment client
   # - deployment server
 

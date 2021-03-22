@@ -38,6 +38,22 @@ test:server:
     - ./node_modules/.bin/jest ./
   except:
     - /^frontend-*$/
+
+staging:server:
+  stage: staging
+  tags:
+    - node
+  image: ruby:latest
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - cd server/
+    - dpl --provider=heroku --app=$HEROKU_APP_STAGING --api-key=$HEROKU_API_KEY --skip-cleanup
+  # dependencies:
+  #   - staging:client
+  only:
+    - development
 # unit-testing:server:
 #   stage: test
 #   tags:
