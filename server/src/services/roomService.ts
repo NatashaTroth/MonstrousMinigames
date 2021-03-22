@@ -39,4 +39,4 @@ class RoomService {
   }
 }
 
-export default RoomService
+export default RoomService;
