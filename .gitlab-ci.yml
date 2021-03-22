@@ -3,10 +3,11 @@ services:
   - docker:19.03.12-dind
 
 stages:
-  - build
-  # - npm
-  # - staging
-  # - production
+  - npm
+  - lint
+  - test
+  - staging
+  - production
 
 # before_script:
 #   - docker login -u natashatroth -p $DOCKER_TOKEN $CI_REGISTRY
