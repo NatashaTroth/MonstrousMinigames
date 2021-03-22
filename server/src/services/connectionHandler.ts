@@ -49,6 +49,7 @@ class ConnectionHandler {
         if (user) {
           user.setRoomId(roomId);
           user.setSocketId(socket.id);
+          user.setActive(true);
         } else {
           user = new User(room.id, socket.id, name);
           userId = user.id;
@@ -86,6 +87,9 @@ class ConnectionHandler {
         console.log(roomId + " | Controller disconnected: " + userId);
         if (room.isOpen()) {
           room.removeUser(room.getUserById(userId));
+          emitter.sendConnectedUsers(screenNameSpace, room);
+        } else if (room.isPlaying()) {
+          room.getUserById(userId).setActive(false);
         }
       });
 
