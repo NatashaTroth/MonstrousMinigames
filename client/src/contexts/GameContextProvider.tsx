@@ -16,6 +16,7 @@ interface IGameContext {
     setRoomId: (val?: string) => void
     connectedUsers?: IUser[]
     setConnectedUsers: (val: IUser[]) => void
+    resetGame: () => void
 }
 
 interface IObstacle {
@@ -57,6 +58,9 @@ export const GameContext = React.createContext<IGameContext>({
     setConnectedUsers: () => {
         // do nothing
     },
+    resetGame: () => {
+        // do nothing
+    },
 })
 
 const GameContextProvider: React.FunctionComponent = ({ children }) => {
@@ -88,6 +92,12 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setRoomId,
         connectedUsers,
         setConnectedUsers,
+        resetGame: () => {
+            setTrackLength(undefined)
+            setFinished(false)
+            setGameStarted(false)
+            setPlayers(undefined)
+        },
     }
     return <GameContext.Provider value={content}>{children}</GameContext.Provider>
 }

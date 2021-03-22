@@ -9,15 +9,16 @@ import FullScreenContainer from '../common/FullScreenContainer'
 import { FinishedScreenContainer, FinishedScreenText } from './FinishedScreen.sc'
 
 export const FinishedScreen: React.FunctionComponent = () => {
-    const { playerRank } = React.useContext(PlayerContext)
-    const { isPlayerAdmin } = React.useContext(PlayerContext)
+    const { playerRank, isPlayerAdmin, resetPlayer } = React.useContext(PlayerContext)
+    const { resetGame } = React.useContext(GameContext)
     const { controllerSocket } = React.useContext(ControllerSocketContext)
-    const { finished } = React.useContext(GameContext)
     const history = useHistory()
 
-    function handleRestartGame() {
+    function handlePlayAgain() {
         controllerSocket?.emit('message', { type: 'resetGame' })
         history.push('/controller/lobby')
+        resetGame()
+        resetPlayer()
     }
 
     return (
@@ -27,7 +28,8 @@ export const FinishedScreen: React.FunctionComponent = () => {
                     #{playerRank}
                     <span>Finished!</span>
                 </FinishedScreenText>
-                {finished && isPlayerAdmin && <Button onClick={handleRestartGame} text="Restart Game" />}
+                {/* TODO check if all players are finished */}
+                {isPlayerAdmin && <Button onClick={handlePlayAgain} text="Play Again" />}
             </FinishedScreenContainer>
         </FullScreenContainer>
     )

@@ -14,6 +14,7 @@ interface IPlayerContext {
     setIsPlayerAdmin: (val: boolean) => void
     permission: boolean
     setPermissionGranted: (val: boolean) => void
+    resetPlayer: () => void
 }
 
 export const PlayerContext = React.createContext<IPlayerContext>({
@@ -35,6 +36,9 @@ export const PlayerContext = React.createContext<IPlayerContext>({
     },
     permission: false,
     setPermissionGranted: () => {
+        // do nothing
+    },
+    resetPlayer: () => {
         // do nothing
     },
 })
@@ -68,6 +72,9 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setIsPlayerAdmin,
         permission,
         setPermissionGranted,
+        resetPlayer: () => {
+            setPlayerFinished(false), setPlayerRank(undefined)
+        },
     }
     return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>
 }
