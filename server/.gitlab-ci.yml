@@ -1,43 +1,43 @@
-image: node:latest
+# image: node:latest
 
-npm:server:
-  tags:
-    - node
-  stage: npm
-  artifacts:
-    paths:
-      - server/node_modules/
-    expire_in: 1 days
-    when: always
+# npm:server:
+#   tags:
+#     - node
+#   stage: npm
+#   artifacts:
+#     paths:
+#       - server/node_modules/
+#     expire_in: 1 days
+#     when: always
 
-  script:
-    - cd server/
-    - echo "Running npm ci ..."
-    - npm ci
-  except:
-    - /^frontend-.*$/
+#   script:
+#     - cd server/
+#     - echo "Running npm ci ..."
+#     - npm ci
+#   except:
+#     - /^frontend-.*$/
 
-lint:server:
-  stage: lint
-  tags:
-    - node
-  script:
-    - cd server/
-    - echo "Linting.."
-    - npm run lint
-  except:
-    - /^frontend-*$/
+# lint:server:
+#   stage: lint
+#   tags:
+#     - node
+#   script:
+#     - cd server/
+#     - echo "Linting.."
+#     - npm run lint
+#   except:
+#     - /^frontend-*$/
 
-test:server:
-  stage: test
-  tags:
-    - node
-  script:
-    - cd server/
-    - echo "Testing.."
-    - ./node_modules/.bin/jest ./
-  except:
-    - /^frontend-*$/
+# test:server:
+#   stage: test
+#   tags:
+#     - node
+#   script:
+#     - cd server/
+#     - echo "Testing.."
+#     - ./node_modules/.bin/jest ./
+#   except:
+#     - /^frontend-*$/
 
 # unit-testing:server:
 #   stage: test
