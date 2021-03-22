@@ -7,7 +7,12 @@ class User {
   public name: string;
   public timestamp: number;
 
-  constructor(roomId: string, socketId: string, name: string, id: string = shortid.generate()) {
+  constructor(
+    roomId: string,
+    socketId: string,
+    name: string,
+    id: string = shortid.generate()
+  ) {
     this.id = id;
     this.roomId = roomId;
     this.socketId = socketId;

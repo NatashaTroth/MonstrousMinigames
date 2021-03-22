@@ -57,11 +57,10 @@ function sendPlayerFinished(nsp: Namespace, user: User, data: any) {
 }
 
 function sendConnectedUsers(nsp: Namespace, room: Room) {
-  nsp.to(room.id).emit("message",
-    {
-      type: MessageTypes.CONNECTED_USERS,
-      users: room.users,
-    });
+  nsp.to(room.id).emit("message", {
+    type: MessageTypes.CONNECTED_USERS,
+    users: room.users,
+  });
 }
 
 export default {

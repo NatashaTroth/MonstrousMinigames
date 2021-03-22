@@ -1,15 +1,14 @@
 import Room from "../classes/room";
-var CodeGenerator = require('node-code-generator');
-var generator = new CodeGenerator()
+var CodeGenerator = require("node-code-generator");
+var generator = new CodeGenerator();
 
 class RoomService {
   private rooms: Array<Room>;
-  public roomCodes: Array<string>
-
+  public roomCodes: Array<string>;
 
   constructor(roomCount: integer) {
     this.rooms = [];
-    this.roomCodes = generator.generateCodes('****', roomCount)
+    this.roomCodes = generator.generateCodes("****", roomCount);
   }
 
   public createRoom(roomId: any = this.getSingleRoomCode()) {
@@ -24,7 +23,7 @@ class RoomService {
       return n.id === roomId;
     })[0];
     if (!room) {
-      console.log('RS | Create Room: ' + roomId);
+      console.log("RS | Create Room: " + roomId);
       return this.createRoom(roomId);
     }
     return room;
@@ -36,7 +35,7 @@ class RoomService {
   }
 
   public getSingleRoomCode() {
-    return this.roomCodes.pop()
+    return this.roomCodes.pop();
   }
 }
 export default RoomService;

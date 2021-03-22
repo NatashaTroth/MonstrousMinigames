@@ -30,6 +30,11 @@ class Room {
     return user === this.admin;
   }
 
+  public removeUser(toBeRemoved: User) {
+    let index = this.users.indexOf(toBeRemoved);
+    this.users.splice(index);
+  }
+
   //TODO remove User, logic
 
   public updateTimestamp() {
