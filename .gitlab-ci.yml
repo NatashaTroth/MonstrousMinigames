@@ -8,6 +8,9 @@ stages:
   # - deployment client
   # - deployment server
 
+before_script:
+  - docker login registry.example.com -u natashatroth -p $DOCKER_TOKEN
+
 include:
   # - local: "/server/.gitlab-ci.yml"
   - local: "/client/.gitlab-ci.yml"
