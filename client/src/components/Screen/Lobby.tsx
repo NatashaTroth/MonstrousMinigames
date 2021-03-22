@@ -3,7 +3,7 @@ import * as React from 'react'
 import { GameContext } from '../../contexts/GameContextProvider'
 import { Headline, JoinedUser, JoinedUsersView, LobbyContainer, Subline } from './Lobby.sc'
 
-const Lobby: React.FunctionComponent = () => {
+export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers } = React.useContext(GameContext)
 
     return (
@@ -18,5 +18,3 @@ const Lobby: React.FunctionComponent = () => {
         </LobbyContainer>
     )
 }
-
-export default Lobby

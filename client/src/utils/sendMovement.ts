@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Socket } from 'socket.io-client'
 
 export function sendMovement(socket: Socket | undefined) {
@@ -7,5 +6,4 @@ export function sendMovement(socket: Socket | undefined) {
         roomId: sessionStorage.getItem('roomId'),
         userId: sessionStorage.getItem('userId'),
     })
-    console.log('move')
 }
