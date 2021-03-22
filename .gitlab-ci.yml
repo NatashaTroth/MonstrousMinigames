@@ -1,9 +1,9 @@
 stages:
   - npm
-  - lint
-  - test
-  # - staging client
+  # - lint
+  # - test
   - staging
+  # - staging client
   # - deployment client
   # - deployment server
 
