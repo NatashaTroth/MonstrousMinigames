@@ -12,7 +12,7 @@ const bounce = keyframes`
 `
 
 interface IObstacleProps {
-    posX: number
+    posx: number
     player: number
 }
 
@@ -29,7 +29,7 @@ export const StyledObstacle = styled.div<IObstacleProps>`
     position: absolute;
     z-index: 2;
     border-radius: 50%;
-    left: ${({ posX }) => posX + 70}px;
+    left: ${({ posx }) => posx + 70}px;
     top: ${({ player }) => 160 + player * 200}px;
 `
 
@@ -45,7 +45,7 @@ export const StyledObstacleHint = styled(Error)<IObstacleProps>`
         color: red;
         z-index: 2;
         border-radius: 50%;
-        left: ${({ posX }) => posX + 70}px;
+        left: ${({ posx }) => posx + 70}px;
         top: ${({ player }) => 100 + player * 200}px;
         animation-duration: 2s;
         animation-iteration-count: infinite;

@@ -1,7 +1,7 @@
 import { cleanup, queryByText, render } from '@testing-library/react'
 import React from 'react'
 
-import Lobby from './Lobby'
+import { Lobby } from './Lobby'
 
 afterEach(cleanup)
 describe('Screen Lobby', () => {

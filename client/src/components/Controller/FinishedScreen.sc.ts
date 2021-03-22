@@ -6,6 +6,10 @@ export const FinishedScreenContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    div:first-of-type {
+        margin-bottom: 20px;
+    }
 `
 
 export const FinishedScreenText = styled.div`
