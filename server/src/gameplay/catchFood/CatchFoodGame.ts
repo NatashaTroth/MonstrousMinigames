@@ -12,10 +12,10 @@ import {
 } from "../interfaces";
 import { User } from "../../interfaces/interfaces";
 import GameEventEmitter from "../../classes/GameEventEmitter";
-import { Game } from "phaser";
 import { verifyGameState } from "../helperFunctions/verifyGameState";
 import { verifyUserId } from "../helperFunctions/verifyUserId";
-import { shuffleArray } from "../../helpers/shuffleArray";
+import {initiatePlayersState} from "./initiatePlayerState"
+
 
 interface CatchFoodGameInterface extends GameInterface {
   playersState: HashTable<PlayerState>;
@@ -53,60 +53,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     this.trackLength = trackLength;
     this.numberOfObstacles = numberOfObstacles;
     this.currentRank = 1;
-    this.playersState = {};
-    this.initiatePlayersState(players);
-  }
-
-  private initiatePlayersState(players: Array<User>) {
-    const obstacleTypes = this.getObstacleTypes();
-    players.forEach((player) => {
-      this.playersState[player.id] = {
-        id: player.id,
-        name: player.name,
-        positionX: 0,
-        obstacles: this.createObstacles(obstacleTypes),
-        atObstacle: false,
-        finished: false,
-        rank: 0,
-      };
-    });
-  }
-
-  private createObstacles(obstacleTypes: Array<ObstacleType>): Array<Obstacle> {
-    const obstacles: Array<Obstacle> = [];
-    const shuffledObstacleTypes: Array<ObstacleType> = shuffleArray(
-      obstacleTypes
-    );
-
-    const quadrantRange =
-      Math.floor(this.trackLength / (this.numberOfObstacles + 1)) - 30; //e.g. 500/4 = 125, +10 to avoid obstacle being at the very beginning, - 10 to stop 2 being right next to eachother
-
-    for (let i = 0; i < this.numberOfObstacles; i++) {
-      let randomNr = Math.random() * quadrantRange;
-
-      let position = randomNr + quadrantRange * (i + 1);
-      position = Math.round(position / 10) * 10; //round to nearest 10 (to stop exactly at it)
-
-      obstacles.push({
-        positionX: position,
-        type: shuffledObstacleTypes[i],
-      });
-    }
-    console.log(obstacles);
-    return [...obstacles];
-  }
-
-  private getObstacleTypes(): Array<ObstacleType> {
-    const obstacleTypeKeys: Array<string> = Object.keys(ObstacleType);
-    const obstacleTypes: Array<ObstacleType> = [];
-    for (let i = 0; i < this.numberOfObstacles; i++) {
-      let randomNr = Math.floor(
-        Math.random() * Math.floor(obstacleTypeKeys.length)
-      );
-      obstacleTypes.push(obstacleTypeKeys[randomNr] as ObstacleType);
-    }
-    console.log(obstacleTypes);
-    return obstacleTypes;
+    this.playersState = initiatePlayersState(players, this.numberOfObstacles, this.trackLength);
   }
 
   startGame() {
@@ -128,7 +75,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
       this.gameState = GameState.Stopped;
     } catch (e) {
       // throw e.Message;
-      console.error(e.message);
+      // console.error(e.message);
     }
   }
 
@@ -173,7 +120,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
       if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId);
     } catch (e) {
       // throw e.Message;
-      console.error(e.message);
+      // console.error(e.message);
     }
   }
 
@@ -209,7 +156,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
       this.playersState[userId].obstacles.shift();
     } catch (e) {
       // throw e.Message;
-      console.error(e.message);
+      // console.error(e.message);
     }
   }
 
@@ -257,7 +204,6 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     this.trackLength = trackLength;
     this.numberOfObstacles = numberOfObstacles;
     this.currentRank = 1;
-    this.playersState = {};
-    this.initiatePlayersState(players);
+    this.playersState = initiatePlayersState(players, this.numberOfObstacles, this.trackLength);;
   }
 }
