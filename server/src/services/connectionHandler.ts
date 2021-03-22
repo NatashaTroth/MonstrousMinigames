@@ -85,11 +85,9 @@ class ConnectionHandler {
 
       socket.on("disconnect", () => {
         console.log(roomId + " | Controller disconnected: " + userId);
+        room.userDisconnected(userId);
         if (room.isOpen()) {
-          room.removeUser(room.getUserById(userId));
           emitter.sendConnectedUsers(screenNameSpace, room);
-        } else if (room.isPlaying()) {
-          room.getUserById(userId).setActive(false);
         }
       });
 
