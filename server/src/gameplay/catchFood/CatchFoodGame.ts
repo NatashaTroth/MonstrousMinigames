@@ -41,6 +41,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
   roomId: string;
   gameState: GameState;
   gameStartedTime: number;
+  players: Array<User>;
   // timeOutLimit: number;
 
   constructor(players: Array<User>, trackLength = 2000, numberOfObstacles = 2) {
@@ -50,6 +51,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     this.trackLength = trackLength;
     this.numberOfObstacles = numberOfObstacles;
     this.currentRank = 1;
+    this.players = players;
     this.playersState = initiatePlayersState(
       players,
       this.numberOfObstacles,
@@ -208,7 +210,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
   }
 
   resetGame(
-    players: Array<User>,
+    players = this.players,
     trackLength = 2000,
     numberOfObstacles = 4
   ): void {
