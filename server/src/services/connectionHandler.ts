@@ -1,6 +1,7 @@
 import User from "../classes/user";
 import RoomService from "./roomService";
 import {
+  GameStateInfo,
   ObstacleReachedInfo,
   PlayerFinishedInfo,
 } from "../gameplay/catchFood/interfaces";
@@ -27,20 +28,21 @@ class ConnectionHandler {
     this.screenNameSpace = this.io.of(Namespaces.SCREEN);
   }
 
-  public handle(): void {
+  public handle() {
     this.handleControllers();
     this.handleScreens();
     this.handleGameEvents();
   }
   private handleControllers() {
-    const rs = this.rs;
-    const controllerNamespace = this.controllerNamespace;
+    let io = this.io;
+    let rs = this.rs;
+    let controllerNamespace = this.controllerNamespace;
 
-    const screenNameSpace = this.screenNameSpace;
+    let screenNameSpace = this.screenNameSpace;
     this.controllerNamespace.on("connection", function (socket: any) {
-      const roomId = socket.handshake.query.roomId;
-      const room = rs.getRoomById(roomId);
-      const name = socket.handshake.query.name;
+      let roomId = socket.handshake.query.roomId;
+      let room = rs.getRoomById(roomId);
+      let name = socket.handshake.query.name;
       let user: User;
 
       let userId = socket.handshake.query.userId;
@@ -49,19 +51,14 @@ class ConnectionHandler {
         if (user) {
           user.setRoomId(roomId);
           user.setSocketId(socket.id);
-          user.setActive(true);
-        } else {
+        }else{
           user = new User(room.id, socket.id, name);
           userId = user.id;
-
+  
           if (!room.addUser(user)) {
-            emitter.sendErrorMessage(
-              socket,
-              "Cannot join. Game already started"
-            );
-            console.error(
-              "User tried to join. Game already started: " + userId
-            );
+            emitter.sendErrorMessage(socket, "Cannot join. Game already started");
+            console.error("User tried to join. Game already started: " + userId);
+            //userId = room.users[0].id;
             return;
           }
         }
@@ -85,14 +82,10 @@ class ConnectionHandler {
 
       socket.on("disconnect", () => {
         console.log(roomId + " | Controller disconnected: " + userId);
-        room.userDisconnected(userId);
-        if (room.isOpen()) {
-          emitter.sendConnectedUsers(screenNameSpace, room);
-        }
       });
 
       socket.on("message", function (message: any) {
-        const type = message.type;
+        let type = message.type;
 
         switch (type) {
           case CatchFoodMsgType.START: {
@@ -106,7 +99,7 @@ class ConnectionHandler {
               );
               emitter.sendGameState(screenNameSpace, room);
 
-              const gameStateInterval = setInterval(() => {
+              let gameStateInterval = setInterval(() => {
                 if (!room.isPlaying) {
                   clearInterval(gameStateInterval);
                 }
@@ -130,12 +123,9 @@ class ConnectionHandler {
           }
           case MessageTypes.RESET_GAME:
             {
-              if (room.isAdmin(user)) {
-                console.log(roomId + " | Reset Game");
-                room.resetGame(user).then(() => {
-                  emitter.sendUserInit(socket, user, room);
-                });
-              }
+              console.log(roomId + " | Reset Game");
+              room.resetGame(user);
+              emitter.sendUserInit(socket, user, room);
             }
             break;
           default: {
@@ -146,17 +136,18 @@ class ConnectionHandler {
     });
   }
   private handleScreens() {
-    const rs = this.rs;
-    const screenNameSpace = this.screenNameSpace;
+    let rs = this.rs;
+    let screenNameSpace = this.screenNameSpace;
 
     this.screenNameSpace.on("connection", function (socket: any) {
-      const roomId = socket.handshake.query.roomId
+      let roomId = socket.handshake.query.roomId
         ? socket.handshake.query.roomId
         : "ABCDE";
-      const room = rs.getRoomById(roomId);
+      let room = rs.getRoomById(roomId);
 
       socket.join(room.id);
       console.log(roomId + " | Screen connected");
+
 
       emitter.sendConnectedUsers(screenNameSpace, room);
 
@@ -172,9 +163,9 @@ class ConnectionHandler {
     });
   }
   private handleGameEvents() {
-    const rs = this.rs;
-    const controllerNamespace = this.controllerNamespace;
-    const screenNameSpace = this.screenNameSpace;
+    let rs = this.rs;
+    let controllerNamespace = this.controllerNamespace;
+    let screenNameSpace = this.screenNameSpace;
     this.gameEventEmitter.on(
       GameEventTypes.ObstacleReached,
       (data: ObstacleReachedInfo) => {
@@ -185,8 +176,8 @@ class ConnectionHandler {
             " | Obstacle: " +
             data.obstacleType
         );
-        const r = rs.getRoomById(data.roomId);
-        const u = r.getUserById(data.userId);
+        let r = rs.getRoomById(data.roomId);
+        let u = r.getUserById(data.userId);
         if (u) {
           this.controllerNamespace.to(u.socketId).emit("message", {
             type: CatchFoodMsgType.OBSTACLE,
@@ -201,8 +192,8 @@ class ConnectionHandler {
         console.log(
           data.roomId + " | userId: " + data.userId + " | Rank: " + data.rank
         );
-        const room = rs.getRoomById(data.roomId);
-        const user = room.getUserById(data.userId);
+        let room = rs.getRoomById(data.roomId);
+        let user = room.getUserById(data.userId);
         if (user) {
           emitter.sendPlayerFinished(controllerNamespace, user, data);
         }
@@ -210,7 +201,7 @@ class ConnectionHandler {
     );
     this.gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: any) => {
       console.log(data.roomId + " | Game has finished");
-      const room = rs.getRoomById(data.roomId);
+      let room = rs.getRoomById(data.roomId);
       room.setClosed();
       emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data);
     });

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Button render correctly Button component 1`] = `
+exports[`test Button component render correctly Button component 1`] = `
 <div
   className="sc-bdfBwQ"
 >
@@ -13,7 +13,7 @@ exports[`Button render correctly Button component 1`] = `
 </div>
 `;
 
-exports[`Button render disabled Button component 1`] = `
+exports[`test Button component render disabled Button component 1`] = `
 <div
   className="sc-bdfBwQ"
 >

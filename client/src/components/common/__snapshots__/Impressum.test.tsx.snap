@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Impressum render correctly Impressum component 1`] = `
+exports[`test Impressum component render correctly Impressum component 1`] = `
 <div
   className="sc-bdfBwQ gjhaZX"
 >

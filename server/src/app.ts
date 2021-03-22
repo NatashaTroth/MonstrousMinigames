@@ -31,18 +31,17 @@ const expresServer = server.app.listen({ port: PORT }, () =>
 
 const io = require("socket.io")(expresServer, {
   cors: {
-    origin: "*",
+    origin: '*',
     methods: ["GET", "POST"],
   },
 });
 
-const roomCount: number = parseInt(`${process.env.ROOM_COUNT}`, 10) || 100;
-
-const rs = new RoomService(roomCount);
+const rs = new RoomService();
 const ch = new ConnectionHandler(io, rs);
 ch.handle();
 
 server.app.get("/create-room", (req, res) => {
-  const room = rs.createRoom();
-  res.send({ roomId: room.id });
+  let room = rs.createRoom()
+  res.send({roomId: room.id});
 });
+

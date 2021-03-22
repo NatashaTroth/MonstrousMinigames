@@ -1,6 +1,5 @@
 {
   "projects": {
-    "staging": "staging-monsters",
-    "production": "monsters-6baec"
+    "default": "monsters-6baec"
   }
 }

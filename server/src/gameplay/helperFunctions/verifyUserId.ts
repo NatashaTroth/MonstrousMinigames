@@ -4,8 +4,7 @@ import { HashTable } from "../interfaces";
 export function verifyUserId(
   playersState: HashTable<PlayerState>,
   userId: string
-) : void {
-  // if (!playersState.hasOwnProperty(userId))
-  if (!Object.prototype.hasOwnProperty.call(playersState, userId))
+) {
+  if (!playersState.hasOwnProperty(userId))
     throw new Error(`User Id ${userId} is not registered to the game.`);
 }

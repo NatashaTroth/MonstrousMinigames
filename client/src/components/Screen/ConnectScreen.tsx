@@ -3,7 +3,7 @@ import * as React from 'react'
 import { io } from 'socket.io-client'
 
 import { GameContext } from '../../contexts/GameContextProvider'
-import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
+import { SocketContext } from '../../contexts/SocketContextProvider'
 import { ENDPOINT } from '../../utils/config'
 import Button from '../common/Button'
 import {
@@ -20,7 +20,7 @@ interface IFormState {
 }
 export const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ roomId: '' })
-    const { setScreenSocket } = React.useContext(ScreenSocketContext)
+    const { setScreenSocket } = React.useContext(SocketContext)
     const { setRoomId } = React.useContext(GameContext)
 
     function handleSubmit() {
@@ -40,6 +40,8 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
         screenSocket.on('connect', () => {
             if (screenSocket) {
+                // eslint-disable-next-line no-console
+                console.log('Screen Socket connected')
                 setScreenSocket(screenSocket)
             }
         })

@@ -6,40 +6,29 @@ class User {
   public socketId: string;
   public name: string;
   public timestamp: number;
-  public active: boolean;
 
-  constructor(
-    roomId: string,
-    socketId: string,
-    name: string,
-    id: string = shortid.generate()
-  ) {
+  constructor(roomId: string, socketId: string, name: string, id: string = shortid.generate()) {
     this.id = id;
     this.roomId = roomId;
     this.socketId = socketId;
     this.name = name;
     this.timestamp = Date.now();
-    this.active = true;
   }
 
-  public setRoomId(id: string): void {
+  public setRoomId(id: string) {
     this.roomId = id;
   }
 
-  public setSocketId(id: string): void {
+  public setSocketId(id: string) {
     this.socketId = id;
   }
 
-  public setName(name: string): void {
+  public setName(name: string) {
     this.name = name;
   }
 
-  public updateTimestamp(): void {
+  public updateTimestamp() {
     this.timestamp = Date.now();
-  }
-
-  public setActive(active: boolean): void {
-    this.active = active;
   }
 }
 

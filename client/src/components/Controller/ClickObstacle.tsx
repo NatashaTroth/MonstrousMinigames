@@ -1,7 +1,7 @@
 import * as React from 'react'
 
-import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider'
 import { PlayerContext } from '../../contexts/PlayerContextProvider'
+import { SocketContext } from '../../contexts/SocketContextProvider'
 import wood from '../../images/wood.png'
 import { OBSTACLES } from '../../utils/constants'
 import { ObstacleContainer, ObstacleInstructions, ObstacleItem, StyledObstacleImage } from './ClickObstacle.sc'
@@ -11,12 +11,14 @@ interface IClickObstacle {
 }
 
 const ClickObstacle: React.FunctionComponent<IClickObstacle> = () => {
-    const { controllerSocket } = React.useContext(ControllerSocketContext)
+    const { controllerSocket } = React.useContext(SocketContext)
     const { setObstacle } = React.useContext(PlayerContext)
 
     function solveObstacle() {
         controllerSocket?.emit('message', { type: 'game1/obstacleSolved' })
         setObstacle(undefined)
+        // eslint-disable-next-line no-console
+        console.log('OBSTACLE REMOVED')
     }
     return (
         <ObstacleContainer>
