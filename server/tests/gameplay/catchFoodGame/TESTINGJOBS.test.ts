@@ -55,8 +55,4 @@ describe('Reset Game tests', () => {
     it('should set the player to not be finished', async () => {
         expect(catchFoodGame.playersState['1'].finished).toBeFalsy()
     })
-
-    it('should have initiated the correct new number of obstacles', async () => {
-        expect(catchFoodGame.playersState['1'].obstacles.length).toBe(6)
-    })
 })
