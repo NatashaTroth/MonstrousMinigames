@@ -5,13 +5,12 @@ import { LinearProgressContainer } from './LinearProgressBar.sc'
 
 interface ILinearProgressBar {
     progress: number
+    MIN?: number
+    MAX?: number
 }
 
-const LinearProgressBar: React.FunctionComponent<ILinearProgressBar> = ({ progress }) => {
-    const MIN = 0
-    const MAX = 50
-
-    const normalise = (value: number) => ((value - MIN) * 100) / (MAX - MIN)
+const LinearProgressBar: React.FunctionComponent<ILinearProgressBar> = ({ progress, MIN = 0, MAX = 50 }) => {
+    const normalise = (value: number) => (((value > MAX ? MAX : value) - MIN) * 100) / (MAX - MIN)
 
     return (
         <LinearProgressContainer>

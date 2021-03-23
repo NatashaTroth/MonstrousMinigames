@@ -1,18 +1,25 @@
-import Hammer from 'hammerjs';
-import * as React from 'react';
+import Hammer from 'hammerjs'
+import * as React from 'react'
+import { useHistory } from 'react-router'
 
-import { ControllerSocketContext } from '../../../contexts/ControllerSocketContextProvider';
-import { PlayerContext } from '../../../contexts/PlayerContextProvider';
-import wood from '../../../images/wood.png';
-import { OBSTACLES, TOUCHEVENT } from '../../../utils/constants';
-import LinearProgressBar from '../LinearProgressBar';
+import { ControllerSocketContext } from '../../../contexts/ControllerSocketContextProvider'
+import { PlayerContext } from '../../../contexts/PlayerContextProvider'
+import wood from '../../../images/wood.png'
+import { OBSTACLES } from '../../../utils/constants'
+import LinearProgressBar from '../LinearProgressBar'
 import {
-    Line, ObstacleContainer, ObstacleInstructions, ObstacleItem, StyledObstacleImage, TouchContainer
-} from './TreeTrunk.sc';
+    Line,
+    ObstacleContainer,
+    ObstacleInstructions,
+    ObstacleItem,
+    StyledObstacleImage,
+    TouchContainer,
+} from './TreeTrunk.sc'
 
-const MAX = 50
-const Treshold = 2
-let counter = 0
+const MAX = 10000
+const Treshold = 0
+let distance = 0
+let send = true
 interface IClickObstacle {
     setObstacle: (value: undefined | OBSTACLES) => void
 }
@@ -21,28 +28,35 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext)
     const { setObstacle } = React.useContext(PlayerContext)
     const [progress, setProgress] = React.useState(0)
+    const history = useHistory()
 
     React.useEffect(() => {
-        const touchContainer = document.getElementById('touchContainer')
         let touchEvent: null | string = null
-        let send = true
+
+        let touchContainer
+
+        let currentDistance = 0
+
+        if (!touchContainer) {
+            touchContainer = document.getElementById('touchContainer')
+        }
 
         if (touchContainer) {
             const hammertime = touchContainer && new Hammer(touchContainer)
 
             hammertime?.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL })
 
-            if (counter <= MAX + Treshold) {
+            if (distance <= MAX + Treshold) {
                 hammertime?.on('panleft panright', e => {
-                    handleTouchEvent(e.type)
+                    handleTouchEvent({ event: e.type, eventDistance: e.distance })
                 })
             } else {
                 hammertime?.off('panleft panright')
             }
         }
 
-        function handleTouchEvent(event: string) {
-            if (counter >= MAX + Treshold && send) {
+        function handleTouchEvent({ event, eventDistance }: { event: string; eventDistance: number }) {
+            if (distance >= MAX + Treshold && send) {
                 send = false
                 solveObstacle()
                 return
@@ -50,13 +64,15 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
 
             if (!touchEvent) {
                 touchEvent = event
+                distance += eventDistance
             } else {
-                if (
-                    (event === TOUCHEVENT.panLeft && touchEvent === TOUCHEVENT.panRight) ||
-                    (event === TOUCHEVENT.panRight && touchEvent === TOUCHEVENT.panLeft)
-                ) {
-                    ++counter
-                    setProgress(counter)
+                if (event !== touchEvent) {
+                    if (eventDistance > currentDistance) {
+                        currentDistance = eventDistance
+                    } else {
+                        distance += currentDistance
+                    }
+                    setProgress(distance)
                     touchEvent = event
                 }
             }
@@ -64,19 +80,19 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
 
         const solveObstacle = (): void => {
             controllerSocket?.emit('message', { type: 'game1/obstacleSolved' })
-            setObstacle(undefined)
+            setTimeout(() => setObstacle(undefined), 100)
         }
-    }, [controllerSocket, progress, setObstacle])
+    }, [controllerSocket, history, progress, setObstacle])
 
     return (
         <ObstacleContainer>
             <ObstacleInstructions>Saw along the line to cut it!</ObstacleInstructions>
-            <LinearProgressBar progress={progress} />
-            <TouchContainer id="touchContainer">
+            <LinearProgressBar progress={progress} MAX={MAX} />
+            <TouchContainer>
                 <ObstacleItem>
                     <StyledObstacleImage src={wood} />
                 </ObstacleItem>
-                <Line />
+                <Line id="touchContainer" />
             </TouchContainer>
         </ObstacleContainer>
     )

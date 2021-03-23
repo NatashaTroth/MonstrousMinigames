@@ -39,13 +39,13 @@ export const Line = styled.div`
     width: 80%;
     position: absolute;
     border-top: 5px dashed red;
+    height: 50px;
 `
 
 export const TouchContainer = styled.div`
-    height: 100%;
+    margin-top: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 2;
-    width: 100%;
 `
