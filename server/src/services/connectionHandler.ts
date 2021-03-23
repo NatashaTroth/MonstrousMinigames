@@ -36,8 +36,8 @@ class ConnectionHandler {
     private handleControllers() {
         const rs = this.rs
         const controllerNamespace = this.controllerNamespace
-
         const screenNameSpace = this.screenNameSpace
+
         this.controllerNamespace.on('connection', function (socket) {
             const roomId = socket.handshake.query.roomId
             const room = rs.getRoomById(roomId)
@@ -68,24 +68,31 @@ class ConnectionHandler {
                 if (!room.addUser(user)) {
                     emitter.sendErrorMessage(socket, 'Cannot join. Game already started')
                     console.error('User tried to join. Game already started: ' + userId)
-                    //userId = room.users[0].id;
                     return
                 }
             }
+
             emitter.sendConnectedUsers(screenNameSpace, room)
             console.log(roomId + ' | Controller connected: ' + userId)
 
             emitter.sendUserInit(socket, user, room)
-            socket.user = user
             socket.join(roomId)
-
             socket.on('disconnect', () => {
-                console.log(socket.user)
-
                 console.log(roomId + ' | Controller disconnected: ' + userId)
                 room.userDisconnected(userId)
+
                 if (room.isOpen()) {
                     emitter.sendConnectedUsers(screenNameSpace, room)
+                    const admin = room.admin
+                    if (admin) {
+                        controllerNamespace.to(admin.socketId).emit('message', {
+                            type: MessageTypes.USER_INIT,
+                            userId: admin.id,
+                            roomId: room.id,
+                            name: admin.name,
+                            isAdmin: room.isAdmin(admin),
+                        })
+                    }
                 }
             })
 

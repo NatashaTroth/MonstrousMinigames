@@ -33,10 +33,7 @@ class Room {
     public removeUser(toBeRemoved: User): void {
         const index = this.users.indexOf(toBeRemoved)
         this.users.splice(index, 1)
-
-        if (this.users[0] && this.isAdmin(toBeRemoved)) {
-            this.admin = this.users[0]
-        }
+        this.resolveAdmin()
     }
 
     public userDisconnected(userId: string): void {
@@ -50,6 +47,15 @@ class Room {
                     this.setClosed()
                 }
             }
+        }
+    }
+    private resolveAdmin(): void {
+        if (this.users.length > 0) {
+            if (this.users.filter(u => u === this.admin).length === 0) {
+                this.admin = this.users[0]
+            }
+        } else {
+            this.admin = null
         }
     }
 
