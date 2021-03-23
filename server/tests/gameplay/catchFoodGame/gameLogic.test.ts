@@ -39,12 +39,39 @@ describe('Game logic tests', () => {
         expect(catchFoodGame.playersState['1'].positionX).toBe(15)
     })
 
+    it('playerHasReachedObstacle is called and returns false', async () => {
+        catchFoodGame.startGame()
+        const playerHasReachedObstacleSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasReachedObstacle')
+        catchFoodGame.runForward('1', 5)
+        expect(playerHasReachedObstacleSpy).toHaveBeenCalled()
+        expect(playerHasReachedObstacleSpy).toHaveReturnedWith(false)
+    })
+
     it('recognises when player has reached an obstacle', async () => {
         catchFoodGame.startGame()
         const distanceToObstacle =
             catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX
         catchFoodGame.runForward('1', distanceToObstacle)
         expect(catchFoodGame.playersState['1'].atObstacle).toBeTruthy()
+    })
+
+    it('playerHasReachedObstacle is called and returns true', async () => {
+        catchFoodGame.startGame()
+        const distanceToObstacle =
+            catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX
+        const playerHasReachedObstacleSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasReachedObstacle')
+        catchFoodGame.runForward('1', distanceToObstacle)
+        expect(playerHasReachedObstacleSpy).toHaveBeenCalled()
+        expect(playerHasReachedObstacleSpy).toHaveReturnedWith(true)
+    })
+
+    it('handlePlayerReachedObstacle is called', async () => {
+        catchFoodGame.startGame()
+        const distanceToObstacle =
+            catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX
+        const handlePlayerReachedObstacleSpy = jest.spyOn(CatchFoodGame.prototype as any, 'handlePlayerReachedObstacle')
+        catchFoodGame.runForward('1', distanceToObstacle)
+        expect(handlePlayerReachedObstacleSpy).toHaveBeenCalled()
     })
 
     it("doesn't remove an obstacle when a player arrives at it", async () => {
@@ -110,18 +137,51 @@ describe('Game logic tests', () => {
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1')
         }
-        catchFoodGame.runForward('1', 500)
+        catchFoodGame.runForward('1', TRACKLENGTH)
         expect(catchFoodGame.playersState['1'].finished).toBeTruthy()
     })
 
-    it('should give the first player that finishes a rank of 1', async () => {
+    it('playerHasPassedGoal is called and returns false', async () => {
+        catchFoodGame.startGame()
+        const playerHasPassedGoalSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasPassedGoal')
+        catchFoodGame.runForward('1', 5)
+        expect(playerHasPassedGoalSpy).toHaveBeenCalled()
+        expect(playerHasPassedGoalSpy).toHaveReturnedWith(false)
+    })
+
+    it('should set a player as finished when they have reached the end of the race', async () => {
         catchFoodGame.startGame()
         // finish player 1
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1')
         }
-        catchFoodGame.runForward('1', 500)
-        expect(catchFoodGame.playersState['1'].rank).toBe(1)
+        catchFoodGame.runForward('1', TRACKLENGTH)
+        expect(catchFoodGame.playersState['1'].finished).toBeTruthy()
+    })
+
+    it('playerHasPassedGoal is called and returns true', async () => {
+        catchFoodGame.startGame()
+        // finish player 1
+        for (let i = 0; i < 4; i++) {
+            catchFoodGame.playerHasCompletedObstacle('1')
+        }
+
+        const playerHasPassedGoalSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasPassedGoal')
+        catchFoodGame.runForward('1', TRACKLENGTH)
+        expect(playerHasPassedGoalSpy).toHaveBeenCalled()
+        expect(playerHasPassedGoalSpy).toHaveReturnedWith(true)
+    })
+
+    it('playerHasFinishedGame is called', async () => {
+        catchFoodGame.startGame()
+        // finish player 1
+        for (let i = 0; i < 4; i++) {
+            catchFoodGame.playerHasCompletedObstacle('1')
+        }
+
+        const playerHasFinishedGameSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasFinishedGame')
+        catchFoodGame.runForward('1', TRACKLENGTH)
+        expect(playerHasFinishedGameSpy).toHaveBeenCalled()
     })
 
     it('should have a current rank of 2 after the first player has finished', async () => {
@@ -130,7 +190,7 @@ describe('Game logic tests', () => {
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1')
         }
-        catchFoodGame.runForward('1', 500)
+        catchFoodGame.runForward('1', TRACKLENGTH)
         expect(catchFoodGame.currentRank).toBe(2)
     })
 
@@ -144,10 +204,10 @@ describe('Game logic tests', () => {
             catchFoodGame.playerHasCompletedObstacle('4')
         }
 
-        catchFoodGame.runForward('1', 500)
-        catchFoodGame.runForward('2', 500)
-        catchFoodGame.runForward('3', 500)
-        catchFoodGame.runForward('4', 500)
+        catchFoodGame.runForward('1', TRACKLENGTH)
+        catchFoodGame.runForward('2', TRACKLENGTH)
+        catchFoodGame.runForward('3', TRACKLENGTH)
+        catchFoodGame.runForward('4', TRACKLENGTH)
         return catchFoodGame
     }
 
