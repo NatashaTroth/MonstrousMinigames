@@ -1,13 +1,11 @@
 import { CatchFoodGame } from '../../../src/gameplay'
-import { GameStateInfo, Obstacle } from '../../../src/gameplay/catchFood/interfaces'
-import { HashTable } from '../../../src/gameplay/interfaces'
+import { GameStateInfo } from '../../../src/gameplay/catchFood/interfaces'
 import { users } from '../mockUsers'
 import { GameState } from '../../../src/gameplay/interfaces'
 
 const TRACKLENGTH = 500
 const NUMBER_OF_OBSTACLES = 4
 let catchFoodGame: CatchFoodGame
-let obstacles: HashTable<Array<Obstacle>>
 let gameStateInfo: GameStateInfo
 
 describe('Get Obstacle Positions test', () => {
