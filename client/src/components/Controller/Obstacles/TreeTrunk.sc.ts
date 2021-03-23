@@ -32,17 +32,24 @@ export const ObstacleInstructions = styled.div`
     box-shadow: 8px 8px 0 #888;
     border-radius: 4px;
     margin-top: 50px;
-    margin-bottom: 50px;
-`
-
-export const Line = styled.div`
-    width: 80%;
-    position: absolute;
-    border-top: 5px dashed red;
-    height: 50px;
+    margin-bottom: 20px;
 `
 
 export const TouchContainer = styled.div`
+    width: 80%;
+    position: absolute;
+    height: 50px;
+    display: flex;
+    align-items: center;
+`
+
+export const Line = styled.div`
+    width: 100%;
+    position: absolute;
+    border-top: 5px dashed red;
+`
+
+export const ObstacleContent = styled.div`
     margin-top: 60px;
     display: flex;
     justify-content: center;

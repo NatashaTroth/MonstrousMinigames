@@ -6,10 +6,11 @@ import { ControllerSocketContext } from '../../../contexts/ControllerSocketConte
 import { PlayerContext } from '../../../contexts/PlayerContextProvider'
 import wood from '../../../images/wood.png'
 import { OBSTACLES } from '../../../utils/constants'
-import LinearProgressBar from '../LinearProgressBar'
+import LinearProgressBar from '../../common/LinearProgressBar'
 import {
     Line,
     ObstacleContainer,
+    ObstacleContent,
     ObstacleInstructions,
     ObstacleItem,
     StyledObstacleImage,
@@ -32,9 +33,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
 
     React.useEffect(() => {
         let touchEvent: null | string = null
-
         let touchContainer
-
         let currentDistance = 0
 
         if (!touchContainer) {
@@ -72,6 +71,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
                     } else {
                         distance += currentDistance
                     }
+
                     setProgress(distance)
                     touchEvent = event
                 }
@@ -79,6 +79,10 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
         }
 
         const solveObstacle = (): void => {
+            distance = 0
+            currentDistance = 0
+            touchEvent = null
+            send = true
             controllerSocket?.emit('message', { type: 'game1/obstacleSolved' })
             setTimeout(() => setObstacle(undefined), 100)
         }
@@ -88,12 +92,14 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
         <ObstacleContainer>
             <ObstacleInstructions>Saw along the line to cut it!</ObstacleInstructions>
             <LinearProgressBar progress={progress} MAX={MAX} />
-            <TouchContainer>
+            <ObstacleContent>
                 <ObstacleItem>
                     <StyledObstacleImage src={wood} />
                 </ObstacleItem>
-                <Line id="touchContainer" />
-            </TouchContainer>
+                <TouchContainer id="touchContainer">
+                    <Line />
+                </TouchContainer>
+            </ObstacleContent>
         </ObstacleContainer>
     )
 }

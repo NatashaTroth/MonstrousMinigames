@@ -1,7 +1,6 @@
-import LinearProgress from '@material-ui/core/LinearProgress'
 import React from 'react'
 
-import { LinearProgressContainer } from './LinearProgressBar.sc'
+import { LinearProgressContainer, StyledLinearProgress } from './LinearProgressBar.sc'
 
 interface ILinearProgressBar {
     progress: number
@@ -14,7 +13,7 @@ const LinearProgressBar: React.FunctionComponent<ILinearProgressBar> = ({ progre
 
     return (
         <LinearProgressContainer>
-            <LinearProgress variant="determinate" value={normalise(progress)} />
+            <StyledLinearProgress variant="determinate" value={normalise(progress)} />
         </LinearProgressContainer>
     )
 }
