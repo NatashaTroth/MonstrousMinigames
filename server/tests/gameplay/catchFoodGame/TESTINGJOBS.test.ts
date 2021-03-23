@@ -43,12 +43,4 @@ describe('Reset Game tests', () => {
     it('should have the correct current rank', async () => {
         expect(catchFoodGame.currentRank).toBe(1)
     })
-
-    it('should have the correct name for player 1', async () => {
-        expect(catchFoodGame.playersState['1'].name).toBe(users[0].name)
-    })
-
-    it('should have a player not at an obstacle', async () => {
-        expect(catchFoodGame.playersState['1'].atObstacle).toBeFalsy()
-    })
 })
