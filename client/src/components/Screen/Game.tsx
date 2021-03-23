@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Countdown from 'react-countdown'
 
-import { Container, CountdownDiv, Go } from './Game.sc'
+import { Container, ContainerTimer, CountdownRenderer, Go } from './Game.sc'
 import Goal from './Goal'
 import Player from './Player'
 
@@ -20,7 +20,11 @@ const Game: React.FunctionComponent = () => {
                             </div>
                         )
                     } else {
-                        return <CountdownDiv>{props.seconds}</CountdownDiv>
+                        return (
+                            <ContainerTimer>
+                                <CountdownRenderer>{props.seconds}</CountdownRenderer>
+                            </ContainerTimer>
+                        )
                     }
                 }}
             />

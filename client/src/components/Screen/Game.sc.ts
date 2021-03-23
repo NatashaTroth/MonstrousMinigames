@@ -12,12 +12,16 @@ export const Container = styled.div`
     top: 0;
     background-position: bottom;
     background-image: url(${forest});
+`
+
+export const ContainerTimer = styled.div`
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
 `
 
-export const CountdownDiv = styled.p`
+export const CountdownRenderer = styled.p`
     font-size: 8em;
     font-weight: 900;
     color: ${orange};
@@ -30,16 +34,19 @@ export const Go = styled.p`
     -webkit-animation: fadeInOut 6s;
     animation: fadeOut 2s;
     opacity: 0;
+    display: none;
 
     @keyframes fadeOut {
         0% {
             opacity: 1;
+            display: block;
         }
         40% {
             opacity: 1;
         }
         100% {
             opacity: 0;
+            display: none;
         }
     }
 `
