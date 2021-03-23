@@ -1,71 +1,68 @@
 image: node:latest
 
 npm:server:
-  tags:
-    - node
-  stage: npm
-  artifacts:
-    paths:
-      - server/node_modules/
-    expire_in: 1 days
-    when: always
+    tags:
+        - node
+    stage: npm
+    artifacts:
+        paths:
+            - server/node_modules/
+        expire_in: 1 days
+        when: always
 
-  script:
-    - cd server/
-    - echo "Running npm ci ..."
-    - npm ci
-  except:
-    - /^frontend-.*$/
-    - /^backend-.*$/
+    script:
+        - cd server/
+        - echo "Running npm ci ..."
+        - npm ci
+    except:
+        - /^frontend-.*$/
 
 lint:server:
-  stage: lint
-  tags:
-    - node
-  script:
-    - cd server/
-    - echo "Linting.."
-    - npm run lint
-  except:
-    - /^frontend-.*$/
-    - /^backend-.*$/
+    stage: lint
+    tags:
+        - node
+    script:
+        - cd server/
+        - echo "Linting.."
+        - npm run lint
+    except:
+        - /^frontend-.*$/
 
 test:server:
-  stage: test
-  tags:
-    - node
-  script:
-    - cd server/
-    - echo "Testing.."
-    - ./node_modules/.bin/jest ./
-  except:
-    - /^frontend-.*$/
-    - /^backend-.*$/
+    stage: test
+    tags:
+        - node
+    script:
+        - cd server/
+        - echo "Testing.."
+        - ./node_modules/.bin/jest ./
+    except:
+        - /^frontend-.*$/
 
 staging:server:
-  stage: staging
-  tags:
-    - node
-  image: ruby:latest
-  script:
-    - apt-get update -qy
-    - apt-get install -y ruby-dev
-    - gem install dpl
-    - cd server/
-    - dpl --provider=heroku --app=$HEROKU_APP_STAGING --api-key=$HEROKU_API_KEY --skip-cleanup
-  only:
-    - dev
+    stage: staging
+    tags:
+        - node
+    image: ruby:latest
+    script:
+        - apt-get update -qy
+        - apt-get install -y ruby-dev
+        - gem install dpl
+        - cd server/
+        - dpl --provider=heroku --app=$HEROKU_APP_STAGING --api-key=$HEROKU_API_KEY --skip-cleanup
+    only:
+        - dev
 
 production:server:
-  stage: production
-  tags:
-    - node
-  image: ruby:latest
-  script:
-    - apt-get update -qy
-    - apt-get install -y ruby-dev
-    - gem install dpl
-    - cd server/
-    - dpl --provider=heroku --app=$HEROKU_APP_PRODUCTION --api-key=$HEROKU_API_KEY --skip-cleanup
-  only:
-    - master
+    stage: production
+    tags:
+        - node
+    image: ruby:latest
+    script:
+        - apt-get update -qy
+        - apt-get install -y ruby-dev
+        - gem install dpl
+        - cd server/
+        - dpl --provider=heroku --app=$HEROKU_APP_PRODUCTION --api-key=$HEROKU_API_KEY --skip-cleanup
+    only:
+        - master
