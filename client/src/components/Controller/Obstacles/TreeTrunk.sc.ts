@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { lightBlue, orange } from '../../utils/colors'
+import { lightBlue, orange } from '../../../utils/colors'
 
 export const ObstacleContainer = styled.div`
     width: 100%;
@@ -9,12 +9,10 @@ export const ObstacleContainer = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
-    justify-content: center;
 `
 
 export const ObstacleItem = styled.div`
-    border-radius: 50%;
-    width: 80%;
+    transform: rotate(80deg);
 `
 export const StyledObstacleImage = styled.img`
     width: 100%;
@@ -34,4 +32,27 @@ export const ObstacleInstructions = styled.div`
     box-shadow: 8px 8px 0 #888;
     border-radius: 4px;
     margin-top: 50px;
+    margin-bottom: 20px;
+`
+
+export const TouchContainer = styled.div`
+    width: 80%;
+    position: absolute;
+    height: 50px;
+    display: flex;
+    align-items: center;
+`
+
+export const Line = styled.div`
+    width: 100%;
+    position: absolute;
+    border-top: 5px dashed red;
+`
+
+export const ObstacleContent = styled.div`
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
 `
