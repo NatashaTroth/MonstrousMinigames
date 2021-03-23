@@ -39,8 +39,4 @@ describe('Reset Game tests', () => {
     it('should have the correct tracklength', async () => {
         expect(catchFoodGame.trackLength).toBe(NEW_TRACKLENGTH)
     })
-
-    it('should have the correct current rank', async () => {
-        expect(catchFoodGame.currentRank).toBe(1)
-    })
 })
