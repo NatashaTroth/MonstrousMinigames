@@ -15,6 +15,11 @@ describe('Event Emitter', () => {
 
     beforeEach(() => {
         catchFoodGame = new CatchFoodGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES)
+        jest.useFakeTimers()
+    })
+
+    afterEach(() => {
+        jest.runAllTimers()
     })
 
     it('should emit a GameHasStarted event when the game is started', async () => {
@@ -49,8 +54,7 @@ describe('Event Emitter', () => {
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1')
         }
-        //
-        const gameEventEmitter = GameEventEmitter.getInstance()
+
         let playerFinished = false
         gameEventEmitter.on(GameEventTypes.PlayerHasFinished, () => {
             playerFinished = true
@@ -78,5 +82,15 @@ describe('Event Emitter', () => {
         catchFoodGame.runForward('3', 500)
         catchFoodGame.runForward('4', 500)
         expect(gameFinishedEvent).toBeTruthy()
+    })
+
+    it('should emit a GameHasTimedOut event when the game has timed out', async () => {
+        let gameTimedOutEvent = false
+        gameEventEmitter.on(GameEventTypes.GameHasTimedOut, () => {
+            gameTimedOutEvent = true
+        })
+        catchFoodGame.startGame()
+        jest.runAllTimers()
+        expect(gameTimedOutEvent).toBeTruthy()
     })
 })

@@ -12,6 +12,7 @@ const OBSTACLE_TYPE_KEYS = Object.keys(ObstacleType)
 describe('Initiate CatchFoodGame correctly', () => {
     beforeEach(async () => {
         catchFoodGame = new CatchFoodGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES)
+        jest.useFakeTimers()
     })
 
     it('initiates players state with correct number of players', async () => {

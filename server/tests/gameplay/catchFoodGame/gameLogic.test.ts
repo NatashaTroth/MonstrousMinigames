@@ -8,6 +8,7 @@ let catchFoodGame: CatchFoodGame
 describe('Game logic tests', () => {
     beforeEach(() => {
         catchFoodGame = new CatchFoodGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES)
+        jest.useFakeTimers()
     })
 
     it('starts players at positionX 0', async () => {
