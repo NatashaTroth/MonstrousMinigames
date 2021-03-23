@@ -32,13 +32,36 @@ class Room {
 
   public removeUser(toBeRemoved: User): void {
     const index = this.users.indexOf(toBeRemoved);
-    this.users.splice(index);
-    // if user is admin
-    if (this.users.length !== 0) {
-      if (this.isAdmin(toBeRemoved)) {
-        this.admin = this.users[0];
+    this.users.splice(index, 1);
+
+    if (this.users[0] && this.isAdmin(toBeRemoved)) {
+      this.admin = this.users[0];
+    }
+  }
+
+  public userDisconnected(userId: string): void {
+    const user = this.getUserById(userId);
+    if (this.isOpen()) {
+      this.removeUser(user);
+    } else {
+      if (this.isPlaying()) {
+        user.setActive(false);
+        if (!this.hasActiveUsers()) {
+          this.setClosed();
+        }
       }
     }
+  }
+
+  private getActiveUsers(): Array<User> {
+    const activeUsers = this.users.filter((user: User) => {
+      return user.active;
+    });
+    return activeUsers;
+  }
+
+  private hasActiveUsers(): boolean {
+    return this.getActiveUsers().length !== 0;
   }
 
   public updateTimestamp(): void {
@@ -85,6 +108,12 @@ class Room {
   }
   public setClosed(): void {
     this.setState(RoomStates.CLOSED);
+  }
+  public setOpen(): void {
+    this.setState(RoomStates.OPEN);
+  }
+  public setPlaying(): void {
+    this.setState(RoomStates.PLAYING);
   }
 }
 
