@@ -17,9 +17,22 @@ import {
     Subline,
 } from './Lobby.sc'
 
+const GAMES = [
+    {
+        id: 1,
+        name: 'Catch Food Game',
+        instructions1: 'Shake your phone to move your monster',
+        instructions2: 'When you reach an obstacle, look at your phone to see how to solve it',
+        image1: instructionsImg1,
+        image2: instructionsImg2,
+    },
+    { id: 2, name: 'Random Game' },
+]
+// const GAMES = ['Catch Food Game', 'Random Game']
+
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers } = React.useContext(GameContext)
-    // const [selectedGame, setSelectedGame] = React.useState(1)
+    const [selectedGame, setSelectedGame] = React.useState(0)
 
     return (
         <LobbyContainer>
@@ -32,19 +45,17 @@ export const Lobby: React.FunctionComponent = () => {
             </JoinedUsersView>
             <GameChoiceContainer>
                 <ListOfGames>
-                    <Button text="Catch Food Game"></Button>
-                    {/* <Button text="Random Game 2"></Button> */}
+                    <Button text={GAMES[0].name} onClick={() => setSelectedGame(0)}></Button>
+                    <Button text={GAMES[1].name} onClick={() => setSelectedGame(1)}></Button>
                 </ListOfGames>
                 <ImagesContainer>
                     <div>
-                        <InstructionsImg src={instructionsImg1} alt="Instructions" />
-                        <Instructions>Shake your phone to move your monster</Instructions>
-                        <InstructionsImg src={instructionsImg2} alt="Instructions" />
-                        <Instructions>
-                            When you reach an obstacle, look at your phone to see how to solve it
-                        </Instructions>
+                        <InstructionsImg src={GAMES[selectedGame].image1} alt="Instructions" />
+                        <Instructions>{GAMES[selectedGame].instructions1}</Instructions>
+                        <InstructionsImg src={GAMES[selectedGame].image2} alt="Instructions" />
+                        <Instructions>{GAMES[selectedGame].instructions2}</Instructions>
                     </div>
-                    <Button text="Start game"></Button>
+                    {/* <Button text="Start game"></Button> */}
                 </ImagesContainer>
             </GameChoiceContainer>
         </LobbyContainer>

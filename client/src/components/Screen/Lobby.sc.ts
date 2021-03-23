@@ -58,6 +58,10 @@ export const GameChoiceContainer = styled.div`
 export const ListOfGames = styled.div`
     flex-grow: 1;
     max-width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 `
 export const ImagesContainer = styled.div`
     flex-grow: 1;
