@@ -1,18 +1,22 @@
 import * as React from 'react'
 
 import woodFront from '../../images/woodFront.png'
-import { StyledObstacle, StyledObstacleImage } from './Obstacle.sc'
+import { ObstacleContainer, StyledObstacle, StyledObstacleHint, StyledObstacleImage } from './Obstacle.sc'
 
 interface IObstacle {
-    posX: number
+    posx: number
     player: number
+    playerAtObstacle: boolean
 }
 
-const Obstacle: React.FunctionComponent<IObstacle> = ({ posX, player }) => {
+const Obstacle: React.FunctionComponent<IObstacle> = ({ posx, player, playerAtObstacle }) => {
     return (
-        <StyledObstacle posX={posX} player={player}>
-            <StyledObstacleImage src={woodFront} />
-        </StyledObstacle>
+        <ObstacleContainer>
+            {playerAtObstacle && <StyledObstacleHint className="bounce" posx={posx} player={player} />}
+            <StyledObstacle posx={posx} player={player}>
+                <StyledObstacleImage src={woodFront} />
+            </StyledObstacle>
+        </ObstacleContainer>
     )
 }
 

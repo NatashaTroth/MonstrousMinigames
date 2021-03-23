@@ -1,0 +1,67 @@
+image: node:latest
+
+npm:client:
+    tags:
+        - node
+    stage: npm
+    artifacts:
+        paths:
+            - client/node_modules/
+        expire_in: 1 days
+        when: always
+
+    script:
+        - cd client/
+        - echo "Running npm ci ..."
+        - npm ci
+    except:
+        - /^backend-.*$/
+        - /^frontend-.*$/
+
+lint:client:
+    stage: lint
+    tags:
+        - node
+    script:
+        - cd client/
+        - echo "Linting.."
+        - npm run lint-fix
+    except:
+        - /^backend-.*$/
+        - /^frontend-.*$/
+
+test:client:
+    stage: test
+    tags:
+        - node
+    script:
+        - cd client/
+        - echo "Testing.."
+        - ./node_modules/.bin/jest ./
+    except:
+        - /^backend-.*$/
+        - /^frontend-.*$/
+
+staging:client:
+    stage: staging
+    script:
+        - cd client
+        - CI=false npm run build
+        - npm install -g firebase-tools
+        - firebase use --token $FIREBASE_TOKEN staging
+        - firebase deploy --only hosting -m "Pipeline $CI_PIPELINE_ID, build $CI_BUILD_ID" --non-interactive --token $FIREBASE_TOKEN
+
+    only:
+        - dev
+
+production:client:
+    stage: production
+    script:
+        - cd client
+        - CI=false npm run build
+        - npm install -g firebase-tools
+        - firebase use --token $FIREBASE_TOKEN production
+        - firebase deploy --only hosting -m "Pipeline $CI_PIPELINE_ID, build $CI_BUILD_ID" --non-interactive --token $FIREBASE_TOKEN
+
+    only:
+        - master

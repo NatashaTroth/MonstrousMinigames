@@ -9,7 +9,7 @@ class Room {
   public admin: User | null;
   private state: RoomStates;
 
-  constructor(id: string = "ABCDE") {
+  constructor(id: string) {
     this.id = id;
     this.users = [];
     this.timestamp = Date.now();
@@ -18,65 +18,102 @@ class Room {
     this.state = RoomStates.OPEN;
   }
 
-  public addUser(user: User) {
-    if (this.state === RoomStates.OPEN) {
+  public addUser(user: User): boolean {
+    if (this.isOpen()) {
       if (this.users.length === 0) this.admin = user;
       this.users.push(user);
       return true;
     }
     return false;
   }
-  public isAdmin(user: User) {
+  public isAdmin(user: User): boolean {
     return user === this.admin;
   }
 
-  //TODO remove User, logic
+  public removeUser(toBeRemoved: User): void {
+    const index = this.users.indexOf(toBeRemoved);
+    this.users.splice(index, 1);
 
-  public updateTimestamp() {
+    if (this.users[0] && this.isAdmin(toBeRemoved)) {
+      this.admin = this.users[0];
+    }
+  }
+
+  public userDisconnected(userId: string): void {
+    const user = this.getUserById(userId);
+    if (this.isOpen()) {
+      this.removeUser(user);
+    } else {
+      if (this.isPlaying()) {
+        user.setActive(false);
+        if (!this.hasActiveUsers()) {
+          this.setClosed();
+        }
+      }
+    }
+  }
+
+  private getActiveUsers(): Array<User> {
+    const activeUsers = this.users.filter((user: User) => {
+      return user.active;
+    });
+    return activeUsers;
+  }
+
+  private hasActiveUsers(): boolean {
+    return this.getActiveUsers().length !== 0;
+  }
+
+  public updateTimestamp(): void {
     this.timestamp = Date.now();
   }
 
-  public createGame() {
+  public createGame(): void {
     this.setState(RoomStates.PLAYING);
     this.game = new CatchFoodGame(this.users);
     this.startGame();
   }
 
-  private startGame() {
+  private startGame(): void {
     if (this.game) {
       this.game.startGame();
     }
   }
 
-  public getUserById(userId: string) {
-    let user = this.users.filter(function (u) {
+  public getUserById(userId: string): User {
+    const user = this.users.filter(function (u) {
       return u.id === userId;
     });
     return user[0];
   }
 
-  public resetGame(user: User) {
+  public async resetGame(user: User) {
     this.game?.resetGame(this.users);
     this.setState(RoomStates.OPEN);
-    this.users = [user];
     this.admin = user;
   }
 
-  private setState(state: RoomStates) {
+  private setState(state: RoomStates): void {
     this.state = state;
   }
 
-  public isOpen() {
+  public isOpen(): boolean {
     return this.state === RoomStates.OPEN;
   }
-  public isPlaying() {
+  public isPlaying(): boolean {
     return this.state === RoomStates.PLAYING;
   }
-  public isClosed() {
+  public isClosed(): boolean {
     return this.state === RoomStates.CLOSED;
   }
-  public setClosed() {
+  public setClosed(): void {
     this.setState(RoomStates.CLOSED);
+  }
+  public setOpen(): void {
+    this.setState(RoomStates.OPEN);
+  }
+  public setPlaying(): void {
+    this.setState(RoomStates.PLAYING);
   }
 }
 
