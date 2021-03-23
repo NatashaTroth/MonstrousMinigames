@@ -4,10 +4,10 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import { AppContainer } from './App.sc'
 import Impressum from './components/common/Impressum'
-import ClickObstacle from './components/Controller/ClickObstacle'
 import { ConnectScreen as ControllerConnectScreen } from './components/Controller/ConnectScreen'
 import { FinishedScreen as ControllerFinishedScreen } from './components/Controller/FinishedScreen'
 import { Lobby as ControllerLobbyScreen } from './components/Controller/Lobby'
+import TreeTrunk from './components/Controller/Obstacles/TreeTrunk'
 import ShakeInstruction from './components/Controller/ShakeInstruction'
 import { ConnectScreen as ScreenConnectScreen } from './components/Screen/ConnectScreen'
 import { FinishedScreen as ScreenFinishedScreen } from './components/Screen/FinishedScreen'
@@ -30,7 +30,7 @@ const App: React.FunctionComponent = () => {
                                     <Route path="/impressum" component={Impressum} exact />
                                     <Route path="/controller/lobby" component={ControllerLobbyScreen} exact />
                                     <Route path="/controller/game1" component={ShakeInstruction} exact />
-                                    <Route path="/controller/game1-obstacle" component={ClickObstacle} exact />
+                                    <Route path="/controller/game1-obstacle" component={TreeTrunk} exact />
                                     <Route path="/controller/finished" component={ControllerFinishedScreen} exact />
 
                                     <Route path="/screen/lobby" component={ScreenLobbyScreen} exact />

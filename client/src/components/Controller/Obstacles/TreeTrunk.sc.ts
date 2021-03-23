@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { lightBlue, orange } from '../../utils/colors'
+import { lightBlue, orange } from '../../../utils/colors'
 
 export const ObstacleContainer = styled.div`
     width: 100%;
@@ -12,7 +12,6 @@ export const ObstacleContainer = styled.div`
 `
 
 export const ObstacleItem = styled.div`
-    width: 100%;
     transform: rotate(80deg);
 `
 export const StyledObstacleImage = styled.img`
@@ -47,4 +46,6 @@ export const TouchContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 2;
+    width: 100%;
 `
