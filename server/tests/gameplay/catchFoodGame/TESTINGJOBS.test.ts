@@ -35,8 +35,4 @@ describe('Reset Game tests', () => {
     it('should have the correct new number of players', async () => {
         expect(Object.keys(catchFoodGame.playersState).length).toBe(users.length)
     })
-
-    it('should have the correct tracklength', async () => {
-        expect(catchFoodGame.trackLength).toBe(NEW_TRACKLENGTH)
-    })
 })
