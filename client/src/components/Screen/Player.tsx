@@ -31,8 +31,7 @@ const Player: React.FunctionComponent = () => {
                         <Obstacle
                             key={`obstacle${index}player${player.id}`}
                             player={playerIndex}
-                            posx={(obstacle.positionX * windowWidth) / (trackLength || 1)}
-                            playerAtObstacle={player.atObstacle && index === 0}
+                            posX={(obstacle.positionX * windowWidth) / (trackLength || 1)}
                         />
                     ))}
                 </div>

@@ -2,8 +2,8 @@ import { stringify } from 'query-string'
 import * as React from 'react'
 import { io } from 'socket.io-client'
 
-import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider'
 import { PlayerContext } from '../../contexts/PlayerContextProvider'
+import { SocketContext } from '../../contexts/SocketContextProvider'
 import { ENDPOINT } from '../../utils/config'
 import { ClickRequestDeviceMotion } from '../../utils/permissions'
 import { sendMovement } from '../../utils/sendMovement'
@@ -17,8 +17,9 @@ interface IFormState {
 
 export const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ name: '', roomId: '' })
-    const { setControllerSocket, controllerSocket } = React.useContext(ControllerSocketContext)
+    const { setControllerSocket } = React.useContext(SocketContext)
     const { setPermissionGranted, playerFinished, permission } = React.useContext(PlayerContext)
+    const { controllerSocket } = React.useContext(SocketContext)
 
     if (permission) {
         window.addEventListener(
@@ -60,6 +61,8 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
         controllerSocket.on('connect', () => {
             if (controllerSocket) {
+                // eslint-disable-next-line no-console
+                console.log('Controller Socket connected')
                 setControllerSocket(controllerSocket)
             }
         })

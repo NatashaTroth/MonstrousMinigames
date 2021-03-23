@@ -1,10 +1,10 @@
-import { Namespace, Socket } from "socket.io";
+import { Namespace } from "socket.io";
 import Room from "../classes/room";
 import User from "../classes/user";
 import { MessageTypes } from "../enums/messageTypes";
 import { CatchFoodMsgType } from "../gameplay/catchFood/interfaces/CatchFoodMsgType";
 
-function sendUserInit(socket: Socket, user: User, room: Room): void {
+function sendUserInit(socket: any, user: User, room: Room) {
   socket.emit("message", {
     type: MessageTypes.USER_INIT,
     userId: user.id,
@@ -13,7 +13,7 @@ function sendUserInit(socket: Socket, user: User, room: Room): void {
     isAdmin: room.isAdmin(user),
   });
 }
-function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
+function sendGameState(nsp: Namespace, room: Room, volatile: boolean = false) {
   if (volatile) {
     nsp.to(room.id).volatile.emit("message", {
       type: CatchFoodMsgType.GAME_STATE,
@@ -26,20 +26,20 @@ function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
     });
   }
 }
-function sendErrorMessage(socket: Socket, message: string): void {
+function sendErrorMessage(socket: any, message: string) {
   socket.emit("message", {
     type: "error",
     msg: message,
   });
 }
-function sendGameHasStarted(nsps: Array<Namespace>, room: Room): void {
+function sendGameHasStarted(nsps: Array<Namespace>, room: Room) {
   nsps.forEach(function (namespace: Namespace) {
     namespace.to(room.id).emit("message", {
       type: CatchFoodMsgType.HAS_STARTED,
     });
   });
 }
-function sendGameHasFinished(nsps: Array<Namespace>, data: any): void {
+function sendGameHasFinished(nsps: Array<Namespace>, data: any) {
   nsps.forEach(function (namespace: Namespace) {
     namespace.to(data.roomId).emit("message", {
       type: MessageTypes.GAME_HAS_FINISHED,
@@ -48,7 +48,7 @@ function sendGameHasFinished(nsps: Array<Namespace>, data: any): void {
   });
 }
 
-function sendPlayerFinished(nsp: Namespace, user: User, data: any): void {
+function sendPlayerFinished(nsp: Namespace, user: User, data: any) {
   console.log(user);
   nsp.to(user.socketId).emit("message", {
     type: CatchFoodMsgType.PLAYER_FINISHED,
@@ -56,11 +56,12 @@ function sendPlayerFinished(nsp: Namespace, user: User, data: any): void {
   });
 }
 
-function sendConnectedUsers(nsp: Namespace, room: Room): void {
-  nsp.to(room.id).emit("message", {
-    type: MessageTypes.CONNECTED_USERS,
-    users: room.users,
-  });
+function sendConnectedUsers(nsp: Namespace, room: Room) {
+  nsp.to(room.id).emit("message",
+    {
+      type: MessageTypes.CONNECTED_USERS,
+      users: room.users,
+    });
 }
 
 export default {

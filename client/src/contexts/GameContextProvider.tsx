@@ -1,7 +1,8 @@
 import * as React from 'react'
+import { useHistory } from 'react-router-dom'
 
 import { OBSTACLES } from '../utils/constants'
-import { IUser } from './ControllerSocketContextProvider'
+import { IUser } from './SocketContextProvider'
 
 interface IGameContext {
     trackLength?: number
@@ -66,6 +67,7 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [gameStarted, setGameStarted] = React.useState<boolean>(false)
     const [roomId, setRoomId] = React.useState<undefined | string>()
     const [connectedUsers, setConnectedUsers] = React.useState<undefined | IUser[]>()
+    const history = useHistory()
 
     const content = {
         trackLength,
@@ -75,6 +77,7 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         finished,
         setFinished: (val: boolean) => {
             setFinished(val)
+            history.push('/screen/finished')
             document.body.style.overflow = 'visible'
             document.body.style.position = 'static'
         },

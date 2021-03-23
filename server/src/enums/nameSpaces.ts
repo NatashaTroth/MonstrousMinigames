@@ -1,4 +1,4 @@
 export enum Namespaces {
-  CONTROLLER = "/controller",
-  SCREEN = "/screen",
-}
+    CONTROLLER = "/controller",
+    SCREEN = "/screen",
+  }
