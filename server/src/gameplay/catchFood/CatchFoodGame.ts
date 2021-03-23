@@ -1,15 +1,10 @@
-import {
-    PlayerState,
-    Obstacle,
-    // ObstacleType,
-    GameStateInfo,
-} from './interfaces'
-import { HashTable, GameEventTypes, GameState, GameInterface } from '../interfaces'
-import { User } from '../../interfaces/interfaces'
-import GameEventEmitter from '../../classes/GameEventEmitter'
-import { verifyGameState } from '../helperFunctions/verifyGameState'
-import { verifyUserId } from '../helperFunctions/verifyUserId'
-import { initiatePlayersState } from './initiatePlayerState'
+import GameEventEmitter from '../../classes/GameEventEmitter';
+import { User } from '../../interfaces/interfaces';
+import { verifyGameState } from '../helperFunctions/verifyGameState';
+import { verifyUserId } from '../helperFunctions/verifyUserId';
+import { GameEventTypes, GameInterface, GameState, HashTable } from '../interfaces';
+import { initiatePlayersState } from './initiatePlayerState';
+import { GameStateInfo, Obstacle, PlayerState } from './interfaces';
 
 interface CatchFoodGameInterface extends GameInterface {
     playersState: HashTable<PlayerState>
@@ -53,10 +48,13 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     startGame(): void {
         try {
             verifyGameState(this.gameState, GameState.Created)
-            this.gameState = GameState.Started
+            const countdownTime = 3000
+            setTimeout(() => {
+                this.gameState = GameState.Started
+            }, countdownTime)
             this.gameEventEmitter.emit(GameEventTypes.GameHasStarted, {
                 roomId: this.roomId,
-                countdownTime: 3000,
+                countdownTime,
             })
             this.gameStartedTime = Date.now()
             // setInterval(this.onTimerTick, 33);
