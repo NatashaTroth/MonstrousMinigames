@@ -1,3 +1,3 @@
-import CatchFoodGame from "./catchFood/CatchFoodGame";
+import CatchFoodGame from './catchFood/CatchFoodGame'
 
-export { CatchFoodGame };
+export { CatchFoodGame }
