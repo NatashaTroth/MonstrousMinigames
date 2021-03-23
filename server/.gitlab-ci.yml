@@ -16,28 +16,31 @@ npm:server:
     - npm ci
   except:
     - /^frontend-.*$/
+    - /^backend-.*$/
 
-    # lint:server:
-    #   stage: lint
-    #   tags:
-    #     - node
-    #   script:
-    #     - cd server/
-    #     - echo "Linting.."
-    #     - npm run lint
-    #   except:
-    #     - /^frontend-*$/
+lint:server:
+  stage: lint
+  tags:
+    - node
+  script:
+    - cd server/
+    - echo "Linting.."
+    - npm run lint
+  except:
+    - /^frontend-.*$/
+    - /^backend-.*$/
 
-    # test:server:
-    #   stage: test
-    #   tags:
-    #     - node
-    #   script:
-    #     - cd server/
-    #     - echo "Testing.."
-    #     - ./node_modules/.bin/jest ./
-    #   except:
-    # - /^frontend-*$/
+test:server:
+  stage: test
+  tags:
+    - node
+  script:
+    - cd server/
+    - echo "Testing.."
+    - ./node_modules/.bin/jest ./
+  except:
+    - /^frontend-.*$/
+    - /^backend-.*$/
 
 staging:server:
   stage: staging
@@ -50,10 +53,8 @@ staging:server:
     - gem install dpl
     - cd server/
     - dpl --provider=heroku --app=$HEROKU_APP_STAGING --api-key=$HEROKU_API_KEY --skip-cleanup
-  # dependencies:
-  #   - staging:client
   only:
-    - development
+    - dev
 
 production:server:
   stage: production
@@ -66,7 +67,5 @@ production:server:
     - gem install dpl
     - cd server/
     - dpl --provider=heroku --app=$HEROKU_APP_PRODUCTION --api-key=$HEROKU_API_KEY --skip-cleanup
-  # dependencies:
-  #   - staging:client
   only:
     - master

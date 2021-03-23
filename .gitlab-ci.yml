@@ -1,0 +1,10 @@
+stages:
+  - npm
+  - lint
+  - test
+  - staging
+  - production
+
+include:
+  - local: "/server/.gitlab-ci.yml"
+  - local: "/client/.gitlab-ci.yml"
