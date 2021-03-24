@@ -11,13 +11,16 @@ describe('connectionHandler', () => {
     let ch: ConnectionHandler
     const url = 'localhost:5000'
     let expresServer
-    let socket
+    let socket: SocketIOClient.Socket
+    let server: HttpServer
+
+    class HttpServer {
+        public app = express()
+
+    }
 
     beforeAll(done => {
-        class Server {
-            public app = express()
-        }
-        const server = new Server()
+        server = new HttpServer()
         const PORT = 5000
         expresServer = server.app.listen({ port: PORT })
         io = require('socket.io')(expresServer, {
@@ -29,6 +32,11 @@ describe('connectionHandler', () => {
         rs = new RoomService(100)
         ch = new ConnectionHandler(io, rs)
         ch.handle()
+        done()
+    })
+
+    afterAll(done => {
+        socket.close()
         done()
     })
 
