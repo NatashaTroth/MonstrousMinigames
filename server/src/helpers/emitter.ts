@@ -63,6 +63,13 @@ function sendConnectedUsers(nsp: Namespace, room: Room): void {
         users: room.users,
     })
 }
+function sendMessage(type: MessageTypes, nsps: Array<Namespace>, roomId: string): void {
+    nsps.forEach(function (namespace: Namespace) {
+        namespace.to(roomId).emit('message', {
+            type: type,
+        })
+    })
+}
 
 export default {
     sendUserInit,
@@ -72,4 +79,5 @@ export default {
     sendPlayerFinished,
     sendGameHasFinished,
     sendConnectedUsers,
+    sendMessage,
 }
