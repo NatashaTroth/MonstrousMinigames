@@ -8,7 +8,8 @@ import { PlayerContext } from './PlayerContextProvider'
 
 export interface IObstacleMessage {
     type: string
-    obstacleType?: OBSTACLES
+    obstacleType: OBSTACLES
+    obstacleId: number
 }
 interface IControllerSocketContext {
     controllerSocket: Socket | undefined
@@ -63,7 +64,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
                 break
             case 'game1/obstacle':
                 messageData = data as IObstacleMessage
-                setObstacle(messageData?.obstacleType)
+                setObstacle({ type: messageData.obstacleType, id: messageData.obstacleId })
                 break
             case 'game1/playerFinished':
                 messageData = data as IGameFinished
@@ -74,7 +75,6 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
             case 'game1/hasStarted':
                 document.body.style.overflow = 'hidden'
                 document.body.style.position = 'fixed'
-
                 setGameStarted(true)
                 history.push(`/controller/${roomId}/game1`)
                 break

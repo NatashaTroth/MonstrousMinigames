@@ -4,9 +4,13 @@ import { useHistory } from 'react-router'
 import { OBSTACLES } from '../utils/constants'
 import { GameContext } from './GameContextProvider'
 
+interface IObstacle {
+    type: OBSTACLES
+    id: number
+}
 interface IPlayerContext {
-    obstacle: undefined | OBSTACLES
-    setObstacle: (val: OBSTACLES | undefined) => void
+    obstacle: undefined | IObstacle
+    setObstacle: (val: IObstacle | undefined) => void
     playerFinished: boolean
     setPlayerFinished: (val: boolean) => void
     playerRank: number | undefined
@@ -45,7 +49,7 @@ export const PlayerContext = React.createContext<IPlayerContext>({
 })
 
 const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
-    const [obstacle, setObstacle] = React.useState<undefined | OBSTACLES>(undefined)
+    const [obstacle, setObstacle] = React.useState<undefined | IObstacle>(undefined)
     const [playerFinished, setPlayerFinished] = React.useState<boolean>(false)
     const [playerRank, setPlayerRank] = React.useState<undefined | number>(undefined)
     const [isPlayerAdmin, setIsPlayerAdmin] = React.useState<boolean>(false)
@@ -55,7 +59,7 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
 
     const content = {
         obstacle,
-        setObstacle: (val: undefined | OBSTACLES) => {
+        setObstacle: (val: undefined | IObstacle) => {
             setObstacle(val)
             if (val) {
                 history.push(`/controller/${roomId}/game1-obstacle`)
