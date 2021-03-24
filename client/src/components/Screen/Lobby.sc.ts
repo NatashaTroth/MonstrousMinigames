@@ -1,14 +1,14 @@
 import styled from 'styled-components'
 
-import { lightBlue, orange } from '../../utils/colors'
+import { lightBlue, lobbyChoiceBackground, orange } from '../../utils/colors'
 
 export const LobbyContainer = styled.div`
     background-color: ${lightBlue};
     height: 100%;
     width: 100%;
-    align-items: center;
     display: flex;
     flex-direction: column;
+    align-items: space-evenly;
 `
 
 export const Headline = styled.div`
@@ -38,7 +38,7 @@ export const JoinedUser = styled.div`
     font-weight: 700;
     display: flex;
     width: 100%;
-    font-size: 25px;
+    font-size: 15px;
     flex-direction: column;
     text-align: center;
     box-shadow: 8px 8px 0 #888;
@@ -46,6 +46,40 @@ export const JoinedUser = styled.div`
     margin-bottom: 10px;
 `
 
+export const GameChoiceContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    flex: 1 1 0px;
+    margin: 5em;
+    padding: 2.5em;
+    background-color: ${lobbyChoiceBackground};
+`
+
+export const ListOfGames = styled.div`
+    flex-grow: 1;
+    max-width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+`
+export const ImagesContainer = styled.div`
+    flex-grow: 1;
+    max-width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-end;
+`
+
+export const InstructionsImg = styled.img`
+    width: 100%;
+`
+
+export const Instructions = styled.p`
+    color: white;
+    text-align: left;
+`
 export const UserListItem = styled.div`
     display: flex;
 `

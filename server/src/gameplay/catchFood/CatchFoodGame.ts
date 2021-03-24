@@ -48,10 +48,13 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     startGame(): void {
         try {
             verifyGameState(this.gameState, GameState.Created)
-            this.gameState = GameState.Started
+            const countdownTime = 3000
+            setTimeout(() => {
+                this.gameState = GameState.Started
+            }, countdownTime)
             this.gameEventEmitter.emit(GameEventTypes.GameHasStarted, {
                 roomId: this.roomId,
-                countdownTime: 3000,
+                countdownTime,
             })
             this.gameStartedTime = Date.now()
             // setInterval(this.onTimerTick, 33);

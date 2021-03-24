@@ -16,7 +16,6 @@ npm:client:
         - npm ci
     except:
         - /^backend-.*$/
-        - /^frontend-.*$/
 
 lint:client:
     stage: lint
@@ -28,7 +27,6 @@ lint:client:
         - npm run lint-fix
     except:
         - /^backend-.*$/
-        - /^frontend-.*$/
 
 test:client:
     stage: test
@@ -40,7 +38,6 @@ test:client:
         - ./node_modules/.bin/jest ./
     except:
         - /^backend-.*$/
-        - /^frontend-.*$/
 
 staging:client:
     stage: staging
