@@ -18,6 +18,17 @@ class Room {
         this.state = RoomStates.OPEN
     }
 
+    public clear(): void {
+        this.users.forEach(user => {
+            user.id = ''
+            user.roomId = ''
+            user.name = ''
+            user.socketId = ''
+            user.active = false
+        })
+        this.state = RoomStates.CLOSED
+    }
+
     public addUser(user: User): boolean {
         if (this.isOpen()) {
             if (this.users.length === 0) this.admin = user
