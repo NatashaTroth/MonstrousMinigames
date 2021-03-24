@@ -127,12 +127,13 @@ class ConnectionHandler {
                             if (room.isAdmin(user)) {
                                 console.log(roomId + ' | Reset Game')
                                 room.resetGame(user).then(() => {
-                                    emitter.sendUserInit(socket, user, room)
                                     emitter.sendMessage(
                                         MessageTypes.GAME_HAS_RESET,
                                         [controllerNamespace, screenNameSpace],
                                         room.id
                                     )
+                                    emitter.sendConnectedUsers(screenNameSpace, room)
+                                    emitter.sendUserInit(socket, user, room)
                                 })
                             }
                         }

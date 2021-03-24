@@ -3,7 +3,7 @@ import Room from '../classes/room'
 import User from '../classes/user'
 import { MessageTypes } from '../enums/messageTypes'
 import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType'
-import { GameHasFinished, GameHasStarted } from '../gameplay/interfaces/index'
+import { GameHasFinished, GameHasStarted, PlayerHasFinished } from '../gameplay/interfaces/index'
 
 function sendUserInit(socket: Socket, user: User, room: Room): void {
     socket.emit('message', {
@@ -50,7 +50,7 @@ function sendGameHasFinished(nsps: Array<Namespace>, data: GameHasFinished): voi
     })
 }
 
-function sendPlayerFinished(nsp: Namespace, user: User, data: any): void {
+function sendPlayerFinished(nsp: Namespace, user: User, data: PlayerHasFinished): void {
     nsp.to(user.socketId).emit('message', {
         type: CatchFoodMsgType.PLAYER_FINISHED,
         rank: data.rank,
