@@ -77,7 +77,7 @@ export const InstructionsImg = styled.img`
 `
 
 export const Instructions = styled.p`
-    color: black;
+    color: white;
     text-align: left;
 `
 export const UserListItem = styled.div`

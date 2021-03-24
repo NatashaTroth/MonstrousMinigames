@@ -8,26 +8,23 @@ import Player from './Player'
 
 const Game: React.FunctionComponent = () => {
     const { countdownTime } = React.useContext(GameContext)
+    const [countdown] = React.useState(Date.now() + countdownTime)
 
     return (
         <Container>
-            {countdownTime > 0 ? (
-                <Countdown
-                    date={Date.now() + 3000}
-                    // autoStart={false}
-                    renderer={props =>
-                        props.completed ? (
-                            <GameContent displayGo />
-                        ) : (
-                            <ContainerTimer>
-                                <CountdownRenderer>{props.seconds}</CountdownRenderer>
-                            </ContainerTimer>
-                        )
-                    }
-                />
-            ) : (
-                <GameContent />
-            )}
+            <Countdown
+                date={countdown}
+                // autoStart={false}
+                renderer={props =>
+                    props.completed ? (
+                        <GameContent displayGo />
+                    ) : (
+                        <ContainerTimer>
+                            <CountdownRenderer>{props.seconds}</CountdownRenderer>
+                        </ContainerTimer>
+                    )
+                }
+            />
         </Container>
     )
 }

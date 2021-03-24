@@ -47,6 +47,6 @@ export const Go = styled.p`
     animation: ${fadeOut} 2s;
     opacity: 0;
     position: absolute;
-    left: calc(50vw - 140px);
-    top: 17vh;
+    left: calc(50% - 140px);
+    top: 18%;
 `
