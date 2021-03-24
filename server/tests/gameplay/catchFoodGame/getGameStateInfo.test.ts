@@ -1,7 +1,7 @@
-import { CatchFoodGame } from '../../../src/gameplay'
-import { GameStateInfo } from '../../../src/gameplay/catchFood/interfaces'
-import { users } from '../mockUsers'
-import { GameState } from '../../../src/gameplay/interfaces'
+import { CatchFoodGame } from '../../../src/gameplay';
+import { GameStateInfo } from '../../../src/gameplay/catchFood/interfaces';
+import { GameState } from '../../../src/gameplay/interfaces';
+import { users } from '../mockUsers';
 
 const TRACKLENGTH = 500
 const NUMBER_OF_OBSTACLES = 4

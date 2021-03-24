@@ -1,6 +1,7 @@
-import { CatchFoodGame } from '../../../src/gameplay'
-import { GameState } from '../../../src/gameplay/interfaces'
-import { users } from '../mockUsers'
+import { CatchFoodGame } from '../../../src/gameplay';
+import { GameState } from '../../../src/gameplay/interfaces';
+import { users } from '../mockUsers';
+import { startGame } from './startGame';
 
 const TRACKLENGTH = 500
 const NUMBER_OF_OBSTACLES = 4
@@ -31,18 +32,18 @@ describe('Change and verify game state', () => {
     })
 
     it('should have a GameState of Started when the game is started', async () => {
-        catchFoodGame.startGame()
+        startGame(catchFoodGame)
         expect(catchFoodGame.gameState).toBe(GameState.Started)
     })
 
     it('should have a GameState of Stopped when the game is stopped', async () => {
-        catchFoodGame.startGame()
+        startGame(catchFoodGame)
         catchFoodGame.stopGame()
         expect(catchFoodGame.gameState).toBe(GameState.Stopped)
     })
 
     it('should have a GameState of Finished when the game is finished', async () => {
-        catchFoodGame.startGame()
+        startGame(catchFoodGame)
         // finish game
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1')
@@ -60,7 +61,7 @@ describe('Change and verify game state', () => {
     })
 
     it('should have a GameState of Created when the game is reset', async () => {
-        catchFoodGame.startGame()
+        startGame(catchFoodGame)
         catchFoodGame.stopGame()
         catchFoodGame.resetGame(users)
         expect(catchFoodGame.gameState).toBe(GameState.Created)
