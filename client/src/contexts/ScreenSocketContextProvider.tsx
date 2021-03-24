@@ -42,6 +42,11 @@ export interface IUser {
     roomId: string
 }
 
+interface IGameStarted {
+    type: string
+    countdownTime: number
+}
+
 interface IConnectedUsers {
     type: string
     users: IUser[]
@@ -61,6 +66,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         roomId,
         setRoomId,
         setConnectedUsers,
+        setCountdownTime,
     } = React.useContext(GameContext)
 
     React.useEffect(() => {
@@ -77,8 +83,10 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     }
                     break
                 case 'game1/hasStarted':
+                    data = messageData as IGameStarted
+                    setCountdownTime(data.countdownTime)
                     setGameStarted(true)
-                    history.push('/screen/game1')
+                    history.push('/screen/game1?countdown=true')
                     break
             }
         }

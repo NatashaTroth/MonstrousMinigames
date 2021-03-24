@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useHistory } from 'react-router'
 
 import { GameContext } from '../../contexts/GameContextProvider'
 import instructionsImg1 from '../../images/instructions1.png'
@@ -31,9 +32,9 @@ const GAMES = [
 // const GAMES = ['Catch Food Game', 'Random Game']
 
 export const Lobby: React.FunctionComponent = () => {
+    const history = useHistory()
     const { roomId, connectedUsers } = React.useContext(GameContext)
     const [selectedGame, setSelectedGame] = React.useState(0)
-
     return (
         <LobbyContainer>
             <Headline>Room Code: {roomId}</Headline>
@@ -55,7 +56,12 @@ export const Lobby: React.FunctionComponent = () => {
                         <InstructionsImg src={GAMES[selectedGame].image2} alt="Instructions" />
                         <Instructions>{GAMES[selectedGame].instructions2}</Instructions>
                     </div>
-                    {/* <Button text="Start game"></Button> */}
+                    <Button
+                        text="Start game"
+                        onClick={() => {
+                            history.push('/screen/game1?countdown=true')
+                        }}
+                    ></Button>
                 </ImagesContainer>
             </GameChoiceContainer>
         </LobbyContainer>
