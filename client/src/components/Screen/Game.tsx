@@ -14,7 +14,7 @@ const Game: React.FunctionComponent = () => {
                     if (props.completed) {
                         return (
                             <div>
-                                <Go>Go</Go>
+                                <Go>Go!</Go>
                                 <Player />
                                 <Goal />
                             </div>

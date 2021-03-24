@@ -28,25 +28,25 @@ export const CountdownRenderer = styled.p`
 `
 
 export const Go = styled.p`
-    font-size: 8em;
+    font-size: 200px;
     font-weight: 900;
     color: ${orange};
     -webkit-animation: fadeInOut 6s;
     animation: fadeOut 2s;
     opacity: 0;
-    display: none;
+    position: absolute;
+    left: calc(50vw - 140px);
+    top: 17vh;
 
     @keyframes fadeOut {
         0% {
             opacity: 1;
-            display: block;
         }
         40% {
             opacity: 1;
         }
         100% {
             opacity: 0;
-            display: none;
         }
     }
 `
