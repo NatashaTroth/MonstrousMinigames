@@ -3,18 +3,14 @@ import {
   PlayerState,
   Obstacle,
   ObstacleType,
-  GameStateInfo,
 } from "./interfaces";
 import {
   HashTable,
-  GameEventTypes,
-  GameState,
-  GameInterface,
 } from "../interfaces";
 import { shuffleArray } from "../../helpers/shuffleArray";
 
 export function initiatePlayersState(players: Array<User>, numberOfObstacles: number, trackLength: number) : HashTable<PlayerState>  {
-  const obstacleTypes = getObstacleTypes(numberOfObstacles, trackLength);
+  const obstacleTypes = getObstacleTypes(numberOfObstacles);
   const playersState : HashTable<PlayerState> = {}
   players.forEach((player) => {
     playersState[player.id] = {
@@ -32,11 +28,11 @@ export function initiatePlayersState(players: Array<User>, numberOfObstacles: nu
 }
 
 
-export function getObstacleTypes(numberOfObstacles: number, trackLength: number): Array<ObstacleType> {
+export function getObstacleTypes(numberOfObstacles: number): Array<ObstacleType> {
   const obstacleTypeKeys: Array<string> = Object.keys(ObstacleType);
   const obstacleTypes: Array<ObstacleType> = [];
   for (let i = 0; i < numberOfObstacles; i++) {
-    let randomNr = Math.floor(
+    const randomNr = Math.floor(
       Math.random() * Math.floor(obstacleTypeKeys.length)
     );
     obstacleTypes.push(obstacleTypeKeys[randomNr] as ObstacleType);
@@ -54,7 +50,7 @@ export function createObstacles(obstacleTypes: Array<ObstacleType>, numberOfObst
     Math.floor(trackLength / (numberOfObstacles + 1)) - 30; //e.g. 500/4 = 125, +10 to avoid obstacle being at the very beginning, - 10 to stop 2 being right next to eachother
 
   for (let i = 0; i < numberOfObstacles; i++) {
-    let randomNr = Math.random() * quadrantRange;
+    const randomNr = Math.random() * quadrantRange;
 
     let position = randomNr + quadrantRange * (i + 1);
     position = Math.round(position / 10) * 10; //round to nearest 10 (to stop exactly at it)

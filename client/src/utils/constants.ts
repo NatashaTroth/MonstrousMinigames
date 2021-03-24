@@ -8,3 +8,8 @@ export enum GAMESTATE {
     stopped = 'STOPPED',
     finished = 'FINISHED',
 }
+
+export enum TOUCHEVENT {
+    panLeft = 'panleft',
+    panRight = 'panright',
+}
