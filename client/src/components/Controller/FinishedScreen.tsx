@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { useHistory } from 'react-router-dom'
 
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider'
 import { GameContext } from '../../contexts/GameContextProvider'
@@ -10,13 +9,11 @@ import { FinishedScreenContainer, FinishedScreenText } from './FinishedScreen.sc
 
 export const FinishedScreen: React.FunctionComponent = () => {
     const { playerRank, isPlayerAdmin, resetPlayer } = React.useContext(PlayerContext)
-    const { resetGame, roomId } = React.useContext(GameContext)
+    const { resetGame } = React.useContext(GameContext)
     const { controllerSocket } = React.useContext(ControllerSocketContext)
-    const history = useHistory()
 
     function handlePlayAgain() {
         controllerSocket?.emit('message', { type: 'resetGame' })
-        history.push(`/controller/${roomId}/lobby`)
         resetGame()
         resetPlayer()
     }

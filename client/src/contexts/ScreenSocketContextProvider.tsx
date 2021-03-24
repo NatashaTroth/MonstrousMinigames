@@ -1,7 +1,9 @@
+import { stringify } from 'query-string'
 import * as React from 'react'
 import { useHistory } from 'react-router-dom'
-import { Socket } from 'socket.io-client'
+import { io, Socket } from 'socket.io-client'
 
+import { ENDPOINT } from '../utils/config'
 import { GAMESTATE, OBSTACLES } from '../utils/constants'
 import { GameContext, IPlayerState } from './GameContextProvider'
 
@@ -9,10 +11,12 @@ export interface IObstacleMessage {
     type: string
     obstacleType?: OBSTACLES
 }
+
 interface IScreenSocketContext {
     screenSocket: Socket | undefined
     setScreenSocket: (val: Socket | undefined, roomId: string) => void
     isScreenConnected: boolean
+    handleSocketConnection: (val: string) => void
 }
 
 export const ScreenSocketContext = React.createContext<IScreenSocketContext>({
@@ -21,6 +25,9 @@ export const ScreenSocketContext = React.createContext<IScreenSocketContext>({
         // do nothing
     },
     isScreenConnected: false,
+    handleSocketConnection: () => {
+        // do nothing
+    },
 })
 
 interface IGameStateData {
@@ -66,6 +73,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
     React.useEffect(() => {
         if (messageData) {
             let data
+
             switch (messageData.type) {
                 case 'game1/gameState':
                     handleGameState(messageData as IGameState)
@@ -79,6 +87,9 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 case 'game1/hasStarted':
                     setGameStarted(true)
                     history.push(`/screen/${roomId}/game1`)
+                    break
+                case 'gameHasReset':
+                    history.push(`/screen/${roomId}/lobby`)
                     break
             }
         }
@@ -114,17 +125,44 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         trackLength,
     ])
 
+    function handleSocketConnection(roomId: string) {
+        const screenSocket = io(
+            `${ENDPOINT}screen?${stringify({
+                roomId: roomId,
+            })}`,
+            {
+                secure: true,
+                reconnection: true,
+                rejectUnauthorized: false,
+                reconnectionDelayMax: 10000,
+                transports: ['websocket'],
+            }
+        )
+        setRoomId(roomId)
+
+        screenSocket.on('connect', () => {
+            if (screenSocket) {
+                handleSetScreenSocket(screenSocket, roomId)
+            }
+        })
+    }
+
     screenSocket?.on('message', (data: IGameState | IConnectedUsers) => {
         setMessageData(data)
     })
 
+    function handleSetScreenSocket(val: Socket | undefined, roomId: string) {
+        setScreenSocket(val)
+        history.push(`/screen/${roomId}/lobby`)
+    }
+
     const content = {
         screenSocket,
         setScreenSocket: (val: Socket | undefined, roomId: string) => {
-            setScreenSocket(val)
-            history.push(`/screen/${roomId}/lobby`)
+            handleSetScreenSocket(val, roomId)
         },
         isScreenConnected: screenSocket ? true : false,
+        handleSocketConnection,
     }
     return <ScreenSocketContext.Provider value={content}>{children}</ScreenSocketContext.Provider>
 }

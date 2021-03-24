@@ -1,8 +1,5 @@
-import { stringify } from 'query-string'
 import * as React from 'react'
-import { io, Socket } from 'socket.io-client'
 
-import { GameContext } from '../../contexts/GameContextProvider'
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
 import { ENDPOINT } from '../../utils/config'
 import Button from '../common/Button'
@@ -20,8 +17,7 @@ interface IFormState {
 }
 export const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ roomId: '' })
-    const { setScreenSocket } = React.useContext(ScreenSocketContext)
-    const { setRoomId } = React.useContext(GameContext)
+    const { handleSocketConnection } = React.useContext(ScreenSocketContext)
 
     async function handleCreateNewRoom() {
         const response = await fetch(`${ENDPOINT}create-room`, {
@@ -32,7 +28,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
         })
 
         const data = await response.json()
-        handleSocketConnection({ roomId: data.roomId, setScreenSocket, setRoomId })
+        handleSocketConnection(data.roomId)
     }
 
     return (
@@ -48,7 +44,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                 <StyledForm
                     onSubmit={e => {
                         e.preventDefault()
-                        handleSocketConnection({ roomId: formState?.roomId || '', setScreenSocket, setRoomId })
+                        handleSocketConnection(formState?.roomId || '')
                     }}
                 >
                     <StyledLabel>
@@ -68,32 +64,4 @@ export const ConnectScreen: React.FunctionComponent = () => {
             <ImpressumLink to="/impressum">Impressum</ImpressumLink>
         </ConnectScreenContainer>
     )
-}
-
-interface IHandleSocketConnection {
-    roomId: string
-    setScreenSocket: (val: undefined | Socket, roomId: string) => void
-    setRoomId: (val: string | undefined) => void
-}
-
-function handleSocketConnection({ roomId, setScreenSocket, setRoomId }: IHandleSocketConnection) {
-    const screenSocket = io(
-        `${ENDPOINT}screen?${stringify({
-            roomId: roomId,
-        })}`,
-        {
-            secure: true,
-            reconnection: true,
-            rejectUnauthorized: false,
-            reconnectionDelayMax: 10000,
-            transports: ['websocket'],
-        }
-    )
-    setRoomId(roomId)
-
-    screenSocket.on('connect', () => {
-        if (screenSocket) {
-            setScreenSocket(screenSocket, roomId)
-        }
-    })
 }
