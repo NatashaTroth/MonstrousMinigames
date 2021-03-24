@@ -3,5 +3,5 @@ export enum MessageTypes {
     CONNECTED_USERS = 'connectedUsers',
     RESET_GAME = 'resetGame',
     GAME_HAS_FINISHED = 'gameHasFinished',
-    GAME_HAS_RESET = 'gameHasReset'
+    GAME_HAS_RESET = 'gameHasReset',
 }
