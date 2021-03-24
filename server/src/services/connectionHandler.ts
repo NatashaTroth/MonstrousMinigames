@@ -1,16 +1,16 @@
-import { Namespace, Server } from 'socket.io';
+import { Namespace, Server } from 'socket.io'
 
-import GameEventEmitter from '../classes/GameEventEmitter';
-import User from '../classes/user';
-import { MessageTypes } from '../enums/messageTypes';
-import { Namespaces } from '../enums/nameSpaces';
-import { ObstacleReachedInfo, PlayerFinishedInfo } from '../gameplay/catchFood/interfaces';
-import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType';
-import { GameEventTypes, GameHasFinished, GameHasStarted } from '../gameplay/interfaces/index';
-import emitter from '../helpers/emitter';
-import { IMessageObstacle } from '../interfaces/messageObstacle';
-import { IMessage } from '../interfaces/messages';
-import RoomService from './roomService';
+import GameEventEmitter from '../classes/GameEventEmitter'
+import User from '../classes/user'
+import { MessageTypes } from '../enums/messageTypes'
+import { Namespaces } from '../enums/nameSpaces'
+import { ObstacleReachedInfo, PlayerFinishedInfo } from '../gameplay/catchFood/interfaces'
+import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType'
+import { GameEventTypes, GameHasFinished, GameHasStarted } from '../gameplay/interfaces/index'
+import emitter from '../helpers/emitter'
+import { IMessageObstacle } from '../interfaces/messageObstacle'
+import { IMessage } from '../interfaces/messages'
+import RoomService from './roomService'
 
 class ConnectionHandler {
     private io: Server

@@ -1,4 +1,4 @@
-import { ObstacleType } from './ObstacleType';
+import { ObstacleType } from './ObstacleType'
 
 interface GameEventInterface {
     roomId: string

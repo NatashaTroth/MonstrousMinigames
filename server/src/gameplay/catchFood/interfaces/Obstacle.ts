@@ -1,4 +1,4 @@
-import { ObstacleType } from './ObstacleType';
+import { ObstacleType } from './ObstacleType'
 
 export interface Obstacle {
     id: number

@@ -1,10 +1,10 @@
-import GameEventEmitter from '../../classes/GameEventEmitter';
-import { User } from '../../interfaces/interfaces';
-import { verifyGameState } from '../helperFunctions/verifyGameState';
-import { verifyUserId } from '../helperFunctions/verifyUserId';
-import { GameEventTypes, GameInterface, GameState, HashTable } from '../interfaces';
-import { initiatePlayersState } from './initiatePlayerState';
-import { GameStateInfo, Obstacle, PlayerState } from './interfaces';
+import GameEventEmitter from '../../classes/GameEventEmitter'
+import { User } from '../../interfaces/interfaces'
+import { verifyGameState } from '../helperFunctions/verifyGameState'
+import { verifyUserId } from '../helperFunctions/verifyUserId'
+import { GameEventTypes, GameInterface, GameState, HashTable } from '../interfaces'
+import { initiatePlayersState } from './initiatePlayerState'
+import { GameStateInfo, Obstacle, PlayerState } from './interfaces'
 
 interface CatchFoodGameInterface extends GameInterface {
     playersState: HashTable<PlayerState>
