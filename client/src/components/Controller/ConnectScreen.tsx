@@ -3,6 +3,7 @@ import * as React from 'react'
 import { io } from 'socket.io-client'
 
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider'
+import { GameContext } from '../../contexts/GameContextProvider'
 import { PlayerContext } from '../../contexts/PlayerContextProvider'
 import { ENDPOINT } from '../../utils/config'
 import { ClickRequestDeviceMotion } from '../../utils/permissions'
@@ -19,6 +20,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ name: '', roomId: '' })
     const { setControllerSocket, controllerSocket } = React.useContext(ControllerSocketContext)
     const { setPermissionGranted, playerFinished, permission } = React.useContext(PlayerContext)
+    const { setRoomId } = React.useContext(GameContext)
 
     if (permission) {
         window.addEventListener(
@@ -58,9 +60,11 @@ export const ConnectScreen: React.FunctionComponent = () => {
             }
         )
 
+        setRoomId(formState?.roomId || '')
+
         controllerSocket.on('connect', () => {
             if (controllerSocket) {
-                setControllerSocket(controllerSocket)
+                setControllerSocket(controllerSocket, formState?.roomId || '')
             }
         })
     }

@@ -11,7 +11,7 @@ export interface IObstacleMessage {
 }
 interface IScreenSocketContext {
     screenSocket: Socket | undefined
-    setScreenSocket: (val: Socket | undefined) => void
+    setScreenSocket: (val: Socket | undefined, roomId: string) => void
     isScreenConnected: boolean
 }
 
@@ -78,7 +78,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     break
                 case 'game1/hasStarted':
                     setGameStarted(true)
-                    history.push('/screen/game1')
+                    history.push(`/screen/${roomId}/game1`)
                     break
             }
         }
@@ -95,7 +95,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 if (GAMESTATE.finished === messageData.data.gameState) {
                     if (!finished) {
                         setFinished(true)
-                        history.push('/screen/finished')
+                        history.push(`/screen/${roomId}/finished`)
                     }
                 }
             }
@@ -120,9 +120,9 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
 
     const content = {
         screenSocket,
-        setScreenSocket: (val: Socket | undefined) => {
+        setScreenSocket: (val: Socket | undefined, roomId: string) => {
             setScreenSocket(val)
-            history.push('/screen/lobby')
+            history.push(`/screen/${roomId}/lobby`)
         },
         isScreenConnected: screenSocket ? true : false,
     }

@@ -10,13 +10,13 @@ import { FinishedScreenContainer, FinishedScreenText } from './FinishedScreen.sc
 
 export const FinishedScreen: React.FunctionComponent = () => {
     const { playerRank, isPlayerAdmin, resetPlayer } = React.useContext(PlayerContext)
-    const { resetGame } = React.useContext(GameContext)
+    const { resetGame, roomId } = React.useContext(GameContext)
     const { controllerSocket } = React.useContext(ControllerSocketContext)
     const history = useHistory()
 
     function handlePlayAgain() {
         controllerSocket?.emit('message', { type: 'resetGame' })
-        history.push('/controller/lobby')
+        history.push(`/controller/${roomId}/lobby`)
         resetGame()
         resetPlayer()
     }

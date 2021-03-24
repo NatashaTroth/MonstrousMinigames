@@ -1,6 +1,6 @@
 import { stringify } from 'query-string'
 import * as React from 'react'
-import { io } from 'socket.io-client'
+import { io, Socket } from 'socket.io-client'
 
 import { GameContext } from '../../contexts/GameContextProvider'
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
@@ -23,26 +23,16 @@ export const ConnectScreen: React.FunctionComponent = () => {
     const { setScreenSocket } = React.useContext(ScreenSocketContext)
     const { setRoomId } = React.useContext(GameContext)
 
-    function handleSubmit() {
-        const screenSocket = io(
-            `${ENDPOINT}screen?${stringify({
-                roomId: formState?.roomId,
-            })}`,
-            {
-                secure: true,
-                reconnection: true,
-                rejectUnauthorized: false,
-                reconnectionDelayMax: 10000,
-                transports: ['websocket'],
-            }
-        )
-        setRoomId(formState?.roomId || undefined)
-
-        screenSocket.on('connect', () => {
-            if (screenSocket) {
-                setScreenSocket(screenSocket)
-            }
+    async function handleCreateNewRoom() {
+        const response = await fetch(`${ENDPOINT}create-room`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         })
+
+        const data = await response.json()
+        handleSocketConnection({ roomId: data.roomId, setScreenSocket, setRoomId })
     }
 
     return (
@@ -53,12 +43,12 @@ export const ConnectScreen: React.FunctionComponent = () => {
                     name="new"
                     text="Create new Room"
                     disabled={Boolean(formState?.roomId)}
-                    onClick={handleSubmit}
+                    onClick={handleCreateNewRoom}
                 />
                 <StyledForm
                     onSubmit={e => {
                         e.preventDefault()
-                        handleSubmit()
+                        handleSocketConnection({ roomId: formState?.roomId || '', setScreenSocket, setRoomId })
                     }}
                 >
                     <StyledLabel>
@@ -78,4 +68,32 @@ export const ConnectScreen: React.FunctionComponent = () => {
             <ImpressumLink to="/impressum">Impressum</ImpressumLink>
         </ConnectScreenContainer>
     )
+}
+
+interface IHandleSocketConnection {
+    roomId: string
+    setScreenSocket: (val: undefined | Socket, roomId: string) => void
+    setRoomId: (val: string | undefined) => void
+}
+
+function handleSocketConnection({ roomId, setScreenSocket, setRoomId }: IHandleSocketConnection) {
+    const screenSocket = io(
+        `${ENDPOINT}screen?${stringify({
+            roomId: roomId,
+        })}`,
+        {
+            secure: true,
+            reconnection: true,
+            rejectUnauthorized: false,
+            reconnectionDelayMax: 10000,
+            transports: ['websocket'],
+        }
+    )
+    setRoomId(roomId)
+
+    screenSocket.on('connect', () => {
+        if (screenSocket) {
+            setScreenSocket(screenSocket, roomId)
+        }
+    })
 }
