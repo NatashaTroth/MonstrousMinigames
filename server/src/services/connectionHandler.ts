@@ -124,17 +124,19 @@ class ConnectionHandler {
                     }
                     case MessageTypes.RESET_GAME:
                         {
-                            if (room.isAdmin(user)) {
-                                console.log(roomId + ' | Reset Game')
-                                room.resetGame(user).then(() => {
-                                    emitter.sendMessage(
-                                        MessageTypes.GAME_HAS_RESET,
-                                        [controllerNamespace, screenNameSpace],
-                                        room.id
-                                    )
-                                    emitter.sendConnectedUsers(screenNameSpace, room)
-                                    emitter.sendUserInit(socket, user, room)
-                                })
+                            if (!room.isOpen()) {
+                                if (room.isAdmin(user)) {
+                                    console.log(roomId + ' | Reset Game')
+                                    room.resetGame().then(() => {
+                                        emitter.sendMessage(
+                                            MessageTypes.GAME_HAS_RESET,
+                                            [controllerNamespace, screenNameSpace],
+                                            room.id
+                                        )
+                                        emitter.sendConnectedUsers(screenNameSpace, room)
+                                        emitter.sendUserInit(socket, user, room)
+                                    })
+                                }
                             }
                         }
                         break
