@@ -45,3 +45,10 @@ export const JoinedUser = styled.div`
     border-radius: 4px;
     margin-bottom: 10px;
 `
+
+export const UserListItem = styled.div`
+    display: flex;
+`
+export const AdminIcon = styled.div`
+    margin-right: 20px;
+`

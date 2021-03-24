@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useHistory } from 'react-router'
 
 import { OBSTACLES } from '../utils/constants'
+import { GameContext } from './GameContextProvider'
 
 interface IPlayerContext {
     obstacle: undefined | OBSTACLES
@@ -14,6 +15,7 @@ interface IPlayerContext {
     setIsPlayerAdmin: (val: boolean) => void
     permission: boolean
     setPermissionGranted: (val: boolean) => void
+    resetPlayer: () => void
 }
 
 export const PlayerContext = React.createContext<IPlayerContext>({
@@ -37,6 +39,9 @@ export const PlayerContext = React.createContext<IPlayerContext>({
     setPermissionGranted: () => {
         // do nothing
     },
+    resetPlayer: () => {
+        // do nothing
+    },
 })
 
 const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
@@ -46,21 +51,22 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [isPlayerAdmin, setIsPlayerAdmin] = React.useState<boolean>(false)
     const [permission, setPermissionGranted] = React.useState<boolean>(false)
     const history = useHistory()
+    const { roomId } = React.useContext(GameContext)
 
     const content = {
         obstacle,
         setObstacle: (val: undefined | OBSTACLES) => {
             setObstacle(val)
             if (val) {
-                history.push('/controller/game1-obstacle')
+                history.push(`/controller/${roomId}/game1-obstacle`)
             } else {
-                history.push('/controller/game1')
+                history.push(`/controller/${roomId}/game1`)
             }
         },
         playerFinished,
         setPlayerFinished: (val: boolean) => {
             setPlayerFinished(val)
-            history.push('/controller/finished')
+            history.push(`/controller/${roomId}/finished`)
         },
         playerRank,
         setPlayerRank,
@@ -68,6 +74,9 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setIsPlayerAdmin,
         permission,
         setPermissionGranted,
+        resetPlayer: () => {
+            setPlayerFinished(false), setPlayerRank(undefined)
+        },
     }
     return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>
 }
