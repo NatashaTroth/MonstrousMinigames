@@ -16,6 +16,8 @@ interface IGameContext {
     setRoomId: (val?: string) => void
     connectedUsers?: IUser[]
     setConnectedUsers: (val: IUser[]) => void
+    showInstructions: boolean
+    setShowInstructions: (val: boolean) => void
 }
 
 interface IObstacle {
@@ -57,6 +59,10 @@ export const GameContext = React.createContext<IGameContext>({
     setConnectedUsers: () => {
         // do nothing
     },
+    showInstructions: true,
+    setShowInstructions: () => {
+        // do nothing
+    },
 })
 
 const GameContextProvider: React.FunctionComponent = ({ children }) => {
@@ -66,6 +72,7 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [gameStarted, setGameStarted] = React.useState<boolean>(false)
     const [roomId, setRoomId] = React.useState<undefined | string>()
     const [connectedUsers, setConnectedUsers] = React.useState<undefined | IUser[]>()
+    const [showInstructions, setShowInstructions] = React.useState<boolean>(true)
 
     const content = {
         trackLength,
@@ -88,6 +95,8 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setRoomId,
         connectedUsers,
         setConnectedUsers,
+        showInstructions,
+        setShowInstructions,
     }
     return <GameContext.Provider value={content}>{children}</GameContext.Provider>
 }
