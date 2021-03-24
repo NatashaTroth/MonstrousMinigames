@@ -5,11 +5,14 @@ import client from 'socket.io-client'
 import express from 'express'
 import { Server } from 'socket.io'
 
+const PORT = process.env.PORT || 5050
+
+
 describe('connectionHandler', () => {
     let io: Server
     let rs: RoomService
     let ch: ConnectionHandler
-    const url = 'localhost:5001'
+    const url = `localhost:${PORT}`
     let expresServer
     let socket: SocketIOClient.Socket
     let server: HttpServer
@@ -21,7 +24,6 @@ describe('connectionHandler', () => {
 
     beforeAll(done => {
         server = new HttpServer()
-        const PORT = 5001
         expresServer = server.app.listen({ port: PORT })
         io = require('socket.io')(expresServer, {
             cors: {
