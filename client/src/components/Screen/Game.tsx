@@ -8,23 +8,14 @@ import Player from './Player'
 
 const Game: React.FunctionComponent = () => {
     const { countdownTime } = React.useContext(GameContext)
-    // const countdownRef = React.useRef()
-    // const countdownRef = ref
-    //   const handleStart = () => countdownRef.current.start();
 
     return (
         <Container>
             {countdownTime > 0 ? (
                 <Countdown
                     date={Date.now() + 3000}
-                    // ref={countdownRef}
                     // autoStart={false}
                     renderer={props => {
-                        // eslint-disable-next-line no-console
-                        console.log(countdownTime)
-                        // eslint-disable-next-line no-console
-                        console.log(props)
-
                         if (props.completed) {
                             return (
                                 <div>

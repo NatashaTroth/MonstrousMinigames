@@ -20,11 +20,7 @@ class Room {
 
     public clear(): void {
         this.users.forEach(user => {
-            user.id = ''
-            user.roomId = ''
-            user.name = ''
-            user.socketId = ''
-            user.active = false
+            user.clear()
         })
         this.state = RoomStates.CLOSED
     }
@@ -104,10 +100,20 @@ class Room {
         return user[0]
     }
 
-    public async resetGame(user: User) {
+    public async resetGame() {
         this.game?.resetGame(this.users)
         this.setState(RoomStates.OPEN)
-        this.admin = user
+        this.clearInactiveUsers()
+        this.users = this.getActiveUsers()
+    }
+
+    private clearInactiveUsers() {
+        const inactiveUsers = this.users.filter((user: User) => {
+            return !user.active
+        })
+        inactiveUsers.forEach(user => {
+            user.clear()
+        })
     }
 
     private setState(state: RoomStates): void {

@@ -36,6 +36,13 @@ class User {
     public setActive(active: boolean): void {
         this.active = active
     }
+    public clear() {
+        this.id = ''
+        this.roomId = ''
+        this.name = ''
+        this.socketId = ''
+        this.active = false
+    }
 }
 
 export default User

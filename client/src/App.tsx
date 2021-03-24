@@ -22,20 +22,20 @@ const App: React.FunctionComponent = () => {
     return (
         <Router>
             <AppContainer className="App">
-                <PlayerContextProvider>
-                    <GameContextProvider>
+                <GameContextProvider>
+                    <PlayerContextProvider>
                         <ScreenSocketContextProvider>
                             <ControllerSocketContextProvider>
                                 <Switch>
                                     <Route path="/impressum" component={Impressum} exact />
-                                    <Route path="/controller/lobby" component={ControllerLobbyScreen} exact />
-                                    <Route path="/controller/game1" component={ShakeInstruction} exact />
-                                    <Route path="/controller/game1-obstacle" component={TreeTrunk} exact />
-                                    <Route path="/controller/finished" component={ControllerFinishedScreen} exact />
+                                    <Route path="/controller/:id/lobby" component={ControllerLobbyScreen} exact />
+                                    <Route path="/controller/:id/game1" component={ShakeInstruction} exact />
+                                    <Route path="/controller/:id/game1-obstacle" component={TreeTrunk} exact />
+                                    <Route path="/controller/:id/finished" component={ControllerFinishedScreen} exact />
 
-                                    <Route path="/screen/lobby" component={ScreenLobbyScreen} exact />
-                                    <Route path="/screen/game1" component={Game} exact />
-                                    <Route path="/screen/finished" component={ScreenFinishedScreen} exact />
+                                    <Route path="/screen/:id/lobby" component={ScreenLobbyScreen} exact />
+                                    <Route path="/screen/:id/game1" component={Game} exact />
+                                    <Route path="/screen/:id/finished" component={ScreenFinishedScreen} exact />
 
                                     <Route
                                         path="/"
@@ -45,8 +45,8 @@ const App: React.FunctionComponent = () => {
                                 </Switch>
                             </ControllerSocketContextProvider>
                         </ScreenSocketContextProvider>
-                    </GameContextProvider>
-                </PlayerContextProvider>
+                    </PlayerContextProvider>
+                </GameContextProvider>
             </AppContainer>
         </Router>
     )

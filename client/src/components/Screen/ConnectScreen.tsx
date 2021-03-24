@@ -1,8 +1,5 @@
-import { stringify } from 'query-string'
 import * as React from 'react'
-import { io } from 'socket.io-client'
 
-import { GameContext } from '../../contexts/GameContextProvider'
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
 import { ENDPOINT } from '../../utils/config'
 import Button from '../common/Button'
@@ -20,29 +17,18 @@ interface IFormState {
 }
 export const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ roomId: '' })
-    const { setScreenSocket } = React.useContext(ScreenSocketContext)
-    const { setRoomId } = React.useContext(GameContext)
+    const { handleSocketConnection } = React.useContext(ScreenSocketContext)
 
-    function handleSubmit() {
-        const screenSocket = io(
-            `${ENDPOINT}screen?${stringify({
-                roomId: formState?.roomId,
-            })}`,
-            {
-                secure: true,
-                reconnection: true,
-                rejectUnauthorized: false,
-                reconnectionDelayMax: 10000,
-                transports: ['websocket'],
-            }
-        )
-        setRoomId(formState?.roomId || undefined)
-
-        screenSocket.on('connect', () => {
-            if (screenSocket) {
-                setScreenSocket(screenSocket)
-            }
+    async function handleCreateNewRoom() {
+        const response = await fetch(`${ENDPOINT}create-room`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         })
+
+        const data = await response.json()
+        handleSocketConnection(data.roomId)
     }
 
     return (
@@ -53,12 +39,12 @@ export const ConnectScreen: React.FunctionComponent = () => {
                     name="new"
                     text="Create new Room"
                     disabled={Boolean(formState?.roomId)}
-                    onClick={handleSubmit}
+                    onClick={handleCreateNewRoom}
                 />
                 <StyledForm
                     onSubmit={e => {
                         e.preventDefault()
-                        handleSubmit()
+                        handleSocketConnection(formState?.roomId || '')
                     }}
                 >
                     <StyledLabel>

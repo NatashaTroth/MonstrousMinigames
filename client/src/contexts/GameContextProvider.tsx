@@ -16,6 +16,7 @@ interface IGameContext {
     setRoomId: (val?: string) => void
     connectedUsers?: IUser[]
     setConnectedUsers: (val: IUser[]) => void
+    resetGame: () => void
     showInstructions: boolean
     setShowInstructions: (val: boolean) => void
     countdownTime: number
@@ -61,6 +62,9 @@ export const GameContext = React.createContext<IGameContext>({
     setConnectedUsers: () => {
         // do nothing
     },
+    resetGame: () => {
+        // do nothing
+    },
     showInstructions: true,
     setShowInstructions: () => {
         // do nothing
@@ -102,6 +106,12 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setRoomId,
         connectedUsers,
         setConnectedUsers,
+        resetGame: () => {
+            setTrackLength(undefined)
+            setFinished(false)
+            setGameStarted(false)
+            setPlayers(undefined)
+        },
         showInstructions,
         setShowInstructions,
         countdownTime,

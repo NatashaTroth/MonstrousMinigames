@@ -80,3 +80,9 @@ export const Instructions = styled.p`
     color: #fff;
     text-align: left;
 `
+export const UserListItem = styled.div`
+    display: flex;
+`
+export const AdminIcon = styled.div`
+    margin-right: 20px;
+`

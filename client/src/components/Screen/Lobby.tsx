@@ -6,6 +6,7 @@ import instructionsImg1 from '../../images/instructions1.png'
 import instructionsImg2 from '../../images/instructions2.png'
 import Button from '../common/Button'
 import {
+    AdminIcon,
     GameChoiceContainer,
     Headline,
     ImagesContainer,
@@ -16,6 +17,7 @@ import {
     ListOfGames,
     LobbyContainer,
     Subline,
+    UserListItem,
 } from './Lobby.sc'
 
 const GAMES = [
@@ -40,8 +42,11 @@ export const Lobby: React.FunctionComponent = () => {
             <Headline>Room Code: {roomId}</Headline>
             <Subline>Connected Users</Subline>
             <JoinedUsersView>
-                {connectedUsers?.map(user => (
-                    <JoinedUser key={`LobbyScreen${roomId}${user.name}`}>{user.name}</JoinedUser>
+                {connectedUsers?.map((user, index) => (
+                    <UserListItem key={`LobbyScreen${roomId}${user.name}`}>
+                        {index === 0 && <AdminIcon>👑</AdminIcon>}
+                        <JoinedUser>{user.name}</JoinedUser>
+                    </UserListItem>
                 ))}
             </JoinedUsersView>
             <GameChoiceContainer>
