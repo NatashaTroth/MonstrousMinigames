@@ -3,6 +3,7 @@ import * as React from 'react'
 import { useHistory } from 'react-router'
 
 import { ControllerSocketContext } from '../../../contexts/ControllerSocketContextProvider'
+import { GameContext } from '../../../contexts/GameContextProvider'
 import { PlayerContext } from '../../../contexts/PlayerContextProvider'
 import wood from '../../../images/wood.png'
 import { OBSTACLES } from '../../../utils/constants'
@@ -14,6 +15,7 @@ import {
     ObstacleInstructions,
     ObstacleItem,
     StyledObstacleImage,
+    StyledTouchAppIcon,
     TouchContainer,
 } from './TreeTrunk.sc'
 
@@ -30,6 +32,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
     const { setObstacle } = React.useContext(PlayerContext)
     const [progress, setProgress] = React.useState(0)
     const history = useHistory()
+    const { showInstructions, setShowInstructions } = React.useContext(GameContext)
 
     React.useEffect(() => {
         let touchEvent: null | string = null
@@ -84,9 +87,10 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
             touchEvent = null
             send = true
             controllerSocket?.emit('message', { type: 'game1/obstacleSolved' })
+            setShowInstructions(false)
             setTimeout(() => setObstacle(undefined), 100)
         }
-    }, [controllerSocket, history, progress, setObstacle])
+    }, [controllerSocket, history, progress, setObstacle, setShowInstructions])
 
     return (
         <ObstacleContainer>
@@ -98,6 +102,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
                 </ObstacleItem>
                 <TouchContainer id="touchContainer">
                     <Line />
+                    {showInstructions && <StyledTouchAppIcon />}
                 </TouchContainer>
             </ObstacleContent>
         </ObstacleContainer>
