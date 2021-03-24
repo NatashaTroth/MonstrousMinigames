@@ -53,7 +53,7 @@ describe('Event Emitter', () => {
         startGame(catchFoodGame)
         // finish player 1
         for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1')
+            catchFoodGame.playerHasCompletedObstacle('1', i)
         }
 
         let playerFinished = false
@@ -72,10 +72,10 @@ describe('Event Emitter', () => {
         })
         // finish game
         for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1')
-            catchFoodGame.playerHasCompletedObstacle('2')
-            catchFoodGame.playerHasCompletedObstacle('3')
-            catchFoodGame.playerHasCompletedObstacle('4')
+            catchFoodGame.playerHasCompletedObstacle('1', i)
+            catchFoodGame.playerHasCompletedObstacle('2', i)
+            catchFoodGame.playerHasCompletedObstacle('3', i)
+            catchFoodGame.playerHasCompletedObstacle('4', i)
         }
 
         catchFoodGame.runForward('1', 500)

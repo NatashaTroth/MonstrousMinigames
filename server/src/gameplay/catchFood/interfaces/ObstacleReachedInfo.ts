@@ -1,11 +1,12 @@
-import { ObstacleType } from "./ObstacleType";
+import { ObstacleType } from './ObstacleType';
 
 interface GameEventInterface {
-  roomId: string;
+    roomId: string
 }
 
 export interface ObstacleReachedInfo extends GameEventInterface {
-  roomId: string;
-  userId: string;
-  obstacleType: ObstacleType;
+    roomId: string
+    userId: string
+    obstacleType: ObstacleType
+    obstacleId: number
 }

@@ -14,7 +14,7 @@ interface CatchFoodGameInterface extends GameInterface {
     getGameStateInfo(): GameStateInfo
     getObstaclePositions(): HashTable<Array<Obstacle>>
     runForward(userId: string, speed: number): void
-    playerHasCompletedObstacle(userId: string): void
+    playerHasCompletedObstacle(userId: string, obstacleId: number): void
     resetGame(players: Array<User>, trackLength: number, numberOfObstacles: number): void
 }
 
@@ -149,17 +149,18 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             roomId: this.roomId,
             userId,
             obstacleType: this.playersState[userId].obstacles[0].type,
+            obstacleId: this.playersState[userId].obstacles[0].id,
         })
     }
 
-    playerHasCompletedObstacle(userId: string): void {
+    playerHasCompletedObstacle(userId: string, obstacleId: number): void {
         //TODO CHange to stop cheating
         try {
             verifyUserId(this.playersState, userId)
             verifyGameState(this.gameState, GameState.Started)
             //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
             this.playersState[userId].atObstacle = false
-            this.playersState[userId].obstacles.shift()
+            if (this.playersState[userId].obstacles[0].id === obstacleId) this.playersState[userId].obstacles.shift()
         } catch (e) {
             // throw e.Message;
             // console.error(e.message);
