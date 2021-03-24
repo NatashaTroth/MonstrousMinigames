@@ -146,6 +146,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             roomId: this.roomId,
             userId,
             obstacleType: this.playersState[userId].obstacles[0].type,
+            obstacleId: this.playersState[userId].obstacles[0].id,
         })
     }
 

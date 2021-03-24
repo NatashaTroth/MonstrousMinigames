@@ -187,6 +187,7 @@ class ConnectionHandler {
                 this.controllerNamespace.to(u.socketId).emit('message', {
                     type: CatchFoodMsgType.OBSTACLE,
                     obstacleType: data.obstacleType,
+                    obstacleId: data.obstacleId,
                 })
             }
         })
