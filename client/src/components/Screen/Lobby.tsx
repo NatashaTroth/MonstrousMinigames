@@ -2,9 +2,8 @@ import * as React from 'react'
 import { useHistory } from 'react-router'
 
 import { GameContext } from '../../contexts/GameContextProvider'
-import instructionsImg1 from '../../images/instructions1.png'
-import instructionsImg2 from '../../images/instructions2.png'
 import Button from '../common/Button'
+import { GAMES } from './data'
 import {
     AdminIcon,
     GameChoiceContainer,
@@ -20,23 +19,11 @@ import {
     UserListItem,
 } from './Lobby.sc'
 
-const GAMES = [
-    {
-        id: 1,
-        name: 'Catch Food Game',
-        instructions1: 'Shake your phone to move your monster',
-        instructions2: 'When you reach an obstacle, look at your phone to see how to solve it',
-        image1: instructionsImg1,
-        image2: instructionsImg2,
-    },
-    { id: 2, name: 'Random Game' },
-]
-// const GAMES = ['Catch Food Game', 'Random Game']
-
 export const Lobby: React.FunctionComponent = () => {
     const history = useHistory()
     const { roomId, connectedUsers } = React.useContext(GameContext)
     const [selectedGame, setSelectedGame] = React.useState(0)
+
     return (
         <LobbyContainer>
             <Headline>Room Code: {roomId}</Headline>
@@ -51,8 +38,13 @@ export const Lobby: React.FunctionComponent = () => {
             </JoinedUsersView>
             <GameChoiceContainer>
                 <ListOfGames>
-                    <Button text={GAMES[0].name} onClick={() => setSelectedGame(0)}></Button>
-                    <Button text={GAMES[1].name} onClick={() => setSelectedGame(1)}></Button>
+                    {GAMES.map(game => (
+                        <Button
+                            key={`LobbySelectGame${game.name}Button`}
+                            text={game.name}
+                            onClick={() => setSelectedGame(game.id)}
+                        />
+                    ))}
                 </ListOfGames>
                 <ImagesContainer>
                     <div>
@@ -64,7 +56,7 @@ export const Lobby: React.FunctionComponent = () => {
                     <Button
                         text="Start game"
                         onClick={() => {
-                            history.push('/screen/game1?countdown=true')
+                            history.push(`/screen/${roomId}/game1`)
                         }}
                     ></Button>
                 </ImagesContainer>

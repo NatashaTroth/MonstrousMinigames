@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { lightBlue, orange } from '../../utils/colors'
+import { lightBlue, lobbyChoiceBackground, orange } from '../../utils/colors'
 
 export const LobbyContainer = styled.div`
     background-color: ${lightBlue};
@@ -52,7 +52,7 @@ export const GameChoiceContainer = styled.div`
     flex: 1 1 0px;
     margin: 5em;
     padding: 2.5em;
-    background-color: #35253e;
+    background-color: ${lobbyChoiceBackground};
 `
 
 export const ListOfGames = styled.div`
@@ -77,7 +77,7 @@ export const InstructionsImg = styled.img`
 `
 
 export const Instructions = styled.p`
-    color: #fff;
+    color: black;
     text-align: left;
 `
 export const UserListItem = styled.div`

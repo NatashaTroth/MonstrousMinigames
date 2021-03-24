@@ -15,32 +15,35 @@ const Game: React.FunctionComponent = () => {
                 <Countdown
                     date={Date.now() + 3000}
                     // autoStart={false}
-                    renderer={props => {
-                        if (props.completed) {
-                            return (
-                                <div>
-                                    <Go>Go!</Go>
-                                    <Player />
-                                    <Goal />
-                                </div>
-                            )
-                        } else {
-                            return (
-                                <ContainerTimer>
-                                    <CountdownRenderer>{props.seconds}</CountdownRenderer>
-                                </ContainerTimer>
-                            )
-                        }
-                    }}
+                    renderer={props =>
+                        props.completed ? (
+                            <GameContent displayGo />
+                        ) : (
+                            <ContainerTimer>
+                                <CountdownRenderer>{props.seconds}</CountdownRenderer>
+                            </ContainerTimer>
+                        )
+                    }
                 />
             ) : (
-                <div>
-                    <Player />
-                    <Goal />
-                </div>
+                <GameContent />
             )}
         </Container>
     )
 }
 
 export default Game
+
+interface IGameContentProps {
+    displayGo?: boolean
+}
+
+const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo }) => {
+    return (
+        <div>
+            {displayGo && <Go>Go!</Go>}
+            <Player />
+            <Goal />
+        </div>
+    )
+}
