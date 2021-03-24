@@ -5,7 +5,7 @@ import client from 'socket.io-client'
 import express from 'express'
 import { Server } from 'socket.io'
 
-const PORT = process.env.PORT || 5050
+const PORT = process.env.TEST_PORT || 5050
 
 
 describe('connectionHandler', () => {
