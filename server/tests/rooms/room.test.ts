@@ -37,7 +37,6 @@ describe('Room: Users', () => {
 
     it('should close the room if all players leave during a game', () => {
         room.setPlaying()
-
         room.userDisconnected(user1.id)
         expect(room.isClosed()).toEqual(false)
         room.userDisconnected(user2.id)
@@ -45,20 +44,13 @@ describe('Room: Users', () => {
     })
     it('should label a player inactive after leaving a running game', () => {
         room.setPlaying()
-
         room.userDisconnected(user1.id)
         expect(user1.active).toBeFalsy
     })
-
-
     it('should remove inactive players after room is restarted', () => {
         room.setPlaying()
-
         room.userDisconnected(user1.id)
-    
         room.resetGame()
-
         expect(room.users).not.toContain(user1)
-        
     })
 })

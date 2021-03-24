@@ -5,11 +5,13 @@ import client from 'socket.io-client';
 import ConnectionHandler from '../../src/services/connectionHandler';
 import RoomService from '../../src/services/roomService';
 
+const PORT = process.env.TEST_PORT || 5050
+
 describe('connectionHandler', () => {
     let io: Server
     let rs: RoomService
     let ch: ConnectionHandler
-    const url = 'localhost:5001'
+    const url = `localhost:${PORT}`
     let expresServer
     let socket: SocketIOClient.Socket
     let server: HttpServer
