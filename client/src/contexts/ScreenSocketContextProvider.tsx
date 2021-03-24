@@ -73,7 +73,6 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         roomId,
         setRoomId,
         setConnectedUsers,
-        setCountdownTime,
     } = React.useContext(GameContext)
 
     React.useEffect(() => {
@@ -92,7 +91,6 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     break
                 case 'game1/hasStarted':
                     data = messageData as IGameStarted
-                    setCountdownTime(data.countdownTime)
                     setGameStarted(true)
                     history.push(`/screen/${roomId}/game1`)
                     break
@@ -125,7 +123,6 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         messageData,
         roomId,
         setConnectedUsers,
-        setCountdownTime,
         setFinished,
         setGameStarted,
         setPlayers,
