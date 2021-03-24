@@ -38,6 +38,18 @@ class RoomService {
     public getSingleRoomCode(): string {
         return this.roomCodes.pop() || 'XXXX'
     }
+
+    public removeRoom(roomId: string): boolean {
+        const room = this.getRoomById(roomId)
+        if (room) {
+            const index = this.rooms.indexOf(room)
+            this.rooms.splice(index, 1)
+            room.clear()
+            this.roomCodes.unshift(room.id)
+            return true
+        }
+        return false
+    }
 }
 
 export default RoomService

@@ -1,5 +1,5 @@
-export default interface IMessage {
+export interface IMessage {
     type: string
-    roomId: string
-    userId: string
+    roomId?: string
+    userId?: string
 }

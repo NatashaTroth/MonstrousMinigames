@@ -3,15 +3,12 @@ import RoomService from './roomService'
 import { ObstacleReachedInfo, PlayerFinishedInfo } from '../gameplay/catchFood/interfaces'
 import GameEventEmitter from '../classes/GameEventEmitter'
 import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType'
-import { GameEventTypes } from '../gameplay/interfaces/GameEventTypes'
+import { GameEventTypes, GameHasStarted, GameHasFinished } from '../gameplay/interfaces/index'
 import { Namespaces } from '../enums/nameSpaces'
 import { MessageTypes } from '../enums/messageTypes'
 import { Server, Namespace } from 'socket.io'
 import emitter from '../helpers/emitter'
-
-interface IMessage {
-    type: string
-}
+import { IMessage } from '../interfaces/messages'
 
 class ConnectionHandler {
     private io: Server
@@ -98,14 +95,11 @@ class ConnectionHandler {
 
             socket.on('message', function (message: IMessage) {
                 const type = message.type
-                console.log(message)
                 switch (type) {
                     case CatchFoodMsgType.START: {
                         if (room.isOpen()) {
                             rs.startGame(room)
-                            console.log(roomId + ' | Start game')
 
-                            emitter.sendGameHasStarted([controllerNamespace, screenNameSpace], room)
                             emitter.sendGameState(screenNameSpace, room)
 
                             const gameStateInterval = setInterval(() => {
@@ -120,14 +114,12 @@ class ConnectionHandler {
                     }
                     case CatchFoodMsgType.MOVE: {
                         if (room.isPlaying()) {
-                            room.game?.runForward(userId, 1)
-                            //emitter.sendGameState(screenNameSpace, room, true)
+                            room.game?.runForward(userId, parseInt(`${process.env.SPEED}`, 10) || 1)
                         }
                         break
                     }
                     case CatchFoodMsgType.OBSTACLE_SOLVED: {
                         room.game?.playerHasCompletedObstacle(userId)
-                        //emitter.sendGameState(screenNameSpace, room, true)
                         break
                     }
                     case MessageTypes.RESET_GAME:
@@ -135,6 +127,12 @@ class ConnectionHandler {
                             if (room.isAdmin(user)) {
                                 console.log(roomId + ' | Reset Game')
                                 room.resetGame(user).then(() => {
+                                    emitter.sendMessage(
+                                        MessageTypes.GAME_HAS_RESET,
+                                        [controllerNamespace, screenNameSpace],
+                                        room.id
+                                    )
+                                    emitter.sendConnectedUsers(screenNameSpace, room)
                                     emitter.sendUserInit(socket, user, room)
                                 })
                             }
@@ -194,7 +192,11 @@ class ConnectionHandler {
                 emitter.sendPlayerFinished(controllerNamespace, user, data)
             }
         })
-        this.gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: any) => {
+        this.gameEventEmitter.on(GameEventTypes.GameHasStarted, (data: GameHasStarted) => {
+            console.log(data.roomId + ' | Game has started!')
+            emitter.sendGameHasStarted([controllerNamespace, screenNameSpace], data)
+        })
+        this.gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameHasFinished) => {
             console.log(data.roomId + ' | Game has finished')
             const room = rs.getRoomById(data.roomId)
             room.setClosed()

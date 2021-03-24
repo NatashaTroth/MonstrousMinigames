@@ -72,6 +72,8 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
 
                 break
             case 'game1/hasStarted':
+                document.body.style.overflow = 'hidden'
+                document.body.style.position = 'fixed'
                 setGameStarted(true)
                 history.push('/controller/game1')
                 break
