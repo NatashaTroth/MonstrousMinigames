@@ -1,9 +1,9 @@
-import ConnectionHandler from '../../src/services/connectionHandler'
-import RoomService from '../../src/services/roomService'
+import express from 'express';
+import { Server } from 'socket.io';
+import client from 'socket.io-client';
 
-import client from 'socket.io-client'
-import express from 'express'
-import { Server } from 'socket.io'
+import ConnectionHandler from '../../src/services/connectionHandler';
+import RoomService from '../../src/services/roomService';
 
 describe('connectionHandler', () => {
     let io: Server
@@ -16,12 +16,11 @@ describe('connectionHandler', () => {
 
     class HttpServer {
         public app = express()
-
     }
 
     beforeAll(done => {
         server = new HttpServer()
-        const PORT = 5001
+        const PORT = process.env.PORT || 5001
         expresServer = server.app.listen({ port: PORT })
         io = require('socket.io')(expresServer, {
             cors: {
@@ -64,6 +63,5 @@ describe('connectionHandler', () => {
         })
         const room = rs.getRoomById(roomId)
         expect(room.id).toEqual(roomId)
- 
     })
 })

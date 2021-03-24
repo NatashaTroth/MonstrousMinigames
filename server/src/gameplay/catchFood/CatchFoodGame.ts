@@ -1,15 +1,10 @@
-import {
-    PlayerState,
-    Obstacle,
-    // ObstacleType,
-    GameStateInfo,
-} from './interfaces'
-import { HashTable, GameEventTypes, GameState, GameInterface } from '../interfaces'
-import { User } from '../../interfaces/interfaces'
-import GameEventEmitter from '../../classes/GameEventEmitter'
-import { verifyGameState } from '../helperFunctions/verifyGameState'
-import { verifyUserId } from '../helperFunctions/verifyUserId'
-import { initiatePlayersState } from './initiatePlayerState'
+import GameEventEmitter from '../../classes/GameEventEmitter';
+import { User } from '../../interfaces/interfaces';
+import { verifyGameState } from '../helperFunctions/verifyGameState';
+import { verifyUserId } from '../helperFunctions/verifyUserId';
+import { GameEventTypes, GameInterface, GameState, HashTable } from '../interfaces';
+import { initiatePlayersState } from './initiatePlayerState';
+import { GameStateInfo, Obstacle, PlayerState } from './interfaces';
 
 interface CatchFoodGameInterface extends GameInterface {
     playersState: HashTable<PlayerState>
@@ -19,7 +14,7 @@ interface CatchFoodGameInterface extends GameInterface {
     getGameStateInfo(): GameStateInfo
     getObstaclePositions(): HashTable<Array<Obstacle>>
     runForward(userId: string, speed: number): void
-    playerHasCompletedObstacle(userId: string): void
+    playerHasCompletedObstacle(userId: string, obstacleId: number): void
     resetGame(players: Array<User>, trackLength: number, numberOfObstacles: number): void
 }
 
@@ -154,14 +149,14 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         })
     }
 
-    playerHasCompletedObstacle(userId: string): void {
+    playerHasCompletedObstacle(userId: string, obstacleId: number): void {
         //TODO CHange to stop cheating
         try {
             verifyUserId(this.playersState, userId)
             verifyGameState(this.gameState, GameState.Started)
             //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
             this.playersState[userId].atObstacle = false
-            this.playersState[userId].obstacles.shift()
+            if (this.playersState[userId].obstacles[0].id === obstacleId) this.playersState[userId].obstacles.shift()
         } catch (e) {
             // throw e.Message;
             // console.error(e.message);

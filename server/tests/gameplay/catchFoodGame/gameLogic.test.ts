@@ -1,5 +1,5 @@
-import { CatchFoodGame } from '../../../src/gameplay'
-import { users } from '../mockUsers'
+import { CatchFoodGame } from '../../../src/gameplay';
+import { users } from '../mockUsers';
 
 const TRACKLENGTH = 500
 const NUMBER_OF_OBSTACLES = 4
@@ -99,7 +99,7 @@ describe('Game logic tests', () => {
         const distanceToObstacle =
             catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX
         catchFoodGame.runForward('1', distanceToObstacle)
-        catchFoodGame.playerHasCompletedObstacle('1')
+        catchFoodGame.playerHasCompletedObstacle('1', 0)
         expect(catchFoodGame.playersState['1'].atObstacle).toBeFalsy()
     })
 
@@ -108,7 +108,7 @@ describe('Game logic tests', () => {
         const distanceToObstacle =
             catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX
         catchFoodGame.runForward('1', distanceToObstacle)
-        catchFoodGame.playerHasCompletedObstacle('1')
+        catchFoodGame.playerHasCompletedObstacle('1', 0)
         expect(catchFoodGame.playersState['1'].obstacles.length).toBe(3)
     })
 
@@ -117,7 +117,7 @@ describe('Game logic tests', () => {
         const distanceToObstacle =
             catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX
         catchFoodGame.runForward('1', distanceToObstacle)
-        catchFoodGame.playerHasCompletedObstacle('1')
+        catchFoodGame.playerHasCompletedObstacle('1', 0)
         const tmpPlayerPositionX = catchFoodGame.playersState['1'].positionX
         catchFoodGame.runForward('1', 5)
         expect(catchFoodGame.playersState['1'].positionX).toBe(tmpPlayerPositionX + 5)
@@ -127,7 +127,7 @@ describe('Game logic tests', () => {
         catchFoodGame.startGame()
         // finish player 1
         for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1')
+            catchFoodGame.playerHasCompletedObstacle('1', i)
         }
         expect(catchFoodGame.playersState['1'].obstacles.length).toBe(0)
     })
@@ -136,7 +136,7 @@ describe('Game logic tests', () => {
         catchFoodGame.startGame()
         // finish player 1
         for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1')
+            catchFoodGame.playerHasCompletedObstacle('1', i)
         }
         catchFoodGame.runForward('1', TRACKLENGTH)
         expect(catchFoodGame.playersState['1'].finished).toBeTruthy()
@@ -154,7 +154,7 @@ describe('Game logic tests', () => {
         catchFoodGame.startGame()
         // finish player 1
         for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1')
+            catchFoodGame.playerHasCompletedObstacle('1', i)
         }
         catchFoodGame.runForward('1', TRACKLENGTH)
         expect(catchFoodGame.playersState['1'].finished).toBeTruthy()
@@ -164,7 +164,7 @@ describe('Game logic tests', () => {
         catchFoodGame.startGame()
         // finish player 1
         for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1')
+            catchFoodGame.playerHasCompletedObstacle('1', i)
         }
 
         const playerHasPassedGoalSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasPassedGoal')
@@ -177,7 +177,7 @@ describe('Game logic tests', () => {
         catchFoodGame.startGame()
         // finish player 1
         for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1')
+            catchFoodGame.playerHasCompletedObstacle('1', i)
         }
 
         const playerHasFinishedGameSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasFinishedGame')
@@ -189,7 +189,7 @@ describe('Game logic tests', () => {
         catchFoodGame.startGame()
         // finish player 1
         for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1')
+            catchFoodGame.playerHasCompletedObstacle('1', i)
         }
         catchFoodGame.runForward('1', TRACKLENGTH)
         expect(catchFoodGame.currentRank).toBe(2)
@@ -199,10 +199,10 @@ describe('Game logic tests', () => {
         catchFoodGame.startGame()
         // finish game
         for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1')
-            catchFoodGame.playerHasCompletedObstacle('2')
-            catchFoodGame.playerHasCompletedObstacle('3')
-            catchFoodGame.playerHasCompletedObstacle('4')
+            catchFoodGame.playerHasCompletedObstacle('1', i)
+            catchFoodGame.playerHasCompletedObstacle('2', i)
+            catchFoodGame.playerHasCompletedObstacle('3', i)
+            catchFoodGame.playerHasCompletedObstacle('4', i)
         }
 
         catchFoodGame.runForward('1', TRACKLENGTH)
