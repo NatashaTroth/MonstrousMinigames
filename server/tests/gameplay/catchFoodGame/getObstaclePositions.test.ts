@@ -1,7 +1,7 @@
-import { CatchFoodGame } from '../../../src/gameplay'
-import { Obstacle } from '../../../src/gameplay/catchFood/interfaces'
-import { HashTable } from '../../../src/gameplay/interfaces'
-import { users } from '../mockUsers'
+import { CatchFoodGame } from '../../../src/gameplay';
+import { Obstacle } from '../../../src/gameplay/catchFood/interfaces';
+import { HashTable } from '../../../src/gameplay/interfaces';
+import { users } from '../mockUsers';
 
 const TRACKLENGTH = 500
 const NUMBER_OF_OBSTACLES = 4
@@ -10,7 +10,8 @@ let obstacles: HashTable<Array<Obstacle>>
 
 describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
-        catchFoodGame = new CatchFoodGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES)
+        catchFoodGame = new CatchFoodGame()
+        catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES)
         jest.useFakeTimers()
         obstacles = catchFoodGame.getObstaclePositions()
     })

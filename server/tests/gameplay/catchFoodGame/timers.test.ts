@@ -1,14 +1,11 @@
 import { CatchFoodGame } from '../../../src/gameplay';
-import { users } from '../mockUsers';
-import { startGame } from './startGame';
+import { startGameAndAdvanceCountdown } from './startGame';
 
-const TRACKLENGTH = 500
-const NUMBER_OF_OBSTACLES = 4
 let catchFoodGame: CatchFoodGame
 
 describe('Timer tests', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES)
+        catchFoodGame = new CatchFoodGame()
         jest.useFakeTimers()
         // finishGame(catchFoodGame);
         // catchFoodGame.resetGame(users, NEW_TRACKLENGTH, NEW_NUMBER_OF_OBSTACLES);
@@ -19,18 +16,18 @@ describe('Timer tests', () => {
     })
 
     it('sets the timeOutLimit to 5 minutes', () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         expect(catchFoodGame.timeOutLimit).toBe(5 * 60 * 1000)
     })
 
     it('sets the timeOutLimit to 5 minutes', () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         expect(setTimeout).toHaveBeenCalledTimes(2)
         expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 300000)
     })
 
     it('stops game when time out', () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         const stopGameSpy = jest.spyOn(CatchFoodGame.prototype as any, 'stopGame')
         jest.runAllTimers()
         expect(stopGameSpy).toHaveBeenCalledTimes(1)

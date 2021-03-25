@@ -1,8 +1,9 @@
-import dotenv from 'dotenv'
-import express from 'express'
-import ConnectionHandler from './services/connectionHandler'
-import RoomService from './services/roomService'
-import cors from 'cors'
+import cors from 'cors';
+import dotenv from 'dotenv';
+import express from 'express';
+
+import ConnectionHandler from './services/connectionHandler';
+import RoomService from './services/roomService';
 
 // load the environment variables from the .env file
 dotenv.config({

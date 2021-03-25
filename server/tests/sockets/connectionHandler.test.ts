@@ -1,9 +1,14 @@
-import express from 'express'
-import { Server } from 'socket.io'
-import client from 'socket.io-client'
+import dotenv from 'dotenv';
+import express from 'express';
+import { Server } from 'socket.io';
+import client from 'socket.io-client';
 
 import ConnectionHandler from '../../src/services/connectionHandler'
 import RoomService from '../../src/services/roomService'
+
+dotenv.config({
+    path: '.env',
+})
 
 const PORT = process.env.TEST_PORT || 5050
 
@@ -24,7 +29,7 @@ describe('connectionHandler', () => {
     beforeAll(done => {
         server = new HttpServer()
 
-        const PORT = process.env.PORT || 5050
+        // const PORT = process.env.PORT || 5050
         expresServer = server.app.listen({ port: PORT })
         io = require('socket.io')(expresServer, {
             cors: {
