@@ -8,17 +8,17 @@ Depends on
 
 ## General
 
-[ ] Code Review
-[ ] Issue Board was updated
-[ ] Test coverage is at least the same
+-   [ ] Code Review
+-   [ ] Issue Board was updated
+-   [ ] Test coverage is at least the same
 
 ## Frontend
 
-[ ] Works in Firefox, Chrome and Safari
+-   [ ] Works in Firefox, Chrome and Safari
 
 ## Backend
 
-[ ] ...
+-   [ ] ...
 
 ## Closes
 
