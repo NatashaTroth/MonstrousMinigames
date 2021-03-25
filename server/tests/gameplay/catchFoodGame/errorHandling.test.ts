@@ -1,13 +1,12 @@
-import { CatchFoodGame } from '../../../src/gameplay'
-import { users } from '../mockUsers'
+import { CatchFoodGame } from '../../../src/gameplay';
 
-const TRACKLENGTH = 500
-const NUMBER_OF_OBSTACLES = 4
+// const TRACKLENGTH = 500
+// const NUMBER_OF_OBSTACLES = 4
 let catchFoodGame: CatchFoodGame
 
 describe('Error handling tests', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES)
+        catchFoodGame = new CatchFoodGame()
         jest.useFakeTimers()
         // finishGame(catchFoodGame);
         // catchFoodGame.resetGame(users, NEW_TRACKLENGTH, NEW_NUMBER_OF_OBSTACLES);

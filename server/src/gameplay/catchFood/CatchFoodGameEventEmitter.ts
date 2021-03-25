@@ -20,7 +20,7 @@
 import GameEventEmitter from '../../classes/GameEventEmitter';
 import { GameEventTypes } from '../interfaces';
 import {
-    GameHasFinished, GameHasStarted, ObstacleReachedInfo, PlayerHasFinished
+    GameHasFinished, GameHasStarted, GameHasStopped, ObstacleReachedInfo, PlayerHasFinished
 } from './interfaces/GameEvents';
 
 export default class CatchFoodGameEventEmitter extends GameEventEmitter {
@@ -49,7 +49,7 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasFinished, data)
     }
 
-    public static emitGameHasStoppedEvent() {
+    public static emitGameHasStoppedEvent(data: GameHasStopped) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasStopped)
     }
 

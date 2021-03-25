@@ -18,6 +18,10 @@ export interface GameHasFinished extends GameEventInterface {
     numberOfObstacles: number
 }
 
+export interface GameHasStopped extends GameEventInterface {
+    roomId: string
+}
+
 export interface PlayerHasFinished extends GameEventInterface {
     roomId: string
     userId: string

@@ -106,7 +106,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             if (timeOut) CatchFoodGameEventEmitter.emitGameHasTimedOutEvent(messageInfo)
             else {
                 clearTimeout(this.timer)
-                CatchFoodGameEventEmitter.emitGameHasStoppedEvent()
+                CatchFoodGameEventEmitter.emitGameHasStoppedEvent({roomId: this.roomId})
             }
         } catch (e) {
             // throw e.Message;
