@@ -1,4 +1,5 @@
 import { Namespace, Socket } from 'socket.io'
+
 import Room from '../classes/room'
 import User from '../classes/user'
 import { MessageTypes } from '../enums/messageTypes'
@@ -50,6 +51,14 @@ function sendGameHasFinished(nsps: Array<Namespace>, data: GameHasFinished): voi
     })
 }
 
+function sendGameHasStopped(nsps: Array<Namespace>, roomId: string): void {
+    nsps.forEach(function (namespace: Namespace) {
+        namespace.to(roomId).emit('message', {
+            type: MessageTypes.GAME_HAS_STOPPED,
+        })
+    })
+}
+
 function sendPlayerFinished(nsp: Namespace, user: User, data: PlayerHasFinished): void {
     nsp.to(user.socketId).emit('message', {
         type: CatchFoodMsgType.PLAYER_FINISHED,
@@ -80,4 +89,5 @@ export default {
     sendGameHasFinished,
     sendConnectedUsers,
     sendMessage,
+    sendGameHasStopped,
 }

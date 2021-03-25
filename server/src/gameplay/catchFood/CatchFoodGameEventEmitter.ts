@@ -15,8 +15,6 @@
 // });
 // myEmitter.emit('event', 'a', 'b');
 
-
-
 import GameEventEmitter from '../../classes/GameEventEmitter';
 import { GameEventTypes } from '../interfaces';
 import {
@@ -50,7 +48,7 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
     }
 
     public static emitGameHasStoppedEvent(data: GameHasStopped) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasStopped)
+        this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasStopped, data)
     }
 
     public static emitGameHasTimedOutEvent(data: GameHasFinished) {

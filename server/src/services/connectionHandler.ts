@@ -1,17 +1,18 @@
-import { Namespace, Server } from 'socket.io'
+import { Namespace, Server } from 'socket.io';
 
-// import GameEventEmitter from '../classes/GameEventEmitter'
-import User from '../classes/user'
-import { MessageTypes } from '../enums/messageTypes'
-import { Namespaces } from '../enums/nameSpaces'
-import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventEmitter'
-import { PlayerFinishedInfo } from '../gameplay/catchFood/interfaces'
-import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType'
-import { GameEventTypes, GameHasFinished, GameHasStarted, ObstacleReachedInfo } from '../gameplay/interfaces/index'
-import emitter from '../helpers/emitter'
-import { IMessageObstacle } from '../interfaces/messageObstacle'
-import { IMessage } from '../interfaces/messages'
-import RoomService from './roomService'
+import User from '../classes/user';
+import { MessageTypes } from '../enums/messageTypes';
+import { Namespaces } from '../enums/nameSpaces';
+import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventEmitter';
+import { PlayerFinishedInfo } from '../gameplay/catchFood/interfaces';
+import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType';
+import {
+    GameEventTypes, GameHasFinished, GameHasStarted, GameHasStopped, ObstacleReachedInfo
+} from '../gameplay/interfaces/index';
+import emitter from '../helpers/emitter';
+import { IMessageObstacle } from '../interfaces/messageObstacle';
+import { IMessage } from '../interfaces/messages';
+import RoomService from './roomService';
 
 class ConnectionHandler {
     private io: Server
@@ -159,6 +160,13 @@ class ConnectionHandler {
                             }
                         }
                         break
+                    case MessageTypes.STOP_GAME: {
+                        if(socket.room.isPlaying()){
+                            console.log(socket.room.id + ' | Stop Game')
+                            socket.room.stopGame()
+                        }
+                        break
+                    }
                     default: {
                         console.log(message)
                     }
@@ -238,11 +246,11 @@ class ConnectionHandler {
             room.setClosed()
             emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data)
         })
-        this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameHasFinished) => {
+        this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameHasStopped) => {
             console.log(data.roomId + ' | Game has stopped')
             const room = rs.getRoomById(data.roomId)
             room.setClosed()
-            emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data)
+            emitter.sendMessage(MessageTypes.GAME_HAS_STOPPED, [controllerNamespace, screenNameSpace], data.roomId)
         })
     }
 }
