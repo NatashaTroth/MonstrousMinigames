@@ -17,6 +17,10 @@
 
 import EventEmitter from 'events'
 
+import { Obstacle } from '../gameplay/catchFood/interfaces'
+import { GameEventTypes } from '../gameplay/interfaces'
+import { GameHasFinished, GameHasStarted } from '../gameplay/interfaces/GameEvents'
+
 export default class GameEventEmitter extends EventEmitter {
     private static EventEmitterInstance: GameEventEmitter = new GameEventEmitter()
     private constructor() {
@@ -25,5 +29,29 @@ export default class GameEventEmitter extends EventEmitter {
 
     public static getInstance(): GameEventEmitter {
         return this.EventEmitterInstance
+    }
+
+    public static emitGameHasStartedEvent(data: GameHasStarted) {
+        this.EventEmitterInstance.emit(GameEventTypes.GameHasStarted, data)
+    }
+
+    public static emitObstacleReachedEvent(data: Obstacle) {
+        this.EventEmitterInstance.emit(GameEventTypes.ObstacleReached, data)
+    }
+
+    public static emitObstacleReachedEvent(data: Obstacle) {
+        this.EventEmitterInstance.emit(GameEventTypes.ObstacleReached, data)
+    }
+
+    public static emitGameHasFinishedEvent(data: GameHasFinished) {
+        this.EventEmitterInstance.emit(GameEventTypes.GameHasFinished, data)
+    }
+
+    public static emitGameHasStoppedEvent(data: GameHasFinished) {
+        this.EventEmitterInstance.emit(GameEventTypes.GameHasStopped, data)
+    }
+
+    public static emitGameHasTimedOutEvent(data: GameHasFinished) {
+        this.EventEmitterInstance.emit(GameEventTypes.GameHasTimedOut, data)
     }
 }

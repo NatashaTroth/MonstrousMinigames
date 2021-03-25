@@ -1,10 +1,10 @@
-import GameEventEmitter from '../../classes/GameEventEmitter'
-import { User } from '../../interfaces/interfaces'
-import { verifyGameState } from '../helperFunctions/verifyGameState'
-import { verifyUserId } from '../helperFunctions/verifyUserId'
-import { GameEventTypes, GameInterface, GameState, HashTable } from '../interfaces'
-import { initiatePlayersState } from './initiatePlayerState'
-import { GameStateInfo, Obstacle, PlayerState } from './interfaces'
+import GameEventEmitter from '../../classes/GameEventEmitter';
+import { User } from '../../interfaces/interfaces';
+import { verifyGameState } from '../helperFunctions/verifyGameState';
+import { verifyUserId } from '../helperFunctions/verifyUserId';
+import { GameEventTypes, GameInterface, GameState, HashTable } from '../interfaces';
+import { initiatePlayersState } from './initiatePlayerState';
+import { GameStateInfo, Obstacle, PlayerState } from './interfaces';
 
 interface CatchFoodGameInterface extends GameInterface {
     playersState: HashTable<PlayerState>
@@ -53,7 +53,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             setTimeout(() => {
                 this.gameState = GameState.Started
             }, this.countdownTime)
-            this.gameEventEmitter.emit(GameEventTypes.GameHasStarted, {
+            GameEventEmitter.emitGameHasStartedEvent( {
                 roomId: this.roomId,
                 countdownTime: this.countdownTime,
             })
@@ -79,12 +79,12 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             verifyGameState(this.gameState, GameState.Started)
             this.gameState = GameState.Stopped
             const currentGameStateInfo = this.getGameStateInfo()
-            const messageInfo = {   roomId: currentGameStateInfo.roomId,
+            const messageInfo = {   
+                roomId: currentGameStateInfo.roomId,
                 playersState: currentGameStateInfo.playersState,
                 gameState: currentGameStateInfo.gameState,
                 trackLength: currentGameStateInfo.trackLength,
                 numberOfObstacles: currentGameStateInfo.numberOfObstacles,
-
             }
             if (timeOut) this.gameEventEmitter.emit(GameEventTypes.GameHasTimedOut, messageInfo)
             else {
@@ -209,6 +209,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             gameState: currentGameStateInfo.gameState,
             trackLength: currentGameStateInfo.trackLength,
             numberOfObstacles: currentGameStateInfo.numberOfObstacles,
+            // playerRanks: get
         })
         //Broadcast, stop game, return ranks
     }
