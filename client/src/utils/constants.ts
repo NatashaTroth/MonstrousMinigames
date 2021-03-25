@@ -13,3 +13,11 @@ export enum TOUCHEVENT {
     panLeft = 'panleft',
     panRight = 'panright',
 }
+
+export enum MESSAGETYPES {
+    userInit = 'userInit',
+    connectedUsers = 'connectedUsers',
+    backToLobby = 'backToLobby',
+    gameHasFinished = 'gameHasFinished',
+    gameHasReset = 'gameHasReset',
+}
