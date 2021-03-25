@@ -34,8 +34,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
     constructor(players: Array<User>, trackLength = 2000, numberOfObstacles = 2) {
         this.gameEventEmitter = GameEventEmitter.getInstance()
-        this.roomId = players[0].roomId
-        this.gameState = GameState.Created
+        this.roomId = ""
+        this.gameState = GameState.Created  //Intia
         this.trackLength = trackLength
         this.numberOfObstacles = numberOfObstacles
         this.currentRank = 1
@@ -47,6 +47,17 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.countdownTime = 3000
     }
 
+    //createNewGame TODO!!!!!!
+    createNewGame(players = this.players, trackLength = 2000, numberOfObstacles = 4): void {
+        this.gameState = GameState.Created
+        this.trackLength = trackLength
+        this.numberOfObstacles = numberOfObstacles
+        this.currentRank = 1
+        this.playersState = initiatePlayersState(players, this.numberOfObstacles, this.trackLength)
+        clearTimeout(this.timer)
+    }
+
+    //put together
     startGame(): void {
         try {
             verifyGameState(this.gameState, GameState.Created)
@@ -214,12 +225,5 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         //Broadcast, stop game, return ranks
     }
 
-    resetGame(players = this.players, trackLength = 2000, numberOfObstacles = 4): void {
-        this.gameState = GameState.Created
-        this.trackLength = trackLength
-        this.numberOfObstacles = numberOfObstacles
-        this.currentRank = 1
-        this.playersState = initiatePlayersState(players, this.numberOfObstacles, this.trackLength)
-        clearTimeout(this.timer)
-    }
+
 }

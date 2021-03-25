@@ -1,5 +1,8 @@
-import { GameState } from '.'
-import { PlayerState } from '../catchFood/interfaces'
+import { GameState } from '../../interfaces';
+import { PlayerState } from './';
+
+export { Obstacle } from './';
+
 
 export interface GameHasStarted {
     roomId: string
