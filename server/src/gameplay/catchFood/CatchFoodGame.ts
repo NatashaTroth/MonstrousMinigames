@@ -238,12 +238,14 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         const playerRanks: Array<PlayerRank> = []
 
         for (const [, playerState] of Object.entries(this.playersState)) {
-            
+            //in case player hasn't finished yet
+            const playerFinishedTime = playerState.finishedTimeMs > 0 ?  playerState.finishedTimeMs : Date.now()
             playerRanks.push({
                 id: playerState.id,
                 name: playerState.name,
                 rank: playerState.rank,
-                totalTimeInSec: (playerState.finishedTimeMs - this.gameStartedTime) / 1000
+                finished: playerState.finished,
+                totalTimeInSec: Math.round((playerFinishedTime - this.gameStartedTime) / 1000)
             })
         }
 
