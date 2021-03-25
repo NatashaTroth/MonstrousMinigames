@@ -4,7 +4,6 @@ import Countdown from 'react-countdown'
 
 import { GameContext } from '../../contexts/GameContextProvider'
 import { Container, ContainerTimer, CountdownRenderer, Go } from './Game.sc'
-import Goal from './Goal'
 import MainScene from './MainScene'
 import Player from './Player'
 
@@ -58,7 +57,6 @@ const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo }) 
         <div>
             {displayGo && <Go>Go!</Go>}
             <Player />
-            <Goal />
             <div id="game-root"></div>
         </div>
     )

@@ -1,16 +1,19 @@
 import Phaser from 'phaser'
 
 import forest from '../../images/forest.png'
+import franz from '../../images/franz_spritesheet.png'
 import goal from '../../images/goal.png'
 import monster2 from '../../images/monster2.png'
-import oliverSpritesheet from '../../images/oliver_spritesheet.jpeg'
+import noah from "../../images/noah_spritesheet.png"
+import steffi from "../../images/steffi_spritesheet.png"
+import susi from "../../images/susi_spritesheet.png"
 import unicorn from '../../images/unicorn.png'
 import wood from '../../images/wood.png'
 
 const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
-const moveplayers = [false, false, false, false]
+const moveplayers = [true, true, true, true]
 const playerFinished = [false, false, false, false]
 
 class MainScene extends Phaser.Scene {
@@ -19,10 +22,11 @@ class MainScene extends Phaser.Scene {
     }
 
     preload(): void {
-        this.load.spritesheet('oliver', oliverSpritesheet, {
-            frameWidth: 275,
-            frameHeight: 400,
-        })
+        this.load.spritesheet('franz', franz, { frameWidth: 826, frameHeight: 1163});
+        this.load.spritesheet('susi', susi, { frameWidth: 826, frameHeight: 1163});
+        this.load.spritesheet('noah', noah, { frameWidth: 826, frameHeight: 1163});
+        this.load.spritesheet('steffi', steffi, { frameWidth: 826, frameHeight: 1163});
+
         this.load.image('monster2', monster2)
         this.load.image('monster', '../../images/monster.png')
         this.load.image('unicorn', unicorn)
@@ -33,10 +37,10 @@ class MainScene extends Phaser.Scene {
 
     create() {
         const forest = this.add.image(0, 0, 'forest')
-        const player1 = this.physics.add.sprite(10, 10, 'oliver')
-        const player2 = this.physics.add.sprite(68, 300, 'oliver')
-        const player3 = this.physics.add.sprite(68, 500, 'oliver')
-        const player4 = this.physics.add.sprite(68, 700, 'oliver')
+        const player1 = this.physics.add.sprite(10, 10, 'franz')
+        const player2 = this.physics.add.sprite(68, 300, 'susi')
+        const player3 = this.physics.add.sprite(68, 500, 'noah')
+        const player4 = this.physics.add.sprite(68, 700, 'steffi')
         const goal1 = this.physics.add.sprite(1050, 100, 'goal')
         const goal2 = this.physics.add.sprite(1050, 300, 'goal')
         const goal3 = this.physics.add.sprite(1050, 500, 'goal')
@@ -66,7 +70,7 @@ class MainScene extends Phaser.Scene {
         players.forEach(player => {
             player.setBounce(0.2)
             player.setCollideWorldBounds(true)
-            player.setScale(0.5, 0.5)
+            player.setScale(0.2, 0.2)
             player.setCollideWorldBounds(true)
         })
 
@@ -77,46 +81,43 @@ class MainScene extends Phaser.Scene {
         goal4.setScale(0.1, 0.1)
 
         this.anims.create({
-            key: 'forward',
-            frames: this.anims.generateFrameNumbers('oliver', {
-                start: 0,
-                end: 3,
-            }),
+            key: 'franzWalk',
+            frames: this.anims.generateFrameNumbers('franz', { start: 12, end: 15 }),
             frameRate: 6,
-            repeat: -1,
-        })
+            repeat: -1
+        });
+        
         this.anims.create({
-            key: 'backwards',
-            frames: this.anims.generateFrameNumbers('oliver', {
-                start: 4,
-                end: 7,
-            }),
+            key: 'susiWalk',
+            frames: this.anims.generateFrameNumbers('susi', { start: 12, end: 15 }),
             frameRate: 6,
-            repeat: -1,
-        })
+            repeat: -1
+        });
+        
         this.anims.create({
-            key: 'left',
-            frames: this.anims.generateFrameNumbers('oliver', {
-                start: 8,
-                end: 11,
-            }),
+            key: 'noahWalk',
+            frames: this.anims.generateFrameNumbers('noah', { start: 12, end: 15 }),
             frameRate: 6,
-            repeat: -1,
-        })
+            repeat: -1
+        });
+        
         this.anims.create({
-            key: 'right',
-            frames: this.anims.generateFrameNumbers('oliver', {
-                start: 12,
-                end: 15,
-            }),
+            key: 'steffiWalk',
+            frames: this.anims.generateFrameNumbers('steffi', { start: 12, end: 15 }),
             frameRate: 6,
-            repeat: -1,
-        })
-
-        players.forEach(player => {
-            player.anims.play('right')
-        })
-    }
+            repeat: -1
+        });
+        
+        
+        /* players.forEach(player => {
+            player.anims.play('right');
+        }); */
+        players[0].anims.play('franzWalk')
+        players[1].anims.play('susiWalk')
+        players[2].anims.play('noahWalk')
+        players[3].anims.play('steffiWalk')
+        }
+        
 
     update() {
         for (let i = 0; i < players.length; i++) {
