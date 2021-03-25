@@ -45,7 +45,7 @@ class ConnectionHandler {
 
             if (!room) {
                 emitter.sendErrorMessage(socket, 'Room code does not exist!')
-                console.error('User tried to join non-existing room' + roomId)
+                console.log('User tried to join non-existing room' + roomId)
                 return
             }
 
@@ -69,7 +69,7 @@ class ConnectionHandler {
                     userId = user.id
                     if (!socket.room.addUser(user)) {
                         emitter.sendErrorMessage(socket, 'Cannot join. Game already started')
-                        console.error('User tried to join. Game already started: ' + userId)
+                        console.log('User tried to join. Game already started: ' + userId)
                         return
                     }
                 }
@@ -80,7 +80,7 @@ class ConnectionHandler {
 
                 if (!socket.room.addUser(user)) {
                     emitter.sendErrorMessage(socket, 'Cannot join. Game already started')
-                    console.error('User tried to join. Game already started: ' + userId)
+                    console.log('User tried to join. Game already started: ' + userId)
                     return
                 }
             }
@@ -176,7 +176,7 @@ class ConnectionHandler {
 
             if (!room) {
                 emitter.sendErrorMessage(socket, 'Room code does not exist!')
-                console.error('User tried to join non-existing room' + roomId)
+                console.log('User tried to join non-existing room' + roomId)
                 return
             }
             socket.room = room
