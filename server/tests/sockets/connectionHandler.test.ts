@@ -3,8 +3,8 @@ import express from 'express';
 import { Server } from 'socket.io';
 import client from 'socket.io-client';
 
-import ConnectionHandler from '../../src/services/connectionHandler';
-import RoomService from '../../src/services/roomService';
+import ConnectionHandler from '../../src/services/connectionHandler'
+import RoomService from '../../src/services/roomService'
 
 dotenv.config({
     path: '.env',
@@ -17,6 +17,7 @@ describe('connectionHandler', () => {
     let rs: RoomService
     let ch: ConnectionHandler
     const url = `localhost:${PORT}`
+    let roomCode: string
     let expresServer
     let socket: SocketIOClient.Socket
     let server: HttpServer
@@ -36,20 +37,22 @@ describe('connectionHandler', () => {
                 methods: ['GET', 'POST'],
             },
         })
-        rs = new RoomService(100)
-        ch = new ConnectionHandler(io, rs)
-        ch.handle()
         done()
     })
 
     afterAll(done => {
-        socket.close()
         done()
     })
 
     beforeEach(done => {
         console.log = jest.fn()
-        socket = client(`http://${url}`, {
+        rs = new RoomService(100)
+        roomCode = rs.createRoom()?.id
+
+        ch = new ConnectionHandler(io, rs)
+        ch.handle()
+
+        socket = client(`http://${url}/controller?roomId=ABCD&name=Robin&userId=`, {
             secure: true,
             reconnection: true,
             rejectUnauthorized: false,
@@ -58,18 +61,21 @@ describe('connectionHandler', () => {
         socket.on('connect', (msg: any) => {
             done()
         })
+
     })
 
     it('should create a new room with the roomId the player used for connecting', () => {
-        const roomId = 'AAAA'
-
-        socket = client(`http://${url}/controller?roomId=${roomId}&name=Robin&userId=`, {
+        const cSocket = client(`http://${url}/controller?roomId=${roomCode}&name=Robin&userId=`, {
             secure: true,
             reconnection: true,
             rejectUnauthorized: false,
-            reconnectionDelayMax: 10000,
+            reconnectionDelayMax: 5000,
         })
-        const room = rs.getRoomById(roomId)
-        expect(room.id).toEqual(roomId)
+
+        cSocket.on('connect', (msg: any) => {
+            const room = rs.getRoomById(roomCode)
+            expect(room.id).toEqual(roomCode)
+        })
     })
+
 })

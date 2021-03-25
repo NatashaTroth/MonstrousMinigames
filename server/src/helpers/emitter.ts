@@ -1,17 +1,18 @@
 import { Namespace, Socket } from 'socket.io';
+
 import Room from '../classes/room';
 import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType';
 import { GameHasFinished, GameHasStarted, PlayerHasFinished } from '../gameplay/interfaces/index';
 
-function sendUserInit(socket: Socket, user: User, room: Room): void {
+function sendUserInit(socket: any): void {
     socket.emit('message', {
         type: MessageTypes.USER_INIT,
-        userId: user.id,
-        roomId: room.id,
-        name: user.name,
-        isAdmin: room.isAdmin(user),
+        userId: socket.user.id,
+        roomId: socket.room.id,
+        name: socket.user.name,
+        isAdmin: socket.room.isAdmin(socket.user),
     });
 }
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
@@ -50,6 +51,14 @@ function sendGameHasFinished(nsps: Array<Namespace>, data: GameHasFinished): voi
     });
 }
 
+function sendGameHasStopped(nsps: Array<Namespace>, roomId: string): void {
+    nsps.forEach(function (namespace: Namespace) {
+        namespace.to(roomId).emit('message', {
+            type: MessageTypes.GAME_HAS_STOPPED,
+        });
+    });
+}
+
 function sendPlayerFinished(nsp: Namespace, user: User, data: PlayerHasFinished): void {
     nsp.to(user.socketId).emit('message', {
         type: CatchFoodMsgType.PLAYER_FINISHED,
@@ -80,4 +89,5 @@ export default {
     sendGameHasFinished,
     sendConnectedUsers,
     sendMessage,
+    sendGameHasStopped,
 };

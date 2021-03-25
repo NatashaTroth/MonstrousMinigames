@@ -1,5 +1,6 @@
 import Room from '../classes/room';
 import { GameStateInfo } from '../gameplay/catchFood/interfaces';
+
 const CodeGenerator = require('node-code-generator');
 const generator = new CodeGenerator();
 
@@ -10,6 +11,7 @@ class RoomService {
     constructor(roomCount: number) {
         this.rooms = [];
         this.roomCodes = generator.generateCodes('****', roomCount);
+        this.createRoom('ABCDE'); //testing purpose only
     }
 
     public createRoom(roomId: string = this.getSingleRoomCode()): Room {
@@ -23,15 +25,11 @@ class RoomService {
         const room = this.rooms.filter(function (n) {
             return n.id === roomId;
         })[0];
-        if (!room) {
-            console.log('RS | Create Room: ' + roomId);
-            return this.createRoom(roomId);
-        }
         return room;
     }
     /** starts the game in the room and returns the initial game state */
     public startGame(room: Room): GameStateInfo | undefined {
-        room.createGame();
+        room.startGame();
         return room.game?.getGameStateInfo();
     }
 

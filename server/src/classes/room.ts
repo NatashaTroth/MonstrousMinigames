@@ -5,7 +5,7 @@ class Room {
     public id: string;
     public users: Array<User>;
     public timestamp: number;
-    public game: CatchFoodGame | null;
+    public game: CatchFoodGame;
     public admin: User | null;
     private state: RoomStates;
 
@@ -13,7 +13,7 @@ class Room {
         this.id = id;
         this.users = [];
         this.timestamp = Date.now();
-        this.game = null;
+        this.game = new CatchFoodGame();
         this.admin = null;
         this.state = RoomStates.OPEN;
     }
@@ -81,16 +81,13 @@ class Room {
         this.timestamp = Date.now();
     }
 
-    public createGame(): void {
+    public startGame(): void {
         this.setState(RoomStates.PLAYING);
-        this.game = new CatchFoodGame();
-        this.startGame();
+        this.game.createNewGame(this.users);
     }
 
-    private startGame(): void {
-        if (this.game) {
-            this.game.startGame();
-        }
+    public stopGame() {
+        this.game?.stopGame();
     }
 
     public getUserById(userId: string): User {
@@ -101,10 +98,9 @@ class Room {
     }
 
     public async resetGame() {
-        this.game?.createNewGame(this.users);
-        this.setState(RoomStates.OPEN);
         this.clearInactiveUsers();
         this.users = this.getActiveUsers();
+        this.setState(RoomStates.OPEN);
     }
 
     private clearInactiveUsers() {
