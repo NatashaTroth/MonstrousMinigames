@@ -29,7 +29,7 @@ interface IClickObstacle {
 
 const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext)
-    const { setObstacle } = React.useContext(PlayerContext)
+    const { obstacle, setObstacle } = React.useContext(PlayerContext)
     const [progress, setProgress] = React.useState(0)
     const history = useHistory()
     const { showInstructions, setShowInstructions } = React.useContext(GameContext)
@@ -89,11 +89,11 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
             touchEvent = null
             send = true
 
-            controllerSocket?.emit('message', { type: 'game1/obstacleSolved', obstacleId: 1 })
+            controllerSocket?.emit('message', { type: 'game1/obstacleSolved', obstacleId: obstacle!.id })
             setShowInstructions(false)
             setTimeout(() => setObstacle(undefined), 100)
         }
-    }, [controllerSocket, history, progress, setObstacle, setShowInstructions])
+    }, [controllerSocket, history, obstacle, progress, setObstacle, setShowInstructions])
 
     return (
         <ObstacleContainer>
