@@ -5,8 +5,8 @@ const CodeGenerator = require('node-code-generator')
 const generator = new CodeGenerator()
 
 class RoomService {
-    private rooms: Array<Room>
-    public roomCodes: Array<string>
+    private rooms: Array<Room>;
+    public roomCodes: Array<string>;
 
     constructor(roomCount: number) {
         this.rooms = []
@@ -15,9 +15,9 @@ class RoomService {
     }
 
     public createRoom(roomId: string = this.getSingleRoomCode()): Room {
-        const room = new Room(roomId)
-        this.rooms.push(room)
-        return room
+        const room = new Room(roomId);
+        this.rooms.push(room);
+        return room;
     }
 
     /** gets the room by the given id or creates a new room with the id */
@@ -34,20 +34,20 @@ class RoomService {
     }
 
     public getSingleRoomCode(): string {
-        return this.roomCodes.pop() || 'XXXX'
+        return this.roomCodes.pop() || 'XXXX';
     }
 
     public removeRoom(roomId: string): boolean {
-        const room = this.getRoomById(roomId)
+        const room = this.getRoomById(roomId);
         if (room) {
-            const index = this.rooms.indexOf(room)
-            this.rooms.splice(index, 1)
-            room.clear()
-            this.roomCodes.unshift(room.id)
-            return true
+            const index = this.rooms.indexOf(room);
+            this.rooms.splice(index, 1);
+            room.clear();
+            this.roomCodes.unshift(room.id);
+            return true;
         }
-        return false
+        return false;
     }
 }
 
-export default RoomService
+export default RoomService;

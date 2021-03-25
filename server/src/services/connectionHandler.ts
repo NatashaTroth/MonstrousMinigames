@@ -15,29 +15,29 @@ import { IMessage } from '../interfaces/messages';
 import RoomService from './roomService';
 
 class ConnectionHandler {
-    private io: Server
-    private gameEventEmitter: CatchFoodGameEventEmitter
-    private rs: RoomService
-    private controllerNamespace: Namespace
-    private screenNameSpace: Namespace
+    private io: Server;
+    private gameEventEmitter: CatchFoodGameEventEmitter;
+    private rs: RoomService;
+    private controllerNamespace: Namespace;
+    private screenNameSpace: Namespace;
 
     constructor(io: Server, rs: RoomService) {
-        this.io = io
-        this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
-        this.rs = rs
-        this.controllerNamespace = this.io.of(Namespaces.CONTROLLER)
-        this.screenNameSpace = this.io.of(Namespaces.SCREEN)
+        this.io = io;
+        this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
+        this.rs = rs;
+        this.controllerNamespace = this.io.of(Namespaces.CONTROLLER);
+        this.screenNameSpace = this.io.of(Namespaces.SCREEN);
     }
 
     public handle(): void {
-        this.handleControllers()
-        this.handleScreens()
-        this.handleGameEvents()
+        this.handleControllers();
+        this.handleScreens();
+        this.handleGameEvents();
     }
     private handleControllers() {
-        const rs = this.rs
-        const controllerNamespace = this.controllerNamespace
-        const screenNameSpace = this.screenNameSpace
+        const rs = this.rs;
+        const controllerNamespace = this.controllerNamespace;
+        const screenNameSpace = this.screenNameSpace;
 
         this.controllerNamespace.on('connection', function (socket) {
             const name = socket.handshake.query.name
@@ -110,10 +110,10 @@ class ConnectionHandler {
                         })
                     }
                 }
-            })
+            });
 
             socket.on('message', function (message: IMessage) {
-                const type = message.type
+                const type = message.type;
                 switch (type) {
                     case CatchFoodMsgType.START: {
                         if (socket.room.isOpen()) {
@@ -130,13 +130,13 @@ class ConnectionHandler {
                             }, 100)
                         }
 
-                        break
+                        break;
                     }
                     case CatchFoodMsgType.MOVE: {
                         if (socket.room.isPlaying()) {
                             socket.room.game?.runForward(socket.user.id, parseInt(`${process.env.SPEED}`, 10) || 1)
                         }
-                        break
+                        break;
                     }
                     case CatchFoodMsgType.OBSTACLE_SOLVED: {
                         const obstacleMessage = message as IMessageObstacle
@@ -168,15 +168,15 @@ class ConnectionHandler {
                         break
                     }
                     default: {
-                        console.log(message)
+                        console.log(message);
                     }
                 }
-            })
-        })
+            });
+        });
     }
     private handleScreens() {
-        const rs = this.rs
-        const screenNameSpace = this.screenNameSpace
+        const rs = this.rs;
+        const screenNameSpace = this.screenNameSpace;
 
         this.screenNameSpace.on('connection', function (socket) {
             const roomId = socket.handshake.query.roomId
@@ -200,40 +200,40 @@ class ConnectionHandler {
             })
 
             socket.on('message', function (message: IMessage) {
-                console.log(message)
+                console.log(message);
 
-                socket.broadcast.emit('message', message)
-            })
-        })
+                socket.broadcast.emit('message', message);
+            });
+        });
     }
     private handleGameEvents() {
-        const rs = this.rs
-        const controllerNamespace = this.controllerNamespace
-        const screenNameSpace = this.screenNameSpace
+        const rs = this.rs;
+        const controllerNamespace = this.controllerNamespace;
+        const screenNameSpace = this.screenNameSpace;
         this.gameEventEmitter.on(GameEventTypes.ObstacleReached, (data: ObstacleReachedInfo) => {
-            console.log(data.roomId + ' | userId: ' + data.userId + ' | Obstacle: ' + data.obstacleType)
-            const r = rs.getRoomById(data.roomId)
-            const u = r.getUserById(data.userId)
+            console.log(data.roomId + ' | userId: ' + data.userId + ' | Obstacle: ' + data.obstacleType);
+            const r = rs.getRoomById(data.roomId);
+            const u = r.getUserById(data.userId);
             if (u) {
                 this.controllerNamespace.to(u.socketId).emit('message', {
                     type: CatchFoodMsgType.OBSTACLE,
                     obstacleType: data.obstacleType,
                     obstacleId: data.obstacleId,
-                })
+                });
             }
-        })
+        });
         this.gameEventEmitter.on(GameEventTypes.PlayerHasFinished, (data: PlayerFinishedInfo) => {
-            console.log(data.roomId + ' | userId: ' + data.userId + ' | Rank: ' + data.rank)
-            const room = rs.getRoomById(data.roomId)
-            const user = room.getUserById(data.userId)
+            console.log(data.roomId + ' | userId: ' + data.userId + ' | Rank: ' + data.rank);
+            const room = rs.getRoomById(data.roomId);
+            const user = room.getUserById(data.userId);
             if (user) {
-                emitter.sendPlayerFinished(controllerNamespace, user, data)
+                emitter.sendPlayerFinished(controllerNamespace, user, data);
             }
-        })
+        });
         this.gameEventEmitter.on(GameEventTypes.GameHasStarted, (data: GameHasStarted) => {
-            console.log(data.roomId + ' | Game has started!')
-            emitter.sendGameHasStarted([controllerNamespace, screenNameSpace], data)
-        })
+            console.log(data.roomId + ' | Game has started!');
+            emitter.sendGameHasStarted([controllerNamespace, screenNameSpace], data);
+        });
         this.gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameHasFinished) => {
             console.log(data.roomId + ' | Game has finished')
             const room = rs.getRoomById(data.roomId)
@@ -255,4 +255,4 @@ class ConnectionHandler {
     }
 }
 
-export default ConnectionHandler
+export default ConnectionHandler;
