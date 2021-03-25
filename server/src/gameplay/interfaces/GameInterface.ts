@@ -1,11 +1,10 @@
-import { GameState } from "./GameState";
-import GameEventEmitter from "../../classes/GameEventEmitter";
+import { GameState } from './GameState';
 
 export interface GameInterface {
   roomId: string;
   playersState: any;
   gameState: GameState;
-  gameEventEmitter: GameEventEmitter;
+  // gameEventEmitter: GameEventEmitter;
   currentRank: number;
 
   startGame(): void;

@@ -1,8 +1,9 @@
-import GameEventEmitter from '../../classes/GameEventEmitter';
+// import GameEventEmitter from '../../classes/GameEventEmitter';
 import { User } from '../../interfaces/interfaces';
 import { verifyGameState } from '../helperFunctions/verifyGameState';
 import { verifyUserId } from '../helperFunctions/verifyUserId';
-import { GameEventTypes, GameInterface, GameState, HashTable } from '../interfaces';
+import { GameHasFinished, GameInterface, GameState, HashTable } from '../interfaces';
+import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
 import { initiatePlayersState } from './initiatePlayerState';
 import { GameStateInfo, Obstacle, PlayerState } from './interfaces';
 
@@ -23,7 +24,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     trackLength: number
     numberOfObstacles: number
     currentRank: number
-    gameEventEmitter: GameEventEmitter
+    // gameEventEmitter: GameEventEmitter
     roomId: string
     gameState: GameState
     gameStartedTime: number
@@ -33,9 +34,9 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     countdownTime: number
 
     constructor(players: Array<User>, trackLength = 2000, numberOfObstacles = 2) {
-        this.gameEventEmitter = GameEventEmitter.getInstance()
-        this.roomId = ""
-        this.gameState = GameState.Created  //Intia
+        // this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
+        this.roomId = players[0].roomId
+        this.gameState = GameState.Created
         this.trackLength = trackLength
         this.numberOfObstacles = numberOfObstacles
         this.currentRank = 1
@@ -48,7 +49,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     }
 
     //createNewGame TODO!!!!!!
-    createNewGame(players = this.players, trackLength = 2000, numberOfObstacles = 4): void {
+    resetGame(players = this.players, trackLength = 2000, numberOfObstacles = 4): void {
         this.gameState = GameState.Created
         this.trackLength = trackLength
         this.numberOfObstacles = numberOfObstacles
@@ -64,7 +65,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             setTimeout(() => {
                 this.gameState = GameState.Started
             }, this.countdownTime)
-            GameEventEmitter.emitGameHasStartedEvent( {
+            CatchFoodGameEventEmitter.emitGameHasStartedEvent( {
                 roomId: this.roomId,
                 countdownTime: this.countdownTime,
             })
@@ -90,17 +91,18 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             verifyGameState(this.gameState, GameState.Started)
             this.gameState = GameState.Stopped
             const currentGameStateInfo = this.getGameStateInfo()
-            const messageInfo = {   
+            const messageInfo: GameHasFinished = {   
                 roomId: currentGameStateInfo.roomId,
                 playersState: currentGameStateInfo.playersState,
                 gameState: currentGameStateInfo.gameState,
                 trackLength: currentGameStateInfo.trackLength,
                 numberOfObstacles: currentGameStateInfo.numberOfObstacles,
             }
-            if (timeOut) this.gameEventEmitter.emit(GameEventTypes.GameHasTimedOut, messageInfo)
+            
+            if (timeOut) CatchFoodGameEventEmitter.emitGameHasTimedOutEvent(messageInfo)
             else {
                 clearTimeout(this.timer)
-                if (timeOut) this.gameEventEmitter.emit(GameEventTypes.GameHasStopped, messageInfo)
+                CatchFoodGameEventEmitter.emitGameHasStoppedEvent()
             }
         } catch (e) {
             // throw e.Message;
@@ -166,7 +168,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     private handlePlayerReachedObstacle(userId: string): void {
         // block player from running when obstacle is reached
         this.playersState[userId].atObstacle = true
-        this.gameEventEmitter.emit(GameEventTypes.ObstacleReached, {
+        CatchFoodGameEventEmitter.emitObstacleReachedEvent({
             roomId: this.roomId,
             userId,
             obstacleType: this.playersState[userId].obstacles[0].type,
@@ -195,7 +197,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.playersState[userId].finished = true
         this.playersState[userId].rank = this.currentRank++
 
-        this.gameEventEmitter.emit(GameEventTypes.PlayerHasFinished, {
+        CatchFoodGameEventEmitter.emitPlayerHasFinishedEvent({
             userId,
             roomId: this.roomId,
             rank: this.playersState[userId].rank,
@@ -214,7 +216,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.gameState = GameState.Finished
         clearTimeout(this.timer)
         const currentGameStateInfo = this.getGameStateInfo()
-        this.gameEventEmitter.emit(GameEventTypes.GameHasFinished, {
+        CatchFoodGameEventEmitter.emitGameHasFinishedEvent( {
             roomId: currentGameStateInfo.roomId,
             playersState: currentGameStateInfo.playersState,
             gameState: currentGameStateInfo.gameState,

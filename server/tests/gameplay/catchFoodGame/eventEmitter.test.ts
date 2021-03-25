@@ -1,5 +1,6 @@
-import GameEventEmitter from '../../../src/classes/GameEventEmitter';
+// import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import { CatchFoodGame } from '../../../src/gameplay';
+import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { GameEventTypes } from '../../../src/gameplay/interfaces';
 import { users } from '../mockUsers';
 import { startGameAndAdvanceCountdown } from './startGame';
@@ -7,11 +8,11 @@ import { startGameAndAdvanceCountdown } from './startGame';
 const TRACKLENGTH = 500
 const NUMBER_OF_OBSTACLES = 4
 let catchFoodGame: CatchFoodGame
-let gameEventEmitter: GameEventEmitter
+let gameEventEmitter: CatchFoodGameEventEmitter
 
 describe('Event Emitter', () => {
     beforeAll(() => {
-        gameEventEmitter = GameEventEmitter.getInstance()
+        gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
     })
 
     beforeEach(() => {

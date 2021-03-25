@@ -1,9 +1,10 @@
 import { Namespace, Server } from 'socket.io'
 
-import GameEventEmitter from '../classes/GameEventEmitter'
+// import GameEventEmitter from '../classes/GameEventEmitter'
 import User from '../classes/user'
 import { MessageTypes } from '../enums/messageTypes'
 import { Namespaces } from '../enums/nameSpaces'
+import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventEmitter'
 import { ObstacleReachedInfo, PlayerFinishedInfo } from '../gameplay/catchFood/interfaces'
 import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType'
 import { GameEventTypes, GameHasFinished, GameHasStarted } from '../gameplay/interfaces/index'
@@ -14,14 +15,14 @@ import RoomService from './roomService'
 
 class ConnectionHandler {
     private io: Server
-    private gameEventEmitter: GameEventEmitter
+    private gameEventEmitter: CatchFoodGameEventEmitter
     private rs: RoomService
     private controllerNamespace: Namespace
     private screenNameSpace: Namespace
 
     constructor(io: Server, rs: RoomService) {
         this.io = io
-        this.gameEventEmitter = GameEventEmitter.getInstance()
+        this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
         this.rs = rs
         this.controllerNamespace = this.io.of(Namespaces.CONTROLLER)
         this.screenNameSpace = this.io.of(Namespaces.SCREEN)
