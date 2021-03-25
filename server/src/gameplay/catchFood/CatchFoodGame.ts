@@ -98,7 +98,6 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             const currentGameStateInfo = this.getGameStateInfo()
             const messageInfo: GameHasFinished = {   
                 roomId: currentGameStateInfo.roomId,
-                playersState: currentGameStateInfo.playersState,
                 gameState: currentGameStateInfo.gameState,
                 trackLength: currentGameStateInfo.trackLength,
                 numberOfObstacles: currentGameStateInfo.numberOfObstacles,
@@ -225,7 +224,6 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         const currentGameStateInfo = this.getGameStateInfo()
         CatchFoodGameEventEmitter.emitGameHasFinishedEvent( {
             roomId: currentGameStateInfo.roomId,
-            playersState: currentGameStateInfo.playersState,
             gameState: currentGameStateInfo.gameState,
             trackLength: currentGameStateInfo.trackLength,
             numberOfObstacles: currentGameStateInfo.numberOfObstacles,

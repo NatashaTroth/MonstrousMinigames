@@ -7,7 +7,7 @@
         "node": "12.x"
     },
     "scripts": {
-        "test": "jest --watchAll",
+        "test": "rm -rf dist/ && jest --watchAll",
         "testGameplay": "jest --watchAll ./tests/gameplay",
         "dev": "nodemon src/app.ts",
         "prettier": "prettier --write src/**/*.ts",
@@ -60,7 +60,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "npm run prettier && jest && npm run lint && npm run tsc"
+            "pre-commit": "rm -rf dist/ && npm run prettier && jest && npm run lint && npm run tsc"
         }
     }
 }
