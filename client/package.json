@@ -62,6 +62,7 @@
         "@types/styled-components": "^5.1.7",
         "@typescript-eslint/eslint-plugin": "^4.14.1",
         "@typescript-eslint/parser": "^4.14.1",
+        "canvas": "^2.7.0",
         "eslint": "^7.19.0",
         "eslint-config-prettier": "^8.1.0",
         "eslint-plugin-formatjs": "^2.12.8",
