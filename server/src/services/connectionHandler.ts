@@ -231,8 +231,17 @@ class ConnectionHandler {
             room.setClosed()
             emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data)
         })
-        this.gameEventEmitter.on(GameEventTypes.GameHasTimedOut, () => {
-            console.log(' | Game has timed out')
+        this.gameEventEmitter.on(GameEventTypes.GameHasTimedOut, (data: GameHasFinished) => {
+            console.log(data.roomId + ' | Game has timed out')
+            const room = rs.getRoomById(data.roomId)
+            room.setClosed()
+            emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data)
+        })
+        this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameHasFinished) => {
+            console.log(data.roomId + ' | Game has stopped')
+            const room = rs.getRoomById(data.roomId)
+            room.setClosed()
+            emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data)
         })
     }
 }
