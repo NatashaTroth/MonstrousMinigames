@@ -27,7 +27,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
                     <span>Finished!</span>
                 </FinishedScreenText>
                 {/* TODO check if all players are finished */}
-                {isPlayerAdmin && <Button onClick={handlePlayAgain} text="Play Again" />}
+                {isPlayerAdmin && <Button onClick={handlePlayAgain} text="Back to Lobby" />}
             </FinishedScreenContainer>
         </FullScreenContainer>
     )
