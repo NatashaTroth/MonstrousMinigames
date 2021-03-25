@@ -1,15 +1,16 @@
 import { GameState } from '../../interfaces';
 import { ObstacleType, PlayerState } from './';
 
-// export { Obstacle } from './';
+interface GameEventInterface {
+    roomId: string
+}
 
-
-export interface GameHasStarted {
+export interface GameHasStarted extends GameEventInterface {
     roomId: string
     countdownTime: number
 }
 
-export interface GameHasFinished {
+export interface GameHasFinished extends GameEventInterface {
     roomId: string
     playersState: Array<PlayerState>
     gameState: GameState
@@ -17,7 +18,7 @@ export interface GameHasFinished {
     numberOfObstacles: number
 }
 
-export interface PlayerHasFinished {
+export interface PlayerHasFinished extends GameEventInterface {
     roomId: string
     userId: string
     rank: number
