@@ -77,9 +77,18 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         try {
             verifyGameState(this.gameState, GameState.Started)
             this.gameState = GameState.Stopped
-            if (timeOut) this.gameEventEmitter.emit(GameEventTypes.GameHasTimedOut, {})
+            const currentGameStateInfo = this.getGameStateInfo()
+            const messageInfo = {
+                roomId: currentGameStateInfo.roomId,
+                playersState: currentGameStateInfo.playersState,
+                gameState: currentGameStateInfo.gameState,
+                trackLength: currentGameStateInfo.trackLength,
+                numberOfObstacles: currentGameStateInfo.numberOfObstacles,
+            }
+            if (timeOut) this.gameEventEmitter.emit(GameEventTypes.GameHasTimedOut, messageInfo)
             else {
                 clearTimeout(this.timer)
+                if (timeOut) this.gameEventEmitter.emit(GameEventTypes.GameHasStopped, messageInfo)
             }
         } catch (e) {
             // throw e.Message;
