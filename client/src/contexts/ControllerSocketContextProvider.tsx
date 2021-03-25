@@ -3,7 +3,6 @@ import * as React from 'react'
 import { useHistory } from 'react-router-dom'
 import { io, Socket } from 'socket.io-client'
 
-import { ENDPOINT } from '../utils/config'
 import { OBSTACLES } from '../utils/constants'
 import { ClickRequestDeviceMotion } from '../utils/permissions'
 import { GameContext } from './GameContextProvider'
@@ -107,7 +106,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         }
 
         const controllerSocket = io(
-            `${ENDPOINT}controller?${stringify({
+            `${process.env.REACT_APP_BACKEND_URL}controller?${stringify({
                 name: name,
                 roomId: roomId,
                 userId: sessionStorage.getItem('userId') || '',

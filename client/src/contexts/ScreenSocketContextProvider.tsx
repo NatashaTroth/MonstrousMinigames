@@ -3,7 +3,6 @@ import * as React from 'react'
 import { useHistory } from 'react-router-dom'
 import { io, Socket } from 'socket.io-client'
 
-import { ENDPOINT } from '../utils/config'
 import { GAMESTATE, OBSTACLES } from '../utils/constants'
 import { GameContext, IPlayerState } from './GameContextProvider'
 
@@ -136,7 +135,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
 
     function handleSocketConnection(roomId: string) {
         const screenSocket = io(
-            `${ENDPOINT}screen?${stringify({
+            `${process.env.REACT_APP_BACKEND_URL}screen?${stringify({
                 roomId: roomId,
             })}`,
             {
