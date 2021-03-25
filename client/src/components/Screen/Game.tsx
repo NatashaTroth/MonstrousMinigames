@@ -7,11 +7,11 @@ import { Container, ContainerTimer, CountdownRenderer, Go } from './Game.sc'
 import MainScene from './MainScene'
 
 const Game: React.FunctionComponent = () => {
-    const { countdownTime } = React.useContext(GameContext)
+    const { countdownTime, players, finished } = React.useContext(GameContext)
     const [countdown] = React.useState(Date.now() + countdownTime)
 
     React.useEffect(() => {
-        new Phaser.Game({
+        const game = new Phaser.Game({
             parent: 'game-root',
             type: Phaser.AUTO,
             width: '100%',
@@ -22,9 +22,13 @@ const Game: React.FunctionComponent = () => {
                     debug: false,
                 },
             },
-            scene: [MainScene],
         })
+        game.scene.add('MainScene', MainScene)
+        game.scene.start('MainScene', { player: players, finished: finished })
     }, [])
+
+    // eslint-disable-next-line no-console
+    console.log(players)
 
     return (
         <Container>

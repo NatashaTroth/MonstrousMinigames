@@ -13,10 +13,17 @@ const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const moveplayers = [true, true, true, true]
 const playerFinished = [false, false, false, false]
+let gameFinished = false
 
 class MainScene extends Phaser.Scene {
     constructor() {
         super('MainScene')
+    }
+
+    init(data: {player: [], finished: boolean}){
+        // eslint-disable-next-line no-console
+        console.log(data.finished)
+        gameFinished = data.finished
     }
 
     preload(): void {
@@ -112,7 +119,7 @@ class MainScene extends Phaser.Scene {
 
     update() {
         for (let i = 0; i < players.length; i++) {
-            if (players[i] && moveplayers[i] && this.isGameOver()) {
+            if (players[i] && moveplayers[i] && !gameFinished) {
                 this.moveForward(players[i])
             } else {
                 players[i].anims.stop()
@@ -159,15 +166,6 @@ class MainScene extends Phaser.Scene {
     }
     playerHitObstacle(playerIndex: number) {
         moveplayers[playerIndex] = false
-    }
-
-    isGameOver() {
-        playerFinished.forEach(isFinished => {
-            if (!isFinished) {
-                return false
-            }
-        })
-        return true
     }
 
     obstacleRemoved(obstacleIndex: number, playerIndex: number) {
