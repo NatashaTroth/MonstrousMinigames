@@ -1,13 +1,14 @@
 import { Namespace, Server } from 'socket.io';
 
-// import GameEventEmitter from '../classes/GameEventEmitter'
 import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
 import { Namespaces } from '../enums/nameSpaces';
 import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventEmitter';
 import { PlayerFinishedInfo } from '../gameplay/catchFood/interfaces';
 import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType';
-import { GameEventTypes, GameHasFinished, GameHasStarted, ObstacleReachedInfo } from '../gameplay/interfaces/index';
+import {
+    GameEventTypes, GameHasFinished, GameHasStarted, ObstacleReachedInfo
+} from '../gameplay/interfaces/index';
 import emitter from '../helpers/emitter';
 import { IMessageObstacle } from '../interfaces/messageObstacle';
 import { IMessage } from '../interfaces/messages';
@@ -127,7 +128,7 @@ class ConnectionHandler {
                         room.game?.playerHasCompletedObstacle(userId, obstacleId);
                         break;
                     }
-                    case MessageTypes.RESET_GAME:
+                    case MessageTypes.BACK_TO_LOBBY:
                         {
                             if (!room.isOpen()) {
                                 if (room.isAdmin(user)) {

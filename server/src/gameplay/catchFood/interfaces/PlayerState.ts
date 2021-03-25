@@ -7,5 +7,6 @@ export interface PlayerState {
   obstacles: Array<Obstacle>;
   atObstacle: boolean;
   finished: boolean;
+  finishedTimeMs: number
   rank: number;
 }

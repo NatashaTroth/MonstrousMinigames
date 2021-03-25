@@ -3,7 +3,7 @@ import * as React from 'react'
 import { useHistory } from 'react-router-dom'
 import { io, Socket } from 'socket.io-client'
 
-import { GAMESTATE, OBSTACLES } from '../utils/constants'
+import { GAMESTATE, MESSAGETYPES, OBSTACLES } from '../utils/constants'
 import { GameContext, IPlayerState } from './GameContextProvider'
 
 export interface IObstacleMessage {
@@ -83,7 +83,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 case 'game1/gameState':
                     handleGameState(messageData as IGameState)
                     break
-                case 'connectedUsers':
+                case MESSAGETYPES.connectedUsers:
                     data = messageData as IConnectedUsers
                     if (data.users) {
                         setConnectedUsers(data.users)
@@ -95,7 +95,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     setGameStarted(true)
                     history.push(`/screen/${roomId}/game1`)
                     break
-                case 'gameHasReset':
+                case MESSAGETYPES.gameHasReset:
                     history.push(`/screen/${roomId}/lobby`)
                     break
             }

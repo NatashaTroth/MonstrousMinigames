@@ -6,6 +6,7 @@ import { GameHasFinished, GameInterface, GameState, HashTable } from '../interfa
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
 import { initiatePlayersState } from './initiatePlayerState';
 import { GameStateInfo, Obstacle, PlayerState } from './interfaces';
+import { PlayerRank } from './interfaces/PlayerRank';
 
 interface CatchFoodGameInterface extends GameInterface {
     playersState: HashTable<PlayerState>
@@ -97,10 +98,10 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             const currentGameStateInfo = this.getGameStateInfo()
             const messageInfo: GameHasFinished = {   
                 roomId: currentGameStateInfo.roomId,
-                playersState: currentGameStateInfo.playersState,
                 gameState: currentGameStateInfo.gameState,
                 trackLength: currentGameStateInfo.trackLength,
                 numberOfObstacles: currentGameStateInfo.numberOfObstacles,
+                playerRanks: this.createPlayerRanks()
             }
             
             if (timeOut) CatchFoodGameEventEmitter.emitGameHasTimedOutEvent(messageInfo)
@@ -200,6 +201,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
         this.playersState[userId].finished = true
         this.playersState[userId].rank = this.currentRank++
+        this.playersState[userId].finishedTimeMs = Date.now()
 
         CatchFoodGameEventEmitter.emitPlayerHasFinishedEvent({
             userId,
@@ -222,13 +224,31 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         const currentGameStateInfo = this.getGameStateInfo()
         CatchFoodGameEventEmitter.emitGameHasFinishedEvent( {
             roomId: currentGameStateInfo.roomId,
-            playersState: currentGameStateInfo.playersState,
             gameState: currentGameStateInfo.gameState,
             trackLength: currentGameStateInfo.trackLength,
             numberOfObstacles: currentGameStateInfo.numberOfObstacles,
-            // playerRanks: get
+            playerRanks: this.createPlayerRanks()
         })
         //Broadcast, stop game, return ranks
+    }
+
+    private createPlayerRanks() : Array<PlayerRank>{
+        const playerRanks: Array<PlayerRank> = []
+
+        for (const [, playerState] of Object.entries(this.playersState)) {
+            //in case player hasn't finished yet
+            const playerFinishedTime = playerState.finishedTimeMs > 0 ?  playerState.finishedTimeMs : Date.now()
+            playerRanks.push({
+                id: playerState.id,
+                name: playerState.name,
+                rank: playerState.rank,
+                finished: playerState.finished,
+                totalTimeInSec: Math.round((playerFinishedTime - this.gameStartedTime) / 1000),
+                positionX: playerState.positionX
+            })
+        }
+
+        return [...playerRanks]
     }
 
 
