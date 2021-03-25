@@ -1,6 +1,6 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { users } from '../mockUsers';
-import { startGame } from './startGame';
+import { startGameAndAdvanceCountdown } from './startGame';
 
 const TRACKLENGTH = 500
 const NEW_TRACKLENGTH = 1000
@@ -17,7 +17,7 @@ describe('Reset Game tests', () => {
     })
 
     function finishGame(catchFoodGame: CatchFoodGame) {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         // finish game
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1')

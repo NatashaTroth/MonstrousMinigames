@@ -1,6 +1,6 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { users } from '../mockUsers';
-import { startGame } from './startGame';
+import { startGameAndAdvanceCountdown } from './startGame';
 
 const TRACKLENGTH = 500
 const NUMBER_OF_OBSTACLES = 4
@@ -13,12 +13,12 @@ describe('Game logic tests', () => {
     })
 
     it('starts players at positionX 0', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         expect(catchFoodGame.playersState['1'].positionX).toBe(0)
     })
 
     it('gameStartedTime is now', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         const gameStartTimeStr = catchFoodGame.gameStartedTime.toString()
         const timeNowStr = Date.now().toString()
         //Remove last 2 digits (could be slight difference)
@@ -29,20 +29,20 @@ describe('Game logic tests', () => {
 
     it('moves players forward when runForward is called', async () => {
         const SPEED = 10
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         catchFoodGame.runForward('1', SPEED)
         expect(catchFoodGame.playersState['1'].positionX).toBe(SPEED)
     })
 
     it('moves players forward correctly when runForward is called multiple times', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         catchFoodGame.runForward('1', 10)
         catchFoodGame.runForward('1', 5)
         expect(catchFoodGame.playersState['1'].positionX).toBe(15)
     })
 
     it('playerHasReachedObstacle is called and returns false', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         const playerHasReachedObstacleSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasReachedObstacle')
         catchFoodGame.runForward('1', 5)
         expect(playerHasReachedObstacleSpy).toHaveBeenCalled()
@@ -50,7 +50,7 @@ describe('Game logic tests', () => {
     })
 
     it('recognises when player has reached an obstacle', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         const distanceToObstacle =
             catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX
         catchFoodGame.runForward('1', distanceToObstacle)
@@ -58,7 +58,7 @@ describe('Game logic tests', () => {
     })
 
     it('playerHasReachedObstacle is called and returns true', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         const distanceToObstacle =
             catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX
         const playerHasReachedObstacleSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasReachedObstacle')
@@ -68,7 +68,7 @@ describe('Game logic tests', () => {
     })
 
     it('handlePlayerReachedObstacle is called', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         const distanceToObstacle =
             catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX
         const handlePlayerReachedObstacleSpy = jest.spyOn(CatchFoodGame.prototype as any, 'handlePlayerReachedObstacle')
@@ -77,7 +77,7 @@ describe('Game logic tests', () => {
     })
 
     it("doesn't remove an obstacle when a player arrives at it", async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         const distanceToObstacle =
             catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX
         catchFoodGame.runForward('1', distanceToObstacle)
@@ -85,7 +85,7 @@ describe('Game logic tests', () => {
     })
 
     it("doesn't allow players to move when they reach an obstacle", async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         const distanceToObstacle =
             catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX
         catchFoodGame.runForward('1', distanceToObstacle)
@@ -96,7 +96,7 @@ describe('Game logic tests', () => {
     })
 
     it('should recognise when a player has completed an obstacle', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         const distanceToObstacle =
             catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX
         catchFoodGame.runForward('1', distanceToObstacle)
@@ -105,7 +105,7 @@ describe('Game logic tests', () => {
     })
 
     it('should remove a completed obstacle', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         const distanceToObstacle =
             catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX
         catchFoodGame.runForward('1', distanceToObstacle)
@@ -114,7 +114,7 @@ describe('Game logic tests', () => {
     })
 
     it('can move a player again when obstacle is completed', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         const distanceToObstacle =
             catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX
         catchFoodGame.runForward('1', distanceToObstacle)
@@ -125,7 +125,7 @@ describe('Game logic tests', () => {
     })
 
     it('should have not obstacles left when the player has completed them', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         // finish player 1
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1')
@@ -134,7 +134,7 @@ describe('Game logic tests', () => {
     })
 
     it('should set a player as finished when they have reached the end of the race', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         // finish player 1
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1')
@@ -144,7 +144,7 @@ describe('Game logic tests', () => {
     })
 
     it('playerHasPassedGoal is called and returns false', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         const playerHasPassedGoalSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasPassedGoal')
         catchFoodGame.runForward('1', 5)
         expect(playerHasPassedGoalSpy).toHaveBeenCalled()
@@ -152,7 +152,7 @@ describe('Game logic tests', () => {
     })
 
     it('should set a player as finished when they have reached the end of the race', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         // finish player 1
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1')
@@ -162,7 +162,7 @@ describe('Game logic tests', () => {
     })
 
     it('playerHasPassedGoal is called and returns true', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         // finish player 1
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1')
@@ -175,7 +175,7 @@ describe('Game logic tests', () => {
     })
 
     it('playerHasFinishedGame is called', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         // finish player 1
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1')
@@ -187,7 +187,7 @@ describe('Game logic tests', () => {
     })
 
     it('should have a current rank of 2 after the first player has finished', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         // finish player 1
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1')
@@ -197,7 +197,7 @@ describe('Game logic tests', () => {
     })
 
     function finishGame(catchFoodGame: CatchFoodGame) {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         // finish game
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1')

@@ -29,7 +29,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     gameStartedTime: number
     players: Array<User>
     timeOutLimit: number
-    timer: ReturnType<typeof setTimeout> //TODO change
+    timer: ReturnType<typeof setTimeout>
+    countdownTime: number
 
     constructor(players: Array<User>, trackLength = 2000, numberOfObstacles = 2) {
         this.gameEventEmitter = GameEventEmitter.getInstance()
@@ -43,18 +44,18 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.gameStartedTime = 0
         this.timeOutLimit = 300000
         this.timer = setTimeout(() => ({}), 0)
+        this.countdownTime = 3000
     }
 
     startGame(): void {
         try {
             verifyGameState(this.gameState, GameState.Created)
-            const countdownTime = 3000
             setTimeout(() => {
                 this.gameState = GameState.Started
-            }, countdownTime)
+            }, this.countdownTime)
             this.gameEventEmitter.emit(GameEventTypes.GameHasStarted, {
                 roomId: this.roomId,
-                countdownTime,
+                countdownTime: this.countdownTime,
             })
             this.gameStartedTime = Date.now()
             // setInterval(this.onTimerTick, 33);
