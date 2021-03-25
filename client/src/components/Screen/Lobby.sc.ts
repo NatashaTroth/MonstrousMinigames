@@ -86,3 +86,10 @@ export const UserListItem = styled.div`
 export const AdminIcon = styled.div`
     margin-right: 20px;
 `
+
+export const ConnectedUsers = styled.div``
+
+export const UpperSection = styled.div`
+    display: flex;
+    justify-content: space-around;
+`
