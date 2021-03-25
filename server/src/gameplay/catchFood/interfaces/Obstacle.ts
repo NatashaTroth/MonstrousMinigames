@@ -1,6 +1,7 @@
-import { ObstacleType } from "./ObstacleType";
+import { ObstacleType } from './ObstacleType'
 
 export interface Obstacle {
-  type: ObstacleType;
-  positionX: number;
+    id: number
+    type: ObstacleType
+    positionX: number
 }

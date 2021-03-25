@@ -1,14 +1,16 @@
-import User from '../classes/user'
-import RoomService from './roomService'
-import { ObstacleReachedInfo, PlayerFinishedInfo } from '../gameplay/catchFood/interfaces'
+import { Namespace, Server } from 'socket.io'
+
 import GameEventEmitter from '../classes/GameEventEmitter'
-import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType'
-import { GameEventTypes, GameHasStarted, GameHasFinished } from '../gameplay/interfaces/index'
-import { Namespaces } from '../enums/nameSpaces'
+import User from '../classes/user'
 import { MessageTypes } from '../enums/messageTypes'
-import { Server, Namespace } from 'socket.io'
+import { Namespaces } from '../enums/nameSpaces'
+import { ObstacleReachedInfo, PlayerFinishedInfo } from '../gameplay/catchFood/interfaces'
+import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType'
+import { GameEventTypes, GameHasFinished, GameHasStarted } from '../gameplay/interfaces/index'
 import emitter from '../helpers/emitter'
+import { IMessageObstacle } from '../interfaces/messageObstacle'
 import { IMessage } from '../interfaces/messages'
+import RoomService from './roomService'
 
 class ConnectionHandler {
     private io: Server
@@ -119,7 +121,9 @@ class ConnectionHandler {
                         break
                     }
                     case CatchFoodMsgType.OBSTACLE_SOLVED: {
-                        room.game?.playerHasCompletedObstacle(userId)
+                        const obstacleMessage = message as IMessageObstacle
+                        const obstacleId = obstacleMessage.obstacleId
+                        room.game?.playerHasCompletedObstacle(userId, obstacleId)
                         break
                     }
                     case MessageTypes.RESET_GAME:
@@ -183,6 +187,7 @@ class ConnectionHandler {
                 this.controllerNamespace.to(u.socketId).emit('message', {
                     type: CatchFoodMsgType.OBSTACLE,
                     obstacleType: data.obstacleType,
+                    obstacleId: data.obstacleId,
                 })
             }
         })

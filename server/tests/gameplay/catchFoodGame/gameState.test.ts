@@ -36,7 +36,7 @@ describe('Change and verify game state', () => {
 
     it("shouldn't be able to complete obstacle until game has started", async () => {
         const obstacleCompleted = catchFoodGame.playersState['1'].obstacles.length
-        catchFoodGame.playerHasCompletedObstacle('1')
+        catchFoodGame.playerHasCompletedObstacle('1', 0)
         expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstacleCompleted)
     })
 
@@ -68,10 +68,10 @@ describe('Change and verify game state', () => {
         startGameAndAdvanceCountdown(catchFoodGame)
         // finish game
         for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1')
-            catchFoodGame.playerHasCompletedObstacle('2')
-            catchFoodGame.playerHasCompletedObstacle('3')
-            catchFoodGame.playerHasCompletedObstacle('4')
+            catchFoodGame.playerHasCompletedObstacle('1', i)
+            catchFoodGame.playerHasCompletedObstacle('2', i)
+            catchFoodGame.playerHasCompletedObstacle('3', i)
+            catchFoodGame.playerHasCompletedObstacle('4', i)
         }
 
         catchFoodGame.runForward('1', 500)

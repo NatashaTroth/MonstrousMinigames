@@ -34,6 +34,8 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
     const history = useHistory()
     const { showInstructions, setShowInstructions } = React.useContext(GameContext)
 
+    // const currentObstacleId = players[]
+
     React.useEffect(() => {
         let touchEvent: null | string = null
         let touchContainer
@@ -86,7 +88,8 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
             currentDistance = 0
             touchEvent = null
             send = true
-            controllerSocket?.emit('message', { type: 'game1/obstacleSolved' })
+
+            controllerSocket?.emit('message', { type: 'game1/obstacleSolved', obstacleId: 1 })
             setShowInstructions(false)
             setTimeout(() => setObstacle(undefined), 100)
         }

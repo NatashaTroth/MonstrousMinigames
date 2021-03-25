@@ -1,12 +1,11 @@
-import ConnectionHandler from '../../src/services/connectionHandler'
-import RoomService from '../../src/services/roomService'
+import express from 'express';
+import { Server } from 'socket.io';
+import client from 'socket.io-client';
 
-import client from 'socket.io-client'
-import express from 'express'
-import { Server } from 'socket.io'
+import ConnectionHandler from '../../src/services/connectionHandler';
+import RoomService from '../../src/services/roomService';
 
 const PORT = process.env.TEST_PORT || 5050
-
 
 describe('connectionHandler', () => {
     let io: Server
@@ -19,11 +18,12 @@ describe('connectionHandler', () => {
 
     class HttpServer {
         public app = express()
-
     }
 
     beforeAll(done => {
         server = new HttpServer()
+
+        const PORT = process.env.PORT || 5050
         expresServer = server.app.listen({ port: PORT })
         io = require('socket.io')(expresServer, {
             cors: {
@@ -66,6 +66,5 @@ describe('connectionHandler', () => {
         })
         const room = rs.getRoomById(roomId)
         expect(room.id).toEqual(roomId)
- 
     })
 })
