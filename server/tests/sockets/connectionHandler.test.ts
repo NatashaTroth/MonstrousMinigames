@@ -12,9 +12,11 @@ describe('connectionHandler', () => {
     let rs: RoomService
     let ch: ConnectionHandler
     const url = `localhost:${PORT}`
+    let roomCode: string
     let expresServer
     let socket: SocketIOClient.Socket
     let server: HttpServer
+    
 
     class HttpServer {
         public app = express()
@@ -32,8 +34,18 @@ describe('connectionHandler', () => {
             },
         })
         rs = new RoomService(100)
+
+        server.app.get('/create-room', (req, res) => {
+            const room = rs.createRoom()
+        
+            res.send({ roomId: room.id })
+        })
+        
+
         ch = new ConnectionHandler(io, rs)
         ch.handle()
+
+
         done()
     })
 
@@ -44,6 +56,8 @@ describe('connectionHandler', () => {
 
     beforeEach(done => {
         console.log = jest.fn()
+        roomCode = rs.createRoom()?.id
+
         socket = client(`http://${url}`, {
             secure: true,
             reconnection: true,
@@ -56,15 +70,14 @@ describe('connectionHandler', () => {
     })
 
     it('should create a new room with the roomId the player used for connecting', () => {
-        const roomId = 'AAAA'
 
-        socket = client(`http://${url}/controller?roomId=${roomId}&name=Robin&userId=`, {
+        socket = client(`http://${url}/controller?roomId=${roomCode}&name=Robin&userId=`, {
             secure: true,
             reconnection: true,
             rejectUnauthorized: false,
             reconnectionDelayMax: 10000,
         })
-        const room = rs.getRoomById(roomId)
-        expect(room.id).toEqual(roomId)
+        const room = rs.getRoomById(roomCode)
+        expect(room.id).toEqual(roomCode)
     })
 })

@@ -23,10 +23,6 @@ class RoomService {
         const room = this.rooms.filter(function (n) {
             return n.id === roomId
         })[0]
-        if (!room) {
-            console.log('RS | Create Room: ' + roomId)
-            return this.createRoom(roomId)
-        }
         return room
     }
     /** starts the game in the room and returns the initial game state */

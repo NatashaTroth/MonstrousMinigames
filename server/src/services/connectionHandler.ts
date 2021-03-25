@@ -38,8 +38,19 @@ class ConnectionHandler {
         const screenNameSpace = this.screenNameSpace
 
         this.controllerNamespace.on('connection', function (socket) {
-            const { roomId, name } = socket.handshake.query
-            socket.room = rs.getRoomById(roomId)
+            const name = socket.handshake.query.name
+            const roomId = socket.handshake.query.roomId
+
+            const room = rs.getRoomById(roomId)
+
+            if (!room) {
+                emitter.sendErrorMessage(socket, 'Room code does not exist!')
+                console.error('User tried to join non-existing room' + roomId)
+                return
+            }
+
+            socket.room = room
+
             socket.join(socket.room.id)
 
             /* User join logic */
@@ -159,8 +170,16 @@ class ConnectionHandler {
         const screenNameSpace = this.screenNameSpace
 
         this.screenNameSpace.on('connection', function (socket) {
-            const roomId = socket.handshake.query.roomId ? socket.handshake.query.roomId : 'ABCDE'
-            socket.room = rs.getRoomById(roomId)
+            const roomId = socket.handshake.query.roomId
+
+            const room = rs.getRoomById(roomId)
+
+            if (!room) {
+                emitter.sendErrorMessage(socket, 'Room code does not exist!')
+                console.error('User tried to join non-existing room' + roomId)
+                return
+            }
+            socket.room = room
             socket.join(socket.room.id)
 
             console.log(socket.room.id + ' | Screen connected')
