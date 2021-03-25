@@ -1,6 +1,8 @@
 export interface PlayerRank {
-  userId: string
+  id: string
   name: string
   rank: number
+  finished: boolean
   totalTimeInSec: number
+  positionX: number
 }
