@@ -33,39 +33,29 @@ describe('connectionHandler', () => {
                 methods: ['GET', 'POST'],
             },
         })
-        rs = new RoomService(100)
-
-        server.app.get('/create-room', (req, res) => {
-            const room = rs.createRoom()
-        
-            res.send({ roomId: room.id })
-        })
-        
-
-        ch = new ConnectionHandler(io, rs)
-        ch.handle()
-
-
         done()
     })
 
     afterAll(done => {
-        socket.close()
         done()
     })
 
     beforeEach(done => {
         console.log = jest.fn()
-        roomCode = rs.createRoom()?.id
+        rs = new RoomService(100)
 
-        socket = client(`http://${url}`, {
+        ch = new ConnectionHandler(io, rs)
+        ch.handle()
+
+        roomCode = rs.createRoom()?.id
+        socket = client(`http://${url}/controller?roomId=${roomCode}&name=Robin&userId=`, {
             secure: true,
             reconnection: true,
             rejectUnauthorized: false,
             reconnectionDelayMax: 10000,
         })
         socket.on('connect', (msg: any) => {
-            done()
+        done()
         })
     })
 
@@ -75,9 +65,11 @@ describe('connectionHandler', () => {
             secure: true,
             reconnection: true,
             rejectUnauthorized: false,
-            reconnectionDelayMax: 10000,
+            reconnectionDelayMax: 5000,
         })
-        const room = rs.getRoomById(roomCode)
-        expect(room.id).toEqual(roomCode)
+
+        socket.on('connect', (msg: any) => {
+            const room = rs.getRoomById(roomCode)
+            expect(room.id).toEqual(roomCode)        })
     })
 })
