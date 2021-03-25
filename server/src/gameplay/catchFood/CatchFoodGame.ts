@@ -6,6 +6,7 @@ import { GameHasFinished, GameInterface, GameState, HashTable } from '../interfa
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
 import { initiatePlayersState } from './initiatePlayerState';
 import { GameStateInfo, Obstacle, PlayerState } from './interfaces';
+import { PlayerRank } from './interfaces/PlayerRank';
 
 interface CatchFoodGameInterface extends GameInterface {
     playersState: HashTable<PlayerState>
@@ -101,6 +102,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
                 gameState: currentGameStateInfo.gameState,
                 trackLength: currentGameStateInfo.trackLength,
                 numberOfObstacles: currentGameStateInfo.numberOfObstacles,
+                playerRanks: this.createPlayerRanks()
             }
             
             if (timeOut) CatchFoodGameEventEmitter.emitGameHasTimedOutEvent(messageInfo)
@@ -200,6 +202,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
         this.playersState[userId].finished = true
         this.playersState[userId].rank = this.currentRank++
+        this.playersState[userId].finishedTimeMs = Date.now()
 
         CatchFoodGameEventEmitter.emitPlayerHasFinishedEvent({
             userId,
@@ -226,9 +229,25 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             gameState: currentGameStateInfo.gameState,
             trackLength: currentGameStateInfo.trackLength,
             numberOfObstacles: currentGameStateInfo.numberOfObstacles,
-            // playerRanks: get
+            playerRanks: this.createPlayerRanks()
         })
         //Broadcast, stop game, return ranks
+    }
+
+    private createPlayerRanks() : Array<PlayerRank>{
+        const playerRanks: Array<PlayerRank> = []
+
+        for (const [, playerState] of Object.entries(this.playersState)) {
+            
+            playerRanks.push({
+                id: playerState.id,
+                name: playerState.name,
+                rank: playerState.rank,
+                totalTimeInSec: (playerState.finishedTimeMs - this.gameStartedTime) / 1000
+            })
+        }
+
+        return [...playerRanks]
     }
 
 

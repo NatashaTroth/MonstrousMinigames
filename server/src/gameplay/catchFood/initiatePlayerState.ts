@@ -1,7 +1,7 @@
-import { shuffleArray } from '../../helpers/shuffleArray'
-import { User } from '../../interfaces/interfaces'
-import { HashTable } from '../interfaces'
-import { Obstacle, ObstacleType, PlayerState } from './interfaces'
+import { shuffleArray } from '../../helpers/shuffleArray';
+import { User } from '../../interfaces/interfaces';
+import { HashTable } from '../interfaces';
+import { Obstacle, ObstacleType, PlayerState } from './interfaces';
 
 export function initiatePlayersState(
     players: Array<User>,
@@ -18,6 +18,7 @@ export function initiatePlayersState(
             obstacles: createObstacles(obstacleTypes, numberOfObstacles, trackLength),
             atObstacle: false,
             finished: false,
+            finishedTimeMs: 0,
             rank: 0,
         }
     })
