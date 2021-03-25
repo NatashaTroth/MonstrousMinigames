@@ -3,11 +3,9 @@ import Phaser from 'phaser'
 import forest from '../../images/forest.png'
 import franz from '../../images/franz_spritesheet.png'
 import goal from '../../images/goal.png'
-import monster2 from '../../images/monster2.png'
 import noah from "../../images/noah_spritesheet.png"
 import steffi from "../../images/steffi_spritesheet.png"
 import susi from "../../images/susi_spritesheet.png"
-import unicorn from '../../images/unicorn.png'
 import wood from '../../images/wood.png'
 
 const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
@@ -27,9 +25,6 @@ class MainScene extends Phaser.Scene {
         this.load.spritesheet('noah', noah, { frameWidth: 826, frameHeight: 1163});
         this.load.spritesheet('steffi', steffi, { frameWidth: 826, frameHeight: 1163});
 
-        this.load.image('monster2', monster2)
-        this.load.image('monster', '../../images/monster.png')
-        this.load.image('unicorn', unicorn)
         this.load.image('forest', forest)
         this.load.image('goal', goal)
         this.load.image('wood', wood)
@@ -108,10 +103,6 @@ class MainScene extends Phaser.Scene {
             repeat: -1
         });
         
-        
-        /* players.forEach(player => {
-            player.anims.play('right');
-        }); */
         players[0].anims.play('franzWalk')
         players[1].anims.play('susiWalk')
         players[2].anims.play('noahWalk')
