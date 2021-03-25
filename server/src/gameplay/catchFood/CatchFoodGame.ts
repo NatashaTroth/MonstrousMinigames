@@ -245,7 +245,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
                 name: playerState.name,
                 rank: playerState.rank,
                 finished: playerState.finished,
-                totalTimeInSec: Math.round((playerFinishedTime - this.gameStartedTime) / 1000)
+                totalTimeInSec: Math.round((playerFinishedTime - this.gameStartedTime) / 1000),
+                positionX: playerState.positionX
             })
         }
 

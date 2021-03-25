@@ -1,5 +1,5 @@
 import { GameState } from '../../interfaces';
-import { ObstacleType, PlayerState } from './';
+import { ObstacleType } from './';
 import { PlayerRank } from './PlayerRank';
 
 interface GameEventInterface {
@@ -13,7 +13,6 @@ export interface GameHasStarted extends GameEventInterface {
 
 export interface GameHasFinished extends GameEventInterface {
     roomId: string
-    playersState: Array<PlayerState>
     gameState: GameState
     trackLength: number
     numberOfObstacles: number

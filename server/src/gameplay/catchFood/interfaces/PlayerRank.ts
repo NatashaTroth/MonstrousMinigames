@@ -4,4 +4,5 @@ export interface PlayerRank {
   rank: number
   finished: boolean
   totalTimeInSec: number
+  positionX: number
 }
