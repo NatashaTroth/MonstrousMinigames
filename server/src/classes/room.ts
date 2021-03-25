@@ -1,5 +1,5 @@
-import { CatchFoodGame } from '../gameplay'
-import User from './user'
+import { CatchFoodGame } from '../gameplay';
+import User from './user';
 
 class Room {
     public id: string
@@ -83,7 +83,7 @@ class Room {
 
     public createGame(): void {
         this.setState(RoomStates.PLAYING)
-        this.game = new CatchFoodGame(this.users)
+        this.game = new CatchFoodGame()
         this.startGame()
     }
 
@@ -101,7 +101,7 @@ class Room {
     }
 
     public async resetGame() {
-        this.game?.resetGame(this.users)
+        this.game?.createNewGame(this.users)
         this.setState(RoomStates.OPEN)
         this.clearInactiveUsers()
         this.users = this.getActiveUsers()
