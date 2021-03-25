@@ -1,7 +1,10 @@
 import * as React from 'react'
 import { useHistory } from 'react-router'
+import { useParams } from 'react-router-dom'
 
+import { IRouteParams } from '../../App'
 import { GameContext } from '../../contexts/GameContextProvider'
+import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
 import Button from '../common/Button'
 import { GAMES } from './data'
 import {
@@ -22,7 +25,13 @@ import {
 export const Lobby: React.FunctionComponent = () => {
     const history = useHistory()
     const { roomId, connectedUsers } = React.useContext(GameContext)
+    const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext)
     const [selectedGame, setSelectedGame] = React.useState(0)
+    const { id }: IRouteParams = useParams()
+
+    if (id && !screenSocket) {
+        handleSocketConnection(id)
+    }
 
     return (
         <LobbyContainer>
