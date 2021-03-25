@@ -1,12 +1,13 @@
 import { Namespace, Server } from 'socket.io'
 
-import GameEventEmitter from '../classes/GameEventEmitter'
+// import GameEventEmitter from '../classes/GameEventEmitter'
 import User from '../classes/user'
 import { MessageTypes } from '../enums/messageTypes'
 import { Namespaces } from '../enums/nameSpaces'
-import { ObstacleReachedInfo, PlayerFinishedInfo } from '../gameplay/catchFood/interfaces'
+import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventEmitter'
+import { PlayerFinishedInfo } from '../gameplay/catchFood/interfaces'
 import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType'
-import { GameEventTypes, GameHasFinished, GameHasStarted } from '../gameplay/interfaces/index'
+import { GameEventTypes, GameHasFinished, GameHasStarted, ObstacleReachedInfo } from '../gameplay/interfaces/index'
 import emitter from '../helpers/emitter'
 import { IMessageObstacle } from '../interfaces/messageObstacle'
 import { IMessage } from '../interfaces/messages'
@@ -14,14 +15,14 @@ import RoomService from './roomService'
 
 class ConnectionHandler {
     private io: Server
-    private gameEventEmitter: GameEventEmitter
+    private gameEventEmitter: CatchFoodGameEventEmitter
     private rs: RoomService
     private controllerNamespace: Namespace
     private screenNameSpace: Namespace
 
     constructor(io: Server, rs: RoomService) {
         this.io = io
-        this.gameEventEmitter = GameEventEmitter.getInstance()
+        this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
         this.rs = rs
         this.controllerNamespace = this.io.of(Namespaces.CONTROLLER)
         this.screenNameSpace = this.io.of(Namespaces.SCREEN)
