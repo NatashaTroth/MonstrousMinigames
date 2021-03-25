@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { useHistory } from 'react-router'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 import { IRouteParams } from '../../App'
 import { GameContext } from '../../contexts/GameContextProvider'
@@ -73,8 +72,6 @@ export const Lobby: React.FunctionComponent = () => {
                     <div>
                         <InstructionsImg src={GAMES[selectedGame].image1} alt="Instructions" />
                         <Instructions>{GAMES[selectedGame].instructions1}</Instructions>
-                        <InstructionsImg src={GAMES[selectedGame].image2} alt="Instructions" />
-                        <Instructions>{GAMES[selectedGame].instructions2}</Instructions>
                     </div>
                     <Button
                         text="Start game"
