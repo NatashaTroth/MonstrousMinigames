@@ -4,7 +4,7 @@ import { Container, StyledButton } from './Button.sc'
 
 interface IButton {
     text: string
-    onClick?: (val?: any) => any
+    onClick?: React.MouseEventHandler<HTMLButtonElement>
     type?: 'button' | 'submit' | 'reset' | undefined
     disabled?: boolean
     name?: string

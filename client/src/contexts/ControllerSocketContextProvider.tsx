@@ -8,12 +8,13 @@ import { PlayerContext } from './PlayerContextProvider'
 
 export interface IObstacleMessage {
     type: string
-    obstacleType?: OBSTACLES
+    obstacleType: OBSTACLES
+    obstacleId: number
 }
 interface IControllerSocketContext {
     controllerSocket: Socket | undefined
     isControllerConnected: boolean
-    setControllerSocket: (val: Socket | undefined) => void
+    setControllerSocket: (val: Socket | undefined, roomId: string) => void
 }
 
 export const ControllerSocketContext = React.createContext<IControllerSocketContext>({
@@ -48,7 +49,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
     const { setObstacle, setPlayerFinished, setPlayerRank, setIsPlayerAdmin } = React.useContext(PlayerContext)
     const history = useHistory()
 
-    const { setGameStarted } = React.useContext(GameContext)
+    const { setGameStarted, roomId } = React.useContext(GameContext)
 
     controllerSocket?.on('message', (data: IUserInitMessage | IObstacleMessage | IGameFinished) => {
         let messageData
@@ -63,7 +64,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
                 break
             case 'game1/obstacle':
                 messageData = data as IObstacleMessage
-                setObstacle(messageData?.obstacleType)
+                setObstacle({ type: messageData.obstacleType, id: messageData.obstacleId })
                 break
             case 'game1/playerFinished':
                 messageData = data as IGameFinished
@@ -72,8 +73,13 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
 
                 break
             case 'game1/hasStarted':
+                document.body.style.overflow = 'hidden'
+                document.body.style.position = 'fixed'
                 setGameStarted(true)
-                history.push('/controller/game1')
+                history.push(`/controller/${roomId}/game1`)
+                break
+            case 'gameHasReset':
+                history.push(`/controller/${roomId}/lobby`)
                 break
             default:
                 break
@@ -82,9 +88,9 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
 
     const content = {
         controllerSocket,
-        setControllerSocket: (val: Socket | undefined) => {
+        setControllerSocket: (val: Socket | undefined, roomId: string) => {
             setControllerSocket(val)
-            history.push('/controller/lobby')
+            history.push(`/controller/${roomId}/lobby`)
         },
         isControllerConnected: controllerSocket ? true : false,
     }
