@@ -148,7 +148,7 @@ class ConnectionHandler {
                         socket.room.game?.playerHasCompletedObstacle(socket.user.id, obstacleId);
                         break;
                     }
-                    case MessageTypes.RESET_GAME:
+                    case MessageTypes.BACK_TO_LOBBY:
                         {
                             if (!socket.room.isOpen() && socket.room.isAdmin(socket.user)) {
                                 console.log(socket.room.id + ' | Reset Game');
