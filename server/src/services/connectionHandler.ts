@@ -231,6 +231,9 @@ class ConnectionHandler {
             room.setClosed()
             emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data)
         })
+        this.gameEventEmitter.on(GameEventTypes.GameHasTimedOut, () => {
+            console.log(' | Game has timed out')
+        })
     }
 }
 
