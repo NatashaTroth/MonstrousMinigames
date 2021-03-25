@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useHistory } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
 
-import { OBSTACLES } from '../utils/constants'
+import { MESSAGETYPES, OBSTACLES } from '../utils/constants'
 import { GameContext } from './GameContextProvider'
 import { PlayerContext } from './PlayerContextProvider'
 
@@ -55,7 +55,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         let messageData
 
         switch (data.type) {
-            case 'userInit':
+            case MESSAGETYPES.userInit:
                 messageData = data as IUserInitMessage
                 sessionStorage.setItem('userId', messageData.userId || '')
                 sessionStorage.setItem('name', messageData.name || '')
@@ -78,7 +78,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
                 setGameStarted(true)
                 history.push(`/controller/${roomId}/game1`)
                 break
-            case 'gameHasReset':
+            case MESSAGETYPES.gameHasReset:
                 history.push(`/controller/${roomId}/lobby`)
                 break
             default:
