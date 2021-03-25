@@ -13,7 +13,7 @@ function sendUserInit(socket: any): void {
         roomId: socket.room.id,
         name: socket.user.name,
         isAdmin: socket.room.isAdmin(socket.user),
-    })
+    });
 }
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
     if (volatile) {
@@ -55,8 +55,8 @@ function sendGameHasStopped(nsps: Array<Namespace>, roomId: string): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(roomId).emit('message', {
             type: MessageTypes.GAME_HAS_STOPPED,
-        })
-    })
+        });
+    });
 }
 
 function sendPlayerFinished(nsp: Namespace, user: User, data: PlayerHasFinished): void {
@@ -90,4 +90,4 @@ export default {
     sendConnectedUsers,
     sendMessage,
     sendGameHasStopped,
-}
+};

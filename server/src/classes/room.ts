@@ -2,20 +2,20 @@ import { CatchFoodGame } from '../gameplay';
 import User from './user';
 
 class Room {
-    public id: string
-    public users: Array<User>
-    public timestamp: number
-    public game: CatchFoodGame
-    public admin: User | null
-    private state: RoomStates
+    public id: string;
+    public users: Array<User>;
+    public timestamp: number;
+    public game: CatchFoodGame;
+    public admin: User | null;
+    private state: RoomStates;
 
     constructor(id: string) {
-        this.id = id
-        this.users = []
-        this.timestamp = Date.now()
-        this.game = new CatchFoodGame()
-        this.admin = null
-        this.state = RoomStates.OPEN
+        this.id = id;
+        this.users = [];
+        this.timestamp = Date.now();
+        this.game = new CatchFoodGame();
+        this.admin = null;
+        this.state = RoomStates.OPEN;
     }
 
     public clear(): void {
@@ -82,12 +82,12 @@ class Room {
     }
 
     public startGame(): void {
-        this.setState(RoomStates.PLAYING)
-        this.game.createNewGame(this.users)
+        this.setState(RoomStates.PLAYING);
+        this.game.createNewGame(this.users);
     }
 
     public stopGame() {
-        this.game?.stopGame()
+        this.game?.stopGame();
     }
 
     public getUserById(userId: string): User {
@@ -98,9 +98,9 @@ class Room {
     }
 
     public async resetGame() {
-        this.clearInactiveUsers()
-        this.users = this.getActiveUsers()
-        this.setState(RoomStates.OPEN)
+        this.clearInactiveUsers();
+        this.users = this.getActiveUsers();
+        this.setState(RoomStates.OPEN);
     }
 
     private clearInactiveUsers() {
