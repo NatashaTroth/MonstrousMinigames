@@ -96,7 +96,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     setGameStarted(true)
                     history.push(`/screen/${roomId}/game1`)
                     break
-                case MESSAGETYPES.backToLobby:
+                case MESSAGETYPES.gameHasReset:
                     history.push(`/screen/${roomId}/lobby`)
                     break
             }
