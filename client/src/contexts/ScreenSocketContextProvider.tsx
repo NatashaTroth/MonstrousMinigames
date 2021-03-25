@@ -167,9 +167,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
 
     const content = {
         screenSocket,
-        setScreenSocket: (val: Socket | undefined, roomId: string) => {
-            handleSetScreenSocket(val, roomId)
-        },
+        setScreenSocket: (val: Socket | undefined, roomId: string) => handleSetScreenSocket(val, roomId),
         isScreenConnected: screenSocket ? true : false,
         handleSocketConnection,
     }

@@ -1,7 +1,9 @@
-import { HashTable } from './HashTable'
-import { GameEventTypes } from './GameEventTypes'
-import { GameState } from './GameState'
-import { GameInterface } from './GameInterface'
-import { GameHasStarted, GameHasFinished, PlayerHasFinished } from './GameEvents'
+import {
+    GameHasFinished, GameHasStarted, GameHasStopped, ObstacleReachedInfo, PlayerHasFinished
+} from '../catchFood/interfaces/GameEvents';
+import { GameEventTypes } from './GameEventTypes';
+import { GameInterface } from './GameInterface';
+import { GameState } from './GameState';
+import { HashTable } from './HashTable';
 
-export { HashTable, GameEventTypes, GameState, GameInterface, GameHasStarted, GameHasFinished, PlayerHasFinished }
+export { HashTable, GameEventTypes, GameState, GameInterface, GameHasStarted, GameHasFinished, PlayerHasFinished,GameHasStopped, ObstacleReachedInfo }

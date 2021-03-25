@@ -1,4 +1,5 @@
 export enum GameState {
+  Initialised = "INITIALISED",
   Created = "CREATED",
   Started = "STARTED",
   Stopped = "STOPPED",
