@@ -8,12 +8,13 @@ const NUMBER_OF_OBSTACLES = 4
 const NEW_NUMBER_OF_OBSTACLES = 6
 let catchFoodGame: CatchFoodGame
 
-describe('Reset Game tests', () => {
+describe('Create new game tests', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES)
+        catchFoodGame = new CatchFoodGame()
+        catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES)
         jest.useFakeTimers()
         finishGame(catchFoodGame)
-        catchFoodGame.resetGame(users, NEW_TRACKLENGTH, NEW_NUMBER_OF_OBSTACLES)
+        catchFoodGame.createNewGame(users, NEW_TRACKLENGTH, NEW_NUMBER_OF_OBSTACLES)
     })
 
     function finishGame(catchFoodGame: CatchFoodGame) {

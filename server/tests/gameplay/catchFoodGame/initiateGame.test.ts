@@ -1,7 +1,7 @@
-import { CatchFoodGame } from '../../../src/gameplay'
-import { Obstacle, ObstacleType } from '../../../src/gameplay/catchFood/interfaces'
-import { GameState } from '../../../src/gameplay/interfaces'
-import { users } from '../mockUsers'
+import { CatchFoodGame } from '../../../src/gameplay';
+import { Obstacle, ObstacleType } from '../../../src/gameplay/catchFood/interfaces';
+import { GameState } from '../../../src/gameplay/interfaces';
+import { users } from '../mockUsers';
 
 const TRACKLENGTH = 500
 const NUMBER_OF_OBSTACLES = 4
@@ -11,7 +11,8 @@ const OBSTACLE_TYPE_KEYS = Object.keys(ObstacleType)
 
 describe('Initiate CatchFoodGame correctly', () => {
     beforeEach(async () => {
-        catchFoodGame = new CatchFoodGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES)
+        catchFoodGame = new CatchFoodGame()
+        catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES)
         jest.useFakeTimers()
     })
 
@@ -28,7 +29,8 @@ describe('Initiate CatchFoodGame correctly', () => {
     })
 
     it('initiates gameStartedTime with 0', async () => {
-        expect(catchFoodGame.gameStartedTime).toBe(0)
+        const catchFoodGameInit = new CatchFoodGame()
+        expect(catchFoodGameInit.gameStartedTime).toBe(0)
     })
 
     it('initiates correct number of obstacles', async () => {

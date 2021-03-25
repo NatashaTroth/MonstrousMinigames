@@ -3,17 +3,17 @@ import { GameState } from './GameState';
 
 export interface GameInterface {
   roomId: string;
-  playersState: any;
+  playersState: any;  //TODO change
   gameState: GameState;
   // gameEventEmitter: GameEventEmitter;
   currentRank: number;
 
-  startGame(): void;
-  stopGame(): void;
-  resetGame(
+  createNewGame(
     players: any,
     trackLength?: number,
     numberOfObstacles?: number
-  ): void; //TODO change
+  ): void;
+  startGame(): void;
+  stopGame(): void;
   getGameStateInfo(): any;
 }

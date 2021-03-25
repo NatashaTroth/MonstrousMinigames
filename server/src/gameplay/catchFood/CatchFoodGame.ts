@@ -12,11 +12,11 @@ interface CatchFoodGameInterface extends GameInterface {
     trackLength: number
     numberOfObstacles: number
 
+    createNewGame(players: Array<User>, trackLength: number, numberOfObstacles: number): void
     getGameStateInfo(): GameStateInfo
     getObstaclePositions(): HashTable<Array<Obstacle>>
     runForward(userId: string, speed: number): void
     playerHasCompletedObstacle(userId: string, obstacleId: number): void
-    resetGame(players: Array<User>, trackLength: number, numberOfObstacles: number): void
 }
 
 export default class CatchFoodGame implements CatchFoodGameInterface {
@@ -33,15 +33,15 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     timer: ReturnType<typeof setTimeout>
     countdownTime: number
 
-    constructor(players: Array<User>, trackLength = 2000, numberOfObstacles = 2) {
+    constructor() {
         // this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
-        this.roomId = players[0].roomId
-        this.gameState = GameState.Created
-        this.trackLength = trackLength
-        this.numberOfObstacles = numberOfObstacles
+        this.roomId = ""
+        this.gameState = GameState.Initialised
+        this.trackLength = 2000
+        this.numberOfObstacles = 4
         this.currentRank = 1
-        this.players = players
-        this.playersState = initiatePlayersState(players, this.numberOfObstacles, this.trackLength)
+        this.players = []
+        this.playersState = {}
         this.gameStartedTime = 0
         this.timeOutLimit = 300000
         this.timer = setTimeout(() => ({}), 0)
@@ -49,13 +49,17 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     }
 
     //createNewGame TODO!!!!!!
-    resetGame(players = this.players, trackLength = 2000, numberOfObstacles = 4): void {
+    createNewGame(players = this.players, trackLength = this.trackLength, numberOfObstacles = this.numberOfObstacles): void {
+        this.roomId = players[0].roomId
         this.gameState = GameState.Created
         this.trackLength = trackLength
-        this.numberOfObstacles = numberOfObstacles
+        this.players = players
         this.currentRank = 1
+        this.gameStartedTime = 0
+        this.numberOfObstacles = numberOfObstacles
         this.playersState = initiatePlayersState(players, this.numberOfObstacles, this.trackLength)
         clearTimeout(this.timer)
+        this.startGame()
     }
 
     //put together
