@@ -1,8 +1,11 @@
+import { stringify } from 'query-string'
 import * as React from 'react'
 import { useHistory } from 'react-router-dom'
-import { Socket } from 'socket.io-client'
+import { io, Socket } from 'socket.io-client'
 
+import { ENDPOINT } from '../utils/config'
 import { OBSTACLES } from '../utils/constants'
+import { ClickRequestDeviceMotion } from '../utils/permissions'
 import { GameContext } from './GameContextProvider'
 import { PlayerContext } from './PlayerContextProvider'
 
@@ -15,6 +18,7 @@ interface IControllerSocketContext {
     controllerSocket: Socket | undefined
     isControllerConnected: boolean
     setControllerSocket: (val: Socket | undefined, roomId: string) => void
+    handleSocketConnection: (roomId: string, name: string) => void
 }
 
 export const ControllerSocketContext = React.createContext<IControllerSocketContext>({
@@ -23,6 +27,9 @@ export const ControllerSocketContext = React.createContext<IControllerSocketCont
         // do nothing
     },
     isControllerConnected: false,
+    handleSocketConnection: () => {
+        // do nothing
+    },
 })
 
 interface IUserInitMessage {
@@ -46,10 +53,12 @@ export interface IUser {
 
 const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [controllerSocket, setControllerSocket] = React.useState<Socket | undefined>(undefined)
-    const { setObstacle, setPlayerFinished, setPlayerRank, setIsPlayerAdmin } = React.useContext(PlayerContext)
+    const { setObstacle, setPlayerFinished, setPlayerRank, setIsPlayerAdmin, setPermissionGranted } = React.useContext(
+        PlayerContext
+    )
     const history = useHistory()
 
-    const { setGameStarted, roomId } = React.useContext(GameContext)
+    const { setGameStarted, roomId, setRoomId } = React.useContext(GameContext)
 
     controllerSocket?.on('message', (data: IUserInitMessage | IObstacleMessage | IGameFinished) => {
         let messageData
@@ -86,13 +95,46 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         }
     })
 
+    function handleSetControllerSocket(val: Socket | undefined, roomId: string) {
+        setControllerSocket(val)
+        history.push(`/controller/${roomId}/lobby`)
+    }
+
+    async function handleSocketConnection(roomId: string, name: string) {
+        const permission = await ClickRequestDeviceMotion()
+        if (permission) {
+            setPermissionGranted(permission)
+        }
+
+        const controllerSocket = io(
+            `${ENDPOINT}controller?${stringify({
+                name: name,
+                roomId: roomId,
+                userId: sessionStorage.getItem('userId') || '',
+            })}`,
+            {
+                secure: true,
+                reconnection: true,
+                rejectUnauthorized: false,
+                reconnectionDelayMax: 10000,
+                transports: ['websocket'],
+            }
+        )
+
+        setRoomId(roomId || '')
+
+        controllerSocket.on('connect', () => {
+            if (controllerSocket) {
+                handleSetControllerSocket(controllerSocket, roomId || '')
+            }
+        })
+    }
+
     const content = {
         controllerSocket,
-        setControllerSocket: (val: Socket | undefined, roomId: string) => {
-            setControllerSocket(val)
-            history.push(`/controller/${roomId}/lobby`)
-        },
+        setControllerSocket: (val: Socket | undefined, roomId: string) => handleSetControllerSocket(val, roomId),
         isControllerConnected: controllerSocket ? true : false,
+        handleSocketConnection,
     }
     return <ControllerSocketContext.Provider value={content}>{children}</ControllerSocketContext.Provider>
 }
