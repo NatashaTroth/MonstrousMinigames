@@ -1,5 +1,5 @@
 export interface IMessage {
-    type: string
-    roomId?: string
-    userId?: string
+    type: string;
+    roomId?: string;
+    userId?: string;
 }

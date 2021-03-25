@@ -1,4 +1,4 @@
-export interface PlayerRanks {
+export interface PlayerRank {
   userId: string
   name: string
   rank: number
