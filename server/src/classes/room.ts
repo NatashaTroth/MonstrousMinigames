@@ -142,11 +142,11 @@ class Room {
     }
 
     public pauseGame(): void {
-        this.game.pauseGame()
+        this.game.pauseGame();
     }
-    
+
     public resumeGame(): void {
-        this.game.resumeGame()
+        this.game.resumeGame();
     }
 }
 
