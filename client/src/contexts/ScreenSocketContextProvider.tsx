@@ -105,6 +105,12 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     setGameStarted(true)
                     history.push(`/screen/${roomId}/game1`)
                     break
+                case MESSAGETYPES.gameHasFinished:
+                    data = messageData as IGameState
+                    setFinished(true)
+                    setPlayerRanks(data.data!.playerRanks!)
+                    history.push(`/screen/${roomId}/finished`)
+                    break
                 case MESSAGETYPES.gameHasReset:
                     history.push(`/screen/${roomId}/lobby`)
                     break
@@ -122,14 +128,6 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
 
                 if (messageData.data.playersState) {
                     setPlayers(messageData.data.playersState)
-                }
-
-                if (GAMESTATE.finished === messageData.data.gameState) {
-                    if (!finished) {
-                        setFinished(true)
-                        setPlayerRanks(messageData.data.playerRanks!)
-                        history.push(`/screen/${roomId}/finished`)
-                    }
                 }
             }
         }
