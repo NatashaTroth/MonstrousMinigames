@@ -7,11 +7,11 @@
         "node": "12.x"
     },
     "scripts": {
-        "test": "jest --watchAll",
+        "test": "rm -rf dist/ && jest --watchAll",
         "testGameplay": "jest --watchAll ./tests/gameplay",
         "dev": "nodemon src/app.ts",
         "prettier": "prettier --write src/**/*.ts",
-        "lint": "eslint \"**/*.ts\" --fix",
+        "lint": "eslint \"**/*.ts\" --fix && npm run tsc && rm -rf dist/",
         "tsc": "tsc",
         "postinstall": "npm run tsc",
         "start": "node src/app.js",
@@ -60,7 +60,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "npm run prettier && jest && npm run lint"
+            "pre-commit": "rm -rf dist/ && npm run prettier && jest && npm run lint"
         }
     }
 }

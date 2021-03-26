@@ -3,6 +3,7 @@ import * as React from 'react'
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider'
 import { GameContext } from '../../contexts/GameContextProvider'
 import { PlayerContext } from '../../contexts/PlayerContextProvider'
+import { MESSAGETYPES } from '../../utils/constants'
 import Button from '../common/Button'
 import FullScreenContainer from '../common/FullScreenContainer'
 import { FinishedScreenContainer, FinishedScreenText } from './FinishedScreen.sc'
@@ -13,7 +14,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext)
 
     function handlePlayAgain() {
-        controllerSocket?.emit('message', { type: 'resetGame' })
+        controllerSocket?.emit('message', { type: MESSAGETYPES.backToLobby })
         resetGame()
         resetPlayer()
     }
@@ -26,7 +27,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
                     <span>Finished!</span>
                 </FinishedScreenText>
                 {/* TODO check if all players are finished */}
-                {isPlayerAdmin && <Button onClick={handlePlayAgain} text="Play Again" />}
+                {isPlayerAdmin && <Button onClick={handlePlayAgain} text="Back to Lobby" />}
             </FinishedScreenContainer>
         </FullScreenContainer>
     )

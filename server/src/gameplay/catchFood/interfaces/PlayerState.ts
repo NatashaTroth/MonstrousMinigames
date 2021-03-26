@@ -1,4 +1,4 @@
-import { Obstacle } from "./Obstacle";
+import { Obstacle } from './Obstacle';
 
 export interface PlayerState {
   id: string;
@@ -7,5 +7,6 @@ export interface PlayerState {
   obstacles: Array<Obstacle>;
   atObstacle: boolean;
   finished: boolean;
+  finishedTimeMs: number
   rank: number;
 }

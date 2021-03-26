@@ -1,21 +1,19 @@
-import GameEventEmitter from '../../../src/classes/GameEventEmitter';
+// import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import { CatchFoodGame } from '../../../src/gameplay';
+import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { GameEventTypes } from '../../../src/gameplay/interfaces';
-import { users } from '../mockUsers';
-import { startGame } from './startGame';
+import { startGameAndAdvanceCountdown } from './startGame';
 
-const TRACKLENGTH = 500
-const NUMBER_OF_OBSTACLES = 4
 let catchFoodGame: CatchFoodGame
-let gameEventEmitter: GameEventEmitter
+let gameEventEmitter: CatchFoodGameEventEmitter
 
 describe('Event Emitter', () => {
     beforeAll(() => {
-        gameEventEmitter = GameEventEmitter.getInstance()
+        gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
     })
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES)
+        catchFoodGame = new CatchFoodGame()
         jest.useFakeTimers()
     })
 
@@ -30,13 +28,13 @@ describe('Event Emitter', () => {
             gameStartedEvent = true
         })
         expect(gameStartedEvent).toBeFalsy()
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         await setTimeout(() => ({}), 100)
         expect(gameStartedEvent).toBeTruthy()
     })
 
     it('should emit an ObstacleReached event when an obstacle is reached', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
 
         let obstacleEventReceived = false
         gameEventEmitter.on(GameEventTypes.ObstacleReached, () => {
@@ -50,7 +48,7 @@ describe('Event Emitter', () => {
     })
 
     it('should emit an PlayerHasFinished event when a player has reached the end of the race', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         // finish player 1
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1', i)
@@ -65,7 +63,7 @@ describe('Event Emitter', () => {
     })
 
     it('should emit a GameHasFinished event when a all the players have finished race', async () => {
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         let gameFinishedEvent = false
         gameEventEmitter.on(GameEventTypes.GameHasFinished, () => {
             gameFinishedEvent = true
@@ -90,7 +88,7 @@ describe('Event Emitter', () => {
         gameEventEmitter.on(GameEventTypes.GameHasTimedOut, () => {
             gameTimedOutEvent = true
         })
-        startGame(catchFoodGame)
+        startGameAndAdvanceCountdown(catchFoodGame)
         jest.runAllTimers()
         expect(gameTimedOutEvent).toBeTruthy()
     })

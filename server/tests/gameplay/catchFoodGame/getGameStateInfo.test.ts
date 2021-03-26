@@ -10,7 +10,8 @@ let gameStateInfo: GameStateInfo
 
 describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
-        catchFoodGame = new CatchFoodGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES)
+        catchFoodGame = new CatchFoodGame()
+        catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES)
         jest.useFakeTimers()
         gameStateInfo = catchFoodGame.getGameStateInfo()
     })

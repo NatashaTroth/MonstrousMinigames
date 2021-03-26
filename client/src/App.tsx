@@ -18,6 +18,10 @@ import GameContextProvider from './contexts/GameContextProvider'
 import PlayerContextProvider from './contexts/PlayerContextProvider'
 import ScreenSocketContextProvider from './contexts/ScreenSocketContextProvider'
 
+export interface IRouteParams {
+    id?: string
+}
+
 const App: React.FunctionComponent = () => {
     return (
         <Router>
@@ -38,9 +42,8 @@ const App: React.FunctionComponent = () => {
                                     <Route path="/screen/:id/finished" component={ScreenFinishedScreen} exact />
 
                                     <Route
-                                        path="/"
+                                        path="/:id?"
                                         component={isMobileOnly ? ControllerConnectScreen : ScreenConnectScreen}
-                                        exact
                                     />
                                 </Switch>
                             </ControllerSocketContextProvider>
