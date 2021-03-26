@@ -31,10 +31,9 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext)
     const { obstacle, setObstacle } = React.useContext(PlayerContext)
     const [progress, setProgress] = React.useState(0)
+    const [initialized, setInitialize] = React.useState(false)
     const history = useHistory()
     const { showInstructions, setShowInstructions } = React.useContext(GameContext)
-
-    // const currentObstacleId = players[]
 
     React.useEffect(() => {
         let touchEvent: null | string = null
@@ -45,7 +44,9 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
             touchContainer = document.getElementById('touchContainer')
         }
 
-        if (touchContainer) {
+        if (touchContainer && !initialized) {
+            setInitialize(true)
+            distance = 0
             const hammertime = touchContainer && new Hammer(touchContainer)
 
             hammertime?.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL })
@@ -65,7 +66,6 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
                 solveObstacle()
                 return
             }
-
             if (!touchEvent) {
                 touchEvent = event
                 distance += eventDistance
@@ -93,7 +93,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
             setShowInstructions(false)
             setTimeout(() => setObstacle(undefined), 100)
         }
-    }, [controllerSocket, history, obstacle, progress, setObstacle, setShowInstructions])
+    }, [controllerSocket, history, initialized, obstacle, progress, setObstacle, setShowInstructions])
 
     return (
         <ObstacleContainer>
