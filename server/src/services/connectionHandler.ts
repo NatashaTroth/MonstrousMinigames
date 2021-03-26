@@ -126,9 +126,7 @@ class ConnectionHandler {
                                     clearInterval(gameStateInterval);
                                 }
                                 // send gamestate volatile
-                                if (socket.room.isPlaying()) {
                                 emitter.sendGameState(screenNameSpace, socket.room, true);
-                                }
                             }, 100);
                         }
 
