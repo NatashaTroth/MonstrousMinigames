@@ -122,11 +122,13 @@ class ConnectionHandler {
                             emitter.sendGameState(screenNameSpace, socket.room);
 
                             const gameStateInterval = setInterval(() => {
-                                if (!socket.room.isPlaying) {
+                                if (!socket.room.isPlaying()) {
                                     clearInterval(gameStateInterval);
                                 }
                                 // send gamestate volatile
+                                if (socket.room.isPlaying()) {
                                 emitter.sendGameState(screenNameSpace, socket.room, true);
+                                }
                             }, 100);
                         }
 
@@ -161,10 +163,23 @@ class ConnectionHandler {
                         }
                         break;
                     case MessageTypes.STOP_GAME: {
-                        if (socket.room.isPlaying()) {
+                        if (socket.room.isPlaying() || socket.room.isPaused()) {
                             console.log(socket.room.id + ' | Stop Game');
                             socket.room.stopGame();
                         }
+                        break;
+                    }
+                    case MessageTypes.PAUSE_RESUME: {
+                        if (socket.room.isAdmin(socket.user)) {
+                            if (socket.room.isPlaying()) {
+                                console.log(socket.room.id + ' | Pause Game');
+                                socket.room.pauseGame()
+                            }else if (socket.room.isPaused()) {
+                                console.log(socket.room.id + ' | Resume Game');
+                                socket.room.resumeGame()
+                         }
+                        }
+
                         break;
                     }
                     default: {
@@ -254,7 +269,7 @@ class ConnectionHandler {
         });
         this.gameEventEmitter.on(GameEventTypes.GameHasPaused, (data: GameStateHasChanged) => {
             console.log(data.roomId + ' | Game has stopped');
-            const room= rs.getRoomById(data.roomId);
+            const room = rs.getRoomById(data.roomId);
             room.setPaused();
             emitter.sendMessage(MessageTypes.GAME_HAS_PAUSED, [controllerNamespace, screenNameSpace], data.roomId);
         });
