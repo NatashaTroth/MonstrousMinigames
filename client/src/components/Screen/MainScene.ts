@@ -1,3 +1,4 @@
+
 import Phaser from 'phaser'
 
 import forest from '../../images/forest.png'
@@ -8,9 +9,11 @@ import steffi from "../../images/steffi_spritesheet.png"
 import susi from "../../images/susi_spritesheet.png"
 import wood from '../../images/wood.png'
 
+
 const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
+let playerNumber = 1
 const moveplayers = [true, true, true, true]
 const playerFinished = [false, false, false, false]
 let gameFinished = false
@@ -24,6 +27,8 @@ class MainScene extends Phaser.Scene {
         // eslint-disable-next-line no-console
         console.log(data.finished)
         gameFinished = data.finished
+        if(data.player !== undefined)
+        playerNumber = data.player.length
     }
 
     preload(): void {
@@ -35,34 +40,44 @@ class MainScene extends Phaser.Scene {
         this.load.image('forest', forest)
         this.load.image('goal', goal)
         this.load.image('wood', wood)
+
+        this.load.audio('music', ['../../audio/Sound_Game.wav']);
     }
 
     create() {
+        //this.sound.add("music", { loop: false });
         const forest = this.add.image(0, 0, 'forest')
-        const player1 = this.physics.add.sprite(10, 10, 'franz')
-        const player2 = this.physics.add.sprite(68, 300, 'susi')
-        const player3 = this.physics.add.sprite(68, 500, 'noah')
-        const player4 = this.physics.add.sprite(68, 700, 'steffi')
-        const goal1 = this.physics.add.sprite(1050, 100, 'goal')
-        const goal2 = this.physics.add.sprite(1050, 300, 'goal')
-        const goal3 = this.physics.add.sprite(1050, 500, 'goal')
-        const goal4 = this.physics.add.sprite(1050, 700, 'goal')
 
-        players.push(player1, player2, player3, player4)
-        goals.push(goal1, goal2, goal3, goal4)
+        players.push(this.physics.add.sprite(10, 10, 'franz'))
+        goals.push(this.physics.add.sprite(1050, 100, 'goal'))
+
+        if(playerNumber >= 2){
+            players.push(this.physics.add.sprite(68, 300, 'susi'))
+            goals.push(this.physics.add.sprite(1050, 300, 'goal'))
+        }
+        if(playerNumber >= 3){
+            players.push(this.physics.add.sprite(68, 500, 'noah'))
+            goals.push(this.physics.add.sprite(1050, 500, 'goal'))
+        }
+        if(playerNumber >= 4){
+            players.push(this.physics.add.sprite(68, 700, 'steffi'))
+            goals.push(this.physics.add.sprite(1050, 700, 'goal'))
+        }
+        // eslint-disable-next-line no-console
+        console.log(playerNumber)
 
         const arr = Array.from({ length: 8 }, () => Math.floor(Math.random() * 600) + 200)
 
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < playerNumber*2; i++) {
             let wood: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
-            if (i < 2) {
-                wood = this.physics.add.sprite(arr[i], 100, 'wood')
-            } else if (i < 4) {
+            if (playerNumber >= 2 && i < 4) {
                 wood = this.physics.add.sprite(arr[i], 300, 'wood')
-            } else if (i < 6) {
+            } else if (playerNumber >= 3 && i < 6) {
                 wood = this.physics.add.sprite(arr[i], 500, 'wood')
-            } else {
+            } else if(playerNumber >= 4) {
                 wood = this.physics.add.sprite(arr[i], 700, 'wood')
+            } else {
+                wood = this.physics.add.sprite(arr[i], 100, 'wood')
             }
 
             wood.setScale(0.5, 0.5)
@@ -77,10 +92,9 @@ class MainScene extends Phaser.Scene {
         })
 
         forest.setScale(1.2, 1.4)
-        goal1.setScale(0.1, 0.1)
-        goal2.setScale(0.1, 0.1)
-        goal3.setScale(0.1, 0.1)
-        goal4.setScale(0.1, 0.1)
+        goals.forEach(goal => {
+            goal.setScale(0.1,0.1)
+        })
 
         this.anims.create({
             key: 'franzWalk',
@@ -109,11 +123,10 @@ class MainScene extends Phaser.Scene {
             frameRate: 6,
             repeat: -1
         });
-        
-        players[0].anims.play('franzWalk')
-        players[1].anims.play('susiWalk')
-        players[2].anims.play('noahWalk')
-        players[3].anims.play('steffiWalk')
+        const animations = ["franzWalk", "susiWalk", "noahWalk", "steffiWalk"]
+        for(let i = 0; i < playerNumber; i++){
+            players[i].anims.play(animations[i])
+        }
         }
         
 
@@ -129,30 +142,38 @@ class MainScene extends Phaser.Scene {
             })
         }
 
+        if(players[0]){
         this.physics.collide(players[0], obstacles[0], () => {
             this.playerHitObstacle(0)
         })
         this.physics.collide(players[0], obstacles[1], () => {
             this.playerHitObstacle(0)
         })
+    }
+    if(players[1]){
         this.physics.collide(players[1], obstacles[2], () => {
             this.playerHitObstacle(1)
         })
         this.physics.collide(players[1], obstacles[3], () => {
             this.playerHitObstacle(1)
         })
+    }
+    if(players[2]){
         this.physics.collide(players[2], obstacles[4], () => {
             this.playerHitObstacle(2)
         })
         this.physics.collide(players[2], obstacles[5], () => {
             this.playerHitObstacle(2)
         })
+    }
+       if(players[3]){
         this.physics.collide(players[3], obstacles[6], () => {
             this.playerHitObstacle(3)
         })
         this.physics.collide(players[3], obstacles[7], () => {
             this.playerHitObstacle(3)
         })
+       }
     }
 
     moveForward(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
