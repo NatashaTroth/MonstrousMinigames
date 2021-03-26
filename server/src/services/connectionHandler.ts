@@ -7,11 +7,7 @@ import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventE
 import { PlayerFinishedInfo } from '../gameplay/catchFood/interfaces';
 import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType';
 import {
-    GameEventTypes,
-    GameHasFinished,
-    GameHasStarted,
-    GameStateHasChanged,
-    ObstacleReachedInfo,
+    GameEventTypes, GameHasFinished, GameHasStarted, GameStateHasChanged, ObstacleReachedInfo
 } from '../gameplay/interfaces/index';
 import emitter from '../helpers/emitter';
 import { IMessageObstacle } from '../interfaces/messageObstacle';
@@ -131,7 +127,7 @@ class ConnectionHandler {
                                 }
                                 // send gamestate volatile
                                 if (socket.room.isPlaying()) {
-                                    emitter.sendGameState(screenNameSpace, socket.room, true);
+                                emitter.sendGameState(screenNameSpace, socket.room, true);
                                 }
                             }, 100);
                         }
@@ -140,7 +136,7 @@ class ConnectionHandler {
                     }
                     case CatchFoodMsgType.MOVE: {
                         if (socket.room.isPlaying()) {
-                            socket.room.game?.runForward(socket.user.id, parseInt(`${process.env.SPEED}`, 10) || 1);
+                            socket.room.game?.runForward(socket.user.id, parseInt(`${process.env.SPEED}`, 10) || 2);
                         }
                         break;
                     }
@@ -177,11 +173,11 @@ class ConnectionHandler {
                         if (socket.room.isAdmin(socket.user)) {
                             if (socket.room.isPlaying()) {
                                 console.log(socket.room.id + ' | Pause Game');
-                                socket.room.pauseGame();
-                            } else if (socket.room.isPaused()) {
+                                socket.room.pauseGame()
+                            }else if (socket.room.isPaused()) {
                                 console.log(socket.room.id + ' | Resume Game');
-                                socket.room.resumeGame();
-                            }
+                                socket.room.resumeGame()
+                         }
                         }
 
                         break;
