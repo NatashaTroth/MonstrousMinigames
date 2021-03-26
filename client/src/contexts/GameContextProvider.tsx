@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { OBSTACLES } from '../utils/constants'
 import { IUser } from './ControllerSocketContextProvider'
+import { IPlayerRank } from './ScreenSocketContextProvider'
 
 interface IGameContext {
     trackLength?: number
@@ -21,6 +22,8 @@ interface IGameContext {
     setShowInstructions: (val: boolean) => void
     countdownTime: number
     setCountdownTime: (val: number) => void
+    playerRanks?: IPlayerRank[]
+    setPlayerRanks: (val: IPlayerRank[]) => void
 }
 
 interface IObstacle {
@@ -37,6 +40,7 @@ export interface IPlayerState {
     positionX: number
     rank: number
 }
+
 export const GameContext = React.createContext<IGameContext>({
     trackLength: undefined,
     setTrackLength: () => {
@@ -73,11 +77,16 @@ export const GameContext = React.createContext<IGameContext>({
     setCountdownTime: () => {
         // do nothing
     },
+    playerRanks: undefined,
+    setPlayerRanks: () => {
+        // do nothing
+    },
 })
 
 const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [trackLength, setTrackLength] = React.useState<undefined | number>()
     const [players, setPlayers] = React.useState<undefined | IPlayerState[]>()
+    const [playerRanks, setPlayerRanks] = React.useState<undefined | IPlayerRank[]>()
     const [finished, setFinished] = React.useState<boolean>(false)
     const [gameStarted, setGameStarted] = React.useState<boolean>(false)
     const [roomId, setRoomId] = React.useState<undefined | string>()
@@ -116,6 +125,8 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setShowInstructions,
         countdownTime,
         setCountdownTime,
+        playerRanks,
+        setPlayerRanks,
     }
     return <GameContext.Provider value={content}>{children}</GameContext.Provider>
 }
