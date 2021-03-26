@@ -116,7 +116,7 @@ class ConnectionHandler {
                 const type = message.type;
                 switch (type) {
                     case CatchFoodMsgType.START: {
-                        if (socket.room.isOpen()) {
+                        if (socket.room.isOpen() && socket.room.isAdmin(socket.user)) {
                             rs.startGame(socket.room);
 
                             emitter.sendGameState(screenNameSpace, socket.room);
