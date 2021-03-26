@@ -56,14 +56,17 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [permission, setPermissionGranted] = React.useState<boolean>(false)
     const history = useHistory()
     const { roomId } = React.useContext(GameContext)
+    let reroute = true
 
     const content = {
         obstacle,
         setObstacle: (val: undefined | IObstacle) => {
             setObstacle(val)
             if (val) {
+                reroute = true
                 history.push(`/controller/${roomId}/game1-obstacle`)
-            } else {
+            } else if (reroute) {
+                reroute = false
                 history.push(`/controller/${roomId}/game1`)
             }
         },
