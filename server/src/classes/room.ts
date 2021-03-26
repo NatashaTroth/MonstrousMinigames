@@ -122,6 +122,9 @@ class Room {
     public isPlaying(): boolean {
         return this.state === RoomStates.PLAYING;
     }
+    public isPaused(): boolean {
+        return this.state === RoomStates.PAUSED;
+    }
     public isClosed(): boolean {
         return this.state === RoomStates.CLOSED;
     }
@@ -134,6 +137,17 @@ class Room {
     public setPlaying(): void {
         this.setState(RoomStates.PLAYING);
     }
+    public setPaused(): void {
+        this.setState(RoomStates.PAUSED);
+    }
+
+    public pauseGame(): void {
+        this.game.pauseGame();
+    }
+
+    public resumeGame(): void {
+        this.game.resumeGame();
+    }
 }
 
 export default Room;
@@ -141,5 +155,6 @@ export default Room;
 export enum RoomStates {
     OPEN,
     PLAYING,
+    PAUSED,
     CLOSED,
 }
