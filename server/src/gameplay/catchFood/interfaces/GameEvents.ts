@@ -3,35 +3,35 @@ import { ObstacleType } from './';
 import { PlayerRank } from './PlayerRank';
 
 interface GameEventInterface {
-    roomId: string
+    roomId: string;
 }
 
 export interface GameHasStarted extends GameEventInterface {
-    roomId: string
-    countdownTime: number
+    roomId: string;
+    countdownTime: number;
 }
 
 export interface GameHasFinished extends GameEventInterface {
-    roomId: string
-    gameState: GameState
-    trackLength: number
-    numberOfObstacles: number
-    playerRanks: Array<PlayerRank>
+    roomId: string;
+    gameState: GameState;
+    trackLength: number;
+    numberOfObstacles: number;
+    playerRanks: Array<PlayerRank>;
 }
 
 export interface GameStateHasChanged extends GameEventInterface {
-    roomId: string
+    roomId: string;
 }
 
 export interface PlayerHasFinished extends GameEventInterface {
-    roomId: string
-    userId: string
-    rank: number
+    roomId: string;
+    userId: string;
+    rank: number;
 }
 
 export interface ObstacleReachedInfo extends GameEventInterface {
-    roomId: string
-    userId: string
-    obstacleType: ObstacleType
-    obstacleId: number
+    roomId: string;
+    userId: string;
+    obstacleType: ObstacleType;
+    obstacleId: number;
 }
