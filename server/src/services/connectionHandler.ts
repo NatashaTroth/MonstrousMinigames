@@ -7,11 +7,7 @@ import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventE
 import { PlayerFinishedInfo } from '../gameplay/catchFood/interfaces';
 import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType';
 import {
-    GameEventTypes,
-    GameHasFinished,
-    GameHasStarted,
-    GameHasStopped,
-    ObstacleReachedInfo,
+    GameEventTypes, GameHasFinished, GameHasStarted, GameStateHasChanged, ObstacleReachedInfo
 } from '../gameplay/interfaces/index';
 import emitter from '../helpers/emitter';
 import { IMessageObstacle } from '../interfaces/messageObstacle';
@@ -250,7 +246,7 @@ class ConnectionHandler {
             room.setClosed();
             emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameHasStopped) => {
+        this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameStateHasChanged) => {
             console.log(data.roomId + ' | Game has stopped');
             const room = rs.getRoomById(data.roomId);
             room.setClosed();

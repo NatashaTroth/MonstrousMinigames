@@ -18,7 +18,7 @@
 import GameEventEmitter from '../../classes/GameEventEmitter';
 import { GameEventTypes } from '../interfaces';
 import {
-    GameHasFinished, GameHasStarted, GameHasStopped, ObstacleReachedInfo, PlayerHasFinished
+    GameHasFinished, GameHasStarted, GameStateHasChanged, ObstacleReachedInfo, PlayerHasFinished
 } from './interfaces/GameEvents';
 
 export default class CatchFoodGameEventEmitter extends GameEventEmitter {
@@ -35,9 +35,18 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasStarted, data)
     }
 
+    public static emitGameHasPausedEvent(data: GameStateHasChanged) {
+        this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasPaused, data)
+    }
+
+    public static emitGameHasResumedEvent(data: GameStateHasChanged) {
+        this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasResumed, data)
+    }
+
     public static emitObstacleReachedEvent(data: ObstacleReachedInfo) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.ObstacleReached, data)
     }
+
 
     public static emitPlayerHasFinishedEvent(data: PlayerHasFinished) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerHasFinished, data)
@@ -47,7 +56,7 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasFinished, data)
     }
 
-    public static emitGameHasStoppedEvent(data: GameHasStopped) {
+    public static emitGameHasStoppedEvent(data: GameStateHasChanged) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasStopped, data)
     }
 

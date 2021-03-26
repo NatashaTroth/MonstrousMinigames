@@ -2,6 +2,7 @@ export enum GameState {
     Initialised = 'INITIALISED',
     Created = 'CREATED',
     Started = 'STARTED',
+    Paused = 'PAUSED',
     Stopped = 'STOPPED',
     Finished = 'FINISHED',
 }
