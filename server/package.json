@@ -11,8 +11,8 @@
         "testGameplay": "jest --watchAll ./tests/gameplay",
         "dev": "nodemon src/app.ts",
         "prettier": "prettier --write src/**/*.ts",
-        "lint": "eslint \"**/*.ts\" --fix && npm run tsc",
-        "tsc": "tsc && rm -rf dist/",
+        "lint": "eslint \"**/*.ts\" --fix && npm run tsc && rm -rf dist/",
+        "tsc": "tsc",
         "postinstall": "npm run tsc",
         "start": "node src/app.js",
         "deploy": "cd .. && git subtree push --prefix server heroku master",
@@ -60,7 +60,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "rm -rf dist/ && npm run prettier && jest && npm run lint && npm run tsc"
+            "pre-commit": "rm -rf dist/ && npm run prettier && jest && npm run lint"
         }
     }
 }
