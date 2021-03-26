@@ -5,16 +5,17 @@
         <h2>Socket.io Test</h2>
 
         <div id="output"></div>
-        <select onchange="changeMode()" name="mode" id="mode">
-            <option selected value="local">local</option>
-            <option value="live">live</option>
+        <select name="env" id="env">
+            <option selected value="localhost:5000">local</option>
+            <option value="monstrous-minigames-staging.herokuapp.com">staging</option>
+            <option value="monstrous-minigames.herokuapp.com">live</option>
         </select>
         <button onclick="connect()">CONNECT</button>
         <br />
         <br />
 
         <button onclick="input('start')">START</button>
-        <button onclick="input('reset')">RESET</button>
+        <button onclick="input('backToLobby')">BACK TO LOBBY</button>
 
         <br />
         <button onclick="input('move')">MOVE</button>
@@ -22,6 +23,7 @@
         <button onclick="input('obstacleSolved')">SOLVE OBSTACLE</button>
         <br />
         <button onclick="input('stop')">STOP</button>
+        <button onclick="input('pause')">PAUSE/RESUME</button>
     </body>
 
     <!-- test-io-client.html -->
@@ -31,128 +33,107 @@
         crossorigin="anonymous"
     ></script>
     <script>
-        let local = true
-        function changeMode() {
-            var e = document.getElementById('mode')
-            if (e.value === 'local') {
-                local = true
-            } else {
-                local = false
-            }
-        }
         function connect() {
-            init(local)
+            init();
         }
-        let userId = ''
-        let socket
+        let userId = '';
+        let socket;
 
         function input(type) {
             if (type == 'start')
                 socket.emit('message', {
                     type: 'game1/start',
-                    roomId: 'ABCDE',
-                    userId: userId,
-                })
+                });
             if (type == 'move')
                 socket.emit('message', {
                     type: 'game1/runForward',
-                    roomId: 'ABCDE',
-                    userId: userId,
-                })
-            if (type == 'reset')
+                });
+            if (type == 'backToLobby')
                 socket.emit('message', {
-                    type: 'resetGame',
-                    roomId: 'ABCDE',
-                    userId: userId,
-                })
+                    type: 'backToLobby',
+                });
             if (type == 'obstacleSolved')
                 socket.emit('message', {
                     type: 'game1/obstacleSolved',
-                    roomId: 'ABCDE',
-                    userId: userId,
-                })
+                });
             if (type == 'stop')
                 socket.emit('message', {
                     type: 'stopGame',
-                    roomId: 'ABCDE',
-                    userId: userId,
-                })
+                });
+            if (type == 'pause')
+                socket.emit('message', {
+                    type: 'pauseResume',
+                });
         }
 
-        function init(local = true) {
-            let url = ''
-            let screenUrl = ''
-            if (local) {
-                url = 'localhost:5000/controller?roomId=ABCDE&name=Robin&userId='
-                screenUrl = 'localhost:5000/screen?roomId=ABCDE&name=Robin&userId='
-            } else {
-                url = 'monstrous-minigames.herokuapp.com/controller?roomId=ABCDE&name=Robin&userId='
-
-                screenUrl = 'monstrous-minigames.herokuapp.com/screen?roomId=ABCDE&name=Robin&userId='
-            }
+        function init() {
+            let env = document.getElementById('env').value;
+            console.log(env);
+            let url = env + '/controller?roomId=ABCDE&name=Robin&userId=';
+            let screenUrl = env + '/screen?roomId=ABCDE&name=Robin&userId=';
 
             socket = io(url, {
                 secure: true,
                 reconnection: true,
                 rejectUnauthorized: false,
                 reconnectionDelayMax: 10000,
-            })
+            });
 
             const ssocket = io(screenUrl, {
                 secure: true,
                 reconnection: true,
                 rejectUnauthorized: false,
                 reconnectionDelayMax: 10000,
-            })
+            });
 
-            output = document.getElementById('output')
-            testSocket()
+            output = document.getElementById('output');
+            testSocket();
 
             function testSocket() {}
 
-            socket.on('connect', onConnect)
-            socket.on('disconnect', onDisconnect)
-            socket.on('connect_error', onError)
-            socket.on('reconnect_error', onError)
-            socket.on('response', onResponse)
-            socket.on('message', onMessage)
-            ssocket.on('message', onMessage)
+            socket.on('connect', onConnect);
+            socket.on('disconnect', onDisconnect);
+            socket.on('connect_error', onError);
+            socket.on('reconnect_error', onError);
+            socket.on('response', onResponse);
+            socket.on('message', onMessage);
+            ssocket.on('message', onMessage);
 
             function onConnect(evt) {
-                writeToScreen('CONNECTED')
-                doSend('Allo?')
+                writeToScreen('CONNECTED');
+                doSend('Allo?');
             }
 
             function onDisconnect(evt) {
-                writeToScreen('DISCONNECTED')
+                writeToScreen('DISCONNECTED');
             }
             function onResponse(response) {
-                writeToScreen(response)
-                console.log(response)
+                writeToScreen(response);
+                console.log(response);
             }
 
             function onMessage(msg) {
-                if (msg.type !== 'game1/gameState') console.log(msg)
+                if (msg.type !== 'game1/gameState') console.log(msg);
 
                 if (msg.type == 'userInit') {
-                    userId = msg.userId
+                    userId = msg.userId;
                 }
             }
 
             function onError(message) {
-                writeToScreen('<span style="color: red;">ERROR:</span> ' + message)
+                writeToScreen('<span style="color: red;">ERROR:</span> ' + message);
             }
 
             function doSend(message) {
-                writeToScreen('SENT: ' + message)
-                socket.emit('test', message)
+                writeToScreen('SENT: ' + message);
+                socket.emit('test', message);
             }
 
             function writeToScreen(message) {
-                var pre = document.createElement('p')
-                pre.style.wordWrap = 'break-word'
-                pre.innerHTML = message
-                output.appendChild(pre)
+                var pre = document.createElement('p');
+                pre.style.wordWrap = 'break-word';
+                pre.innerHTML = message;
+                output.appendChild(pre);
             }
         }
 
