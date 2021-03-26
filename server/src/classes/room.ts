@@ -98,8 +98,8 @@ class Room {
     }
 
     public async resetGame() {
-        this.clearInactiveUsers();
         this.users = this.getActiveUsers();
+        this.clearInactiveUsers();
         this.setState(RoomStates.OPEN);
     }
 
