@@ -52,9 +52,14 @@ export interface IUser {
 
 const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [controllerSocket, setControllerSocket] = React.useState<Socket | undefined>(undefined)
-    const { setObstacle, setPlayerFinished, setPlayerRank, setIsPlayerAdmin, setPermissionGranted } = React.useContext(
-        PlayerContext
-    )
+    const {
+        setObstacle,
+        setPlayerFinished,
+        setPlayerRank,
+        setIsPlayerAdmin,
+        setPermissionGranted,
+        playerFinished,
+    } = React.useContext(PlayerContext)
     const history = useHistory()
 
     const { setGameStarted, roomId, setRoomId } = React.useContext(GameContext)
@@ -76,9 +81,10 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
                 break
             case 'game1/playerFinished':
                 messageData = data as IGameFinished
-                setPlayerFinished(true)
-                setPlayerRank(messageData.rank)
-
+                if (!playerFinished) {
+                    setPlayerFinished(true)
+                    setPlayerRank(messageData.rank)
+                }
                 break
             case 'game1/hasStarted':
                 document.body.style.overflow = 'hidden'
