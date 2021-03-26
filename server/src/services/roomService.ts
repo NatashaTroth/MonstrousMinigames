@@ -23,7 +23,7 @@ class RoomService {
     /** gets the room by the given id or creates a new room with the id */
     public getRoomById(roomId: string): Room {
         const room = this.rooms.filter(function (n) {
-            return n.id === roomId;
+            return n.id === roomId.toUpperCase();
         })[0];
         return room;
     }
