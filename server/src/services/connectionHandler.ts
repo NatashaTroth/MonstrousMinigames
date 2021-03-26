@@ -7,7 +7,11 @@ import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventE
 import { PlayerFinishedInfo } from '../gameplay/catchFood/interfaces';
 import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType';
 import {
-    GameEventTypes, GameHasFinished, GameHasStarted, GameStateHasChanged, ObstacleReachedInfo
+    GameEventTypes,
+    GameHasFinished,
+    GameHasStarted,
+    GameStateHasChanged,
+    ObstacleReachedInfo,
 } from '../gameplay/interfaces/index';
 import emitter from '../helpers/emitter';
 import { IMessageObstacle } from '../interfaces/messageObstacle';
