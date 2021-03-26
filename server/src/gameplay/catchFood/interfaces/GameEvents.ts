@@ -19,7 +19,7 @@ export interface GameHasFinished extends GameEventInterface {
     playerRanks: Array<PlayerRank>
 }
 
-export interface GameHasStopped extends GameEventInterface {
+export interface GameStateHasChanged extends GameEventInterface {
     roomId: string
 }
 

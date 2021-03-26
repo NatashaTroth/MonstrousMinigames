@@ -95,6 +95,19 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     //   }
     // }
 
+    pauseGame(): void {
+       verifyGameState(this.gameState, GameState.Started)
+       this.gameState = GameState.Paused
+       CatchFoodGameEventEmitter.emitGameHasPausedEvent({roomId: this.roomId})
+    }
+
+    resumeGame(): void {
+       verifyGameState(this.gameState, GameState.Paused)
+       this.gameState = GameState.Started
+       CatchFoodGameEventEmitter.emitGameHasResumedEvent({roomId: this.roomId})
+
+    }
+
     stopGame(timeOut = false): void {
         try {
             verifyGameState(this.gameState, GameState.Started)
@@ -247,7 +260,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
                 name: playerState.name,
                 rank: playerState.rank,
                 finished: playerState.finished,
-                totalTimeInSec: Math.round((playerFinishedTime - this.gameStartedTime) / 1000),
+                totalTimeInMs: playerFinishedTime - this.gameStartedTime,
                 positionX: playerState.positionX
             })
         }

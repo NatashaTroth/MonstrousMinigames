@@ -1,5 +1,5 @@
 import {
-    GameHasFinished, GameHasStarted, GameHasStopped, ObstacleReachedInfo, PlayerHasFinished
+    GameHasFinished, GameHasStarted, GameStateHasChanged, ObstacleReachedInfo, PlayerHasFinished
 } from '../catchFood/interfaces/GameEvents';
 import { GameEventTypes } from './GameEventTypes';
 import { GameInterface } from './GameInterface';
@@ -14,6 +14,6 @@ export {
     GameHasStarted,
     GameHasFinished,
     PlayerHasFinished,
-    GameHasStopped,
+    GameStateHasChanged,
     ObstacleReachedInfo,
 }
