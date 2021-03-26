@@ -29,12 +29,21 @@ export const ScreenSocketContext = React.createContext<IScreenSocketContext>({
     },
 })
 
+export interface IPlayerRank {
+    id: number
+    name: string
+    rank: number
+    finished: boolean
+    totalTimeInMs: number
+    positionX: number
+}
 interface IGameStateData {
     gameState: GAMESTATE
     numberOfObstacles: number
     roomId: string
     trackLength: number
-    playersState: IPlayerState[]
+    playersState?: IPlayerState[]
+    playerRanks?: IPlayerRank[]
 }
 
 interface IGameState {
@@ -64,6 +73,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
 
     const {
         setPlayers,
+        setPlayerRanks,
         setTrackLength,
         finished,
         setFinished,
@@ -109,10 +119,15 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 if (!roomId) {
                     setRoomId(messageData.data.roomId)
                 }
-                setPlayers(messageData.data.playersState)
+
+                if (messageData.data.playersState) {
+                    setPlayers(messageData.data.playersState)
+                }
+
                 if (GAMESTATE.finished === messageData.data.gameState) {
                     if (!finished) {
                         setFinished(true)
+                        setPlayerRanks(messageData.data.playerRanks!)
                         history.push(`/screen/${roomId}/finished`)
                     }
                 }
@@ -127,6 +142,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setCountdownTime,
         setFinished,
         setGameStarted,
+        setPlayerRanks,
         setPlayers,
         setRoomId,
         setTrackLength,
