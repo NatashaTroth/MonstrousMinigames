@@ -252,6 +252,18 @@ class ConnectionHandler {
             room.setClosed();
             emitter.sendMessage(MessageTypes.GAME_HAS_STOPPED, [controllerNamespace, screenNameSpace], data.roomId);
         });
+        this.gameEventEmitter.on(GameEventTypes.GameHasPaused, (data: GameStateHasChanged) => {
+            console.log(data.roomId + ' | Game has stopped');
+            const room= rs.getRoomById(data.roomId);
+            room.setPaused();
+            emitter.sendMessage(MessageTypes.GAME_HAS_PAUSED, [controllerNamespace, screenNameSpace], data.roomId);
+        });
+        this.gameEventEmitter.on(GameEventTypes.GameHasResumed, (data: GameStateHasChanged) => {
+            console.log(data.roomId + ' | Game has stopped');
+            const room = rs.getRoomById(data.roomId);
+            room.setPlaying();
+            emitter.sendMessage(MessageTypes.GAME_HAS_RESUMED, [controllerNamespace, screenNameSpace], data.roomId);
+        });
     }
 }
 

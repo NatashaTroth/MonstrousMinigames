@@ -6,4 +6,6 @@ export enum MessageTypes {
     GAME_HAS_RESET = 'gameHasReset',
     STOP_GAME = 'stopGame',
     GAME_HAS_STOPPED = 'gameHasStopped',
+    GAME_HAS_PAUSED = 'gameHasPaused',
+    GAME_HAS_RESUMED = 'gameHasResumed'
 }
