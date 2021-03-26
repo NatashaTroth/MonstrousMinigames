@@ -4,7 +4,6 @@ import { useHistory, useParams } from 'react-router-dom'
 import { IRouteParams } from '../../App'
 import { GameContext } from '../../contexts/GameContextProvider'
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
-import { STAGING } from '../../utils/config'
 import { generateQRCode } from '../../utils/generateQRCode'
 import Button from '../common/Button'
 import { GAMES } from './data'
@@ -37,7 +36,7 @@ export const Lobby: React.FunctionComponent = () => {
     }
 
     React.useEffect(() => {
-        generateQRCode(`${STAGING}${roomId}`, 'qrCode')
+        generateQRCode(`${process.env.REACT_APP_FRONTEND_URL}${roomId}`, 'qrCode')
     }, [roomId])
 
     return (

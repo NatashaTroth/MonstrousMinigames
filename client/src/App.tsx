@@ -21,6 +21,7 @@ import ScreenSocketContextProvider from './contexts/ScreenSocketContextProvider'
 export interface IRouteParams {
     id?: string
 }
+
 const App: React.FunctionComponent = () => {
     return (
         <Router>

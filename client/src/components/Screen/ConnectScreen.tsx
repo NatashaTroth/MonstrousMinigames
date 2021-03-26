@@ -1,7 +1,6 @@
 import * as React from 'react'
 
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
-import { ENDPOINT } from '../../utils/config'
 import Button from '../common/Button'
 import {
     ConnectScreenContainer,
@@ -20,7 +19,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
     const { handleSocketConnection } = React.useContext(ScreenSocketContext)
 
     async function handleCreateNewRoom() {
-        const response = await fetch(`${ENDPOINT}create-room`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}create-room`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
