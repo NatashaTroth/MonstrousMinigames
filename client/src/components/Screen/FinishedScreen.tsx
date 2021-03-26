@@ -2,7 +2,14 @@ import * as React from 'react'
 
 import { GameContext } from '../../contexts/GameContextProvider'
 import { formatMs } from '../../utils/formatMs'
-import { FinishedScreenContainer, FinishedScreenText, Headline, RankTable } from './FinishedScreen.sc'
+import {
+    FinishedScreenContainer,
+    FinishedScreenPlayerRank,
+    Headline,
+    LeaderBoardRow,
+    PlayerTime,
+    RankTable,
+} from './FinishedScreen.sc'
 
 export const FinishedScreen: React.FunctionComponent = () => {
     const { playerRanks } = React.useContext(GameContext)
@@ -14,14 +21,16 @@ export const FinishedScreen: React.FunctionComponent = () => {
             <RankTable>
                 <Headline>Finished!</Headline>
                 {sortedPlayerRanks?.map((player, index) => (
-                    <FinishedScreenText key={player.name}>
-                        #{player.rank} {player.name}{' '}
-                        {formatMs(
-                            index === 0
-                                ? player.totalTimeInMs
-                                : player.totalTimeInMs - sortedPlayerRanks[0].totalTimeInMs
-                        )}
-                    </FinishedScreenText>
+                    <LeaderBoardRow key={`LeaderBoardRow${index}`}>
+                        <FinishedScreenPlayerRank key={player.name}>
+                            #{player.rank} {player.name}{' '}
+                        </FinishedScreenPlayerRank>
+                        <PlayerTime winner={index === 0}>
+                            {index === 0
+                                ? formatMs(player.totalTimeInMs)
+                                : `+${formatMs(player.totalTimeInMs - sortedPlayerRanks[0].totalTimeInMs)}`}
+                        </PlayerTime>
+                    </LeaderBoardRow>
                 ))}
             </RankTable>
         </FinishedScreenContainer>
