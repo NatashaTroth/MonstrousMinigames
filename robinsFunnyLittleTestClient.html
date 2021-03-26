@@ -23,6 +23,7 @@
         <button onclick="input('obstacleSolved')">SOLVE OBSTACLE</button>
         <br />
         <button onclick="input('stop')">STOP</button>
+        <button onclick="input('pause')">PAUSE/RESUME</button>
     </body>
 
     <!-- test-io-client.html -->
@@ -58,6 +59,10 @@
             if (type == 'stop')
                 socket.emit('message', {
                     type: 'stopGame',
+                });
+            if (type == 'pause')
+                socket.emit('message', {
+                    type: 'pauseResume',
                 });
         }
 

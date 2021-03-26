@@ -138,7 +138,15 @@ class Room {
         this.setState(RoomStates.PLAYING);
     }
     public setPaused(): void {
-        this.setState(RoomStates.PAUSED)
+        this.setState(RoomStates.PAUSED);
+    }
+
+    public pauseGame(): void {
+        this.game.pauseGame()
+    }
+    
+    public resumeGame(): void {
+        this.game.resumeGame()
     }
 }
 
