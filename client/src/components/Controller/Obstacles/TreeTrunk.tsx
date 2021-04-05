@@ -19,7 +19,7 @@ import {
     TouchContainer,
 } from './TreeTrunk.sc'
 
-const MAX = 10000
+const MAX = 5000
 const Treshold = 0
 let distance = 0
 let send = true
