@@ -1,5 +1,7 @@
+import { Button as MuiButton } from '@material-ui/core'
+import { Assignment } from '@material-ui/icons'
 import * as React from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import { IRouteParams } from '../../App'
 import { GameContext } from '../../contexts/GameContextProvider'
@@ -25,14 +27,20 @@ import {
 } from './Lobby.sc'
 
 export const Lobby: React.FunctionComponent = () => {
-    const history = useHistory()
     const { roomId, connectedUsers } = React.useContext(GameContext)
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext)
     const [selectedGame, setSelectedGame] = React.useState(0)
     const { id }: IRouteParams = useParams()
+    const navigator = window.navigator
 
     if (id && !screenSocket) {
         handleSocketConnection(id)
+    }
+
+    async function handleCopyToClipboard() {
+        if (navigator.clipboard) {
+            await navigator.clipboard.writeText(`${process.env.REACT_APP_FRONTEND_URL}${roomId}`)
+        }
     }
 
     React.useEffect(() => {
@@ -54,7 +62,13 @@ export const Lobby: React.FunctionComponent = () => {
                         ))}
                     </JoinedUsersView>
                 </ConnectedUsers>
-                <div id="qrCode" />
+                <div>
+                    <div id="qrCode" />
+                    <MuiButton onClick={handleCopyToClipboard}>
+                        Copy to Clipboard
+                        <Assignment />
+                    </MuiButton>
+                </div>
             </UpperSection>
 
             <GameChoiceContainer>
@@ -72,12 +86,6 @@ export const Lobby: React.FunctionComponent = () => {
                         <InstructionsImg src={GAMES[selectedGame].image1} alt="Instructions" />
                         <Instructions>{GAMES[selectedGame].instructions1}</Instructions>
                     </div>
-                    <Button
-                        text="Start game"
-                        onClick={() => {
-                            history.push(`/screen/${roomId}/game1`)
-                        }}
-                    ></Button>
                 </ImagesContainer>
             </GameChoiceContainer>
         </LobbyContainer>
