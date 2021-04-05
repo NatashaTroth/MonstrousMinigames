@@ -7,6 +7,7 @@ import {
     FinishedScreenPlayerRank,
     Headline,
     LeaderBoardRow,
+    PlayerDifference,
     PlayerTime,
     RankTable,
 } from './FinishedScreen.sc'
@@ -23,13 +24,14 @@ export const FinishedScreen: React.FunctionComponent = () => {
                 {sortedPlayerRanks?.map((player, index) => (
                     <LeaderBoardRow key={`LeaderBoardRow${index}`}>
                         <FinishedScreenPlayerRank key={player.name}>
-                            #{player.rank} {player.name}{' '}
+                            #{player.rank} {player.name}
                         </FinishedScreenPlayerRank>
-                        <PlayerTime winner={index === 0}>
+                        <PlayerTime>{formatMs(player.totalTimeInMs)}</PlayerTime>
+                        <PlayerDifference winner={index === 0}>
                             {index === 0
                                 ? formatMs(player.totalTimeInMs)
                                 : `+${formatMs(player.totalTimeInMs - sortedPlayerRanks[0].totalTimeInMs)}`}
-                        </PlayerTime>
+                        </PlayerDifference>
                     </LeaderBoardRow>
                 ))}
             </RankTable>
