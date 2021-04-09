@@ -1,7 +1,6 @@
 import { stringify } from 'query-string'
 import * as React from 'react'
 import { useHistory } from 'react-router-dom'
-import { io, Socket } from 'socket.io-client'
 
 import { MESSAGETYPES, OBSTACLES } from '../utils/constants'
 import { ClickRequestDeviceMotion } from '../utils/permissions'
@@ -24,9 +23,9 @@ export interface IObstacleMessage {
     obstacleId: number
 }
 interface IControllerSocketContext {
-    controllerSocket: Socket | undefined
+    controllerSocket: SocketIOClient.Socket | undefined
     isControllerConnected: boolean
-    setControllerSocket: (val: Socket | undefined, roomId: string) => void
+    setControllerSocket: (val: SocketIOClient.Socket | undefined, roomId: string) => void
     handleSocketConnection: (roomId: string, name: string) => void
 }
 
@@ -52,7 +51,7 @@ export interface IUser {
 }
 
 const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) => {
-    const [controllerSocket, setControllerSocket] = React.useState<Socket | undefined>(undefined)
+    const [controllerSocket, setControllerSocket] = React.useState<SocketIOClient.Socket | undefined>(undefined)
     const {
         setObstacle,
         setPlayerFinished,
@@ -101,7 +100,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         }
     })
 
-    function handleSetControllerSocket(val: Socket | undefined, roomId: string) {
+    function handleSetControllerSocket(val: SocketIOClient.Socket | undefined, roomId: string) {
         setControllerSocket(val)
         history.push(`/controller/${roomId}/lobby`)
     }
@@ -138,7 +137,8 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
 
     const content = {
         controllerSocket,
-        setControllerSocket: (val: Socket | undefined, roomId: string) => handleSetControllerSocket(val, roomId),
+        setControllerSocket: (val: SocketIOClient.Socket | undefined, roomId: string) =>
+            handleSetControllerSocket(val, roomId),
         isControllerConnected: controllerSocket ? true : false,
         handleSocketConnection,
     }

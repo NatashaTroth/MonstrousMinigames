@@ -1,9 +1,10 @@
 import { cleanup, fireEvent, queryByText, render } from '@testing-library/react'
 import { createServer } from 'http'
+import { AddressInfo } from 'node:net'
 import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
-import { Server } from 'socket.io'
-import { io as clientIO, Socket } from 'socket.io-client'
+import { Server, Socket } from 'socket.io'
+import Client from 'socket.io-client'
 
 import { FinishedScreen } from '../../components/Controller/FinishedScreen'
 import { FinishedScreenContainer } from '../../components/Controller/FinishedScreen.sc'
@@ -12,54 +13,33 @@ import { defaultValue, PlayerContext } from '../../contexts/PlayerContextProvide
 
 afterEach(cleanup)
 describe('Screen FinishedScreen', () => {
-    let controllerSocket: Socket | undefined = undefined
-    // let serverSocket: Socket | undefined = undefined
-    let io: any
+    let io: Server, serverSocket: Socket, clientSocket: SocketIOClient.Socket
 
     beforeAll(done => {
-        const httpServer: any = createServer()
+        const httpServer = createServer()
         io = new Server(httpServer)
         httpServer.listen(() => {
-            const port = httpServer.address()!.port || 8080
-            controllerSocket = clientIO(`http://localhost:${port}`)
-            io.on('connection', (socket: Socket) => {
-                // serverSocket = socket
+            const port = (httpServer.address() as AddressInfo).port
+            clientSocket = Client(`http://localhost:${port}`)
+            io.on('connection', socket => {
+                serverSocket = socket
             })
-            controllerSocket.on('connect', done)
+            clientSocket.on('connect', done)
         })
     })
 
     afterAll(() => {
         io.close()
-
-        if (controllerSocket) {
-            controllerSocket.close()
-        }
+        clientSocket.close()
     })
 
-    // it('if back to lobby button is clicked, a message should been emitted', done => {
-    //     const { container } = render(
-    //         <Router>
-    //             <ControllerSocketContext.Provider value={{ ...controllerDefaultValue, controllerSocket }}>
-    //                 <PlayerContext.Provider value={{ ...defaultValue, isPlayerAdmin: true }}>
-    //                     <FinishedScreenContainer />
-    //                 </PlayerContext.Provider>
-    //             </ControllerSocketContext.Provider>
-    //         </Router>
-    //     )
-
-    //     const button = container.querySelector('button')
-
-    //     if (button) {
-    //         fireEvent.click(button)
-    //         done()
-
-    //         // serverSocket!.on('message', (arg: any) => {
-    //         //     expect(arg).toBe({ type: MESSAGETYPES.backToLobby })
-    //         //     done()
-    //         // })
-    //     }
-    // })
+    test('should work', done => {
+        clientSocket.on('hello', (arg: any) => {
+            expect(arg).toBe('world')
+            done()
+        })
+        serverSocket.emit('hello', 'world')
+    })
 
     it('renders text "Finished!"', () => {
         const givenText = 'Finished!'
