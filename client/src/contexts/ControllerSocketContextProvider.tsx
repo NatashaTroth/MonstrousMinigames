@@ -8,6 +8,16 @@ import { ClickRequestDeviceMotion } from '../utils/permissions'
 import { GameContext } from './GameContextProvider'
 import { PlayerContext } from './PlayerContextProvider'
 
+export const defaultValue = {
+    controllerSocket: undefined,
+    setControllerSocket: () => {
+        // do nothing
+    },
+    isControllerConnected: false,
+    handleSocketConnection: () => {
+        // do nothing
+    },
+}
 export interface IObstacleMessage {
     type: string
     obstacleType: OBSTACLES
@@ -20,16 +30,7 @@ interface IControllerSocketContext {
     handleSocketConnection: (roomId: string, name: string) => void
 }
 
-export const ControllerSocketContext = React.createContext<IControllerSocketContext>({
-    controllerSocket: undefined,
-    setControllerSocket: () => {
-        // do nothing
-    },
-    isControllerConnected: false,
-    handleSocketConnection: () => {
-        // do nothing
-    },
-})
+export const ControllerSocketContext = React.createContext<IControllerSocketContext>(defaultValue)
 
 interface IUserInitMessage {
     name?: string

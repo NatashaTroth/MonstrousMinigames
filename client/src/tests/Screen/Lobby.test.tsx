@@ -2,8 +2,8 @@ import { cleanup, queryByText, render } from '@testing-library/react'
 import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 
+import { Lobby } from '../../components/Screen/Lobby'
 import { defaultValue, GameContext } from '../../contexts/GameContextProvider'
-import { Lobby } from './Lobby'
 
 afterEach(cleanup)
 describe('Screen Lobby', () => {

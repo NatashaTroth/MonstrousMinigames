@@ -18,7 +18,7 @@ interface IScreenSocketContext {
     handleSocketConnection: (val: string) => void
 }
 
-export const ScreenSocketContext = React.createContext<IScreenSocketContext>({
+export const defaultValue = {
     screenSocket: undefined,
     setScreenSocket: () => {
         // do nothing
@@ -27,7 +27,9 @@ export const ScreenSocketContext = React.createContext<IScreenSocketContext>({
     handleSocketConnection: () => {
         // do nothing
     },
-})
+}
+
+export const ScreenSocketContext = React.createContext<IScreenSocketContext>(defaultValue)
 
 export interface IPlayerRank {
     id: number

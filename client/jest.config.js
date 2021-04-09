@@ -8,5 +8,6 @@ module.exports = {
     transform: {
         '^.+\\.js$': 'babel-jest',
         '^.+\\.(bmp|gif|jpg|jpeg|png|psd|svg|webp)$': '<rootDir>/jest/mediaFileTransformer.js',
-    },
+    }
 }
+

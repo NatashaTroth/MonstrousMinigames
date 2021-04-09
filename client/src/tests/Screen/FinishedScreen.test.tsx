@@ -1,9 +1,9 @@
 import { cleanup, queryByText, render } from '@testing-library/react'
 import React from 'react'
 
+import { FinishedScreen } from '../../components/Screen/FinishedScreen'
 import { defaultValue, GameContext } from '../../contexts/GameContextProvider'
 import { formatMs } from '../../utils/formatMs'
-import { FinishedScreen } from './FinishedScreen'
 
 afterEach(cleanup)
 describe('Controller FinishedScreen', () => {

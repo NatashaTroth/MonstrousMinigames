@@ -53,6 +53,8 @@
         ]
     },
     "devDependencies": {
+        "@types/enzyme": "^3.10.8",
+        "@types/enzyme-adapter-react-16": "^1.0.6",
         "@types/jest": "^26.0.20",
         "@types/node": "^12.20.7",
         "@types/qrcode": "^1.4.0",
@@ -61,7 +63,9 @@
         "@types/styled-components": "^5.1.7",
         "@typescript-eslint/eslint-plugin": "^4.14.1",
         "@typescript-eslint/parser": "^4.14.1",
+        "@wojtekmaj/enzyme-adapter-react-17": "^0.6.0",
         "canvas": "^2.7.0",
+        "enzyme": "^3.11.0",
         "eslint": "^7.19.0",
         "eslint-config-prettier": "^8.1.0",
         "eslint-plugin-formatjs": "^2.12.8",
@@ -78,6 +82,7 @@
         "prettier": "^2.2.1",
         "qrcode": "^1.4.4",
         "react-test-renderer": "^17.0.1",
+        "socket.io": "^4.0.1",
         "styled-components": "^5.2.1",
         "ts-jest": "^26.5.3"
     }

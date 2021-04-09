@@ -3,7 +3,7 @@ import 'jest-styled-components'
 import { cleanup, fireEvent, queryByText, render } from '@testing-library/react'
 import React from 'react'
 
-import Button from './Button'
+import Button from '../../components/common/Button'
 
 afterEach(cleanup)
 describe('Button', () => {
