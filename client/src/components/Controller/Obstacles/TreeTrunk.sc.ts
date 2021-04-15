@@ -5,31 +5,31 @@ import { grey, lightBlue, orange } from '../../../utils/colors'
 
 const slide = keyframes`
     0% { 
-        transform: translateX(0);
+        transform: translateY(-200);
           opacity: 1;
     }
     16% {
-        transform: translateX(280px); 
+        transform: translateY(200px); 
           opacity: 1;
     }
     33%{
-       transform: translateX(0px);
+       transform: translateY(-200px);
          opacity: 1;  
     }
     49%{
-       transform: translateX(280px);  
+       transform: translateY(200px);  
          opacity: 1;
     }
     66%{
-       transform: translateX(0px);  
+       transform: translateY(-200px);  
          opacity: 1;
     }
     82%{
-       transform: translateX(280px);  
+       transform: translateY(200px);  
        opacity: 1;
     }
     100% { 
-        transform: translateX(0);
+        transform: translateY(200px);
         opacity: 0;  
     }
 `
@@ -41,10 +41,15 @@ export const ObstacleContainer = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
+
+    img {
+        user-select: none;
+        pointer-events: none;
+    }
 `
 
 export const ObstacleItem = styled.div`
-    transform: rotate(80deg);
+    transform: rotate(348deg);
 `
 export const StyledObstacleImage = styled.img`
     width: 100%;
@@ -68,21 +73,21 @@ export const ObstacleInstructions = styled.div`
 `
 
 export const TouchContainer = styled.div`
-    width: 80%;
     position: absolute;
-    height: 50px;
+    height: 60%;
     display: flex;
     align-items: center;
+    justify-content: center;
 `
 
 export const Line = styled.div`
-    width: 100%;
+    height: 80%;
     position: absolute;
-    border-top: 5px dashed red;
+    border-left: 5px dashed red;
 `
 
 export const ObstacleContent = styled.div`
-    margin-top: 60px;
+    margin-top: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
