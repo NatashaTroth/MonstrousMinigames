@@ -6,7 +6,7 @@ import { GameContext } from '../../contexts/GameContextProvider'
 import { PlayerContext } from '../../contexts/PlayerContextProvider'
 import Button from '../common/Button'
 import FullScreenContainer from '../common/FullScreenContainer'
-import { Instruction, LobbyScreenContainer } from './Lobby.sc'
+import { AdminInstructions, Instruction, LobbyScreenContainer, StyledTypography } from './Lobby.sc'
 
 export const Lobby: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext)
@@ -27,16 +27,25 @@ export const Lobby: React.FunctionComponent = () => {
         <FullScreenContainer>
             <LobbyScreenContainer>
                 {isPlayerAdmin ? (
-                    <Button
-                        onClick={() => {
-                            if (permission) {
-                                startGame()
-                            }
-                        }}
-                        text="Start Game"
-                    />
+                    <AdminInstructions>
+                        <Instruction>You are Player #1.</Instruction>
+                        <StyledTypography>
+                            When all other players are ready, you have to press the "Start Game" button to start the
+                            game.
+                        </StyledTypography>
+                        <div>
+                            <Button
+                                onClick={() => {
+                                    if (permission) {
+                                        startGame()
+                                    }
+                                }}
+                                text="Start Game"
+                            />
+                        </div>
+                    </AdminInstructions>
                 ) : (
-                    <Instruction>Wait until the Admin starts the Game</Instruction>
+                    <Instruction>{`Wait until Player #1 starts the Game`}</Instruction>
                 )}
             </LobbyScreenContainer>
         </FullScreenContainer>
