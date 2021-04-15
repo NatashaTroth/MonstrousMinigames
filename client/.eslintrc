@@ -37,6 +37,7 @@
         "simple-import-sort/imports": "error",
         "react/display-name": "off",
         "react/prop-types": "off",
+        "react/no-unescaped-entities": "off",
         "react/jsx-uses-react": "error",
         "formatjs/enforce-placeholders": "error",
         "formatjs/enforce-default-message": "error"

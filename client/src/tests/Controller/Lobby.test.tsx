@@ -17,8 +17,19 @@ describe('PlayerContextProvider', () => {
         expect(queryByText(container, givenText)).toBeTruthy()
     })
 
+    it('when user is admin, an instruction is rendered', () => {
+        const givenText =
+            'When all other players are ready, you have to press the "Start Game" button to start the game.'
+        const { container } = render(
+            <PlayerContext.Provider value={{ ...defaultValue, isPlayerAdmin: true }}>
+                <Lobby />
+            </PlayerContext.Provider>
+        )
+        expect(queryByText(container, givenText)).toBeTruthy()
+    })
+
     it('when user is not admin, some instructions are rendered', () => {
-        const givenText = 'Wait until the Admin starts the Game'
+        const givenText = 'Wait until Player #1 starts the Game'
         const { container } = render(
             <PlayerContext.Provider value={{ ...defaultValue, isPlayerAdmin: false }}>
                 <Lobby />

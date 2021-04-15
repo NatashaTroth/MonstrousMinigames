@@ -1,3 +1,4 @@
+import { Typography } from '@material-ui/core'
 import styled from 'styled-components'
 
 import { orange } from '../../utils/colors'
@@ -24,4 +25,20 @@ export const Instruction = styled.div`
     text-align: center;
     box-shadow: 8px 8px 0 #888;
     border-radius: 4px;
+`
+
+export const AdminInstructions = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding: 20px;
+`
+
+export const StyledTypography = styled(Typography)`
+    && {
+        font-weight: 700;
+        margin-top: 20px;
+        margin-bottom: 50px;
+    }
 `

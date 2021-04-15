@@ -1,3 +1,4 @@
+import { Typography } from '@material-ui/core'
 import styled from 'styled-components'
 
 import { lightBlue, lobbyChoiceBackground, orange } from '../../utils/colors'
@@ -87,9 +88,17 @@ export const AdminIcon = styled.div`
     margin-right: 20px;
 `
 
-export const ConnectedUsers = styled.div``
+export const UpperSectionItem = styled.div`
+    flex-basis: 33%;
+`
 
 export const UpperSection = styled.div`
     display: flex;
     justify-content: space-around;
+`
+
+export const StyledTypography = styled(Typography)`
+    && {
+        font-weight: 700;
+    }
 `
