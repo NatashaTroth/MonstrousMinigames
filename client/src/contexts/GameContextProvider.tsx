@@ -4,44 +4,7 @@ import { OBSTACLES } from '../utils/constants'
 import { IUser } from './ControllerSocketContextProvider'
 import { IPlayerRank } from './ScreenSocketContextProvider'
 
-interface IGameContext {
-    trackLength?: number
-    setTrackLength: (val: number) => void
-    players?: IPlayerState[]
-    setPlayers: (val: IPlayerState[]) => void
-    finished: boolean
-    setFinished: (val: boolean) => void
-    gameStarted: boolean
-    setGameStarted: (val: boolean) => void
-    roomId?: string
-    setRoomId: (val?: string) => void
-    connectedUsers?: IUser[]
-    setConnectedUsers: (val: IUser[]) => void
-    resetGame: () => void
-    showInstructions: boolean
-    setShowInstructions: (val: boolean) => void
-    countdownTime: number
-    setCountdownTime: (val: number) => void
-    playerRanks?: IPlayerRank[]
-    setPlayerRanks: (val: IPlayerRank[]) => void
-}
-
-interface IObstacle {
-    positionX: number
-    type: OBSTACLES
-}
-
-export interface IPlayerState {
-    atObstacle: boolean
-    finished: boolean
-    id: string
-    name: string
-    obstacles: IObstacle[]
-    positionX: number
-    rank: number
-}
-
-export const GameContext = React.createContext<IGameContext>({
+export const defaultValue = {
     trackLength: undefined,
     setTrackLength: () => {
         // do nothing
@@ -81,7 +44,45 @@ export const GameContext = React.createContext<IGameContext>({
     setPlayerRanks: () => {
         // do nothing
     },
-})
+}
+interface IGameContext {
+    trackLength?: number
+    setTrackLength: (val: number) => void
+    players?: IPlayerState[]
+    setPlayers: (val: IPlayerState[]) => void
+    finished: boolean
+    setFinished: (val: boolean) => void
+    gameStarted: boolean
+    setGameStarted: (val: boolean) => void
+    roomId?: string
+    setRoomId: (val?: string) => void
+    connectedUsers?: IUser[]
+    setConnectedUsers: (val: IUser[]) => void
+    resetGame: () => void
+    showInstructions: boolean
+    setShowInstructions: (val: boolean) => void
+    countdownTime: number
+    setCountdownTime: (val: number) => void
+    playerRanks?: IPlayerRank[]
+    setPlayerRanks: (val: IPlayerRank[]) => void
+}
+
+interface IObstacle {
+    positionX: number
+    type: OBSTACLES
+}
+
+export interface IPlayerState {
+    atObstacle: boolean
+    finished: boolean
+    id: string
+    name: string
+    obstacles: IObstacle[]
+    positionX: number
+    rank: number
+}
+
+export const GameContext = React.createContext<IGameContext>(defaultValue)
 
 const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [trackLength, setTrackLength] = React.useState<undefined | number>()

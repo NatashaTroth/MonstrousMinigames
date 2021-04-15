@@ -1,6 +1,4 @@
-import { Socket } from 'socket.io-client'
-
-export function sendMovement(socket: Socket | undefined) {
+export function sendMovement(socket: SocketIOClient.Socket | undefined) {
     socket?.emit('message', {
         type: 'game1/runForward',
         roomId: sessionStorage.getItem('roomId'),

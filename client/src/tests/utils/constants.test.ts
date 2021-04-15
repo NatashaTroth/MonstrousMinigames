@@ -1,4 +1,4 @@
-import { GAMESTATE, OBSTACLES, TOUCHEVENT } from './constants'
+import { GAMESTATE, OBSTACLES, TOUCHEVENT } from '../../utils/constants'
 
 describe('test GAMESTATE enum', () => {
     it('GAMESTATE.created should return CREATED', async () => {
