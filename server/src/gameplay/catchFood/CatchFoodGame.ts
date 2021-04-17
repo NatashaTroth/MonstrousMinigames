@@ -53,7 +53,6 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.gamePausedTime = 0;
     }
 
-    //createNewGame TODO!!!!!!
     createNewGame(
         players = this.players,
         trackLength = this.trackLength,
@@ -282,12 +281,14 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         //Broadcast, stop game, return ranks
     }
 
-    private createPlayerRanks(): Array<PlayerRank> {
+    createPlayerRanks(): Array<PlayerRank> {
         const playerRanks: Array<PlayerRank> = [];
 
         for (const [, playerState] of Object.entries(this.playersState)) {
             //in case player hasn't finished yet
             const playerFinishedTime = playerState.finishedTimeMs > 0 ? playerState.finishedTimeMs : Date.now();
+            // console.log(playerFinishedTime)
+            // console.log(this.gameStartedTime)
             playerRanks.push({
                 id: playerState.id,
                 name: playerState.name,

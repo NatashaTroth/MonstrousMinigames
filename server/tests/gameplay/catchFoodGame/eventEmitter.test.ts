@@ -1,7 +1,7 @@
 // import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import { CatchFoodGame } from '../../../src/gameplay';
 import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
-import { GameEventTypes } from '../../../src/gameplay/interfaces';
+import { GameEventTypes, GameHasFinished } from '../../../src/gameplay/interfaces';
 import { startGameAndAdvanceCountdown } from './startGame';
 
 let catchFoodGame: CatchFoodGame
@@ -92,4 +92,7 @@ describe('Event Emitter', () => {
         jest.runAllTimers()
         expect(gameTimedOutEvent).toBeTruthy()
     })
+
+   
+
 })
