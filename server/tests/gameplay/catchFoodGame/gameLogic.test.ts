@@ -1,12 +1,18 @@
 import { CatchFoodGame } from '../../../src/gameplay';
+import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
+import { GameEventTypes, GameHasFinished, GameState } from '../../../src/gameplay/interfaces';
 import { startGameAndAdvanceCountdown } from './startGame';
 
 const TRACKLENGTH = 500
 
 let catchFoodGame: CatchFoodGame
+let gameEventEmitter: CatchFoodGameEventEmitter;
+const dateNow = 1618665766156;
+
 
 describe('Game logic tests', () => {
     beforeEach(() => {
+        gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
         catchFoodGame = new CatchFoodGame()
         jest.useFakeTimers()
     })
@@ -195,27 +201,6 @@ describe('Game logic tests', () => {
         expect(catchFoodGame.currentRank).toBe(2)
     })
 
-    function finishGame(catchFoodGame: CatchFoodGame) {
-        const dateNow = 1618665766156;
-        Date.now = jest.fn(() => dateNow);
-        startGameAndAdvanceCountdown(catchFoodGame)
-        // finish game
-        for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1', i)
-            catchFoodGame.playerHasCompletedObstacle('2', i)
-            catchFoodGame.playerHasCompletedObstacle('3', i)
-            catchFoodGame.playerHasCompletedObstacle('4', i)
-        }
-        catchFoodGame.runForward('1', TRACKLENGTH)
-        Date.now = jest.fn(() => dateNow + 5000);
-        catchFoodGame.runForward('2', TRACKLENGTH)
-        Date.now = jest.fn(() => dateNow + 10000);
-        catchFoodGame.runForward('3', TRACKLENGTH)
-        Date.now = jest.fn(() => dateNow + 15000);
-        catchFoodGame.runForward('4', TRACKLENGTH)
-        return catchFoodGame
-    }
-
     it('all players should be marked as finished', async () => {
         catchFoodGame = finishGame(catchFoodGame)
         expect(catchFoodGame.playersState['1'].finished).toBeTruthy()
@@ -238,4 +223,127 @@ describe('Game logic tests', () => {
         catchFoodGame = finishGame(catchFoodGame)
         expect(catchFoodGame.playersState['4'].rank).toBe(4)
     })
+
+    it('creates game finished event with the correct properties', async () => {
+        const eventData = getGameFinishedData(catchFoodGame)
+        const expectedEventObj = {
+            roomId: catchFoodGame.roomId,
+            gameState: GameState.Finished,
+            trackLength: catchFoodGame.trackLength,
+            numberOfObstacles: catchFoodGame.numberOfObstacles
+        }
+
+        expect(eventData).toMatchObject(expectedEventObj)
+        expect(eventData).toHaveProperty('playerRanks')
+    })
+
+    it('creates game finished event with the correct playerRanks properties', async () => {
+        const eventData = getGameFinishedData(catchFoodGame)
+        expect(eventData.playerRanks[0].name).toBe(catchFoodGame.playersState["1"].name)
+        expect(eventData.playerRanks[0].finished).toBeTruthy()
+        expect(eventData.playerRanks[0].positionX).toBe(catchFoodGame.playersState["1"].positionX)
+    })
+
+    it('creates game finished event with the correct playerRanks totalTimeInMs properties', async () => {
+        const eventData = getGameFinishedData(catchFoodGame)
+        expect(eventData.playerRanks[0].totalTimeInMs).toBe(1000)
+        expect(eventData.playerRanks[1].totalTimeInMs).toBe(5000)
+        expect(eventData.playerRanks[2].totalTimeInMs).toBe(10000)
+        expect(eventData.playerRanks[3].totalTimeInMs).toBe(15000)
+
+    })
+
+    it('creates game finished event with the correct playerRanks', async () => {
+        const eventData = getGameFinishedData(catchFoodGame)
+        expect(eventData.playerRanks[0].rank).toBe(1)
+        expect(eventData.playerRanks[1].rank).toBe(2)
+        expect(eventData.playerRanks[2].rank).toBe(3)
+        expect(eventData.playerRanks[3].rank).toBe(4)
+    })
+
+    it('creates game finished event where first 3 players have the same ranks', async () => {
+        Date.now = jest.fn(() => dateNow);
+        const eventData = getGameFinishedDataSameRanks(catchFoodGame)
+        expect(eventData.playerRanks[0].rank).toBe(1)
+        expect(eventData.playerRanks[1].rank).toBe(1)
+        expect(eventData.playerRanks[2].rank).toBe(1)
+        expect(eventData.playerRanks[3].rank).toBe(4)
+    })
+
+
+    function finishGame(catchFoodGame: CatchFoodGame) {
+        const dateNow = 1618665766156;
+        Date.now = jest.fn(() => dateNow);
+        startGameAndAdvanceCountdown(catchFoodGame)
+        // finish game
+        for (let i = 0; i < 4; i++) {
+            catchFoodGame.playerHasCompletedObstacle('1', i)
+            catchFoodGame.playerHasCompletedObstacle('2', i)
+            catchFoodGame.playerHasCompletedObstacle('3', i)
+            catchFoodGame.playerHasCompletedObstacle('4', i)
+        }
+        Date.now = jest.fn(() => dateNow + 1000);
+        catchFoodGame.runForward('1', TRACKLENGTH)
+        Date.now = jest.fn(() => dateNow + 5000);
+        catchFoodGame.runForward('2', TRACKLENGTH)
+        Date.now = jest.fn(() => dateNow + 10000);
+        catchFoodGame.runForward('3', TRACKLENGTH)
+        Date.now = jest.fn(() => dateNow + 15000);
+        catchFoodGame.runForward('4', TRACKLENGTH)
+        return catchFoodGame
+    }
+
+
+
+    function getGameFinishedData(catchFoodGame: CatchFoodGame): GameHasFinished{
+        let eventData: GameHasFinished = {
+            roomId: '',
+            gameState: GameState.Started,
+            trackLength: 0,
+            numberOfObstacles: 0,
+            playerRanks: [],
+        };
+    
+        gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameHasFinished) => {
+            eventData = data;
+        });
+
+        catchFoodGame = finishGame(catchFoodGame)
+        return eventData
+    }
+
+    function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame){
+        let eventData: GameHasFinished = {
+            roomId: '',
+            gameState: GameState.Started,
+            trackLength: 0,
+            numberOfObstacles: 0,
+            playerRanks: [],
+        };
+
+        
+        
+        gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameHasFinished) => {
+            eventData = data;
+        });
+        
+        startGameAndAdvanceCountdown(catchFoodGame)
+        // finish game
+        for (let i = 0; i < 4; i++) {
+            catchFoodGame.playerHasCompletedObstacle('1', i)
+            catchFoodGame.playerHasCompletedObstacle('2', i)
+            catchFoodGame.playerHasCompletedObstacle('3', i)
+            catchFoodGame.playerHasCompletedObstacle('4', i)
+        }
+        catchFoodGame.runForward('1', TRACKLENGTH)
+        catchFoodGame.runForward('2', TRACKLENGTH)
+        catchFoodGame.runForward('3', TRACKLENGTH)
+        Date.now = jest.fn(() => dateNow + 15000);
+        catchFoodGame.runForward('4', TRACKLENGTH)
+    
+        return eventData
+    }
+
+
+
 })
