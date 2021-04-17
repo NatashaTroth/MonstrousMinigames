@@ -25,6 +25,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     trackLength: number;
     numberOfObstacles: number;
     currentRank: number;
+    ranksDictionary: HashTable<number>
     // gameEventEmitter: GameEventEmitter
     roomId: string;
     gameState: GameState;
@@ -43,6 +44,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.trackLength = 2000;
         this.numberOfObstacles = 4;
         this.currentRank = 1;
+        this.ranksDictionary = {}
         this.players = [];
         this.playersState = {};
         this.gameStartedTime = 0;
@@ -249,8 +251,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         if (this.playersState[userId].finished) return;
 
         this.playersState[userId].finished = true;
-        this.playersState[userId].rank = this.currentRank++;
         this.playersState[userId].finishedTimeMs = Date.now();
+        this.playersState[userId].rank = this.getRank(this.playersState[userId].finishedTimeMs);
 
         CatchFoodGameEventEmitter.emitPlayerHasFinishedEvent({
             userId,
@@ -265,6 +267,22 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
     private gameHasFinished(): boolean {
         return this.currentRank > Object.keys(this.playersState).length;
+    }
+
+    private getRank(timeFinishedInMs: number){
+        const timeFinishedInMsStr:string = timeFinishedInMs.toString()
+        //here
+        const currentRank = this.currentRank
+        this.currentRank++
+
+        // if two players finished at the same time
+        if(Object.prototype.hasOwnProperty.call(this.ranksDictionary, timeFinishedInMsStr)){
+            return this.ranksDictionary[timeFinishedInMsStr]
+        }
+        else{
+            this.ranksDictionary[timeFinishedInMsStr] = currentRank
+            return currentRank
+        }
     }
 
     private handleGameFinished(): void {
@@ -292,7 +310,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             playerRanks.push({
                 id: playerState.id,
                 name: playerState.name,
-                rank: playerState.rank,
+                rank: playerState.rank || this.getRank(playerFinishedTime),
                 finished: playerState.finished,
                 totalTimeInMs: playerFinishedTime - this.gameStartedTime,
                 positionX: playerState.positionX,

@@ -196,6 +196,8 @@ describe('Game logic tests', () => {
     })
 
     function finishGame(catchFoodGame: CatchFoodGame) {
+        const dateNow = 1618665766156;
+        Date.now = jest.fn(() => dateNow);
         startGameAndAdvanceCountdown(catchFoodGame)
         // finish game
         for (let i = 0; i < 4; i++) {
@@ -204,10 +206,12 @@ describe('Game logic tests', () => {
             catchFoodGame.playerHasCompletedObstacle('3', i)
             catchFoodGame.playerHasCompletedObstacle('4', i)
         }
-
         catchFoodGame.runForward('1', TRACKLENGTH)
+        Date.now = jest.fn(() => dateNow + 5000);
         catchFoodGame.runForward('2', TRACKLENGTH)
+        Date.now = jest.fn(() => dateNow + 10000);
         catchFoodGame.runForward('3', TRACKLENGTH)
+        Date.now = jest.fn(() => dateNow + 15000);
         catchFoodGame.runForward('4', TRACKLENGTH)
         return catchFoodGame
     }
