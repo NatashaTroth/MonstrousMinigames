@@ -1,38 +1,24 @@
 import { CatchFoodGame } from '../../../src/gameplay';
-import { startGameAndAdvanceCountdown } from './startGame';
+import { finishGame, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
-const TRACKLENGTH = 500
+// const TRACKLENGTH = 500;
 
-let catchFoodGame: CatchFoodGame
+let catchFoodGame: CatchFoodGame;
 
 describe('Game logic tests', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame()
-        jest.useFakeTimers()
-    })
-
-
+        catchFoodGame = new CatchFoodGame();
+        jest.useFakeTimers();
+    });
 
     it('playerHasReachedObstacle is called and returns false', async () => {
-      //TODO
-      startGameAndAdvanceCountdown(catchFoodGame)
-      catchFoodGame.gameStartedTime = 1000
-      const createPlayerRanksSpy = jest.spyOn(CatchFoodGame.prototype as any, 'createPlayerRanks')
-         // finish game
-         for (let i = 0; i < 4; i++) {
-          catchFoodGame.playerHasCompletedObstacle('1', i)
-          catchFoodGame.playerHasCompletedObstacle('2', i)
-          catchFoodGame.playerHasCompletedObstacle('3', i)
-          catchFoodGame.playerHasCompletedObstacle('4', i)
-      }
+        //TODO
+        startGameAndAdvanceCountdown(catchFoodGame);
+        catchFoodGame.gameStartedTime = 1000;
+        const createPlayerRanksSpy = jest.spyOn(CatchFoodGame.prototype as any, 'createPlayerRanks');
+        finishGame(catchFoodGame);
+        expect(createPlayerRanksSpy).toHaveBeenCalled();
+    });
 
-      catchFoodGame.runForward('1', TRACKLENGTH)
-      catchFoodGame.runForward('2', TRACKLENGTH)
-      catchFoodGame.runForward('3', TRACKLENGTH)
-      catchFoodGame.runForward('4', TRACKLENGTH)
-
-        expect(createPlayerRanksSpy).toHaveBeenCalled()
-        // expect(createPlayerRanksSpy).toHaveReturnedWith({})
-    })
-
-})
+    //TODO finish
+});

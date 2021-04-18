@@ -62,5 +62,10 @@
         "hooks": {
             "pre-commit": "rm -rf dist/ && npm run prettier && jest --coverage && npm run lint"
         }
+    },
+    "jest": {
+        "collectCoverageFrom": [
+            "tests/"
+        ]
     }
 }

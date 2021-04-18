@@ -1,6 +1,6 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/interfaces/GameState';
-import { startGameAndAdvanceCountdown } from './startGame';
+import { startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
 const dateNow = 1618665766156;
@@ -51,8 +51,6 @@ describe('Game logic tests', () => {
         expect(getGameTimePassedBeforePauseSpy).toReturn();
     });
 
-
-
     // function trimMsTime(time: number) {
     //     const timeStr = time.toString();
     //     const trimmedTime = timeStr.substr(0, timeStr.length - 2);
@@ -78,33 +76,31 @@ describe('Game logic tests', () => {
         expect(catchFoodGame.gameState).toBe(GameState.Started);
     });
 
-
     it('updates gameStartedTime correctly to accommodate pause', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const gameStartTime = dateNow
-        const gamePauseTime = dateNow + 5000
+        const gameStartTime = dateNow;
+        const gamePauseTime = dateNow + 5000;
         Date.now = jest.fn(() => gamePauseTime);
         catchFoodGame.pauseGame();
-        const gameResumeTime = dateNow + 15000
+        const gameResumeTime = dateNow + 15000;
         Date.now = jest.fn(() => gameResumeTime);
         catchFoodGame.resumeGame();
-        const gameTimePassed = gamePauseTime - gameStartTime
-        const newGameStartedTime = gameResumeTime - gameTimePassed
+        const gameTimePassed = gamePauseTime - gameStartTime;
+        const newGameStartedTime = gameResumeTime - gameTimePassed;
         expect(catchFoodGame.gameStartedTime).toBe(newGameStartedTime);
     });
 
     it('updates time correctly after pause, so that timeout happens after the defined time out time', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const gamePauseTime = dateNow + 5000
+        const gamePauseTime = dateNow + 5000;
         Date.now = jest.fn(() => gamePauseTime);
         catchFoodGame.pauseGame();
-        const gameResumeTime = dateNow + 15000
+        const gameResumeTime = dateNow + 15000;
         Date.now = jest.fn(() => gameResumeTime);
         catchFoodGame.resumeGame();
-        jest.advanceTimersByTime(catchFoodGame.timeOutLimit - 5000 - 1)
+        jest.advanceTimersByTime(catchFoodGame.timeOutLimit - 5000 - 1);
         expect(catchFoodGame.gameState).toBe(GameState.Started);
-        jest.advanceTimersByTime(1)
+        jest.advanceTimersByTime(1);
         expect(catchFoodGame.gameState).toBe(GameState.Stopped);
-        
     });
 });

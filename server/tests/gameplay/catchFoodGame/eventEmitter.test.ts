@@ -1,9 +1,10 @@
 // import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import { CatchFoodGame } from '../../../src/gameplay';
 import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
-import { PlayerHasDisconnectedInfo } from '../../../src/gameplay/catchFood/interfaces/GameEvents';
-import { GameEventTypes } from '../../../src/gameplay/interfaces';
-import { startGameAndAdvanceCountdown } from './startGame';
+import { ObstacleType } from '../../../src/gameplay/catchFood/interfaces';
+import * as GameEvents from '../../../src/gameplay/catchFood/interfaces/GameEvents';
+import { GameEventTypes, GameState } from '../../../src/gameplay/interfaces';
+import { finishGame, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
 let gameEventEmitter: CatchFoodGameEventEmitter;
@@ -42,6 +43,8 @@ describe('Event Emitter', () => {
         expect(gameEventEmitterNew).toBe(gameEventEmitter);
     });
 
+    //---------- Start game ----------
+
     it('should emit a GameHasStarted event when the game is started', async () => {
         //Game started
         let gameStartedEvent = false;
@@ -50,9 +53,27 @@ describe('Event Emitter', () => {
         });
         expect(gameStartedEvent).toBeFalsy();
         startGameAndAdvanceCountdown(catchFoodGame);
-        await setTimeout(() => ({}), 100);
         expect(gameStartedEvent).toBeTruthy();
     });
+
+    it('should emit GameHasStarted data when the game is started', async () => {
+        let eventData: GameEvents.GameHasStarted = {
+            roomId: '',
+            countdownTime: 0,
+        };
+        gameEventEmitter.on(GameEventTypes.GameHasStarted, (data: GameEvents.GameHasStarted) => {
+            eventData = data;
+        });
+
+        startGameAndAdvanceCountdown(catchFoodGame);
+
+        expect(eventData).toMatchObject({
+            roomId: catchFoodGame.roomId,
+            countdownTime: catchFoodGame.countdownTime,
+        });
+    });
+
+    //---------- Obstacle reached ----------
 
     it('should emit an ObstacleReached event when an obstacle is reached', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
@@ -67,6 +88,33 @@ describe('Event Emitter', () => {
         catchFoodGame.runForward('1', distanceToObstacle);
         expect(obstacleEventReceived).toBeTruthy();
     });
+
+    it('should emit an ObstacleReachedInfo data when an obstacle is reached', async () => {
+        let eventData: GameEvents.ObstacleReachedInfo = {
+            roomId: '',
+            userId: '',
+            obstacleId: 1,
+            obstacleType: ObstacleType.TreeStump, //null not possible
+        };
+        gameEventEmitter.on(GameEventTypes.ObstacleReached, (data: GameEvents.ObstacleReachedInfo) => {
+            eventData = data;
+        });
+
+        startGameAndAdvanceCountdown(catchFoodGame);
+
+        const distanceToObstacle =
+            catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX;
+        catchFoodGame.runForward('1', distanceToObstacle);
+
+        expect(eventData).toMatchObject({
+            roomId: catchFoodGame.roomId,
+            userId: '1',
+            obstacleId: catchFoodGame.playersState['1'].obstacles[0].id,
+            obstacleType: catchFoodGame.playersState['1'].obstacles[0].type,
+        });
+    });
+
+    //---------- Player has finished ----------
 
     it('should emit an PlayerHasFinished event when a player has reached the end of the race', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
@@ -83,6 +131,31 @@ describe('Event Emitter', () => {
         expect(playerFinished).toBeTruthy();
     });
 
+    it('should emit an PlayerHasFinished data when a player has reached the end of the race', async () => {
+        startGameAndAdvanceCountdown(catchFoodGame);
+        // finish player 1
+        for (let i = 0; i < 4; i++) {
+            catchFoodGame.playerHasCompletedObstacle('1', i);
+        }
+
+        let eventData: GameEvents.PlayerHasFinished = {
+            roomId: '',
+            userId: '',
+            rank: 0,
+        };
+        gameEventEmitter.on(GameEventTypes.PlayerHasFinished, (data: GameEvents.PlayerHasFinished) => {
+            eventData = data;
+        });
+        catchFoodGame.runForward('1', 500);
+        expect(eventData).toMatchObject({
+            roomId: catchFoodGame.roomId,
+            userId: '1',
+            rank: catchFoodGame.playersState['1'].rank,
+        });
+    });
+
+    //---------- Game has finished ----------
+
     it('should emit a GameHasFinished event when a all the players have finished race', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         let gameFinishedEvent = false;
@@ -90,18 +163,46 @@ describe('Event Emitter', () => {
             gameFinishedEvent = true;
         });
         // finish game
-        for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1', i);
-            catchFoodGame.playerHasCompletedObstacle('2', i);
-            catchFoodGame.playerHasCompletedObstacle('3', i);
-            catchFoodGame.playerHasCompletedObstacle('4', i);
-        }
-
-        catchFoodGame.runForward('1', 500);
-        catchFoodGame.runForward('2', 500);
-        catchFoodGame.runForward('3', 500);
-        catchFoodGame.runForward('4', 500);
+        finishGame(catchFoodGame);
         expect(gameFinishedEvent).toBeTruthy();
+    });
+
+    it('should emit a GameHasFinished data when a all the players have finished race', async () => {
+        const dateNow = 1618665766156;
+        Date.now = jest.fn(() => dateNow);
+        startGameAndAdvanceCountdown(catchFoodGame);
+        let eventData: GameEvents.GameHasFinished = {
+            roomId: '',
+            gameState: GameState.Started,
+            trackLength: 0,
+            numberOfObstacles: 0,
+            playerRanks: [],
+        };
+        gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
+            eventData = data;
+        });
+        // finish game
+        Date.now = jest.fn(() => dateNow + 10000);
+        finishGame(catchFoodGame);
+
+        expect(eventData).toMatchObject({
+            roomId: catchFoodGame.roomId,
+            gameState: catchFoodGame.gameState,
+            trackLength: catchFoodGame.trackLength,
+            numberOfObstacles: catchFoodGame.numberOfObstacles,
+        });
+
+        const playerOneTotalTime = dateNow + 10000 - catchFoodGame.gameStartedTime;
+
+        expect(eventData.playerRanks[0]).toMatchObject({
+            id: '1',
+            name: catchFoodGame.playersState['1'].name,
+            rank: catchFoodGame.playersState['1'].rank,
+            finished: catchFoodGame.playersState['1'].finished,
+            totalTimeInMs: playerOneTotalTime,
+            positionX: catchFoodGame.playersState['1'].positionX,
+            isActive: catchFoodGame.playersState['1'].isActive,
+        });
     });
 
     it('should emit a GameHasTimedOut event when the game has timed out', async () => {
@@ -125,7 +226,7 @@ describe('Event Emitter', () => {
     });
 
     it('should emit a roomId and userId when a player is disconnected', async () => {
-        let eventData: PlayerHasDisconnectedInfo = {
+        let eventData: GameEvents.PlayerHasDisconnectedInfo = {
             roomId: '',
             userId: '',
         };

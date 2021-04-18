@@ -33,6 +33,7 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
     }
 
     public static emitGameHasStartedEvent(data: GameEvents.GameHasStarted) {
+        //*
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasStarted, data);
     }
 
@@ -45,14 +46,17 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
     }
 
     public static emitObstacleReachedEvent(data: GameEvents.ObstacleReachedInfo) {
+        //*
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.ObstacleReached, data);
     }
 
     public static emitPlayerHasFinishedEvent(data: GameEvents.PlayerHasFinished) {
+        //*
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerHasFinished, data);
     }
 
     public static emitGameHasFinishedEvent(data: GameEvents.GameHasFinished) {
+        //*
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasFinished, data);
     }
 

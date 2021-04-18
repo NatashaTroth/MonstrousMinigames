@@ -276,7 +276,11 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     }
 
     private gameHasFinished(): boolean {
-        return this.currentRank > Object.keys(this.playersState).length;
+        const userIds = Object.keys(this.playersState);
+        const activePlayers = userIds.filter(userId => {
+            if (this.playersState[userId].isActive) return userId;
+        });
+        return this.currentRank > activePlayers.length;
     }
 
     private getRank(timeFinishedInMs: number) {

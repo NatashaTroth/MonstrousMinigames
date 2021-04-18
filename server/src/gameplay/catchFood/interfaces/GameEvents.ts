@@ -11,14 +11,6 @@ export interface GameHasStarted extends GameEventInterface {
     countdownTime: number;
 }
 
-export interface GameHasFinished extends GameEventInterface {
-    roomId: string;
-    gameState: GameState;
-    trackLength: number;
-    numberOfObstacles: number;
-    playerRanks: Array<PlayerRank>;
-}
-
 export interface GameStateHasChanged extends GameEventInterface {
     roomId: string;
 }
@@ -29,11 +21,18 @@ export interface PlayerHasFinished extends GameEventInterface {
     rank: number;
 }
 
+export interface GameHasFinished extends GameEventInterface {
+    roomId: string;
+    gameState: GameState;
+    trackLength: number;
+    numberOfObstacles: number;
+    playerRanks: Array<PlayerRank>;
+}
 export interface ObstacleReachedInfo extends GameEventInterface {
     roomId: string;
     userId: string;
-    obstacleType: ObstacleType;
     obstacleId: number;
+    obstacleType: ObstacleType;
 }
 
 export interface PlayerHasDisconnectedInfo extends GameEventInterface {
