@@ -104,12 +104,16 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setFinished: (val: boolean) => {
             document.body.style.overflow = 'visible'
             document.body.style.position = 'static'
+            document.body.style.userSelect = 'auto'
+
             setFinished(val)
         },
         gameStarted,
         setGameStarted: (val: boolean) => {
             document.body.style.overflow = 'hidden'
             document.body.style.position = 'fixed'
+            document.body.style.userSelect = 'none'
+
             setGameStarted(val)
         },
         roomId,
