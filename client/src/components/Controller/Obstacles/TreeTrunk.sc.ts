@@ -78,6 +78,7 @@ export const TouchContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 40%;
 `
 
 export const Line = styled.div`
