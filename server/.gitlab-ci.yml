@@ -44,14 +44,17 @@ staging:server:
     tags:
         - node
     image: ruby:latest
+    environment:
+        name: staging-server
+        url: https://monstrous-minigames-staging.herokuapp.com/
     script:
         - apt-get update -qy
         - apt-get install -y ruby-dev
         - gem install dpl
         - cd server/
         - dpl --provider=heroku --app=$HEROKU_APP_STAGING --api-key=$HEROKU_API_KEY --skip-cleanup
-    only:
-        - dev
+    # only:
+    #     - dev
     when: manual
 
 production:server:
@@ -59,6 +62,9 @@ production:server:
     tags:
         - node
     image: ruby:latest
+    environment:
+        name: production-server
+        url: https://monstrous-minigames.herokuapp.com/
     script:
         - apt-get update -qy
         - apt-get install -y ruby-dev
