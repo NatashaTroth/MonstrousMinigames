@@ -226,7 +226,9 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     }
 
     private playerHasPassedGoal(userId: string): boolean {
-        return this.playersState[userId].positionX >= this.trackLength;
+        return (
+            this.playersState[userId].positionX >= this.trackLength && this.playersState[userId].obstacles.length === 0
+        );
     }
 
     private handlePlayerReachedObstacle(userId: string): void {
@@ -250,6 +252,9 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             if (this.playersState[userId].obstacles[0].id === obstacleId) {
                 this.playersState[userId].obstacles.shift();
             }
+
+            // shouldn't happen - but just to be safe (e.g. in case messages arrive in wrong order)
+            if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId);
         } catch (e) {
             // throw e.Message;
             // console.error(e.message);

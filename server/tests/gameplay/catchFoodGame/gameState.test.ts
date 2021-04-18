@@ -118,11 +118,9 @@ describe('Change and verify game state', () => {
 
         catchFoodGame.disconnectPlayer('3');
         catchFoodGame.disconnectPlayer('4');
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1', i);
             catchFoodGame.playerHasCompletedObstacle('2', i);
-            catchFoodGame.playerHasCompletedObstacle('3', i);
-            catchFoodGame.playerHasCompletedObstacle('4', i);
         }
 
         catchFoodGame.runForward('1', catchFoodGame.trackLength);

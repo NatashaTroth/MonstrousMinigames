@@ -27,13 +27,10 @@ describe('Game logic tests', () => {
     });
 
     it('gameStartedTime is now', async () => {
+        Date.now = jest.fn(() => dateNow);
         startGameAndAdvanceCountdown(catchFoodGame);
-        const gameStartTimeStr = catchFoodGame.gameStartedTime.toString();
-        const timeNowStr = Date.now().toString();
         //Remove last 2 digits (could be slight difference)
-        expect(gameStartTimeStr.substr(0, gameStartTimeStr.length - 2)).toBe(
-            timeNowStr.substr(0, gameStartTimeStr.length - 2)
-        );
+        expect(catchFoodGame.gameStartedTime).toBe(Date.now());
     });
 
     it('moves players forward when runForward is called', async () => {
@@ -138,7 +135,6 @@ describe('Game logic tests', () => {
 
     it('should have not obstacles left when the player has completed them', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        // finish player 1
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1', i);
         }
@@ -155,7 +151,21 @@ describe('Game logic tests', () => {
         expect(catchFoodGame.playersState['1'].finished).toBeTruthy();
     });
 
-    it('should not be able to run forware when player as finished the race', async () => {
+    it('should not set a player as finished if they have not completed all their obstacles but reached the goal', async () => {
+        startGameAndAdvanceCountdown(catchFoodGame);
+        catchFoodGame.runForward('1', TRACKLENGTH);
+        expect(catchFoodGame.playersState['1'].finished).toBeFalsy();
+    });
+
+    it('should not set a player as finished if they have not reached the goal but completed their obstacles', async () => {
+        startGameAndAdvanceCountdown(catchFoodGame);
+        for (let i = 0; i < 4; i++) {
+            catchFoodGame.playerHasCompletedObstacle('1', i);
+        }
+        expect(catchFoodGame.playersState['1'].finished).toBeFalsy();
+    });
+
+    it('should not be able to run forward when player as finished the race', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         // finish player 1
         for (let i = 0; i < 4; i++) {

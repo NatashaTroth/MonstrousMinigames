@@ -344,10 +344,10 @@ describe('Event Emitter', () => {
         // player 1 has finished
         const player1FinishedTime = 500;
         Date.now = jest.fn(() => dateNow + player1FinishedTime);
-        catchFoodGame.runForward('1', catchFoodGame.trackLength);
         for (let i = 0; i < 4; i++) {
             catchFoodGame.playerHasCompletedObstacle('1', i);
         }
+        catchFoodGame.runForward('1', catchFoodGame.trackLength);
 
         // player 2 has run forward - but should get the same rank as player 1
         catchFoodGame.runForward('2', 50);
@@ -363,7 +363,7 @@ describe('Event Emitter', () => {
         });
 
         // const playerOneTotalTime = dateNow + 10000 - catchFoodGame.gameStartedTime;
-        let userId1 = '1';
+        const userId1 = '1';
         expect(eventData.playerRanks[0]).toMatchObject({
             id: userId1,
             name: catchFoodGame.playersState[userId1].name,
@@ -374,7 +374,7 @@ describe('Event Emitter', () => {
             isActive: true,
         });
 
-        let userId2 = '2';
+        const userId2 = '2';
         expect(eventData.playerRanks[1]).toMatchObject({
             id: userId2,
             name: catchFoodGame.playersState[userId2].name,
@@ -385,7 +385,7 @@ describe('Event Emitter', () => {
             isActive: true,
         });
 
-        let userId3 = '3';
+        const userId3 = '3';
         expect(eventData.playerRanks[2]).toMatchObject({
             id: userId3,
             name: catchFoodGame.playersState[userId3].name,
