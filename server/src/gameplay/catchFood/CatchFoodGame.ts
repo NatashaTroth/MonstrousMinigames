@@ -323,6 +323,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
                 finished: playerState.finished,
                 totalTimeInMs: playerFinishedTime - this.gameStartedTime,
                 positionX: playerState.positionX,
+                isActive: playerState.isActive,
             });
         }
 

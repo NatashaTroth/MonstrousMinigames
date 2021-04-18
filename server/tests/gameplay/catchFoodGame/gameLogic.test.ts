@@ -283,6 +283,15 @@ describe('Game logic tests', () => {
         expect(eventData.playerRanks[3].rank).toBe(4);
     });
 
+    it('creates game finished event with isActive property', async () => {
+        Date.now = jest.fn(() => dateNow);
+        const eventData = getGameFinishedDataSameRanks(catchFoodGame);
+        expect(eventData.playerRanks[0].isActive).toBeTruthy();
+        expect(eventData.playerRanks[1].isActive).toBeTruthy();
+        expect(eventData.playerRanks[2].isActive).toBeTruthy();
+        expect(eventData.playerRanks[3].isActive).toBeTruthy();
+    });
+
     function finishGame(catchFoodGame: CatchFoodGame) {
         const dateNow = 1618665766156;
         Date.now = jest.fn(() => dateNow);
