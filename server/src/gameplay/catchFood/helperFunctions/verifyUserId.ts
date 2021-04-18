@@ -1,5 +1,5 @@
-import { PlayerState } from '../catchFood/interfaces';
-import { HashTable } from '../interfaces';
+import { HashTable } from '../../interfaces';
+import { PlayerState } from '../interfaces';
 
 export function verifyUserId(playersState: HashTable<PlayerState>, userId: string): void {
     // if (!playersState.hasOwnProperty(userId))

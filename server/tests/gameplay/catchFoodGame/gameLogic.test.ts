@@ -1,20 +1,17 @@
 import { CatchFoodGame } from '../../../src/gameplay';
-// import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { GameState } from '../../../src/gameplay/interfaces';
 import {
-    getGameFinishedDataDifferentTimes, getGameFinishedDataSameRanks,
-    startAndFinishGameDifferentTimes, startGameAndAdvanceCountdown
+    getGameFinishedDataDifferentTimes, startAndFinishGameDifferentTimes,
+    startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 const TRACKLENGTH = 500;
 
 let catchFoodGame: CatchFoodGame;
-// let gameEventEmitter: CatchFoodGameEventEmitter;
 const dateNow = 1618665766156;
 
 describe('Game logic tests', () => {
     beforeEach(() => {
-        // gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
         catchFoodGame = new CatchFoodGame();
         jest.useFakeTimers();
     });

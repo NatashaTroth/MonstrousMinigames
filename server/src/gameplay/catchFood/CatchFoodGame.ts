@@ -1,11 +1,11 @@
 // import GameEventEmitter from '../../classes/GameEventEmitter';
 import { User } from '../../interfaces/interfaces';
 import { verifyGameState } from '../helperFunctions/verifyGameState';
-import { verifyUserId } from '../helperFunctions/verifyUserId';
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
 import { GameInterface, GameState, HashTable } from '../interfaces';
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
-import { initiatePlayersState } from './initiatePlayerState';
+import { initiatePlayersState } from './helperFunctions/initiatePlayerState';
+import { verifyUserId } from './helperFunctions/verifyUserId';
 import { GameEvents, GameStateInfo, Obstacle, PlayerRank, PlayerState } from './interfaces';
 
 interface CatchFoodGameInterface extends GameInterface {
