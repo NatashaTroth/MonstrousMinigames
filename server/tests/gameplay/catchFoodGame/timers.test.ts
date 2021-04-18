@@ -1,6 +1,7 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
-import { GameEventTypes, GameHasFinished, GameState } from '../../../src/gameplay/interfaces';
+import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
+import { GameEventTypes, GameState } from '../../../src/gameplay/interfaces';
 import { startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
@@ -93,7 +94,7 @@ describe('Timer tests', () => {
 });
 
 function getGameFinishedDataAfterTimeOut(catchFoodGame: CatchFoodGame, dateNow: number) {
-    let eventData: GameHasFinished = {
+    let eventData: GameEvents.GameHasFinished = {
         roomId: '',
         gameState: GameState.Started,
         trackLength: 0,
@@ -101,7 +102,7 @@ function getGameFinishedDataAfterTimeOut(catchFoodGame: CatchFoodGame, dateNow: 
         playerRanks: [],
     };
 
-    gameEventEmitter.on(GameEventTypes.GameHasTimedOut, (data: GameHasFinished) => {
+    gameEventEmitter.on(GameEventTypes.GameHasTimedOut, (data: GameEvents.GameHasFinished) => {
         eventData = data;
     });
     // startGameAndAdvanceCountdown(catchFoodGame);

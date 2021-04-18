@@ -1,4 +1,4 @@
-import { Obstacle } from './Obstacle';
+import { Obstacle } from './';
 
 export interface PlayerState {
     id: string;

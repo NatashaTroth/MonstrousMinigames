@@ -2,7 +2,7 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { ObstacleType } from '../../../src/gameplay/catchFood/interfaces';
-import * as GameEvents from '../../../src/gameplay/catchFood/interfaces/GameEvents';
+import { GameEvents } from '../../../src/gameplay/catchFood/interfaces/';
 import { GameEventTypes, GameState } from '../../../src/gameplay/interfaces';
 import { finishGame, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 

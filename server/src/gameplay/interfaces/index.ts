@@ -1,6 +1,6 @@
-import {
-    GameHasFinished, GameHasStarted, GameStateHasChanged, ObstacleReachedInfo, PlayerHasFinished
-} from '../catchFood/interfaces/GameEvents';
+// import {
+//     GameHasFinished, GameHasStarted, GameStateHasChanged, ObstacleReachedInfo, PlayerHasFinished
+// } from '../catchFood/interfaces/GameEvents';
 import { GameEventTypes } from './GameEventTypes';
 import { GameInterface } from './GameInterface';
 import { GameState } from './GameState';
@@ -11,9 +11,9 @@ export {
     GameEventTypes,
     GameState,
     GameInterface,
-    GameHasStarted,
-    GameHasFinished,
-    PlayerHasFinished,
-    GameStateHasChanged,
-    ObstacleReachedInfo,
-}
+    // GameHasStarted,
+    // GameHasFinished,
+    // PlayerHasFinished,
+    // GameStateHasChanged,
+    // ObstacleReachedInfo,
+};

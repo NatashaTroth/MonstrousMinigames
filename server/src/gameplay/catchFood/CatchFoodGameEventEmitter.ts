@@ -20,7 +20,7 @@ import { GameEventTypes } from '../interfaces';
 // import {
 //     GameHasFinished, GameHasStarted, GameStateHasChanged, ObstacleReachedInfo, PlayerHasFinished, Game
 // } from './interfaces/GameEvents';
-import * as GameEvents from './interfaces/GameEvents';
+import { GameEvents } from './interfaces';
 
 export default class CatchFoodGameEventEmitter extends GameEventEmitter {
     private static CatchFoodGameEventEmitter: CatchFoodGameEventEmitter = new CatchFoodGameEventEmitter();

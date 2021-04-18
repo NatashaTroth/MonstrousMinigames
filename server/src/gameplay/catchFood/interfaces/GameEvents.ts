@@ -1,6 +1,6 @@
 import { GameState } from '../../interfaces';
 import { ObstacleType } from './';
-import { PlayerRank } from './PlayerRank';
+import { PlayerRank } from './';
 
 interface GameEventInterface {
     roomId: string;

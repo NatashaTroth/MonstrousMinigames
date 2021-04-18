@@ -3,11 +3,10 @@ import { User } from '../../interfaces/interfaces';
 import { verifyGameState } from '../helperFunctions/verifyGameState';
 import { verifyUserId } from '../helperFunctions/verifyUserId';
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
-import { GameHasFinished, GameInterface, GameState, HashTable } from '../interfaces';
+import { GameInterface, GameState, HashTable } from '../interfaces';
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
 import { initiatePlayersState } from './initiatePlayerState';
-import { GameStateInfo, Obstacle, PlayerState } from './interfaces';
-import { PlayerRank } from './interfaces/PlayerRank';
+import { GameStateInfo, Obstacle, PlayerState, GameEvents, PlayerRank } from './interfaces';
 
 interface CatchFoodGameInterface extends GameInterface {
     playersState: HashTable<PlayerState>;
@@ -154,7 +153,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             verifyGameState(this.gameState, [GameState.Started, GameState.Paused]);
             this.gameState = GameState.Stopped;
             const currentGameStateInfo = this.getGameStateInfo();
-            const messageInfo: GameHasFinished = {
+            const messageInfo: GameEvents.GameHasFinished = {
                 roomId: currentGameStateInfo.roomId,
                 gameState: currentGameStateInfo.gameState,
                 trackLength: currentGameStateInfo.trackLength,

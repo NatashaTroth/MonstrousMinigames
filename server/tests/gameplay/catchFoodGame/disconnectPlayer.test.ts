@@ -1,7 +1,7 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 // import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
-import * as GameEvents from '../../../src/gameplay/interfaces';
+import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 import {
     // finishGame,
     // getGameFinishedData,

@@ -3,8 +3,8 @@ import { Namespace, Socket } from 'socket.io';
 import Room from '../classes/room';
 import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
-import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType';
-import { GameHasFinished, GameHasStarted, PlayerHasFinished } from '../gameplay/interfaces/index';
+import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces';
+import { GameEvents } from '../gameplay/catchFood/interfaces';
 
 function sendUserInit(socket: any): void {
     socket.emit('message', {
@@ -34,7 +34,7 @@ function sendErrorMessage(socket: Socket, message: string): void {
         msg: message,
     });
 }
-function sendGameHasStarted(nsps: Array<Namespace>, data: GameHasStarted): void {
+function sendGameHasStarted(nsps: Array<Namespace>, data: GameEvents.GameHasStarted): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(data.roomId).emit('message', {
             type: CatchFoodMsgType.HAS_STARTED,
@@ -42,7 +42,7 @@ function sendGameHasStarted(nsps: Array<Namespace>, data: GameHasStarted): void 
         });
     });
 }
-function sendGameHasFinished(nsps: Array<Namespace>, data: GameHasFinished): void {
+function sendGameHasFinished(nsps: Array<Namespace>, data: GameEvents.GameHasFinished): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(data.roomId).emit('message', {
             type: MessageTypes.GAME_HAS_FINISHED,
@@ -59,7 +59,7 @@ function sendGameHasStopped(nsps: Array<Namespace>, roomId: string): void {
     });
 }
 
-function sendPlayerFinished(nsp: Namespace, user: User, data: PlayerHasFinished): void {
+function sendPlayerFinished(nsp: Namespace, user: User, data: GameEvents.PlayerHasFinished): void {
     nsp.to(user.socketId).emit('message', {
         type: CatchFoodMsgType.PLAYER_FINISHED,
         rank: data.rank,
