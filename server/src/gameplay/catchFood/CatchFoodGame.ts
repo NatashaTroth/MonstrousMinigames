@@ -25,9 +25,10 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     trackLength: number;
     numberOfObstacles: number;
     currentRank: number;
-    ranksDictionary: HashTable<number>
+    ranksDictionary: HashTable<number>;
     // gameEventEmitter: GameEventEmitter
     roomId: string;
+    maxNumberOfPlayers: number;
     gameState: GameState;
     gameStartedTime: number;
     players: Array<User>;
@@ -40,11 +41,12 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     constructor() {
         // this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
         this.roomId = '';
+        this.maxNumberOfPlayers = 4;
         this.gameState = GameState.Initialised;
         this.trackLength = 2000;
         this.numberOfObstacles = 4;
         this.currentRank = 1;
-        this.ranksDictionary = {}
+        this.ranksDictionary = {};
         this.players = [];
         this.playersState = {};
         this.gameStartedTime = 0;
@@ -61,7 +63,11 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         numberOfObstacles = this.numberOfObstacles
     ): void {
         verifyGameState(this.gameState, [GameState.Initialised, GameState.Finished, GameState.Stopped]);
-        this.gameState = GameState.Created
+        if (players.length > this.maxNumberOfPlayers) {
+            throw new Error(`Too many players. Max ${this.maxNumberOfPlayers} Players`);
+        }
+
+        this.gameState = GameState.Created;
         this.roomId = players[0].roomId;
         this.trackLength = trackLength;
         this.players = players;
@@ -238,7 +244,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             verifyUserId(this.playersState, userId);
             verifyGameState(this.gameState, [GameState.Started]);
             this.playersState[userId].atObstacle = false;
-            if (this.playersState[userId].obstacles[0].id === obstacleId){
+            if (this.playersState[userId].obstacles[0].id === obstacleId) {
                 this.playersState[userId].obstacles.shift();
             }
         } catch (e) {
@@ -270,19 +276,18 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         return this.currentRank > Object.keys(this.playersState).length;
     }
 
-    private getRank(timeFinishedInMs: number){
-        const timeFinishedInMsStr:string = timeFinishedInMs.toString()
+    private getRank(timeFinishedInMs: number) {
+        const timeFinishedInMsStr: string = timeFinishedInMs.toString();
         //here
-        const currentRank = this.currentRank
-        this.currentRank++
+        const currentRank = this.currentRank;
+        this.currentRank++;
 
         // if two players finished at the same time
-        if(Object.prototype.hasOwnProperty.call(this.ranksDictionary, timeFinishedInMsStr)){
-            return this.ranksDictionary[timeFinishedInMsStr]
-        }
-        else{
-            this.ranksDictionary[timeFinishedInMsStr] = currentRank
-            return currentRank
+        if (Object.prototype.hasOwnProperty.call(this.ranksDictionary, timeFinishedInMsStr)) {
+            return this.ranksDictionary[timeFinishedInMsStr];
+        } else {
+            this.ranksDictionary[timeFinishedInMsStr] = currentRank;
+            return currentRank;
         }
     }
 
