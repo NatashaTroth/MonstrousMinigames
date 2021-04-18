@@ -25,21 +25,8 @@ describe('Change and verify game state', () => {
     })
 
     it("shouldn't be able to move player until game has started", async () => {
-        // expect(() => catchFoodGame.runForward("1")).toThrow();
-        // const initialPositionX = catchFoodGame.playersState['1'].positionX
-        // const verifyGameStateSpy = jest.spyOn('verifyGameState')
-        // catchFoodGame.runForward('1')
-        // expect(verifyGameStateSpy).toHaveBeenCalled()
         expect(() => verifyGameState(catchFoodGame.gameState, [GameState.Started])).toThrow()
-        // expect(catchFoodGame.playersState['1'].positionX).toBe(initialPositionX)
     })
-
-    // it("shouldn't be able to move player until game has started", async () => {
-    //     // expect(() => catchFoodGame.runForward("1")).toThrow();
-    //     const initialPositionX = catchFoodGame.playersState['1'].positionX
-    //     catchFoodGame.runForward('50')
-    //     expect(catchFoodGame.playersState['1'].positionX).toBe(initialPositionX)
-    // })
 
     it("shouldn't be able to move player until game has started and the countdown has run", async () => {
         catchFoodGame.createNewGame(users, 500, 4)
@@ -55,17 +42,55 @@ describe('Change and verify game state', () => {
         expect(catchFoodGame.playersState['1'].positionX).toBe(initialPositionX)
     })
 
-    // it("shouldn't be able to complete obstacle until game has started", async () => {
-    //     const obstacleCompleted = catchFoodGame.playersState['1'].obstacles.length
-    //     catchFoodGame.playerHasCompletedObstacle('1', 0)
-    //     expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstacleCompleted)
-    // })
+    it("shouldn't be able to move player when game is paused", async () => {
+        catchFoodGame.createNewGame(users, 500, 4)
+        const initialPositionX = catchFoodGame.playersState['1'].positionX
+        catchFoodGame.pauseGame()
+        catchFoodGame.runForward('50')
+        expect(catchFoodGame.playersState['1'].positionX).toBe(initialPositionX)
+    })
+
+
+    it("shouldn't be able to complete obstacle until game has started", async () => {
+        catchFoodGame.createNewGame(users, 500, 4)
+        // Countdown still has to run
+        const obstaclesCompletedLength = catchFoodGame.playersState['1'].obstacles.length
+        catchFoodGame.playerHasCompletedObstacle('1', 0)
+        expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstaclesCompletedLength)
+    })
+
+    it("should be able to complete obstacle when game has started", async () => {
+        startGameAndAdvanceCountdown(catchFoodGame)
+        const obstaclesCompletedLength = catchFoodGame.playersState['1'].obstacles.length
+        catchFoodGame.playerHasCompletedObstacle('1', 0)
+        expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstaclesCompletedLength - 1)
+    })
+
+    it("shouldn't be able to complete obstacle when game is paused", async () => {
+        startGameAndAdvanceCountdown(catchFoodGame)
+        const obstaclesCompletedLength = catchFoodGame.playersState['1'].obstacles.length
+        catchFoodGame.pauseGame()
+        catchFoodGame.playerHasCompletedObstacle('1', 0)
+        expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstaclesCompletedLength)
+    })
 
     it("shouldn't be able to stop game unless game has started", async () => {
         catchFoodGame.stopGame()
         expect(catchFoodGame.gameState).toBe(GameState.Initialised)
     })
 
+    it("should be able to stop game when started", async () => {
+        startGameAndAdvanceCountdown(catchFoodGame)
+        catchFoodGame.stopGame()
+        expect(catchFoodGame.gameState).toBe(GameState.Stopped)
+    })
+
+    it("should be able to stop game when paused", async () => {
+        startGameAndAdvanceCountdown(catchFoodGame)
+        catchFoodGame.pauseGame()
+        catchFoodGame.stopGame()
+        expect(catchFoodGame.gameState).toBe(GameState.Stopped)
+    })
 
     it('should not have a GameState of Started until the game has started and countdown has run', async () => {
         catchFoodGame.createNewGame(users)
@@ -109,4 +134,11 @@ describe('Change and verify game state', () => {
         catchFoodGame.createNewGame(users)
         expect(catchFoodGame.gameState).toBe(GameState.Created)
     })
+
+
+
+
+   
+
+
 })

@@ -233,13 +233,14 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     }
 
     playerHasCompletedObstacle(userId: string, obstacleId: number): void {
-        //TODO CHange to stop cheating
+        //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
         try {
             verifyUserId(this.playersState, userId);
             verifyGameState(this.gameState, [GameState.Started]);
-            //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
             this.playersState[userId].atObstacle = false;
-            if (this.playersState[userId].obstacles[0].id === obstacleId) this.playersState[userId].obstacles.shift();
+            if (this.playersState[userId].obstacles[0].id === obstacleId){
+                this.playersState[userId].obstacles.shift();
+            }
         } catch (e) {
             // throw e.Message;
             // console.error(e.message);

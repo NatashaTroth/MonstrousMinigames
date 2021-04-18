@@ -60,7 +60,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "rm -rf dist/ && npm run prettier && jest && npm run lint"
+            "pre-commit": "rm -rf dist/ && npm run prettier && jest --coverage && npm run lint"
         }
     }
 }
