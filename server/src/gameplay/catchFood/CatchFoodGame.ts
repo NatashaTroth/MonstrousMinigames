@@ -2,6 +2,7 @@
 import { User } from '../../interfaces/interfaces';
 import { verifyGameState } from '../helperFunctions/verifyGameState';
 import { verifyUserId } from '../helperFunctions/verifyUserId';
+import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
 import { GameHasFinished, GameInterface, GameState, HashTable } from '../interfaces';
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
 import { initiatePlayersState } from './initiatePlayerState';
@@ -200,6 +201,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     runForward(userId: string, speed = 1): void {
         try {
             verifyUserId(this.playersState, userId);
+            verifyUserIsActive(userId, this.playersState[userId].isActive);
             verifyGameState(this.gameState, [GameState.Started]);
 
             if (this.playersState[userId].finished) return;
@@ -242,6 +244,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
         try {
             verifyUserId(this.playersState, userId);
+            verifyUserIsActive(userId, this.playersState[userId].isActive);
             verifyGameState(this.gameState, [GameState.Started]);
             this.playersState[userId].atObstacle = false;
             if (this.playersState[userId].obstacles[0].id === obstacleId) {
@@ -328,6 +331,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
     disconnectPlayer(userId: string): void {
         try {
+            verifyUserId(this.playersState, userId);
+            verifyUserIsActive(userId, this.playersState[userId].isActive);
             verifyGameState(this.gameState, [
                 GameState.Initialised,
                 GameState.Started,
