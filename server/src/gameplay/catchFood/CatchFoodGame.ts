@@ -56,12 +56,13 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     }
 
     createNewGame(
-        players = this.players,
+        players: Array<User>,
         trackLength = this.trackLength,
         numberOfObstacles = this.numberOfObstacles
     ): void {
+        verifyGameState(this.gameState, [GameState.Initialised, GameState.Finished, GameState.Stopped]);
+        this.gameState = GameState.Created
         this.roomId = players[0].roomId;
-        this.gameState = GameState.Created;
         this.trackLength = trackLength;
         this.players = players;
         this.currentRank = 1;
@@ -73,9 +74,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     }
 
     //put together
-    startGame(): void {
+    private startGame(): void {
         try {
-            verifyGameState(this.gameState, GameState.Created);
             setTimeout(() => {
                 this.gameState = GameState.Started;
             }, this.countdownTime);
@@ -102,7 +102,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
     pauseGame(): void {
         try {
-            verifyGameState(this.gameState, GameState.Started);
+            verifyGameState(this.gameState, [GameState.Started]);
             this.gameState = GameState.Paused;
 
             // update gamePausedTime
@@ -124,7 +124,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
     resumeGame(): void {
         try {
-            verifyGameState(this.gameState, GameState.Paused);
+            verifyGameState(this.gameState, [GameState.Paused]);
             this.gameState = GameState.Started;
 
             // resume timeout timer
@@ -144,7 +144,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
     stopGame(timeOut = false): void {
         try {
-            verifyGameState(this.gameState, GameState.Started);
+            verifyGameState(this.gameState, [GameState.Started, GameState.Paused]);
             this.gameState = GameState.Stopped;
             const currentGameStateInfo = this.getGameStateInfo();
             const messageInfo: GameHasFinished = {
@@ -194,7 +194,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     runForward(userId: string, speed = 1): void {
         try {
             verifyUserId(this.playersState, userId);
-            verifyGameState(this.gameState, GameState.Started);
+            verifyGameState(this.gameState, [GameState.Started]);
 
             if (this.playersState[userId].finished) return;
             if (this.playersState[userId].atObstacle) return;
@@ -236,7 +236,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         //TODO CHange to stop cheating
         try {
             verifyUserId(this.playersState, userId);
-            verifyGameState(this.gameState, GameState.Started);
+            verifyGameState(this.gameState, [GameState.Started]);
             //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
             this.playersState[userId].atObstacle = false;
             if (this.playersState[userId].obstacles[0].id === obstacleId) this.playersState[userId].obstacles.shift();

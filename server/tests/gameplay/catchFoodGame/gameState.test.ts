@@ -30,7 +30,7 @@ describe('Change and verify game state', () => {
         // const verifyGameStateSpy = jest.spyOn('verifyGameState')
         // catchFoodGame.runForward('1')
         // expect(verifyGameStateSpy).toHaveBeenCalled()
-        expect(() => verifyGameState(catchFoodGame.gameState, GameState.Started)).toThrow()
+        expect(() => verifyGameState(catchFoodGame.gameState, [GameState.Started])).toThrow()
         // expect(catchFoodGame.playersState['1'].positionX).toBe(initialPositionX)
     })
 

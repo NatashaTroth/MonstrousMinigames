@@ -9,7 +9,7 @@ export interface GameInterface {
     currentRank: number
 
     createNewGame(players: any, trackLength?: number, numberOfObstacles?: number): void
-    startGame(): void
+    //startGame(): void
     stopGame(): void
     pauseGame(): void
     getGameStateInfo(): any

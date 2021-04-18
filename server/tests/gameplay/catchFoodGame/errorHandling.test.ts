@@ -1,4 +1,5 @@
 import { CatchFoodGame } from '../../../src/gameplay';
+import { users } from '../mockUsers';
 
 // const TRACKLENGTH = 500
 // const NUMBER_OF_OBSTACLES = 4
@@ -15,7 +16,7 @@ describe('Error handling tests', () => {
     //TODO
 
     it('needs to be implemented', () => {
-        catchFoodGame.startGame()
+        catchFoodGame.createNewGame(users)
         expect(true).toBeTruthy()
     })
 
