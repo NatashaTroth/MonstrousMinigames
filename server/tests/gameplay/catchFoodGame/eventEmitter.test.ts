@@ -1,6 +1,7 @@
 // import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import { CatchFoodGame } from '../../../src/gameplay';
 import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
+import { PlayerHasDisconnectedInfo } from '../../../src/gameplay/catchFood/interfaces/GameEvents';
 import { GameEventTypes } from '../../../src/gameplay/interfaces';
 import { startGameAndAdvanceCountdown } from './startGame';
 
@@ -111,5 +112,31 @@ describe('Event Emitter', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         jest.runAllTimers();
         expect(gameTimedOutEvent).toBeTruthy();
+    });
+
+    it('should emit a PlayerHasDisconnected event when a player is disconnected', async () => {
+        let playerHasDisconnectedEvent = false;
+        gameEventEmitter.on(GameEventTypes.PlayerHasDisconnected, () => {
+            playerHasDisconnectedEvent = true;
+        });
+        startGameAndAdvanceCountdown(catchFoodGame);
+        catchFoodGame.disconnectPlayer('1');
+        expect(playerHasDisconnectedEvent).toBeTruthy();
+    });
+
+    it('should emit a roomId and userId when a player is disconnected', async () => {
+        let eventData: PlayerHasDisconnectedInfo = {
+            roomId: '',
+            userId: '',
+        };
+        gameEventEmitter.on(GameEventTypes.PlayerHasDisconnected, data => {
+            eventData = data;
+        });
+        startGameAndAdvanceCountdown(catchFoodGame);
+        catchFoodGame.disconnectPlayer('1');
+        expect(eventData).toMatchObject({
+            roomId: 'xxx',
+            userId: '1',
+        });
     });
 });

@@ -35,3 +35,8 @@ export interface ObstacleReachedInfo extends GameEventInterface {
     obstacleType: ObstacleType;
     obstacleId: number;
 }
+
+export interface PlayerHasDisconnectedInfo extends GameEventInterface {
+    roomId: string;
+    userId: string;
+}

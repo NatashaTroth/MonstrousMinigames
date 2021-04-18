@@ -17,9 +17,10 @@
 
 import GameEventEmitter from '../../classes/GameEventEmitter';
 import { GameEventTypes } from '../interfaces';
-import {
-    GameHasFinished, GameHasStarted, GameStateHasChanged, ObstacleReachedInfo, PlayerHasFinished
-} from './interfaces/GameEvents';
+// import {
+//     GameHasFinished, GameHasStarted, GameStateHasChanged, ObstacleReachedInfo, PlayerHasFinished, Game
+// } from './interfaces/GameEvents';
+import * as GameEvents from './interfaces/GameEvents';
 
 export default class CatchFoodGameEventEmitter extends GameEventEmitter {
     private static CatchFoodGameEventEmitter: CatchFoodGameEventEmitter = new CatchFoodGameEventEmitter();
@@ -31,35 +32,39 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
         return this.CatchFoodGameEventEmitter;
     }
 
-    public static emitGameHasStartedEvent(data: GameHasStarted) {
+    public static emitGameHasStartedEvent(data: GameEvents.GameHasStarted) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasStarted, data);
     }
 
-    public static emitGameHasPausedEvent(data: GameStateHasChanged) {
+    public static emitGameHasPausedEvent(data: GameEvents.GameStateHasChanged) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasPaused, data);
     }
 
-    public static emitGameHasResumedEvent(data: GameStateHasChanged) {
+    public static emitGameHasResumedEvent(data: GameEvents.GameStateHasChanged) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasResumed, data);
     }
 
-    public static emitObstacleReachedEvent(data: ObstacleReachedInfo) {
+    public static emitObstacleReachedEvent(data: GameEvents.ObstacleReachedInfo) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.ObstacleReached, data);
     }
 
-    public static emitPlayerHasFinishedEvent(data: PlayerHasFinished) {
+    public static emitPlayerHasFinishedEvent(data: GameEvents.PlayerHasFinished) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerHasFinished, data);
     }
 
-    public static emitGameHasFinishedEvent(data: GameHasFinished) {
+    public static emitGameHasFinishedEvent(data: GameEvents.GameHasFinished) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasFinished, data);
     }
 
-    public static emitGameHasStoppedEvent(data: GameStateHasChanged) {
+    public static emitGameHasStoppedEvent(data: GameEvents.GameStateHasChanged) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasStopped, data);
     }
 
-    public static emitGameHasTimedOutEvent(data: GameHasFinished) {
+    public static emitGameHasTimedOutEvent(data: GameEvents.GameHasFinished) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasTimedOut, data);
+    }
+
+    public static emitPlayerHasDisconnected(data: GameEvents.PlayerHasDisconnectedInfo) {
+        this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerHasDisconnected, data);
     }
 }

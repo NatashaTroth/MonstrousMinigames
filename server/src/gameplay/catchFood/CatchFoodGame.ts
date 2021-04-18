@@ -325,4 +325,23 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
         return [...playerRanks];
     }
+
+    disconnectPlayer(userId: string): void {
+        try {
+            verifyGameState(this.gameState, [
+                GameState.Initialised,
+                GameState.Started,
+                GameState.Created,
+                GameState.Paused,
+            ]);
+
+            this.playersState[userId].isActive = false;
+            CatchFoodGameEventEmitter.emitPlayerHasDisconnected({
+                roomId: this.roomId,
+                userId,
+            });
+        } catch (e) {
+            //TODO
+        }
+    }
 }
