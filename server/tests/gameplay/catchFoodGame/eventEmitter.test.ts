@@ -21,6 +21,7 @@ describe('Event Emitter', () => {
 
     afterEach(() => {
         jest.runAllTimers();
+        jest.clearAllMocks();
     });
 
     // test super is being called

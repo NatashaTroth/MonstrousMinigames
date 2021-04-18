@@ -18,6 +18,7 @@ describe('Timer tests', () => {
 
     afterEach(() => {
         jest.runAllTimers();
+        jest.clearAllMocks();
     });
 
     it('sets the timeOutLimit to 5 minutes', () => {

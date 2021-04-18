@@ -12,6 +12,9 @@ describe('Game logic tests', () => {
         catchFoodGame = new CatchFoodGame();
         jest.useFakeTimers();
     });
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
 
     //-----Pause-----
     it('Can pause game when game has started', async () => {
