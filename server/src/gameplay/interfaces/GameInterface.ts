@@ -1,15 +1,18 @@
+import { User } from '../../interfaces/interfaces';
+import { GameStateInfo, PlayerState } from '../catchFood/interfaces';
 // import GameEventEmitter from '../../classes/GameEventEmitter';
+import { HashTable } from './';
 import { GameState } from './GameState';
 
 export interface GameInterface {
     roomId: string;
-    playersState: any; //TODO change
+    playersState: HashTable<PlayerState>; //TODO change for each game -> use ||
     gameState: GameState;
     currentRank: number;
 
-    createNewGame(players: any, trackLength?: number, numberOfObstacles?: number): void;
+    createNewGame(players: Array<User>, trackLength?: number, numberOfObstacles?: number): void;
     stopGame(): void;
     pauseGame(): void;
-    getGameStateInfo(): any;
+    getGameStateInfo(): GameStateInfo;
     disconnectPlayer(userId: string): void;
 }
