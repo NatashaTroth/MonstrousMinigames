@@ -1,4 +1,5 @@
 import { CatchFoodGame } from '../../../src/gameplay';
+import { MaxNumberUsersExceededError } from '../../../src/gameplay/customErrors';
 import { users } from '../mockUsers';
 
 // const TRACKLENGTH = 500
@@ -25,8 +26,23 @@ describe('Error handling tests', () => {
                 timestamp: 4242,
             },
         ];
-        expect(() => catchFoodGame.createNewGame(longerUsers)).toThrowError(
-            `Too many players. Max ${catchFoodGame.maxNumberOfPlayers} Players`
-        );
+        expect(() => catchFoodGame.createNewGame(longerUsers)).toThrowError(MaxNumberUsersExceededError);
+    });
+
+    it('throws an error when game is created with more than 4 players with the max number of users', () => {
+        const longerUsers = [
+            ...users,
+            {
+                id: '5',
+                name: 'Lavender',
+                roomId: 'xxx',
+                timestamp: 4242,
+            },
+        ];
+        try {
+            catchFoodGame.createNewGame(longerUsers);
+        } catch (e) {
+            expect(e.maxNumberOfUsers).toBe(catchFoodGame.maxNumberOfPlayers);
+        }
     });
 });

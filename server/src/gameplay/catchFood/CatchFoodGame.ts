@@ -1,5 +1,6 @@
 // import GameEventEmitter from '../../classes/GameEventEmitter';
 import { User } from '../../interfaces/interfaces';
+import { MaxNumberUsersExceededError } from '../customErrors';
 import { verifyGameState } from '../helperFunctions/verifyGameState';
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
 import { GameInterface, GameState, HashTable } from '../interfaces';
@@ -65,7 +66,10 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         // try {
         verifyGameState(this.gameState, [GameState.Initialised, GameState.Finished, GameState.Stopped]);
         if (players.length > this.maxNumberOfPlayers) {
-            throw new Error(`Too many players. Max ${this.maxNumberOfPlayers} Players`);
+            throw new MaxNumberUsersExceededError(
+                `Too many players. Max ${this.maxNumberOfPlayers} Players`,
+                this.maxNumberOfPlayers
+            );
         }
 
         this.gameState = GameState.Created;

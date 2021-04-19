@@ -1,4 +1,5 @@
 import DisconnectedUserError from './DisconnectedUserError';
+import MaxNumberUsersExceededError from './MaxNumberUsersExceededError';
 import WrongGameStateError from './WrongGameStateError';
 
-export { WrongGameStateError, DisconnectedUserError };
+export { WrongGameStateError, DisconnectedUserError, MaxNumberUsersExceededError };
