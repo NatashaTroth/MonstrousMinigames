@@ -24,7 +24,11 @@ describe('Game logic tests', () => {
     });
 
     it('Cannot pause game when game has not started', async () => {
-        catchFoodGame.pauseGame();
+        try {
+            catchFoodGame.pauseGame();
+        } catch (e) {
+            // ignore in this test
+        }
         expect(catchFoodGame.gameState).toBe(GameState.Initialised);
     });
 
@@ -42,7 +46,7 @@ describe('Game logic tests', () => {
         expect(catchFoodGame.timeOutRemainingTime).toBe(catchFoodGame.timeOutLimit - 5000);
     });
 
-    it('Cannot pause game when game has not started', async () => {
+    it('calls getGameTimePassedBeforePause when paused', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const getGameTimePassedBeforePauseSpy = jest.spyOn(
             CatchFoodGame.prototype as any,
@@ -69,13 +73,21 @@ describe('Game logic tests', () => {
     });
 
     it('Cannot resume game when game has not started', async () => {
-        catchFoodGame.resumeGame();
+        try {
+            catchFoodGame.resumeGame();
+        } catch (e) {
+            //ignore in this test
+        }
         expect(catchFoodGame.gameState).toBe(GameState.Initialised);
     });
 
     it('Cannot resume game when game has not been paused', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.resumeGame();
+        try {
+            catchFoodGame.resumeGame();
+        } catch (e) {
+            //ignore for this test
+        }
         expect(catchFoodGame.gameState).toBe(GameState.Started);
     });
 

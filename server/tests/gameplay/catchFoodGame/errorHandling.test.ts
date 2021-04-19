@@ -29,28 +29,4 @@ describe('Error handling tests', () => {
             `Too many players. Max ${catchFoodGame.maxNumberOfPlayers} Players`
         );
     });
-
-    //if it throws an error - catch it
-    // it('cannot disconnect an inactive user', async () => {
-    //     startGameAndAdvanceCountdown(catchFoodGame);
-    //     const obstaclesLength = catchFoodGame.playersState['1'].obstacles.length;
-    //     catchFoodGame.disconnectPlayer('1');
-    //     expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstaclesLength - 1);
-    // });
-
-    // it("throw an error if userId is not registered to the game", async () => {
-    //   catchFoodGame.startGame();
-    // try {
-    //   catchFoodGame.runForward("notUserId");
-    //   expect(true).toBeFalsy();
-    // } catch (e) {
-    //   //yaay, error was thrown
-    // }
-    // try {
-    //   catchFoodGame.playerHasCompletedObstacle("notUserId");
-    //   expect(true).toBeFalsy();
-    // } catch (e) {
-    //   //yaay, error was thrown
-    // }
-    // });
 });

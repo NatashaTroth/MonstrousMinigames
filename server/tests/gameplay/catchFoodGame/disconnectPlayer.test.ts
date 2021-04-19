@@ -2,16 +2,11 @@ import { CatchFoodGame } from '../../../src/gameplay';
 import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 // import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
-import {
-    // finishGame,
-    // getGameFinishedData,
-    // getGameFinishedDataDifferentTimes,
-    startAndFinishGameDifferentTimes,
-    startGameAndAdvanceCountdown,
-} from './gameHelperFunctions';
-
 // ..
 import { GameEventTypes, GameState } from '../../../src/gameplay/interfaces';
+import {
+    startAndFinishGameDifferentTimes, startGameAndAdvanceCountdown
+} from './gameHelperFunctions';
 
 const TRACK_LENGTH = 500;
 
@@ -43,13 +38,21 @@ describe('Disconnect Player tests', () => {
     it('cannot disconnect player when game has stopped', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.stopGame();
-        catchFoodGame.disconnectPlayer('1');
+        try {
+            catchFoodGame.disconnectPlayer('1');
+        } catch (e) {
+            //ignore for this test
+        }
         expect(catchFoodGame.playersState['1'].isActive).toBeTruthy();
     });
 
     it('cannot disconnect player when game has finished', async () => {
         startAndFinishGameDifferentTimes(catchFoodGame);
-        catchFoodGame.disconnectPlayer('1');
+        try {
+            catchFoodGame.disconnectPlayer('1');
+        } catch (e) {
+            //ignore for this test
+        }
         expect(catchFoodGame.playersState['1'].isActive).toBeTruthy();
     });
 
@@ -58,7 +61,11 @@ describe('Disconnect Player tests', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.runForward('1', SPEED);
         catchFoodGame.disconnectPlayer('1');
-        catchFoodGame.runForward('1');
+        try {
+            catchFoodGame.runForward('1');
+        } catch (e) {
+            //ignore for this test
+        }
         expect(catchFoodGame.playersState['1'].positionX).toBe(SPEED);
     });
 
@@ -67,7 +74,12 @@ describe('Disconnect Player tests', () => {
         const obstaclesLength = catchFoodGame.playersState['1'].obstacles.length;
         catchFoodGame.playerHasCompletedObstacle('1', catchFoodGame.playersState['1'].obstacles[0].id);
         catchFoodGame.disconnectPlayer('1');
-        catchFoodGame.playerHasCompletedObstacle('1', catchFoodGame.playersState['1'].obstacles[0].id);
+
+        try {
+            catchFoodGame.playerHasCompletedObstacle('1', catchFoodGame.playersState['1'].obstacles[0].id);
+        } catch (e) {
+            //ignore for this test
+        }
         expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstaclesLength - 1);
     });
 

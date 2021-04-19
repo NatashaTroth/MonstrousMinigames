@@ -30,22 +30,31 @@ describe('Change and verify game state', () => {
     it("shouldn't be able to move player until game has started and the countdown has run", async () => {
         catchFoodGame.createNewGame(users, 500, 4);
         const initialPositionX = catchFoodGame.playersState['1'].positionX;
-        catchFoodGame.runForward('50');
+        try {
+            catchFoodGame.runForward('50');
+        } catch (e) {
+            //ignore for this test
+        }
         expect(catchFoodGame.playersState['1'].positionX).toBe(initialPositionX);
     });
 
     it('should be able to move player once game has started and the countdown has run', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const initialPositionX = catchFoodGame.playersState['1'].positionX;
-        catchFoodGame.runForward('50');
-        expect(catchFoodGame.playersState['1'].positionX).toBe(initialPositionX);
+        catchFoodGame.runForward('1', 10);
+        expect(catchFoodGame.playersState['1'].positionX).toBe(initialPositionX + 10);
     });
 
     it("shouldn't be able to move player when game is paused", async () => {
-        catchFoodGame.createNewGame(users, 500, 4);
+        startGameAndAdvanceCountdown(catchFoodGame);
         const initialPositionX = catchFoodGame.playersState['1'].positionX;
         catchFoodGame.pauseGame();
-        catchFoodGame.runForward('50');
+        try {
+            catchFoodGame.runForward('50');
+        } catch (e) {
+            //ignore in this test
+        }
+
         expect(catchFoodGame.playersState['1'].positionX).toBe(initialPositionX);
     });
 
@@ -53,7 +62,11 @@ describe('Change and verify game state', () => {
         catchFoodGame.createNewGame(users, 500, 4);
         // Countdown still has to run
         const obstaclesCompletedLength = catchFoodGame.playersState['1'].obstacles.length;
-        catchFoodGame.playerHasCompletedObstacle('1', 0);
+        try {
+            catchFoodGame.playerHasCompletedObstacle('1', 0);
+        } catch (e) {
+            //ignore for this test
+        }
         expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstaclesCompletedLength);
     });
 
@@ -68,12 +81,20 @@ describe('Change and verify game state', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const obstaclesCompletedLength = catchFoodGame.playersState['1'].obstacles.length;
         catchFoodGame.pauseGame();
-        catchFoodGame.playerHasCompletedObstacle('1', 0);
+        try {
+            catchFoodGame.playerHasCompletedObstacle('1', 0);
+        } catch (e) {
+            //ignore for this test
+        }
         expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstaclesCompletedLength);
     });
 
     it("shouldn't be able to stop game unless game has started", async () => {
-        catchFoodGame.stopGame();
+        try {
+            catchFoodGame.stopGame();
+        } catch (e) {
+            //ignore for this test
+        }
         expect(catchFoodGame.gameState).toBe(GameState.Initialised);
     });
 
