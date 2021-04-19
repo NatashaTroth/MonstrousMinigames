@@ -5,6 +5,7 @@ import { verifyGameState } from '../helperFunctions/verifyGameState';
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
 import { GameInterface, GameState, HashTable } from '../interfaces';
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
+import { WrongObstacleIdError } from './customErrors';
 import { initiatePlayersState } from './helperFunctions/initiatePlayerState';
 import { verifyUserId } from './helperFunctions/verifyUserId';
 import { GameEvents, GameStateInfo, Obstacle, PlayerRank, PlayerState } from './interfaces';
@@ -245,7 +246,6 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
     playerHasCompletedObstacle(userId: string, obstacleId: number): void {
         //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
-        //TODO throw an error for obstacle that does not exist
         // try {
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.playersState, userId);
@@ -253,6 +253,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.playersState[userId].atObstacle = false;
         if (this.playersState[userId].obstacles[0].id === obstacleId) {
             this.playersState[userId].obstacles.shift();
+        } else {
+            throw new WrongObstacleIdError(`${obstacleId} is not the id for the next obstacle.`, userId, obstacleId);
         }
 
         // shouldn't happen - but just to be safe (e.g. in case messages arrive in wrong order)

@@ -5,7 +5,7 @@ import { startGameAndAdvanceCountdown } from './gameHelperFunctions';
 let catchFoodGame: CatchFoodGame;
 const USER_ID_THAT_DOES_NOT_EXIST = '50';
 
-describe('DisconnectedUserError handling tests', () => {
+describe('WrongUserIdError handling tests', () => {
     beforeEach(() => {
         jest.useFakeTimers();
         catchFoodGame = new CatchFoodGame();

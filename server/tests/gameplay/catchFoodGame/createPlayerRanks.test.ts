@@ -73,6 +73,4 @@ describe('Game logic tests', () => {
         expect(eventData.playerRanks[2].isActive).toBeTruthy();
         expect(eventData.playerRanks[3].isActive).toBeTruthy();
     });
-
-    //TODO finish
 });

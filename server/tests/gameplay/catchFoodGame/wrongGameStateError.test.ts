@@ -4,7 +4,7 @@ import { GameState } from '../../../src/gameplay/interfaces';
 import { users } from '../mockUsers';
 import {
     getToCreatedGameState, getToFinishedGameState, getToPausedGameState, getToStartedGameState,
-    getToStoppedGameState, startAndFinishGameDifferentTimes, startGameAndAdvanceCountdown
+    getToStoppedGameState, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
