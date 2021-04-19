@@ -245,6 +245,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
     playerHasCompletedObstacle(userId: string, obstacleId: number): void {
         //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
+        //TODO throw an error for obstacle that does not exist
         // try {
         verifyUserId(this.playersState, userId);
         verifyUserIsActive(userId, this.playersState[userId].isActive);
