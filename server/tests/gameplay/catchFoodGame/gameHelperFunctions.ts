@@ -117,3 +117,31 @@ export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
 
     return eventData;
 }
+
+export function getToCreatedGameState(catchFoodGame: CatchFoodGame) {
+    catchFoodGame.createNewGame(users);
+    expect(catchFoodGame.gameState).toBe(GameState.Created);
+}
+
+export function getToStartedGameState(catchFoodGame: CatchFoodGame) {
+    startGameAndAdvanceCountdown(catchFoodGame);
+    expect(catchFoodGame.gameState).toBe(GameState.Started);
+}
+
+export function getToPausedGameState(catchFoodGame: CatchFoodGame) {
+    startGameAndAdvanceCountdown(catchFoodGame);
+    catchFoodGame.pauseGame();
+    expect(catchFoodGame.gameState).toBe(GameState.Paused);
+}
+
+export function getToStoppedGameState(catchFoodGame: CatchFoodGame) {
+    startGameAndAdvanceCountdown(catchFoodGame);
+    catchFoodGame.stopGame();
+    expect(catchFoodGame.gameState).toBe(GameState.Stopped);
+}
+
+export function getToFinishedGameState(catchFoodGame: CatchFoodGame) {
+    startGameAndAdvanceCountdown(catchFoodGame);
+    finishGame(catchFoodGame);
+    expect(catchFoodGame.gameState).toBe(GameState.Finished);
+}

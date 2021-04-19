@@ -202,9 +202,9 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
     runForward(userId: string, speed = 1): void {
         // try {
+        verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.playersState, userId);
         verifyUserIsActive(userId, this.playersState[userId].isActive);
-        verifyGameState(this.gameState, [GameState.Started]);
 
         if (this.playersState[userId].finished) return;
         if (this.playersState[userId].atObstacle) return;
@@ -247,9 +247,9 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
         //TODO throw an error for obstacle that does not exist
         // try {
+        verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.playersState, userId);
         verifyUserIsActive(userId, this.playersState[userId].isActive);
-        verifyGameState(this.gameState, [GameState.Started]);
         this.playersState[userId].atObstacle = false;
         if (this.playersState[userId].obstacles[0].id === obstacleId) {
             this.playersState[userId].obstacles.shift();
@@ -342,14 +342,14 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
     disconnectPlayer(userId: string): void {
         // try {
-        verifyUserId(this.playersState, userId);
-        verifyUserIsActive(userId, this.playersState[userId].isActive);
         verifyGameState(this.gameState, [
             GameState.Initialised,
             GameState.Started,
             GameState.Created,
             GameState.Paused,
         ]);
+        verifyUserId(this.playersState, userId);
+        verifyUserIsActive(userId, this.playersState[userId].isActive);
 
         this.playersState[userId].isActive = false;
         CatchFoodGameEventEmitter.emitPlayerHasDisconnected({
