@@ -52,11 +52,11 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
             hammertime?.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL })
 
             if (distance <= MAX + Treshold) {
-                hammertime?.on('panleft panright', e => {
+                hammertime?.on('panup pandown', e => {
                     handleTouchEvent({ event: e.type, eventDistance: e.distance })
                 })
             } else {
-                hammertime?.off('panleft panright')
+                hammertime?.off('panup pandown')
             }
         }
 

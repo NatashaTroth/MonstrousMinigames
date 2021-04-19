@@ -71,7 +71,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
             case MESSAGETYPES.userInit:
                 messageData = data as IUserInitMessage
                 sessionStorage.setItem('userId', messageData.userId || '')
-                sessionStorage.setItem('name', messageData.name || '')
+                localStorage.setItem('name', messageData.name || '')
                 sessionStorage.setItem('roomId', messageData.roomId || '')
                 setIsPlayerAdmin(messageData.isAdmin || false)
                 break
