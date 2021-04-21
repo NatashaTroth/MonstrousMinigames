@@ -53,6 +53,7 @@ staging:client:
 
     only:
         - dev
+    when: manual
 
 production:client:
     stage: production

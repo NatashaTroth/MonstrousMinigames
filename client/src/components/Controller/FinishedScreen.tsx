@@ -14,7 +14,11 @@ export const FinishedScreen: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext)
 
     function handlePlayAgain() {
+        // eslint-disable-next-line no-console
+        console.log('play again')
         controllerSocket?.emit('message', { type: MESSAGETYPES.backToLobby })
+        // eslint-disable-next-line no-console
+        console.log('play again 2')
         resetGame()
         resetPlayer()
     }

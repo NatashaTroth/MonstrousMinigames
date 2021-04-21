@@ -1,7 +1,6 @@
 import { stringify } from 'query-string'
 import * as React from 'react'
 import { useHistory } from 'react-router-dom'
-import { io, Socket } from 'socket.io-client'
 
 import { GAMESTATE, MESSAGETYPES, OBSTACLES } from '../utils/constants'
 import { GameContext, IPlayerState } from './GameContextProvider'
@@ -12,13 +11,13 @@ export interface IObstacleMessage {
 }
 
 interface IScreenSocketContext {
-    screenSocket: Socket | undefined
-    setScreenSocket: (val: Socket | undefined, roomId: string) => void
+    screenSocket: SocketIOClient.Socket | undefined
+    setScreenSocket: (val: SocketIOClient.Socket | undefined, roomId: string) => void
     isScreenConnected: boolean
     handleSocketConnection: (val: string) => void
 }
 
-export const ScreenSocketContext = React.createContext<IScreenSocketContext>({
+export const defaultValue = {
     screenSocket: undefined,
     setScreenSocket: () => {
         // do nothing
@@ -27,7 +26,9 @@ export const ScreenSocketContext = React.createContext<IScreenSocketContext>({
     handleSocketConnection: () => {
         // do nothing
     },
-})
+}
+
+export const ScreenSocketContext = React.createContext<IScreenSocketContext>(defaultValue)
 
 export interface IPlayerRank {
     id: number
@@ -67,7 +68,7 @@ interface IConnectedUsers {
     users: IUser[]
 }
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
-    const [screenSocket, setScreenSocket] = React.useState<Socket | undefined>(undefined)
+    const [screenSocket, setScreenSocket] = React.useState<SocketIOClient.Socket | undefined>(undefined)
     const [messageData, setMessageData] = React.useState<IGameState | IConnectedUsers | undefined>()
     const history = useHistory()
 
@@ -173,14 +174,14 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setMessageData(data)
     })
 
-    function handleSetScreenSocket(val: Socket | undefined, roomId: string) {
+    function handleSetScreenSocket(val: SocketIOClient.Socket | undefined, roomId: string) {
         setScreenSocket(val)
         history.push(`/screen/${roomId}/lobby`)
     }
 
     const content = {
         screenSocket,
-        setScreenSocket: (val: Socket | undefined, roomId: string) => handleSetScreenSocket(val, roomId),
+        setScreenSocket: (val: SocketIOClient.Socket | undefined, roomId: string) => handleSetScreenSocket(val, roomId),
         isScreenConnected: screenSocket ? true : false,
         handleSocketConnection,
     }

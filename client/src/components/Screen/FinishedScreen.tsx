@@ -29,7 +29,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
                         <PlayerTime>{formatMs(player.totalTimeInMs)}</PlayerTime>
                         <PlayerDifference winner={index === 0}>
                             {index === 0
-                                ? formatMs(player.totalTimeInMs)
+                                ? `+${formatMs(player.totalTimeInMs)}`
                                 : `+${formatMs(player.totalTimeInMs - sortedPlayerRanks[0].totalTimeInMs)}`}
                         </PlayerDifference>
                     </LeaderBoardRow>

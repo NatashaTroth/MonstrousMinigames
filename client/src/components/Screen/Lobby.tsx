@@ -11,7 +11,6 @@ import Button from '../common/Button'
 import { GAMES } from './data'
 import {
     AdminIcon,
-    ConnectedUsers,
     GameChoiceContainer,
     Headline,
     ImagesContainer,
@@ -21,8 +20,10 @@ import {
     JoinedUsersView,
     ListOfGames,
     LobbyContainer,
+    StyledTypography,
     Subline,
     UpperSection,
+    UpperSectionItem,
     UserListItem,
 } from './Lobby.sc'
 
@@ -51,7 +52,7 @@ export const Lobby: React.FunctionComponent = () => {
         <LobbyContainer>
             <Headline>Room Code: {roomId}</Headline>
             <UpperSection>
-                <ConnectedUsers>
+                <UpperSectionItem>
                     <Subline>Connected Users</Subline>
                     <JoinedUsersView>
                         {connectedUsers?.map((user, index) => (
@@ -61,14 +62,22 @@ export const Lobby: React.FunctionComponent = () => {
                             </UserListItem>
                         ))}
                     </JoinedUsersView>
-                </ConnectedUsers>
-                <div>
+                </UpperSectionItem>
+                <UpperSectionItem>
+                    <StyledTypography>
+                        This screen will later serve as a game board displaying the current game progress and your
+                        smartphone will be used as a controller. To connect your phone, scan the QR code. Once your
+                        phone is connected, your name should appear among the connected users. If all players are ready,
+                        only player 1 will be able to start the game.
+                    </StyledTypography>
+                </UpperSectionItem>
+                <UpperSectionItem>
                     <div id="qrCode" />
                     <MuiButton onClick={handleCopyToClipboard}>
                         Copy to Clipboard
                         <Assignment />
                     </MuiButton>
-                </div>
+                </UpperSectionItem>
             </UpperSection>
 
             <GameChoiceContainer>

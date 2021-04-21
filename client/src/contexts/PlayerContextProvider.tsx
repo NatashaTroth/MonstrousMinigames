@@ -4,25 +4,7 @@ import { useHistory } from 'react-router'
 import { OBSTACLES } from '../utils/constants'
 import { GameContext } from './GameContextProvider'
 
-interface IObstacle {
-    type: OBSTACLES
-    id: number
-}
-interface IPlayerContext {
-    obstacle: undefined | IObstacle
-    setObstacle: (val: IObstacle | undefined) => void
-    playerFinished: boolean
-    setPlayerFinished: (val: boolean) => void
-    playerRank: number | undefined
-    setPlayerRank: (val: number) => void
-    isPlayerAdmin: boolean
-    setIsPlayerAdmin: (val: boolean) => void
-    permission: boolean
-    setPermissionGranted: (val: boolean) => void
-    resetPlayer: () => void
-}
-
-export const PlayerContext = React.createContext<IPlayerContext>({
+export const defaultValue = {
     obstacle: undefined,
     setObstacle: () => {
         // do nothing
@@ -46,7 +28,26 @@ export const PlayerContext = React.createContext<IPlayerContext>({
     resetPlayer: () => {
         // do nothing
     },
-})
+}
+interface IObstacle {
+    type: OBSTACLES
+    id: number
+}
+interface IPlayerContext {
+    obstacle: undefined | IObstacle
+    setObstacle: (val: IObstacle | undefined) => void
+    playerFinished: boolean
+    setPlayerFinished: (val: boolean) => void
+    playerRank: number | undefined
+    setPlayerRank: (val: number) => void
+    isPlayerAdmin: boolean
+    setIsPlayerAdmin: (val: boolean) => void
+    permission: boolean
+    setPermissionGranted: (val: boolean) => void
+    resetPlayer: () => void
+}
+
+export const PlayerContext = React.createContext<IPlayerContext>(defaultValue)
 
 const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [obstacle, setObstacle] = React.useState<undefined | IObstacle>(undefined)

@@ -1,26 +1,13 @@
 import { stringify } from 'query-string'
 import * as React from 'react'
 import { useHistory } from 'react-router-dom'
-import { io, Socket } from 'socket.io-client'
 
 import { MESSAGETYPES, OBSTACLES } from '../utils/constants'
 import { ClickRequestDeviceMotion } from '../utils/permissions'
 import { GameContext } from './GameContextProvider'
 import { PlayerContext } from './PlayerContextProvider'
 
-export interface IObstacleMessage {
-    type: string
-    obstacleType: OBSTACLES
-    obstacleId: number
-}
-interface IControllerSocketContext {
-    controllerSocket: Socket | undefined
-    isControllerConnected: boolean
-    setControllerSocket: (val: Socket | undefined, roomId: string) => void
-    handleSocketConnection: (roomId: string, name: string) => void
-}
-
-export const ControllerSocketContext = React.createContext<IControllerSocketContext>({
+export const defaultValue = {
     controllerSocket: undefined,
     setControllerSocket: () => {
         // do nothing
@@ -29,7 +16,20 @@ export const ControllerSocketContext = React.createContext<IControllerSocketCont
     handleSocketConnection: () => {
         // do nothing
     },
-})
+}
+export interface IObstacleMessage {
+    type: string
+    obstacleType: OBSTACLES
+    obstacleId: number
+}
+interface IControllerSocketContext {
+    controllerSocket: SocketIOClient.Socket | undefined
+    isControllerConnected: boolean
+    setControllerSocket: (val: SocketIOClient.Socket | undefined, roomId: string) => void
+    handleSocketConnection: (roomId: string, name: string) => void
+}
+
+export const ControllerSocketContext = React.createContext<IControllerSocketContext>(defaultValue)
 
 interface IUserInitMessage {
     name?: string
@@ -51,7 +51,7 @@ export interface IUser {
 }
 
 const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) => {
-    const [controllerSocket, setControllerSocket] = React.useState<Socket | undefined>(undefined)
+    const [controllerSocket, setControllerSocket] = React.useState<SocketIOClient.Socket | undefined>(undefined)
     const {
         setObstacle,
         setPlayerFinished,
@@ -71,7 +71,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
             case MESSAGETYPES.userInit:
                 messageData = data as IUserInitMessage
                 sessionStorage.setItem('userId', messageData.userId || '')
-                sessionStorage.setItem('name', messageData.name || '')
+                localStorage.setItem('name', messageData.name || '')
                 sessionStorage.setItem('roomId', messageData.roomId || '')
                 setIsPlayerAdmin(messageData.isAdmin || false)
                 break
@@ -100,7 +100,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         }
     })
 
-    function handleSetControllerSocket(val: Socket | undefined, roomId: string) {
+    function handleSetControllerSocket(val: SocketIOClient.Socket | undefined, roomId: string) {
         setControllerSocket(val)
         history.push(`/controller/${roomId}/lobby`)
     }
@@ -137,7 +137,8 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
 
     const content = {
         controllerSocket,
-        setControllerSocket: (val: Socket | undefined, roomId: string) => handleSetControllerSocket(val, roomId),
+        setControllerSocket: (val: SocketIOClient.Socket | undefined, roomId: string) =>
+            handleSetControllerSocket(val, roomId),
         isControllerConnected: controllerSocket ? true : false,
         handleSocketConnection,
     }
