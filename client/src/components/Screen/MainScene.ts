@@ -46,10 +46,11 @@ class MainScene extends Phaser.Scene {
 
     create() {
         //this.sound.add("music", { loop: false });
+
         const forest = this.add.image(0, 0, 'forest')
 
         players.push(this.physics.add.sprite(10, 10, 'franz'))
-        goals.push(this.physics.add.sprite(1050, 100, 'goal'))
+        goals.push(this.physics.add.sprite(1600, 100, 'goal'))
 
         if(playerNumber >= 2){
             players.push(this.physics.add.sprite(68, 300, 'susi'))
@@ -91,7 +92,7 @@ class MainScene extends Phaser.Scene {
             player.setCollideWorldBounds(true)
         })
 
-        forest.setScale(1.2, 1.4)
+        forest.setScale(1.8, 1.4)
         goals.forEach(goal => {
             goal.setScale(0.1,0.1)
         })
