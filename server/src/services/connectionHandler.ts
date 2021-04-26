@@ -7,7 +7,11 @@ import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventE
 import { PlayerFinishedInfo } from '../gameplay/catchFood/interfaces';
 import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType';
 import {
-    GameEventTypes, GameHasFinished, GameHasStarted, GameStateHasChanged, ObstacleReachedInfo
+    GameEventTypes,
+    GameHasFinished,
+    GameHasStarted,
+    GameStateHasChanged,
+    ObstacleReachedInfo,
 } from '../gameplay/interfaces/index';
 import emitter from '../helpers/emitter';
 import { IMessageObstacle } from '../interfaces/messageObstacle';
@@ -91,7 +95,7 @@ class ConnectionHandler {
             emitter.sendConnectedUsers(screenNameSpace, socket.room);
             console.log(socket.room.id + ' | Controller connected: ' + socket.user.id);
 
-            emitter.sendUserInit(socket);
+            emitter.sendUserInit(socket, user.number);
 
             socket.on('disconnect', () => {
                 console.log(socket.room.id + ' | Controller disconnected: ' + socket.user.id);
@@ -107,6 +111,7 @@ class ConnectionHandler {
                             roomId: socket.room.id,
                             name: admin.name,
                             isAdmin: socket.room.isAdmin(admin),
+                            number: admin.number,
                         });
                     }
                 }
@@ -155,7 +160,7 @@ class ConnectionHandler {
                                         socket.room.id
                                     );
                                     emitter.sendConnectedUsers(screenNameSpace, socket.room);
-                                    emitter.sendUserInit(socket);
+                                    emitter.sendUserInit(socket, user.number);
                                 });
                             }
                         }
@@ -171,11 +176,11 @@ class ConnectionHandler {
                         if (socket.room.isAdmin(socket.user)) {
                             if (socket.room.isPlaying()) {
                                 console.log(socket.room.id + ' | Pause Game');
-                                socket.room.pauseGame()
-                            }else if (socket.room.isPaused()) {
+                                socket.room.pauseGame();
+                            } else if (socket.room.isPaused()) {
                                 console.log(socket.room.id + ' | Resume Game');
-                                socket.room.resumeGame()
-                         }
+                                socket.room.resumeGame();
+                            }
                         }
 
                         break;
@@ -257,7 +262,7 @@ class ConnectionHandler {
             console.log(data.roomId + ' | Game has timed out');
             const room = rs.getRoomById(data.roomId);
             room.setClosed();
-            emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data);
+            emitter.sendGameHasTimedOut([controllerNamespace, screenNameSpace], data);
         });
         this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameStateHasChanged) => {
             console.log(data.roomId + ' | Game has stopped');
