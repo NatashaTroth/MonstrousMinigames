@@ -3,6 +3,7 @@ import * as React from 'react'
 import { useHistory } from 'react-router-dom'
 
 import { GAMESTATE, MESSAGETYPES, OBSTACLES } from '../utils/constants'
+import ScreenSocket from '../utils/screenSocket'
 import { GameContext, IPlayerState } from './GameContextProvider'
 
 export interface IObstacleMessage {
@@ -176,6 +177,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
 
     function handleSetScreenSocket(val: SocketIOClient.Socket | undefined, roomId: string) {
         setScreenSocket(val)
+        ScreenSocket.getInstance(val)
         history.push(`/screen/${roomId}/lobby`)
     }
 
