@@ -171,11 +171,11 @@ class ConnectionHandler {
                         if (socket.room.isAdmin(socket.user)) {
                             if (socket.room.isPlaying()) {
                                 console.log(socket.room.id + ' | Pause Game');
-                                socket.room.pauseGame()
-                            }else if (socket.room.isPaused()) {
+                                socket.room.pauseGame();
+                            } else if (socket.room.isPaused()) {
                                 console.log(socket.room.id + ' | Resume Game');
-                                socket.room.resumeGame()
-                         }
+                                socket.room.resumeGame();
+                            }
                         }
 
                         break;

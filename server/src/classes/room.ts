@@ -1,3 +1,4 @@
+import { Globals } from '../enums/globals';
 import { CatchFoodGame } from '../gameplay';
 import User from './user';
 
@@ -26,7 +27,7 @@ class Room {
     }
 
     public addUser(user: User): boolean {
-        if (this.isOpen()) {
+        if (this.isOpen() && this.getUserCount() < Globals.MAX_PLAYER_NUMBER) {
             if (this.users.length === 0) this.admin = user;
             this.users.push(user);
             return true;
@@ -35,6 +36,10 @@ class Room {
     }
     public isAdmin(user: User): boolean {
         return user === this.admin;
+    }
+
+    public getUserCount(): number {
+        return this.users.length;
     }
 
     public removeUser(toBeRemoved: User): void {
