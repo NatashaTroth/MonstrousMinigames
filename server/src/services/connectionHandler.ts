@@ -257,7 +257,7 @@ class ConnectionHandler {
             console.log(data.roomId + ' | Game has timed out');
             const room = rs.getRoomById(data.roomId);
             room.setClosed();
-            emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data);
+            emitter.sendGameHasTimedOut([controllerNamespace, screenNameSpace], data);
         });
         this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameStateHasChanged) => {
             console.log(data.roomId + ' | Game has stopped');

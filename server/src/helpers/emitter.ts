@@ -51,6 +51,15 @@ function sendGameHasFinished(nsps: Array<Namespace>, data: GameHasFinished): voi
     });
 }
 
+function sendGameHasTimedOut(nsps: Array<Namespace>, data: GameHasFinished): void {
+    nsps.forEach(function (namespace: Namespace) {
+        namespace.to(data.roomId).emit('message', {
+            type: MessageTypes.GAME_HAS_TIMED_OUT,
+            data: data,
+        });
+    });
+}
+
 function sendGameHasStopped(nsps: Array<Namespace>, roomId: string): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(roomId).emit('message', {
@@ -87,6 +96,7 @@ export default {
     sendGameHasStarted,
     sendPlayerFinished,
     sendGameHasFinished,
+    sendGameHasTimedOut,
     sendConnectedUsers,
     sendMessage,
     sendGameHasStopped,
