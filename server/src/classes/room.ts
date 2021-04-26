@@ -30,10 +30,18 @@ class Room {
         if (this.isOpen() && this.getUserCount() < Globals.MAX_PLAYER_NUMBER) {
             if (this.users.length === 0) this.admin = user;
             this.users.push(user);
+            this.updateUserNumbers();
             return true;
         }
         return false;
     }
+
+    private updateUserNumbers(): void {
+        this.users.forEach(function (user, i) {
+            user.setNumber(i + 1);
+        });
+    }
+
     public isAdmin(user: User): boolean {
         return user === this.admin;
     }
@@ -46,6 +54,7 @@ class Room {
         const index = this.users.indexOf(toBeRemoved);
         this.users.splice(index, 1);
         this.resolveAdmin();
+        this.updateUserNumbers();
     }
 
     public userDisconnected(userId: string): void {

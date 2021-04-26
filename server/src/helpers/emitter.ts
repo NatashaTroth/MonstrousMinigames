@@ -6,13 +6,14 @@ import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType';
 import { GameHasFinished, GameHasStarted, PlayerHasFinished } from '../gameplay/interfaces/index';
 
-function sendUserInit(socket: any): void {
+function sendUserInit(socket: any, number: number): void {
     socket.emit('message', {
         type: MessageTypes.USER_INIT,
         userId: socket.user.id,
         roomId: socket.room.id,
         name: socket.user.name,
         isAdmin: socket.room.isAdmin(socket.user),
+        number: number,
     });
 }
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {

@@ -63,4 +63,14 @@ describe('Room: Users', () => {
         }
         expect(room.addUser(new User(room.id, '999', 'User'))).toBeFalsy();
     });
+
+    it('number of first player should be 1 and number of second player 2', () => {
+        expect(user1.number).toStrictEqual(1);
+        expect(user2.number).toStrictEqual(2);
+    });
+
+    it('number of second player should be 1 if first player is removed', () => {
+        room.removeUser(user1);
+        expect(user2.number).toStrictEqual(1);
+    });
 });
