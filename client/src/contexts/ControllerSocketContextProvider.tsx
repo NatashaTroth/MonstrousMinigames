@@ -95,6 +95,11 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
             case MESSAGETYPES.gameHasReset:
                 history.push(`/controller/${roomId}/lobby`)
                 break
+            case MESSAGETYPES.gameHasTimedOut:
+                messageData = data as IGameFinished
+                setPlayerFinished(true)
+                setPlayerRank(messageData.rank)
+                break
             default:
                 break
         }

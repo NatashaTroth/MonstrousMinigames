@@ -34,9 +34,9 @@ export const ScreenSocketContext = React.createContext<IScreenSocketContext>(def
 export interface IPlayerRank {
     id: number
     name: string
-    rank: number
+    rank?: number
     finished: boolean
-    totalTimeInMs: number
+    totalTimeInMs?: number
     positionX: number
 }
 interface IGameStateData {
@@ -85,6 +85,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setRoomId,
         setConnectedUsers,
         setCountdownTime,
+        setHasTimedOut,
     } = React.useContext(GameContext)
 
     React.useEffect(() => {
@@ -108,15 +109,22 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     history.push(`/screen/${roomId}/game1`)
                     break
                 case MESSAGETYPES.gameHasFinished:
-                    data = messageData as IGameState
-                    setFinished(true)
-                    setPlayerRanks(data.data!.playerRanks!)
-                    history.push(`/screen/${roomId}/finished`)
+                    handleGameHasFinished(messageData as IGameState)
                     break
                 case MESSAGETYPES.gameHasReset:
                     history.push(`/screen/${roomId}/lobby`)
                     break
+                case MESSAGETYPES.gameHasTimedOut:
+                    setHasTimedOut(true)
+                    handleGameHasFinished(messageData as IGameState)
+                    break
             }
+        }
+
+        function handleGameHasFinished(messageData: IGameState) {
+            setFinished(true)
+            setPlayerRanks(messageData.data!.playerRanks!)
+            history.push(`/screen/${roomId}/finished`)
         }
 
         function handleGameState(messageData: IGameState) {
@@ -142,6 +150,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setCountdownTime,
         setFinished,
         setGameStarted,
+        setHasTimedOut,
         setPlayerRanks,
         setPlayers,
         setRoomId,

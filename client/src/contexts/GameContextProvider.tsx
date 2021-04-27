@@ -44,6 +44,10 @@ export const defaultValue = {
     setPlayerRanks: () => {
         // do nothing
     },
+    hasTimedOut: false,
+    setHasTimedOut: () => {
+        // do nothing
+    },
 }
 interface IGameContext {
     trackLength?: number
@@ -65,6 +69,8 @@ interface IGameContext {
     setCountdownTime: (val: number) => void
     playerRanks?: IPlayerRank[]
     setPlayerRanks: (val: IPlayerRank[]) => void
+    hasTimedOut: boolean
+    setHasTimedOut: (val: boolean) => void
 }
 
 interface IObstacle {
@@ -94,6 +100,7 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [connectedUsers, setConnectedUsers] = React.useState<undefined | IUser[]>()
     const [showInstructions, setShowInstructions] = React.useState<boolean>(true)
     const [countdownTime, setCountdownTime] = React.useState<number>(0)
+    const [hasTimedOut, setHasTimedOut] = React.useState<boolean>(false)
 
     const content = {
         trackLength,
@@ -132,6 +139,8 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setCountdownTime,
         playerRanks,
         setPlayerRanks,
+        hasTimedOut,
+        setHasTimedOut,
     }
     return <GameContext.Provider value={content}>{children}</GameContext.Provider>
 }
