@@ -14,11 +14,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext)
 
     function handlePlayAgain() {
-        // eslint-disable-next-line no-console
-        console.log('play again')
         controllerSocket?.emit('message', { type: MESSAGETYPES.backToLobby })
-        // eslint-disable-next-line no-console
-        console.log('play again 2')
         resetGame()
         resetPlayer()
     }
@@ -27,8 +23,14 @@ export const FinishedScreen: React.FunctionComponent = () => {
         <FullScreenContainer>
             <FinishedScreenContainer>
                 <FinishedScreenText>
-                    #{playerRank}
-                    <span>Finished!</span>
+                    {playerRank ? (
+                        <>
+                            #{playerRank}
+                            <span>Finished!</span>
+                        </>
+                    ) : (
+                        'Game has timed out'
+                    )}
                 </FinishedScreenText>
                 {/* TODO check if all players are finished */}
                 {isPlayerAdmin && <Button onClick={handlePlayAgain} text="Back to Lobby" />}

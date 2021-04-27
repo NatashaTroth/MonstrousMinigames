@@ -41,9 +41,23 @@ describe('Screen FinishedScreen', () => {
         serverSocket.emit('hello', 'world')
     })
 
-    it('renders text "Finished!"', () => {
+    it('when player reaches the goal, it renders text "Finished!"', () => {
         const givenText = 'Finished!'
-        const { container } = render(<FinishedScreen />)
+        const { container } = render(
+            <PlayerContext.Provider value={{ ...defaultValue, playerRank: 1 }}>
+                <FinishedScreen />
+            </PlayerContext.Provider>
+        )
+        expect(queryByText(container, givenText)).toBeTruthy()
+    })
+
+    it('when player don`t reaches the goal, it renders text "Game has timed out"', () => {
+        const givenText = 'Game has timed out'
+        const { container } = render(
+            <PlayerContext.Provider value={{ ...defaultValue, playerRank: undefined }}>
+                <FinishedScreen />
+            </PlayerContext.Provider>
+        )
         expect(queryByText(container, givenText)).toBeTruthy()
     })
 
