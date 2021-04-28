@@ -7,14 +7,16 @@ class User {
     public name: string;
     public timestamp: number;
     public active: boolean;
+    public number: number;
 
-    constructor(roomId: string, socketId: string, name: string, id: string = shortid.generate()) {
+    constructor(roomId: string, socketId: string, name: string, id: string = shortid.generate(), number = 0) {
         this.id = id;
         this.roomId = roomId;
         this.socketId = socketId;
         this.name = name;
         this.timestamp = Date.now();
         this.active = true;
+        this.number = number;
     }
 
     public setRoomId(id: string): void {
@@ -36,6 +38,11 @@ class User {
     public setActive(active: boolean): void {
         this.active = active;
     }
+
+    public setNumber(number: number) {
+        this.number = number;
+    }
+
     public clear() {
         this.id = '';
         this.roomId = '';

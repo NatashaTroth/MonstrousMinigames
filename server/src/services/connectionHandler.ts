@@ -4,10 +4,8 @@ import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
 import { Namespaces } from '../enums/nameSpaces';
 import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventEmitter';
-import { GameEvents } from '../gameplay/catchFood/interfaces';
-import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces';
+import { CatchFoodMsgType, GameEvents } from '../gameplay/catchFood/interfaces';
 import { GameEventTypes } from '../gameplay/interfaces/index';
-
 import emitter from '../helpers/emitter';
 import { IMessageObstacle } from '../interfaces/messageObstacle';
 import { IMessage } from '../interfaces/messages';
@@ -90,7 +88,7 @@ class ConnectionHandler {
             emitter.sendConnectedUsers(screenNameSpace, socket.room);
             console.log(socket.room.id + ' | Controller connected: ' + socket.user.id);
 
-            emitter.sendUserInit(socket);
+            emitter.sendUserInit(socket, user.number);
 
             socket.on('disconnect', () => {
                 console.log(socket.room.id + ' | Controller disconnected: ' + socket.user.id);
@@ -106,6 +104,7 @@ class ConnectionHandler {
                             roomId: socket.room.id,
                             name: admin.name,
                             isAdmin: socket.room.isAdmin(admin),
+                            number: admin.number,
                         });
                     }
                 }
@@ -154,7 +153,7 @@ class ConnectionHandler {
                                         socket.room.id
                                     );
                                     emitter.sendConnectedUsers(screenNameSpace, socket.room);
-                                    emitter.sendUserInit(socket);
+                                    emitter.sendUserInit(socket, user.number);
                                 });
                             }
                         }
@@ -256,7 +255,7 @@ class ConnectionHandler {
             console.log(data.roomId + ' | Game has timed out');
             const room = rs.getRoomById(data.roomId);
             room.setClosed();
-            emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data);
+            emitter.sendGameHasTimedOut([controllerNamespace, screenNameSpace], data);
         });
         this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameEvents.GameStateHasChanged) => {
             console.log(data.roomId + ' | Game has stopped');

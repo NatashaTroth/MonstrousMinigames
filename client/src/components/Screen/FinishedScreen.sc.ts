@@ -87,3 +87,18 @@ export const PlayerTime = styled.div`
     padding: 5px;
     text-align: right;
 `
+
+export const UnfinishedSectionHeadline = styled.div`
+    color: black;
+    font-weight: 700;
+    font-size: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+`
+
+export const UnfinishedUserRow = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+`
