@@ -1,4 +1,4 @@
-import { ClickRequestDeviceMotion } from './permissions'
+import { ClickRequestDeviceMotion } from '../../utils/permissions'
 
 describe('test ClickRequestDeviceMotion function', () => {
     it('ClickRequestDeviceMotion should return true', async () => {

@@ -1,7 +1,7 @@
 import { cleanup, queryByText, render } from '@testing-library/react'
 import React from 'react'
 
-import ShakeInstruction from './ShakeInstruction'
+import ShakeInstruction from '../../components/Controller/ShakeInstruction'
 
 afterEach(cleanup)
 describe('Controller ShakeInstruction', () => {

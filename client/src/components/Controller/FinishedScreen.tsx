@@ -23,8 +23,14 @@ export const FinishedScreen: React.FunctionComponent = () => {
         <FullScreenContainer>
             <FinishedScreenContainer>
                 <FinishedScreenText>
-                    #{playerRank}
-                    <span>Finished!</span>
+                    {playerRank ? (
+                        <>
+                            #{playerRank}
+                            <span>Finished!</span>
+                        </>
+                    ) : (
+                        'Game has timed out'
+                    )}
                 </FinishedScreenText>
                 {/* TODO check if all players are finished */}
                 {isPlayerAdmin && <Button onClick={handlePlayAgain} text="Back to Lobby" />}

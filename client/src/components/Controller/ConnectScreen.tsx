@@ -15,7 +15,10 @@ interface IFormState {
 
 export const ConnectScreen: React.FunctionComponent = () => {
     const { id }: IRouteParams = useParams()
-    const [formState, setFormState] = React.useState<IFormState>({ name: '', roomId: id || '' })
+    const [formState, setFormState] = React.useState<IFormState>({
+        name: localStorage.getItem('name') || '',
+        roomId: id || '',
+    })
     const { controllerSocket, handleSocketConnection } = React.useContext(ControllerSocketContext)
     const { playerFinished, permission } = React.useContext(PlayerContext)
 

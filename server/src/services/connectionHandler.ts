@@ -95,7 +95,7 @@ class ConnectionHandler {
             emitter.sendConnectedUsers(screenNameSpace, socket.room);
             console.log(socket.room.id + ' | Controller connected: ' + socket.user.id);
 
-            emitter.sendUserInit(socket);
+            emitter.sendUserInit(socket, user.number);
 
             socket.on('disconnect', () => {
                 console.log(socket.room.id + ' | Controller disconnected: ' + socket.user.id);
@@ -111,6 +111,7 @@ class ConnectionHandler {
                             roomId: socket.room.id,
                             name: admin.name,
                             isAdmin: socket.room.isAdmin(admin),
+                            number: admin.number,
                         });
                     }
                 }
@@ -130,9 +131,7 @@ class ConnectionHandler {
                                     clearInterval(gameStateInterval);
                                 }
                                 // send gamestate volatile
-                                if (socket.room.isPlaying()) {
-                                    emitter.sendGameState(screenNameSpace, socket.room, true);
-                                }
+                                emitter.sendGameState(screenNameSpace, socket.room, true);
                             }, 100);
                         }
 
@@ -140,7 +139,7 @@ class ConnectionHandler {
                     }
                     case CatchFoodMsgType.MOVE: {
                         if (socket.room.isPlaying()) {
-                            socket.room.game?.runForward(socket.user.id, parseInt(`${process.env.SPEED}`, 10) || 1);
+                            socket.room.game?.runForward(socket.user.id, parseInt(`${process.env.SPEED}`, 10) || 2);
                         }
                         break;
                     }
@@ -161,7 +160,7 @@ class ConnectionHandler {
                                         socket.room.id
                                     );
                                     emitter.sendConnectedUsers(screenNameSpace, socket.room);
-                                    emitter.sendUserInit(socket);
+                                    emitter.sendUserInit(socket, user.number);
                                 });
                             }
                         }
@@ -263,7 +262,7 @@ class ConnectionHandler {
             console.log(data.roomId + ' | Game has timed out');
             const room = rs.getRoomById(data.roomId);
             room.setClosed();
-            emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data);
+            emitter.sendGameHasTimedOut([controllerNamespace, screenNameSpace], data);
         });
         this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameStateHasChanged) => {
             console.log(data.roomId + ' | Game has stopped');
