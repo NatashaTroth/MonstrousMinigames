@@ -81,7 +81,9 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         playerFinished,
         setPlayerFinished: (val: boolean) => {
             setPlayerFinished(val);
-            history.push(`/controller/${roomId}/finished`);
+            if (val) {
+                history.push(`/controller/${roomId}/finished`);
+            }
         },
         playerRank,
         setPlayerRank,
@@ -90,7 +92,8 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         permission,
         setPermissionGranted,
         resetPlayer: () => {
-            setPlayerFinished(false), setPlayerRank(undefined);
+            setPlayerFinished(false);
+            setPlayerRank(undefined);
         },
         playerNumber,
         setPlayerNumber,
