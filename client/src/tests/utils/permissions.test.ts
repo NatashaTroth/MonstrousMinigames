@@ -1,7 +1,7 @@
-import { ClickRequestDeviceMotion } from '../../utils/permissions'
+import { ClickRequestDeviceMotion } from '../../utils/permissions';
 
 describe('test ClickRequestDeviceMotion function', () => {
     it('ClickRequestDeviceMotion should return true', async () => {
-        expect(await ClickRequestDeviceMotion()).toBe(true)
-    })
-})
+        expect(await ClickRequestDeviceMotion()).toBe(true);
+    });
+});

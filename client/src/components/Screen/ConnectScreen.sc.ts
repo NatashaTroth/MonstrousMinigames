@@ -1,14 +1,14 @@
-import { Link } from 'react-router-dom'
-import styled from 'styled-components'
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
-import camp from '../../images/camp.svg'
-import { orange } from '../../utils/colors'
+import camp from '../../images/camp.svg';
+import { orange } from '../../utils/colors';
 
-const borderWidth = 5
-const boxShadowDepth = 8
-const fontSize = 1
-const horizontalPadding = 16
-const verticalPadding = 8
+const borderWidth = 5;
+const boxShadowDepth = 8;
+const fontSize = 1;
+const horizontalPadding = 16;
+const verticalPadding = 8;
 
 export const ConnectScreenContainer = styled.div`
     height: 100%;
@@ -21,7 +21,7 @@ export const ConnectScreenContainer = styled.div`
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-`
+`;
 export const StyledInput = styled.input`
     color: black;
     border: none;
@@ -40,13 +40,13 @@ export const StyledInput = styled.input`
     &:active {
         outline: none;
     }
-`
+`;
 export const StyledForm = styled.form`
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-`
+`;
 
 export const FormContainer = styled.div`
     width: 100%;
@@ -58,7 +58,7 @@ export const FormContainer = styled.div`
     button:first-of-type {
         margin-bottom: 50px;
     }
-`
+`;
 
 export const StyledLabel = styled.label`
     margin: 0px 30px 30px 30px;
@@ -80,7 +80,7 @@ export const StyledLabel = styled.label`
     border-radius: 4px;
     width: 30%;
     max-width: 400px;
-`
+`;
 
 export const ImpressumLink = styled(Link)`
     text-decoration: none;
@@ -97,4 +97,4 @@ export const ImpressumLink = styled(Link)`
     border-radius: 4px;
     margin-bottom: 20px;
     padding: 10px 15px;
-`
+`;

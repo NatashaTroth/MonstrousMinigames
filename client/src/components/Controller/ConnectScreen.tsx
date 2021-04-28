@@ -1,50 +1,50 @@
-import * as React from 'react'
-import { useParams } from 'react-router'
+import * as React from 'react';
+import { useParams } from 'react-router';
 
-import { IRouteParams } from '../../App'
-import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider'
-import { PlayerContext } from '../../contexts/PlayerContextProvider'
-import { sendMovement } from '../../utils/sendMovement'
-import Button from '../common/Button'
-import { ConnectScreenContainer, FormContainer, ImpressumLink, StyledInput, StyledLabel } from './ConnectScreen.sc'
+import { IRouteParams } from '../../App';
+import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
+import { PlayerContext } from '../../contexts/PlayerContextProvider';
+import { sendMovement } from '../../utils/sendMovement';
+import Button from '../common/Button';
+import { ConnectScreenContainer, FormContainer, ImpressumLink, StyledInput, StyledLabel } from './ConnectScreen.sc';
 
 interface IFormState {
-    name: string
-    roomId: string
+    name: string;
+    roomId: string;
 }
 
 export const ConnectScreen: React.FunctionComponent = () => {
-    const { id }: IRouteParams = useParams()
+    const { id }: IRouteParams = useParams();
     const [formState, setFormState] = React.useState<IFormState>({
         name: localStorage.getItem('name') || '',
         roomId: id || '',
-    })
-    const { controllerSocket, handleSocketConnection } = React.useContext(ControllerSocketContext)
-    const { playerFinished, permission } = React.useContext(PlayerContext)
+    });
+    const { controllerSocket, handleSocketConnection } = React.useContext(ControllerSocketContext);
+    const { playerFinished, permission } = React.useContext(PlayerContext);
 
     if (permission) {
         window.addEventListener(
             'devicemotion',
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (event: any) => {
-                event.preventDefault()
+                event.preventDefault();
                 if (
                     event?.acceleration?.x &&
                     (event.acceleration.x < -2 || event.acceleration.x > 2) &&
                     !playerFinished
                 ) {
-                    sendMovement(controllerSocket)
+                    sendMovement(controllerSocket);
                 }
             }
-        )
+        );
     }
 
     return (
         <ConnectScreenContainer>
             <FormContainer
                 onSubmit={e => {
-                    e.preventDefault()
-                    handleSocketConnection(formState.roomId, formState?.name)
+                    e.preventDefault();
+                    handleSocketConnection(formState.roomId, formState?.name);
                 }}
             >
                 <StyledLabel>
@@ -73,5 +73,5 @@ export const ConnectScreen: React.FunctionComponent = () => {
             </FormContainer>
             <ImpressumLink to="/impressum">Impressum</ImpressumLink>
         </ConnectScreenContainer>
-    )
-}
+    );
+};

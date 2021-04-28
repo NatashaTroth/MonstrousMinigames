@@ -44,6 +44,9 @@ staging:client:
     variables:
         REACT_APP_FRONTEND_URL: 'https://staging-monsters.web.app/'
         REACT_APP_BACKEND_URL: 'https://monstrous-minigames-staging.herokuapp.com/'
+    environment:
+        name: staging-client
+        url: https://staging-monsters.web.app/
     script:
         - cd client
         - CI=false npm run build
@@ -60,6 +63,9 @@ production:client:
     variables:
         REACT_APP_FRONTEND_URL: 'https://monsters-6baec.web.app/'
         REACT_APP_BACKEND_URL: 'https://monstrous-minigames.herokuapp.com/'
+    environment:
+        name: production-client
+        url: https://monsters-6baec.web.app/
     script:
         - cd client
         - CI=false npm run build
