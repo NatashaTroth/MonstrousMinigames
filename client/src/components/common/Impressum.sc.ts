@@ -1,18 +1,18 @@
-import { Link } from 'react-router-dom'
-import styled from 'styled-components'
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
-import { lightBlue, orange } from '../../utils/colors'
+import { lightBlue, orange } from '../../utils/colors';
 
 export const ImpressumContainer = styled.div`
     background-color: ${lightBlue};
     width: 100%;
     height: 100%;
-`
+`;
 export const Headline = styled.div`
     font-weight: 700;
     font-size: 25px;
     padding-top: 20px;
-`
+`;
 export const HomeLink = styled(Link)`
     text-decoration: none;
     border: 2px solid ${orange};
@@ -28,4 +28,4 @@ export const HomeLink = styled(Link)`
     border-radius: 4px;
     margin-bottom: 20px;
     padding: 5px;
-`
+`;

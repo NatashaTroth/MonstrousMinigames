@@ -1,7 +1,7 @@
-import ScreenRotationIcon from '@material-ui/icons/ScreenRotation'
-import styled from 'styled-components'
+import ScreenRotationIcon from '@material-ui/icons/ScreenRotation';
+import styled from 'styled-components';
 
-import { orange } from '../../utils/colors'
+import { orange } from '../../utils/colors';
 
 export const StyledShakeInstruction = styled.div`
     border: 5px solid ${orange};
@@ -17,12 +17,12 @@ export const StyledShakeInstruction = styled.div`
     text-align: center;
     box-shadow: 8px 8px 0 #888;
     border-radius: 4px;
-`
+`;
 export const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-`
+`;
 
 export const StyledRotationIcon = styled(ScreenRotationIcon)`
     && {
@@ -32,4 +32,4 @@ export const StyledRotationIcon = styled(ScreenRotationIcon)`
         margin-bottom: 20px;
         color: ${orange};
     }
-`
+`;

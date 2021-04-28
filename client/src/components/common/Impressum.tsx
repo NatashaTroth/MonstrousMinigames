@@ -1,6 +1,6 @@
-import * as React from 'react'
+import * as React from 'react';
 
-import { Headline, HomeLink, ImpressumContainer } from './Impressum.sc'
+import { Headline, HomeLink, ImpressumContainer } from './Impressum.sc';
 
 const Impressum: React.FunctionComponent = () => {
     return (
@@ -14,7 +14,7 @@ const Impressum: React.FunctionComponent = () => {
             </p>
             <HomeLink to="/">Back</HomeLink>
         </ImpressumContainer>
-    )
-}
+    );
+};
 
-export default Impressum
+export default Impressum;

@@ -10,4 +10,3 @@ module.exports = {
         '^.+\\.(bmp|gif|jpg|jpeg|png|psd|svg|webp)$': '<rootDir>/jest/mediaFileTransformer.js',
     }
 }
-

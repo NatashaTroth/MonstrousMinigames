@@ -1,7 +1,7 @@
-import * as React from 'react'
+import * as React from 'react';
 
-import { GameContext } from '../../contexts/GameContextProvider'
-import { formatMs } from '../../utils/formatMs'
+import { GameContext } from '../../contexts/GameContextProvider';
+import { formatMs } from '../../utils/formatMs';
 import {
     FinishedScreenContainer,
     FinishedScreenPlayerRank,
@@ -12,13 +12,13 @@ import {
     RankTable,
     UnfinishedSectionHeadline,
     UnfinishedUserRow,
-} from './FinishedScreen.sc'
+} from './FinishedScreen.sc';
 
 export const FinishedScreen: React.FunctionComponent = () => {
-    const { playerRanks, hasTimedOut } = React.useContext(GameContext)
+    const { playerRanks, hasTimedOut } = React.useContext(GameContext);
 
-    const unfinishedPlayers = playerRanks?.filter(playerRank => !playerRank.rank) || []
-    const sortedPlayerRanks = playerRanks?.filter(playerRank => playerRank.rank).sort((a, b) => a.rank! - b.rank!)
+    const unfinishedPlayers = playerRanks?.filter(playerRank => !playerRank.rank) || [];
+    const sortedPlayerRanks = playerRanks?.filter(playerRank => playerRank.rank).sort((a, b) => a.rank! - b.rank!);
 
     return (
         <FinishedScreenContainer>
@@ -49,5 +49,5 @@ export const FinishedScreen: React.FunctionComponent = () => {
                 )}
             </RankTable>
         </FinishedScreenContainer>
-    )
-}
+    );
+};

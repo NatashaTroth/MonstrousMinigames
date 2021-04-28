@@ -1,7 +1,7 @@
-import { TouchApp } from '@material-ui/icons'
-import styled, { keyframes } from 'styled-components'
+import { TouchApp } from '@material-ui/icons';
+import styled, { keyframes } from 'styled-components';
 
-import { grey, lightBlue, orange } from '../../../utils/colors'
+import { grey, lightBlue, orange } from '../../../utils/colors';
 
 const slide = keyframes`
     0% { 
@@ -32,7 +32,7 @@ const slide = keyframes`
         transform: translateY(200px);
         opacity: 0;  
     }
-`
+`;
 
 export const ObstacleContainer = styled.div`
     width: 100%;
@@ -46,14 +46,14 @@ export const ObstacleContainer = styled.div`
         user-select: none;
         pointer-events: none;
     }
-`
+`;
 
 export const ObstacleItem = styled.div`
     transform: rotate(348deg);
-`
+`;
 export const StyledObstacleImage = styled.img`
     width: 100%;
-`
+`;
 export const ObstacleInstructions = styled.div`
     border: 5px solid ${orange};
     background: white;
@@ -70,7 +70,7 @@ export const ObstacleInstructions = styled.div`
     border-radius: 4px;
     margin-top: 50px;
     margin-bottom: 20px;
-`
+`;
 
 export const TouchContainer = styled.div`
     position: absolute;
@@ -79,13 +79,13 @@ export const TouchContainer = styled.div`
     align-items: center;
     justify-content: center;
     width: 40%;
-`
+`;
 
 export const Line = styled.div`
     height: 80%;
     position: absolute;
     border-left: 5px dashed red;
-`
+`;
 
 export const ObstacleContent = styled.div`
     margin-top: 100px;
@@ -93,7 +93,7 @@ export const ObstacleContent = styled.div`
     justify-content: center;
     align-items: center;
     z-index: 2;
-`
+`;
 
 export const StyledTouchAppIcon = styled(TouchApp)`
     && {
@@ -108,4 +108,4 @@ export const StyledTouchAppIcon = styled(TouchApp)`
         animation-name: ${slide};
         opacity: 0;
     }
-`
+`;

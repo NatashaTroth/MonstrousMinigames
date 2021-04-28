@@ -1,5 +1,5 @@
-import { LinearProgress } from '@material-ui/core'
-import styled from 'styled-components'
+import { LinearProgress } from '@material-ui/core';
+import styled from 'styled-components';
 
 import {
     grey,
@@ -7,13 +7,13 @@ import {
     progressBarExtremeLightGreen,
     progressBarGreen,
     progressBarLightGreen,
-} from '../../utils/colors'
+} from '../../utils/colors';
 
 export const LinearProgressContainer = styled.div`
     width: 80%;
     border: 3px solid ${grey};
     margin: 20px 0;
-`
+`;
 
 export const StyledLinearProgress = styled(LinearProgress)`
     && {
@@ -33,4 +33,4 @@ export const StyledLinearProgress = styled(LinearProgress)`
             );
         }
     }
-`
+`;

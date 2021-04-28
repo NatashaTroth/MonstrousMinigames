@@ -1,6 +1,6 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
-import { lightBlue } from '../../utils/colors'
+import { lightBlue } from '../../utils/colors';
 
 export const StyledFullScreenContainer = styled.div`
     background-color: ${lightBlue};
@@ -9,4 +9,4 @@ export const StyledFullScreenContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-`
+`;

@@ -1,12 +1,12 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
-import { lightBlue, orange, progressBarGreen } from '../../utils/colors'
+import { lightBlue, orange, progressBarGreen } from '../../utils/colors';
 
 export const RankTable = styled.div`
     width: 50%;
     display: flex;
     flex-direction: column;
-`
+`;
 
 export const FinishedScreenContainer = styled.div`
     display: flex;
@@ -15,7 +15,7 @@ export const FinishedScreenContainer = styled.div`
     width: 100%;
     height: 100%;
     background-color: ${lightBlue};
-`
+`;
 
 export const FinishedScreenPlayerRank = styled.div`
     border: 5px solid ${orange};
@@ -33,23 +33,23 @@ export const FinishedScreenPlayerRank = styled.div`
     border-radius: 4px;
     padding: 5px;
     text-align: left;
-`
+`;
 export const Headline = styled.div`
     color: black;
     font-weight: 700;
     font-size: 40px;
     margin-top: 30px;
     margin-bottom: 30px;
-`
+`;
 export const LeaderBoardRow = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
-`
+`;
 
 interface IPlayerDifferenceProps {
-    winner: boolean
+    winner: boolean;
 }
 
 export const PlayerDifference = styled.div<IPlayerDifferenceProps>`
@@ -68,7 +68,7 @@ export const PlayerDifference = styled.div<IPlayerDifferenceProps>`
     border-radius: 4px;
     padding: 5px;
     text-align: right;
-`
+`;
 
 export const PlayerTime = styled.div`
     border: 5px solid black;
@@ -86,7 +86,7 @@ export const PlayerTime = styled.div`
     border-radius: 4px;
     padding: 5px;
     text-align: right;
-`
+`;
 
 export const UnfinishedSectionHeadline = styled.div`
     color: black;
@@ -94,11 +94,11 @@ export const UnfinishedSectionHeadline = styled.div`
     font-size: 20px;
     margin-top: 30px;
     margin-bottom: 30px;
-`
+`;
 
 export const UnfinishedUserRow = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 30px;
-`
+`;

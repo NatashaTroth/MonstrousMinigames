@@ -1,9 +1,9 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
-import { orange } from '../../utils/colors'
+import { orange } from '../../utils/colors';
 
 interface IContainerProps {
-    top: number
+    top: number;
 }
 
 export const Container = styled.div<IContainerProps>`
@@ -14,11 +14,11 @@ export const Container = styled.div<IContainerProps>`
     display: flex;
     color: white;
     flex-direction: column;
-`
+`;
 export const PlayerCharacter = styled.img`
     width: 80px;
     height: auto;
-`
+`;
 
 export const PlayerName = styled.div`
     border: 2px solid ${orange};
@@ -35,4 +35,4 @@ export const PlayerName = styled.div`
     box-shadow: 4px 4px 0 #888;
     border-radius: 4px;
     margin-bottom: 5px;
-`
+`;

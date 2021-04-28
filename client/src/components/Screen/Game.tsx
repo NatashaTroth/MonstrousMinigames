@@ -1,14 +1,14 @@
-import * as React from 'react'
-import Countdown from 'react-countdown'
+import * as React from 'react';
+import Countdown from 'react-countdown';
 
-import { GameContext } from '../../contexts/GameContextProvider'
-import { Container, ContainerTimer, CountdownRenderer, Go } from './Game.sc'
-import Goal from './Goal'
-import Player from './Player'
+import { GameContext } from '../../contexts/GameContextProvider';
+import { Container, ContainerTimer, CountdownRenderer, Go } from './Game.sc';
+import Goal from './Goal';
+import Player from './Player';
 
 const Game: React.FunctionComponent = () => {
-    const { countdownTime } = React.useContext(GameContext)
-    const [countdown] = React.useState(Date.now() + countdownTime)
+    const { countdownTime } = React.useContext(GameContext);
+    const [countdown] = React.useState(Date.now() + countdownTime);
 
     return (
         <Container>
@@ -26,13 +26,13 @@ const Game: React.FunctionComponent = () => {
                 }
             />
         </Container>
-    )
-}
+    );
+};
 
-export default Game
+export default Game;
 
 interface IGameContentProps {
-    displayGo?: boolean
+    displayGo?: boolean;
 }
 
 const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo }) => {
@@ -42,5 +42,5 @@ const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo }) 
             <Player />
             <Goal />
         </div>
-    )
-}
+    );
+};
