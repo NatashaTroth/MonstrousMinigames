@@ -4,15 +4,8 @@ import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
 import { Namespaces } from '../enums/nameSpaces';
 import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventEmitter';
-import { PlayerFinishedInfo } from '../gameplay/catchFood/interfaces';
-import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType';
-import {
-    GameEventTypes,
-    GameHasFinished,
-    GameHasStarted,
-    GameStateHasChanged,
-    ObstacleReachedInfo,
-} from '../gameplay/interfaces/index';
+import { CatchFoodMsgType, GameEvents } from '../gameplay/catchFood/interfaces';
+import { GameEventTypes } from '../gameplay/interfaces/index';
 import emitter from '../helpers/emitter';
 import { IMessageObstacle } from '../interfaces/messageObstacle';
 import { IMessage } from '../interfaces/messages';
@@ -228,7 +221,7 @@ class ConnectionHandler {
         const rs = this.rs;
         const controllerNamespace = this.controllerNamespace;
         const screenNameSpace = this.screenNameSpace;
-        this.gameEventEmitter.on(GameEventTypes.ObstacleReached, (data: ObstacleReachedInfo) => {
+        this.gameEventEmitter.on(GameEventTypes.ObstacleReached, (data: GameEvents.ObstacleReachedInfo) => {
             console.log(data.roomId + ' | userId: ' + data.userId + ' | Obstacle: ' + data.obstacleType);
             const r = rs.getRoomById(data.roomId);
             const u = r.getUserById(data.userId);
@@ -240,7 +233,7 @@ class ConnectionHandler {
                 });
             }
         });
-        this.gameEventEmitter.on(GameEventTypes.PlayerHasFinished, (data: PlayerFinishedInfo) => {
+        this.gameEventEmitter.on(GameEventTypes.PlayerHasFinished, (data: GameEvents.PlayerHasFinished) => {
             console.log(data.roomId + ' | userId: ' + data.userId + ' | Rank: ' + data.rank);
             const room = rs.getRoomById(data.roomId);
             const user = room.getUserById(data.userId);
@@ -248,35 +241,35 @@ class ConnectionHandler {
                 emitter.sendPlayerFinished(controllerNamespace, user, data);
             }
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasStarted, (data: GameHasStarted) => {
+        this.gameEventEmitter.on(GameEventTypes.GameHasStarted, (data: GameEvents.GameHasStarted) => {
             console.log(data.roomId + ' | Game has started!');
             emitter.sendGameHasStarted([controllerNamespace, screenNameSpace], data);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameHasFinished) => {
+        this.gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
             console.log(data.roomId + ' | Game has finished');
             const room = rs.getRoomById(data.roomId);
             room.setClosed();
             emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasTimedOut, (data: GameHasFinished) => {
+        this.gameEventEmitter.on(GameEventTypes.GameHasTimedOut, (data: GameEvents.GameHasFinished) => {
             console.log(data.roomId + ' | Game has timed out');
             const room = rs.getRoomById(data.roomId);
             room.setClosed();
             emitter.sendGameHasTimedOut([controllerNamespace, screenNameSpace], data);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameStateHasChanged) => {
+        this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameEvents.GameStateHasChanged) => {
             console.log(data.roomId + ' | Game has stopped');
             const room = rs.getRoomById(data.roomId);
             room.setClosed();
             emitter.sendMessage(MessageTypes.GAME_HAS_STOPPED, [controllerNamespace, screenNameSpace], data.roomId);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasPaused, (data: GameStateHasChanged) => {
+        this.gameEventEmitter.on(GameEventTypes.GameHasPaused, (data: GameEvents.GameStateHasChanged) => {
             console.log(data.roomId + ' | Game has stopped');
             const room = rs.getRoomById(data.roomId);
             room.setPaused();
             emitter.sendMessage(MessageTypes.GAME_HAS_PAUSED, [controllerNamespace, screenNameSpace], data.roomId);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasResumed, (data: GameStateHasChanged) => {
+        this.gameEventEmitter.on(GameEventTypes.GameHasResumed, (data: GameEvents.GameStateHasChanged) => {
             console.log(data.roomId + ' | Game has stopped');
             const room = rs.getRoomById(data.roomId);
             room.setPlaying();

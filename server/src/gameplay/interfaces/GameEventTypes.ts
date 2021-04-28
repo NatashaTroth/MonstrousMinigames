@@ -7,4 +7,5 @@ export enum GameEventTypes {
     GameHasStopped = 'GAME_HAS_STOPPED',
     GameHasFinished = 'GAME_HAS_FINISHED',
     GameHasTimedOut = 'GAME_HAS_TIMED_OUT',
+    PlayerHasDisconnected = 'PLAYER_HAS_DISCONNECTED',
 }

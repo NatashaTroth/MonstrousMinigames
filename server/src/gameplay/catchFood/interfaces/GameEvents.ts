@@ -1,6 +1,5 @@
 import { GameState } from '../../interfaces';
-import { ObstacleType } from './';
-import { PlayerRank } from './PlayerRank';
+import { ObstacleType, PlayerRank } from './';
 
 interface GameEventInterface {
     roomId: string;
@@ -9,14 +8,6 @@ interface GameEventInterface {
 export interface GameHasStarted extends GameEventInterface {
     roomId: string;
     countdownTime: number;
-}
-
-export interface GameHasFinished extends GameEventInterface {
-    roomId: string;
-    gameState: GameState;
-    trackLength: number;
-    numberOfObstacles: number;
-    playerRanks: Array<PlayerRank>;
 }
 
 export interface GameStateHasChanged extends GameEventInterface {
@@ -29,9 +20,21 @@ export interface PlayerHasFinished extends GameEventInterface {
     rank: number;
 }
 
+export interface GameHasFinished extends GameEventInterface {
+    roomId: string;
+    gameState: GameState;
+    trackLength: number;
+    numberOfObstacles: number;
+    playerRanks: Array<PlayerRank>;
+}
 export interface ObstacleReachedInfo extends GameEventInterface {
     roomId: string;
     userId: string;
-    obstacleType: ObstacleType;
     obstacleId: number;
+    obstacleType: ObstacleType;
+}
+
+export interface PlayerHasDisconnectedInfo extends GameEventInterface {
+    roomId: string;
+    userId: string;
 }
