@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { resetObstacle } from '../components/Controller/Obstacles/TreeTrunk';
 import { OBSTACLES } from '../utils/constants';
 import { IUser } from './ControllerSocketContextProvider';
 import { IPlayerRank } from './ScreenSocketContextProvider';
@@ -133,6 +134,7 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
             setFinished(false);
             setGameStarted(false);
             setPlayers(undefined);
+            resetObstacle();
         },
         showInstructions,
         setShowInstructions,

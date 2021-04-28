@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
+import { localDevelopment } from '../../utils/constants';
 import Button from '../common/Button';
 import FullScreenContainer from '../common/FullScreenContainer';
 import { Instruction, InstructionContainer, LobbyScreenContainer, StyledTypography } from './Lobby.sc';
@@ -37,7 +38,7 @@ export const Lobby: React.FunctionComponent = () => {
                         <div>
                             <Button
                                 onClick={() => {
-                                    if (permission) {
+                                    if (permission || localDevelopment) {
                                         startGame();
                                     }
                                 }}

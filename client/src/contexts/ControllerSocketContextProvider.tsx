@@ -7,6 +7,8 @@ import { ClickRequestDeviceMotion } from '../utils/permissions';
 import { GameContext } from './GameContextProvider';
 import { PlayerContext } from './PlayerContextProvider';
 
+type MessageData = IUserInitMessage | IObstacleMessage | IGameFinished;
+
 export const defaultValue = {
     controllerSocket: undefined,
     setControllerSocket: () => {
@@ -66,51 +68,69 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
 
     const { setGameStarted, roomId, setRoomId } = React.useContext(GameContext);
 
-    controllerSocket?.on('message', (data: IUserInitMessage | IObstacleMessage | IGameFinished) => {
-        let messageData;
+    const handleMessageData = React.useCallback(
+        (data: MessageData) => {
+            let messageData;
 
-        switch (data.type) {
-            case MESSAGETYPES.userInit:
-                messageData = data as IUserInitMessage;
-                sessionStorage.setItem('userId', messageData.userId || '');
-                localStorage.setItem('name', messageData.name || '');
-                sessionStorage.setItem('roomId', messageData.roomId || '');
-                setIsPlayerAdmin(messageData.isAdmin || false);
-                setPlayerNumber(messageData.number || 0);
-                break;
-            case 'game1/obstacle':
-                messageData = data as IObstacleMessage;
-                setObstacle({ type: messageData.obstacleType, id: messageData.obstacleId });
-                break;
-            case 'game1/playerFinished':
-                messageData = data as IGameFinished;
-                if (!playerFinished) {
+            switch (data.type) {
+                case MESSAGETYPES.userInit:
+                    messageData = data as IUserInitMessage;
+                    sessionStorage.setItem('userId', messageData.userId || '');
+                    localStorage.setItem('name', messageData.name || '');
+                    sessionStorage.setItem('roomId', messageData.roomId || '');
+                    setIsPlayerAdmin(messageData.isAdmin || false);
+                    setPlayerNumber(messageData.number || 0);
+                    break;
+                case 'game1/obstacle':
+                    messageData = data as IObstacleMessage;
+                    setObstacle({ type: messageData.obstacleType, id: messageData.obstacleId });
+
+                    break;
+                case 'game1/playerFinished':
+                    messageData = data as IGameFinished;
+                    if (!playerFinished) {
+                        setPlayerFinished(true);
+                        setPlayerRank(messageData.rank);
+                    }
+                    break;
+                case 'game1/hasStarted':
+                    document.body.style.overflow = 'hidden';
+                    document.body.style.position = 'fixed';
+                    setGameStarted(true);
+
+                    history.push(`/controller/${roomId}/game1`);
+                    break;
+                case MESSAGETYPES.gameHasReset:
+                    history.push(`/controller/${roomId}/lobby`);
+                    break;
+                case MESSAGETYPES.gameHasTimedOut:
+                    messageData = data as IGameFinished;
                     setPlayerFinished(true);
                     setPlayerRank(messageData.rank);
-                }
-                break;
-            case 'game1/hasStarted':
-                document.body.style.overflow = 'hidden';
-                document.body.style.position = 'fixed';
-                setGameStarted(true);
-                history.push(`/controller/${roomId}/game1`);
-                break;
-            case MESSAGETYPES.gameHasReset:
-                history.push(`/controller/${roomId}/lobby`);
-                break;
-            case MESSAGETYPES.gameHasTimedOut:
-                messageData = data as IGameFinished;
-                setPlayerFinished(true);
-                setPlayerRank(messageData.rank);
-                break;
-            default:
-                break;
-        }
-    });
+                    break;
+                default:
+                    break;
+            }
+        },
+        [
+            history,
+            playerFinished,
+            roomId,
+            setGameStarted,
+            setIsPlayerAdmin,
+            setObstacle,
+            setPlayerFinished,
+            setPlayerNumber,
+            setPlayerRank,
+        ]
+    );
 
-    function handleSetControllerSocket(val: SocketIOClient.Socket | undefined, roomId: string) {
-        setControllerSocket(val);
-        history.push(`/controller/${roomId}/lobby`);
+    function handleSetControllerSocket(socket: SocketIOClient.Socket | undefined, roomId: string) {
+        setControllerSocket(socket);
+        if (socket) {
+            socket.on('message', (data: MessageData) => handleMessageData(data));
+            history.push(`/controller/${roomId}/lobby`);
+        }
     }
 
     async function handleSocketConnection(roomId: string, name: string) {
