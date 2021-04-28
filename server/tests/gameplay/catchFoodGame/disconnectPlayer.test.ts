@@ -5,10 +5,11 @@ import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 // ..
 import { GameEventTypes, GameState } from '../../../src/gameplay/interfaces';
 import {
-    startAndFinishGameDifferentTimes, startGameAndAdvanceCountdown
+    completeNextObstacle, finishPlayer, startAndFinishGameDifferentTimes,
+    startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
-const TRACK_LENGTH = 500;
+// const TRACK_LENGTH = 500;
 
 let catchFoodGame: CatchFoodGame;
 let gameEventEmitter: CatchFoodGameEventEmitter;
@@ -72,7 +73,7 @@ describe('Disconnect Player tests', () => {
     it('cannot complete an obstacle when disconnected', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const obstaclesLength = catchFoodGame.playersState['1'].obstacles.length;
-        catchFoodGame.playerHasCompletedObstacle('1', catchFoodGame.playersState['1'].obstacles[0].id);
+        completeNextObstacle(catchFoodGame, '1');
         catchFoodGame.disconnectPlayer('1');
 
         try {
@@ -101,13 +102,8 @@ describe('Disconnect Player tests', () => {
         Date.now = jest.fn(() => dateNow + 10000);
         catchFoodGame.disconnectPlayer('3');
         catchFoodGame.disconnectPlayer('4');
-        for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1', i);
-            catchFoodGame.playerHasCompletedObstacle('2', i);
-        }
-
-        catchFoodGame.runForward('1', TRACK_LENGTH);
-        catchFoodGame.runForward('2', TRACK_LENGTH);
+        finishPlayer(catchFoodGame, '1');
+        finishPlayer(catchFoodGame, '2');
 
         expect(eventData.playerRanks[0].isActive).toBeTruthy();
         expect(eventData.playerRanks[1].isActive).toBeTruthy();

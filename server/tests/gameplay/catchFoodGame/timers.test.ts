@@ -2,7 +2,7 @@ import { CatchFoodGame } from '../../../src/gameplay';
 import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 import { GameEventTypes, GameState } from '../../../src/gameplay/interfaces';
-import { startGameAndAdvanceCountdown } from './gameHelperFunctions';
+import { finishPlayer, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
 let gameEventEmitter: CatchFoodGameEventEmitter;
@@ -12,8 +12,6 @@ describe('Timer tests', () => {
         gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
         catchFoodGame = new CatchFoodGame();
         jest.useFakeTimers();
-        // finishGame(catchFoodGame);
-        // catchFoodGame.resetGame(users, NEW_TRACKLENGTH, NEW_NUMBER_OF_OBSTACLES);
     });
 
     afterEach(() => {
@@ -64,10 +62,7 @@ describe('Timer tests', () => {
         Date.now = jest.fn(() => dateNow);
         startGameAndAdvanceCountdown(catchFoodGame);
 
-        for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1', i);
-        }
-        catchFoodGame.runForward('1', catchFoodGame.trackLength);
+        finishPlayer(catchFoodGame, '1');
 
         const eventData = getGameFinishedDataAfterTimeOut(catchFoodGame, dateNow);
         expect(eventData.playerRanks[0].rank).toBe(1);
@@ -81,10 +76,7 @@ describe('Timer tests', () => {
         Date.now = jest.fn(() => dateNow);
         startGameAndAdvanceCountdown(catchFoodGame);
 
-        for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1', i);
-        }
-        catchFoodGame.runForward('1', catchFoodGame.trackLength);
+        finishPlayer(catchFoodGame, '1');
 
         const eventData = getGameFinishedDataAfterTimeOut(catchFoodGame, dateNow);
         expect(eventData.playerRanks[0].finished).toBeTruthy();
@@ -114,46 +106,3 @@ function getGameFinishedDataAfterTimeOut(catchFoodGame: CatchFoodGame, dateNow: 
     jest.runAllTimers();
     return eventData;
 }
-// // timerGame.js
-// // ;('use strict')
-
-// // function timerGame(callback) {
-// //     console.log('Ready....go!')
-// //     setTimeout(() => {
-// //         console.log('Times up -- stop!')
-// //         callback && callback()
-// //     }, 1000)
-// // }
-
-// // module.exports = timerGame
-// // // __tests__/timerGame-test.js
-// // ;('use strict')
-
-// // jest.useFakeTimers()
-
-// // test('waits 1 second before ending the game', () => {
-// //     // const timerGame = timerGame;
-// //     timerGame()
-
-// //     expect(setTimeout.mock.calls.length).toBe(1)
-// //     expect(setTimeout.mock.calls[0][1]).toBe(1000)
-// // })
-
-// timerGame.js
-
-// function timerGame(callback: any) {
-//     console.log('Ready....go!')
-//     setTimeout(() => {
-//         console.log("Time's up -- stop!")
-//         callback && callback()
-//     }, 1000)
-// }
-
-// jest.useFakeTimers()
-
-// test('waits 1 second before ending the game', () => {
-//     timerGame(() => {})
-
-//     expect(setTimeout).toHaveBeenCalledTimes(1)
-//     expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000)
-// })

@@ -9,13 +9,11 @@ import {
 
 let catchFoodGame: CatchFoodGame;
 
-describe('WrongGameStateError handling tests', () => {
+describe('Create new game', () => {
     beforeEach(() => {
         catchFoodGame = new CatchFoodGame();
         jest.useFakeTimers();
     });
-
-    // -- createNewGame --
 
     it('throws an error with requiredGameStates property on create game when wrong game state', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
@@ -45,8 +43,14 @@ describe('WrongGameStateError handling tests', () => {
         getToPausedGameState(catchFoodGame);
         expect(() => catchFoodGame.createNewGame(users)).toThrowError(WrongGameStateError);
     });
+});
 
-    // -- Pause game --
+describe('Pause game', () => {
+    beforeEach(() => {
+        catchFoodGame = new CatchFoodGame();
+        jest.useFakeTimers();
+    });
+
     it('throws an error with requiredGameStates property on pause game when wrong game state', () => {
         let errorThrown = false;
         try {
@@ -82,8 +86,14 @@ describe('WrongGameStateError handling tests', () => {
         getToFinishedGameState(catchFoodGame);
         expect(() => catchFoodGame.pauseGame()).toThrowError(WrongGameStateError);
     });
+});
 
-    // -- Resume game --
+describe('Resume game', () => {
+    beforeEach(() => {
+        catchFoodGame = new CatchFoodGame();
+        jest.useFakeTimers();
+    });
+
     it('throws an error with requiredGameStates property on resume game when wrong game state', () => {
         let errorThrown = false;
         try {
@@ -120,8 +130,14 @@ describe('WrongGameStateError handling tests', () => {
         getToFinishedGameState(catchFoodGame);
         expect(() => catchFoodGame.resumeGame()).toThrowError(WrongGameStateError);
     });
+});
 
-    // -- Stop game --
+describe('Stop game', () => {
+    beforeEach(() => {
+        catchFoodGame = new CatchFoodGame();
+        jest.useFakeTimers();
+    });
+
     it('throws an error with requiredGameStates property on stop game when wrong game state', () => {
         let errorThrown = false;
         try {
@@ -152,8 +168,14 @@ describe('WrongGameStateError handling tests', () => {
         getToFinishedGameState(catchFoodGame);
         expect(() => catchFoodGame.stopGame()).toThrowError(WrongGameStateError);
     });
+});
 
-    // -- Run forward --
+describe('Run forward', () => {
+    beforeEach(() => {
+        catchFoodGame = new CatchFoodGame();
+        jest.useFakeTimers();
+    });
+
     it('throws an error with requiredGameStates property on runForward when wrong game state', () => {
         let errorThrown = false;
         try {
@@ -188,8 +210,14 @@ describe('WrongGameStateError handling tests', () => {
         getToFinishedGameState(catchFoodGame);
         expect(() => catchFoodGame.runForward('1')).toThrow(WrongGameStateError);
     });
+});
 
-    // -- PlayerHasCompletedObstacle --
+describe('Player has completed obstacle', () => {
+    beforeEach(() => {
+        catchFoodGame = new CatchFoodGame();
+        jest.useFakeTimers();
+    });
+
     it('throws an error with requiredGameStates property on playerHasCompletedObstacle when wrong game state', () => {
         let errorThrown = false;
         try {
@@ -224,8 +252,14 @@ describe('WrongGameStateError handling tests', () => {
         getToFinishedGameState(catchFoodGame);
         expect(() => catchFoodGame.playerHasCompletedObstacle('1', 1)).toThrow(WrongGameStateError);
     });
+});
 
-    // -- DisconnectPlayer --
+describe('Disconnect player', () => {
+    beforeEach(() => {
+        catchFoodGame = new CatchFoodGame();
+        jest.useFakeTimers();
+    });
+
     it('throws an error with requiredGameStates property on disconnectPlayer when wrong game state', () => {
         let errorThrown = false;
         try {

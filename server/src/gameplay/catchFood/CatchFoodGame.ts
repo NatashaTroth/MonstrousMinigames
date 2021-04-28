@@ -5,7 +5,7 @@ import { verifyGameState } from '../helperFunctions/verifyGameState';
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
 import { GameInterface, GameState, HashTable } from '../interfaces';
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
-import { WrongObstacleIdError } from './customErrors';
+import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
 import { initiatePlayersState } from './helperFunctions/initiatePlayerState';
 import { verifyUserId } from './helperFunctions/verifyUserId';
 import { GameEvents, GameStateInfo, Obstacle, PlayerRank, PlayerState } from './interfaces';
@@ -236,6 +236,9 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     private handlePlayerReachedObstacle(userId: string): void {
         // block player from running when obstacle is reached
         this.playersState[userId].atObstacle = true;
+
+        //set position x to obstacle position (in case ran past)
+        this.playersState[userId].positionX = this.playersState[userId].obstacles[0].positionX;
         CatchFoodGameEventEmitter.emitObstacleReachedEvent({
             roomId: this.roomId,
             userId,
@@ -250,6 +253,9 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.playersState, userId);
         verifyUserIsActive(userId, this.playersState[userId].isActive);
+
+        this.verifyUserIsAtObstacle(userId);
+
         this.playersState[userId].atObstacle = false;
         if (this.playersState[userId].obstacles[0].id === obstacleId) {
             this.playersState[userId].obstacles.shift();
@@ -262,6 +268,16 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         // } catch (e) {
         //     throw e;
         // }
+    }
+
+    private verifyUserIsAtObstacle(userId: string) {
+        if (
+            !this.playersState[userId].atObstacle
+            // ||
+            // this.playersState[userId].positionX !== this.playersState[userId].obstacles[0].positionX
+        ) {
+            throw new NotAtObstacleError(`User ${userId} is not at an obstacle`, userId);
+        }
     }
 
     private playerHasFinishedGame(userId: string): void {

@@ -2,7 +2,9 @@ import { CatchFoodGame } from '../../../src/gameplay';
 import { verifyGameState } from '../../../src/gameplay/helperFunctions/verifyGameState';
 import { GameState } from '../../../src/gameplay/interfaces';
 import { users } from '../mockUsers';
-import { finishGame, startGameAndAdvanceCountdown } from './gameHelperFunctions';
+import {
+    completeNextObstacle, finishGame, finishPlayer, startGameAndAdvanceCountdown
+} from './gameHelperFunctions';
 
 const TRACKLENGTH = 500;
 const NUMBER_OF_OBSTACLES = 4;
@@ -18,7 +20,7 @@ describe('Change and verify game state', () => {
         expect(catchFoodGame.gameState).toBe(GameState.Initialised);
     });
 
-    it('initialises state as initialised', async () => {
+    it('sets state to created when new game is created ', async () => {
         catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES);
         expect(catchFoodGame.gameState).toBe(GameState.Created);
     });
@@ -73,7 +75,7 @@ describe('Change and verify game state', () => {
     it('should be able to complete obstacle when game has started', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const obstaclesCompletedLength = catchFoodGame.playersState['1'].obstacles.length;
-        catchFoodGame.playerHasCompletedObstacle('1', 0);
+        completeNextObstacle(catchFoodGame, '1');
         expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstaclesCompletedLength - 1);
     });
 
@@ -136,17 +138,10 @@ describe('Change and verify game state', () => {
 
     it('game should finish when all active players have finished', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-
         catchFoodGame.disconnectPlayer('3');
         catchFoodGame.disconnectPlayer('4');
-        for (let i = 0; i < 4; i++) {
-            catchFoodGame.playerHasCompletedObstacle('1', i);
-            catchFoodGame.playerHasCompletedObstacle('2', i);
-        }
-
-        catchFoodGame.runForward('1', catchFoodGame.trackLength);
-        catchFoodGame.runForward('2', catchFoodGame.trackLength);
-
+        finishPlayer(catchFoodGame, '1');
+        finishPlayer(catchFoodGame, '2');
         expect(catchFoodGame.gameState).toBe(GameState.Finished);
     });
 

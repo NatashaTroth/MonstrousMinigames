@@ -5,7 +5,7 @@ import { startGameAndAdvanceCountdown } from './gameHelperFunctions';
 let catchFoodGame: CatchFoodGame;
 const dateNow = 1618665766156;
 
-describe('Game logic tests', () => {
+describe('Pause tests', () => {
     beforeEach(() => {
         // global.Date.now = jest.fn(() => new Date('2019-04-07T10:20:30Z').getTime())
         Date.now = jest.fn(() => dateNow);
@@ -16,7 +16,6 @@ describe('Game logic tests', () => {
         jest.clearAllMocks();
     });
 
-    //-----Pause-----
     it('Can pause game when game has started', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.pauseGame();
@@ -63,8 +62,19 @@ describe('Game logic tests', () => {
     //     const trimmedTime = timeStr.substr(0, timeStr.length - 2);
     //     return parseInt(trimmedTime);
     // }
+});
 
-    //-----Resume-----
+describe('Resume tests', () => {
+    beforeEach(() => {
+        // global.Date.now = jest.fn(() => new Date('2019-04-07T10:20:30Z').getTime())
+        Date.now = jest.fn(() => dateNow);
+        catchFoodGame = new CatchFoodGame();
+        jest.useFakeTimers();
+    });
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it('Can resume game when game has been paused', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.pauseGame();

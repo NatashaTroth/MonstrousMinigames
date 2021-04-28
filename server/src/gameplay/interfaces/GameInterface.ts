@@ -11,6 +11,7 @@ export interface GameInterface {
     currentRank: number;
 
     createNewGame(players: Array<User>, trackLength?: number, numberOfObstacles?: number): void;
+    // private startGame()
     stopGame(): void;
     pauseGame(): void;
     getGameStateInfo(): GameStateInfo;

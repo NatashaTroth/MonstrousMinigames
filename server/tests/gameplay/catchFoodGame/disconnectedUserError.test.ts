@@ -1,6 +1,6 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { DisconnectedUserError } from '../../../src/gameplay/customErrors';
-import { startGameAndAdvanceCountdown } from './gameHelperFunctions';
+import { completeNextObstacle, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
 
@@ -34,7 +34,7 @@ describe('DisconnectedUserError handling tests', () => {
     });
     it('throws a DisconnectedUserError when trying to complete an obstacle when disconnected', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.playerHasCompletedObstacle('1', catchFoodGame.playersState['1'].obstacles[0].id);
+        completeNextObstacle(catchFoodGame, '1');
         catchFoodGame.disconnectPlayer('1');
         expect(() =>
             catchFoodGame.playerHasCompletedObstacle('1', catchFoodGame.playersState['1'].obstacles[0].id)
