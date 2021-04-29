@@ -165,19 +165,6 @@ class ConnectionHandler {
                         }
                         break;
                     }
-                    case MessageTypes.PAUSE_RESUME: {
-                        if (socket.room.isAdmin(socket.user)) {
-                            if (socket.room.isPlaying()) {
-                                console.log(socket.room.id + ' | Pause Game');
-                                socket.room.pauseGame();
-                            } else if (socket.room.isPaused()) {
-                                console.log(socket.room.id + ' | Resume Game');
-                                socket.room.resumeGame();
-                            }
-                        }
-
-                        break;
-                    }
                     default: {
                         console.log(message);
                     }
@@ -213,7 +200,23 @@ class ConnectionHandler {
             socket.on('message', function (message: IMessage) {
                 console.log(message);
 
-                socket.broadcast.emit('message', message);
+                const type = message.type;
+                switch (type) {
+                    case MessageTypes.PAUSE_RESUME: {
+                        if (socket.room.isPlaying()) {
+                            console.log(socket.room.id + ' | Pause Game');
+                            socket.room.pauseGame();
+                        } else if (socket.room.isPaused()) {
+                            console.log(socket.room.id + ' | Resume Game');
+                            socket.room.resumeGame();
+                        }
+
+                        break;
+                    }
+                    default: {
+                        console.log(message);
+                    }
+                }
             });
         });
     }
