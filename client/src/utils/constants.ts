@@ -4,7 +4,7 @@ export enum Obstacles {
 }
 
 export enum ObstacleRoutes {
-    treeStump = 'tree-stump',
+    treeStump = 'tree_stump',
     spider = 'spider',
 }
 

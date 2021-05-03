@@ -55,9 +55,10 @@ const Spider: React.FunctionComponent = () => {
                             handleInput(analyser);
                         } else {
                             javascriptNode.removeEventListener('audioprocess', () => {
-                                solveObstacle();
+                                // do nothing
                             });
                             stream!.getTracks().forEach(track => track.stop());
+                            solveObstacle();
                         }
                     });
                 }
