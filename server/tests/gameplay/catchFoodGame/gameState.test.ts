@@ -1,7 +1,7 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { verifyGameState } from '../../../src/gameplay/helperFunctions/verifyGameState';
 import { GameState } from '../../../src/gameplay/interfaces';
-import { users } from '../mockUsers';
+import { leaderboard, roomId, users } from '../mockData';
 import {
     completeNextObstacle, finishGame, finishPlayer, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
@@ -12,7 +12,7 @@ let catchFoodGame: CatchFoodGame;
 
 describe('Change and verify game state', () => {
     beforeEach(async () => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 

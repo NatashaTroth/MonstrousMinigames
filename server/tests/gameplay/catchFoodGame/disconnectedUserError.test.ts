@@ -1,12 +1,13 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { DisconnectedUserError } from '../../../src/gameplay/customErrors';
+import { leaderboard, roomId } from '../mockData';
 import { completeNextObstacle, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
 
 describe('DisconnectedUserError handling tests', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 

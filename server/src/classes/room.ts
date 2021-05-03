@@ -3,6 +3,7 @@ import { Globals } from '../enums/globals';
 import { CatchFoodGame } from '../gameplay';
 import { GameStateInfo } from '../gameplay/catchFood/interfaces';
 import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
+import Leaderboard from '../gameplay/leaderboard/Leaderboard';
 import User from './user';
 
 class Room {
@@ -12,12 +13,14 @@ class Room {
     public game: CatchFoodGame;
     public admin: User | null;
     private state: RoomStates;
+    private leaderboard: Leaderboard;
 
     constructor(id: string) {
         this.id = id;
         this.users = [];
         this.timestamp = Date.now();
-        this.game = new CatchFoodGame();
+        this.leaderboard = new Leaderboard(this.id);
+        this.game = new CatchFoodGame(this.id, this.leaderboard);
         this.admin = null;
         this.state = RoomStates.OPEN;
     }

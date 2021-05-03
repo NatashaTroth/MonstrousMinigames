@@ -1,7 +1,7 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { GameStateInfo } from '../../../src/gameplay/catchFood/interfaces';
 import { GameState } from '../../../src/gameplay/interfaces';
-import { users } from '../mockUsers';
+import { leaderboard, roomId, users } from '../mockData';
 
 const TRACKLENGTH = 500;
 const NUMBER_OF_OBSTACLES = 4;
@@ -10,7 +10,7 @@ let gameStateInfo: GameStateInfo;
 
 describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES);
         jest.useFakeTimers();
         gameStateInfo = catchFoodGame.getGameStateInfo();
