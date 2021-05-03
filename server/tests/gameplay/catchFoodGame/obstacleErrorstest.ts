@@ -2,6 +2,7 @@ import { CatchFoodGame } from '../../../src/gameplay';
 import {
     NotAtObstacleError, WrongObstacleIdError
 } from '../../../src/gameplay/catchFood/customErrors';
+import { leaderboard, roomId } from '../mockData';
 import { startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
@@ -13,7 +14,7 @@ const OBSTACLE_ID_THAT_DOES_NOT_EXIST = 50;
 describe('NotAtObstacleError handling tests', () => {
     beforeEach(() => {
         jest.useFakeTimers();
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         startGameAndAdvanceCountdown(catchFoodGame);
     });
 
@@ -35,7 +36,7 @@ describe('NotAtObstacleError handling tests', () => {
 describe('WrongObstacleIdError handling tests', () => {
     beforeEach(() => {
         jest.useFakeTimers();
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         startGameAndAdvanceCountdown(catchFoodGame);
         const distanceToObstacle =
             catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX;

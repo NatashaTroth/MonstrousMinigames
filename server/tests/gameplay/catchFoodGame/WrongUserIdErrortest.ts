@@ -1,5 +1,6 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { WrongUserIdError } from '../../../src/gameplay/customErrors';
+import { leaderboard, roomId } from '../mockData';
 import { startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
@@ -8,7 +9,7 @@ const USER_ID_THAT_DOES_NOT_EXIST = '50';
 describe('WrongUserIdError handling tests', () => {
     beforeEach(() => {
         jest.useFakeTimers();
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         startGameAndAdvanceCountdown(catchFoodGame);
     });
 
