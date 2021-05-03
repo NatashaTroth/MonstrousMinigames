@@ -7,7 +7,7 @@ npm:client:
     artifacts:
         paths:
             - client/node_modules/
-        expire_in: 1 days
+        expire_in: 2 days
         when: always
 
     script:
