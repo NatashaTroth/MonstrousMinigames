@@ -1,10 +1,10 @@
 import { TouchApp } from '@material-ui/icons';
 import styled, { keyframes } from 'styled-components';
 
-import { grey, lightBlue, orange } from '../../../utils/colors';
+import { grey } from '../../../utils/colors';
 
 const slide = keyframes`
-    0% { 
+    0%, 33% { 
         transform: translateY(-200);
           opacity: 1;
     }
@@ -34,42 +34,11 @@ const slide = keyframes`
     }
 `;
 
-export const ObstacleContainer = styled.div`
-    width: 100%;
-    height: 100%;
-    background-color: ${lightBlue};
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-
-    img {
-        user-select: none;
-        pointer-events: none;
-    }
-`;
-
 export const ObstacleItem = styled.div`
     transform: rotate(348deg);
 `;
 export const StyledObstacleImage = styled.img`
     width: 100%;
-`;
-export const ObstacleInstructions = styled.div`
-    border: 5px solid ${orange};
-    background: white;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
-    color: ${orange};
-    font-weight: 700;
-    display: flex;
-    width: 80%;
-    font-size: 20px;
-    flex-direction: column;
-    text-align: center;
-    box-shadow: 8px 8px 0 #888;
-    border-radius: 4px;
-    margin-top: 50px;
-    margin-bottom: 20px;
 `;
 
 export const TouchContainer = styled.div`
@@ -85,14 +54,6 @@ export const Line = styled.div`
     height: 80%;
     position: absolute;
     border-left: 5px dashed red;
-`;
-
-export const ObstacleContent = styled.div`
-    margin-top: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2;
 `;
 
 export const StyledTouchAppIcon = styled(TouchApp)`
