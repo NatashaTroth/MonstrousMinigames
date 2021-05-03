@@ -4,7 +4,14 @@
     <body>
         <h2>Socket.io Test</h2>
 
-        <div id="output"></div>
+        <input name="userId" id="userId" />
+        <label for="userId">userId</label>
+        <br />
+
+        <input name="roomId" id="roomId" />
+        <label for="roomId">roomId</label>
+        <br />
+        <br />
         <select name="env" id="env">
             <option selected value="localhost:5000">local</option>
             <option value="monstrous-minigames-staging.herokuapp.com">staging</option>
@@ -24,6 +31,8 @@
         <br />
         <button onclick="input('stop')">STOP</button>
         <button onclick="input('pause')">PAUSE/RESUME</button>
+
+        <div id="output"></div>
     </body>
 
     <!-- test-io-client.html -->
@@ -36,7 +45,9 @@
         function connect() {
             init();
         }
-        let userId = '';
+        let userId = document.getElementById('userId').value ? document.getElementById('userId').value : '';
+        let roomId = document.getElementById('roomId').value ? document.getElementById('roomId').value : 'ABCDE';
+
         let socket;
 
         function input(type) {
@@ -69,9 +80,13 @@
         function init() {
             let env = document.getElementById('env').value;
             console.log(env);
-            let url = env + '/controller?roomId=ABCDE&name=Robin&userId=';
-            let screenUrl = env + '/screen?roomId=ABCDE&name=Robin&userId=';
+            let userId = document.getElementById('userId').value ? document.getElementById('userId').value : '';
+            let roomId = document.getElementById('roomId').value ? document.getElementById('roomId').value : 'ABCDE';
 
+            let url = env + `/controller?roomId=${roomId}&name=Robin&userId=${userId}`;
+            let screenUrl = env + `/screen?roomId=${roomId}&name=Robin&userId=${userId}`;
+
+            console.log(document.getElementById('userId').value);
             socket = io(url, {
                 secure: true,
                 reconnection: true,
@@ -101,7 +116,6 @@
 
             function onConnect(evt) {
                 writeToScreen('CONNECTED');
-                doSend('Allo?');
             }
 
             function onDisconnect(evt) {
@@ -113,7 +127,9 @@
             }
 
             function onMessage(msg) {
-                if (msg.type !== 'game1/gameState') console.log(msg);
+                if (msg.type !== 'game1/gameState') {
+                    console.log(msg);
+                }
 
                 if (msg.type == 'userInit') {
                     userId = msg.userId;

@@ -1,6 +1,8 @@
 import Room from '../../src/classes/room';
 import User from '../../src/classes/user';
+import { GameAlreadyStartedError } from '../../src/customErrors';
 import { Globals } from '../../src/enums/globals';
+import { MaxNumberUsersExceededError } from '../../src/gameplay/customErrors';
 
 describe('Room ID', () => {
     it("creates a room with id 'ABCD'", () => {
@@ -57,11 +59,13 @@ describe('Room: Users', () => {
     it('should return a user count of 2 after 2 players joined', () => {
         expect(room.getUserCount()).toStrictEqual(2);
     });
-    it('should return false if a player wants to join a full room', () => {
+    it('should throw an MaxNumberUsersExceededError if a player wants to join a full room', () => {
         for (let i = 2; i < Globals.MAX_PLAYER_NUMBER; i++) {
             room.addUser(new User(room.id, i.toString(), 'User'));
         }
-        expect(room.addUser(new User(room.id, '999', 'User'))).toBeFalsy();
+        expect(() => {
+            room.addUser(new User(room.id, '999', 'User'));
+        }).toThrow(MaxNumberUsersExceededError);
     });
 
     it('number of first player should be 1 and number of second player 2', () => {
@@ -72,5 +76,12 @@ describe('Room: Users', () => {
     it('number of second player should be 1 if first player is removed', () => {
         room.removeUser(user1);
         expect(user2.number).toStrictEqual(1);
+    });
+
+    it('should throw an GameAlreadyStartedError if a player wants to join game that has already started', () => {
+        room.startGame()
+        expect(() => {
+            room.addUser(new User(room.id, '999', 'User'));
+        }).toThrow(GameAlreadyStartedError);
     });
 });

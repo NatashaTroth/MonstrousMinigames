@@ -1,4 +1,5 @@
 import Room from '../classes/room';
+import { InvalidRoomCodeError } from '../customErrors';
 import { GameStateInfo } from '../gameplay/catchFood/interfaces';
 
 const CodeGenerator = require('node-code-generator');
@@ -25,6 +26,9 @@ class RoomService {
         const room = this.rooms.filter(function (n) {
             return n.id === roomId.toUpperCase();
         })[0];
+        if (!room) {
+            throw new InvalidRoomCodeError();
+        }
         return room;
     }
     /** starts the game in the room and returns the initial game state */
