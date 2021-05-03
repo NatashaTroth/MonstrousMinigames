@@ -7,6 +7,7 @@ import { verifyGameState } from '../helperFunctions/verifyGameState';
 import { verifyUserId } from '../helperFunctions/verifyUserId';
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
 import { GameState, HashTable, IGameInterface } from '../interfaces';
+// import Leaderboard from '../leaderboard/Leaderboard';
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
 import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
 import { initiatePlayersState } from './helperFunctions/initiatePlayerState';
@@ -41,8 +42,10 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     countdownTime: number;
     timeOutRemainingTime: number;
     gamePausedTime: number;
+    // leaderboard: Leaderboard;
 
     constructor() {
+        // constructor(roomId: string, leaderboard: Leaderboard) {
         // this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
         this.roomId = '';
         this.maxNumberOfPlayers = Globals.MAX_PLAYER_NUMBER;
@@ -59,6 +62,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.countdownTime = 3000;
         this.timeOutRemainingTime = 0;
         this.gamePausedTime = 0;
+        // this.leaderboard = {};
+        // this.leaderboard = leaderboard;
     }
 
     createNewGame(
@@ -73,7 +78,6 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
                 this.maxNumberOfPlayers
             );
         }
-
         this.gameState = GameState.Created;
         this.roomId = players[0].roomId;
         this.trackLength = trackLength;
@@ -230,7 +234,6 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     }
 
     playerHasCompletedObstacle(userId: string, obstacleId: number): void {
-        //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.playersState, userId);
         verifyUserIsActive(userId, this.playersState[userId].isActive);
@@ -303,6 +306,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     private handleGameFinished(): void {
         this.gameState = GameState.Finished;
         clearTimeout(this.timer);
+
         const currentGameStateInfo = this.getGameStateInfo();
         CatchFoodGameEventEmitter.emitGameHasFinishedEvent({
             roomId: currentGameStateInfo.roomId,
