@@ -1,6 +1,6 @@
 export enum ObstacleType {
     TreeStump = 'TREE-STUMP',
     //BearTrap = 'BEAR-TRAP',
-    //Spider = 'SPIDER',
+    Spider = 'SPIDER',
     //Hole = 'HOLE',
 }
