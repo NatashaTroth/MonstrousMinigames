@@ -1,47 +1,51 @@
-import { GAMESTATE, OBSTACLES, TOUCHEVENT } from '../../utils/constants';
+import { GameState, Obstacles, TouchEvent } from '../../utils/constants';
 
 describe('test GAMESTATE enum', () => {
     it('GAMESTATE.created should return CREATED', async () => {
-        expect(GAMESTATE.created).toBe('CREATED');
+        expect(GameState.created).toBe('CREATED');
     });
 
     it('GAMESTATE.started should return STARTED', async () => {
-        expect(GAMESTATE.started).toBe('STARTED');
+        expect(GameState.started).toBe('STARTED');
     });
 
     it('GAMESTATE.stopped should return STOPPED', async () => {
-        expect(GAMESTATE.stopped).toBe('STOPPED');
+        expect(GameState.stopped).toBe('STOPPED');
     });
 
     it('GAMESTATE.finished should return FINISHED', async () => {
-        expect(GAMESTATE.finished).toBe('FINISHED');
+        expect(GameState.finished).toBe('FINISHED');
     });
 
     it('GAMESTATE should have length of 4', async () => {
-        expect(Object.keys(GAMESTATE).length).toBe(4);
+        expect(Object.keys(GameState).length).toBe(4);
     });
 });
 
 describe('test OBSTACLES enum', () => {
     it('OBSTACLES.treeStump should return TREE-STUMP', async () => {
-        expect(OBSTACLES.treeStump).toBe('TREE-STUMP');
+        expect(Obstacles.treeStump).toBe('TREE-STUMP');
     });
 
-    it('OBSTACLES should have length of 1', async () => {
-        expect(Object.keys(OBSTACLES).length).toBe(1);
+    it('OBSTACLES.spider should return SPIDER', async () => {
+        expect(Obstacles.spider).toBe('SPIDER');
+    });
+
+    it('OBSTACLES should have length of 2', async () => {
+        expect(Object.keys(Obstacles).length).toBe(2);
     });
 });
 
 describe('test TOUCHEVENT enum', () => {
     it('TOUCHEVENT.panLeft should return panLeft', async () => {
-        expect(TOUCHEVENT.panLeft).toBe('panleft');
+        expect(TouchEvent.panLeft).toBe('panleft');
     });
 
     it('TOUCHEVENT.panRight should return panRight', async () => {
-        expect(TOUCHEVENT.panRight).toBe('panright');
+        expect(TouchEvent.panRight).toBe('panright');
     });
 
     it('OBSTACLES should have length of 2', async () => {
-        expect(Object.keys(TOUCHEVENT).length).toBe(2);
+        expect(Object.keys(TouchEvent).length).toBe(2);
     });
 });

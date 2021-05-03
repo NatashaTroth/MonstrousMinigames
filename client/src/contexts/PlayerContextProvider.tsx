@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router';
 
-import { OBSTACLES } from '../utils/constants';
+import { Obstacles } from '../utils/constants';
 import { GameContext } from './GameContextProvider';
 
 export const defaultValue = {
@@ -34,7 +34,7 @@ export const defaultValue = {
     },
 };
 interface IObstacle {
-    type: OBSTACLES;
+    type: Obstacles;
     id: number;
 }
 interface IPlayerContext {
@@ -72,7 +72,7 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
             setObstacle(val);
             if (val) {
                 reroute = true;
-                history.push(`/controller/${roomId}/game1-obstacle`);
+                history.push(`/controller/${roomId}/${val.type.toLowerCase()}`);
             } else if (reroute) {
                 reroute = false;
                 history.push(`/controller/${roomId}/game1`);

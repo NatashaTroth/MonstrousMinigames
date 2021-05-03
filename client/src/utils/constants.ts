@@ -1,20 +1,26 @@
-export enum OBSTACLES {
+export enum Obstacles {
     treeStump = 'TREE-STUMP',
+    spider = 'SPIDER',
 }
 
-export enum GAMESTATE {
+export enum ObstacleRoutes {
+    treeStump = 'tree-stump',
+    spider = 'spider',
+}
+
+export enum GameState {
     created = 'CREATED',
     started = 'STARTED',
     stopped = 'STOPPED',
     finished = 'FINISHED',
 }
 
-export enum TOUCHEVENT {
+export enum TouchEvent {
     panLeft = 'panleft',
     panRight = 'panright',
 }
 
-export enum MESSAGETYPES {
+export enum MessageTypes {
     userInit = 'userInit',
     connectedUsers = 'connectedUsers',
     backToLobby = 'backToLobby',
