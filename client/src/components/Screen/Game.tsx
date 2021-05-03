@@ -7,7 +7,7 @@ import { Container, ContainerTimer, CountdownRenderer, Go } from './Game.sc'
 import MainScene from './MainScene'
 
 const Game: React.FunctionComponent = () => {
-    const { countdownTime, players, finished } = React.useContext(GameContext)
+    const { countdownTime, roomId } = React.useContext(GameContext)
     const [countdown] = React.useState(Date.now() + countdownTime)
 
     React.useEffect(() => {
@@ -24,11 +24,8 @@ const Game: React.FunctionComponent = () => {
             },
         })
         game.scene.add('MainScene', MainScene)
-        game.scene.start('MainScene', { player: players, finished: finished })
+        game.scene.start('MainScene', { roomId: roomId})
     }, [])
-
-    // eslint-disable-next-line no-console
-    console.log(players)
 
     return (
         <Container>

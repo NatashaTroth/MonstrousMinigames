@@ -8,27 +8,25 @@ import noah from "../../images/noah_spritesheet.png"
 import steffi from "../../images/steffi_spritesheet.png"
 import susi from "../../images/susi_spritesheet.png"
 import wood from '../../images/wood.png'
+//import ScreenSocket from '../../utils/screenSocket'
 
 
 const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
-let playerNumber = 1
+const playerNumber = 1
 const moveplayers = [true, true, true, true]
 const playerFinished = [false, false, false, false]
-let gameFinished = false
+//const socket = ScreenSocket.getInstance()
 
 class MainScene extends Phaser.Scene {
     constructor() {
         super('MainScene')
     }
 
-    init(data: {player: [], finished: boolean}){
+    init(data:{roomId?:string}){
         // eslint-disable-next-line no-console
-        console.log(data.finished)
-        gameFinished = data.finished
-        if(data.player !== undefined)
-        playerNumber = data.player.length
+        console.log(data.roomId)
     }
 
     preload(): void {
@@ -46,7 +44,6 @@ class MainScene extends Phaser.Scene {
 
     create() {
         //this.sound.add("music", { loop: false });
-
         const forest = this.add.image(0, 0, 'forest')
 
         players.push(this.physics.add.sprite(10, 10, 'franz'))
@@ -64,8 +61,6 @@ class MainScene extends Phaser.Scene {
             players.push(this.physics.add.sprite(68, 700, 'steffi'))
             goals.push(this.physics.add.sprite(1050, 700, 'goal'))
         }
-        // eslint-disable-next-line no-console
-        console.log(playerNumber)
 
         const arr = Array.from({ length: 8 }, () => Math.floor(Math.random() * 600) + 200)
 
@@ -133,7 +128,7 @@ class MainScene extends Phaser.Scene {
 
     update() {
         for (let i = 0; i < players.length; i++) {
-            if (players[i] && moveplayers[i] && !gameFinished) {
+            if (players[i] && moveplayers[i]) {
                 this.moveForward(players[i])
             } else {
                 players[i].anims.stop()
@@ -141,6 +136,7 @@ class MainScene extends Phaser.Scene {
             this.physics.collide(players[i], goals[i], () => {
                 this.player1ReachedGoal(i)
             })
+
         }
 
         if(players[0]){
