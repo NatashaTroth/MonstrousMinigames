@@ -68,4 +68,8 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
     public static emitPlayerHasDisconnected(data: GameEvents.PlayerHasDisconnectedInfo) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerHasDisconnected, data);
     }
+
+    public static emitPlayerHasReconnected(data: GameEvents.PlayerHasReconnectedInfo) {
+        this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerHasReconnected, data);
+    }
 }

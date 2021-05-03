@@ -307,6 +307,71 @@ describe('Player has disconnected events', () => {
             userId: '1',
         });
     });
+
+    it('should not emit a PlayerHasDisconnected event when an inactive player is disconnected', async () => {
+        startGameAndAdvanceCountdown(catchFoodGame);
+        catchFoodGame.disconnectPlayer('1');
+        let playerHasDisconnectedEvent = false;
+        gameEventEmitter.on(GameEventTypes.PlayerHasDisconnected, () => {
+            playerHasDisconnectedEvent = true;
+        });
+        catchFoodGame.disconnectPlayer('1');
+        expect(playerHasDisconnectedEvent).toBeFalsy();
+    });
+});
+
+describe('Player has reconnected events', () => {
+    beforeAll(() => {
+        gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
+    });
+
+    beforeEach(() => {
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.runAllTimers();
+        jest.clearAllMocks();
+    });
+
+    it('should emit a PlayerHasReconnected event when a player is reconnected', async () => {
+        let playerHasReconnectedEvent = false;
+        gameEventEmitter.on(GameEventTypes.PlayerHasReconnected, () => {
+            playerHasReconnectedEvent = true;
+        });
+        startGameAndAdvanceCountdown(catchFoodGame);
+        catchFoodGame.disconnectPlayer('1');
+        catchFoodGame.reconnectPlayer('1');
+        expect(playerHasReconnectedEvent).toBeTruthy();
+    });
+
+    it('should emit a roomId and userId when a player is reconnected', async () => {
+        let eventData: GameEvents.PlayerHasReconnectedInfo = {
+            roomId: '',
+            userId: '',
+        };
+        gameEventEmitter.on(GameEventTypes.PlayerHasReconnected, data => {
+            eventData = data;
+        });
+        startGameAndAdvanceCountdown(catchFoodGame);
+        catchFoodGame.disconnectPlayer('1');
+        catchFoodGame.reconnectPlayer('1');
+        expect(eventData).toMatchObject({
+            roomId: 'xxx',
+            userId: '1',
+        });
+    });
+
+    it('should not emit a PlayerHasReconnected event when an active player is reconnected', async () => {
+        let playerHasReconnectedEvent = false;
+        gameEventEmitter.on(GameEventTypes.PlayerHasReconnected, () => {
+            playerHasReconnectedEvent = true;
+        });
+        startGameAndAdvanceCountdown(catchFoodGame);
+        catchFoodGame.reconnectPlayer('1');
+        expect(playerHasReconnectedEvent).toBeFalsy();
+    });
 });
 
 describe('Player has finished events', () => {
