@@ -99,8 +99,14 @@ class ConnectionHandler {
 
             socket.on('disconnect', () => {
                 console.info(socket.room.id + ' | Controller disconnected: ' + socket.user.id);
+                try {
+                    socket.room.game.disconnectPlayer(socket.user.id);
+                } catch (e) {
+                    emitter.sendErrorMessage(socket, e);
+                    console.error(roomId + ' | ' + e.name + ' | ' + userId);
+                    return;
+                }
                 socket.room.userDisconnected(socket.user.id);
-
                 if (socket.room.isOpen()) {
                     emitter.sendConnectedUsers(screenNameSpace, socket.room);
                     const admin = socket.room.admin;
@@ -144,14 +150,24 @@ class ConnectionHandler {
                     }
                     case CatchFoodMsgType.MOVE: {
                         if (socket.room.isPlaying()) {
-                            socket.room.game?.runForward(socket.user.id, parseInt(`${process.env.SPEED}`, 10) || 2);
+                            try {
+                                socket.room.game?.runForward(socket.user.id, parseInt(`${process.env.SPEED}`, 10) || 2);
+                            } catch (e) {
+                                emitter.sendErrorMessage(socket, e);
+                                console.error(roomId + ' | ' + e.name);
+                            }
                         }
                         break;
                     }
                     case CatchFoodMsgType.OBSTACLE_SOLVED: {
                         const obstacleMessage = message as IMessageObstacle;
                         const obstacleId = obstacleMessage.obstacleId;
-                        socket.room.game?.playerHasCompletedObstacle(socket.user.id, obstacleId);
+                        try {
+                            socket.room.game?.playerHasCompletedObstacle(socket.user.id, obstacleId);
+                        } catch (e) {
+                            emitter.sendErrorMessage(socket, e);
+                            console.error(roomId + ' | ' + e.name);
+                        }
                         break;
                     }
                     case MessageTypes.BACK_TO_LOBBY:
@@ -173,7 +189,12 @@ class ConnectionHandler {
                     case MessageTypes.STOP_GAME: {
                         if (socket.room.isPlaying() || socket.room.isPaused()) {
                             console.info(socket.room.id + ' | Stop Game');
-                            socket.room.stopGame();
+                            try {
+                                socket.room.stopGame();
+                            } catch (e) {
+                                console.error(socket.room.id + ' | ' + e.name);
+                                emitter.sendErrorMessage(socket, e);
+                            }
                         }
                         break;
                     }
@@ -220,10 +241,20 @@ class ConnectionHandler {
                     case MessageTypes.PAUSE_RESUME: {
                         if (socket.room.isPlaying()) {
                             console.info(socket.room.id + ' | Pause Game');
-                            socket.room.pauseGame();
+                            try {
+                                socket.room.pauseGame();
+                            } catch (e) {
+                                console.error(socket.room.id + ' | ' + e.name);
+                                emitter.sendErrorMessage(socket, e);
+                            }
                         } else if (socket.room.isPaused()) {
                             console.info(socket.room.id + ' | Resume Game');
-                            socket.room.resumeGame();
+                            try {
+                                socket.room.resumeGame();
+                            } catch (e) {
+                                console.error(socket.room.id + ' | ' + e.name);
+                                emitter.sendErrorMessage(socket, e);
+                            }
                         }
 
                         break;
