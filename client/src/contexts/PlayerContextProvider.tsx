@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { useHistory } from 'react-router'
+import * as React from 'react';
+import { useHistory } from 'react-router';
 
-import { OBSTACLES } from '../utils/constants'
-import { GameContext } from './GameContextProvider'
+import { OBSTACLES } from '../utils/constants';
+import { GameContext } from './GameContextProvider';
 
 export const defaultValue = {
     obstacle: undefined,
@@ -28,53 +28,62 @@ export const defaultValue = {
     resetPlayer: () => {
         // do nothing
     },
-}
+    playerNumber: undefined,
+    setPlayerNumber: () => {
+        // do nothing
+    },
+};
 interface IObstacle {
-    type: OBSTACLES
-    id: number
+    type: OBSTACLES;
+    id: number;
 }
 interface IPlayerContext {
-    obstacle: undefined | IObstacle
-    setObstacle: (val: IObstacle | undefined) => void
-    playerFinished: boolean
-    setPlayerFinished: (val: boolean) => void
-    playerRank: number | undefined
-    setPlayerRank: (val: number) => void
-    isPlayerAdmin: boolean
-    setIsPlayerAdmin: (val: boolean) => void
-    permission: boolean
-    setPermissionGranted: (val: boolean) => void
-    resetPlayer: () => void
+    obstacle: undefined | IObstacle;
+    setObstacle: (val: IObstacle | undefined) => void;
+    playerFinished: boolean;
+    setPlayerFinished: (val: boolean) => void;
+    playerRank: number | undefined;
+    setPlayerRank: (val: number) => void;
+    isPlayerAdmin: boolean;
+    setIsPlayerAdmin: (val: boolean) => void;
+    permission: boolean;
+    setPermissionGranted: (val: boolean) => void;
+    resetPlayer: () => void;
+    playerNumber: number | undefined;
+    setPlayerNumber: (val: number) => void;
 }
 
-export const PlayerContext = React.createContext<IPlayerContext>(defaultValue)
+export const PlayerContext = React.createContext<IPlayerContext>(defaultValue);
 
 const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
-    const [obstacle, setObstacle] = React.useState<undefined | IObstacle>(undefined)
-    const [playerFinished, setPlayerFinished] = React.useState<boolean>(false)
-    const [playerRank, setPlayerRank] = React.useState<undefined | number>(undefined)
-    const [isPlayerAdmin, setIsPlayerAdmin] = React.useState<boolean>(false)
-    const [permission, setPermissionGranted] = React.useState<boolean>(false)
-    const history = useHistory()
-    const { roomId } = React.useContext(GameContext)
-    let reroute = true
+    const [obstacle, setObstacle] = React.useState<undefined | IObstacle>();
+    const [playerFinished, setPlayerFinished] = React.useState<boolean>(false);
+    const [playerRank, setPlayerRank] = React.useState<undefined | number>();
+    const [isPlayerAdmin, setIsPlayerAdmin] = React.useState<boolean>(false);
+    const [playerNumber, setPlayerNumber] = React.useState<number | undefined>();
+    const [permission, setPermissionGranted] = React.useState<boolean>(false);
+    const history = useHistory();
+    const { roomId } = React.useContext(GameContext);
+    let reroute = true;
 
     const content = {
         obstacle,
         setObstacle: (val: undefined | IObstacle) => {
-            setObstacle(val)
+            setObstacle(val);
             if (val) {
-                reroute = true
-                history.push(`/controller/${roomId}/game1-obstacle`)
+                reroute = true;
+                history.push(`/controller/${roomId}/game1-obstacle`);
             } else if (reroute) {
-                reroute = false
-                history.push(`/controller/${roomId}/game1`)
+                reroute = false;
+                history.push(`/controller/${roomId}/game1`);
             }
         },
         playerFinished,
         setPlayerFinished: (val: boolean) => {
-            setPlayerFinished(val)
-            history.push(`/controller/${roomId}/finished`)
+            setPlayerFinished(val);
+            if (val) {
+                history.push(`/controller/${roomId}/finished`);
+            }
         },
         playerRank,
         setPlayerRank,
@@ -83,10 +92,13 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         permission,
         setPermissionGranted,
         resetPlayer: () => {
-            setPlayerFinished(false), setPlayerRank(undefined)
+            setPlayerFinished(false);
+            setPlayerRank(undefined);
         },
-    }
-    return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>
-}
+        playerNumber,
+        setPlayerNumber,
+    };
+    return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>;
+};
 
-export default PlayerContextProvider
+export default PlayerContextProvider;

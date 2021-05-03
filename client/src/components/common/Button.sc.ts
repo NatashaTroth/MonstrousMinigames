@@ -1,15 +1,15 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
-import { orange } from '../../utils/colors'
+import { orange } from '../../utils/colors';
 
-const borderWidth = 5
-const boxShadowDepth = 8
-const fontSize = 1
-const horizontalPadding = 16
-const verticalPadding = 8
-let clip = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)'
+const borderWidth = 5;
+const boxShadowDepth = 8;
+const fontSize = 1;
+const horizontalPadding = 16;
+const verticalPadding = 8;
+let clip = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
 
-export const Container = styled.div``
+export const Container = styled.div``;
 
 export const StyledButton = styled.button`
     color: black;
@@ -67,4 +67,4 @@ export const StyledButton = styled.button`
     button span:nth-of-type(1) {
         ${(clip = 'polygon(0 0, 100% 0, 50% 50%, 50% 50%)')}
     }
-`
+`;

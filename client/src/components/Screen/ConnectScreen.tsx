@@ -1,7 +1,7 @@
-import * as React from 'react'
+import * as React from 'react';
 
-import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
-import Button from '../common/Button'
+import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import Button from '../common/Button';
 import {
     ConnectScreenContainer,
     FormContainer,
@@ -9,14 +9,14 @@ import {
     StyledForm,
     StyledInput,
     StyledLabel,
-} from './ConnectScreen.sc'
+} from './ConnectScreen.sc';
 
 interface IFormState {
-    roomId: string
+    roomId: string;
 }
 export const ConnectScreen: React.FunctionComponent = () => {
-    const [formState, setFormState] = React.useState<undefined | IFormState>({ roomId: '' })
-    const { handleSocketConnection } = React.useContext(ScreenSocketContext)
+    const [formState, setFormState] = React.useState<undefined | IFormState>({ roomId: '' });
+    const { handleSocketConnection } = React.useContext(ScreenSocketContext);
 
     async function handleCreateNewRoom() {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}create-room`, {
@@ -24,10 +24,10 @@ export const ConnectScreen: React.FunctionComponent = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-        })
+        });
 
-        const data = await response.json()
-        handleSocketConnection(data.roomId)
+        const data = await response.json();
+        handleSocketConnection(data.roomId);
     }
 
     return (
@@ -42,8 +42,8 @@ export const ConnectScreen: React.FunctionComponent = () => {
                 />
                 <StyledForm
                     onSubmit={e => {
-                        e.preventDefault()
-                        handleSocketConnection(formState?.roomId || '')
+                        e.preventDefault();
+                        handleSocketConnection(formState?.roomId || '');
                     }}
                 >
                     <StyledLabel>
@@ -62,5 +62,5 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
             <ImpressumLink to="/impressum">Impressum</ImpressumLink>
         </ConnectScreenContainer>
-    )
-}
+    );
+};

@@ -1,6 +1,6 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
-import { orange } from '../../utils/colors'
+import { orange } from '../../utils/colors';
 
 export const FinishedScreenContainer = styled.div`
     display: flex;
@@ -10,7 +10,7 @@ export const FinishedScreenContainer = styled.div`
     div:first-of-type {
         margin-bottom: 20px;
     }
-`
+`;
 
 export const FinishedScreenText = styled.div`
     border: 5px solid ${orange};
@@ -26,4 +26,4 @@ export const FinishedScreenText = styled.div`
     text-align: center;
     box-shadow: 8px 8px 0 #888;
     border-radius: 4px;
-`
+`;

@@ -1,14 +1,14 @@
-import { Button as MuiButton } from '@material-ui/core'
-import { Assignment } from '@material-ui/icons'
-import * as React from 'react'
-import { useParams } from 'react-router-dom'
+import { Button as MuiButton } from '@material-ui/core';
+import { Assignment } from '@material-ui/icons';
+import * as React from 'react';
+import { useParams } from 'react-router-dom';
 
-import { IRouteParams } from '../../App'
-import { GameContext } from '../../contexts/GameContextProvider'
-import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
-import { generateQRCode } from '../../utils/generateQRCode'
-import Button from '../common/Button'
-import { GAMES } from './data'
+import { IRouteParams } from '../../App';
+import { GameContext } from '../../contexts/GameContextProvider';
+import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { generateQRCode } from '../../utils/generateQRCode';
+import Button from '../common/Button';
+import { GAMES } from './data';
 import {
     AdminIcon,
     GameChoiceContainer,
@@ -25,28 +25,28 @@ import {
     UpperSection,
     UpperSectionItem,
     UserListItem,
-} from './Lobby.sc'
+} from './Lobby.sc';
 
 export const Lobby: React.FunctionComponent = () => {
-    const { roomId, connectedUsers } = React.useContext(GameContext)
-    const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext)
-    const [selectedGame, setSelectedGame] = React.useState(0)
-    const { id }: IRouteParams = useParams()
-    const navigator = window.navigator
+    const { roomId, connectedUsers } = React.useContext(GameContext);
+    const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
+    const [selectedGame, setSelectedGame] = React.useState(0);
+    const { id }: IRouteParams = useParams();
+    const navigator = window.navigator;
 
     if (id && !screenSocket) {
-        handleSocketConnection(id)
+        handleSocketConnection(id);
     }
 
     async function handleCopyToClipboard() {
         if (navigator.clipboard) {
-            await navigator.clipboard.writeText(`${process.env.REACT_APP_FRONTEND_URL}${roomId}`)
+            await navigator.clipboard.writeText(`${process.env.REACT_APP_FRONTEND_URL}${roomId}`);
         }
     }
 
     React.useEffect(() => {
-        generateQRCode(`${process.env.REACT_APP_FRONTEND_URL}${roomId}`, 'qrCode')
-    }, [roomId])
+        generateQRCode(`${process.env.REACT_APP_FRONTEND_URL}${roomId}`, 'qrCode');
+    }, [roomId]);
 
     return (
         <LobbyContainer>
@@ -98,5 +98,5 @@ export const Lobby: React.FunctionComponent = () => {
                 </ImagesContainer>
             </GameChoiceContainer>
         </LobbyContainer>
-    )
-}
+    );
+};

@@ -1,20 +1,21 @@
-import { stringify } from 'query-string'
-import * as React from 'react'
-import { useHistory } from 'react-router-dom'
+import { stringify } from 'query-string';
+import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
-import { GAMESTATE, MESSAGETYPES, OBSTACLES } from '../utils/constants'
-import { GameContext, IPlayerState } from './GameContextProvider'
+import { GAMESTATE, MESSAGETYPES, OBSTACLES } from '../utils/constants';
+import ScreenSocket from '../utils/screenSocket';
+import { GameContext, IPlayerState } from './GameContextProvider';
 
 export interface IObstacleMessage {
-    type: string
-    obstacleType?: OBSTACLES
+    type: string;
+    obstacleType?: OBSTACLES;
 }
 
 interface IScreenSocketContext {
-    screenSocket: SocketIOClient.Socket | undefined
-    setScreenSocket: (val: SocketIOClient.Socket | undefined, roomId: string) => void
-    isScreenConnected: boolean
-    handleSocketConnection: (val: string) => void
+    screenSocket: SocketIOClient.Socket | undefined;
+    setScreenSocket: (val: SocketIOClient.Socket | undefined, roomId: string) => void;
+    isScreenConnected: boolean;
+    handleSocketConnection: (val: string) => void;
 }
 
 export const defaultValue = {
@@ -26,51 +27,51 @@ export const defaultValue = {
     handleSocketConnection: () => {
         // do nothing
     },
-}
+};
 
-export const ScreenSocketContext = React.createContext<IScreenSocketContext>(defaultValue)
+export const ScreenSocketContext = React.createContext<IScreenSocketContext>(defaultValue);
 
 export interface IPlayerRank {
-    id: number
-    name: string
-    rank: number
-    finished: boolean
-    totalTimeInMs: number
-    positionX: number
+    id: number;
+    name: string;
+    rank?: number;
+    finished: boolean;
+    totalTimeInMs?: number;
+    positionX: number;
 }
 interface IGameStateData {
-    gameState: GAMESTATE
-    numberOfObstacles: number
-    roomId: string
-    trackLength: number
-    playersState?: IPlayerState[]
-    playerRanks?: IPlayerRank[]
+    gameState: GAMESTATE;
+    numberOfObstacles: number;
+    roomId: string;
+    trackLength: number;
+    playersState?: IPlayerState[];
+    playerRanks?: IPlayerRank[];
 }
 
 interface IGameState {
-    data?: IGameStateData
-    type: string
+    data?: IGameStateData;
+    type: string;
 }
 
 export interface IUser {
-    id: string
-    name: string
-    roomId: string
+    id: string;
+    name: string;
+    roomId: string;
 }
 
 interface IGameStarted {
-    type: string
-    countdownTime: number
+    type: string;
+    countdownTime: number;
 }
 
 interface IConnectedUsers {
-    type: string
-    users: IUser[]
+    type: string;
+    users: IUser[];
 }
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
-    const [screenSocket, setScreenSocket] = React.useState<SocketIOClient.Socket | undefined>(undefined)
-    const [messageData, setMessageData] = React.useState<IGameState | IConnectedUsers | undefined>()
-    const history = useHistory()
+    const [screenSocket, setScreenSocket] = React.useState<SocketIOClient.Socket | undefined>(undefined);
+    const [messageData, setMessageData] = React.useState<IGameState | IConnectedUsers | undefined>();
+    const history = useHistory();
 
     const {
         setPlayers,
@@ -84,51 +85,59 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setRoomId,
         setConnectedUsers,
         setCountdownTime,
-    } = React.useContext(GameContext)
+        setHasTimedOut,
+    } = React.useContext(GameContext);
 
     React.useEffect(() => {
         if (messageData) {
-            let data
+            let data;
 
             switch (messageData.type) {
                 case 'game1/gameState':
-                    handleGameState(messageData as IGameState)
-                    break
+                    handleGameState(messageData as IGameState);
+                    break;
                 case MESSAGETYPES.connectedUsers:
-                    data = messageData as IConnectedUsers
+                    data = messageData as IConnectedUsers;
                     if (data.users) {
-                        setConnectedUsers(data.users)
+                        setConnectedUsers(data.users);
                     }
-                    break
+                    break;
                 case 'game1/hasStarted':
-                    data = messageData as IGameStarted
-                    setCountdownTime(data.countdownTime)
-                    setGameStarted(true)
-                    history.push(`/screen/${roomId}/game1`)
-                    break
+                    data = messageData as IGameStarted;
+                    setCountdownTime(data.countdownTime);
+                    setGameStarted(true);
+                    history.push(`/screen/${roomId}/game1`);
+                    break;
                 case MESSAGETYPES.gameHasFinished:
-                    data = messageData as IGameState
-                    setFinished(true)
-                    setPlayerRanks(data.data!.playerRanks!)
-                    history.push(`/screen/${roomId}/finished`)
-                    break
+                    handleGameHasFinished(messageData as IGameState);
+                    break;
                 case MESSAGETYPES.gameHasReset:
-                    history.push(`/screen/${roomId}/lobby`)
-                    break
+                    history.push(`/screen/${roomId}/lobby`);
+                    break;
+                case MESSAGETYPES.gameHasTimedOut:
+                    setHasTimedOut(true);
+                    handleGameHasFinished(messageData as IGameState);
+                    break;
             }
+        }
+
+        function handleGameHasFinished(messageData: IGameState) {
+            setFinished(true);
+            setPlayerRanks(messageData.data!.playerRanks!);
+            history.push(`/screen/${roomId}/finished`);
         }
 
         function handleGameState(messageData: IGameState) {
             if (messageData.data) {
                 if (!trackLength) {
-                    setTrackLength(messageData.data.trackLength)
+                    setTrackLength(messageData.data.trackLength);
                 }
                 if (!roomId) {
-                    setRoomId(messageData.data.roomId)
+                    setRoomId(messageData.data.roomId);
                 }
 
                 if (messageData.data.playersState) {
-                    setPlayers(messageData.data.playersState)
+                    setPlayers(messageData.data.playersState);
                 }
             }
         }
@@ -141,12 +150,13 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setCountdownTime,
         setFinished,
         setGameStarted,
+        setHasTimedOut,
         setPlayerRanks,
         setPlayers,
         setRoomId,
         setTrackLength,
         trackLength,
-    ])
+    ]);
 
     function handleSocketConnection(roomId: string) {
         const screenSocket = io(
@@ -160,23 +170,24 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 reconnectionDelayMax: 10000,
                 transports: ['websocket'],
             }
-        )
-        setRoomId(roomId)
+        );
+        setRoomId(roomId);
 
         screenSocket.on('connect', () => {
             if (screenSocket) {
-                handleSetScreenSocket(screenSocket, roomId)
+                handleSetScreenSocket(screenSocket, roomId);
             }
-        })
+        });
     }
 
     screenSocket?.on('message', (data: IGameState | IConnectedUsers) => {
-        setMessageData(data)
-    })
+        setMessageData(data);
+    });
 
     function handleSetScreenSocket(val: SocketIOClient.Socket | undefined, roomId: string) {
-        setScreenSocket(val)
-        history.push(`/screen/${roomId}/lobby`)
+        setScreenSocket(val);
+        ScreenSocket.getInstance(val);
+        history.push(`/screen/${roomId}/lobby`);
     }
 
     const content = {
@@ -184,8 +195,8 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setScreenSocket: (val: SocketIOClient.Socket | undefined, roomId: string) => handleSetScreenSocket(val, roomId),
         isScreenConnected: screenSocket ? true : false,
         handleSocketConnection,
-    }
-    return <ScreenSocketContext.Provider value={content}>{children}</ScreenSocketContext.Provider>
-}
+    };
+    return <ScreenSocketContext.Provider value={content}>{children}</ScreenSocketContext.Provider>;
+};
 
-export default ScreenSocketContextProvider
+export default ScreenSocketContextProvider;

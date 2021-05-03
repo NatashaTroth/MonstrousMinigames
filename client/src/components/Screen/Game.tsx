@@ -46,13 +46,13 @@ const Game: React.FunctionComponent = () => {
                 }
             />
         </Container>
-    )
-}
+    );
+};
 
-export default Game
+export default Game;
 
 interface IGameContentProps {
-    displayGo?: boolean
+    displayGo?: boolean;
 }
 
 const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo }) => {
@@ -61,5 +61,5 @@ const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo }) 
             {displayGo && <Go>Go!</Go>}
             <div id="game-root"></div>
         </div>
-    )
-}
+    );
+};

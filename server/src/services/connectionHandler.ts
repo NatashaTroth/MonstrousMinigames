@@ -4,15 +4,8 @@ import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
 import { Namespaces } from '../enums/nameSpaces';
 import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventEmitter';
-import { PlayerFinishedInfo } from '../gameplay/catchFood/interfaces';
-import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType';
-import {
-    GameEventTypes,
-    GameHasFinished,
-    GameHasStarted,
-    GameStateHasChanged,
-    ObstacleReachedInfo,
-} from '../gameplay/interfaces/index';
+import { CatchFoodMsgType, GameEvents } from '../gameplay/catchFood/interfaces';
+import { GameEventTypes } from '../gameplay/interfaces/index';
 import emitter from '../helpers/emitter';
 import { IMessageObstacle } from '../interfaces/messageObstacle';
 import { IMessage } from '../interfaces/messages';
@@ -95,7 +88,7 @@ class ConnectionHandler {
             emitter.sendConnectedUsers(screenNameSpace, socket.room);
             console.log(socket.room.id + ' | Controller connected: ' + socket.user.id);
 
-            emitter.sendUserInit(socket);
+            emitter.sendUserInit(socket, user.number);
 
             socket.on('disconnect', () => {
                 console.log(socket.room.id + ' | Controller disconnected: ' + socket.user.id);
@@ -111,6 +104,7 @@ class ConnectionHandler {
                             roomId: socket.room.id,
                             name: admin.name,
                             isAdmin: socket.room.isAdmin(admin),
+                            number: admin.number,
                         });
                     }
                 }
@@ -159,7 +153,7 @@ class ConnectionHandler {
                                         socket.room.id
                                     );
                                     emitter.sendConnectedUsers(screenNameSpace, socket.room);
-                                    emitter.sendUserInit(socket);
+                                    emitter.sendUserInit(socket, user.number);
                                 });
                             }
                         }
@@ -169,19 +163,6 @@ class ConnectionHandler {
                             console.log(socket.room.id + ' | Stop Game');
                             socket.room.stopGame();
                         }
-                        break;
-                    }
-                    case MessageTypes.PAUSE_RESUME: {
-                        if (socket.room.isAdmin(socket.user)) {
-                            if (socket.room.isPlaying()) {
-                                console.log(socket.room.id + ' | Pause Game');
-                                socket.room.pauseGame()
-                            }else if (socket.room.isPaused()) {
-                                console.log(socket.room.id + ' | Resume Game');
-                                socket.room.resumeGame()
-                         }
-                        }
-
                         break;
                     }
                     default: {
@@ -219,7 +200,23 @@ class ConnectionHandler {
             socket.on('message', function (message: IMessage) {
                 console.log(message);
 
-                socket.broadcast.emit('message', message);
+                const type = message.type;
+                switch (type) {
+                    case MessageTypes.PAUSE_RESUME: {
+                        if (socket.room.isPlaying()) {
+                            console.log(socket.room.id + ' | Pause Game');
+                            socket.room.pauseGame();
+                        } else if (socket.room.isPaused()) {
+                            console.log(socket.room.id + ' | Resume Game');
+                            socket.room.resumeGame();
+                        }
+
+                        break;
+                    }
+                    default: {
+                        console.log(message);
+                    }
+                }
             });
         });
     }
@@ -227,7 +224,7 @@ class ConnectionHandler {
         const rs = this.rs;
         const controllerNamespace = this.controllerNamespace;
         const screenNameSpace = this.screenNameSpace;
-        this.gameEventEmitter.on(GameEventTypes.ObstacleReached, (data: ObstacleReachedInfo) => {
+        this.gameEventEmitter.on(GameEventTypes.ObstacleReached, (data: GameEvents.ObstacleReachedInfo) => {
             console.log(data.roomId + ' | userId: ' + data.userId + ' | Obstacle: ' + data.obstacleType);
             const r = rs.getRoomById(data.roomId);
             const u = r.getUserById(data.userId);
@@ -239,7 +236,7 @@ class ConnectionHandler {
                 });
             }
         });
-        this.gameEventEmitter.on(GameEventTypes.PlayerHasFinished, (data: PlayerFinishedInfo) => {
+        this.gameEventEmitter.on(GameEventTypes.PlayerHasFinished, (data: GameEvents.PlayerHasFinished) => {
             console.log(data.roomId + ' | userId: ' + data.userId + ' | Rank: ' + data.rank);
             const room = rs.getRoomById(data.roomId);
             const user = room.getUserById(data.userId);
@@ -247,35 +244,35 @@ class ConnectionHandler {
                 emitter.sendPlayerFinished(controllerNamespace, user, data);
             }
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasStarted, (data: GameHasStarted) => {
+        this.gameEventEmitter.on(GameEventTypes.GameHasStarted, (data: GameEvents.GameHasStarted) => {
             console.log(data.roomId + ' | Game has started!');
             emitter.sendGameHasStarted([controllerNamespace, screenNameSpace], data);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameHasFinished) => {
+        this.gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
             console.log(data.roomId + ' | Game has finished');
             const room = rs.getRoomById(data.roomId);
             room.setClosed();
             emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasTimedOut, (data: GameHasFinished) => {
+        this.gameEventEmitter.on(GameEventTypes.GameHasTimedOut, (data: GameEvents.GameHasFinished) => {
             console.log(data.roomId + ' | Game has timed out');
             const room = rs.getRoomById(data.roomId);
             room.setClosed();
-            emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data);
+            emitter.sendGameHasTimedOut([controllerNamespace, screenNameSpace], data);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameStateHasChanged) => {
+        this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameEvents.GameStateHasChanged) => {
             console.log(data.roomId + ' | Game has stopped');
             const room = rs.getRoomById(data.roomId);
             room.setClosed();
             emitter.sendMessage(MessageTypes.GAME_HAS_STOPPED, [controllerNamespace, screenNameSpace], data.roomId);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasPaused, (data: GameStateHasChanged) => {
+        this.gameEventEmitter.on(GameEventTypes.GameHasPaused, (data: GameEvents.GameStateHasChanged) => {
             console.log(data.roomId + ' | Game has stopped');
             const room = rs.getRoomById(data.roomId);
             room.setPaused();
             emitter.sendMessage(MessageTypes.GAME_HAS_PAUSED, [controllerNamespace, screenNameSpace], data.roomId);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasResumed, (data: GameStateHasChanged) => {
+        this.gameEventEmitter.on(GameEventTypes.GameHasResumed, (data: GameEvents.GameStateHasChanged) => {
             console.log(data.roomId + ' | Game has stopped');
             const room = rs.getRoomById(data.roomId);
             room.setPlaying();

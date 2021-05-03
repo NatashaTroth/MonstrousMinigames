@@ -20,4 +20,10 @@ export enum MESSAGETYPES {
     backToLobby = 'backToLobby',
     gameHasFinished = 'gameHasFinished',
     gameHasReset = 'gameHasReset',
+    gameHasStopped = 'gameHasStopped',
+    gameHasTimedOut = 'gameHasTimedOut',
+    gameHasPaused = 'gameHasPaused',
+    gameHasResumed = 'gameHasResumed',
 }
+
+export const localDevelopment = false;

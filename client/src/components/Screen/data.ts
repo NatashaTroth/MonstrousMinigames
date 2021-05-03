@@ -1,5 +1,5 @@
-import instructionsImg1 from '../../images/instructions1.png'
-import instructionsImg2 from '../../images/instructions2.png'
+import instructionsImg1 from '../../images/instructions1.png';
+import instructionsImg2 from '../../images/instructions2.png';
 
 // TODO remove demo games
 export const GAMES = [
@@ -12,4 +12,4 @@ export const GAMES = [
         image2: instructionsImg2,
     },
     { id: 2, name: 'Random Game' },
-]
+];
