@@ -5,13 +5,13 @@ import { MaxNumberUsersExceededError } from '../customErrors';
 import { verifyGameState } from '../helperFunctions/verifyGameState';
 import { verifyUserId } from '../helperFunctions/verifyUserId';
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
-import { GameInterface, GameState, HashTable } from '../interfaces';
+import { GameState, HashTable, IGameInterface } from '../interfaces';
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
 import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
 import { initiatePlayersState } from './helperFunctions/initiatePlayerState';
 import { GameEvents, GameStateInfo, Obstacle, PlayerRank, PlayerState } from './interfaces';
 
-interface CatchFoodGameInterface extends GameInterface {
+interface CatchFoodGameInterface extends IGameInterface {
     playersState: HashTable<PlayerState>;
     trackLength: number;
     numberOfObstacles: number;

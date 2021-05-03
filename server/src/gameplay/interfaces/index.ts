@@ -1,6 +1,6 @@
 import { GameEventTypes } from './GameEventTypes';
-import { GameInterface } from './GameInterface';
 import { GameState } from './GameState';
 import { HashTable } from './HashTable';
+import { IGameInterface } from './IGameInterface';
 
-export { HashTable, GameEventTypes, GameState, GameInterface };
+export { HashTable, GameEventTypes, GameState, IGameInterface };

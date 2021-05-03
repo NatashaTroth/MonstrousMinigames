@@ -4,7 +4,7 @@ import { GameStateInfo, PlayerState } from '../catchFood/interfaces';
 import { HashTable } from './';
 import { GameState } from './GameState';
 
-export interface GameInterface {
+export interface IGameInterface {
     roomId: string;
     playersState: HashTable<PlayerState>; //TODO change for each game -> use ||
     gameState: GameState;

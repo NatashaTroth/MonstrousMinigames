@@ -1,8 +1,8 @@
-// import { CatchFoodGame } from '../../../src/gameplay';
+import User from '../../../src/classes/user';
+import { IPlayerRank } from '../../../src/gameplay/interfaces/IPlayerRank';
 import Leaderboard from '../../../src/gameplay/leaderboard/Leaderboard';
 import { users } from '../mockUsers';
 
-// let catchFoodGame: CatchFoodGame;
 let leaderboard: Leaderboard;
 const ROOM_ID = '###';
 
@@ -84,5 +84,31 @@ describe('Add user(s)', () => {
             leaderboard.addUserPoints(user.id, points);
             expect(leaderboard.userPoints[user.id].points).toBe(points);
         });
+    });
+
+    describe('Create and add User Points after Game', () => {
+        // const user = users[0];
+        // const points = 10;
+
+        beforeEach(() => {
+            leaderboard = new Leaderboard(ROOM_ID);
+            leaderboard.addUsers(users);
+        });
+
+        it('Updates user points object when new points are added', async () => {
+            let rankCounter = 1;
+            const playerRanks: Array<IPlayerRank> = users.map((user: User) => {
+                return {
+                    id: user.id,
+                    name: user.name,
+                    rank: rankCounter++,
+                    finished: true,
+                };
+            });
+            leaderboard.updateUserPointsAfterGame(playerRanks);
+            // expect(leaderboard.userPoints[user.id].points).toBe(points);
+        });
+
+        //TODO test that catchfood game calls it then
     });
 });

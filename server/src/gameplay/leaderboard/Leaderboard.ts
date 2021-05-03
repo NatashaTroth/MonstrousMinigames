@@ -1,7 +1,8 @@
 import User from '../../classes/user';
-import { PlayerRank } from '../catchFood/interfaces';
+// import { PlayerRank as CatchFoodPlayerRank } from '../catchFood/interfaces';
 import { verifyUserId } from '../helperFunctions/verifyUserId';
 import { HashTable } from '../interfaces';
+import { IPlayerRank } from '../interfaces/IPlayerRank';
 import { GameType } from './enums/GameType';
 import { GamePlayed } from './interfaces/GamePlayed';
 import { UserPoints } from './interfaces/UserPoints';
@@ -17,7 +18,7 @@ export default class Leaderboard {
         this.userPoints = {};
     }
 
-    addGame(game: GameType, playerRanks: Array<PlayerRank> /* TODO or other*/) {
+    addGame(game: GameType, playerRanks: Array<IPlayerRank> /* TODO or other*/) {
         this.gameHistory.push({ game, playerRanks });
     }
 
@@ -34,5 +35,9 @@ export default class Leaderboard {
     addUserPoints(userId: string, points: number) {
         verifyUserId(this.userPoints, userId);
         this.userPoints[userId].points += points;
+    }
+
+    updateUserPointsAfterGame(playerRanks: Array<IPlayerRank>) {
+        return 10;
     }
 }
