@@ -7,6 +7,10 @@ import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from './Obst
 import { StyledNet, StyledSpider } from './Spider.sc';
 
 let currentCount = 0;
+
+interface WindowProps extends Window {
+    webkitAudioContext?: typeof AudioContext;
+}
 const Spider: React.FunctionComponent = () => {
     const [progress, setProgress] = React.useState(0);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
@@ -25,9 +29,12 @@ const Spider: React.FunctionComponent = () => {
 
         async function getAudioInput() {
             let stream: MediaStream | null = null;
+            const w = window as WindowProps;
 
             try {
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                const AudioContext = window.AudioContext || w.webkitAudioContext;
 
                 const audioContext = new AudioContext();
                 const analyser = audioContext.createAnalyser();
