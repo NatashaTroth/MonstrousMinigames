@@ -3,12 +3,12 @@
 import User from '../../classes/user';
 import { MaxNumberUsersExceededError } from '../customErrors';
 import { verifyGameState } from '../helperFunctions/verifyGameState';
+import { verifyUserId } from '../helperFunctions/verifyUserId';
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
 import { GameInterface, GameState, HashTable } from '../interfaces';
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
 import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
 import { initiatePlayersState } from './helperFunctions/initiatePlayerState';
-import { verifyUserId } from './helperFunctions/verifyUserId';
 import { GameEvents, GameStateInfo, Obstacle, PlayerRank, PlayerState } from './interfaces';
 
 interface CatchFoodGameInterface extends GameInterface {

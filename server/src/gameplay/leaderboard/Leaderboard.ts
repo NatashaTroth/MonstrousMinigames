@@ -1,5 +1,6 @@
 import User from '../../classes/user';
 import { PlayerRank } from '../catchFood/interfaces';
+import { verifyUserId } from '../helperFunctions/verifyUserId';
 import { HashTable } from '../interfaces';
 import { GameType } from './enums/GameType';
 import { GamePlayed } from './interfaces/GamePlayed';
@@ -30,15 +31,8 @@ export default class Leaderboard {
         });
     }
 
-    // updateUserPoints(userId: string) {
-    //     if(Object.prototype.hasOwnProperty.call(this.userPoints, userId)){
-    //         this.userPoints[userId]
-
-    //     }
-    //     else{
-    //         //error
-    //     }
-    // }
-
-    // disconnectUser() {}
+    addUserPoints(userId: string, points: number) {
+        verifyUserId(this.userPoints, userId);
+        this.userPoints[userId].points += points;
+    }
 }

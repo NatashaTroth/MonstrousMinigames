@@ -25,24 +25,23 @@ describe('Create new Leaderboard', () => {
 });
 
 describe('Add user(s)', () => {
+    const user = users[0];
+
     beforeEach(() => {
         leaderboard = new Leaderboard(ROOM_ID);
     });
 
     it('Adds a new user with correct id', async () => {
-        const user = users[0];
         leaderboard.addUser(user.id, user.name);
         expect(leaderboard.userPoints[user.id].userId).toBe(user.id);
     });
 
     it('Adds a new user with correct name', async () => {
-        const user = users[0];
         leaderboard.addUser(user.id, user.name);
         expect(leaderboard.userPoints[user.id].name).toBe(user.name);
     });
 
     it('Adds a new user with 0 points', async () => {
-        const user = users[0];
         leaderboard.addUser(user.id, user.name);
         expect(leaderboard.userPoints[user.id].points).toBe(0);
     });
@@ -70,6 +69,20 @@ describe('Add user(s)', () => {
                 name: users[3].name,
                 points: 0,
             },
+        });
+    });
+
+    describe('Add User Points', () => {
+        const user = users[0];
+        const points = 10;
+        beforeEach(() => {
+            leaderboard = new Leaderboard(ROOM_ID);
+            leaderboard.addUsers(users);
+        });
+
+        it('Updates user points object when new points are added', async () => {
+            leaderboard.addUserPoints(user.id, points);
+            expect(leaderboard.userPoints[user.id].points).toBe(points);
         });
     });
 });
