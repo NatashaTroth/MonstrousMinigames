@@ -123,7 +123,7 @@ describe('Obstacle reached events', () => {
             roomId: '',
             userId: '',
             obstacleId: 1,
-            obstacleType: ObstacleType.TreeStump, //null not possible
+            obstacleType: ObstacleType.TREE_STUMP, //null not possible
         };
         gameEventEmitter.on(GameEventTypes.ObstacleReached, (data: GameEvents.ObstacleReachedInfo) => {
             eventData = data;
