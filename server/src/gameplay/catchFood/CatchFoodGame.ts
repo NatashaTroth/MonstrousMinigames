@@ -258,9 +258,6 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         } else {
             throw new WrongObstacleIdError(`${obstacleId} is not the id for the next obstacle.`, userId, obstacleId);
         }
-
-        // shouldn't happen - but just to be safe (e.g. in case messages arrive in wrong order)
-        if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId);
     }
 
     private verifyUserIsAtObstacle(userId: string) {
@@ -275,9 +272,10 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
     private playerHasFinishedGame(userId: string): void {
         //only if player hasn't already been marked as finished
-        if (this.playersState[userId].finished) return;
+        // if (this.playersState[userId].finished) return; //don't think I need
 
         this.playersState[userId].finished = true;
+        this.playersState[userId].positionX = this.trackLength;
         this.playersState[userId].finishedTimeMs = Date.now();
         this.playersState[userId].rank = this.getRank(this.playersState[userId].finishedTimeMs);
 
