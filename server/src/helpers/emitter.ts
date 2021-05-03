@@ -3,7 +3,8 @@ import { Namespace, Socket } from 'socket.io';
 import Room from '../classes/room';
 import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
-import { CatchFoodMsgType, GameEvents } from '../gameplay/catchFood/interfaces';
+import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
+import { GameEvents } from '../gameplay/catchFood/interfaces';
 
 function sendUserInit(socket: any, number: number): void {
     socket.emit('message', {

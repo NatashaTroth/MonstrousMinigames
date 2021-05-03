@@ -3,10 +3,11 @@
 import User from '../../classes/user';
 import { Globals } from '../../enums/globals';
 import { MaxNumberUsersExceededError } from '../customErrors';
+import { GameState } from '../enums';
 import { verifyGameState } from '../helperFunctions/verifyGameState';
 import { verifyUserId } from '../helperFunctions/verifyUserId';
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
-import { GameState, HashTable, IGameInterface } from '../interfaces';
+import { HashTable, IGameInterface } from '../interfaces';
 import { GameType } from '../leaderboard/enums/GameType';
 import Leaderboard from '../leaderboard/Leaderboard';
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';

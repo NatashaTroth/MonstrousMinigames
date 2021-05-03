@@ -1,6 +1,6 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { GameStateInfo } from '../../../src/gameplay/catchFood/interfaces';
-import { GameState } from '../../../src/gameplay/interfaces';
+import { GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
 
 const TRACKLENGTH = 500;
