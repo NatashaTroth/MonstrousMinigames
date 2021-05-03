@@ -1,7 +1,5 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { WrongUserIdError } from '../../../src/gameplay/customErrors';
-import Leaderboard from '../../../src/gameplay/leaderboard/Leaderboard';
-import { users } from '../mockUsers';
 import { startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
@@ -34,21 +32,5 @@ describe('WrongUserIdError handling tests', () => {
 
     it('throws a WrongUserIdError when trying to disconnect a user who does not exist', async () => {
         expect(() => catchFoodGame.disconnectPlayer(USER_ID_THAT_DOES_NOT_EXIST)).toThrow(WrongUserIdError);
-    });
-});
-
-describe('Leaderboard add user points', () => {
-    const points = 10;
-    const ROOM_ID = '###';
-    let leaderboard: Leaderboard;
-
-    beforeEach(() => {
-        leaderboard = new Leaderboard(ROOM_ID);
-        leaderboard.addUsers(users);
-    });
-
-    it('throws a WrongUserIdError when trying to add points to a user who does not exist', async () => {
-        const userIdThatDoesNotExist = 'wrong user id';
-        expect(() => leaderboard.addUserPoints(userIdThatDoesNotExist, points)).toThrow(WrongUserIdError);
     });
 });

@@ -1,3 +1,3 @@
 export enum GameType {
-    GAME_1 = 'Catch Food Game',
+    CATCH_FOOD_GAME = 'Catch Food Game',
 }
