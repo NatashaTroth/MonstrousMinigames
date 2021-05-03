@@ -1,6 +1,8 @@
 import { Error } from '@material-ui/icons';
 import styled, { keyframes } from 'styled-components';
 
+import { Obstacles } from '../../utils/constants';
+
 const bounce = keyframes`
     0%   { transform: scale(1,1)      translateY(0); }
     10%  { transform: scale(1.1,.9)   translateY(0); }
@@ -14,6 +16,7 @@ const bounce = keyframes`
 interface IObstacleProps {
     posx: number;
     player: number;
+    type?: Obstacles;
 }
 
 export const ObstacleContainer = styled.div`
@@ -30,7 +33,7 @@ export const StyledObstacle = styled.div<IObstacleProps>`
     z-index: 2;
     border-radius: 50%;
     left: ${({ posx }) => posx + 70}px;
-    top: ${({ player }) => 160 + player * 200}px;
+    top: ${({ player, type }) => (type === Obstacles.treeStump ? 160 + player * 200 : player * 200)}px;
 `;
 
 export const StyledObstacleImage = styled.img`
@@ -46,7 +49,7 @@ export const StyledObstacleHint = styled(Error)<IObstacleProps>`
         z-index: 2;
         border-radius: 50%;
         left: ${({ posx }) => posx + 70}px;
-        top: ${({ player }) => 100 + player * 200}px;
+        top: ${({ player, type }) => (type === Obstacles.treeStump ? 100 + player * 200 : 160 + player * 200)}px;
         animation-duration: 2s;
         animation-iteration-count: infinite;
         transform-origin: bottom;

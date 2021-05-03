@@ -23,8 +23,8 @@ describe('test GAMESTATE enum', () => {
 });
 
 describe('test OBSTACLES enum', () => {
-    it('OBSTACLES.treeStump should return TREE-STUMP', async () => {
-        expect(Obstacles.treeStump).toBe('TREE-STUMP');
+    it('OBSTACLES.treeStump should return TREE_STUMP', async () => {
+        expect(Obstacles.treeStump).toBe('TREE_STUMP');
     });
 
     it('OBSTACLES.spider should return SPIDER', async () => {
