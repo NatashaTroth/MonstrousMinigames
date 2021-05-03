@@ -64,7 +64,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         trackLength = this.trackLength,
         numberOfObstacles = this.numberOfObstacles
     ): void {
-        try {
+        //try {
             verifyGameState(this.gameState, [GameState.Initialised, GameState.Finished, GameState.Stopped]);
             if (players.length > this.maxNumberOfPlayers) {
                 throw new MaxNumberUsersExceededError(
@@ -83,9 +83,9 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             this.playersState = initiatePlayersState(players, this.numberOfObstacles, this.trackLength);
             clearTimeout(this.timer);
             this.startGame();
-        } catch (e) {
+       // } catch (e) {
             // throw e;
-        }
+       // }
     }
 
     //put together
