@@ -60,6 +60,9 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
     public static emitGameHasStoppedEvent(data: GameEvents.GameStateHasChanged) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasStopped, data);
     }
+    public static emitAllPlayersHaveDisconnected(data: GameEvents.GameStateHasChanged) {
+        this.CatchFoodGameEventEmitter.emit(GameEventTypes.AllPlayersHaveDisconnected, data);
+    }
 
     public static emitGameHasTimedOutEvent(data: GameEvents.GameHasFinished) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasTimedOut, data);

@@ -4,7 +4,7 @@ import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFood
 import { ObstacleType } from '../../../src/gameplay/catchFood/enums';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces/';
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
-import { leaderboard, roomId } from '../mockData';
+import { leaderboard, roomId, users } from '../mockData';
 import { finishGame, finishPlayer, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
@@ -124,7 +124,7 @@ describe('Obstacle reached events', () => {
             roomId: '',
             userId: '',
             obstacleId: 1,
-            obstacleType: ObstacleType.TREE_STUMP, //null not possible
+            obstacleType: ObstacleType.TreeStump, //null not possible
         };
         gameEventEmitter.on(GameEventTypes.ObstacleReached, (data: GameEvents.ObstacleReachedInfo) => {
             eventData = data;
@@ -242,13 +242,13 @@ describe('Game has stopped events', () => {
         jest.clearAllMocks();
     });
 
-    it('should emit a GameHasStopped event when the game has been paused', async () => {
+    it('should emit a GameHasStopped event when the game has been stopped by the user', async () => {
         let gameHasStopped = false;
         gameEventEmitter.on(GameEventTypes.GameHasStopped, () => {
             gameHasStopped = true;
         });
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.stopGame();
+        catchFoodGame.stopGameUserClosed();
         expect(gameHasStopped).toBeTruthy();
     });
 
@@ -260,7 +260,7 @@ describe('Game has stopped events', () => {
             eventData = data;
         });
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.stopGame();
+        catchFoodGame.stopGameUserClosed();
         expect(eventData).toMatchObject({
             roomId: catchFoodGame.roomId,
         });
@@ -317,6 +317,16 @@ describe('Player has disconnected events', () => {
         });
         catchFoodGame.disconnectPlayer('1');
         expect(playerHasDisconnectedEvent).toBeFalsy();
+    });
+
+    it('should emit a AllPlayersHaveDisconnected event when all players have disconnected', async () => {
+        let allPlayersHaveDisconnected = false;
+        gameEventEmitter.on(GameEventTypes.AllPlayersHaveDisconnected, () => {
+            allPlayersHaveDisconnected = true;
+        });
+        startGameAndAdvanceCountdown(catchFoodGame);
+        users.forEach(user => catchFoodGame.disconnectPlayer(user.id));
+        expect(allPlayersHaveDisconnected).toBeTruthy();
     });
 });
 

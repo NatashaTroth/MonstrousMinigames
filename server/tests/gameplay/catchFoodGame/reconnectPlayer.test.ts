@@ -41,7 +41,7 @@ describe('Reconnect Player tests', () => {
     it('cannot reconnect player when game has stopped', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.disconnectPlayer('1');
-        catchFoodGame.stopGame();
+        catchFoodGame.stopGameUserClosed();
         try {
             catchFoodGame.reconnectPlayer('1');
         } catch (e) {

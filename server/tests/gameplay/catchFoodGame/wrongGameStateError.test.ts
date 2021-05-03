@@ -142,7 +142,7 @@ describe('Stop game', () => {
         let errorThrown = false;
         try {
             getToCreatedGameState(catchFoodGame);
-            catchFoodGame.stopGame();
+            catchFoodGame.stopGameUserClosed();
         } catch (e) {
             errorThrown = true;
             expect([GameState.Started, GameState.Paused].sort()).toEqual(e.requiredGameStates.sort());
@@ -151,22 +151,22 @@ describe('Stop game', () => {
     });
     it('throws an error on stop game when game state is Initialised', () => {
         expect(catchFoodGame.gameState).toBe(GameState.Initialised);
-        expect(() => catchFoodGame.stopGame()).toThrowError(WrongGameStateError);
+        expect(() => catchFoodGame.stopGameUserClosed()).toThrowError(WrongGameStateError);
     });
 
     it('throws an error on stop game when game state is Created', () => {
         getToCreatedGameState(catchFoodGame);
-        expect(() => catchFoodGame.stopGame()).toThrowError(WrongGameStateError);
+        expect(() => catchFoodGame.stopGameUserClosed()).toThrowError(WrongGameStateError);
     });
 
     it('throws an error on stop game when game state is Stopped', () => {
         getToStoppedGameState(catchFoodGame);
-        expect(() => catchFoodGame.stopGame()).toThrowError(WrongGameStateError);
+        expect(() => catchFoodGame.stopGameUserClosed()).toThrowError(WrongGameStateError);
     });
 
     it('throws an error on stop game when game state is Finished', () => {
         getToFinishedGameState(catchFoodGame);
-        expect(() => catchFoodGame.stopGame()).toThrowError(WrongGameStateError);
+        expect(() => catchFoodGame.stopGameUserClosed()).toThrowError(WrongGameStateError);
     });
 });
 

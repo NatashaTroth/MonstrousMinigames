@@ -4,7 +4,7 @@ import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFood
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 // ..
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
-import { leaderboard, roomId } from '../mockData';
+import { leaderboard, roomId, users } from '../mockData';
 import {
     completeNextObstacle, finishPlayer, startAndFinishGameDifferentTimes,
     startGameAndAdvanceCountdown
@@ -39,7 +39,7 @@ describe('Disconnect Player tests', () => {
 
     it('cannot disconnect player when game has stopped', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.stopGame();
+        catchFoodGame.stopGameUserClosed();
         try {
             catchFoodGame.disconnectPlayer('1');
         } catch (e) {
@@ -110,5 +110,11 @@ describe('Disconnect Player tests', () => {
         expect(eventData.playerRanks[1].isActive).toBeTruthy();
         expect(eventData.playerRanks[2].isActive).toBeFalsy();
         expect(eventData.playerRanks[3].isActive).toBeFalsy();
+    });
+
+    it('should stop the game when all players have disconnected', async () => {
+        startGameAndAdvanceCountdown(catchFoodGame);
+        users.forEach(user => catchFoodGame.disconnectPlayer(user.id));
+        expect(catchFoodGame.gameState).toBe(GameState.Stopped);
     });
 });
