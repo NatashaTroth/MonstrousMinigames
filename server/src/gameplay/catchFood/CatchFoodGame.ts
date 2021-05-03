@@ -7,7 +7,8 @@ import { verifyGameState } from '../helperFunctions/verifyGameState';
 import { verifyUserId } from '../helperFunctions/verifyUserId';
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
 import { GameState, HashTable, IGameInterface } from '../interfaces';
-// import Leaderboard from '../leaderboard/Leaderboard';
+import { GameType } from '../leaderboard/enums/GameType';
+import Leaderboard from '../leaderboard/Leaderboard';
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
 import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
 import { initiatePlayersState } from './helperFunctions/initiatePlayerState';
@@ -42,12 +43,11 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     countdownTime: number;
     timeOutRemainingTime: number;
     gamePausedTime: number;
-    // leaderboard: Leaderboard;
+    leaderboard: Leaderboard;
 
-    constructor() {
-        // constructor(roomId: string, leaderboard: Leaderboard) {
+    constructor(roomId: string, leaderboard: Leaderboard) {
         // this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
-        this.roomId = '';
+        this.roomId = roomId;
         this.maxNumberOfPlayers = Globals.MAX_PLAYER_NUMBER;
         this.gameState = GameState.Initialised;
         this.trackLength = 2000;
@@ -63,7 +63,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.timeOutRemainingTime = 0;
         this.gamePausedTime = 0;
         // this.leaderboard = {};
-        // this.leaderboard = leaderboard;
+        this.leaderboard = leaderboard;
     }
 
     createNewGame(
@@ -79,7 +79,6 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             );
         }
         this.gameState = GameState.Created;
-        this.roomId = players[0].roomId;
         this.trackLength = trackLength;
         this.players = players;
         this.currentRank = 1;
@@ -306,6 +305,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     private handleGameFinished(): void {
         this.gameState = GameState.Finished;
         clearTimeout(this.timer);
+        const playerRanks = this.createPlayerRanks();
+        this.leaderboard.addGameToHistory(GameType.CATCH_FOOD_GAME, [...playerRanks]);
 
         const currentGameStateInfo = this.getGameStateInfo();
         CatchFoodGameEventEmitter.emitGameHasFinishedEvent({
@@ -313,7 +314,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             gameState: currentGameStateInfo.gameState,
             trackLength: currentGameStateInfo.trackLength,
             numberOfObstacles: currentGameStateInfo.numberOfObstacles,
-            playerRanks: this.createPlayerRanks(),
+            playerRanks: [...playerRanks],
         });
         //Broadcast, stop game, return ranks
     }

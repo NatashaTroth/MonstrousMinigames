@@ -4,6 +4,7 @@ import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFood
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 // ..
 import { GameEventTypes, GameState } from '../../../src/gameplay/interfaces';
+import { leaderboard, roomId } from '../mockData';
 import {
     completeNextObstacle, finishPlayer, startAndFinishGameDifferentTimes,
     startGameAndAdvanceCountdown
@@ -21,7 +22,7 @@ describe('Disconnect Player tests', () => {
 
     beforeEach(() => {
         // gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 

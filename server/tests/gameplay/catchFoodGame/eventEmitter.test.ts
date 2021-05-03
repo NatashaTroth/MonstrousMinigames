@@ -4,6 +4,7 @@ import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFood
 import { ObstacleType } from '../../../src/gameplay/catchFood/interfaces';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces/';
 import { GameEventTypes, GameState } from '../../../src/gameplay/interfaces';
+import { leaderboard, roomId } from '../mockData';
 import { finishGame, finishPlayer, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
@@ -15,7 +16,7 @@ describe('Event Emitter', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -51,7 +52,7 @@ describe('Start Game events ', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -95,7 +96,7 @@ describe('Obstacle reached events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -150,7 +151,7 @@ describe('Game has paused events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -190,7 +191,7 @@ describe('Game has resumed events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -232,7 +233,7 @@ describe('Game has stopped events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -272,7 +273,7 @@ describe('Player has disconnected events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -314,7 +315,7 @@ describe('Player has finished events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -360,7 +361,7 @@ describe('Game has finished events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -425,7 +426,7 @@ describe('Game has timed out events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 

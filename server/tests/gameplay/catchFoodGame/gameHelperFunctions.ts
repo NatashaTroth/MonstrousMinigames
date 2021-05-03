@@ -2,7 +2,7 @@ import { CatchFoodGame } from '../../../src/gameplay';
 import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 import { GameEventTypes, GameState } from '../../../src/gameplay/interfaces';
-import { users } from '../mockUsers';
+import { users } from '../mockData';
 
 const TRACK_LENGTH = 500;
 const gameEventEmitter = CatchFoodGameEventEmitter.getInstance();

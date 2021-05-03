@@ -3,10 +3,9 @@ import { IPlayerRank } from '../../../src/gameplay/interfaces/IPlayerRank';
 import { GameType } from '../../../src/gameplay/leaderboard/enums/GameType';
 import { LeaderboardInfo } from '../../../src/gameplay/leaderboard/interfaces';
 import Leaderboard from '../../../src/gameplay/leaderboard/Leaderboard';
-import { users } from '../mockUsers';
+import { roomId, users } from '../mockData';
 
 let leaderboard: Leaderboard;
-const ROOM_ID = '###';
 
 function createPlayerRanksArray(users: Array<User>, rankArray: Array<number>): Array<IPlayerRank> {
     let rankIndex = 0;
@@ -22,11 +21,11 @@ function createPlayerRanksArray(users: Array<User>, rankArray: Array<number>): A
 
 describe('Create new Leaderboard', () => {
     beforeEach(() => {
-        leaderboard = new Leaderboard(ROOM_ID);
+        leaderboard = new Leaderboard(roomId);
     });
 
     it('Initiates the roomId', async () => {
-        expect(leaderboard.roomId).toBe(ROOM_ID);
+        expect(leaderboard.roomId).toBe(roomId);
     });
 
     it('Initiates gameHistory', async () => {
@@ -42,7 +41,7 @@ describe('Add user(s)', () => {
     const user = users[0];
 
     beforeEach(() => {
-        leaderboard = new Leaderboard(ROOM_ID);
+        leaderboard = new Leaderboard(roomId);
     });
 
     it('Adds a new user with correct id', async () => {
@@ -90,7 +89,7 @@ describe('Add user(s)', () => {
 describe('Add Game to Game History', () => {
     let playerRanks: Array<IPlayerRank>;
     beforeEach(() => {
-        leaderboard = new Leaderboard(ROOM_ID);
+        leaderboard = new Leaderboard(roomId);
         leaderboard.addUsers(users);
         playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
     });
@@ -125,7 +124,7 @@ describe('Add Game to Game History', () => {
 
     describe('Add User Points', () => {
         beforeEach(() => {
-            leaderboard = new Leaderboard(ROOM_ID);
+            leaderboard = new Leaderboard(roomId);
         });
 
         afterEach(() => {
@@ -155,7 +154,7 @@ describe('Add Game to Game History', () => {
     describe('Create and add User Points after Game', () => {
         let updateUserPointsAfterGameSpy: any;
         beforeEach(() => {
-            leaderboard = new Leaderboard(ROOM_ID);
+            leaderboard = new Leaderboard(roomId);
             leaderboard.addUsers(users);
             updateUserPointsAfterGameSpy = jest.spyOn(Leaderboard.prototype as any, 'updateUserPointsAfterGame');
         });
@@ -217,14 +216,14 @@ describe('Get Leaderboard Info', () => {
     let leaderboardInfo: LeaderboardInfo;
     beforeEach(() => {
         playerRanks = createPlayerRanksArray(users, [2, 1, 4, 3]);
-        leaderboard = new Leaderboard(ROOM_ID);
+        leaderboard = new Leaderboard(roomId);
         leaderboard.addUsers(users);
         leaderboard.addGameToHistory(GameType.CATCH_FOOD_GAME, playerRanks);
         leaderboardInfo = leaderboard.getLeaderboardInfo();
     });
 
     it('Returns the room id', async () => {
-        expect(leaderboardInfo.roomId).toBe(ROOM_ID);
+        expect(leaderboardInfo.roomId).toBe(roomId);
     });
 
     it('Returns the game history', async () => {
@@ -263,7 +262,7 @@ describe('Get Leaderboard Info Error No Game History', () => {
     let leaderboardInfo: LeaderboardInfo;
     beforeEach(() => {
         playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
-        leaderboard = new Leaderboard(ROOM_ID);
+        leaderboard = new Leaderboard(roomId);
         leaderboard.addUsers(users);
     });
 

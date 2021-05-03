@@ -1,4 +1,5 @@
 import User from '../../src/classes/user';
+import Leaderboard from '../../src/gameplay/leaderboard/Leaderboard';
 
 // public id: string;
 // public roomId: string;
@@ -15,3 +16,7 @@ export const users: Array<User> = [
     new User('xxx', 'iii', 'James', '3'),
     new User('xxx', 'iii', 'Luna', '4'),
 ];
+
+export const roomId = 'xxx';
+
+export const leaderboard = new Leaderboard(roomId);

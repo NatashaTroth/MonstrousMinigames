@@ -1,5 +1,6 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/interfaces';
+import { leaderboard, roomId } from '../mockData';
 import {
     completeNextObstacle, completePlayersObstacles, finishPlayer, getGameFinishedDataDifferentTimes,
     startAndFinishGameDifferentTimes, startGameAndAdvanceCountdown
@@ -12,7 +13,7 @@ const dateNow = 1618665766156;
 
 describe('Start game', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
     afterEach(() => {
@@ -34,7 +35,7 @@ describe('Start game', () => {
 
 describe('Run forward', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
     afterEach(() => {
@@ -58,7 +59,7 @@ describe('Run forward', () => {
 
 describe('Obstacles reached', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
     afterEach(() => {
@@ -159,7 +160,7 @@ describe('Obstacles reached', () => {
 
 describe('Player has finished race', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
     afterEach(() => {
@@ -226,7 +227,7 @@ describe('Player has finished race', () => {
 
 describe('Game finished', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
     afterEach(() => {

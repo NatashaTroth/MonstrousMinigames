@@ -1,14 +1,14 @@
 import User from '../../../src/classes/user';
 import { CatchFoodGame } from '../../../src/gameplay';
 import { MaxNumberUsersExceededError } from '../../../src/gameplay/customErrors';
-import { users } from '../mockUsers';
+import { leaderboard, roomId, users } from '../mockData';
 
 let catchFoodGame: CatchFoodGame;
 const longerUsers = [...users, new User('xxx', 'iii', 'Lavender', '5')];
 
 describe('Error handling tests', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
