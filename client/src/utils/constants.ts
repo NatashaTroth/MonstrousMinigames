@@ -1,5 +1,5 @@
 export enum Obstacles {
-    treeStump = 'TREE-STUMP',
+    treeStump = 'TREE_STUMP',
     spider = 'SPIDER',
 }
 
