@@ -37,7 +37,7 @@ const io = require('socket.io')(expresServer, {
     },
 });
 
-const roomCount: number = parseInt(`${process.env.ROOM_COUNT}`, 10) || 100;
+const roomCount: number = parseInt(`${process.env.ROOM_COUNT}`, 10) || 20000;
 
 const rs = new RoomService(roomCount);
 const ch = new ConnectionHandler(io, rs);
@@ -47,4 +47,6 @@ server.app.get('/create-room', (req, res) => {
     const room = rs.createRoom();
 
     res.send({ roomId: room.id });
+    console.info(`${room.id} | Room created`);
+    console.info(`${rs.roomCodes.length} room codes left`);
 });
