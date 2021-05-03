@@ -3,6 +3,7 @@ import User from '../../classes/user';
 import { HashTable } from '../interfaces';
 import { IPlayerRank } from '../interfaces/IPlayerRank';
 import { GameType } from './enums/GameType';
+import rankPointsDictionary from './globalVars/rankPointsDictionary';
 import { GamePlayed, LeaderboardInfo, UserPoints } from './interfaces';
 
 export default class Leaderboard {
@@ -15,7 +16,7 @@ export default class Leaderboard {
         this.roomId = roomId;
         this.gameHistory = [];
         this.userPoints = {};
-        this.rankPointsDictionary = { '1': 5, '2': 3, '3': 2, '4': 1 }; // TODO move to global enums
+        this.rankPointsDictionary = rankPointsDictionary;
     }
 
     addUser(userId: string, username: string): void {
