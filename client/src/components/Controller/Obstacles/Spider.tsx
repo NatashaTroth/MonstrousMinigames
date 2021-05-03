@@ -11,45 +11,54 @@ const Spider: React.FunctionComponent = () => {
     const [progress, setProgress] = React.useState(0);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { obstacle, setObstacle } = React.useContext(PlayerContext);
-    const MAX = 100;
+    const MAX = 20;
 
-    getAudioInput();
+    React.useEffect(() => {
+        getAudioInput();
 
-    async function getAudioInput() {
-        let stream = null;
+        const solveObstacle = () => {
+            currentCount = 0;
 
-        try {
-            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            controllerSocket?.emit('message', { type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
+            setObstacle(undefined);
+        };
 
-            const audioContext = new AudioContext();
-            const analyser = audioContext.createAnalyser();
+        async function getAudioInput() {
+            let stream = null;
 
-            if (stream) {
-                const microphone = audioContext.createMediaStreamSource(stream);
-                const javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-                analyser.smoothingTimeConstant = 0.8;
-                analyser.fftSize = 1024;
+                const audioContext = new AudioContext();
+                const analyser = audioContext.createAnalyser();
 
-                microphone.connect(analyser);
-                analyser.connect(javascriptNode);
-                javascriptNode.connect(audioContext.destination);
+                if (stream) {
+                    const microphone = audioContext.createMediaStreamSource(stream);
+                    const javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
 
-                javascriptNode.addEventListener('audioprocess', () => {
-                    if (currentCount < MAX) {
-                        handleInput(analyser);
-                    } else {
-                        javascriptNode.removeEventListener('audioprocess', () => {
-                            solveObstacle();
-                        });
-                    }
-                });
+                    analyser.smoothingTimeConstant = 0.8;
+                    analyser.fftSize = 1024;
+
+                    microphone.connect(analyser);
+                    analyser.connect(javascriptNode);
+                    javascriptNode.connect(audioContext.destination);
+
+                    javascriptNode.addEventListener('audioprocess', () => {
+                        if (currentCount < MAX) {
+                            handleInput(analyser);
+                        } else {
+                            javascriptNode.removeEventListener('audioprocess', () => {
+                                solveObstacle();
+                            });
+                        }
+                    });
+                }
+            } catch (error) {
+                // eslint-disable-next-line no-console
+                console.log('getUserMedia not supported');
             }
-        } catch (error) {
-            // eslint-disable-next-line no-console
-            console.log('getUserMedia not supported');
         }
-    }
+    }, [controllerSocket, obstacle, setObstacle]);
 
     function handleInput(analyser: AnalyserNode) {
         const array = new Uint8Array(analyser.frequencyBinCount);
@@ -63,19 +72,12 @@ const Spider: React.FunctionComponent = () => {
 
         const average = values / length;
 
-        if (average > 80) {
+        if (average > 70) {
             currentCount += 0.5;
             values = 0;
             setProgress(currentCount);
         }
     }
-
-    const solveObstacle = () => {
-        currentCount = 0;
-
-        controllerSocket?.emit('message', { type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
-        setObstacle(undefined);
-    };
 
     return (
         <ObstacleContainer>
