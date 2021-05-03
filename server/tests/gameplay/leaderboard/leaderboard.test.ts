@@ -71,44 +71,113 @@ describe('Add user(s)', () => {
             },
         });
     });
+});
 
-    describe('Add User Points', () => {
-        const user = users[0];
-        const points = 10;
-        beforeEach(() => {
-            leaderboard = new Leaderboard(ROOM_ID);
-            leaderboard.addUsers(users);
+describe('Add User Points', () => {
+    const user = users[0];
+    const points = 10;
+    beforeEach(() => {
+        leaderboard = new Leaderboard(ROOM_ID);
+        leaderboard.addUsers(users);
+    });
+
+    it('Updates user points object when new points are added', async () => {
+        leaderboard.addUserPoints(user.id, points);
+        expect(leaderboard.userPoints[user.id].points).toBe(points);
+    });
+});
+
+describe('Create and add User Points after Game', () => {
+    // const user = users[0];
+    // const points = 10;
+
+    beforeEach(() => {
+        leaderboard = new Leaderboard(ROOM_ID);
+        leaderboard.addUsers(users);
+    });
+
+    it('Updates user points object when the first points are added', async () => {
+        let rankCounter = 1;
+        const playerRanks: Array<IPlayerRank> = users.map((user: User) => {
+            return {
+                id: user.id,
+                name: user.name,
+                rank: rankCounter++,
+                finished: true,
+            };
         });
+        leaderboard.updateUserPointsAfterGame(playerRanks);
+        // expect(leaderboard.userPoints[user.id].points).toBe(points);
+        expect(leaderboard.userPoints).toMatchObject({
+            '1': {
+                userId: users[0].id,
+                name: users[0].name,
+                points: 5,
+            },
+            '2': {
+                userId: users[1].id,
+                name: users[1].name,
+                points: 3,
+            },
+            '3': {
+                userId: users[2].id,
+                name: users[2].name,
+                points: 2,
+            },
+            '4': {
+                userId: users[3].id,
+                name: users[3].name,
+                points: 1,
+            },
+        });
+    });
+    it('Updates user points object when new points are added with duplicate ranks', async () => {
+        let rankCounter = 1;
+        const playerRanks: Array<IPlayerRank> = users.map((user: User) => {
+            return {
+                id: user.id,
+                name: user.name,
+                rank: rankCounter++,
+                finished: true,
+            };
+        });
+        leaderboard.updateUserPointsAfterGame(playerRanks);
 
-        it('Updates user points object when new points are added', async () => {
-            leaderboard.addUserPoints(user.id, points);
-            expect(leaderboard.userPoints[user.id].points).toBe(points);
+        let rankIndex = 0;
+        const ranks = [2, 4, 1, 2];
+        const playerRanks2: Array<IPlayerRank> = users.map((user: User) => {
+            return {
+                id: user.id,
+                name: user.name,
+                rank: ranks[rankIndex++],
+                finished: true,
+            };
+        });
+        leaderboard.updateUserPointsAfterGame(playerRanks2);
+
+        expect(leaderboard.userPoints).toMatchObject({
+            '1': {
+                userId: users[0].id,
+                name: users[0].name,
+                points: 5 + 3,
+            },
+            '2': {
+                userId: users[1].id,
+                name: users[1].name,
+                points: 3 + 1,
+            },
+            '3': {
+                userId: users[2].id,
+                name: users[2].name,
+                points: 2 + 5,
+            },
+            '4': {
+                userId: users[3].id,
+                name: users[3].name,
+                points: 1 + 3,
+            },
         });
     });
 
-    describe('Create and add User Points after Game', () => {
-        // const user = users[0];
-        // const points = 10;
-
-        beforeEach(() => {
-            leaderboard = new Leaderboard(ROOM_ID);
-            leaderboard.addUsers(users);
-        });
-
-        it('Updates user points object when new points are added', async () => {
-            let rankCounter = 1;
-            const playerRanks: Array<IPlayerRank> = users.map((user: User) => {
-                return {
-                    id: user.id,
-                    name: user.name,
-                    rank: rankCounter++,
-                    finished: true,
-                };
-            });
-            leaderboard.updateUserPointsAfterGame(playerRanks);
-            // expect(leaderboard.userPoints[user.id].points).toBe(points);
-        });
-
-        //TODO test that catchfood game calls it then
-    });
+    //TODO test that catchfood game calls it then
 });
