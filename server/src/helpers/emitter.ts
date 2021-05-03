@@ -28,10 +28,11 @@ function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
         });
     }
 }
-function sendErrorMessage(socket: Socket, message: string): void {
+function sendErrorMessage(socket: Socket, e: Error): void {
     socket.emit('message', {
         type: 'error',
-        msg: message,
+        name: e.name,
+        msg: e.message,
     });
 }
 function sendGameHasStarted(nsps: Array<Namespace>, data: GameEvents.GameHasStarted): void {
