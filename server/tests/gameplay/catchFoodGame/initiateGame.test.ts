@@ -17,7 +17,7 @@ describe('Initiate CatchFoodGame correctly', () => {
     });
 
     it('initiates players state with correct number of players', async () => {
-        expect(Object.keys(catchFoodGame.playersState).length).toBe(NUMBER_OF_OBSTACLES);
+        expect(Object.keys(catchFoodGame.playersState).length).toBe(users.length);
     });
 
     it('initiates trackLength with correct length', async () => {

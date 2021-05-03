@@ -1,4 +1,4 @@
-import { User } from '../../interfaces/interfaces';
+import User from '../../classes/user';
 import { GameStateInfo, PlayerState } from '../catchFood/interfaces';
 // import GameEventEmitter from '../../classes/GameEventEmitter';
 import { HashTable } from './';

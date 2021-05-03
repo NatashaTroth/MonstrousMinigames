@@ -1,4 +1,4 @@
-// import User from '../../classes/user';
+import User from '../../classes/user';
 import { PlayerRank } from '../catchFood/interfaces';
 import { HashTable } from '../interfaces';
 import { GameType } from './enums/GameType';
@@ -20,6 +20,16 @@ export default class Leaderboard {
         this.gameHistory.push({ game, playerRanks });
     }
 
+    addUser(userId: string, username: string) {
+        this.userPoints[userId] = { userId: userId, name: username, points: 0 };
+    }
+
+    addUsers(users: Array<User>) {
+        users.forEach(user => {
+            this.addUser(user.id, user.name);
+        });
+    }
+
     // updateUserPoints(userId: string) {
     //     if(Object.prototype.hasOwnProperty.call(this.userPoints, userId)){
     //         this.userPoints[userId]
@@ -28,10 +38,6 @@ export default class Leaderboard {
     //     else{
     //         //error
     //     }
-    // }
-
-    // addUser(user: User) {
-    //     this.userPoints[user.id] = { userId: user.id, name: user.name, points: 0 };
     // }
 
     // disconnectUser() {}

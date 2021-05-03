@@ -1,5 +1,5 @@
+import User from '../../../classes/user';
 import { shuffleArray } from '../../../helpers/shuffleArray';
-import { User } from '../../../interfaces/interfaces';
 import { HashTable } from '../../interfaces';
 import { Obstacle, ObstacleType, PlayerState } from '../interfaces';
 

@@ -1,5 +1,6 @@
 // import GameEventEmitter from '../../classes/GameEventEmitter';
-import { User } from '../../interfaces/interfaces';
+
+import User from '../../classes/user';
 import { MaxNumberUsersExceededError } from '../customErrors';
 import { verifyGameState } from '../helperFunctions/verifyGameState';
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
