@@ -24,7 +24,7 @@ const Spider: React.FunctionComponent = () => {
         };
 
         async function getAudioInput() {
-            let stream = null;
+            let stream: MediaStream | null = null;
 
             try {
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -50,6 +50,7 @@ const Spider: React.FunctionComponent = () => {
                             javascriptNode.removeEventListener('audioprocess', () => {
                                 solveObstacle();
                             });
+                            stream!.getTracks().forEach(track => track.stop());
                         }
                     });
                 }
@@ -72,7 +73,7 @@ const Spider: React.FunctionComponent = () => {
 
         const average = values / length;
 
-        if (average > 70) {
+        if (average > 60) {
             currentCount += 0.5;
             values = 0;
             setProgress(currentCount);
