@@ -155,7 +155,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             gameState: currentGameStateInfo.gameState,
             trackLength: currentGameStateInfo.trackLength,
             numberOfObstacles: currentGameStateInfo.numberOfObstacles,
-            playerRanks: this.createPlayerRanks(),
+            playerRanks: [...this.createPlayerRanks()],
         };
 
         if (timeOut) CatchFoodGameEventEmitter.emitGameHasTimedOutEvent(messageInfo);
@@ -175,7 +175,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         return {
             gameState: this.gameState,
             roomId: this.roomId,
-            playersState: playerInfoArray,
+            playersState: [...playerInfoArray],
             trackLength: this.trackLength,
             numberOfObstacles: this.numberOfObstacles,
         };
@@ -184,10 +184,10 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     getObstaclePositions(): HashTable<Array<Obstacle>> {
         const obstaclePositions: HashTable<Array<Obstacle>> = {};
         for (const [, playerState] of Object.entries(this.playersState)) {
-            obstaclePositions[playerState.id] = playerState.obstacles;
+            obstaclePositions[playerState.id] = [...playerState.obstacles];
         }
 
-        return obstaclePositions;
+        return { ...obstaclePositions };
     }
 
     runForward(userId: string, speed = 1): void {
