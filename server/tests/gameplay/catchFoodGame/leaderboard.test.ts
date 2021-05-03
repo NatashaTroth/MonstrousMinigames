@@ -1,7 +1,7 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
-import { GameEventTypes, GameState } from '../../../src/gameplay/interfaces';
+import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { GameType } from '../../../src/gameplay/leaderboard/enums/GameType';
 import Leaderboard from '../../../src/gameplay/leaderboard/Leaderboard';
 import { roomId } from '../mockData';

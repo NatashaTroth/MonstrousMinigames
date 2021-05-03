@@ -1,5 +1,5 @@
 import { WrongGameStateError } from '../customErrors';
-import { GameState } from '../interfaces';
+import { GameState } from '../enums';
 
 export function verifyGameState(currentGameState: GameState, requiredGameState: Array<GameState>): void {
     if (!requiredGameState.includes(currentGameState)) {

@@ -1,9 +1,9 @@
 // import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import { CatchFoodGame } from '../../../src/gameplay';
 import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
-import { ObstacleType } from '../../../src/gameplay/catchFood/interfaces';
+import { ObstacleType } from '../../../src/gameplay/catchFood/enums';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces/';
-import { GameEventTypes, GameState } from '../../../src/gameplay/interfaces';
+import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId } from '../mockData';
 import { finishGame, finishPlayer, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 

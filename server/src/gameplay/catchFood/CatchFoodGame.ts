@@ -3,10 +3,11 @@
 import User from '../../classes/user';
 import { Globals } from '../../enums/globals';
 import { MaxNumberUsersExceededError } from '../customErrors';
+import { GameState } from '../enums';
 import { verifyGameState } from '../helperFunctions/verifyGameState';
 import { verifyUserId } from '../helperFunctions/verifyUserId';
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
-import { GameState, HashTable, IGameInterface } from '../interfaces';
+import { HashTable, IGameInterface } from '../interfaces';
 import { GameType } from '../leaderboard/enums/GameType';
 import Leaderboard from '../leaderboard/Leaderboard';
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
@@ -155,7 +156,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             gameState: currentGameStateInfo.gameState,
             trackLength: currentGameStateInfo.trackLength,
             numberOfObstacles: currentGameStateInfo.numberOfObstacles,
-            playerRanks: this.createPlayerRanks(),
+            playerRanks: [...this.createPlayerRanks()],
         };
 
         if (timeOut) CatchFoodGameEventEmitter.emitGameHasTimedOutEvent(messageInfo);
@@ -175,7 +176,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         return {
             gameState: this.gameState,
             roomId: this.roomId,
-            playersState: playerInfoArray,
+            playersState: [...playerInfoArray],
             trackLength: this.trackLength,
             numberOfObstacles: this.numberOfObstacles,
         };
@@ -184,10 +185,10 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     getObstaclePositions(): HashTable<Array<Obstacle>> {
         const obstaclePositions: HashTable<Array<Obstacle>> = {};
         for (const [, playerState] of Object.entries(this.playersState)) {
-            obstaclePositions[playerState.id] = playerState.obstacles;
+            obstaclePositions[playerState.id] = [...playerState.obstacles];
         }
 
-        return obstaclePositions;
+        return { ...obstaclePositions };
     }
 
     runForward(userId: string, speed = 1): void {

@@ -1,7 +1,8 @@
 import User from '../../../classes/user';
 import { shuffleArray } from '../../../helpers/shuffleArray';
 import { HashTable } from '../../interfaces';
-import { Obstacle, ObstacleType, PlayerState } from '../interfaces';
+import { ObstacleType } from '../enums';
+import { Obstacle, PlayerState } from '../interfaces';
 
 export function initiatePlayersState(
     players: Array<User>,

@@ -1,8 +1,8 @@
 import User from '../../classes/user';
 import { GameStateInfo } from '../catchFood/interfaces';
+import { GameState } from '../enums/GameState';
 // import GameEventEmitter from '../../classes/GameEventEmitter';
 import { HashTable, IPlayerState } from './';
-import { GameState } from './GameState';
 
 export interface IGameInterface {
     roomId: string;

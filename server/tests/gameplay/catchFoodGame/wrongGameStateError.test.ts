@@ -1,6 +1,6 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { WrongGameStateError } from '../../../src/gameplay/customErrors';
-import { GameState } from '../../../src/gameplay/interfaces';
+import { GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
 import {
     getToCreatedGameState, getToFinishedGameState, getToPausedGameState, getToStartedGameState,

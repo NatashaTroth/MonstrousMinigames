@@ -1,5 +1,6 @@
-import { GameState } from '../../interfaces';
-import { ObstacleType, PlayerRank } from './';
+import { GameState } from '../../enums';
+import { ObstacleType } from '../enums';
+import { PlayerRank } from './';
 
 interface GameEventInterface {
     roomId: string;

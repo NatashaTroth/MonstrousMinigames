@@ -1,6 +1,6 @@
 import { CatchFoodGame } from '../../../src/gameplay';
+import { GameState } from '../../../src/gameplay/enums';
 import { verifyGameState } from '../../../src/gameplay/helperFunctions/verifyGameState';
-import { GameState } from '../../../src/gameplay/interfaces';
 import { leaderboard, roomId, users } from '../mockData';
 import {
     completeNextObstacle, finishGame, finishPlayer, startGameAndAdvanceCountdown
