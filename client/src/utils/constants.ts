@@ -24,6 +24,8 @@ export enum MESSAGETYPES {
     gameHasTimedOut = 'gameHasTimedOut',
     gameHasPaused = 'gameHasPaused',
     gameHasResumed = 'gameHasResumed',
+    pauseResume = 'pauseResume',
+    stopGame = 'stopGame',
 }
 
-export const localDevelopment = false;
+export const localDevelopment = true;

@@ -66,11 +66,13 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
     } = React.useContext(PlayerContext);
     const history = useHistory();
 
-    const { setGameStarted, roomId, setRoomId } = React.useContext(GameContext);
+    const { setGameStarted, roomId, setRoomId, setHasPaused } = React.useContext(GameContext);
 
     const handleMessageData = React.useCallback(
         (data: MessageData) => {
             let messageData;
+            // eslint-disable-next-line no-console
+            console.log(data);
 
             switch (data.type) {
                 case MESSAGETYPES.userInit:
@@ -108,6 +110,12 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
                     setPlayerFinished(true);
                     setPlayerRank(messageData.rank);
                     break;
+                case MESSAGETYPES.gameHasPaused:
+                    setHasPaused(true);
+                    break;
+                case MESSAGETYPES.gameHasResumed:
+                    setHasPaused(false);
+                    break;
                 default:
                     break;
             }
@@ -117,6 +125,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
             playerFinished,
             roomId,
             setGameStarted,
+            setHasPaused,
             setIsPlayerAdmin,
             setObstacle,
             setPlayerFinished,

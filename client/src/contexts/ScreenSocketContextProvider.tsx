@@ -86,6 +86,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setConnectedUsers,
         setCountdownTime,
         setHasTimedOut,
+        setHasPaused,
     } = React.useContext(GameContext);
 
     React.useEffect(() => {
@@ -113,6 +114,12 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     break;
                 case MESSAGETYPES.gameHasReset:
                     history.push(`/screen/${roomId}/lobby`);
+                    break;
+                case MESSAGETYPES.gameHasPaused:
+                    setHasPaused(true);
+                    break;
+                case MESSAGETYPES.gameHasResumed:
+                    setHasPaused(false);
                     break;
                 case MESSAGETYPES.gameHasTimedOut:
                     setHasTimedOut(true);
@@ -150,6 +157,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setCountdownTime,
         setFinished,
         setGameStarted,
+        setHasPaused,
         setHasTimedOut,
         setPlayerRanks,
         setPlayers,
@@ -180,13 +188,12 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         });
     }
 
-    screenSocket?.on('message', (data: IGameState | IConnectedUsers) => {
-        setMessageData(data);
-    });
-
-    function handleSetScreenSocket(val: SocketIOClient.Socket | undefined, roomId: string) {
-        setScreenSocket(val);
-        ScreenSocket.getInstance(val);
+    function handleSetScreenSocket(socket: SocketIOClient.Socket | undefined, roomId: string) {
+        setScreenSocket(socket);
+        ScreenSocket.getInstance(socket);
+        socket?.on('message', (data: IGameState | IConnectedUsers) => {
+            setMessageData(data);
+        });
         history.push(`/screen/${roomId}/lobby`);
     }
 
