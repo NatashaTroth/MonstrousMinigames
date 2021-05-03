@@ -122,6 +122,20 @@ describe('Add Game to Game History', () => {
         });
     });
 
+    it('adds the new game to end of history array', async () => {
+        //add first game
+        leaderboard.addGameToHistory(GameType.CATCH_FOOD_GAME, playerRanks);
+
+        //add second game
+        const newUserName = 'New Player';
+        const playerRanks2 = createPlayerRanksArray([new User('xxx', 'iii', newUserName, '10')], [2, 2, 2, 2]);
+        leaderboard.addGameToHistory(GameType.CATCH_FOOD_GAME, playerRanks2);
+
+        expect(leaderboard.gameHistory.length).toBe(2);
+        expect(leaderboard.gameHistory[0].playerRanks[0].name).toBe(users[0].name);
+        expect(leaderboard.gameHistory[1].playerRanks[0].name).toBe(newUserName);
+    });
+
     describe('Add User Points', () => {
         beforeEach(() => {
             leaderboard = new Leaderboard(roomId);
