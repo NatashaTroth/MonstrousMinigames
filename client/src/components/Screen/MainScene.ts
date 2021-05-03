@@ -1,5 +1,6 @@
 
 import Phaser from 'phaser'
+import { stringify } from 'querystring'
 
 import forest from '../../images/forest.png'
 import franz from '../../images/franz_spritesheet.png'
@@ -8,16 +9,16 @@ import noah from "../../images/noah_spritesheet.png"
 import steffi from "../../images/steffi_spritesheet.png"
 import susi from "../../images/susi_spritesheet.png"
 import wood from '../../images/wood.png'
-//import ScreenSocket from '../../utils/screenSocket'
 
 
 const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const playerNumber = 1
+let roomId = ""
 const moveplayers = [true, true, true, true]
 const playerFinished = [false, false, false, false]
-//const socket = ScreenSocket.getInstance()
+let socket 
 
 class MainScene extends Phaser.Scene {
     constructor() {
@@ -25,8 +26,9 @@ class MainScene extends Phaser.Scene {
     }
 
     init(data:{roomId?:string}){
-        // eslint-disable-next-line no-console
-        console.log(data.roomId)
+        if(roomId !== undefined){
+            roomId = data.roomId!
+        }
     }
 
     preload(): void {
@@ -124,9 +126,16 @@ class MainScene extends Phaser.Scene {
             players[i].anims.play(animations[i])
         }
         }
+
+        logMessage(data: any){
+            // eslint-disable-next-line no-console
+            console.log(data)
+        }
         
 
     update() {
+        socket = this.handleSocketConnection()
+        socket.on("message", (data: any ) => this.logMessage(data))
         for (let i = 0; i < players.length; i++) {
             if (players[i] && moveplayers[i]) {
                 this.moveForward(players[i])
@@ -171,6 +180,22 @@ class MainScene extends Phaser.Scene {
             this.playerHitObstacle(3)
         })
        }
+    }
+
+    handleSocketConnection(){
+        const socket = io(
+            `${process.env.REACT_APP_BACKEND_URL}screen?${stringify({
+                roomId: roomId,
+            })}`,
+            {
+                secure: true,
+                reconnection: true,
+                rejectUnauthorized: false,
+                reconnectionDelayMax: 10000,
+                transports: ['websocket'],
+            }
+        );
+        return socket
     }
 
     moveForward(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
