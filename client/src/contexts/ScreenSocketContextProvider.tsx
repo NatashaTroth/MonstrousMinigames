@@ -2,13 +2,13 @@ import { stringify } from 'query-string';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { GAMESTATE, MESSAGETYPES, OBSTACLES } from '../utils/constants';
+import { GameState, MessageTypes, Obstacles } from '../utils/constants';
 import ScreenSocket from '../utils/screenSocket';
 import { GameContext, IPlayerState } from './GameContextProvider';
 
 export interface IObstacleMessage {
     type: string;
-    obstacleType?: OBSTACLES;
+    obstacleType?: Obstacles;
 }
 
 interface IScreenSocketContext {
@@ -40,7 +40,7 @@ export interface IPlayerRank {
     positionX: number;
 }
 interface IGameStateData {
-    gameState: GAMESTATE;
+    gameState: GameState;
     numberOfObstacles: number;
     roomId: string;
     trackLength: number;
@@ -97,7 +97,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 case 'game1/gameState':
                     handleGameState(messageData as IGameState);
                     break;
-                case MESSAGETYPES.connectedUsers:
+                case MessageTypes.connectedUsers:
                     data = messageData as IConnectedUsers;
                     if (data.users) {
                         setConnectedUsers(data.users);
@@ -109,23 +109,23 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     setGameStarted(true);
                     history.push(`/screen/${roomId}/game1`);
                     break;
-                case MESSAGETYPES.gameHasFinished:
+                case MessageTypes.gameHasFinished:
                     handleGameHasFinished(messageData as IGameState);
                     break;
-                case MESSAGETYPES.gameHasReset:
+                case MessageTypes.gameHasReset:
                     history.push(`/screen/${roomId}/lobby`);
                     break;
-                case MESSAGETYPES.gameHasPaused:
+                case MessageTypes.gameHasPaused:
                     setHasPaused(true);
                     break;
-                case MESSAGETYPES.gameHasResumed:
+                case MessageTypes.gameHasResumed:
                     setHasPaused(false);
                     break;
-                case MESSAGETYPES.gameHasTimedOut:
+                case MessageTypes.gameHasTimedOut:
                     setHasTimedOut(true);
                     handleGameHasFinished(messageData as IGameState);
                     break;
-                case MESSAGETYPES.gameHasStopped:
+                case MessageTypes.gameHasStopped:
                     history.push(`/screen/${roomId}/lobby`);
                     break;
             }

@@ -1,4 +1,4 @@
-import { MESSAGETYPES } from './constants';
+import { MessageTypes } from './constants';
 
 export function handleResetGame(
     socket: SocketIOClient.Socket | undefined,
@@ -7,7 +7,7 @@ export function handleResetGame(
         resetPlayer: () => void;
     }
 ) {
-    socket?.emit('message', { type: MESSAGETYPES.backToLobby });
+    socket?.emit('message', { type: MessageTypes.backToLobby });
     dependencies.resetGame();
     dependencies.resetPlayer();
 }

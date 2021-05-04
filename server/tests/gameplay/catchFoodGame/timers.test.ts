@@ -1,80 +1,109 @@
 import { CatchFoodGame } from '../../../src/gameplay';
-import { startGameAndAdvanceCountdown } from './startGame';
+import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
+import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
+import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
+import { leaderboard, roomId } from '../mockData';
+import { finishPlayer, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
-let catchFoodGame: CatchFoodGame
+let catchFoodGame: CatchFoodGame;
+let gameEventEmitter: CatchFoodGameEventEmitter;
 
 describe('Timer tests', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame()
-        jest.useFakeTimers()
-        // finishGame(catchFoodGame);
-        // catchFoodGame.resetGame(users, NEW_TRACKLENGTH, NEW_NUMBER_OF_OBSTACLES);
-    })
+        gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        jest.useFakeTimers();
+    });
 
     afterEach(() => {
-        jest.runAllTimers()
-    })
+        jest.runAllTimers();
+        jest.clearAllMocks();
+    });
 
     it('sets the timeOutLimit to 5 minutes', () => {
-        startGameAndAdvanceCountdown(catchFoodGame)
-        expect(catchFoodGame.timeOutLimit).toBe(5 * 60 * 1000)
-    })
+        startGameAndAdvanceCountdown(catchFoodGame);
+        expect(catchFoodGame.timeOutLimit).toBe(5 * 60 * 1000);
+    });
 
     it('sets the timeOutLimit to 5 minutes', () => {
-        startGameAndAdvanceCountdown(catchFoodGame)
-        expect(setTimeout).toHaveBeenCalledTimes(2)
-        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 300000)
-    })
+        startGameAndAdvanceCountdown(catchFoodGame);
+        expect(setTimeout).toHaveBeenCalledTimes(2);
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 300000);
+    });
 
     it('stops game when time out', () => {
-        startGameAndAdvanceCountdown(catchFoodGame)
-        const stopGameSpy = jest.spyOn(CatchFoodGame.prototype as any, 'stopGame')
-        jest.runAllTimers()
-        expect(stopGameSpy).toHaveBeenCalledTimes(1)
-        expect(stopGameSpy).toHaveBeenCalledWith(true)
-    })
-})
+        startGameAndAdvanceCountdown(catchFoodGame);
+        const stopGameSpy = jest.spyOn(CatchFoodGame.prototype as any, 'stopGameTimeout');
+        jest.runAllTimers();
+        expect(stopGameSpy).toHaveBeenCalledTimes(1);
+        expect(catchFoodGame.gameState).toBe(GameState.Stopped);
+    });
 
-// // timerGame.js
-// // ;('use strict')
+    it('should emit correct playerRanks when the game has timed out', async () => {
+        const dateNow = 1618665766156;
+        Date.now = jest.fn(() => dateNow);
+        startGameAndAdvanceCountdown(catchFoodGame);
+        const eventData = getGameFinishedDataAfterTimeOut(catchFoodGame, dateNow);
+        expect(eventData.playerRanks[0].totalTimeInMs).toBe(catchFoodGame.timeOutLimit);
+    });
 
-// // function timerGame(callback) {
-// //     console.log('Ready....go!')
-// //     setTimeout(() => {
-// //         console.log('Times up -- stop!')
-// //         callback && callback()
-// //     }, 1000)
-// // }
+    it('should emit correct ranks when the game has timed out and no players reached the goal', async () => {
+        const dateNow = 1618665766156;
+        Date.now = jest.fn(() => dateNow);
+        startGameAndAdvanceCountdown(catchFoodGame);
+        const eventData = getGameFinishedDataAfterTimeOut(catchFoodGame, dateNow);
+        expect(eventData.playerRanks[0].rank).toBe(1);
+        expect(eventData.playerRanks[1].rank).toBe(1);
+        expect(eventData.playerRanks[2].rank).toBe(1);
+        expect(eventData.playerRanks[3].rank).toBe(1);
+    });
 
-// // module.exports = timerGame
-// // // __tests__/timerGame-test.js
-// // ;('use strict')
+    it('should emit correct ranks when the game has timed out and one player reached the goal', async () => {
+        const dateNow = 1618665766156;
+        Date.now = jest.fn(() => dateNow);
+        startGameAndAdvanceCountdown(catchFoodGame);
 
-// // jest.useFakeTimers()
+        finishPlayer(catchFoodGame, '1');
 
-// // test('waits 1 second before ending the game', () => {
-// //     // const timerGame = timerGame;
-// //     timerGame()
+        const eventData = getGameFinishedDataAfterTimeOut(catchFoodGame, dateNow);
+        expect(eventData.playerRanks[0].rank).toBe(1);
+        expect(eventData.playerRanks[1].rank).toBe(2);
+        expect(eventData.playerRanks[2].rank).toBe(2);
+        expect(eventData.playerRanks[3].rank).toBe(2);
+    });
 
-// //     expect(setTimeout.mock.calls.length).toBe(1)
-// //     expect(setTimeout.mock.calls[0][1]).toBe(1000)
-// // })
+    it('should emit correct finished boolean on timed out players', async () => {
+        const dateNow = 1618665766156;
+        Date.now = jest.fn(() => dateNow);
+        startGameAndAdvanceCountdown(catchFoodGame);
 
-// timerGame.js
+        finishPlayer(catchFoodGame, '1');
 
-// function timerGame(callback: any) {
-//     console.log('Ready....go!')
-//     setTimeout(() => {
-//         console.log("Time's up -- stop!")
-//         callback && callback()
-//     }, 1000)
-// }
+        const eventData = getGameFinishedDataAfterTimeOut(catchFoodGame, dateNow);
+        expect(eventData.playerRanks[0].finished).toBeTruthy();
+        expect(eventData.playerRanks[1].finished).toBeFalsy();
+        expect(eventData.playerRanks[2].finished).toBeFalsy();
+        expect(eventData.playerRanks[3].finished).toBeFalsy();
+    });
+});
 
-// jest.useFakeTimers()
+function getGameFinishedDataAfterTimeOut(catchFoodGame: CatchFoodGame, dateNow: number) {
+    let eventData: GameEvents.GameHasFinished = {
+        roomId: '',
+        gameState: GameState.Started,
+        trackLength: 0,
+        numberOfObstacles: 0,
+        playerRanks: [],
+    };
 
-// test('waits 1 second before ending the game', () => {
-//     timerGame(() => {})
+    gameEventEmitter.on(GameEventTypes.GameHasTimedOut, (data: GameEvents.GameHasFinished) => {
+        eventData = data;
+    });
+    // startGameAndAdvanceCountdown(catchFoodGame);
 
-//     expect(setTimeout).toHaveBeenCalledTimes(1)
-//     expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000)
-// })
+    Date.now = jest.fn(() => dateNow + catchFoodGame.timeOutLimit);
+
+    // Time out game
+    jest.runAllTimers();
+    return eventData;
+}

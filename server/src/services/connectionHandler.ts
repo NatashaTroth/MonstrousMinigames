@@ -1,18 +1,13 @@
 import { Namespace, Server } from 'socket.io';
 
+import Room from '../classes/room';
 import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
 import { Namespaces } from '../enums/nameSpaces';
 import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventEmitter';
-import { PlayerFinishedInfo } from '../gameplay/catchFood/interfaces';
-import { CatchFoodMsgType } from '../gameplay/catchFood/interfaces/CatchFoodMsgType';
-import {
-    GameEventTypes,
-    GameHasFinished,
-    GameHasStarted,
-    GameStateHasChanged,
-    ObstacleReachedInfo,
-} from '../gameplay/interfaces/index';
+import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
+import { GameEvents } from '../gameplay/catchFood/interfaces';
+import { GameEventTypes } from '../gameplay/enums';
 import emitter from '../helpers/emitter';
 import { IMessageObstacle } from '../interfaces/messageObstacle';
 import { IMessage } from '../interfaces/messages';
@@ -47,11 +42,13 @@ class ConnectionHandler {
             const name = socket.handshake.query.name;
             const roomId = socket.handshake.query.roomId;
 
-            const room = rs.getRoomById(roomId);
+            let room: Room;
 
-            if (!room) {
-                emitter.sendErrorMessage(socket, 'Room code does not exist!');
-                console.log('User tried to join non-existing room' + roomId);
+            try {
+                room = rs.getRoomById(roomId);
+            } catch (e) {
+                emitter.sendErrorMessage(socket, e);
+                console.error(roomId + ' | ' + e.name);
                 return;
             }
 
@@ -73,9 +70,11 @@ class ConnectionHandler {
                 } else {
                     user = new User(socket.room.id, socket.id, name);
                     userId = user.id;
-                    if (!socket.room.addUser(user)) {
-                        emitter.sendErrorMessage(socket, 'Cannot join. Game already started');
-                        console.log('User tried to join. Game already started: ' + userId);
+                    try {
+                        socket.room.addUser(user);
+                    } catch (e) {
+                        emitter.sendErrorMessage(socket, e);
+                        console.error(roomId + ' | ' + e.name + ' | ' + userId);
                         return;
                     }
                 }
@@ -84,23 +83,31 @@ class ConnectionHandler {
                 user = new User(socket.room.id, socket.id, name);
                 userId = user.id;
 
-                if (!socket.room.addUser(user)) {
-                    emitter.sendErrorMessage(socket, 'Cannot join. Game already started');
-                    console.log('User tried to join. Game already started: ' + userId);
+                try {
+                    socket.room.addUser(user);
+                } catch (e) {
+                    emitter.sendErrorMessage(socket, e);
+                    console.error(roomId + ' | ' + e.name + ' | ' + userId);
                     return;
                 }
             }
             socket.user = user;
 
             emitter.sendConnectedUsers(screenNameSpace, socket.room);
-            console.log(socket.room.id + ' | Controller connected: ' + socket.user.id);
+            console.info(socket.room.id + ' | Controller connected: ' + socket.user.id);
 
             emitter.sendUserInit(socket, user.number);
 
             socket.on('disconnect', () => {
-                console.log(socket.room.id + ' | Controller disconnected: ' + socket.user.id);
+                console.info(socket.room.id + ' | Controller disconnected: ' + socket.user.id);
+                try {
+                    socket.room.game.disconnectPlayer(socket.user.id);
+                } catch (e) {
+                    emitter.sendErrorMessage(socket, e);
+                    console.error(roomId + ' | ' + e.name + ' | ' + userId);
+                    return;
+                }
                 socket.room.userDisconnected(socket.user.id);
-
                 if (socket.room.isOpen()) {
                     emitter.sendConnectedUsers(screenNameSpace, socket.room);
                     const admin = socket.room.admin;
@@ -122,16 +129,23 @@ class ConnectionHandler {
                 switch (type) {
                     case CatchFoodMsgType.START: {
                         if (socket.room.isOpen() && socket.room.isAdmin(socket.user)) {
-                            rs.startGame(socket.room);
+                            try {
+                                room.startGame();
+                            } catch (e) {
+                                console.error(socket.room.id + ' | ' + e.name);
+                                emitter.sendErrorMessage(socket, e);
+                            }
 
                             emitter.sendGameState(screenNameSpace, socket.room);
 
                             const gameStateInterval = setInterval(() => {
-                                if (!socket.room.isPlaying()) {
+                                if (!socket.room.isPlaying() && !socket.room.isPaused()) {
                                     clearInterval(gameStateInterval);
                                 }
                                 // send gamestate volatile
-                                emitter.sendGameState(screenNameSpace, socket.room, true);
+                                if (socket.room.isPlaying()) {
+                                    emitter.sendGameState(screenNameSpace, socket.room, true);
+                                }
                             }, 100);
                         }
 
@@ -139,20 +153,30 @@ class ConnectionHandler {
                     }
                     case CatchFoodMsgType.MOVE: {
                         if (socket.room.isPlaying()) {
-                            socket.room.game?.runForward(socket.user.id, parseInt(`${process.env.SPEED}`, 10) || 2);
+                            try {
+                                socket.room.game?.runForward(socket.user.id, parseInt(`${process.env.SPEED}`, 10) || 2);
+                            } catch (e) {
+                                emitter.sendErrorMessage(socket, e);
+                                console.error(roomId + ' | ' + e.name);
+                            }
                         }
                         break;
                     }
                     case CatchFoodMsgType.OBSTACLE_SOLVED: {
                         const obstacleMessage = message as IMessageObstacle;
                         const obstacleId = obstacleMessage.obstacleId;
-                        socket.room.game?.playerHasCompletedObstacle(socket.user.id, obstacleId);
+                        try {
+                            socket.room.game?.playerHasCompletedObstacle(socket.user.id, obstacleId);
+                        } catch (e) {
+                            emitter.sendErrorMessage(socket, e);
+                            console.error(roomId + ' | ' + e.name);
+                        }
                         break;
                     }
                     case MessageTypes.BACK_TO_LOBBY:
                         {
                             if (!socket.room.isOpen() && socket.room.isAdmin(socket.user)) {
-                                console.log(socket.room.id + ' | Reset Game');
+                                console.info(socket.room.id + ' | Reset Game');
                                 socket.room.resetGame().then(() => {
                                     emitter.sendMessage(
                                         MessageTypes.GAME_HAS_RESET,
@@ -165,28 +189,8 @@ class ConnectionHandler {
                             }
                         }
                         break;
-                    case MessageTypes.STOP_GAME: {
-                        if (socket.room.isPlaying() || socket.room.isPaused()) {
-                            console.log(socket.room.id + ' | Stop Game');
-                            socket.room.stopGame();
-                        }
-                        break;
-                    }
-                    case MessageTypes.PAUSE_RESUME: {
-                        if (socket.room.isAdmin(socket.user)) {
-                            if (socket.room.isPlaying()) {
-                                console.log(socket.room.id + ' | Pause Game');
-                                socket.room.pauseGame();
-                            } else if (socket.room.isPaused()) {
-                                console.log(socket.room.id + ' | Resume Game');
-                                socket.room.resumeGame();
-                            }
-                        }
-
-                        break;
-                    }
                     default: {
-                        console.log(message);
+                        console.info(message);
                     }
                 }
             });
@@ -199,28 +203,69 @@ class ConnectionHandler {
         this.screenNameSpace.on('connection', function (socket) {
             const roomId = socket.handshake.query.roomId;
 
-            const room = rs.getRoomById(roomId);
+            let room: Room;
 
-            if (!room) {
-                emitter.sendErrorMessage(socket, 'Room code does not exist!');
-                console.log('User tried to join non-existing room' + roomId);
+            try {
+                room = rs.getRoomById(roomId);
+            } catch (e) {
+                emitter.sendErrorMessage(socket, e);
+                console.error(roomId + ' | ' + e.name);
+
                 return;
             }
             socket.room = room;
             socket.join(socket.room.id);
 
-            console.log(socket.room.id + ' | Screen connected');
+            console.info(socket.room.id + ' | Screen connected');
 
             emitter.sendConnectedUsers(screenNameSpace, socket.room);
 
             socket.on('disconnect', () => {
-                console.log(socket.room.id + ' | Screen disconnected');
+                console.info(socket.room.id + ' | Screen disconnected');
             });
 
             socket.on('message', function (message: IMessage) {
-                console.log(message);
+                console.info(message);
 
-                socket.broadcast.emit('message', message);
+                const type = message.type;
+                switch (type) {
+                    case MessageTypes.PAUSE_RESUME: {
+                        if (socket.room.isPlaying()) {
+                            console.info(socket.room.id + ' | Pause Game');
+                            try {
+                                socket.room.pauseGame();
+                            } catch (e) {
+                                console.error(socket.room.id + ' | ' + e.name);
+                                emitter.sendErrorMessage(socket, e);
+                            }
+                        } else if (socket.room.isPaused()) {
+                            console.info(socket.room.id + ' | Resume Game');
+                            try {
+                                socket.room.resumeGame();
+                            } catch (e) {
+                                console.error(socket.room.id + ' | ' + e.name);
+                                emitter.sendErrorMessage(socket, e);
+                            }
+                        }
+
+                        break;
+                    }
+                    case MessageTypes.STOP_GAME: {
+                        if (socket.room.isPlaying() || socket.room.isPaused()) {
+                            console.info(socket.room.id + ' | Stop Game');
+                            try {
+                                socket.room.stopGame();
+                            } catch (e) {
+                                console.error(socket.room.id + ' | ' + e.name);
+                                emitter.sendErrorMessage(socket, e);
+                            }
+                        }
+                        break;
+                    }
+                    default: {
+                        console.info(message);
+                    }
+                }
             });
         });
     }
@@ -228,8 +273,8 @@ class ConnectionHandler {
         const rs = this.rs;
         const controllerNamespace = this.controllerNamespace;
         const screenNameSpace = this.screenNameSpace;
-        this.gameEventEmitter.on(GameEventTypes.ObstacleReached, (data: ObstacleReachedInfo) => {
-            console.log(data.roomId + ' | userId: ' + data.userId + ' | Obstacle: ' + data.obstacleType);
+        this.gameEventEmitter.on(GameEventTypes.ObstacleReached, (data: GameEvents.ObstacleReachedInfo) => {
+            console.info(data.roomId + ' | userId: ' + data.userId + ' | Obstacle: ' + data.obstacleType);
             const r = rs.getRoomById(data.roomId);
             const u = r.getUserById(data.userId);
             if (u) {
@@ -240,48 +285,51 @@ class ConnectionHandler {
                 });
             }
         });
-        this.gameEventEmitter.on(GameEventTypes.PlayerHasFinished, (data: PlayerFinishedInfo) => {
-            console.log(data.roomId + ' | userId: ' + data.userId + ' | Rank: ' + data.rank);
+        this.gameEventEmitter.on(GameEventTypes.PlayerHasFinished, (data: GameEvents.PlayerHasFinished) => {
+            console.info(data.roomId + ' | userId: ' + data.userId + ' | Rank: ' + data.rank);
             const room = rs.getRoomById(data.roomId);
             const user = room.getUserById(data.userId);
             if (user) {
                 emitter.sendPlayerFinished(controllerNamespace, user, data);
             }
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasStarted, (data: GameHasStarted) => {
-            console.log(data.roomId + ' | Game has started!');
+        this.gameEventEmitter.on(GameEventTypes.GameHasStarted, (data: GameEvents.GameHasStarted) => {
+            this.consoleInfo(data.roomId, GameEventTypes.GameHasStarted);
             emitter.sendGameHasStarted([controllerNamespace, screenNameSpace], data);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameHasFinished) => {
-            console.log(data.roomId + ' | Game has finished');
+        this.gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
+            this.consoleInfo(data.roomId, GameEventTypes.GameHasFinished);
             const room = rs.getRoomById(data.roomId);
-            room.setClosed();
+            room.setFinished();
             emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasTimedOut, (data: GameHasFinished) => {
-            console.log(data.roomId + ' | Game has timed out');
+        this.gameEventEmitter.on(GameEventTypes.GameHasTimedOut, (data: GameEvents.GameHasFinished) => {
+            this.consoleInfo(data.roomId, GameEventTypes.GameHasTimedOut);
             const room = rs.getRoomById(data.roomId);
-            room.setClosed();
+            room.setFinished();
             emitter.sendGameHasTimedOut([controllerNamespace, screenNameSpace], data);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameStateHasChanged) => {
-            console.log(data.roomId + ' | Game has stopped');
+        this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameEvents.GameStateHasChanged) => {
+            this.consoleInfo(data.roomId, GameEventTypes.GameHasStopped);
             const room = rs.getRoomById(data.roomId);
-            room.setClosed();
+            room.setFinished();
             emitter.sendMessage(MessageTypes.GAME_HAS_STOPPED, [controllerNamespace, screenNameSpace], data.roomId);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasPaused, (data: GameStateHasChanged) => {
-            console.log(data.roomId + ' | Game has stopped');
+        this.gameEventEmitter.on(GameEventTypes.GameHasPaused, (data: GameEvents.GameStateHasChanged) => {
+            this.consoleInfo(data.roomId, GameEventTypes.GameHasPaused);
             const room = rs.getRoomById(data.roomId);
             room.setPaused();
             emitter.sendMessage(MessageTypes.GAME_HAS_PAUSED, [controllerNamespace, screenNameSpace], data.roomId);
         });
-        this.gameEventEmitter.on(GameEventTypes.GameHasResumed, (data: GameStateHasChanged) => {
-            console.log(data.roomId + ' | Game has stopped');
+        this.gameEventEmitter.on(GameEventTypes.GameHasResumed, (data: GameEvents.GameStateHasChanged) => {
+            this.consoleInfo(data.roomId, GameEventTypes.GameHasResumed);
             const room = rs.getRoomById(data.roomId);
             room.setPlaying();
             emitter.sendMessage(MessageTypes.GAME_HAS_RESUMED, [controllerNamespace, screenNameSpace], data.roomId);
         });
+    }
+    private consoleInfo(roomId: string, msg: string) {
+        console.info(`${roomId} | ${msg}`);
     }
 }
 

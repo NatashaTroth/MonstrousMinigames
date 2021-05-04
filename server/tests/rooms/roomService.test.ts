@@ -1,4 +1,5 @@
 import User from '../../src/classes/user';
+import { Globals } from '../../src/enums/globals';
 import RoomService from '../../src/services/roomService';
 
 describe('RoomService', () => {
@@ -39,5 +40,30 @@ describe('RoomService', () => {
         room.addUser(user);
         rs.removeRoom(room.id);
         expect(user.roomId).toBeFalsy;
+    });
+
+    it('should reuse the room code after it was closed and closed rooms were cleared', () => {
+        const room = rs.createRoom();
+        for(let i = 1; i < 5; i++){
+            rs.createRoom()
+        }
+        room.setClosed()
+        rs.cleanupRooms()
+        expect([room.id]).toEqual(rs.roomCodes);
+    });
+
+    it(`should remove rooms that are older than ${Globals.ROOM_TIME_OUT_HOURS} hours`, () => {
+        const room = rs.createRoom();
+        room.timestamp = Date.now() - ((Globals.ROOM_TIME_OUT_HOURS * 360000) + 1)
+        rs.cleanupRooms()
+        expect(rs.roomCodes).toContain(room.id)
+    });
+
+    it(`should not close rooms that are not older than ${Globals.ROOM_TIME_OUT_HOURS} hours`, () => {
+        const room = rs.createRoom();
+        
+        room.timestamp = Date.now() - ((Globals.ROOM_TIME_OUT_HOURS - 1) * 360000)
+        rs.cleanupRooms()
+        expect(rs.roomCodes).not.toContain(room.id)
     });
 });

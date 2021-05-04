@@ -8,8 +8,10 @@ export enum GameState {
 }
 
 /*
-Created: Game created, but hasn't started yet
+Initialised: Game class has been initialised
+Created: Game created, but hasn't started yet (wait until countdown finishes)
 Started: Game has started (players are playing the game)
+Paused: Game has been paused
 Stopped: Game was stopped/cancelled without being finished (irregular stop)
 Finished: All players finished the game, the game is now over (regular stop)
 */

@@ -4,7 +4,7 @@ import Countdown from 'react-countdown';
 
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { MESSAGETYPES } from '../../utils/constants';
+import { MessageTypes } from '../../utils/constants';
 import Button from '../common/Button';
 import {
     Container,
@@ -55,17 +55,17 @@ const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo }) 
     const { hasPaused, setHasPaused } = React.useContext(GameContext);
 
     function handlePauseGame() {
-        screenSocket?.emit('message', { type: MESSAGETYPES.pauseResume });
+        screenSocket?.emit('message', { type: MessageTypes.pauseResume });
         setHasPaused(true);
     }
 
     function handleResumeGame() {
-        screenSocket?.emit('message', { type: MESSAGETYPES.pauseResume });
+        screenSocket?.emit('message', { type: MessageTypes.pauseResume });
         setHasPaused(false);
     }
 
     function handleStopGame() {
-        screenSocket?.emit('message', { type: MESSAGETYPES.stopGame });
+        screenSocket?.emit('message', { type: MessageTypes.stopGame });
     }
 
     return (
