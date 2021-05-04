@@ -11,7 +11,7 @@ import { PlayerContext } from './PlayerContextProvider';
 export type MessageData = IUserInitMessage | IObstacleMessage | IGameFinished;
 
 export const defaultValue = {
-    controllerSocket: new SocketIOAdapter('test', 'test'),
+    controllerSocket: new SocketIOAdapter('default', 'controller', 'default'),
     setControllerSocket: () => {
         // do nothing
     },
@@ -55,7 +55,9 @@ export interface IUser {
 }
 
 const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) => {
-    const [controllerSocket, setControllerSocket] = React.useState<Socket>(new SocketIOAdapter('test', 'test'));
+    const [controllerSocket, setControllerSocket] = React.useState<Socket>(
+        new SocketIOAdapter('default', 'controller', 'default')
+    );
     const {
         setObstacle,
         setPlayerFinished,

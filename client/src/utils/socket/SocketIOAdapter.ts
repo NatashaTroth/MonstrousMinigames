@@ -3,11 +3,17 @@ import io from 'socket.io-client';
 
 import { Socket } from './Socket';
 
+interface Params {
+    roomId: string;
+    name?: string;
+    userId?: string;
+}
+
 export class SocketIOAdapter implements Socket {
     public socket: SocketIOClient.Socket;
     public connectionPromise: Promise<void>;
 
-    constructor(public name: string, public roomId: string) {
+    constructor(public roomId: string, public device: 'controller' | 'screen', public name?: string) {
         this.socket = this.connect();
         this.connectionPromise = new Promise(resolve => {
             // TODO check error case
@@ -30,19 +36,19 @@ export class SocketIOAdapter implements Socket {
     }
 
     connect() {
-        return io(
-            `${process.env.REACT_APP_BACKEND_URL}controller?${stringify({
-                name: this.name,
-                roomId: this.roomId,
-                userId: sessionStorage.getItem('userId') || '',
-            })}`,
-            {
-                secure: true,
-                reconnection: true,
-                rejectUnauthorized: false,
-                reconnectionDelayMax: 10000,
-                transports: ['websocket'],
-            }
-        );
+        const params: Params = { roomId: this.roomId };
+
+        if (this.device === 'controller') {
+            params.name = this.name;
+            params.userId = sessionStorage.getItem('userId') || '';
+        }
+
+        return io(`${process.env.REACT_APP_BACKEND_URL}${this.device}?${stringify(params)}`, {
+            secure: true,
+            reconnection: true,
+            rejectUnauthorized: false,
+            reconnectionDelayMax: 10000,
+            transports: ['websocket'],
+        });
     }
 }
