@@ -1,199 +1,214 @@
+import Phaser from 'phaser';
+import { stringify } from 'querystring';
 
-import Phaser from 'phaser'
-import { stringify } from 'querystring'
+import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
+import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
+import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
+// import music from '../../assets/audio/Sound_Game.mp3';
+import forest from '../../images/forest.png';
+import franz from '../../images/franz_spritesheet.png';
+import goal from '../../images/goal.png';
+import noah from '../../images/noah_spritesheet.png';
+import steffi from '../../images/steffi_spritesheet.png';
+import susi from '../../images/susi_spritesheet.png';
+import wood from '../../images/wood.png';
 
-import forest from '../../images/forest.png'
-import franz from '../../images/franz_spritesheet.png'
-import goal from '../../images/goal.png'
-import noah from "../../images/noah_spritesheet.png"
-import steffi from "../../images/steffi_spritesheet.png"
-import susi from "../../images/susi_spritesheet.png"
-import wood from '../../images/wood.png'
-
-
-const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
-const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
-const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
-let playerNumber = 1
-let roomId = ""
-const moveplayers = [true, true, true, true]
-const playerFinished = [false, false, false, false]
-let socket: SocketIOClient.Socket
+/* eslint @typescript-eslint/no-var-requires: "off" */
+// const music = require('../../audio/Sound_Game.mp3');
+const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
+const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
+const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
+let playerNumber = 1;
+let roomId = '';
+const moveplayers = [true, true, true, true];
+const playerFinished = [false, false, false, false];
+let socket: SocketIOClient.Socket;
 
 class MainScene extends Phaser.Scene {
     constructor() {
-        super('MainScene')
+        super('MainScene');
     }
 
-    init(data:{roomId?:string}){
-        socket = this.handleSocketConnection()
-        if(roomId !== undefined){
-            roomId = data.roomId!
+    init(data: { roomId?: string }) {
+        socket = this.handleSocketConnection();
+        if (roomId !== undefined) {
+            roomId = data.roomId!;
         }
     }
 
     preload(): void {
-        this.load.spritesheet('franz', franz, { frameWidth: 826, frameHeight: 1163});
-        this.load.spritesheet('susi', susi, { frameWidth: 826, frameHeight: 1163});
-        this.load.spritesheet('noah', noah, { frameWidth: 826, frameHeight: 1163});
-        this.load.spritesheet('steffi', steffi, { frameWidth: 826, frameHeight: 1163});
+        this.load.spritesheet('franz', franz, { frameWidth: 826, frameHeight: 1163 });
+        this.load.spritesheet('susi', susi, { frameWidth: 826, frameHeight: 1163 });
+        this.load.spritesheet('noah', noah, { frameWidth: 826, frameHeight: 1163 });
+        this.load.spritesheet('steffi', steffi, { frameWidth: 826, frameHeight: 1163 });
 
-        this.load.image('forest', forest)
-        this.load.image('goal', goal)
-        this.load.image('wood', wood)
+        this.load.image('forest', forest);
+        this.load.image('goal', goal);
+        this.load.image('wood', wood);
 
-        this.load.audio('music', ['../../audio/Sound_Game.wav']);
+        // this.load.audio('music', ['../../assets/audio/Sound_Game.mp3']);
+        // require('../../audio/Sound_Game.mp3');
+        this.load.audio('backgroundMusicStart', [game1SoundStart]);
+        this.load.audio('backgroundMusicLoop', [game1SoundLoop]);
+        this.load.audio('backgroundMusicEnd', [game1SoundEnd]);
+        //require('../../audio/Sound_Game.mp3')
     }
 
     create() {
-        //this.sound.add("music", { loop: false });
-        const forest = this.add.image(0, 0, 'forest')
+        const backgroundMusicStart = this.sound.add('backgroundMusicStart');
+        const backgroundMusicLoop = this.sound.add('backgroundMusicLoop');
+        // const backgroundMusicEnd = this.sound.add('backgroundMusicStart');
+        // const backgroundMusic = this.sound.add("music", { loop: false });
+        backgroundMusicStart.play({ loop: false });
+        backgroundMusicStart.once('complete', () => {
+            backgroundMusicLoop.play({ loop: true });
+        });
 
-        players.push(this.physics.add.sprite(10, 10, 'franz'))
-        goals.push(this.physics.add.sprite(1600, 100, 'goal'))
+        const forest = this.add.image(0, 0, 'forest');
 
-        if(playerNumber >= 2){
-            players.push(this.physics.add.sprite(68, 300, 'susi'))
-            goals.push(this.physics.add.sprite(1050, 300, 'goal'))
+        players.push(this.physics.add.sprite(10, 10, 'franz'));
+        goals.push(this.physics.add.sprite(1600, 100, 'goal'));
+
+        if (playerNumber >= 2) {
+            players.push(this.physics.add.sprite(68, 300, 'susi'));
+            goals.push(this.physics.add.sprite(1050, 300, 'goal'));
         }
-        if(playerNumber >= 3){
-            players.push(this.physics.add.sprite(68, 500, 'noah'))
-            goals.push(this.physics.add.sprite(1050, 500, 'goal'))
+        if (playerNumber >= 3) {
+            players.push(this.physics.add.sprite(68, 500, 'noah'));
+            goals.push(this.physics.add.sprite(1050, 500, 'goal'));
         }
-        if(playerNumber >= 4){
-            players.push(this.physics.add.sprite(68, 700, 'steffi'))
-            goals.push(this.physics.add.sprite(1050, 700, 'goal'))
+        if (playerNumber >= 4) {
+            players.push(this.physics.add.sprite(68, 700, 'steffi'));
+            goals.push(this.physics.add.sprite(1050, 700, 'goal'));
         }
 
-        const arr = Array.from({ length: 8 }, () => Math.floor(Math.random() * 600) + 200)
+        const arr = Array.from({ length: 8 }, () => Math.floor(Math.random() * 600) + 200);
 
-        for (let i = 0; i < playerNumber*2; i++) {
-            let wood: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
+        for (let i = 0; i < playerNumber * 2; i++) {
+            let wood: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
             if (playerNumber >= 2 && i < 4) {
-                wood = this.physics.add.sprite(arr[i], 300, 'wood')
+                wood = this.physics.add.sprite(arr[i], 300, 'wood');
             } else if (playerNumber >= 3 && i < 6) {
-                wood = this.physics.add.sprite(arr[i], 500, 'wood')
-            } else if(playerNumber >= 4) {
-                wood = this.physics.add.sprite(arr[i], 700, 'wood')
+                wood = this.physics.add.sprite(arr[i], 500, 'wood');
+            } else if (playerNumber >= 4) {
+                wood = this.physics.add.sprite(arr[i], 700, 'wood');
             } else {
-                wood = this.physics.add.sprite(arr[i], 100, 'wood')
+                wood = this.physics.add.sprite(arr[i], 100, 'wood');
             }
 
-            wood.setScale(0.5, 0.5)
-            obstacles.push(wood)
+            wood.setScale(0.5, 0.5);
+            obstacles.push(wood);
         }
 
         players.forEach(player => {
-            player.setBounce(0.2)
-            player.setCollideWorldBounds(true)
-            player.setScale(0.2, 0.2)
-            player.setCollideWorldBounds(true)
-        })
+            player.setBounce(0.2);
+            player.setCollideWorldBounds(true);
+            player.setScale(0.2, 0.2);
+            player.setCollideWorldBounds(true);
+        });
 
-        forest.setScale(1.8, 1.4)
+        forest.setScale(1.8, 1.4);
         goals.forEach(goal => {
-            goal.setScale(0.1,0.1)
-        })
+            goal.setScale(0.1, 0.1);
+        });
 
         this.anims.create({
             key: 'franzWalk',
             frames: this.anims.generateFrameNumbers('franz', { start: 12, end: 15 }),
             frameRate: 6,
-            repeat: -1
+            repeat: -1,
         });
-        
+
         this.anims.create({
             key: 'susiWalk',
             frames: this.anims.generateFrameNumbers('susi', { start: 12, end: 15 }),
             frameRate: 6,
-            repeat: -1
+            repeat: -1,
         });
-        
+
         this.anims.create({
             key: 'noahWalk',
             frames: this.anims.generateFrameNumbers('noah', { start: 12, end: 15 }),
             frameRate: 6,
-            repeat: -1
+            repeat: -1,
         });
-        
+
         this.anims.create({
             key: 'steffiWalk',
             frames: this.anims.generateFrameNumbers('steffi', { start: 12, end: 15 }),
             frameRate: 6,
-            repeat: -1
+            repeat: -1,
         });
-        const animations = ["franzWalk", "susiWalk", "noahWalk", "steffiWalk"]
-        for(let i = 0; i < playerNumber; i++){
-            players[i].anims.play(animations[i])
+        const animations = ['franzWalk', 'susiWalk', 'noahWalk', 'steffiWalk'];
+        for (let i = 0; i < playerNumber; i++) {
+            players[i].anims.play(animations[i]);
         }
-        }
+    }
 
-        logMessage(data: any){
-            // eslint-disable-next-line no-console
-            console.log(data)
-            if(data.type === "game1/gameState"){
-                playerNumber = data.data.playersState.length
-                //obstacles = data.data.obstacles
-                this.updateGameState(data.data.playersState)
-            }
+    logMessage(data: any) {
+        // eslint-disable-next-line no-console
+        console.log(data);
+        if (data.type === 'game1/gameState') {
+            playerNumber = data.data.playersState.length;
+            //obstacles = data.data.obstacles
+            this.updateGameState(data.data.playersState);
         }
+    }
 
-
-        updateGameState(playerData: any){
-            for(let i = 0; i < players.length; i++){
-                this.moveForward(players[i], playerData[i].positionX)
-            }
+    updateGameState(playerData: any) {
+        for (let i = 0; i < players.length; i++) {
+            this.moveForward(players[i], playerData[i].positionX);
         }
+    }
 
     update() {
-        socket.on("message", (data: any ) => this.logMessage(data))
+        socket.on('message', (data: any) => this.logMessage(data));
         for (let i = 0; i < players.length; i++) {
             if (players[i] && moveplayers[i]) {
                 //this.moveForward(players[i], 0)
             } else {
-                players[i].anims.stop()
+                players[i].anims.stop();
             }
             this.physics.collide(players[i], goals[i], () => {
-                this.player1ReachedGoal(i)
-            })
-
+                this.player1ReachedGoal(i);
+            });
         }
 
-        if(players[0]){
-        this.physics.collide(players[0], obstacles[0], () => {
-            this.playerHitObstacle(0)
-        })
-        this.physics.collide(players[0], obstacles[1], () => {
-            this.playerHitObstacle(0)
-        })
-    }
-    if(players[1]){
-        this.physics.collide(players[1], obstacles[2], () => {
-            this.playerHitObstacle(1)
-        })
-        this.physics.collide(players[1], obstacles[3], () => {
-            this.playerHitObstacle(1)
-        })
-    }
-    if(players[2]){
-        this.physics.collide(players[2], obstacles[4], () => {
-            this.playerHitObstacle(2)
-        })
-        this.physics.collide(players[2], obstacles[5], () => {
-            this.playerHitObstacle(2)
-        })
-    }
-       if(players[3]){
-        this.physics.collide(players[3], obstacles[6], () => {
-            this.playerHitObstacle(3)
-        })
-        this.physics.collide(players[3], obstacles[7], () => {
-            this.playerHitObstacle(3)
-        })
-       }
+        if (players[0]) {
+            this.physics.collide(players[0], obstacles[0], () => {
+                this.playerHitObstacle(0);
+            });
+            this.physics.collide(players[0], obstacles[1], () => {
+                this.playerHitObstacle(0);
+            });
+        }
+        if (players[1]) {
+            this.physics.collide(players[1], obstacles[2], () => {
+                this.playerHitObstacle(1);
+            });
+            this.physics.collide(players[1], obstacles[3], () => {
+                this.playerHitObstacle(1);
+            });
+        }
+        if (players[2]) {
+            this.physics.collide(players[2], obstacles[4], () => {
+                this.playerHitObstacle(2);
+            });
+            this.physics.collide(players[2], obstacles[5], () => {
+                this.playerHitObstacle(2);
+            });
+        }
+        if (players[3]) {
+            this.physics.collide(players[3], obstacles[6], () => {
+                this.playerHitObstacle(3);
+            });
+            this.physics.collide(players[3], obstacles[7], () => {
+                this.playerHitObstacle(3);
+            });
+        }
     }
 
-    handleSocketConnection(){
+    handleSocketConnection() {
         const socket = io(
             `${process.env.REACT_APP_BACKEND_URL}screen?${stringify({
                 roomId: roomId,
@@ -206,26 +221,26 @@ class MainScene extends Phaser.Scene {
                 transports: ['websocket'],
             }
         );
-        return socket
+        return socket;
     }
 
     moveForward(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, toX: number) {
-        player.x = toX
+        player.x = toX;
     }
 
     player1ReachedGoal(playerIndex: number) {
-        players[playerIndex].anims.stop()
-        moveplayers[playerIndex] = false
-        playerFinished[playerIndex] = true
+        players[playerIndex].anims.stop();
+        moveplayers[playerIndex] = false;
+        playerFinished[playerIndex] = true;
     }
     playerHitObstacle(playerIndex: number) {
-        moveplayers[playerIndex] = false
+        moveplayers[playerIndex] = false;
     }
 
     obstacleRemoved(obstacleIndex: number, playerIndex: number) {
-        obstacles[obstacleIndex].destroy()
-        moveplayers[playerIndex] = true
+        obstacles[obstacleIndex].destroy();
+        moveplayers[playerIndex] = true;
     }
 }
 
-export default MainScene
+export default MainScene;

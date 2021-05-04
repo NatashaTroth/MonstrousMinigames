@@ -17,6 +17,12 @@ interface IFormState {
 export const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ roomId: '' });
     const { handleSocketConnection } = React.useContext(ScreenSocketContext);
+    let audioContext: any; //TODO change
+
+    React.useEffect(() => {
+        // const AudioContext = window.AudioContext;
+        //  audioContext = new AudioContext();
+    }, []);
 
     async function handleCreateNewRoom() {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}create-room`, {
@@ -28,6 +34,9 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
         const data = await response.json();
         handleSocketConnection(data.roomId);
+        /* eslint no-console: "warn" */
+        console.log('hiiiii');
+        audioContext.resume();
     }
 
     return (
