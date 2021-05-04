@@ -1,5 +1,6 @@
 import Room from '../classes/room';
 import { InvalidRoomCodeError } from '../customErrors';
+import { Globals } from '../enums/globals';
 import { GameStateInfo } from '../gameplay/catchFood/interfaces';
 
 const CodeGenerator = require('node-code-generator');
@@ -12,7 +13,6 @@ class RoomService {
     constructor(roomCount: number) {
         this.rooms = [];
         this.roomCodes = generator.generateCodes('****', roomCount, { alphanumericChars: 'ABCDEFGHJKLMNPQRSTUVWXYZ' });
-        this.createRoom('ABCDE'); //testing purpose only
     }
 
     public createRoom(roomId: string = this.getSingleRoomCode()): Room {
@@ -51,6 +51,23 @@ class RoomService {
             return true;
         }
         return false;
+    }
+    public clearClosedRooms(): void {
+        const closedRooms = this.rooms.filter((room: Room) => {
+            return room.isClosed();
+        });
+        closedRooms.forEach((room: Room) => {
+            this.removeRoom(room.id);
+        });
+    }
+
+    public closeTimedOutRooms(): void {
+        const timedOutRooms = this.rooms.filter((room: Room) => {
+            return Date.now() - room.timestamp > Globals.ROOM_TIME_OUT_HOURS * 360000;
+        });
+        timedOutRooms.forEach((room: Room) => {
+            room.setClosed();
+        });
     }
 }
 
