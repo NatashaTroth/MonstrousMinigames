@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { MESSAGETYPES, OBSTACLES } from '../utils/constants';
+import { handleResetGame } from '../utils/handleResetGame';
 import { ClickRequestDeviceMotion } from '../utils/permissions';
 import { GameContext } from './GameContextProvider';
 import { PlayerContext } from './PlayerContextProvider';
@@ -63,10 +64,11 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         setPlayerNumber,
         setPermissionGranted,
         playerFinished,
+        resetPlayer,
     } = React.useContext(PlayerContext);
     const history = useHistory();
 
-    const { setGameStarted, roomId, setRoomId, setHasPaused } = React.useContext(GameContext);
+    const { setGameStarted, roomId, setRoomId, setHasPaused, resetGame } = React.useContext(GameContext);
 
     const handleMessageData = React.useCallback(
         (data: MessageData) => {
@@ -117,13 +119,17 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
                     setHasPaused(false);
                     break;
                 case MESSAGETYPES.gameHasStopped:
+                    handleResetGame(controllerSocket, { resetPlayer, resetGame });
                     history.push(`/controller/${roomId}/lobby`);
                     break;
             }
         },
         [
+            controllerSocket,
             history,
             playerFinished,
+            resetGame,
+            resetPlayer,
             roomId,
             setGameStarted,
             setHasPaused,
