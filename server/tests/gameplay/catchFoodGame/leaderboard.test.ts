@@ -32,7 +32,7 @@ describe('Leaderboard tests for Catch Food Game', () => {
     it('should save the correct game type to leaderboard game history', async () => {
         startAndFinishGame(catchFoodGame);
 
-        expect(leaderboard.gameHistory[0].game).toBe(GameType.CATCH_FOOD_GAME);
+        expect(leaderboard.gameHistory[0].game).toBe(GameType.CatchFoodGame);
     });
 
     it('should save the game to leaderboard game history', async () => {

@@ -102,7 +102,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.gameStartedTime = Date.now();
         // setInterval(this.onTimerTick, 33);
         this.timer = setTimeout(() => {
-            this.stopGame(true);
+            this.stopGameTimeout();
         }, this.timeOutLimit);
     }
 
@@ -137,7 +137,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
         // resume timeout timer
         this.timer = setTimeout(() => {
-            this.stopGame(true);
+            this.stopGameTimeout();
         }, this.timeOutRemainingTime);
         // this.timeOutRemasiningTime = 0
 
@@ -147,9 +147,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         CatchFoodGameEventEmitter.emitGameHasResumedEvent({ roomId: this.roomId });
     }
 
-    stopGame(timeOut = false): void {
-        verifyGameState(this.gameState, [GameState.Started, GameState.Paused]);
-        this.gameState = GameState.Stopped;
+    private stopGameTimeout() {
+        this.stopGame();
         const currentGameStateInfo = this.getGameStateInfo();
         const messageInfo: GameEvents.GameHasFinished = {
             roomId: currentGameStateInfo.roomId,
@@ -159,11 +158,24 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             playerRanks: [...this.createPlayerRanks()],
         };
 
-        if (timeOut) CatchFoodGameEventEmitter.emitGameHasTimedOutEvent(messageInfo);
-        else {
-            clearTimeout(this.timer);
-            CatchFoodGameEventEmitter.emitGameHasStoppedEvent({ roomId: this.roomId });
-        }
+        CatchFoodGameEventEmitter.emitGameHasTimedOutEvent(messageInfo);
+    }
+
+    stopGameUserClosed() {
+        this.stopGame();
+        clearTimeout(this.timer);
+        CatchFoodGameEventEmitter.emitGameHasStoppedEvent({ roomId: this.roomId });
+    }
+
+    stopGameAllUsersDisconnected() {
+        this.stopGame();
+        clearTimeout(this.timer);
+        CatchFoodGameEventEmitter.emitAllPlayersHaveDisconnected({ roomId: this.roomId });
+    }
+
+    private stopGame(): void {
+        verifyGameState(this.gameState, [GameState.Started, GameState.Paused]);
+        this.gameState = GameState.Stopped;
     }
 
     getGameStateInfo(): GameStateInfo {
@@ -246,9 +258,6 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         } else {
             throw new WrongObstacleIdError(`${obstacleId} is not the id for the next obstacle.`, userId, obstacleId);
         }
-
-        // shouldn't happen - but just to be safe (e.g. in case messages arrive in wrong order)
-        if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId);
     }
 
     private verifyUserIsAtObstacle(userId: string) {
@@ -263,9 +272,10 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
     private playerHasFinishedGame(userId: string): void {
         //only if player hasn't already been marked as finished
-        if (this.playersState[userId].finished) return;
+        // if (this.playersState[userId].finished) return; //don't think I need
 
         this.playersState[userId].finished = true;
+        this.playersState[userId].positionX = this.trackLength;
         this.playersState[userId].finishedTimeMs = Date.now();
         this.playersState[userId].rank = this.getRank(this.playersState[userId].finishedTimeMs);
 
@@ -307,7 +317,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.gameState = GameState.Finished;
         clearTimeout(this.timer);
         const playerRanks = this.createPlayerRanks();
-        this.leaderboard.addGameToHistory(GameType.CATCH_FOOD_GAME, [...playerRanks]);
+        this.leaderboard.addGameToHistory(GameType.CatchFoodGame, [...playerRanks]);
 
         const currentGameStateInfo = this.getGameStateInfo();
         CatchFoodGameEventEmitter.emitGameHasFinishedEvent({
@@ -350,12 +360,42 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             GameState.Paused,
         ]);
         verifyUserId(this.playersState, userId);
-        verifyUserIsActive(userId, this.playersState[userId].isActive);
+        if (this.playersState[userId].isActive) {
+            this.playersState[userId].isActive = false;
+            CatchFoodGameEventEmitter.emitPlayerHasDisconnected({
+                roomId: this.roomId,
+                userId,
+            });
 
-        this.playersState[userId].isActive = false;
-        CatchFoodGameEventEmitter.emitPlayerHasDisconnected({
-            roomId: this.roomId,
-            userId,
-        });
+            if (this.allPlayersDisconnected()) {
+                this.stopGameAllUsersDisconnected();
+            }
+        }
+    }
+
+    private allPlayersDisconnected() {
+        for (const [, playerState] of Object.entries(this.playersState)) {
+            if (playerState.isActive) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    reconnectPlayer(userId: string): void {
+        verifyGameState(this.gameState, [
+            GameState.Initialised,
+            GameState.Started,
+            GameState.Created,
+            GameState.Paused,
+        ]);
+        verifyUserId(this.playersState, userId);
+        if (!this.playersState[userId].isActive) {
+            this.playersState[userId].isActive = true;
+            CatchFoodGameEventEmitter.emitPlayerHasReconnected({
+                roomId: this.roomId,
+                userId,
+            });
+        }
     }
 }

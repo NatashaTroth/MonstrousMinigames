@@ -12,7 +12,9 @@ export interface IGameInterface {
 
     createNewGame(players: Array<User>, trackLength?: number, numberOfObstacles?: number): void;
     // private startGame()
-    stopGame(): void;
+    // stopGameTimeout(): void;
+    stopGameUserClosed(): void;
+    stopGameAllUsersDisconnected(): void;
     pauseGame(): void;
     getGameStateInfo(): GameStateInfo;
     disconnectPlayer(userId: string): void;
