@@ -1,5 +1,5 @@
-import { IUserInitMessage } from '../contexts/ControllerSocketContextProvider';
-import { Storage } from '../utils/storage/Storage';
+import { IUserInitMessage } from '../../contexts/ControllerSocketContextProvider';
+import { Storage } from '../storage/Storage';
 
 export function persistUser(
     data: IUserInitMessage,
@@ -15,6 +15,6 @@ export function persistUser(
     localStorage.setItem('name', data.name || '');
     sessionStorage.setItem('roomId', data.roomId || '');
 
-    setPlayerAdmin(data.isAdmin || false);
-    setPlayerNumber(data.number || 0);
+    setPlayerAdmin(data.isAdmin);
+    setPlayerNumber(data.number);
 }

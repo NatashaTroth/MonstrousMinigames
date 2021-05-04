@@ -1,17 +1,20 @@
 import {
-    IGameFinished, IObstacleMessage, IUserInitMessage, MessageData
+    IGameFinished,
+    IObstacleMessage,
+    IUserInitMessage,
+    MessageData,
 } from '../contexts/ControllerSocketContextProvider';
 import { IObstacle } from '../contexts/PlayerContextProvider';
 import { MessageTypes } from './constants';
-import { gameHasStarted } from './gameHasStarted';
-import { gameHasTimedOut } from './gameHasTimedOut';
-import { handleResetGame } from './handleResetGame';
+import { gameHasStarted } from './gameState/gameHasStarted';
+import { gameHasTimedOut } from './gameState/gameHasTimedOut';
+import { handleResetGame } from './gameState/handleResetGame';
 import history from './history';
-import { persistUser } from './persistUser';
 import { playerHasFinished } from './playerHasFinished';
 import { Socket } from './socket/Socket';
 import { localStorage } from './storage/LocalStorage';
 import { sessionStorage } from './storage/SessionStorage';
+import { persistUser } from './user/persistUser';
 
 export interface HandleMessageDataDependencies {
     setPlayerAdmin: (val: boolean) => void;

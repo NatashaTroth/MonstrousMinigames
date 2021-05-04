@@ -1,4 +1,4 @@
-import history from './history';
+import history from '../history';
 
 export function gameHasStarted(roomId: string | undefined, dependencies: { setGameStarted: (val: boolean) => void }) {
     document.body.style.overflow = 'hidden';

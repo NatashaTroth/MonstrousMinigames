@@ -1,7 +1,7 @@
 import { MessageData } from '../contexts/ControllerSocketContextProvider';
 import { MessageTypes, Obstacles } from './constants';
 import { handleMessageData } from './handleMessageData';
-import { handleResetGame } from './handleResetGame';
+import { InMemorySocketFake } from './socket/InMemorySocketFake';
 
 describe('handleMessageData function', () => {
     let setPlayerRank: jest.Mock<any, any>;
@@ -14,7 +14,7 @@ describe('handleMessageData function', () => {
     let resetGame: jest.Mock<any, any>;
     let resetPlayer: jest.Mock<any, any>;
     let defaultData: { roomId: string; playerFinished: boolean };
-    const fakeSocket = '' as any;
+    const fakeSocket = new InMemorySocketFake();
 
     beforeEach(() => {
         setPlayerRank = jest.fn();
@@ -315,7 +315,7 @@ describe('handleMessageData function', () => {
         expect(setHasPaused).toHaveBeenLastCalledWith(false);
     });
 
-    it('when message type is gameHasStopped, handed handleResetGame should be called', () => {
+    it('when message type is gameHasStopped, back to L should be called', () => {
         const mockData = {
             type: MessageTypes.gameHasStopped,
         };
@@ -337,6 +337,6 @@ describe('handleMessageData function', () => {
             },
         });
 
-        expect(handleResetGame).toHaveBeenCalledTimes(1);
+        expect(resetGame).toHaveBeenCalledTimes(1);
     });
 });

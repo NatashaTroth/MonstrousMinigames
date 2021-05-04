@@ -1,8 +1,9 @@
 import { HandleMessageDataDependencies } from './handleMessageData';
 import { handleSetControllerSocket } from './handleSetControllerSocket';
-import { ClickRequestDeviceMotion } from './permissions';
 import { Socket } from './socket/Socket';
 import { SocketIOAdapter } from './socket/SocketIOAdapter';
+import { ClickRequestDeviceMotion } from './user/permissions';
+import { window } from './window/WindowAdapter';
 
 interface HandleSocketConnDependencies extends HandleMessageDataDependencies {
     setControllerSocket: (socket: Socket) => void;
@@ -18,7 +19,7 @@ export async function handleSocketConnection(
 ) {
     const { setPermissionGranted, setRoomId } = dependencies;
 
-    const permission = await ClickRequestDeviceMotion();
+    const permission = await ClickRequestDeviceMotion(window);
     if (permission) {
         setPermissionGranted(permission);
     }

@@ -1,5 +1,5 @@
+import { Storage } from '../storage/Storage';
 import { persistUser } from './persistUser';
-import { Storage } from './storage/Storage';
 
 beforeAll(() => {
     global.sessionStorage = new LocalStorageFake();

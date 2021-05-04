@@ -1,4 +1,5 @@
 import { stringify } from 'query-string';
+import io from 'socket.io-client';
 
 import { Socket } from './Socket';
 

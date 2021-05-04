@@ -2,6 +2,8 @@ import * as React from 'react';
 
 import { resetObstacle } from '../components/Controller/Obstacles/TreeTrunk';
 import { Obstacles } from '../utils/constants';
+import { handleSetGameFinished } from '../utils/gameState/handleSetGameFinished';
+import { handleSetGameStarted } from '../utils/gameState/handleSetGameStarted';
 import { IUser } from './ControllerSocketContextProvider';
 import { IPlayerRank } from './ScreenSocketContextProvider';
 
@@ -117,21 +119,9 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         players,
         setPlayers,
         finished,
-        setFinished: (val: boolean) => {
-            document.body.style.overflow = 'visible';
-            document.body.style.position = 'static';
-            document.body.style.userSelect = 'auto';
-
-            setFinished(val);
-        },
+        setFinished: (val: boolean) => handleSetGameFinished(val, { setFinished }),
         gameStarted,
-        setGameStarted: (val: boolean) => {
-            document.body.style.overflow = 'hidden';
-            document.body.style.position = 'fixed';
-            document.body.style.userSelect = 'none';
-
-            setGameStarted(val);
-        },
+        setGameStarted: (val: boolean) => handleSetGameStarted(val, { setGameStarted }),
         roomId,
         setRoomId,
         connectedUsers,
