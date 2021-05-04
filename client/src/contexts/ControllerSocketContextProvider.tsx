@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { MessageTypes, Obstacles } from '../utils/constants';
+import { handleResetGame } from '../utils/handleResetGame';
 import { ClickRequestDeviceMotion } from '../utils/permissions';
 import { GameContext } from './GameContextProvider';
 import { PlayerContext } from './PlayerContextProvider';
@@ -63,14 +64,17 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         setPlayerNumber,
         setPermissionGranted,
         playerFinished,
+        resetPlayer,
     } = React.useContext(PlayerContext);
     const history = useHistory();
 
-    const { setGameStarted, roomId, setRoomId } = React.useContext(GameContext);
+    const { setGameStarted, roomId, setRoomId, setHasPaused, resetGame } = React.useContext(GameContext);
 
     const handleMessageData = React.useCallback(
         (data: MessageData) => {
             let messageData;
+            // eslint-disable-next-line no-console
+            console.log(data);
 
             switch (data.type) {
                 case MessageTypes.userInit:
@@ -108,15 +112,27 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
                     setPlayerFinished(true);
                     setPlayerRank(messageData.rank);
                     break;
-                default:
+                case MessageTypes.gameHasPaused:
+                    setHasPaused(true);
+                    break;
+                case MessageTypes.gameHasResumed:
+                    setHasPaused(false);
+                    break;
+                case MessageTypes.gameHasStopped:
+                    handleResetGame(controllerSocket, { resetPlayer, resetGame });
+                    history.push(`/controller/${roomId}/lobby`);
                     break;
             }
         },
         [
+            controllerSocket,
             history,
             playerFinished,
+            resetGame,
+            resetPlayer,
             roomId,
             setGameStarted,
+            setHasPaused,
             setIsPlayerAdmin,
             setObstacle,
             setPlayerFinished,

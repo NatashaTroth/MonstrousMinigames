@@ -3,6 +3,7 @@ import { useParams } from 'react-router';
 
 import { IRouteParams } from '../../App';
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
+import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { sendMovement } from '../../utils/sendMovement';
 import Button from '../common/Button';
@@ -21,6 +22,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
     });
     const { controllerSocket, handleSocketConnection } = React.useContext(ControllerSocketContext);
     const { playerFinished, permission } = React.useContext(PlayerContext);
+    const { hasPaused } = React.useContext(GameContext);
 
     if (permission) {
         window.addEventListener(
@@ -33,7 +35,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                     (event.acceleration.x < -2 || event.acceleration.x > 2) &&
                     !playerFinished
                 ) {
-                    sendMovement(controllerSocket);
+                    sendMovement(controllerSocket, hasPaused);
                 }
             }
         );
