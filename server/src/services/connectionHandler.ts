@@ -187,18 +187,6 @@ class ConnectionHandler {
                             }
                         }
                         break;
-                    case MessageTypes.STOP_GAME: {
-                        if (socket.room.isPlaying() || socket.room.isPaused()) {
-                            console.info(socket.room.id + ' | Stop Game');
-                            try {
-                                socket.room.stopGame();
-                            } catch (e) {
-                                console.error(socket.room.id + ' | ' + e.name);
-                                emitter.sendErrorMessage(socket, e);
-                            }
-                        }
-                        break;
-                    }
                     default: {
                         console.info(message);
                     }
@@ -258,6 +246,18 @@ class ConnectionHandler {
                             }
                         }
 
+                        break;
+                    }
+                    case MessageTypes.STOP_GAME: {
+                        if (socket.room.isPlaying() || socket.room.isPaused()) {
+                            console.info(socket.room.id + ' | Stop Game');
+                            try {
+                                socket.room.stopGame();
+                            } catch (e) {
+                                console.error(socket.room.id + ' | ' + e.name);
+                                emitter.sendErrorMessage(socket, e);
+                            }
+                        }
                         break;
                     }
                     default: {
