@@ -21,6 +21,9 @@ export function handleSetControllerSocket(
         setPlayerRank,
         setGameStarted,
         setPlayerAdmin,
+        setHasPaused,
+        resetGame,
+        resetPlayer,
     } = dependencies;
 
     setControllerSocket(socket);
@@ -31,6 +34,7 @@ export function handleSetControllerSocket(
                 data,
                 playerFinished,
                 roomId,
+                socket,
                 dependencies: {
                     setPlayerAdmin,
                     setPlayerNumber,
@@ -38,6 +42,9 @@ export function handleSetControllerSocket(
                     setObstacle,
                     setPlayerRank,
                     setGameStarted,
+                    setHasPaused,
+                    resetGame,
+                    resetPlayer,
                 },
             })
         );

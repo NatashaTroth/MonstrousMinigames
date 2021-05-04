@@ -62,9 +62,10 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         setPlayerNumber,
         setPermissionGranted,
         playerFinished,
+        resetPlayer,
     } = React.useContext(PlayerContext);
 
-    const { setGameStarted, setRoomId } = React.useContext(GameContext);
+    const { setGameStarted, setRoomId, setHasPaused, resetGame } = React.useContext(GameContext);
 
     const dependencies = {
         setControllerSocket,
@@ -81,6 +82,9 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         setControllerSocket: (val: SocketIOClient.Socket | undefined, roomId: string) =>
             handleSetControllerSocket(val, roomId, playerFinished, {
                 ...dependencies,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
             }),
         isControllerConnected: controllerSocket ? true : false,
         handleSocketConnection: (roomId: string, name: string) => {
@@ -88,6 +92,9 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
                 ...dependencies,
                 setPermissionGranted,
                 setRoomId,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
             });
         },
     };

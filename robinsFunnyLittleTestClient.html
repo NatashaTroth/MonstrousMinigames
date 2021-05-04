@@ -49,6 +49,7 @@
         let roomId = document.getElementById('roomId').value ? document.getElementById('roomId').value : 'ABCDE';
 
         let socket;
+        let ssocket;
 
         function input(type) {
             if (type == 'start')
@@ -68,11 +69,11 @@
                     type: 'game1/obstacleSolved',
                 });
             if (type == 'stop')
-                socket.emit('message', {
+                ssocket.emit('message', {
                     type: 'stopGame',
                 });
             if (type == 'pause')
-                socket.emit('message', {
+                ssocket.emit('message', {
                     type: 'pauseResume',
                 });
         }
@@ -94,7 +95,7 @@
                 reconnectionDelayMax: 10000,
             });
 
-            const ssocket = io(screenUrl, {
+            ssocket = io(screenUrl, {
                 secure: true,
                 reconnection: true,
                 rejectUnauthorized: false,

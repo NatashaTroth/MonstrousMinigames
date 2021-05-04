@@ -86,6 +86,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setConnectedUsers,
         setCountdownTime,
         setHasTimedOut,
+        setHasPaused,
     } = React.useContext(GameContext);
 
     React.useEffect(() => {
@@ -114,9 +115,18 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 case MessageTypes.gameHasReset:
                     history.push(`/screen/${roomId}/lobby`);
                     break;
+                case MessageTypes.gameHasPaused:
+                    setHasPaused(true);
+                    break;
+                case MessageTypes.gameHasResumed:
+                    setHasPaused(false);
+                    break;
                 case MessageTypes.gameHasTimedOut:
                     setHasTimedOut(true);
                     handleGameHasFinished(messageData as IGameState);
+                    break;
+                case MessageTypes.gameHasStopped:
+                    history.push(`/screen/${roomId}/lobby`);
                     break;
             }
         }
@@ -150,6 +160,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setCountdownTime,
         setFinished,
         setGameStarted,
+        setHasPaused,
         setHasTimedOut,
         setPlayerRanks,
         setPlayers,
@@ -180,13 +191,12 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         });
     }
 
-    screenSocket?.on('message', (data: IGameState | IConnectedUsers) => {
-        setMessageData(data);
-    });
-
-    function handleSetScreenSocket(val: SocketIOClient.Socket | undefined, roomId: string) {
-        setScreenSocket(val);
-        ScreenSocket.getInstance(val);
+    function handleSetScreenSocket(socket: SocketIOClient.Socket | undefined, roomId: string) {
+        setScreenSocket(socket);
+        ScreenSocket.getInstance(socket);
+        socket?.on('message', (data: IGameState | IConnectedUsers) => {
+            setMessageData(data);
+        });
         history.push(`/screen/${roomId}/lobby`);
     }
 

@@ -33,10 +33,10 @@ describe('Timer tests', () => {
 
     it('stops game when time out', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const stopGameSpy = jest.spyOn(CatchFoodGame.prototype as any, 'stopGame');
+        const stopGameSpy = jest.spyOn(CatchFoodGame.prototype as any, 'stopGameTimeout');
         jest.runAllTimers();
         expect(stopGameSpy).toHaveBeenCalledTimes(1);
-        expect(stopGameSpy).toHaveBeenCalledWith(true);
+        expect(catchFoodGame.gameState).toBe(GameState.Stopped);
     });
 
     it('should emit correct playerRanks when the game has timed out', async () => {

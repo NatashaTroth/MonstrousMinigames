@@ -41,9 +41,4 @@ describe('DisconnectedUserError handling tests', () => {
             catchFoodGame.playerHasCompletedObstacle('1', catchFoodGame.playersState['1'].obstacles[0].id)
         ).toThrow(DisconnectedUserError);
     });
-    it('throws a DisconnectedUserError when trying to disconnect an already disconnected user', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.disconnectPlayer('1');
-        expect(() => catchFoodGame.disconnectPlayer('1')).toThrow(DisconnectedUserError);
-    });
 });

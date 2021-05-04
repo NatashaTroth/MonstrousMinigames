@@ -33,6 +33,8 @@ export enum MessageTypes {
     obstacle = 'game1/obstacle',
     playerFinished = 'game1/playerFinished',
     started = 'game1/hasStarted',
+    pauseResume = 'pauseResume',
+    stopGame = 'stopGame',
 }
 
 export const localDevelopment = false;

@@ -9,7 +9,11 @@ describe('handleMessageData function', () => {
     let setObstacle: jest.Mock<any, any>;
     let setGameStarted: jest.Mock<any, any>;
     let setPlayerFinished: jest.Mock<any, any>;
+    let setHasPaused: jest.Mock<any, any>;
+    let resetGame: jest.Mock<any, any>;
+    let resetPlayer: jest.Mock<any, any>;
     let defaultData: { roomId: string; playerFinished: boolean };
+    const fakeSocket = '' as any;
 
     beforeEach(() => {
         setPlayerRank = jest.fn();
@@ -18,6 +22,9 @@ describe('handleMessageData function', () => {
         setObstacle = jest.fn();
         setGameStarted = jest.fn();
         setPlayerFinished = jest.fn();
+        resetGame = jest.fn();
+        resetPlayer = jest.fn();
+        setHasPaused = jest.fn();
 
         defaultData = {
             roomId: '1234',
@@ -34,6 +41,7 @@ describe('handleMessageData function', () => {
 
         handleMessageData({
             ...defaultData,
+            socket: fakeSocket,
             data: mockData,
             dependencies: {
                 setPlayerRank,
@@ -42,6 +50,9 @@ describe('handleMessageData function', () => {
                 setObstacle,
                 setGameStarted,
                 setPlayerFinished,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
             },
         });
 
@@ -57,6 +68,7 @@ describe('handleMessageData function', () => {
 
         handleMessageData({
             ...defaultData,
+            socket: fakeSocket,
             data: mockData,
             dependencies: {
                 setPlayerRank,
@@ -65,6 +77,9 @@ describe('handleMessageData function', () => {
                 setObstacle,
                 setGameStarted,
                 setPlayerFinished,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
             },
         });
 
@@ -81,6 +96,7 @@ describe('handleMessageData function', () => {
         handleMessageData({
             ...defaultData,
             data: mockData,
+            socket: fakeSocket,
             dependencies: {
                 setPlayerRank,
                 setPlayerAdmin,
@@ -88,6 +104,9 @@ describe('handleMessageData function', () => {
                 setObstacle,
                 setGameStarted,
                 setPlayerFinished,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
             },
         });
 
@@ -103,6 +122,7 @@ describe('handleMessageData function', () => {
         handleMessageData({
             ...defaultData,
             data: mockData,
+            socket: fakeSocket,
             dependencies: {
                 setPlayerRank,
                 setPlayerAdmin,
@@ -110,6 +130,9 @@ describe('handleMessageData function', () => {
                 setObstacle,
                 setGameStarted,
                 setPlayerFinished,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
             },
         });
 
@@ -125,6 +148,7 @@ describe('handleMessageData function', () => {
         handleMessageData({
             ...defaultData,
             data: mockData,
+            socket: fakeSocket,
             dependencies: {
                 setPlayerRank,
                 setPlayerAdmin,
@@ -132,6 +156,9 @@ describe('handleMessageData function', () => {
                 setObstacle,
                 setGameStarted,
                 setPlayerFinished,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
             },
         });
 
@@ -146,6 +173,7 @@ describe('handleMessageData function', () => {
         handleMessageData({
             ...defaultData,
             data: mockData as MessageData,
+            socket: fakeSocket,
             dependencies: {
                 setPlayerRank,
                 setPlayerAdmin,
@@ -153,6 +181,9 @@ describe('handleMessageData function', () => {
                 setObstacle,
                 setGameStarted,
                 setPlayerFinished,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
             },
         });
 
@@ -190,6 +221,7 @@ describe('handleMessageData function', () => {
         handleMessageData({
             ...defaultData,
             data: mockData,
+            socket: fakeSocket,
             dependencies: {
                 setPlayerRank,
                 setPlayerAdmin,
@@ -197,6 +229,9 @@ describe('handleMessageData function', () => {
                 setObstacle,
                 setGameStarted,
                 setPlayerFinished,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
             },
         });
 
@@ -212,6 +247,7 @@ describe('handleMessageData function', () => {
         handleMessageData({
             ...defaultData,
             data: mockData,
+            socket: fakeSocket,
             dependencies: {
                 setPlayerRank,
                 setPlayerAdmin,
@@ -219,6 +255,9 @@ describe('handleMessageData function', () => {
                 setObstacle,
                 setGameStarted,
                 setPlayerFinished,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
             },
         });
 

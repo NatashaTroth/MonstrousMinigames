@@ -1,8 +1,11 @@
 import { IUserInitMessage } from '../contexts/ControllerSocketContextProvider';
+import { Storage } from '../utils/storage/Storage';
 
 export function persistUser(
     data: IUserInitMessage,
     dependencies: {
+        localStorage: Storage;
+        sessionStorage: Storage;
         setPlayerAdmin: (val: boolean) => void;
         setPlayerNumber: (val: number) => void;
     }

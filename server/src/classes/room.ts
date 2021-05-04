@@ -114,7 +114,7 @@ class Room {
     }
 
     public stopGame() {
-        this.game?.stopGame();
+        this.game?.stopGameUserClosed();
     }
 
     public getUserById(userId: string): User {
@@ -127,7 +127,7 @@ class Room {
     public async resetGame() {
         this.users = this.getActiveUsers();
         this.clearInactiveUsers();
-        this.setState(RoomStates.OPEN);
+        this.setOpen();
     }
 
     private clearInactiveUsers() {
@@ -149,6 +149,9 @@ class Room {
     public isPlaying(): boolean {
         return this.state === RoomStates.PLAYING;
     }
+    public isFinished(): boolean {
+        return this.state === RoomStates.FINISHED;
+    }
     public isPaused(): boolean {
         return this.state === RoomStates.PAUSED;
     }
@@ -163,6 +166,9 @@ class Room {
     }
     public setPlaying(): void {
         this.setState(RoomStates.PLAYING);
+    }
+    public setFinished(): void {
+        this.setState(RoomStates.FINISHED);
     }
     public setPaused(): void {
         this.setState(RoomStates.PAUSED);
@@ -182,6 +188,7 @@ export default Room;
 export enum RoomStates {
     OPEN,
     PLAYING,
+    FINISHED,
     PAUSED,
     CLOSED,
 }
