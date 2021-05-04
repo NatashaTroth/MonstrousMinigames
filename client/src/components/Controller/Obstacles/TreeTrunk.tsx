@@ -9,7 +9,9 @@ import wood from '../../../images/wood.png';
 import { Obstacles } from '../../../utils/constants';
 import LinearProgressBar from '../../common/LinearProgressBar';
 import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from './ObstaclStyles.sc';
-import { Line, ObstacleItem, StyledObstacleImage, StyledTouchAppIcon, TouchContainer } from './TreeTrunk.sc';
+import {
+    Line, ObstacleItem, StyledObstacleImage, StyledTouchAppIcon, TouchContainer
+} from './TreeTrunk.sc';
 
 const MAX = 5000;
 const Treshold = 0;
@@ -85,7 +87,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
             touchEvent = null;
             send = true;
 
-            controllerSocket?.emit('message', { type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
+            controllerSocket?.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
             setShowInstructions(false);
             setTimeout(() => setObstacle(undefined), 100);
         };

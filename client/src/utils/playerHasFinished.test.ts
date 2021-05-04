@@ -1,4 +1,4 @@
-import { playerHasFinished } from '../../utils/playerHasFinished';
+import { playerHasFinished } from './playerHasFinished';
 
 describe('playerHasFinished function', () => {
     let setPlayerFinished: jest.Mock<any, any>;

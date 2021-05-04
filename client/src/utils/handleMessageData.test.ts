@@ -1,6 +1,7 @@
-import { MessageData } from '../../contexts/ControllerSocketContextProvider';
-import { MessageTypes, Obstacles } from '../../utils/constants';
-import { handleMessageData } from '../../utils/handleMessageData';
+import { MessageData } from '../contexts/ControllerSocketContextProvider';
+import { MessageTypes, Obstacles } from './constants';
+import { handleMessageData } from './handleMessageData';
+import { handleResetGame } from './handleResetGame';
 
 describe('handleMessageData function', () => {
     let setPlayerRank: jest.Mock<any, any>;
@@ -262,5 +263,80 @@ describe('handleMessageData function', () => {
         });
 
         expect(setPlayerRank).toHaveBeenLastCalledWith(mockData.rank);
+    });
+
+    it('when message type is gameHasPaused, handed setHasPaused should be called with true', () => {
+        const mockData = {
+            type: MessageTypes.gameHasPaused,
+        };
+
+        handleMessageData({
+            ...defaultData,
+            data: mockData as MessageData,
+            socket: fakeSocket,
+            dependencies: {
+                setPlayerRank,
+                setPlayerAdmin,
+                setPlayerNumber,
+                setObstacle,
+                setGameStarted,
+                setPlayerFinished,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
+            },
+        });
+
+        expect(setHasPaused).toHaveBeenLastCalledWith(true);
+    });
+
+    it('when message type is gameHasResumed, handed setHasPaused should be called with false', () => {
+        const mockData = {
+            type: MessageTypes.gameHasResumed,
+        };
+
+        handleMessageData({
+            ...defaultData,
+            data: mockData as MessageData,
+            socket: fakeSocket,
+            dependencies: {
+                setPlayerRank,
+                setPlayerAdmin,
+                setPlayerNumber,
+                setObstacle,
+                setGameStarted,
+                setPlayerFinished,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
+            },
+        });
+
+        expect(setHasPaused).toHaveBeenLastCalledWith(false);
+    });
+
+    it('when message type is gameHasStopped, handed handleResetGame should be called', () => {
+        const mockData = {
+            type: MessageTypes.gameHasStopped,
+        };
+
+        handleMessageData({
+            ...defaultData,
+            data: mockData as MessageData,
+            socket: fakeSocket,
+            dependencies: {
+                setPlayerRank,
+                setPlayerAdmin,
+                setPlayerNumber,
+                setObstacle,
+                setGameStarted,
+                setPlayerFinished,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
+            },
+        });
+
+        expect(handleResetGame).toHaveBeenCalledTimes(1);
     });
 });

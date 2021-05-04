@@ -1,11 +1,11 @@
-import { stringify } from 'query-string';
-
 import { HandleMessageDataDependencies } from './handleMessageData';
 import { handleSetControllerSocket } from './handleSetControllerSocket';
 import { ClickRequestDeviceMotion } from './permissions';
+import { Socket } from './socket/Socket';
+import { SocketIOAdapter } from './socket/SocketIOAdapter';
 
 interface HandleSocketConnDependencies extends HandleMessageDataDependencies {
-    setControllerSocket: (socker: SocketIOClient.Socket | undefined) => void;
+    setControllerSocket: (socket: Socket) => void;
     setPermissionGranted: (val: boolean) => void;
     setRoomId: (val: string) => void;
 }
@@ -23,26 +23,7 @@ export async function handleSocketConnection(
         setPermissionGranted(permission);
     }
 
-    const controllerSocket = io(
-        `${process.env.REACT_APP_BACKEND_URL}controller?${stringify({
-            name: name,
-            roomId: roomId,
-            userId: sessionStorage.getItem('userId') || '',
-        })}`,
-        {
-            secure: true,
-            reconnection: true,
-            rejectUnauthorized: false,
-            reconnectionDelayMax: 10000,
-            transports: ['websocket'],
-        }
-    );
-
     setRoomId(roomId || '');
 
-    controllerSocket.on('connect', () => {
-        if (controllerSocket) {
-            handleSetControllerSocket(controllerSocket, roomId || '', playerFinished, dependencies);
-        }
-    });
+    handleSetControllerSocket(new SocketIOAdapter(name, roomId), roomId || '', playerFinished, dependencies);
 }

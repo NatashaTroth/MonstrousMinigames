@@ -9,6 +9,7 @@ import { handleResetGame } from './handleResetGame';
 import history from './history';
 import { persistUser } from './persistUser';
 import { playerHasFinished } from './playerHasFinished';
+import { Socket } from './socket/Socket';
 import { localStorage } from './storage/LocalStorage';
 import { sessionStorage } from './storage/SessionStorage';
 
@@ -27,7 +28,7 @@ interface HandleMessageDataProps {
     data: MessageData;
     playerFinished: boolean;
     roomId: string | undefined;
-    socket: SocketIOClient.Socket | undefined;
+    socket: Socket;
     dependencies: HandleMessageDataDependencies;
 }
 export function handleMessageData(props: HandleMessageDataProps) {

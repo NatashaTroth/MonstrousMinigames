@@ -1,4 +1,4 @@
-import { gameHasStarted } from '../../utils/gameHasStarted';
+import { gameHasStarted } from './gameHasStarted';
 
 describe('gameHasStarted function', () => {
     const setGameStarted = jest.fn();

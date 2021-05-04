@@ -7,12 +7,12 @@ import { InMemorySocketFake } from '../../utils/socket/InMemorySocketFake';
 afterEach(cleanup);
 
 describe('InMemorySocket', () => {
-    it('when data was written, registered callback is called', () => {
+    it('when data was written, registered callback is called', async () => {
         const socket = new InMemorySocketFake();
 
         const callback = jest.fn();
-        socket.listen(callback);
-        socket.emit('data');
+        await socket.listen(callback);
+        await socket.emit('data');
         expect(callback).toHaveBeenLastCalledWith('data');
     });
 });

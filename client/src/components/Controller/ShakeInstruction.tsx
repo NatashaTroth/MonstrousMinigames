@@ -7,11 +7,7 @@ import { localDevelopment } from '../../utils/constants';
 import { sendMovement } from '../../utils/sendMovement';
 import FullScreenContainer from '../common/FullScreenContainer';
 import {
-    Container,
-    DialogContent,
-    StyledDialog,
-    StyledRotationIcon,
-    StyledShakeInstruction,
+    Container, DialogContent, StyledDialog, StyledRotationIcon, StyledShakeInstruction
 } from './ShakeInstruction.sc';
 
 const ShakeInstruction: React.FunctionComponent = () => {

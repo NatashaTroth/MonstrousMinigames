@@ -23,7 +23,7 @@ const Spider: React.FunctionComponent = () => {
         const solveObstacle = () => {
             currentCount = 0;
 
-            controllerSocket?.emit('message', { type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
+            controllerSocket?.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
             setObstacle(undefined);
         };
 

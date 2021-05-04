@@ -1,4 +1,4 @@
-import { gameHasTimedOut } from '../../utils/gameHasTimedOut';
+import { gameHasTimedOut } from './gameHasTimedOut';
 
 describe('gameHasTimedOut function', () => {
     const setPlayerFinished = jest.fn();

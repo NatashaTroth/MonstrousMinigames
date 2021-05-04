@@ -1,6 +1,6 @@
-import { MessageTypes } from '../../utils/constants';
-import { handleResetGame } from '../../utils/handleResetGame';
-import { InMemorySocketFake } from '../../utils/socket/InMemorySocketFake';
+import { MessageTypes } from './constants';
+import { handleResetGame } from './handleResetGame';
+import { InMemorySocketFake } from './socket/InMemorySocketFake';
 
 describe('handleResetGame', () => {
     const resetGame = jest.fn();

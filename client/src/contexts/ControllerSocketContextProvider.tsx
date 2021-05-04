@@ -3,13 +3,15 @@ import * as React from 'react';
 import { Obstacles } from '../utils/constants';
 import { handleSetControllerSocket } from '../utils/handleSetControllerSocket';
 import { handleSocketConnection } from '../utils/handleSocketConnection';
+import { Socket } from '../utils/socket/Socket';
+import { SocketIOAdapter } from '../utils/socket/SocketIOAdapter';
 import { GameContext } from './GameContextProvider';
 import { PlayerContext } from './PlayerContextProvider';
 
 export type MessageData = IUserInitMessage | IObstacleMessage | IGameFinished;
 
 export const defaultValue = {
-    controllerSocket: undefined,
+    controllerSocket: new SocketIOAdapter('test', 'test'),
     setControllerSocket: () => {
         // do nothing
     },
@@ -24,9 +26,9 @@ export interface IObstacleMessage {
     obstacleId: number;
 }
 interface IControllerSocketContext {
-    controllerSocket: SocketIOClient.Socket | undefined;
+    controllerSocket: Socket;
     isControllerConnected: boolean;
-    setControllerSocket: (val: SocketIOClient.Socket | undefined, roomId: string) => void;
+    setControllerSocket: (val: Socket, roomId: string) => void;
     handleSocketConnection: (roomId: string, name: string) => void;
 }
 
@@ -53,7 +55,7 @@ export interface IUser {
 }
 
 const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) => {
-    const [controllerSocket, setControllerSocket] = React.useState<SocketIOClient.Socket | undefined>(undefined);
+    const [controllerSocket, setControllerSocket] = React.useState<Socket>(new SocketIOAdapter('test', 'test'));
     const {
         setObstacle,
         setPlayerFinished,
@@ -79,7 +81,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
 
     const content = {
         controllerSocket,
-        setControllerSocket: (val: SocketIOClient.Socket | undefined, roomId: string) =>
+        setControllerSocket: (val: Socket, roomId: string) =>
             handleSetControllerSocket(val, roomId, playerFinished, {
                 ...dependencies,
                 setHasPaused,
