@@ -1,4 +1,5 @@
 import cors from 'cors';
+import { CronJob } from 'cron';
 import dotenv from 'dotenv';
 import express from 'express';
 
@@ -37,16 +38,37 @@ const io = require('socket.io')(expresServer, {
     },
 });
 
-const roomCount: number = parseInt(`${process.env.ROOM_COUNT}`, 10) || 20000;
+const roomCount: number = parseInt(`${process.env.ROOM_COUNT}`, 10) || 1000;
 
 const rs = new RoomService(roomCount);
+
+const test_room = process.env.TEST_ROOM;
+if (test_room) rs.createRoom(test_room);
+
 const ch = new ConnectionHandler(io, rs);
 ch.handle();
+
+let room_count = rs.roomCodes.length;
+const cron = new CronJob(
+    '0 * * * *',
+    function () {
+        try {
+            room_count = rs.roomCodes.length;
+            rs.cleanupRooms();
+            if (rs.roomCodes.length - room_count > 0)
+                console.info(`${rs.roomCodes.length - room_count} room(s) cleared`);
+        } catch (e) {
+            console.error(e);
+        }
+    },
+    null,
+    true
+);
+cron.start();
 
 server.app.get('/create-room', (req, res) => {
     const room = rs.createRoom();
 
     res.send({ roomId: room.id });
     console.info(`${room.id} | Room created`);
-    console.info(`${rs.roomCodes.length} room codes left`);
 });
