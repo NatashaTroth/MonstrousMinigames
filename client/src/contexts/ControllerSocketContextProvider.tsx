@@ -116,7 +116,8 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
                 case MESSAGETYPES.gameHasResumed:
                     setHasPaused(false);
                     break;
-                default:
+                case MESSAGETYPES.gameHasStopped:
+                    history.push(`/controller/${roomId}/lobby`);
                     break;
             }
         },

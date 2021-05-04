@@ -125,6 +125,9 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     setHasTimedOut(true);
                     handleGameHasFinished(messageData as IGameState);
                     break;
+                case MESSAGETYPES.gameHasStopped:
+                    history.push(`/screen/${roomId}/lobby`);
+                    break;
             }
         }
 
