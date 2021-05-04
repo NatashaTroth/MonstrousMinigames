@@ -52,21 +52,12 @@ class RoomService {
         }
         return false;
     }
-    public clearClosedRooms(): void {
+    public cleanupRooms(): void {
         const closedRooms = this.rooms.filter((room: Room) => {
-            return room.isClosed();
+            return room.isClosed() || Date.now() - room.timestamp > Globals.ROOM_TIME_OUT_HOURS * 360000;
         });
         closedRooms.forEach((room: Room) => {
             this.removeRoom(room.id);
-        });
-    }
-
-    public closeTimedOutRooms(): void {
-        const timedOutRooms = this.rooms.filter((room: Room) => {
-            return Date.now() - room.timestamp > Globals.ROOM_TIME_OUT_HOURS * 360000;
-        });
-        timedOutRooms.forEach((room: Room) => {
-            room.setClosed();
         });
     }
 }

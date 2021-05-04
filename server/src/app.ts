@@ -54,9 +54,9 @@ const cron = new CronJob(
     function () {
         try {
             room_count = rs.roomCodes.length;
-            rs.closeTimedOutRooms();
-            rs.clearClosedRooms();
-            if (rs.roomCodes.length - room_count > 0) console.info(`${rs.roomCodes.length - room_count} rooms cleared`);
+            rs.cleanupRooms();
+            if (rs.roomCodes.length - room_count > 0)
+                console.info(`${rs.roomCodes.length - room_count} room(s) cleared`);
         } catch (e) {
             console.error(e);
         }

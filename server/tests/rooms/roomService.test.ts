@@ -48,21 +48,22 @@ describe('RoomService', () => {
             rs.createRoom()
         }
         room.setClosed()
-        rs.clearClosedRooms()
+        rs.cleanupRooms()
         expect([room.id]).toEqual(rs.roomCodes);
     });
 
-    it(`should close rooms that are older than ${Globals.ROOM_TIME_OUT_HOURS} hours`, () => {
+    it(`should remove rooms that are older than ${Globals.ROOM_TIME_OUT_HOURS} hours`, () => {
         const room = rs.createRoom();
         room.timestamp = Date.now() - ((Globals.ROOM_TIME_OUT_HOURS * 360000) + 1)
-        rs.closeTimedOutRooms()
-        expect(room.isClosed()).toEqual(true);
+        rs.cleanupRooms()
+        expect(rs.roomCodes).toContain(room.id)
     });
 
     it(`should not close rooms that are not older than ${Globals.ROOM_TIME_OUT_HOURS} hours`, () => {
         const room = rs.createRoom();
+        
         room.timestamp = Date.now() - ((Globals.ROOM_TIME_OUT_HOURS - 1) * 360000)
-        rs.closeTimedOutRooms()
-        expect(room.isClosed()).toEqual(false);
+        rs.cleanupRooms()
+        expect(rs.roomCodes).not.toContain(room.id)
     });
 });
