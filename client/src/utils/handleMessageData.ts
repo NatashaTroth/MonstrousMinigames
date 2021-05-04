@@ -12,18 +12,19 @@ import history from './history';
 import { persistUser } from './persistUser';
 import { playerHasFinished } from './playerHasFinished';
 
+export interface HandleMessageDataDependencies {
+    setPlayerAdmin: (val: boolean) => void;
+    setPlayerNumber: (val: number) => void;
+    setPlayerFinished: (val: boolean) => void;
+    setObstacle: (obstacle: undefined | IObstacle) => void;
+    setPlayerRank: (val: number) => void;
+    setGameStarted: (val: boolean) => void;
+}
 interface HandleMessageDataProps {
     data: MessageData;
     playerFinished: boolean;
     roomId: string | undefined;
-    dependencies: {
-        setPlayerAdmin: (val: boolean) => void;
-        setPlayerNumber: (val: number) => void;
-        setPlayerFinished: (val: boolean) => void;
-        setObstacle: (obstacle: undefined | IObstacle) => void;
-        setPlayerRank: (val: number) => void;
-        setGameStarted: (val: boolean) => void;
-    };
+    dependencies: HandleMessageDataDependencies;
 }
 export function handleMessageData(props: HandleMessageDataProps) {
     let messageData;
