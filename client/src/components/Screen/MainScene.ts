@@ -14,11 +14,11 @@ import wood from '../../images/wood.png'
 const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
-const playerNumber = 1
+let playerNumber = 1
 let roomId = ""
 const moveplayers = [true, true, true, true]
 const playerFinished = [false, false, false, false]
-let socket 
+let socket: SocketIOClient.Socket
 
 class MainScene extends Phaser.Scene {
     constructor() {
@@ -26,6 +26,7 @@ class MainScene extends Phaser.Scene {
     }
 
     init(data:{roomId?:string}){
+        socket = this.handleSocketConnection()
         if(roomId !== undefined){
             roomId = data.roomId!
         }
@@ -130,15 +131,25 @@ class MainScene extends Phaser.Scene {
         logMessage(data: any){
             // eslint-disable-next-line no-console
             console.log(data)
+            if(data.type === "game1/gameState"){
+                playerNumber = data.data.playersState.length
+                //obstacles = data.data.obstacles
+                this.updateGameState(data.data.playersState)
+            }
         }
-        
+
+
+        updateGameState(playerData: any){
+            for(let i = 0; i < players.length; i++){
+                this.moveForward(players[i], playerData[i].positionX)
+            }
+        }
 
     update() {
-        socket = this.handleSocketConnection()
         socket.on("message", (data: any ) => this.logMessage(data))
         for (let i = 0; i < players.length; i++) {
             if (players[i] && moveplayers[i]) {
-                this.moveForward(players[i])
+                //this.moveForward(players[i], 0)
             } else {
                 players[i].anims.stop()
             }
@@ -198,8 +209,8 @@ class MainScene extends Phaser.Scene {
         return socket
     }
 
-    moveForward(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
-        player.x += 1
+    moveForward(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, toX: number) {
+        player.x = toX
     }
 
     player1ReachedGoal(playerIndex: number) {
