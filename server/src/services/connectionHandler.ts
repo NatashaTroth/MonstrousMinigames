@@ -139,11 +139,13 @@ class ConnectionHandler {
                             emitter.sendGameState(screenNameSpace, socket.room);
 
                             const gameStateInterval = setInterval(() => {
-                                if (!socket.room.isPlaying()) {
+                                if (!socket.room.isPlaying() && !socket.room.isPaused()) {
                                     clearInterval(gameStateInterval);
                                 }
                                 // send gamestate volatile
-                                emitter.sendGameState(screenNameSpace, socket.room, true);
+                                if (socket.room.isPlaying()) {
+                                    emitter.sendGameState(screenNameSpace, socket.room, true);
+                                }
                             }, 100);
                         }
 
@@ -292,7 +294,7 @@ class ConnectionHandler {
             }
         });
         this.gameEventEmitter.on(GameEventTypes.GameHasStarted, (data: GameEvents.GameHasStarted) => {
-            this.consoleInfo(data.roomId, GameEventTypes.GameHasFinished);
+            this.consoleInfo(data.roomId, GameEventTypes.GameHasStarted);
             emitter.sendGameHasStarted([controllerNamespace, screenNameSpace], data);
         });
         this.gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
