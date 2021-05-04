@@ -114,7 +114,7 @@ class Room {
     }
 
     public stopGame() {
-        this.game?.stopGame();
+        this.game?.stopGameUserClosed();
     }
 
     public getUserById(userId: string): User {

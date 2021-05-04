@@ -39,3 +39,8 @@ export interface PlayerHasDisconnectedInfo extends GameEventInterface {
     roomId: string;
     userId: string;
 }
+
+export interface PlayerHasReconnectedInfo extends GameEventInterface {
+    roomId: string;
+    userId: string;
+}

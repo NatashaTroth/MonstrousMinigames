@@ -4,10 +4,9 @@ import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFood
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 // ..
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
-import { leaderboard, roomId, users } from '../mockData';
+import { leaderboard, roomId } from '../mockData';
 import {
-    completeNextObstacle, finishPlayer, startAndFinishGameDifferentTimes,
-    startGameAndAdvanceCountdown
+    completeNextObstacle, finishPlayer, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 // const TRACK_LENGTH = 500;
@@ -15,7 +14,7 @@ import {
 let catchFoodGame: CatchFoodGame;
 let gameEventEmitter: CatchFoodGameEventEmitter;
 
-describe('Disconnect Player tests', () => {
+describe('Reconnect Player tests', () => {
     beforeAll(() => {
         gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
     });
@@ -26,66 +25,80 @@ describe('Disconnect Player tests', () => {
         jest.useFakeTimers();
     });
 
-    it('disconnectPlayer should initialise player isActive as true', async () => {
+    it('reconnectPlayer should set player isActive to true', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
+        catchFoodGame.disconnectPlayer('1');
+        catchFoodGame.reconnectPlayer('1');
         expect(catchFoodGame.playersState['1'].isActive).toBeTruthy();
     });
 
-    it('disconnectPlayer should set player isActive to false', async () => {
+    it('reconnectPlayer should not change anything if player was not disconnected (no error should be thrown)', async () => {
+        startGameAndAdvanceCountdown(catchFoodGame);
+        catchFoodGame.reconnectPlayer('1');
+        expect(catchFoodGame.playersState['1'].isActive).toBeTruthy();
+    });
+
+    it('cannot reconnect player when game has stopped', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.disconnectPlayer('1');
+        catchFoodGame.stopGameUserClosed();
+        try {
+            catchFoodGame.reconnectPlayer('1');
+        } catch (e) {
+            //ignore for this test
+        }
         expect(catchFoodGame.playersState['1'].isActive).toBeFalsy();
     });
 
-    it('cannot disconnect player when game has stopped', async () => {
+    it('cannot reconnect player when game has finished', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.stopGameUserClosed();
+        catchFoodGame.disconnectPlayer('1');
+
+        finishPlayer(catchFoodGame, '2');
+        finishPlayer(catchFoodGame, '3');
+        finishPlayer(catchFoodGame, '4');
         try {
-            catchFoodGame.disconnectPlayer('1');
+            catchFoodGame.reconnectPlayer('1');
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.playersState['1'].isActive).toBeTruthy();
+        expect(catchFoodGame.playersState['1'].isActive).toBeFalsy();
     });
 
-    it('cannot disconnect player when game has finished', async () => {
-        startAndFinishGameDifferentTimes(catchFoodGame);
-        try {
-            catchFoodGame.disconnectPlayer('1');
-        } catch (e) {
-            //ignore for this test
-        }
-        expect(catchFoodGame.playersState['1'].isActive).toBeTruthy();
-    });
-
-    it('cannot run forward when disconnected', async () => {
+    it('can run forward after being reconnected', async () => {
         const SPEED = 50;
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.runForward('1', SPEED);
         catchFoodGame.disconnectPlayer('1');
-        try {
-            catchFoodGame.runForward('1');
-        } catch (e) {
-            //ignore for this test
-        }
+        catchFoodGame.reconnectPlayer('1');
+        catchFoodGame.runForward('1', SPEED);
         expect(catchFoodGame.playersState['1'].positionX).toBe(SPEED);
     });
 
-    it('cannot complete an obstacle when disconnected', async () => {
+    it('can complete an obstacle after being reconnected', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const obstaclesLength = catchFoodGame.playersState['1'].obstacles.length;
-        completeNextObstacle(catchFoodGame, '1');
         catchFoodGame.disconnectPlayer('1');
-
-        try {
-            catchFoodGame.playerHasCompletedObstacle('1', catchFoodGame.playersState['1'].obstacles[0].id);
-        } catch (e) {
-            //ignore for this test
-        }
+        catchFoodGame.reconnectPlayer('1');
+        completeNextObstacle(catchFoodGame, '1');
         expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstaclesLength - 1);
     });
 
-    it('should emit isActive is false when a player was disconnected and the game has finished', async () => {
+    it('should not finish game until reconnected player is finished', async () => {
+        startGameAndAdvanceCountdown(catchFoodGame);
+
+        // finish game
+        catchFoodGame.disconnectPlayer('3');
+        catchFoodGame.disconnectPlayer('4');
+        finishPlayer(catchFoodGame, '1');
+        catchFoodGame.reconnectPlayer('4');
+        finishPlayer(catchFoodGame, '2');
+
+        expect(catchFoodGame.gameState).toBe(GameState.Started);
+        finishPlayer(catchFoodGame, '4');
+        expect(catchFoodGame.gameState).toBe(GameState.Finished);
+    });
+
+    it('should emit isActive is true when a player was reconnected and the game has finished', async () => {
         const dateNow = 1618665766156;
         Date.now = jest.fn(() => dateNow);
         startGameAndAdvanceCountdown(catchFoodGame);
@@ -104,17 +117,13 @@ describe('Disconnect Player tests', () => {
         catchFoodGame.disconnectPlayer('3');
         catchFoodGame.disconnectPlayer('4');
         finishPlayer(catchFoodGame, '1');
+        catchFoodGame.reconnectPlayer('4');
         finishPlayer(catchFoodGame, '2');
+        finishPlayer(catchFoodGame, '4');
 
         expect(eventData.playerRanks[0].isActive).toBeTruthy();
         expect(eventData.playerRanks[1].isActive).toBeTruthy();
         expect(eventData.playerRanks[2].isActive).toBeFalsy();
-        expect(eventData.playerRanks[3].isActive).toBeFalsy();
-    });
-
-    it('should stop the game when all players have disconnected', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
-        users.forEach(user => catchFoodGame.disconnectPlayer(user.id));
-        expect(catchFoodGame.gameState).toBe(GameState.Stopped);
+        expect(eventData.playerRanks[3].isActive).toBeTruthy();
     });
 });

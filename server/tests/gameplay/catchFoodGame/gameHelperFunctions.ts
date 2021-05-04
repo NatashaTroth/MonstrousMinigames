@@ -135,7 +135,7 @@ export function getToPausedGameState(catchFoodGame: CatchFoodGame) {
 
 export function getToStoppedGameState(catchFoodGame: CatchFoodGame) {
     startGameAndAdvanceCountdown(catchFoodGame);
-    catchFoodGame.stopGame();
+    catchFoodGame.stopGameUserClosed();
     expect(catchFoodGame.gameState).toBe(GameState.Stopped);
 }
 
