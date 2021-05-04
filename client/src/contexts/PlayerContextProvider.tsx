@@ -33,7 +33,7 @@ export const defaultValue = {
         // do nothing
     },
 };
-interface IObstacle {
+export interface IObstacle {
     type: Obstacles;
     id: number;
 }

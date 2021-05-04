@@ -2,12 +2,13 @@ import { stringify } from 'query-string';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { MessageTypes, Obstacles } from '../utils/constants';
+import { Obstacles } from '../utils/constants';
+import { handleMessageData } from '../utils/handleMessageData';
 import { ClickRequestDeviceMotion } from '../utils/permissions';
 import { GameContext } from './GameContextProvider';
 import { PlayerContext } from './PlayerContextProvider';
 
-type MessageData = IUserInitMessage | IObstacleMessage | IGameFinished;
+export type MessageData = IUserInitMessage | IObstacleMessage | IGameFinished;
 
 export const defaultValue = {
     controllerSocket: undefined,
@@ -33,16 +34,16 @@ interface IControllerSocketContext {
 
 export const ControllerSocketContext = React.createContext<IControllerSocketContext>(defaultValue);
 
-interface IUserInitMessage {
+export interface IUserInitMessage {
     name?: string;
     type?: string;
-    userId?: 'userInit';
+    userId?: string;
     roomId?: string;
-    isAdmin?: boolean;
-    number?: number;
+    isAdmin: boolean;
+    number: number;
 }
 
-interface IGameFinished {
+export interface IGameFinished {
     type: string;
     rank: number;
 }
@@ -66,69 +67,26 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
     } = React.useContext(PlayerContext);
     const history = useHistory();
 
-    const { setGameStarted, roomId, setRoomId } = React.useContext(GameContext);
-
-    const handleMessageData = React.useCallback(
-        (data: MessageData) => {
-            let messageData;
-
-            switch (data.type) {
-                case MessageTypes.userInit:
-                    messageData = data as IUserInitMessage;
-                    sessionStorage.setItem('userId', messageData.userId || '');
-                    localStorage.setItem('name', messageData.name || '');
-                    sessionStorage.setItem('roomId', messageData.roomId || '');
-                    setIsPlayerAdmin(messageData.isAdmin || false);
-                    setPlayerNumber(messageData.number || 0);
-                    break;
-                case 'game1/obstacle':
-                    messageData = data as IObstacleMessage;
-                    setObstacle({ type: messageData.obstacleType, id: messageData.obstacleId });
-
-                    break;
-                case 'game1/playerFinished':
-                    messageData = data as IGameFinished;
-                    if (!playerFinished) {
-                        setPlayerFinished(true);
-                        setPlayerRank(messageData.rank);
-                    }
-                    break;
-                case 'game1/hasStarted':
-                    document.body.style.overflow = 'hidden';
-                    document.body.style.position = 'fixed';
-                    setGameStarted(true);
-
-                    history.push(`/controller/${roomId}/game1`);
-                    break;
-                case MessageTypes.gameHasReset:
-                    history.push(`/controller/${roomId}/lobby`);
-                    break;
-                case MessageTypes.gameHasTimedOut:
-                    messageData = data as IGameFinished;
-                    setPlayerFinished(true);
-                    setPlayerRank(messageData.rank);
-                    break;
-                default:
-                    break;
-            }
-        },
-        [
-            history,
-            playerFinished,
-            roomId,
-            setGameStarted,
-            setIsPlayerAdmin,
-            setObstacle,
-            setPlayerFinished,
-            setPlayerNumber,
-            setPlayerRank,
-        ]
-    );
+    const { setGameStarted, setRoomId } = React.useContext(GameContext);
 
     function handleSetControllerSocket(socket: SocketIOClient.Socket | undefined, roomId: string) {
         setControllerSocket(socket);
         if (socket) {
-            socket.on('message', (data: MessageData) => handleMessageData(data));
+            socket.on('message', (data: MessageData) =>
+                handleMessageData({
+                    data,
+                    playerFinished,
+                    roomId,
+                    dependencies: {
+                        setPlayerAdmin: setIsPlayerAdmin,
+                        setPlayerNumber,
+                        setPlayerFinished,
+                        setObstacle,
+                        setPlayerRank,
+                        setGameStarted,
+                    },
+                })
+            );
             history.push(`/controller/${roomId}/lobby`);
         }
     }

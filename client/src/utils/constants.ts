@@ -30,6 +30,9 @@ export enum MessageTypes {
     gameHasTimedOut = 'gameHasTimedOut',
     gameHasPaused = 'gameHasPaused',
     gameHasResumed = 'gameHasResumed',
+    obstacle = 'game1/obstacle',
+    playerFinished = 'game1/playerFinished',
+    started = 'game1/hasStarted',
 }
 
 export const localDevelopment = false;

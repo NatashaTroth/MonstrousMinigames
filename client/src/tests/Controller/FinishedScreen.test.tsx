@@ -12,6 +12,32 @@ import { defaultValue as gameContextDefaultValue, GameContext } from '../../cont
 import { defaultValue, PlayerContext } from '../../contexts/PlayerContextProvider';
 
 afterEach(cleanup);
+
+// interface ISocket {
+//     listen: (callback: <T>(val: T) => void) => void;
+//     write: <T>(val: T) => void;
+// }
+
+// class InMemorySocket implements ISocket {
+//     listen(callback: <T>(val: T) => void) {
+//         // do nothing
+//     }
+
+//     write<T>(val: T) {
+//         // do nothing
+//     }
+// }
+
+// describe('InMemorySocket', () => {
+//     it('when data was written, registered callback is called', () => {
+//         const socket = new InMemorySocket();
+
+//         const callback = jest.fn();
+//         socket.listen(callback);
+//         socket.write('data');
+//         expect(callback).toHaveBeenLastCalledWith(['data']);
+//     });
+// });
 describe('Screen FinishedScreen', () => {
     let io: Server, serverSocket: Socket, clientSocket: SocketIOClient.Socket;
 

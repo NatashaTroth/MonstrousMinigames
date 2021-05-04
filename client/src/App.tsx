@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { isMobileOnly } from 'react-device-detect';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Route, Router, Switch } from 'react-router-dom';
 
 import { AppContainer } from './App.sc';
 import Impressum from './components/common/Impressum';
@@ -19,6 +19,7 @@ import GameContextProvider from './contexts/GameContextProvider';
 import PlayerContextProvider from './contexts/PlayerContextProvider';
 import ScreenSocketContextProvider from './contexts/ScreenSocketContextProvider';
 import { ObstacleRoutes } from './utils/constants';
+import history from './utils/history';
 
 export interface IRouteParams {
     id?: string;
@@ -26,7 +27,7 @@ export interface IRouteParams {
 
 const App: React.FunctionComponent = () => {
     return (
-        <Router>
+        <Router history={history}>
             <AppContainer className="App">
                 <GameContextProvider>
                     <PlayerContextProvider>
