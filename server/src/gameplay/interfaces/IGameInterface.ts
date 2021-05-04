@@ -1,12 +1,12 @@
-import { User } from '../../interfaces/interfaces';
-import { GameStateInfo, PlayerState } from '../catchFood/interfaces';
+import User from '../../classes/user';
+import { GameStateInfo } from '../catchFood/interfaces';
+import { GameState } from '../enums/GameState';
 // import GameEventEmitter from '../../classes/GameEventEmitter';
-import { HashTable } from './';
-import { GameState } from './GameState';
+import { HashTable, IPlayerState } from './';
 
-export interface GameInterface {
+export interface IGameInterface {
     roomId: string;
-    playersState: HashTable<PlayerState>; //TODO change for each game -> use ||
+    playersState: HashTable<IPlayerState>;
     gameState: GameState;
     currentRank: number;
 

@@ -1,4 +1,5 @@
 import { CatchFoodGame } from '../../../src/gameplay';
+import { leaderboard, roomId } from '../mockData';
 import {
     finishGame, getGameFinishedDataDifferentTimes, getGameFinishedDataSameRanks,
     startGameAndAdvanceCountdown
@@ -11,7 +12,7 @@ const dateNow = 1618665766156;
 
 describe('Game logic tests', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 

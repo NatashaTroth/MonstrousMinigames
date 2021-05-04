@@ -1,5 +1,5 @@
+import { GameState } from '../../enums';
 import { PlayerState } from './';
-import { GameState } from '../../interfaces';
 
 export interface GameStateInfo {
     roomId: string;

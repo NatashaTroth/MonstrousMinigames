@@ -1,5 +1,5 @@
 import { CatchFoodGame } from '../../../src/gameplay';
-import { users } from '../mockUsers';
+import { leaderboard, roomId, users } from '../mockData';
 import { startAndFinishGame } from './gameHelperFunctions';
 
 const NEW_TRACKLENGTH = 1000;
@@ -8,7 +8,7 @@ let catchFoodGame: CatchFoodGame;
 
 describe('Create new game tests', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
         startAndFinishGame(catchFoodGame);
         catchFoodGame.createNewGame(users, NEW_TRACKLENGTH, NEW_NUMBER_OF_OBSTACLES);

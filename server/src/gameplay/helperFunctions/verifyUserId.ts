@@ -1,6 +1,6 @@
-import { WrongUserIdError } from '../../customErrors';
-import { HashTable } from '../../interfaces';
-import { PlayerState } from '../interfaces';
+import { PlayerState } from '../catchFood/interfaces';
+import { WrongUserIdError } from '../customErrors';
+import { HashTable } from '../interfaces';
 
 export function verifyUserId(playersState: HashTable<PlayerState>, userId: string): void {
     // if (!playersState.hasOwnProperty(userId))

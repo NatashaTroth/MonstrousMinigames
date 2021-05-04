@@ -1,5 +1,6 @@
 import { CatchFoodGame } from '../../../src/gameplay';
-import { GameState } from '../../../src/gameplay/interfaces/GameState';
+import { GameState } from '../../../src/gameplay/enums/GameState';
+import { leaderboard, roomId } from '../mockData';
 import { startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
@@ -9,7 +10,7 @@ describe('Pause tests', () => {
     beforeEach(() => {
         // global.Date.now = jest.fn(() => new Date('2019-04-07T10:20:30Z').getTime())
         Date.now = jest.fn(() => dateNow);
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
     afterEach(() => {
@@ -68,7 +69,7 @@ describe('Resume tests', () => {
     beforeEach(() => {
         // global.Date.now = jest.fn(() => new Date('2019-04-07T10:20:30Z').getTime())
         Date.now = jest.fn(() => dateNow);
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
     afterEach(() => {

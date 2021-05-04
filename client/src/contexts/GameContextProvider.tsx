@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { resetObstacle } from '../components/Controller/Obstacles/TreeTrunk';
-import { OBSTACLES } from '../utils/constants';
+import { Obstacles } from '../utils/constants';
 import { IUser } from './ControllerSocketContextProvider';
 import { IPlayerRank } from './ScreenSocketContextProvider';
 
@@ -76,7 +76,7 @@ interface IGameContext {
 
 interface IObstacle {
     positionX: number;
-    type: OBSTACLES;
+    type: Obstacles;
 }
 
 export interface IPlayerState {

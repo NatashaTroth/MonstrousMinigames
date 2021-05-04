@@ -16,7 +16,7 @@
 // myEmitter.emit('event', 'a', 'b');
 
 import GameEventEmitter from '../../classes/GameEventEmitter';
-import { GameEventTypes } from '../interfaces';
+import { GameEventTypes } from '../enums';
 // import {
 //     GameHasFinished, GameHasStarted, GameStateHasChanged, ObstacleReachedInfo, PlayerHasFinished, Game
 // } from './interfaces/GameEvents';
