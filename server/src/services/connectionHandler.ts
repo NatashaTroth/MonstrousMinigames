@@ -298,19 +298,19 @@ class ConnectionHandler {
         this.gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
             console.info(data.roomId + ' | Game has finished');
             const room = rs.getRoomById(data.roomId);
-            room.setClosed();
+            room.setFinished();
             emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data);
         });
         this.gameEventEmitter.on(GameEventTypes.GameHasTimedOut, (data: GameEvents.GameHasFinished) => {
             console.info(data.roomId + ' | Game has timed out');
             const room = rs.getRoomById(data.roomId);
-            room.setClosed();
+            room.setFinished();
             emitter.sendGameHasTimedOut([controllerNamespace, screenNameSpace], data);
         });
         this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameEvents.GameStateHasChanged) => {
             console.info(data.roomId + ' | Game has stopped');
             const room = rs.getRoomById(data.roomId);
-            room.setClosed();
+            room.setFinished();
             emitter.sendMessage(MessageTypes.GAME_HAS_STOPPED, [controllerNamespace, screenNameSpace], data.roomId);
         });
         this.gameEventEmitter.on(GameEventTypes.GameHasPaused, (data: GameEvents.GameStateHasChanged) => {
