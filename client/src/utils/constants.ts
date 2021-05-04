@@ -28,4 +28,4 @@ export enum MESSAGETYPES {
     stopGame = 'stopGame',
 }
 
-export const localDevelopment = true;
+export const localDevelopment = false;
