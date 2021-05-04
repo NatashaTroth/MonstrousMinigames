@@ -76,8 +76,11 @@ class Room {
         } else {
             if (this.isPlaying()) {
                 user.setActive(false);
-                if (!this.hasActiveUsers()) {
+                if (this.hasActiveUsers()) {
+                    this.game.disconnectPlayer(userId);
+                } else {
                     this.setClosed();
+                    this.game.stopGameAllUsersDisconnected();
                 }
             }
         }

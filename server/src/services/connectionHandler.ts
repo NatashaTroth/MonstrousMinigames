@@ -101,13 +101,12 @@ class ConnectionHandler {
             socket.on('disconnect', () => {
                 console.info(socket.room.id + ' | Controller disconnected: ' + socket.user.id);
                 try {
-                    socket.room.game.disconnectPlayer(socket.user.id);
+                    socket.room.userDisconnected(socket.user.id);
                 } catch (e) {
                     emitter.sendErrorMessage(socket, e);
                     console.error(roomId + ' | ' + e.name + ' | ' + userId);
                     return;
                 }
-                socket.room.userDisconnected(socket.user.id);
                 if (socket.room.isOpen()) {
                     emitter.sendConnectedUsers(screenNameSpace, socket.room);
                     const admin = socket.room.admin;
@@ -263,7 +262,7 @@ class ConnectionHandler {
                         break;
                     }
                     default: {
-                        console.info(message);
+                        //console.info(message);
                     }
                 }
             });

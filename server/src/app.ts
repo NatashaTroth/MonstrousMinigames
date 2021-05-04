@@ -50,7 +50,7 @@ ch.handle();
 
 let room_count = rs.roomCodes.length;
 const cron = new CronJob(
-    '0 * * * *',
+    '*/10 * * * *',
     function () {
         try {
             room_count = rs.roomCodes.length;
