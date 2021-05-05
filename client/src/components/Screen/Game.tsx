@@ -3,12 +3,20 @@ import * as React from 'react'
 import Countdown from 'react-countdown'
 
 import { GameContext } from '../../contexts/GameContextProvider'
-import { Container, ContainerTimer, CountdownRenderer, Go } from './Game.sc'
+import { Container, Go } from './Game.sc'
 import MainScene from './MainScene'
 
+//import Countdown from 'react-countdown'
+
+
+
+
+
+
 const Game: React.FunctionComponent = () => {
-    const { countdownTime, roomId } = React.useContext(GameContext)
-    const [countdown] = React.useState(Date.now() + countdownTime)
+    //const { countdownTime, roomId } = React.useContext(GameContext)
+    const { roomId } = React.useContext(GameContext)
+    //const [countdown] = React.useState(Date.now() + countdownTime)
 
     React.useEffect(() => {
         const game = new Phaser.Game({
@@ -29,19 +37,8 @@ const Game: React.FunctionComponent = () => {
 
     return (
         <Container>
-            <Countdown
-                date={countdown}
-                // autoStart={false}
-                renderer={props =>
-                    props.completed ? (
-                        <GameContent displayGo />
-                    ) : (
-                        <ContainerTimer>
-                            <CountdownRenderer>{props.seconds}</CountdownRenderer>
-                        </ContainerTimer>
-                    )
-                }
-            />
+            <Countdown></Countdown>
+            <GameContent displayGo />
         </Container>
     );
 };

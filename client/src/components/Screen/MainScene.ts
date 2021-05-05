@@ -1,4 +1,3 @@
-
 import Phaser from 'phaser'
 import { stringify } from 'querystring'
 
@@ -10,15 +9,16 @@ import steffi from "../../images/steffi_spritesheet.png"
 import susi from "../../images/susi_spritesheet.png"
 import wood from '../../images/wood.png'
 
-
 const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
+//let obstaclePositions: number[] = []
 let playerNumber = 1
 let roomId = ""
 const moveplayers = [true, true, true, true]
 const playerFinished = [false, false, false, false]
 let socket: SocketIOClient.Socket
+let trackLength = 0
 
 class MainScene extends Phaser.Scene {
     constructor() {
@@ -42,7 +42,7 @@ class MainScene extends Phaser.Scene {
         this.load.image('goal', goal)
         this.load.image('wood', wood)
 
-        this.load.audio('music', ['../../audio/Sound_Game.wav']);
+        //this.load.audio('music', ['../../audio/Sound_Game.wav']);
     }
 
     create() {
@@ -128,14 +128,40 @@ class MainScene extends Phaser.Scene {
         }
         }
 
-        logMessage(data: any){
+        handleMessage(data: any){
             // eslint-disable-next-line no-console
             console.log(data)
-            if(data.type === "game1/gameState"){
-                playerNumber = data.data.playersState.length
-                //obstacles = data.data.obstacles
-                this.updateGameState(data.data.playersState)
+            if(data.type == "error"){
+                this.handleError(data.msg)
+            } else {
+                if (trackLength === 0 && data.data !== undefined) {
+                    trackLength = data.data.trackLength
+                }
+                if (!roomId) {
+                    roomId = data.data.roomId
+                }
+                if(data.type === "game1/gameState"){
+                    playerNumber = data.data.playersState.length
+                    //obstaclePositions = data.data.playerState.obstacles
+                    this.updateGameState(data.data.playersState)
+                }
+            
             }
+        }
+
+        handleError(msg: string){
+            this.add.text(32, 32, `Error: ${  msg}`, { font: "30px Arial"});
+            players.forEach(player => {
+                player.destroy()
+            });
+
+            obstacles.forEach(obstacle => {
+                obstacle.destroy()
+            });
+        }
+
+        removePlayerSprite(index: number){
+            players[index].destroy()
         }
 
 
@@ -146,15 +172,15 @@ class MainScene extends Phaser.Scene {
         }
 
     update() {
-        socket.on("message", (data: any ) => this.logMessage(data))
+        socket.on("message", (data: any ) => this.handleMessage(data))
         for (let i = 0; i < players.length; i++) {
-            if (players[i] && moveplayers[i]) {
+            /* if (players[i] && moveplayers[i]) {
                 //this.moveForward(players[i], 0)
             } else {
                 players[i].anims.stop()
-            }
+            } */
             this.physics.collide(players[i], goals[i], () => {
-                this.player1ReachedGoal(i)
+                this.playerReachedGoal(i)
             })
 
         }
@@ -213,7 +239,7 @@ class MainScene extends Phaser.Scene {
         player.x = toX
     }
 
-    player1ReachedGoal(playerIndex: number) {
+    playerReachedGoal(playerIndex: number) {
         players[playerIndex].anims.stop()
         moveplayers[playerIndex] = false
         playerFinished[playerIndex] = true
