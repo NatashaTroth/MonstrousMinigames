@@ -18,9 +18,14 @@ describe('Leaderboard tests for Catch Food Game', () => {
     });
 
     beforeEach(() => {
+        jest.useFakeTimers();
         leaderboard = new Leaderboard(roomId);
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        jest.useFakeTimers();
+    });
+
+    afterEach(async () => {
+        jest.runAllTimers();
+        jest.clearAllMocks();
     });
 
     it('should call addGameToHistory on leaderboard', async () => {

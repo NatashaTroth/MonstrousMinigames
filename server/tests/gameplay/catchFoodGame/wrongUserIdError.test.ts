@@ -13,6 +13,11 @@ describe('WrongUserIdError handling tests', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
     });
 
+    afterEach(async () => {
+        jest.runAllTimers();
+        jest.clearAllMocks();
+    });
+
     it('the WrongUserIdError has a userId property', async () => {
         try {
             catchFoodGame.runForward(USER_ID_THAT_DOES_NOT_EXIST);

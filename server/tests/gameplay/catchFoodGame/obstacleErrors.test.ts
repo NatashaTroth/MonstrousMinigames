@@ -18,6 +18,11 @@ describe('NotAtObstacleError handling tests', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
     });
 
+    afterEach(async () => {
+        jest.runAllTimers();
+        jest.clearAllMocks();
+    });
+
     it('the NotAtObstacleError has a userId property', async () => {
         try {
             catchFoodGame.playerHasCompletedObstacle(USER_ID, OBSTACLE_ID_THAT_IS_NEXT);
