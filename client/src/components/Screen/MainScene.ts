@@ -13,19 +13,22 @@ const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 //let obstaclePositions: number[] = []
-let playerNumber = 1
+let playerNumber = 0
 let roomId = ""
 const moveplayers = [true, true, true, true]
 const playerFinished = [false, false, false, false]
 let socket: SocketIOClient.Socket
 let trackLength = 0
+const animations = ["franzWalk", "susiWalk", "noahWalk", "steffiWalk"]
+
+let logged = false 
 
 class MainScene extends Phaser.Scene {
     constructor() {
         super('MainScene')
     }
 
-    init(data:{roomId:string}){
+    init(data:{roomId:string, playerNumber: number}){
         if(roomId === "" && data.roomId !== undefined){
             roomId = data.roomId
         }
@@ -52,18 +55,18 @@ class MainScene extends Phaser.Scene {
         players.push(this.physics.add.sprite(10, 10, 'franz'))
         goals.push(this.physics.add.sprite(1600, 100, 'goal'))
 
-        if(playerNumber >= 2){
+
             players.push(this.physics.add.sprite(68, 300, 'susi'))
             goals.push(this.physics.add.sprite(1050, 300, 'goal'))
-        }
-        if(playerNumber >= 3){
+        
+
             players.push(this.physics.add.sprite(68, 500, 'noah'))
             goals.push(this.physics.add.sprite(1050, 500, 'goal'))
-        }
-        if(playerNumber >= 4){
+        
+
             players.push(this.physics.add.sprite(68, 700, 'steffi'))
             goals.push(this.physics.add.sprite(1050, 700, 'goal'))
-        }
+        
 
         const arr = Array.from({ length: 8 }, () => Math.floor(Math.random() * 600) + 200)
 
@@ -122,10 +125,7 @@ class MainScene extends Phaser.Scene {
             frameRate: 6,
             repeat: -1
         });
-        const animations = ["franzWalk", "susiWalk", "noahWalk", "steffiWalk"]
-        for(let i = 0; i < playerNumber; i++){
-            players[i].anims.play(animations[i])
-        }
+        
         }
 
         handleMessage(data: any){
@@ -139,8 +139,27 @@ class MainScene extends Phaser.Scene {
                     roomId = data.data.roomId
                 }
                 if(data.type === "game1/gameState"){
-                    playerNumber = data.data.playersState.length
-                    //obstaclePositions = data.data.playerState.obstacles
+                    if(logged == false){
+                        logged = true
+                        if(playerNumber == 0){
+                            // eslint-disable-next-line no-console
+                            console.log(data.data.playersState.length)
+                            playerNumber = data.data.playersState.length
+
+                            if(playerNumber < 4){
+                                for(let i = playerNumber; i < 4; i++){
+                                    // eslint-disable-next-line no-console
+                                console.log(i)
+                                    players[i].destroy()
+                                }
+                            }
+                            for(let i = 0; i < playerNumber; i++){
+                                players[i].anims.play(animations[i])
+                            }
+                        }
+                        
+                    }
+                    
                     this.updateGameState(data.data.playersState)
                 }
             
@@ -164,7 +183,7 @@ class MainScene extends Phaser.Scene {
 
 
         updateGameState(playerData: any){
-            for(let i = 0; i < players.length; i++){
+            for(let i = 0; i < playerNumber; i++){
                 if(players[i] !== undefined && playerData !== undefined)
                     this.moveForward(players[i], playerData[i].positionX)
             }

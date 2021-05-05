@@ -17,6 +17,7 @@ const Game: React.FunctionComponent = () => {
     //const { countdownTime, roomId } = React.useContext(GameContext)
     const { roomId } = React.useContext(GameContext)
     //const [countdown] = React.useState(Date.now() + countdownTime)
+
     React.useEffect(() => {
         const game = new Phaser.Game({
             parent: 'game-root',
