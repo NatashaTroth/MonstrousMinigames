@@ -5,6 +5,7 @@ import forest from '../../images/forest.png'
 import franz from '../../images/franz_spritesheet.png'
 import goal from '../../images/goal.png'
 import noah from "../../images/noah_spritesheet.png"
+import spider from "../../images/spider.png"
 import steffi from "../../images/steffi_spritesheet.png"
 import susi from "../../images/susi_spritesheet.png"
 import wood from '../../images/wood.png'
@@ -44,6 +45,7 @@ class MainScene extends Phaser.Scene {
         this.load.image('forest', forest)
         this.load.image('goal', goal)
         this.load.image('wood', wood)
+        this.load.image('spider', spider)
     }
 
     create() {
@@ -166,7 +168,7 @@ class MainScene extends Phaser.Scene {
             console.log(`x: ${  x  }y: ${  y  }${type}`)
             let textureName = "TreeStump"
             switch(type){
-                case "Spider": textureName = "wood"; break
+                case "Spider": textureName = "spider"; break
                 case "Wood": textureName = "wood"; break;
                 default: textureName = "wood"
             }
@@ -220,44 +222,7 @@ class MainScene extends Phaser.Scene {
             if (!moveplayers[i]) {
                 players[i].anims.stop()
             }
-            this.physics.collide(players[i], goals[i], () => {
-                this.playerReachedGoal(i)
-            })
-
         }
-
-        if(players[0]){
-        this.physics.collide(players[0], obstacles[0], () => {
-            this.playerHitObstacle(0)
-        })
-        this.physics.collide(players[0], obstacles[1], () => {
-            this.playerHitObstacle(0)
-        })
-    }
-    if(players[1]){
-        this.physics.collide(players[1], obstacles[2], () => {
-            this.playerHitObstacle(1)
-        })
-        this.physics.collide(players[1], obstacles[3], () => {
-            this.playerHitObstacle(1)
-        })
-    }
-    if(players[2]){
-        this.physics.collide(players[2], obstacles[4], () => {
-            this.playerHitObstacle(2)
-        })
-        this.physics.collide(players[2], obstacles[5], () => {
-            this.playerHitObstacle(2)
-        })
-    }
-       if(players[3]){
-        this.physics.collide(players[3], obstacles[6], () => {
-            this.playerHitObstacle(3)
-        })
-        this.physics.collide(players[3], obstacles[7], () => {
-            this.playerHitObstacle(3)
-        })
-       }
     }
 
     handleSocketConnection(){
