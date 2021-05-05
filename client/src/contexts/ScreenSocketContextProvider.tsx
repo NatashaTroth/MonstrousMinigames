@@ -2,13 +2,13 @@ import { stringify } from 'query-string';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { GAMESTATE, MESSAGETYPES, OBSTACLES } from '../utils/constants';
+import { GameState, MessageTypes, Obstacles } from '../utils/constants';
 import ScreenSocket from '../utils/screenSocket';
 import { GameContext, IPlayerState } from './GameContextProvider';
 
 export interface IObstacleMessage {
     type: string;
-    obstacleType?: OBSTACLES;
+    obstacleType?: Obstacles;
 }
 
 interface IScreenSocketContext {
@@ -40,7 +40,7 @@ export interface IPlayerRank {
     positionX: number;
 }
 interface IGameStateData {
-    gameState: GAMESTATE;
+    gameState: GameState;
     numberOfObstacles: number;
     roomId: string;
     trackLength: number;
@@ -86,6 +86,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setConnectedUsers,
         setCountdownTime,
         setHasTimedOut,
+        setHasPaused,
     } = React.useContext(GameContext);
 
     React.useEffect(() => {
@@ -96,7 +97,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 case 'game1/gameState':
                     handleGameState(messageData as IGameState);
                     break;
-                case MESSAGETYPES.connectedUsers:
+                case MessageTypes.connectedUsers:
                     data = messageData as IConnectedUsers;
                     if (data.users) {
                         setConnectedUsers(data.users);
@@ -108,15 +109,24 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     setGameStarted(true);
                     history.push(`/screen/${roomId}/game1`);
                     break;
-                case MESSAGETYPES.gameHasFinished:
+                case MessageTypes.gameHasFinished:
                     handleGameHasFinished(messageData as IGameState);
                     break;
-                case MESSAGETYPES.gameHasReset:
+                case MessageTypes.gameHasReset:
                     history.push(`/screen/${roomId}/lobby`);
                     break;
-                case MESSAGETYPES.gameHasTimedOut:
+                case MessageTypes.gameHasPaused:
+                    setHasPaused(true);
+                    break;
+                case MessageTypes.gameHasResumed:
+                    setHasPaused(false);
+                    break;
+                case MessageTypes.gameHasTimedOut:
                     setHasTimedOut(true);
                     handleGameHasFinished(messageData as IGameState);
+                    break;
+                case MessageTypes.gameHasStopped:
+                    history.push(`/screen/${roomId}/lobby`);
                     break;
             }
         }
@@ -150,6 +160,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setCountdownTime,
         setFinished,
         setGameStarted,
+        setHasPaused,
         setHasTimedOut,
         setPlayerRanks,
         setPlayers,
@@ -180,13 +191,12 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         });
     }
 
-    screenSocket?.on('message', (data: IGameState | IConnectedUsers) => {
-        setMessageData(data);
-    });
-
-    function handleSetScreenSocket(val: SocketIOClient.Socket | undefined, roomId: string) {
-        setScreenSocket(val);
-        ScreenSocket.getInstance(val);
+    function handleSetScreenSocket(socket: SocketIOClient.Socket | undefined, roomId: string) {
+        setScreenSocket(socket);
+        ScreenSocket.getInstance(socket);
+        socket?.on('message', (data: IGameState | IConnectedUsers) => {
+            setMessageData(data);
+        });
         history.push(`/screen/${roomId}/lobby`);
     }
 

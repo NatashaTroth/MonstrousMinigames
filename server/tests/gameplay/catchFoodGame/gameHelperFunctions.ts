@@ -1,8 +1,8 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
-import { GameEventTypes, GameState } from '../../../src/gameplay/interfaces';
-import { users } from '../mockUsers';
+import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
+import { users } from '../mockData';
 
 const TRACK_LENGTH = 500;
 const gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
@@ -22,7 +22,7 @@ export function startAndFinishGame(catchFoodGame: CatchFoodGame): CatchFoodGame 
 }
 
 export function finishGame(catchFoodGame: CatchFoodGame): CatchFoodGame {
-    for (let i = 1; i <= 4; i++) {
+    for (let i = 1; i <= catchFoodGame.numberOfObstacles; i++) {
         finishPlayer(catchFoodGame, i.toString());
     }
 
@@ -59,7 +59,7 @@ export function startAndFinishGameDifferentTimes(catchFoodGame: CatchFoodGame) {
     Date.now = jest.fn(() => dateNow);
     startGameAndAdvanceCountdown(catchFoodGame);
     // finish game
-    for (let i = 1; i <= 4; i++) {
+    for (let i = 1; i <= catchFoodGame.numberOfObstacles; i++) {
         completePlayersObstacles(catchFoodGame, i.toString());
     }
 
@@ -104,7 +104,7 @@ export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
 
     startGameAndAdvanceCountdown(catchFoodGame);
     // finish game
-    for (let i = 1; i <= 4; i++) {
+    for (let i = 1; i <= catchFoodGame.numberOfObstacles; i++) {
         completePlayersObstacles(catchFoodGame, i.toString());
     }
 
@@ -135,7 +135,7 @@ export function getToPausedGameState(catchFoodGame: CatchFoodGame) {
 
 export function getToStoppedGameState(catchFoodGame: CatchFoodGame) {
     startGameAndAdvanceCountdown(catchFoodGame);
-    catchFoodGame.stopGame();
+    catchFoodGame.stopGameUserClosed();
     expect(catchFoodGame.gameState).toBe(GameState.Stopped);
 }
 

@@ -1,7 +1,8 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
-import { GameEventTypes, GameState } from '../../../src/gameplay/interfaces';
+import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
+import { leaderboard, roomId } from '../mockData';
 import { finishPlayer, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
@@ -10,7 +11,7 @@ let gameEventEmitter: CatchFoodGameEventEmitter;
 describe('Timer tests', () => {
     beforeEach(() => {
         gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -32,10 +33,10 @@ describe('Timer tests', () => {
 
     it('stops game when time out', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const stopGameSpy = jest.spyOn(CatchFoodGame.prototype as any, 'stopGame');
+        const stopGameSpy = jest.spyOn(CatchFoodGame.prototype as any, 'stopGameTimeout');
         jest.runAllTimers();
         expect(stopGameSpy).toHaveBeenCalledTimes(1);
-        expect(stopGameSpy).toHaveBeenCalledWith(true);
+        expect(catchFoodGame.gameState).toBe(GameState.Stopped);
     });
 
     it('should emit correct playerRanks when the game has timed out', async () => {

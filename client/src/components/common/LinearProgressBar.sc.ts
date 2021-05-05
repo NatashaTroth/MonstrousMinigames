@@ -13,6 +13,7 @@ export const LinearProgressContainer = styled.div`
     width: 80%;
     border: 3px solid ${grey};
     margin: 20px 0;
+    z-index: 3;
 `;
 
 export const StyledLinearProgress = styled(LinearProgress)`

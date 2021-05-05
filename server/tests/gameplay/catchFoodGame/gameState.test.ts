@@ -1,7 +1,7 @@
 import { CatchFoodGame } from '../../../src/gameplay';
+import { GameState } from '../../../src/gameplay/enums';
 import { verifyGameState } from '../../../src/gameplay/helperFunctions/verifyGameState';
-import { GameState } from '../../../src/gameplay/interfaces';
-import { users } from '../mockUsers';
+import { leaderboard, roomId, users } from '../mockData';
 import {
     completeNextObstacle, finishGame, finishPlayer, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
@@ -12,7 +12,7 @@ let catchFoodGame: CatchFoodGame;
 
 describe('Change and verify game state', () => {
     beforeEach(async () => {
-        catchFoodGame = new CatchFoodGame();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -93,7 +93,7 @@ describe('Change and verify game state', () => {
 
     it("shouldn't be able to stop game unless game has started", async () => {
         try {
-            catchFoodGame.stopGame();
+            catchFoodGame.stopGameUserClosed();
         } catch (e) {
             //ignore for this test
         }
@@ -102,14 +102,14 @@ describe('Change and verify game state', () => {
 
     it('should be able to stop game when started', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.stopGame();
+        catchFoodGame.stopGameUserClosed();
         expect(catchFoodGame.gameState).toBe(GameState.Stopped);
     });
 
     it('should be able to stop game when paused', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.pauseGame();
-        catchFoodGame.stopGame();
+        catchFoodGame.stopGameUserClosed();
         expect(catchFoodGame.gameState).toBe(GameState.Stopped);
     });
 
@@ -126,7 +126,7 @@ describe('Change and verify game state', () => {
 
     it('should have a GameState of Stopped when the game is stopped', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.stopGame();
+        catchFoodGame.stopGameUserClosed();
         expect(catchFoodGame.gameState).toBe(GameState.Stopped);
     });
 
@@ -147,7 +147,7 @@ describe('Change and verify game state', () => {
 
     it('should have a GameState of Created when new game is created', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.stopGame();
+        catchFoodGame.stopGameUserClosed();
         catchFoodGame.createNewGame(users);
         expect(catchFoodGame.gameState).toBe(GameState.Created);
     });
