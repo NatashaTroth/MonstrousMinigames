@@ -132,6 +132,8 @@ class MainScene extends Phaser.Scene {
             // eslint-disable-next-line no-console
             console.log(data)
             if(data.type == "error"){
+                // eslint-disable-next-line no-console
+            console.log(data.roomId)
                 this.handleError(data.msg)
             } else {
                 if (trackLength === 0 && data.data !== undefined) {
@@ -167,7 +169,8 @@ class MainScene extends Phaser.Scene {
 
         updateGameState(playerData: any){
             for(let i = 0; i < players.length; i++){
-                this.moveForward(players[i], playerData[i].positionX)
+                if(players[i] !== undefined && playerData !== undefined)
+                    this.moveForward(players[i], playerData[i].positionX)
             }
         }
 
@@ -220,6 +223,11 @@ class MainScene extends Phaser.Scene {
     }
 
     handleSocketConnection(){
+        if(roomId == "" || roomId == undefined){
+            this.handleError("No room code")
+        }
+        // eslint-disable-next-line no-console
+        console.log(roomId)
         const socket = io(
             `${process.env.REACT_APP_BACKEND_URL}screen?${stringify({
                 roomId: roomId,
@@ -233,6 +241,7 @@ class MainScene extends Phaser.Scene {
             }
         );
         return socket
+    
     }
 
     moveForward(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, toX: number) {
