@@ -1,4 +1,4 @@
-import { ObstacleType } from './';
+import { ObstacleType } from '../enums';
 
 export interface Obstacle {
     id: number;

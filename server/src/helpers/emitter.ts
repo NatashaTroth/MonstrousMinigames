@@ -3,7 +3,8 @@ import { Namespace, Socket } from 'socket.io';
 import Room from '../classes/room';
 import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
-import { CatchFoodMsgType, GameEvents } from '../gameplay/catchFood/interfaces';
+import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
+import { GameEvents } from '../gameplay/catchFood/interfaces';
 
 function sendUserInit(socket: any, number: number): void {
     socket.emit('message', {
@@ -28,10 +29,11 @@ function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
         });
     }
 }
-function sendErrorMessage(socket: Socket, message: string): void {
+function sendErrorMessage(socket: Socket, e: Error): void {
     socket.emit('message', {
         type: 'error',
-        msg: message,
+        name: e.name,
+        msg: e.message,
     });
 }
 function sendGameHasStarted(nsps: Array<Namespace>, data: GameEvents.GameHasStarted): void {

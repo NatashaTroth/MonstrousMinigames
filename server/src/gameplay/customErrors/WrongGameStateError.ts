@@ -1,4 +1,4 @@
-import { GameState } from '../interfaces';
+import { GameState } from '../enums';
 
 export default class WrongGameStateError extends Error {
     requiredGameStates: Array<GameState>;

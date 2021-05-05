@@ -16,7 +16,7 @@
 // myEmitter.emit('event', 'a', 'b');
 
 import GameEventEmitter from '../../classes/GameEventEmitter';
-import { GameEventTypes } from '../interfaces';
+import { GameEventTypes } from '../enums';
 // import {
 //     GameHasFinished, GameHasStarted, GameStateHasChanged, ObstacleReachedInfo, PlayerHasFinished, Game
 // } from './interfaces/GameEvents';
@@ -60,6 +60,9 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
     public static emitGameHasStoppedEvent(data: GameEvents.GameStateHasChanged) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasStopped, data);
     }
+    public static emitAllPlayersHaveDisconnected(data: GameEvents.GameStateHasChanged) {
+        this.CatchFoodGameEventEmitter.emit(GameEventTypes.AllPlayersHaveDisconnected, data);
+    }
 
     public static emitGameHasTimedOutEvent(data: GameEvents.GameHasFinished) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasTimedOut, data);
@@ -67,5 +70,9 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
 
     public static emitPlayerHasDisconnected(data: GameEvents.PlayerHasDisconnectedInfo) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerHasDisconnected, data);
+    }
+
+    public static emitPlayerHasReconnected(data: GameEvents.PlayerHasReconnectedInfo) {
+        this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerHasReconnected, data);
     }
 }

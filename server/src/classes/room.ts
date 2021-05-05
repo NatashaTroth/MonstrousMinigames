@@ -1,5 +1,9 @@
+import { GameAlreadyStartedError } from '../customErrors';
 import { Globals } from '../enums/globals';
 import { CatchFoodGame } from '../gameplay';
+import { GameStateInfo } from '../gameplay/catchFood/interfaces';
+import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
+import Leaderboard from '../gameplay/leaderboard/Leaderboard';
 import User from './user';
 
 class Room {
@@ -9,12 +13,14 @@ class Room {
     public game: CatchFoodGame;
     public admin: User | null;
     private state: RoomStates;
+    private leaderboard: Leaderboard;
 
     constructor(id: string) {
         this.id = id;
         this.users = [];
         this.timestamp = Date.now();
-        this.game = new CatchFoodGame();
+        this.leaderboard = new Leaderboard(this.id);
+        this.game = new CatchFoodGame(this.id, this.leaderboard);
         this.admin = null;
         this.state = RoomStates.OPEN;
     }
@@ -26,14 +32,20 @@ class Room {
         this.state = RoomStates.CLOSED;
     }
 
-    public addUser(user: User): boolean {
-        if (this.isOpen() && this.getUserCount() < Globals.MAX_PLAYER_NUMBER) {
-            if (this.users.length === 0) this.admin = user;
-            this.users.push(user);
-            this.updateUserNumbers();
-            return true;
+    public addUser(user: User): void {
+        if (!this.isOpen()) {
+            throw new GameAlreadyStartedError();
         }
-        return false;
+        if (this.getUserCount() >= Globals.MAX_PLAYER_NUMBER) {
+            throw new MaxNumberUsersExceededError(
+                `Too many players. Max ${Globals.MAX_PLAYER_NUMBER} Players`,
+                Globals.MAX_PLAYER_NUMBER
+            );
+        }
+
+        if (this.users.length === 0) this.admin = user;
+        this.users.push(user);
+        this.updateUserNumbers();
     }
 
     private updateUserNumbers(): void {
@@ -64,8 +76,11 @@ class Room {
         } else {
             if (this.isPlaying()) {
                 user.setActive(false);
-                if (!this.hasActiveUsers()) {
+                if (this.hasActiveUsers()) {
+                    this.game.disconnectPlayer(userId);
+                } else {
                     this.setClosed();
+                    this.game.stopGameAllUsersDisconnected();
                 }
             }
         }
@@ -95,13 +110,15 @@ class Room {
         this.timestamp = Date.now();
     }
 
-    public startGame(): void {
+    public startGame(): GameStateInfo {
         this.setState(RoomStates.PLAYING);
         this.game.createNewGame(this.users);
+        this.updateTimestamp();
+        return this.game.getGameStateInfo();
     }
 
     public stopGame() {
-        this.game?.stopGame();
+        this.game?.stopGameUserClosed();
     }
 
     public getUserById(userId: string): User {
@@ -114,7 +131,7 @@ class Room {
     public async resetGame() {
         this.users = this.getActiveUsers();
         this.clearInactiveUsers();
-        this.setState(RoomStates.OPEN);
+        this.setOpen();
     }
 
     private clearInactiveUsers() {
@@ -136,6 +153,9 @@ class Room {
     public isPlaying(): boolean {
         return this.state === RoomStates.PLAYING;
     }
+    public isFinished(): boolean {
+        return this.state === RoomStates.FINISHED;
+    }
     public isPaused(): boolean {
         return this.state === RoomStates.PAUSED;
     }
@@ -150,6 +170,9 @@ class Room {
     }
     public setPlaying(): void {
         this.setState(RoomStates.PLAYING);
+    }
+    public setFinished(): void {
+        this.setState(RoomStates.FINISHED);
     }
     public setPaused(): void {
         this.setState(RoomStates.PAUSED);
@@ -169,6 +192,7 @@ export default Room;
 export enum RoomStates {
     OPEN,
     PLAYING,
+    FINISHED,
     PAUSED,
     CLOSED,
 }

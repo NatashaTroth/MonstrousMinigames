@@ -6,25 +6,17 @@ import { ControllerSocketContext } from '../../../contexts/ControllerSocketConte
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import wood from '../../../images/wood.png';
-import { OBSTACLES } from '../../../utils/constants';
+import { Obstacles } from '../../../utils/constants';
 import LinearProgressBar from '../../common/LinearProgressBar';
-import {
-    Line,
-    ObstacleContainer,
-    ObstacleContent,
-    ObstacleInstructions,
-    ObstacleItem,
-    StyledObstacleImage,
-    StyledTouchAppIcon,
-    TouchContainer,
-} from './TreeTrunk.sc';
+import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from './ObstaclStyles.sc';
+import { Line, ObstacleItem, StyledObstacleImage, StyledTouchAppIcon, TouchContainer } from './TreeTrunk.sc';
 
 const MAX = 5000;
 const Treshold = 0;
 let distance = 0;
 let send = true;
 interface IClickObstacle {
-    setObstacle: (value: undefined | OBSTACLES) => void;
+    setObstacle: (value: undefined | Obstacles) => void;
 }
 
 export function resetObstacle() {
@@ -38,7 +30,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
     const [progress, setProgress] = React.useState(0);
     const [initialized, setInitialize] = React.useState(false);
     const history = useHistory();
-    const { showInstructions, setShowInstructions } = React.useContext(GameContext);
+    const { showInstructions, setShowInstructions, roomId } = React.useContext(GameContext);
 
     React.useEffect(() => {
         let touchEvent: null | string = null;
@@ -93,9 +85,9 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
             touchEvent = null;
             send = true;
 
-            controllerSocket?.emit('message', { type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
+            controllerSocket?.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
             setShowInstructions(false);
-            setTimeout(() => setObstacle(undefined), 100);
+            setTimeout(() => setObstacle(roomId, undefined), 100);
         };
 
         return () => {
@@ -103,7 +95,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
                 // do nothing
             });
         };
-    }, [controllerSocket, history, initialized, obstacle, progress, setObstacle, setShowInstructions]);
+    }, [controllerSocket, history, initialized, obstacle, progress, roomId, setObstacle, setShowInstructions]);
 
     return (
         <ObstacleContainer>

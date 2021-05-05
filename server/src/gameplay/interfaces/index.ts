@@ -1,6 +1,5 @@
-import { GameEventTypes } from './GameEventTypes';
-import { GameInterface } from './GameInterface';
-import { GameState } from './GameState';
 import { HashTable } from './HashTable';
+import { IGameInterface } from './IGameInterface';
+import { IPlayerState } from './IPlayerState';
 
-export { HashTable, GameEventTypes, GameState, GameInterface };
+export { HashTable, IGameInterface, IPlayerState };

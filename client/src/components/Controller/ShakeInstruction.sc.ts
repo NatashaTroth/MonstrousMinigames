@@ -1,3 +1,4 @@
+import { Dialog } from '@material-ui/core';
 import ScreenRotationIcon from '@material-ui/icons/ScreenRotation';
 import styled from 'styled-components';
 
@@ -31,5 +32,23 @@ export const StyledRotationIcon = styled(ScreenRotationIcon)`
         height: 100px;
         margin-bottom: 20px;
         color: ${orange};
+    }
+`;
+
+export const StyledDialog = styled(Dialog)`
+    && {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+`;
+
+export const DialogContent = styled.div`
+    && {
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
     }
 `;

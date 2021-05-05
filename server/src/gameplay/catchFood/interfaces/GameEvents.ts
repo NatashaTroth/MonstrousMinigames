@@ -1,5 +1,6 @@
-import { GameState } from '../../interfaces';
-import { ObstacleType, PlayerRank } from './';
+import { GameState } from '../../enums';
+import { ObstacleType } from '../enums';
+import { PlayerRank } from './';
 
 interface GameEventInterface {
     roomId: string;
@@ -35,6 +36,11 @@ export interface ObstacleReachedInfo extends GameEventInterface {
 }
 
 export interface PlayerHasDisconnectedInfo extends GameEventInterface {
+    roomId: string;
+    userId: string;
+}
+
+export interface PlayerHasReconnectedInfo extends GameEventInterface {
     roomId: string;
     userId: string;
 }
