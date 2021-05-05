@@ -52,10 +52,10 @@ class MainScene extends Phaser.Scene {
         const bg = this.add.image(windowWidth / 2, windowHeight / 2, 'forest');
         bg.setDisplaySize(windowWidth, windowHeight);
 
-            players.push(this.physics.add.sprite(10, 10, 'franz'))
-            players.push(this.physics.add.sprite(68, 300, 'susi'))
-            players.push(this.physics.add.sprite(68, 500, 'noah'))
-            players.push(this.physics.add.sprite(68, 700, 'steffi'))
+            players.push(this.physics.add.sprite(0, 10, 'franz'))
+            players.push(this.physics.add.sprite(0, 300, 'susi'))
+            players.push(this.physics.add.sprite(0, 500, 'noah'))
+            players.push(this.physics.add.sprite(0, 700, 'steffi'))
 
 
         players.forEach(player => {
