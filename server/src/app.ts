@@ -43,9 +43,6 @@ const roomCount: number = parseInt(`${process.env.ROOM_COUNT}`, 10) || 1000;
 
 const rs = new RoomService(roomCount);
 
-const test_room = process.env.TEST_ROOM;
-if (test_room) rs.createRoom(test_room);
-
 const ch = new ConnectionHandler(io, rs);
 ch.handle();
 

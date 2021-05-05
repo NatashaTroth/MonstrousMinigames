@@ -10,6 +10,8 @@
 
         <input name="roomId" id="roomId" />
         <label for="roomId">roomId</label>
+        <button onclick="input('createRoom')">CREATE ROOM</button>
+
         <br />
         <br />
         <select name="env" id="env">
@@ -76,6 +78,22 @@
                 ssocket.emit('message', {
                     type: 'pauseResume',
                 });
+            if (type == 'createRoom') {
+                let env = document.getElementById('env').value;
+
+                async function handleCreateNewRoom() {
+                    const response = await fetch(`http://${env}/create-room`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    const data = await response.json();
+                    document.getElementById('roomId').value = data.roomId;
+                }
+                handleCreateNewRoom();
+            }
         }
 
         function init() {
