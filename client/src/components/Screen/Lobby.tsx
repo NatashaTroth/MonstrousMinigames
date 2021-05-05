@@ -37,7 +37,6 @@ export const Lobby: React.FunctionComponent = () => {
     const [selectedGame, setSelectedGame] = React.useState(0);
     const { id }: IRouteParams = useParams();
     const navigator = window.navigator;
-    // const audio = new Audio(lobbyMusic);
 
     if (id && !screenSocket) {
         handleSocketConnection(id);
@@ -48,14 +47,6 @@ export const Lobby: React.FunctionComponent = () => {
             await navigator.clipboard.writeText(`${process.env.REACT_APP_FRONTEND_URL}${roomId}`);
         }
     }
-
-    // React.componentDidUpdate = () => {
-    //     if (shouldBlockNavigation) {
-    //       window.onbeforeunload = () => true
-    //     } else {
-    //       window.onbeforeunload = undefined
-    //     }
-    // }
 
     React.useEffect(() => {
         // TODO remove

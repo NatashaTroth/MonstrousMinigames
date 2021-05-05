@@ -21,12 +21,6 @@ interface WindowProps extends Window {
 export const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ roomId: '' });
     const { handleSocketConnection } = React.useContext(ScreenSocketContext);
-    // let audioContext: any; //TODO change
-
-    // React.useEffect(() => {
-    //     // const AudioContext = window.AudioContext;
-    //     // const w = window as WindowProps;
-    // }, []);
 
     async function handleCreateNewRoom() {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}create-room`, {
@@ -40,7 +34,6 @@ export const ConnectScreen: React.FunctionComponent = () => {
         handleSocketConnection(data.roomId);
         const w = window as WindowProps;
         const AudioContext = window.AudioContext || w.webkitAudioContext;
-        // audioContext = new AudioContext();
         new AudioContext().resume();
     }
 

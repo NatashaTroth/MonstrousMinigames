@@ -14,8 +14,6 @@ import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
     React.useEffect(() => {
-        //eslint-disable-next-line no-console
-        console.log('test');
         pauseLobbyMusic();
     }, []);
 

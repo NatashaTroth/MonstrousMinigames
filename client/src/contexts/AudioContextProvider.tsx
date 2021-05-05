@@ -9,16 +9,10 @@ export const defaultValue = {
     pauseLobbyMusic: () => {
         //do nothing
     },
-    // audio: new Audio(lobbyMusic),
-
-    // setAudio: () => {
-    //     // do nothing
-    // },
 };
 interface IAudioContext {
     playLobbyMusic: () => void;
     pauseLobbyMusic: () => void;
-    // setAudio: (val: HTMLAudioElement) => void;
 }
 
 export const AudioContext = React.createContext<IAudioContext>(defaultValue);
@@ -34,13 +28,6 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
         pauseLobbyMusic: () => {
             audio.pause();
         },
-
-        // setAudio,
-        // : (val: HTMLAudioElement) => {
-        //     //eslint-disable-next-line no-console
-        //     console.log('hiii');
-        //     setAudio(val);
-        // },
     };
     return <AudioContext.Provider value={content}>{children}</AudioContext.Provider>;
 };
