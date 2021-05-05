@@ -9,7 +9,9 @@ import { defaultValue, GameContext } from '../../contexts/GameContextProvider';
 // window.HTMLMediaElement.prototype.play = () => { /* do nothing */ };
 
 window.HTMLMediaElement.prototype.play = () => new Promise(resolve => resolve);
-// window.HTMLMediaElement.prototype.pause = () => { /* do nothing */ };
+window.HTMLMediaElement.prototype.pause = () => {
+    /* do nothing */
+};
 // window.HTMLMediaElement.prototype.addTextTrack = () => { /* do nothing */ };
 
 afterEach(cleanup);

@@ -1,11 +1,11 @@
 import { Button as MuiButton } from '@material-ui/core';
 import { Assignment } from '@material-ui/icons';
 import * as React from 'react';
+import { useBeforeunload } from 'react-beforeunload';
 import { useParams } from 'react-router-dom';
 
 import { IRouteParams } from '../../App';
-import lobbyMusic from '../../assets/audio/Lobby_Sound.wav';
-// import lobbyMusic from '../../assets/audio/Sound_Game.wav';
+import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { localDevelopment } from '../../utils/constants';
@@ -32,10 +32,12 @@ import {
 
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers } = React.useContext(GameContext);
+    const { playLobbyMusic, pauseLobbyMusic } = React.useContext(AudioContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const [selectedGame, setSelectedGame] = React.useState(0);
     const { id }: IRouteParams = useParams();
     const navigator = window.navigator;
+    // const audio = new Audio(lobbyMusic);
 
     if (id && !screenSocket) {
         handleSocketConnection(id);
@@ -47,6 +49,14 @@ export const Lobby: React.FunctionComponent = () => {
         }
     }
 
+    // React.componentDidUpdate = () => {
+    //     if (shouldBlockNavigation) {
+    //       window.onbeforeunload = () => true
+    //     } else {
+    //       window.onbeforeunload = undefined
+    //     }
+    // }
+
     React.useEffect(() => {
         // TODO remove
         if (localDevelopment) {
@@ -57,9 +67,13 @@ export const Lobby: React.FunctionComponent = () => {
     }, [roomId]);
 
     React.useEffect(() => {
-        const audio = new Audio(lobbyMusic);
-        audio.play();
+        playLobbyMusic();
     }, []);
+
+    useBeforeunload(() => {
+        //eslint-disable-next-line no-console
+        pauseLobbyMusic();
+    });
 
     return (
         <LobbyContainer>

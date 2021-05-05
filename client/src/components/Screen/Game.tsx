@@ -4,6 +4,7 @@ import Phaser from 'phaser';
 import * as React from 'react';
 import Countdown from 'react-countdown';
 
+import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { MessageTypes } from '../../utils/constants';
@@ -12,8 +13,15 @@ import { Container, ControlBar, DialogContent, Go, IconContainer, PauseIcon, Sto
 import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
+    React.useEffect(() => {
+        //eslint-disable-next-line no-console
+        console.log('test');
+        pauseLobbyMusic();
+    }, []);
+
     //const { countdownTime, roomId } = React.useContext(GameContext)
     const { roomId } = React.useContext(GameContext);
+    const { pauseLobbyMusic } = React.useContext(AudioContext);
     //const [countdown] = React.useState(Date.now() + countdownTime)
     React.useEffect(() => {
         const game = new Phaser.Game({
