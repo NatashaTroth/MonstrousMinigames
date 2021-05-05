@@ -1,10 +1,10 @@
 export enum Obstacles {
-    treeStump = 'TREE_STUMP',
-    spider = 'SPIDER',
+    treeStump = 'TreeStump',
+    spider = 'Spider',
 }
 
 export enum ObstacleRoutes {
-    treeStump = 'tree_stump',
+    treeStump = 'treestump',
     spider = 'spider',
 }
 
@@ -30,6 +30,9 @@ export enum MessageTypes {
     gameHasTimedOut = 'gameHasTimedOut',
     gameHasPaused = 'gameHasPaused',
     gameHasResumed = 'gameHasResumed',
+    obstacle = 'game1/obstacle',
+    playerFinished = 'game1/playerFinished',
+    started = 'game1/hasStarted',
     pauseResume = 'pauseResume',
     stopGame = 'stopGame',
 }

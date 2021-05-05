@@ -1,4 +1,6 @@
-export async function ClickRequestDeviceMotion() {
+import { Window } from '../window/Window';
+
+export async function ClickRequestDeviceMotion(window: Window) {
     // iOS: Requests permission for device orientation
     if (window.DeviceMotionEvent && typeof window.DeviceMotionEvent.requestPermission === 'function') {
         const permissionReq = await window.DeviceMotionEvent.requestPermission();

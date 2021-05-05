@@ -21,7 +21,7 @@ const ShakeInstruction: React.FunctionComponent = () => {
 
     if (localDevelopment) {
         if (!playerFinished) {
-            setInterval(() => sendMovement(controllerSocket, hasPaused), 500);
+            setInterval(() => sendMovement(controllerSocket, hasPaused), 100);
         }
     }
 

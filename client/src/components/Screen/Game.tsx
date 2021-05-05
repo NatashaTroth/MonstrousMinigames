@@ -55,17 +55,17 @@ const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo }) 
     const { hasPaused, setHasPaused } = React.useContext(GameContext);
 
     function handlePauseGame() {
-        screenSocket?.emit('message', { type: MessageTypes.pauseResume });
+        screenSocket?.emit({ type: MessageTypes.pauseResume });
         setHasPaused(true);
     }
 
     function handleResumeGame() {
-        screenSocket?.emit('message', { type: MessageTypes.pauseResume });
+        screenSocket?.emit({ type: MessageTypes.pauseResume });
         setHasPaused(false);
     }
 
     function handleStopGame() {
-        screenSocket?.emit('message', { type: MessageTypes.stopGame });
+        screenSocket?.emit({ type: MessageTypes.stopGame });
     }
 
     return (

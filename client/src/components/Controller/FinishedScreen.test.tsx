@@ -1,51 +1,43 @@
 import { cleanup, fireEvent, queryByText, render } from '@testing-library/react';
-import { createServer } from 'http';
-import { AddressInfo } from 'node:net';
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { Server, Socket } from 'socket.io';
-import Client from 'socket.io-client';
+import { Router } from 'react-router-dom';
 
-import { FinishedScreen } from '../../components/Controller/FinishedScreen';
-import { FinishedScreenContainer } from '../../components/Controller/FinishedScreen.sc';
+import {
+    ControllerSocketContext,
+    defaultValue as controllerDefaultValue,
+} from '../../contexts/ControllerSocketContextProvider';
 import { defaultValue as gameContextDefaultValue, GameContext } from '../../contexts/GameContextProvider';
 import { defaultValue, PlayerContext } from '../../contexts/PlayerContextProvider';
+import history from '../../utils/history';
+import { InMemorySocketFake } from '../../utils/socket/InMemorySocketFake';
+import { FinishedScreen } from './FinishedScreen';
 
 afterEach(cleanup);
+
+describe('InMemorySocket', () => {
+    it('when data was written, registered callback is called', async () => {
+        const socket = new InMemorySocketFake();
+
+        const callback = jest.fn();
+        await socket.listen(callback);
+        await socket.emit('data');
+        expect(callback).toHaveBeenLastCalledWith('data');
+    });
+});
 describe('Screen FinishedScreen', () => {
-    let io: Server, serverSocket: Socket, clientSocket: SocketIOClient.Socket;
+    const socket = new InMemorySocketFake();
 
-    beforeAll(done => {
-        const httpServer = createServer();
-        io = new Server(httpServer);
-        httpServer.listen(() => {
-            const port = (httpServer.address() as AddressInfo).port;
-            clientSocket = Client(`http://localhost:${port}`);
-            io.on('connection', socket => {
-                serverSocket = socket;
-            });
-            clientSocket.on('connect', done);
-        });
-    });
-
-    afterAll(() => {
-        io.close();
-        clientSocket.close();
-    });
-
-    test('should work', done => {
-        clientSocket.on('hello', (arg: any) => {
-            expect(arg).toBe('world');
-            done();
-        });
-        serverSocket.emit('hello', 'world');
-    });
+    const FinishedScreenComponent = (
+        <ControllerSocketContext.Provider value={{ ...controllerDefaultValue, controllerSocket: socket }}>
+            <FinishedScreen />
+        </ControllerSocketContext.Provider>
+    );
 
     it('when player reaches the goal, it renders text "Finished!"', () => {
         const givenText = 'Finished!';
         const { container } = render(
             <PlayerContext.Provider value={{ ...defaultValue, playerRank: 1 }}>
-                <FinishedScreen />
+                {FinishedScreenComponent}
             </PlayerContext.Provider>
         );
         expect(queryByText(container, givenText)).toBeTruthy();
@@ -56,7 +48,7 @@ describe('Screen FinishedScreen', () => {
         const { container } = render(
             <GameContext.Provider value={{ ...gameContextDefaultValue, hasTimedOut: true }}>
                 <PlayerContext.Provider value={{ ...defaultValue, playerRank: undefined }}>
-                    <FinishedScreen />
+                    {FinishedScreenComponent}
                 </PlayerContext.Provider>
             </GameContext.Provider>
         );
@@ -66,7 +58,7 @@ describe('Screen FinishedScreen', () => {
     it('if user is admin, a button is rendered', () => {
         const { container } = render(
             <PlayerContext.Provider value={{ ...defaultValue, isPlayerAdmin: true }}>
-                <FinishedScreen />
+                {FinishedScreenComponent}
             </PlayerContext.Provider>
         );
 
@@ -77,7 +69,7 @@ describe('Screen FinishedScreen', () => {
         const givenText = 'Back to Lobby';
         const { container } = render(
             <PlayerContext.Provider value={{ ...defaultValue, isPlayerAdmin: true }}>
-                <FinishedScreen />
+                {FinishedScreenComponent}
             </PlayerContext.Provider>
         );
 
@@ -87,7 +79,7 @@ describe('Screen FinishedScreen', () => {
     it('if user is not admin, no button is rendered', () => {
         const { container } = render(
             <PlayerContext.Provider value={{ ...defaultValue, isPlayerAdmin: false }}>
-                <FinishedScreen />
+                {FinishedScreenComponent}
             </PlayerContext.Provider>
         );
 
@@ -98,7 +90,7 @@ describe('Screen FinishedScreen', () => {
         const givenText = '#1';
         const { container } = render(
             <PlayerContext.Provider value={{ ...defaultValue, playerRank: 1 }}>
-                <FinishedScreen />
+                {FinishedScreenComponent}
             </PlayerContext.Provider>
         );
 
@@ -108,9 +100,9 @@ describe('Screen FinishedScreen', () => {
     it('when connect back to lobby is clicked, resetPlayer function should be called', () => {
         const onClick = jest.fn();
         const { container } = render(
-            <Router>
+            <Router history={history}>
                 <PlayerContext.Provider value={{ ...defaultValue, resetPlayer: onClick }}>
-                    <FinishedScreenContainer />
+                    {FinishedScreenComponent}
                 </PlayerContext.Provider>
             </Router>
         );
@@ -126,9 +118,9 @@ describe('Screen FinishedScreen', () => {
     it('when connect back to lobby is clicked, resetGame function should be called', () => {
         const onClick = jest.fn();
         const { container } = render(
-            <Router>
+            <Router history={history}>
                 <GameContext.Provider value={{ ...gameContextDefaultValue, resetGame: onClick }}>
-                    <FinishedScreenContainer />
+                    {FinishedScreenComponent}
                 </GameContext.Provider>
             </Router>
         );

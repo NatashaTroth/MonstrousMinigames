@@ -4,8 +4,10 @@ import { configure, mount } from 'enzyme';
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import { ConnectScreen } from '../../components/Controller/ConnectScreen';
-import { ControllerSocketContext, defaultValue } from '../../contexts/ControllerSocketContextProvider';
+import {
+    ControllerSocketContext, defaultValue
+} from '../../contexts/ControllerSocketContextProvider';
+import { ConnectScreen } from './ConnectScreen';
 
 afterEach(cleanup);
 configure({ adapter: new Adapter() });
