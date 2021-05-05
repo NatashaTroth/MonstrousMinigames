@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { isMobileOnly } from 'react-device-detect';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Route, Router, Switch } from 'react-router-dom';
 
 import { AppContainer } from './App.sc';
 import Impressum from './components/common/Impressum';
 import { ConnectScreen as ControllerConnectScreen } from './components/Controller/ConnectScreen';
 import { FinishedScreen as ControllerFinishedScreen } from './components/Controller/FinishedScreen';
 import { Lobby as ControllerLobbyScreen } from './components/Controller/Lobby';
+import Spider from './components/Controller/Obstacles/Spider';
 import TreeTrunk from './components/Controller/Obstacles/TreeTrunk';
 import ShakeInstruction from './components/Controller/ShakeInstruction';
 import { ConnectScreen as ScreenConnectScreen } from './components/Screen/ConnectScreen';
@@ -17,6 +18,8 @@ import ControllerSocketContextProvider from './contexts/ControllerSocketContextP
 import GameContextProvider from './contexts/GameContextProvider';
 import PlayerContextProvider from './contexts/PlayerContextProvider';
 import ScreenSocketContextProvider from './contexts/ScreenSocketContextProvider';
+import { ObstacleRoutes } from './utils/constants';
+import history from './utils/history';
 
 export interface IRouteParams {
     id?: string;
@@ -24,7 +27,7 @@ export interface IRouteParams {
 
 const App: React.FunctionComponent = () => {
     return (
-        <Router>
+        <Router history={history}>
             <AppContainer className="App">
                 <GameContextProvider>
                     <PlayerContextProvider>
@@ -34,7 +37,12 @@ const App: React.FunctionComponent = () => {
                                     <Route path="/impressum" component={Impressum} exact />
                                     <Route path="/controller/:id/lobby" component={ControllerLobbyScreen} exact />
                                     <Route path="/controller/:id/game1" component={ShakeInstruction} exact />
-                                    <Route path="/controller/:id/game1-obstacle" component={TreeTrunk} exact />
+                                    <Route
+                                        path={`/controller/:id/${ObstacleRoutes.treeStump}`}
+                                        component={TreeTrunk}
+                                        exact
+                                    />
+                                    <Route path={`/controller/:id/${ObstacleRoutes.spider}`} component={Spider} exact />
                                     <Route path="/controller/:id/finished" component={ControllerFinishedScreen} exact />
 
                                     <Route path="/screen/:id/lobby" component={ScreenLobbyScreen} exact />

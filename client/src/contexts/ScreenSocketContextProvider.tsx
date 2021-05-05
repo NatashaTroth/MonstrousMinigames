@@ -1,25 +1,27 @@
-import { stringify } from 'query-string';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { GAMESTATE, MESSAGETYPES, OBSTACLES } from '../utils/constants';
+import { GameState, MessageTypes, Obstacles } from '../utils/constants';
 import ScreenSocket from '../utils/screenSocket';
+import { InMemorySocketFake } from '../utils/socket/InMemorySocketFake';
+import { Socket } from '../utils/socket/Socket';
+import { SocketIOAdapter } from '../utils/socket/SocketIOAdapter';
 import { GameContext, IPlayerState } from './GameContextProvider';
 
 export interface IObstacleMessage {
     type: string;
-    obstacleType?: OBSTACLES;
+    obstacleType?: Obstacles;
 }
 
 interface IScreenSocketContext {
-    screenSocket: SocketIOClient.Socket | undefined;
-    setScreenSocket: (val: SocketIOClient.Socket | undefined, roomId: string) => void;
+    screenSocket: Socket;
+    setScreenSocket: (val: Socket, roomId: string) => void;
     isScreenConnected: boolean;
     handleSocketConnection: (val: string) => void;
 }
 
 export const defaultValue = {
-    screenSocket: undefined,
+    screenSocket: new InMemorySocketFake(),
     setScreenSocket: () => {
         // do nothing
     },
@@ -40,7 +42,7 @@ export interface IPlayerRank {
     positionX: number;
 }
 interface IGameStateData {
-    gameState: GAMESTATE;
+    gameState: GameState;
     numberOfObstacles: number;
     roomId: string;
     trackLength: number;
@@ -69,7 +71,7 @@ interface IConnectedUsers {
     users: IUser[];
 }
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
-    const [screenSocket, setScreenSocket] = React.useState<SocketIOClient.Socket | undefined>(undefined);
+    const [screenSocket, setScreenSocket] = React.useState<Socket>(new InMemorySocketFake());
     const [messageData, setMessageData] = React.useState<IGameState | IConnectedUsers | undefined>();
     const history = useHistory();
 
@@ -86,6 +88,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setConnectedUsers,
         setCountdownTime,
         setHasTimedOut,
+        setHasPaused,
     } = React.useContext(GameContext);
 
     React.useEffect(() => {
@@ -96,7 +99,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 case 'game1/gameState':
                     handleGameState(messageData as IGameState);
                     break;
-                case MESSAGETYPES.connectedUsers:
+                case MessageTypes.connectedUsers:
                     data = messageData as IConnectedUsers;
                     if (data.users) {
                         setConnectedUsers(data.users);
@@ -108,15 +111,24 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     setGameStarted(true);
                     history.push(`/screen/${roomId}/game1`);
                     break;
-                case MESSAGETYPES.gameHasFinished:
+                case MessageTypes.gameHasFinished:
                     handleGameHasFinished(messageData as IGameState);
                     break;
-                case MESSAGETYPES.gameHasReset:
+                case MessageTypes.gameHasReset:
                     history.push(`/screen/${roomId}/lobby`);
                     break;
-                case MESSAGETYPES.gameHasTimedOut:
+                case MessageTypes.gameHasPaused:
+                    setHasPaused(true);
+                    break;
+                case MessageTypes.gameHasResumed:
+                    setHasPaused(false);
+                    break;
+                case MessageTypes.gameHasTimedOut:
                     setHasTimedOut(true);
                     handleGameHasFinished(messageData as IGameState);
+                    break;
+                case MessageTypes.gameHasStopped:
+                    history.push(`/screen/${roomId}/lobby`);
                     break;
             }
         }
@@ -150,6 +162,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setCountdownTime,
         setFinished,
         setGameStarted,
+        setHasPaused,
         setHasTimedOut,
         setPlayerRanks,
         setPlayers,
@@ -159,40 +172,24 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
     ]);
 
     function handleSocketConnection(roomId: string) {
-        const screenSocket = io(
-            `${process.env.REACT_APP_BACKEND_URL}screen?${stringify({
-                roomId: roomId,
-            })}`,
-            {
-                secure: true,
-                reconnection: true,
-                rejectUnauthorized: false,
-                reconnectionDelayMax: 10000,
-                transports: ['websocket'],
-            }
-        );
         setRoomId(roomId);
 
-        screenSocket.on('connect', () => {
-            if (screenSocket) {
-                handleSetScreenSocket(screenSocket, roomId);
-            }
-        });
+        handleSetScreenSocket(new SocketIOAdapter(roomId, 'screen'), roomId);
     }
 
-    screenSocket?.on('message', (data: IGameState | IConnectedUsers) => {
-        setMessageData(data);
-    });
-
-    function handleSetScreenSocket(val: SocketIOClient.Socket | undefined, roomId: string) {
-        setScreenSocket(val);
-        ScreenSocket.getInstance(val);
+    function handleSetScreenSocket(socket: Socket, roomId: string) {
+        setScreenSocket(socket);
+        ScreenSocket.getInstance(socket);
+        // TODO change any to IGameState | IConnectedUsers
+        socket?.listen((data: any) => {
+            setMessageData(data);
+        });
         history.push(`/screen/${roomId}/lobby`);
     }
 
     const content = {
         screenSocket,
-        setScreenSocket: (val: SocketIOClient.Socket | undefined, roomId: string) => handleSetScreenSocket(val, roomId),
+        setScreenSocket: (val: Socket, roomId: string) => handleSetScreenSocket(val, roomId),
         isScreenConnected: screenSocket ? true : false,
         handleSocketConnection,
     };

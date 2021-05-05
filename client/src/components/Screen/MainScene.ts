@@ -4,7 +4,6 @@ import { stringify } from 'querystring';
 // import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
 import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
-// import music from '../../assets/audio/Sound_Game.mp3';
 import forest from '../../images/forest.png';
 import franz from '../../images/franz_spritesheet.png';
 import goal from '../../images/goal.png';
@@ -13,30 +12,39 @@ import steffi from '../../images/steffi_spritesheet.png';
 import susi from '../../images/susi_spritesheet.png';
 import wood from '../../images/wood.png';
 
-/* eslint @typescript-eslint/no-var-requires: "off" */
-// const music = require('../../audio/Sound_Game.mp3');
+// import music from '../../assets/audio/Sound_Game.mp3';
+
 const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
 const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
 const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
+//let obstaclePositions: number[] = []
 let playerNumber = 1;
 let roomId = '';
 const moveplayers = [true, true, true, true];
 const playerFinished = [false, false, false, false];
 let socket: SocketIOClient.Socket;
+let trackLength = 0;
 
 class MainScene extends Phaser.Scene {
     constructor() {
         super('MainScene');
     }
 
-    init(data: { roomId?: string }) {
-        socket = this.handleSocketConnection();
-        if (roomId !== undefined) {
-            roomId = data.roomId!;
+    init(data: { roomId: string }) {
+        if (roomId === '' && data.roomId !== undefined) {
+            roomId = data.roomId;
         }
+        socket = this.handleSocketConnection();
     }
 
     preload(): void {
+        // this.load.audio('music', ['../../assets/audio/Sound_Game.mp3']);
+        // require('../../audio/Sound_Game.mp3');
+        this.load.audio('backgroundMusicStart', [game1SoundStart]);
+        this.load.audio('backgroundMusicLoop', [game1SoundLoop]);
+        // this.load.audio('backgroundMusicEnd', [game1SoundEnd]);
+        //require('../../audio/Sound_Game.mp3')
+
         this.load.spritesheet('franz', franz, { frameWidth: 826, frameHeight: 1163 });
         this.load.spritesheet('susi', susi, { frameWidth: 826, frameHeight: 1163 });
         this.load.spritesheet('noah', noah, { frameWidth: 826, frameHeight: 1163 });
@@ -46,12 +54,7 @@ class MainScene extends Phaser.Scene {
         this.load.image('goal', goal);
         this.load.image('wood', wood);
 
-        // this.load.audio('music', ['../../assets/audio/Sound_Game.mp3']);
-        // require('../../audio/Sound_Game.mp3');
-        this.load.audio('backgroundMusicStart', [game1SoundStart]);
-        this.load.audio('backgroundMusicLoop', [game1SoundLoop]);
-        // this.load.audio('backgroundMusicEnd', [game1SoundEnd]);
-        //require('../../audio/Sound_Game.mp3')
+        //this.load.audio('music', ['../../audio/Sound_Game.wav']);
     }
 
     create() {
@@ -147,32 +150,56 @@ class MainScene extends Phaser.Scene {
         }
     }
 
-    logMessage(data: any) {
-        // eslint-disable-next-line no-console
-        console.log(data);
-        if (data.type === 'game1/gameState') {
-            playerNumber = data.data.playersState.length;
-            //obstacles = data.data.obstacles
-            this.updateGameState(data.data.playersState);
+    handleMessage(data: any) {
+        if (data.type == 'error') {
+            this.handleError(data.msg);
+        } else {
+            if (trackLength === 0 && data.data !== undefined) {
+                trackLength = data.data.trackLength;
+            }
+            if (!roomId) {
+                roomId = data.data.roomId;
+            }
+            if (data.type === 'game1/gameState') {
+                playerNumber = data.data.playersState.length;
+                //obstaclePositions = data.data.playerState.obstacles
+                this.updateGameState(data.data.playersState);
+            }
         }
+    }
+
+    handleError(msg: string) {
+        this.add.text(32, 32, `Error: ${msg}`, { font: '30px Arial' });
+        players.forEach(player => {
+            player.destroy();
+        });
+
+        obstacles.forEach(obstacle => {
+            obstacle.destroy();
+        });
+    }
+
+    removePlayerSprite(index: number) {
+        players[index].destroy();
     }
 
     updateGameState(playerData: any) {
         for (let i = 0; i < players.length; i++) {
-            this.moveForward(players[i], playerData[i].positionX);
+            if (players[i] !== undefined && playerData !== undefined)
+                this.moveForward(players[i], playerData[i].positionX);
         }
     }
 
     update() {
-        socket.on('message', (data: any) => this.logMessage(data));
+        socket.on('message', (data: any) => this.handleMessage(data));
         for (let i = 0; i < players.length; i++) {
-            if (players[i] && moveplayers[i]) {
+            /* if (players[i] && moveplayers[i]) {
                 //this.moveForward(players[i], 0)
             } else {
-                players[i].anims.stop();
-            }
+                players[i].anims.stop()
+            } */
             this.physics.collide(players[i], goals[i], () => {
-                this.player1ReachedGoal(i);
+                this.playerReachedGoal(i);
             });
         }
 
@@ -211,6 +238,9 @@ class MainScene extends Phaser.Scene {
     }
 
     handleSocketConnection() {
+        if (roomId == '' || roomId == undefined) {
+            this.handleError('No room code');
+        }
         const socket = io(
             `${process.env.REACT_APP_BACKEND_URL}screen?${stringify({
                 roomId: roomId,
@@ -230,7 +260,7 @@ class MainScene extends Phaser.Scene {
         player.x = toX;
     }
 
-    player1ReachedGoal(playerIndex: number) {
+    playerReachedGoal(playerIndex: number) {
         players[playerIndex].anims.stop();
         moveplayers[playerIndex] = false;
         playerFinished[playerIndex] = true;

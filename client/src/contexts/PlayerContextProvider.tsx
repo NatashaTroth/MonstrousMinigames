@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router';
 
-import { OBSTACLES } from '../utils/constants';
+import { Obstacles } from '../utils/constants';
 import { GameContext } from './GameContextProvider';
 
 export const defaultValue = {
@@ -33,13 +33,13 @@ export const defaultValue = {
         // do nothing
     },
 };
-interface IObstacle {
-    type: OBSTACLES;
+export interface IObstacle {
+    type: Obstacles;
     id: number;
 }
 interface IPlayerContext {
     obstacle: undefined | IObstacle;
-    setObstacle: (val: IObstacle | undefined) => void;
+    setObstacle: (roomId: string | undefined, val: IObstacle | undefined) => void;
     playerFinished: boolean;
     setPlayerFinished: (val: boolean) => void;
     playerRank: number | undefined;
@@ -64,15 +64,16 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [permission, setPermissionGranted] = React.useState<boolean>(false);
     const history = useHistory();
     const { roomId } = React.useContext(GameContext);
+
     let reroute = true;
 
     const content = {
         obstacle,
-        setObstacle: (val: undefined | IObstacle) => {
+        setObstacle: (roomId: string | undefined, val: undefined | IObstacle) => {
             setObstacle(val);
             if (val) {
                 reroute = true;
-                history.push(`/controller/${roomId}/game1-obstacle`);
+                history.push(`/controller/${roomId}/${val.type.toLowerCase()}`);
             } else if (reroute) {
                 reroute = false;
                 history.push(`/controller/${roomId}/game1`);

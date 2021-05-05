@@ -14,9 +14,9 @@ import {
 interface IFormState {
     roomId: string;
 }
-// interface WindowProps extends Window {
-//     webkitAudioContext?: typeof AudioContext;
-// }
+interface WindowProps extends Window {
+    webkitAudioContext?: typeof AudioContext;
+}
 
 export const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ roomId: '' });
@@ -38,7 +38,8 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
         const data = await response.json();
         handleSocketConnection(data.roomId);
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const w = window as WindowProps;
+        const AudioContext = window.AudioContext || w.webkitAudioContext;
         // audioContext = new AudioContext();
         new AudioContext().resume();
     }

@@ -1,6 +1,7 @@
+import { IPlayerState } from '../../interfaces';
 import { Obstacle } from './';
 
-export interface PlayerState {
+export interface PlayerState extends IPlayerState {
     id: string;
     name: string;
     positionX: number;

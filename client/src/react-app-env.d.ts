@@ -8,6 +8,6 @@ declare module '*.wav' {
     export default src;
 }
 
-interface Window {
-    webkitAudioContext: typeof AudioContext;
-}
+// interface Window {
+//     webkitAudioContext: typeof AudioContext;
+// }
