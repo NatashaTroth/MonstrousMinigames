@@ -16,7 +16,8 @@ describe('Start game', () => {
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
-    afterEach(() => {
+    afterEach(async () => {
+        jest.runAllTimers();
         jest.clearAllMocks();
     });
 

@@ -11,8 +11,13 @@ let catchFoodGame: CatchFoodGame;
 
 describe('Create new game', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+    });
+
+    afterEach(async () => {
+        jest.runAllTimers();
+        jest.clearAllMocks();
     });
 
     it('throws an error with requiredGameStates property on create game when wrong game state', () => {
