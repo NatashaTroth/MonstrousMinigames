@@ -16,7 +16,7 @@ export const Lobby: React.FunctionComponent = () => {
     const history = useHistory();
 
     function startGame() {
-        controllerSocket?.emit('message', {
+        controllerSocket?.emit({
             type: 'game1/start',
             roomId: sessionStorage.getItem('roomId'),
             userId: sessionStorage.getItem('userId'),

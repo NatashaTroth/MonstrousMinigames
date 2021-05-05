@@ -4,8 +4,8 @@ import { configure, mount } from 'enzyme';
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import { ConnectScreen } from '../../components/Screen/ConnectScreen';
 import { defaultValue, ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { ConnectScreen } from './ConnectScreen';
 
 configure({ adapter: new Adapter() });
 afterEach(cleanup);

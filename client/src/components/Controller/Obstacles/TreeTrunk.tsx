@@ -30,7 +30,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
     const [progress, setProgress] = React.useState(0);
     const [initialized, setInitialize] = React.useState(false);
     const history = useHistory();
-    const { showInstructions, setShowInstructions } = React.useContext(GameContext);
+    const { showInstructions, setShowInstructions, roomId } = React.useContext(GameContext);
 
     React.useEffect(() => {
         let touchEvent: null | string = null;
@@ -85,9 +85,9 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
             touchEvent = null;
             send = true;
 
-            controllerSocket?.emit('message', { type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
+            controllerSocket?.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
             setShowInstructions(false);
-            setTimeout(() => setObstacle(undefined), 100);
+            setTimeout(() => setObstacle(roomId, undefined), 100);
         };
 
         return () => {
@@ -95,7 +95,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
                 // do nothing
             });
         };
-    }, [controllerSocket, history, initialized, obstacle, progress, setObstacle, setShowInstructions]);
+    }, [controllerSocket, history, initialized, obstacle, progress, roomId, setObstacle, setShowInstructions]);
 
     return (
         <ObstacleContainer>
