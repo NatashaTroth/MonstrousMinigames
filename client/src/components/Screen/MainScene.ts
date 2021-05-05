@@ -13,11 +13,10 @@ import wood from '../../images/wood.png'
 const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
 const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = []
-//let obstaclePositions: number[] = []
 let playerNumber = 0
 let roomId = ""
 const moveplayers = [true, true, true, true]
-const playerFinished = [false, false, false, false]
+//let obstaclesCleared = [0,0,0,0]
 let socket: SocketIOClient.Socket
 let trackLength = 0
 const animations = ["franzWalk", "susiWalk", "noahWalk", "steffiWalk"]
@@ -196,7 +195,7 @@ class MainScene extends Phaser.Scene {
             for(let i = 0; i < playerNumber; i++){
                 if(players[i] !== undefined && playerData !== undefined){
                     this.moveForward(players[i], playerData[i].positionX)
-                    this.checkAtObstacle(playerData[i].positionX, i, playerData[i].atObstacle, playerData[i].obstacles.length)
+                    this.checkAtObstacle(i, playerData[i].atObstacle, playerData[i].positionX)
                     this.checkFinished(i, playerData[i].finished)
                 }
             }
@@ -208,43 +207,21 @@ class MainScene extends Phaser.Scene {
             }
         }
 
-        checkAtObstacle(playerPosition: number, playerIndex: number, isAtObstacle: boolean, numberOfObstacles: number){
+        checkAtObstacle(playerIndex: number, isAtObstacle: boolean, playerPositionX: number){
             if(isAtObstacle && players[playerIndex].anims.isPlaying){
                 players[playerIndex].anims.stop()
             } else if (!isAtObstacle && !players[playerIndex].anims.isPlaying){
                 players[playerIndex].anims.play(animations[playerIndex])
-                //this.destroyObstacle(playerPosition, playerIndex, numberOfObstacles)
+                this.destroyObstacle(playerIndex, playerPositionX)
             }
         }
 
-        destroyObstacle(playerPosition: number, playerIndex: number, numberOfObstacles: number){
-            let min = 0
-            let max = 0
-            switch(playerIndex){
-                case 0: {
-                    min = 0
-                    max = numberOfObstacles
-                } break
-                case 1: {
-                    min = numberOfObstacles
-                    max = 2*numberOfObstacles
-                } break
-                case 2: {
-                    min = 2*numberOfObstacles
-                    max = 3*numberOfObstacles
-                } break
-                default: {
-                    min = 3*numberOfObstacles
-                    max = 4*numberOfObstacles
-                } break
-            }
-            if(playerIndex === 0){
-                for(let i = min; i < max; i++){
-                    if(obstacles[i].x === playerPosition){
-                        obstacles[i].destroy()
-                    }
+        destroyObstacle(playerIndex: number, playerPositionX: number){
+            obstacles.forEach(element => {
+                if(element.x === playerPositionX && element.y === this.getYPosition(playerIndex)){
+                    element.destroy()
                 }
-            }
+            });
         }
 
     update() {
