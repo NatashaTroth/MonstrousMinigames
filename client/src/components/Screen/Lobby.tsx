@@ -32,7 +32,7 @@ import {
 
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers } = React.useContext(GameContext);
-    const { playLobbyMusic, pauseLobbyMusic } = React.useContext(AudioContext);
+    const { playLobbyMusic, pauseLobbyMusic, permission } = React.useContext(AudioContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const [selectedGame, setSelectedGame] = React.useState(0);
     const { id }: IRouteParams = useParams();
@@ -58,12 +58,12 @@ export const Lobby: React.FunctionComponent = () => {
     }, [roomId]);
 
     React.useEffect(() => {
-        playLobbyMusic();
-    }, []);
+        playLobbyMusic(permission);
+    }, [permission]);
 
     useBeforeunload(() => {
         //eslint-disable-next-line no-console
-        pauseLobbyMusic();
+        pauseLobbyMusic(permission);
     });
 
     return (

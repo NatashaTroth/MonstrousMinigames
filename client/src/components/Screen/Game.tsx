@@ -13,14 +13,14 @@ import { Container, ControlBar, DialogContent, Go, IconContainer, PauseIcon, Sto
 import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
-    React.useEffect(() => {
-        pauseLobbyMusic();
-    }, []);
-
     //const { countdownTime, roomId } = React.useContext(GameContext)
     const { roomId } = React.useContext(GameContext);
-    const { pauseLobbyMusic } = React.useContext(AudioContext);
+    const { pauseLobbyMusic, permission } = React.useContext(AudioContext);
     //const [countdown] = React.useState(Date.now() + countdownTime)
+
+    React.useEffect(() => {
+        pauseLobbyMusic(permission);
+    }, [permission]);
 
     React.useEffect(() => {
         const game = new Phaser.Game({

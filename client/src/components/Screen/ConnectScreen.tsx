@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { AudioContext } from '../../contexts/AudioContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import Button from '../common/Button';
 import {
@@ -21,6 +22,7 @@ interface WindowProps extends Window {
 export const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ roomId: '' });
     const { handleSocketConnection } = React.useContext(ScreenSocketContext);
+    const { setPermissionGranted } = React.useContext(AudioContext);
 
     async function handleCreateNewRoom() {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}create-room`, {
@@ -32,9 +34,12 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
         const data = await response.json();
         handleSocketConnection(data.roomId);
-        const w = window as WindowProps;
-        const AudioContext = window.AudioContext || w.webkitAudioContext;
-        new AudioContext().resume();
+        // const w = window as WindowProps;
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext || false;
+        if (AudioContext) {
+            setPermissionGranted(true);
+            new AudioContext().resume();
+        }
     }
 
     return (
