@@ -113,7 +113,7 @@ class Room {
     public startGame(): GameStateInfo {
         this.setState(RoomStates.PLAYING);
         this.game.createNewGame(this.users);
-        this.updateTimestamp()
+        this.updateTimestamp();
         return this.game.getGameStateInfo();
     }
 

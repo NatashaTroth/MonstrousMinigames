@@ -2,6 +2,7 @@ import { Namespace, Server } from 'socket.io';
 
 import Room from '../classes/room';
 import User from '../classes/user';
+import { Globals } from '../enums/globals';
 import { MessageTypes } from '../enums/messageTypes';
 import { Namespaces } from '../enums/nameSpaces';
 import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventEmitter';
@@ -145,7 +146,7 @@ class ConnectionHandler {
                                 if (socket.room.isPlaying()) {
                                     emitter.sendGameState(screenNameSpace, socket.room, true);
                                 }
-                            }, 100);
+                            }, Globals.GAME_STATE_UPDATE_MS);
                         }
 
                         break;

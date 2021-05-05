@@ -3,6 +3,7 @@ import { CronJob } from 'cron';
 import dotenv from 'dotenv';
 import express from 'express';
 
+import { Globals } from './enums/globals';
 import ConnectionHandler from './services/connectionHandler';
 import RoomService from './services/roomService';
 
@@ -50,7 +51,7 @@ ch.handle();
 
 let room_count = rs.roomCodes.length;
 const cron = new CronJob(
-    '*/10 * * * *',
+    Globals.CRON_JOB_CLEANUP,
     function () {
         try {
             room_count = rs.roomCodes.length;
