@@ -44,58 +44,25 @@ class MainScene extends Phaser.Scene {
         this.load.image('forest', forest)
         this.load.image('goal', goal)
         this.load.image('wood', wood)
-
-        //this.load.audio('music', ['../../audio/Sound_Game.wav']);
     }
 
     create() {
-        //this.sound.add("music", { loop: false });
-        const forest = this.add.image(0, 0, 'forest')
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        const bg = this.add.image(windowWidth / 2, windowHeight / 2, 'forest');
+        bg.setDisplaySize(windowWidth, windowHeight);
 
-        players.push(this.physics.add.sprite(10, 10, 'franz'))
-        goals.push(this.physics.add.sprite(1600, 100, 'goal'))
-
-
+            players.push(this.physics.add.sprite(10, 10, 'franz'))
             players.push(this.physics.add.sprite(68, 300, 'susi'))
-            goals.push(this.physics.add.sprite(1050, 300, 'goal'))
-        
-
             players.push(this.physics.add.sprite(68, 500, 'noah'))
-            goals.push(this.physics.add.sprite(1050, 500, 'goal'))
-        
-
             players.push(this.physics.add.sprite(68, 700, 'steffi'))
-            goals.push(this.physics.add.sprite(1050, 700, 'goal'))
-        
 
-        const arr = Array.from({ length: 8 }, () => Math.floor(Math.random() * 600) + 200)
-
-        for (let i = 0; i < playerNumber*2; i++) {
-            let wood: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
-            if (playerNumber >= 2 && i < 4) {
-                wood = this.physics.add.sprite(arr[i], 300, 'wood')
-            } else if (playerNumber >= 3 && i < 6) {
-                wood = this.physics.add.sprite(arr[i], 500, 'wood')
-            } else if(playerNumber >= 4) {
-                wood = this.physics.add.sprite(arr[i], 700, 'wood')
-            } else {
-                wood = this.physics.add.sprite(arr[i], 100, 'wood')
-            }
-
-            wood.setScale(0.5, 0.5)
-            obstacles.push(wood)
-        }
 
         players.forEach(player => {
             player.setBounce(0.2)
             player.setCollideWorldBounds(true)
             player.setScale(0.2, 0.2)
             player.setCollideWorldBounds(true)
-        })
-
-        forest.setScale(1.8, 1.4)
-        goals.forEach(goal => {
-            goal.setScale(0.1,0.1)
         })
 
         this.anims.create({
@@ -140,21 +107,21 @@ class MainScene extends Phaser.Scene {
                 }
                 if(data.type === "game1/gameState"){
                     if(logged == false){
+
                         logged = true
                         if(playerNumber == 0){
-                            // eslint-disable-next-line no-console
-                            console.log(data.data.playersState.length)
                             playerNumber = data.data.playersState.length
 
                             if(playerNumber < 4){
                                 for(let i = playerNumber; i < 4; i++){
-                                    // eslint-disable-next-line no-console
-                                console.log(i)
                                     players[i].destroy()
                                 }
                             }
                             for(let i = 0; i < playerNumber; i++){
                                 players[i].anims.play(animations[i])
+                                if(obstacles.length == 0)
+                                    this.setObstacles(i, data.data.playersState[i].obstacles)
+                                    this.setGoal(i)
                             }
                         }
                         
@@ -165,6 +132,46 @@ class MainScene extends Phaser.Scene {
             
             }
         }
+
+        setGoal(playerIndex: number){
+            const goal = this.physics.add.sprite(trackLength, this.getYPosition(playerIndex), 'goal')
+            goal.setScale(0.1,0.1)
+            goals.push(goal)
+        }
+
+        getYPosition(playerIndex: number){
+            switch(playerIndex){
+                case 0: return 100
+                case 1: return 300
+                case 2: return 500
+                case 3: return 700
+                default: return 0;
+            }
+        }
+
+        setObstacles(playerIndex: number, obstacleArray: [{id: number, positionX: number, type: string}]){
+            const yPosition = this.getYPosition(playerIndex)
+            let obstacle: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
+            for(let i = 0; i < obstacleArray.length; i++){
+                obstacle = this.placeObstacle(obstacleArray[i].positionX, yPosition, obstacleArray[i].type)
+                obstacle.setScale(0.5, 0.5)
+                obstacles.push(obstacle)
+            }
+            
+        }
+
+        placeObstacle(x: number, y: number, type: string){
+            // eslint-disable-next-line no-console
+            console.log(`x: ${  x  }y: ${  y  }${type}`)
+            let textureName = "TreeStump"
+            switch(type){
+                case "Spider": textureName = "wood"; break
+                case "Wood": textureName = "wood"; break;
+                default: textureName = "wood"
+            }
+            return this.physics.add.sprite(x, y, textureName)
+        }
+        
 
         handleError(msg: string){
             this.add.text(32, 32, `Error: ${  msg}`, { font: "30px Arial"});
@@ -192,11 +199,9 @@ class MainScene extends Phaser.Scene {
     update() {
         socket.on("message", (data: any ) => this.handleMessage(data))
         for (let i = 0; i < players.length; i++) {
-            /* if (players[i] && moveplayers[i]) {
-                //this.moveForward(players[i], 0)
-            } else {
+            if (!moveplayers[i]) {
                 players[i].anims.stop()
-            } */
+            }
             this.physics.collide(players[i], goals[i], () => {
                 this.playerReachedGoal(i)
             })
