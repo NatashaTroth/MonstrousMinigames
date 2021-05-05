@@ -107,7 +107,8 @@ class MainScene extends Phaser.Scene {
                 }
                 if(data.type === "game1/gameState"){
                     if(logged == false){
-
+                        // eslint-disable-next-line no-console
+                        console.log(data.data.playersState[0])
                         logged = true
                         if(playerNumber == 0){
                             playerNumber = data.data.playersState.length
@@ -119,7 +120,7 @@ class MainScene extends Phaser.Scene {
                             }
                             for(let i = 0; i < playerNumber; i++){
                                 players[i].anims.play(animations[i])
-                                if(obstacles.length == 0)
+                                if(obstacles.length < data.data.playersState[0].obstacles.length * playerNumber)
                                     this.setObstacles(i, data.data.playersState[i].obstacles)
                                     this.setGoal(i)
                             }
@@ -191,8 +192,25 @@ class MainScene extends Phaser.Scene {
 
         updateGameState(playerData: any){
             for(let i = 0; i < playerNumber; i++){
-                if(players[i] !== undefined && playerData !== undefined)
+                if(players[i] !== undefined && playerData !== undefined){
                     this.moveForward(players[i], playerData[i].positionX)
+                    this.checkAtObstacle(i, playerData[i].atObstacle)
+                    this.checkFinished(i, playerData[i].finished)
+                }
+            }
+        }
+
+        checkFinished(playerIndex: number, isFinished: boolean){
+            if(isFinished){
+                players[playerIndex].anims.stop()
+            }
+        }
+
+        checkAtObstacle(playerIndex: number, isAtObstacle: boolean){
+            if(isAtObstacle && players[playerIndex].anims.isPlaying){
+                players[playerIndex].anims.stop()
+            } else if (!isAtObstacle && !players[playerIndex].anims.isPlaying){
+                players[playerIndex].anims.play(animations[playerIndex])
             }
         }
 
