@@ -4,6 +4,8 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { IRouteParams } from '../../App';
+import lobbyMusic from '../../assets/audio/Lobby_Sound.wav';
+// import lobbyMusic from '../../assets/audio/Sound_Game.wav';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { generateQRCode } from '../../utils/generateQRCode';
@@ -47,6 +49,11 @@ export const Lobby: React.FunctionComponent = () => {
     React.useEffect(() => {
         generateQRCode(`${process.env.REACT_APP_FRONTEND_URL}${roomId}`, 'qrCode');
     }, [roomId]);
+
+    React.useEffect(() => {
+        const audio = new Audio(lobbyMusic);
+        audio.play();
+    }, []);
 
     return (
         <LobbyContainer>

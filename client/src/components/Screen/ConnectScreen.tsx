@@ -14,15 +14,19 @@ import {
 interface IFormState {
     roomId: string;
 }
+// interface WindowProps extends Window {
+//     webkitAudioContext?: typeof AudioContext;
+// }
+
 export const ConnectScreen: React.FunctionComponent = () => {
     const [formState, setFormState] = React.useState<undefined | IFormState>({ roomId: '' });
     const { handleSocketConnection } = React.useContext(ScreenSocketContext);
-    let audioContext: any; //TODO change
+    // let audioContext: any; //TODO change
 
-    React.useEffect(() => {
-        // const AudioContext = window.AudioContext;
-        //  audioContext = new AudioContext();
-    }, []);
+    // React.useEffect(() => {
+    //     // const AudioContext = window.AudioContext;
+    //     // const w = window as WindowProps;
+    // }, []);
 
     async function handleCreateNewRoom() {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}create-room`, {
@@ -34,9 +38,9 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
         const data = await response.json();
         handleSocketConnection(data.roomId);
-        /* eslint no-console: "warn" */
-        console.log('hiiiii');
-        audioContext.resume();
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        // audioContext = new AudioContext();
+        new AudioContext().resume();
     }
 
     return (

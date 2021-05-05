@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { stringify } from 'querystring';
 
-import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
+// import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
 import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
 // import music from '../../assets/audio/Sound_Game.mp3';
@@ -50,15 +50,17 @@ class MainScene extends Phaser.Scene {
         // require('../../audio/Sound_Game.mp3');
         this.load.audio('backgroundMusicStart', [game1SoundStart]);
         this.load.audio('backgroundMusicLoop', [game1SoundLoop]);
-        this.load.audio('backgroundMusicEnd', [game1SoundEnd]);
+        // this.load.audio('backgroundMusicEnd', [game1SoundEnd]);
         //require('../../audio/Sound_Game.mp3')
     }
 
     create() {
         const backgroundMusicStart = this.sound.add('backgroundMusicStart');
         const backgroundMusicLoop = this.sound.add('backgroundMusicLoop');
-        // const backgroundMusicEnd = this.sound.add('backgroundMusicStart');
-        // const backgroundMusic = this.sound.add("music", { loop: false });
+
+        // for end: https://rexrainbow.github.io/phaser3-rex-notes/docs/site/audio/
+        // const backgroundMusicEnd = this.sound.add('backgroundMusicEnd');
+
         backgroundMusicStart.play({ loop: false });
         backgroundMusicStart.once('complete', () => {
             backgroundMusicLoop.play({ loop: true });
