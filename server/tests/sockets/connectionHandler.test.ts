@@ -18,70 +18,55 @@ describe('connectionHandler', () => {
     let ch: ConnectionHandler;
     const url = `localhost:${PORT}`;
     let roomCode: string;
-    let expresServer;
-    let socket: SocketIOClient.Socket;
-    let server: HttpServer;
+    let receiver: SocketIOClient.Socket;
+    let server: any;
 
-    class HttpServer {
-        public app = express();
-    }
+    const app = express();
 
     beforeAll(done => {
-        server = new HttpServer();
+        server = require('http').Server(app);
 
-        // const PORT = process.env.PORT || 5050
-        expresServer = server.app.listen({ port: PORT });
-        io = require('socket.io')(expresServer, {
+        server.listen(PORT, () => done());
+    });
+
+    afterAll(done => {
+        server.listening ? server.close(() => done()) : done();
+    });
+    afterEach(done => {
+        receiver.close()
+        done()
+    });
+
+    beforeEach(async done => {
+        rs = new RoomService(10);
+        roomCode = rs.createRoom()?.id;
+
+        io = require('socket.io')(server, {
             cors: {
                 origin: '*',
                 methods: ['GET', 'POST'],
             },
         });
-        done();
-    });
-
-    afterAll(done => {
-        server.app.removeAllListeners;
-        server.app.delete;
-        server.app.off;
-        done();
-    });
-
-    beforeEach(async done => {
-        console.info = jest.fn();
-        console.error = jest.fn();
-
-        rs = new RoomService(100);
-        roomCode = rs.createRoom()?.id;
-
         ch = new ConnectionHandler(io, rs);
         ch.handle();
 
-        socket = await client(`http://${url}/controller?roomId=${roomCode}&name=Robin&userId=`, {
-            secure: true,
-            reconnection: true,
-            rejectUnauthorized: false,
-            reconnectionDelayMax: 10000,
-        });
-        socket.on('connect', (msg: any) => {
-            roomCode = rs.createRoom()?.id;
-
-            done();
-        });
+        done()
     });
+    it('should send a message of type userinit with the given username on connection', () => {
+        const username = 'John'
 
-    it('should create a new room with the roomId the player used for connecting', () => {
-        const cSocket = client(`http://${url}/controller?roomId=${roomCode}&name=Robin&userId=`, {
+        receiver = client(`http://${url}/controller?roomId=${roomCode}&name=${username}userId=`, {
             secure: true,
             reconnection: true,
             rejectUnauthorized: false,
             reconnectionDelayMax: 5000,
         });
+        receiver.on('message', (msg: any) => {
+            expect(msg.type).toEqual('userInit')
+            expect(msg.name).toEqual(username)
 
-        cSocket.on('connect', (msg: any) => {
-            const room = rs.getRoomById(roomCode);
-            expect(room.id).toEqual(roomCode);
         });
     });
+
 
 });
