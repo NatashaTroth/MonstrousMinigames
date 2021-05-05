@@ -3,15 +3,19 @@ import * as React from 'react';
 import { Obstacles } from '../utils/constants';
 import { handleSetControllerSocket } from '../utils/handleSetControllerSocket';
 import { handleSocketConnection } from '../utils/handleSocketConnection';
+import { InMemorySocketFake } from '../utils/socket/InMemorySocketFake';
 import { Socket } from '../utils/socket/Socket';
-import { SocketIOAdapter } from '../utils/socket/SocketIOAdapter';
 import { GameContext } from './GameContextProvider';
 import { PlayerContext } from './PlayerContextProvider';
 
-export type MessageData = IUserInitMessage | IObstacleMessage | IGameFinished;
+export interface IError {
+    type: string;
+    name: string;
+}
+export type MessageData = IUserInitMessage | IObstacleMessage | IGameFinished | IError;
 
 export const defaultValue = {
-    controllerSocket: new SocketIOAdapter('default', 'controller', 'default'),
+    controllerSocket: new InMemorySocketFake(),
     setControllerSocket: () => {
         // do nothing
     },
@@ -55,9 +59,7 @@ export interface IUser {
 }
 
 const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) => {
-    const [controllerSocket, setControllerSocket] = React.useState<Socket>(
-        new SocketIOAdapter('default', 'controller', 'default')
-    );
+    const [controllerSocket, setControllerSocket] = React.useState<Socket>(new InMemorySocketFake());
     const {
         setObstacle,
         setPlayerFinished,

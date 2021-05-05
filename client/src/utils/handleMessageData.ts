@@ -20,7 +20,7 @@ export interface HandleMessageDataDependencies {
     setPlayerAdmin: (val: boolean) => void;
     setPlayerNumber: (val: number) => void;
     setPlayerFinished: (val: boolean) => void;
-    setObstacle: (obstacle: undefined | IObstacle) => void;
+    setObstacle: (roomId: string | undefined, obstacle: undefined | IObstacle) => void;
     setPlayerRank: (val: number) => void;
     setGameStarted: (val: boolean) => void;
     setHasPaused: (val: boolean) => void;
@@ -30,7 +30,7 @@ export interface HandleMessageDataDependencies {
 interface HandleMessageDataProps {
     data: MessageData;
     playerFinished: boolean;
-    roomId: string | undefined;
+    roomId: string;
     socket: Socket;
     dependencies: HandleMessageDataDependencies;
 }
@@ -60,7 +60,7 @@ export function handleMessageData(props: HandleMessageDataProps) {
             break;
         case MessageTypes.obstacle:
             messageData = data as IObstacleMessage;
-            setObstacle({ type: messageData.obstacleType, id: messageData.obstacleId });
+            setObstacle(roomId, { type: messageData.obstacleType, id: messageData.obstacleId });
             break;
         case MessageTypes.playerFinished:
             playerHasFinished(data as IGameFinished, playerFinished, { setPlayerFinished, setPlayerRank });

@@ -7,7 +7,11 @@ import { localDevelopment } from '../../utils/constants';
 import { sendMovement } from '../../utils/sendMovement';
 import FullScreenContainer from '../common/FullScreenContainer';
 import {
-    Container, DialogContent, StyledDialog, StyledRotationIcon, StyledShakeInstruction
+    Container,
+    DialogContent,
+    StyledDialog,
+    StyledRotationIcon,
+    StyledShakeInstruction,
 } from './ShakeInstruction.sc';
 
 const ShakeInstruction: React.FunctionComponent = () => {
@@ -17,7 +21,7 @@ const ShakeInstruction: React.FunctionComponent = () => {
 
     if (localDevelopment) {
         if (!playerFinished) {
-            setInterval(() => sendMovement(controllerSocket, hasPaused), 500);
+            setInterval(() => sendMovement(controllerSocket, hasPaused), 100);
         }
     }
 

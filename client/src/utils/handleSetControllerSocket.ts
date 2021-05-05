@@ -48,5 +48,8 @@ export function handleSetControllerSocket(
             },
         });
     });
-    history.push(`/controller/${roomId}/lobby`);
+
+    if (socket) {
+        history.push(`/controller/${roomId}/lobby`);
+    }
 }

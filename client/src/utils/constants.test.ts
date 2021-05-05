@@ -23,12 +23,12 @@ describe('test GAMESTATE enum', () => {
 });
 
 describe('test OBSTACLES enum', () => {
-    it('OBSTACLES.treeStump should return TREE_STUMP', () => {
-        expect(Obstacles.treeStump).toBe('TREE_STUMP');
+    it('OBSTACLES.treeStump should return TreeStump', () => {
+        expect(Obstacles.treeStump).toBe('TreeStump');
     });
 
-    it('OBSTACLES.spider should return SPIDER', () => {
-        expect(Obstacles.spider).toBe('SPIDER');
+    it('OBSTACLES.spider should return Spider', () => {
+        expect(Obstacles.spider).toBe('Spider');
     });
 
     it('OBSTACLES should have length of 2', () => {

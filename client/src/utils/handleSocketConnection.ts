@@ -24,7 +24,7 @@ export async function handleSocketConnection(
         setPermissionGranted(permission);
     }
 
-    setRoomId(roomId || '');
+    setRoomId(roomId);
 
     handleSetControllerSocket(
         new SocketIOAdapter(roomId, 'controller', name),

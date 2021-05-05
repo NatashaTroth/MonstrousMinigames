@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import { GameState, MessageTypes, Obstacles } from '../utils/constants';
 import ScreenSocket from '../utils/screenSocket';
+import { InMemorySocketFake } from '../utils/socket/InMemorySocketFake';
 import { Socket } from '../utils/socket/Socket';
 import { SocketIOAdapter } from '../utils/socket/SocketIOAdapter';
 import { GameContext, IPlayerState } from './GameContextProvider';
@@ -20,7 +21,7 @@ interface IScreenSocketContext {
 }
 
 export const defaultValue = {
-    screenSocket: new SocketIOAdapter('default', 'screen'),
+    screenSocket: new InMemorySocketFake(),
     setScreenSocket: () => {
         // do nothing
     },
@@ -70,7 +71,7 @@ interface IConnectedUsers {
     users: IUser[];
 }
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
-    const [screenSocket, setScreenSocket] = React.useState<Socket>(new SocketIOAdapter('default', 'screen'));
+    const [screenSocket, setScreenSocket] = React.useState<Socket>(new InMemorySocketFake());
     const [messageData, setMessageData] = React.useState<IGameState | IConnectedUsers | undefined>();
     const history = useHistory();
 

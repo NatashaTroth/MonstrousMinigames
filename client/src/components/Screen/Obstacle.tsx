@@ -17,7 +17,7 @@ const Obstacle: React.FunctionComponent<IObstacle> = ({ posx, player, playerAtOb
 
     return (
         <ObstacleContainer>
-            {playerAtObstacle && <StyledObstacleHint className="bounce" posx={posx} player={player} />}
+            {playerAtObstacle && <StyledObstacleHint className="bounce" posx={posx} player={player} type={type} />}
             <StyledObstacle posx={posx} player={player} type={type}>
                 <StyledObstacleImage src={image} />
             </StyledObstacle>
