@@ -196,7 +196,7 @@ class MainScene extends Phaser.Scene {
             for(let i = 0; i < playerNumber; i++){
                 if(players[i] !== undefined && playerData !== undefined){
                     this.moveForward(players[i], playerData[i].positionX)
-                    this.checkAtObstacle(i, playerData[i].atObstacle)
+                    this.checkAtObstacle(playerData[i].positionX, i, playerData[i].atObstacle, playerData[i].obstacles.length)
                     this.checkFinished(i, playerData[i].finished)
                 }
             }
@@ -208,11 +208,42 @@ class MainScene extends Phaser.Scene {
             }
         }
 
-        checkAtObstacle(playerIndex: number, isAtObstacle: boolean){
+        checkAtObstacle(playerPosition: number, playerIndex: number, isAtObstacle: boolean, numberOfObstacles: number){
             if(isAtObstacle && players[playerIndex].anims.isPlaying){
                 players[playerIndex].anims.stop()
             } else if (!isAtObstacle && !players[playerIndex].anims.isPlaying){
                 players[playerIndex].anims.play(animations[playerIndex])
+                //this.destroyObstacle(playerPosition, playerIndex, numberOfObstacles)
+            }
+        }
+
+        destroyObstacle(playerPosition: number, playerIndex: number, numberOfObstacles: number){
+            let min = 0
+            let max = 0
+            switch(playerIndex){
+                case 0: {
+                    min = 0
+                    max = numberOfObstacles
+                } break
+                case 1: {
+                    min = numberOfObstacles
+                    max = 2*numberOfObstacles
+                } break
+                case 2: {
+                    min = 2*numberOfObstacles
+                    max = 3*numberOfObstacles
+                } break
+                default: {
+                    min = 3*numberOfObstacles
+                    max = 4*numberOfObstacles
+                } break
+            }
+            if(playerIndex === 0){
+                for(let i = min; i < max; i++){
+                    if(obstacles[i].x === playerPosition){
+                        obstacles[i].destroy()
+                    }
+                }
             }
         }
 
@@ -247,20 +278,6 @@ class MainScene extends Phaser.Scene {
 
     moveForward(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, toX: number) {
         player.x = toX
-    }
-
-    playerReachedGoal(playerIndex: number) {
-        players[playerIndex].anims.stop()
-        moveplayers[playerIndex] = false
-        playerFinished[playerIndex] = true
-    }
-    playerHitObstacle(playerIndex: number) {
-        moveplayers[playerIndex] = false
-    }
-
-    obstacleRemoved(obstacleIndex: number, playerIndex: number) {
-        obstacles[obstacleIndex].destroy()
-        moveplayers[playerIndex] = true
     }
 }
 
