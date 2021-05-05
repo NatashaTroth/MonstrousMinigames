@@ -25,11 +25,11 @@ class MainScene extends Phaser.Scene {
         super('MainScene')
     }
 
-    init(data:{roomId?:string}){
-        socket = this.handleSocketConnection()
-        if(roomId !== undefined){
-            roomId = data.roomId!
+    init(data:{roomId:string}){
+        if(roomId === "" && data.roomId !== undefined){
+            roomId = data.roomId
         }
+        socket = this.handleSocketConnection()
     }
 
     preload(): void {
@@ -129,11 +129,7 @@ class MainScene extends Phaser.Scene {
         }
 
         handleMessage(data: any){
-            // eslint-disable-next-line no-console
-            console.log(data)
             if(data.type == "error"){
-                // eslint-disable-next-line no-console
-            console.log(data.roomId)
                 this.handleError(data.msg)
             } else {
                 if (trackLength === 0 && data.data !== undefined) {
@@ -226,8 +222,6 @@ class MainScene extends Phaser.Scene {
         if(roomId == "" || roomId == undefined){
             this.handleError("No room code")
         }
-        // eslint-disable-next-line no-console
-        console.log(roomId)
         const socket = io(
             `${process.env.REACT_APP_BACKEND_URL}screen?${stringify({
                 roomId: roomId,
