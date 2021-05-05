@@ -10,14 +10,12 @@ interface IButton {
     name?: string;
 }
 
-const Button: React.FunctionComponent<IButton> = ({ text, onClick, type = 'button', disabled, name }) => {
-    return (
-        <Container>
-            <StyledButton disabled={disabled} onClick={onClick} type={type} name={name}>
-                {text}
-            </StyledButton>
-        </Container>
-    );
-};
+const Button: React.FunctionComponent<IButton> = ({ text, onClick, type = 'button', disabled, name }) => (
+    <Container>
+        <StyledButton disabled={disabled} onClick={onClick} type={type} name={name}>
+            {text}
+        </StyledButton>
+    </Container>
+);
 
 export default Button;

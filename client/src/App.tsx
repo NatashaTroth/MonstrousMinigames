@@ -3,7 +3,7 @@ import { isMobileOnly } from 'react-device-detect';
 import { Route, Router, Switch } from 'react-router-dom';
 
 import { AppContainer } from './App.sc';
-import Impressum from './components/common/Impressum';
+import Credits from './components/common/Credits';
 import { ConnectScreen as ControllerConnectScreen } from './components/Controller/ConnectScreen';
 import { FinishedScreen as ControllerFinishedScreen } from './components/Controller/FinishedScreen';
 import { Lobby as ControllerLobbyScreen } from './components/Controller/Lobby';
@@ -34,7 +34,8 @@ const App: React.FunctionComponent = () => {
                         <ScreenSocketContextProvider>
                             <ControllerSocketContextProvider>
                                 <Switch>
-                                    <Route path="/impressum" component={Impressum} exact />
+                                    Credits
+                                    <Route path="/credits" component={Credits} exact />
                                     <Route path="/controller/:id/lobby" component={ControllerLobbyScreen} exact />
                                     <Route path="/controller/:id/game1" component={ShakeInstruction} exact />
                                     <Route
@@ -44,11 +45,9 @@ const App: React.FunctionComponent = () => {
                                     />
                                     <Route path={`/controller/:id/${ObstacleRoutes.spider}`} component={Spider} exact />
                                     <Route path="/controller/:id/finished" component={ControllerFinishedScreen} exact />
-
                                     <Route path="/screen/:id/lobby" component={ScreenLobbyScreen} exact />
                                     <Route path="/screen/:id/game1" component={Game} exact />
                                     <Route path="/screen/:id/finished" component={ScreenFinishedScreen} exact />
-
                                     <Route
                                         path="/:id?"
                                         component={isMobileOnly ? ControllerConnectScreen : ScreenConnectScreen}

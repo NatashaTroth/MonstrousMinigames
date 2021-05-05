@@ -1,21 +1,21 @@
 import * as React from 'react';
 
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import history from '../../utils/history';
 import Button from '../common/Button';
+import ConnectDialog from './ConnectDialog';
 import {
+    ButtonContainer,
     ConnectScreenContainer,
-    FormContainer,
-    ImpressumLink,
-    StyledForm,
-    StyledInput,
-    StyledLabel,
+    LeftButtonContainer,
+    LeftContainer,
+    LogoContainer,
+    RightContainer,
+    StyledTypography,
 } from './ConnectScreen.sc';
 
-interface IFormState {
-    roomId: string;
-}
 export const ConnectScreen: React.FunctionComponent = () => {
-    const [formState, setFormState] = React.useState<undefined | IFormState>({ roomId: '' });
+    const [dialogOpen, setDialogOpen] = React.useState(false);
     const { handleSocketConnection } = React.useContext(ScreenSocketContext);
 
     async function handleCreateNewRoom() {
@@ -32,35 +32,31 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
     return (
         <ConnectScreenContainer>
-            <FormContainer>
-                <Button
-                    type="button"
-                    name="new"
-                    text="Create new Room"
-                    disabled={Boolean(formState?.roomId)}
-                    onClick={handleCreateNewRoom}
-                />
-                <StyledForm
-                    onSubmit={e => {
-                        e.preventDefault();
-                        handleSocketConnection(formState?.roomId || '');
-                    }}
-                >
-                    <StyledLabel>
-                        Join existing Room
-                        <StyledInput
-                            type="text"
-                            name="roomId"
-                            value={formState?.roomId}
-                            onChange={e => setFormState({ ...formState, roomId: e.target.value })}
-                            placeholder="Insert a room code"
-                        />
-                    </StyledLabel>
-                    <Button type="submit" name="join" text="Connect" disabled={!formState?.roomId} />
-                </StyledForm>
-            </FormContainer>
+            <ConnectDialog open={dialogOpen} handleClose={() => setDialogOpen(false)} />
+            <LeftContainer>
+                <LeftButtonContainer>
+                    <Button type="button" name="new" text="Create New Room" onClick={handleCreateNewRoom} />
+                    <Button type="button" name="join" text="Join Room" onClick={() => setDialogOpen(true)} />
+                    <Button type="button" name="tutorial" text="Tutorial" disabled />
+                </LeftButtonContainer>
+            </LeftContainer>
+            <RightContainer>
+                <LogoContainer>
+                    <StyledTypography>Monstrous</StyledTypography>
+                    <StyledTypography>Minigames</StyledTypography>
+                </LogoContainer>
 
-            <ImpressumLink to="/impressum">Impressum</ImpressumLink>
+                <ButtonContainer>
+                    <Button type="button" name="credits" text="Credits" onClick={() => history.push('/credits')} />
+                    <Button
+                        type="button"
+                        name="settings"
+                        text="Settings"
+                        onClick={() => history.push('/settings')}
+                        disabled
+                    />
+                </ButtonContainer>
+            </RightContainer>
         </ConnectScreenContainer>
     );
 };
