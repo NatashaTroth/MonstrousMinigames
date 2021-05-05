@@ -312,7 +312,7 @@ class ConnectionHandler {
         this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameEvents.GameStateHasChanged) => {
             this.consoleInfo(data.roomId, GameEventTypes.GameHasStopped);
             const room = rs.getRoomById(data.roomId);
-            room.setFinished();
+            room.setOpen();
             emitter.sendMessage(MessageTypes.GAME_HAS_STOPPED, [controllerNamespace, screenNameSpace], data.roomId);
         });
         this.gameEventEmitter.on(GameEventTypes.GameHasPaused, (data: GameEvents.GameStateHasChanged) => {
