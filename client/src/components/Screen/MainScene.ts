@@ -186,12 +186,14 @@ class MainScene extends Phaser.Scene {
                             }
                         }
                         for (let i = 0; i < playerNumber; i++) {
-                            this.playerText[i] = this.add.text(
-                                players[i].x, //+ 50
-                                players[i].y - 100,
-                                data.data.playersState[i].name,
-                                { font: '16px Arial', align: 'center', fixedWidth: 150 }
-                            );
+                            this.playerText[i] = this.add
+                                .text(
+                                    players[i].x, //+ 50
+                                    players[i].y - 100,
+                                    data.data.playersState[i].name,
+                                    { font: '16px Arial', align: 'center', fixedWidth: 150 }
+                                )
+                                .setDepth(10);
                             // this.playerText[i].setFixedSize = players[i].width;
                             this.playerText[i].setBackgroundColor('#000000');
                             // players[i].anims.play(animations[i]);
@@ -253,6 +255,8 @@ class MainScene extends Phaser.Scene {
                     obstacle.setScale(0.3, 0.3);
             }
 
+            obstacle.setDepth(obstacleArray.length - i);
+
             this.playerObstacles[playerIndex].push(obstacle);
             // obstacles.push(obstacle);
         }
@@ -272,7 +276,7 @@ class MainScene extends Phaser.Scene {
             default:
                 textureName = 'wood';
         }
-        return this.physics.add.sprite(x, y, textureName).setDepth(1);
+        return this.physics.add.sprite(x, y, textureName); //.setDepth(1);
     }
 
     handleError(msg: string) {
@@ -331,7 +335,7 @@ class MainScene extends Phaser.Scene {
         if (!this.playerAttention[playerIndex]) {
             this.playerAttention[playerIndex] = this.physics.add
                 .sprite(players[playerIndex].x + 75, players[playerIndex].y - 100, 'attention')
-                .setDepth(4)
+                .setDepth(20)
                 .setScale(0.03, 0.03);
         }
     }
@@ -428,7 +432,7 @@ class MainScene extends Phaser.Scene {
         }
 
         player.x = toX;
-        this.playerText[playerIndex].x = toX; //-50
+        this.playerText[playerIndex].x = toX; //- 100;
         this.test++;
 
         // if (this.test == 100) {
