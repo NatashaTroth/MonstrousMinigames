@@ -1,9 +1,10 @@
 import { cleanup, queryByText, render } from '@testing-library/react';
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 
 import { Lobby } from '../../components/Screen/Lobby';
 import { defaultValue, GameContext } from '../../contexts/GameContextProvider';
+import history from '../../utils/history';
 
 // window.HTMLMediaElement.prototype.load = () => { /* do nothing */ };
 // window.HTMLMediaElement.prototype.play = () => { /* do nothing */ };
@@ -16,21 +17,11 @@ window.HTMLMediaElement.prototype.pause = () => {
 
 afterEach(cleanup);
 describe('Screen Lobby', () => {
-    it('renders text "Connected Users"', () => {
-        const givenText = 'Connected Users';
-        const { container } = render(
-            <Router>
-                <Lobby />
-            </Router>
-        );
-        expect(queryByText(container, givenText)).toBeTruthy();
-    });
-
     it('renders correct roomId', () => {
         const roomId = 'ABCDE';
         const givenText = `Room Code: ${roomId}`;
         const { container } = render(
-            <Router>
+            <Router history={history}>
                 <GameContext.Provider value={{ ...defaultValue, roomId }}>
                     <Lobby />
                 </GameContext.Provider>
@@ -42,7 +33,7 @@ describe('Screen Lobby', () => {
     it('renders copy to clipboard button', () => {
         const givenText = 'Copy to Clipboard';
         const { container } = render(
-            <Router>
+            <Router history={history}>
                 <Lobby />
             </Router>
         );
@@ -55,16 +46,18 @@ describe('Screen Lobby', () => {
                 id: '1',
                 name: 'User 1',
                 roomId: 'ABCDE',
+                number: 1,
             },
             {
                 id: '2',
                 name: 'User 2',
                 roomId: 'ABCDE',
+                number: 2,
             },
         ];
 
         const { container } = render(
-            <Router>
+            <Router history={history}>
                 <GameContext.Provider value={{ ...defaultValue, connectedUsers }}>
                     <Lobby />
                 </GameContext.Provider>

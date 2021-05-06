@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { lightBlue, orange } from '../../utils/colors';
 
-export const ImpressumContainer = styled.div`
+export const CreditsContainer = styled.div`
     background-color: ${lightBlue};
     width: 100%;
     height: 100%;

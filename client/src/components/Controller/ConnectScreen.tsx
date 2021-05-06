@@ -46,7 +46,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
             <FormContainer
                 onSubmit={e => {
                     e.preventDefault();
-                    handleSocketConnection(formState.roomId, formState?.name);
+                    handleSocketConnection(formState.roomId.toUpperCase(), formState?.name);
                 }}
             >
                 <StyledLabel>
@@ -58,6 +58,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                         onChange={e => setFormState({ ...formState, name: e.target.value })}
                         placeholder="Insert your name"
                         required
+                        maxLength={10}
                     />
                 </StyledLabel>
                 <StyledLabel>

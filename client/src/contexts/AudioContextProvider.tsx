@@ -24,15 +24,8 @@ interface IAudioContext {
 export const AudioContext = React.createContext<IAudioContext>(defaultValue);
 
 const AudioContextProvider: React.FunctionComponent = ({ children }) => {
-    const [audio, setAudio] = React.useState<HTMLAudioElement>(new Audio(lobbyMusic));
+    const audio = new Audio(lobbyMusic);
     const [permission, setPermissionGranted] = React.useState<boolean>(false);
-
-    const handlePlayLobbyMusic = (p: boolean) => {
-        if (p) {
-            audio.play();
-            audio.loop = true;
-        }
-    };
 
     const content = {
         permission,

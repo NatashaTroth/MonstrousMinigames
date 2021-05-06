@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import { Headline, HomeLink, ImpressumContainer } from './Impressum.sc';
+import { CreditsContainer, Headline, HomeLink } from './Credits.sc';
 
-const Impressum: React.FunctionComponent = () => {
+const Credits: React.FunctionComponent = () => {
     return (
-        <ImpressumContainer>
-            <Headline>Impressum</Headline>
+        <CreditsContainer>
+            <Headline>Credits</Headline>
             <p>
                 The graphics for the tree trunks were created by macrovecto and downloaded from freepiks.com.{' '}
                 <a href="https://de.freepik.com/vektoren-kostenlos/holzwerkstoff-und-fertigprodukte-mit-baumstamm-aeste-planken-kuechenutensilien-transparent-gesetzt_6804311.htm#page=1&query=Baumstamm&position=8">
@@ -13,8 +13,8 @@ const Impressum: React.FunctionComponent = () => {
                 </a>
             </p>
             <HomeLink to="/">Back</HomeLink>
-        </ImpressumContainer>
+        </CreditsContainer>
     );
 };
 
-export default Impressum;
+export default Credits;

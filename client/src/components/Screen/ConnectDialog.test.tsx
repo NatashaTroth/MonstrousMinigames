@@ -5,7 +5,7 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { defaultValue, ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { ConnectScreen } from './ConnectScreen';
+import ConnectDialog from './ConnectDialog';
 
 configure({ adapter: new Adapter() });
 afterEach(cleanup);
@@ -17,7 +17,12 @@ describe('Screen ConnectScreen', () => {
                 <ScreenSocketContext.Provider
                     value={{ ...defaultValue, handleSocketConnection: handleSocketConnectionFunction }}
                 >
-                    <ConnectScreen />
+                    <ConnectDialog
+                        open={true}
+                        handleClose={() => {
+                            //do nothing
+                        }}
+                    />
                 </ScreenSocketContext.Provider>
             </Router>
         );

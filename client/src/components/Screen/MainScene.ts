@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 import { stringify } from 'querystring';
 
-// import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
 import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
 import attention from '../../images/attention.png';
@@ -16,6 +15,7 @@ import steffi from '../../images/steffi_spritesheet.png';
 import susi from '../../images/susi_spritesheet.png';
 // import track from '../../images/track.png';
 import wood from '../../images/wood.png';
+import { MessageTypes } from '../../utils/constants';
 
 const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
 const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
@@ -23,7 +23,7 @@ const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
 let playerNumber = 0;
 let roomId = '';
 const moveplayers = [true, true, true, true];
-//let obstaclesCleared = [0,0,0,0]
+
 let socket: SocketIOClient.Socket;
 let trackLength = 0;
 const animations = ['franzWalk', 'susiWalk', 'noahWalk', 'steffiWalk'];
@@ -56,12 +56,8 @@ class MainScene extends Phaser.Scene {
     }
 
     preload(): void {
-        // this.load.audio('music', ['../../assets/audio/Sound_Game.mp3']);
-        // require('../../audio/Sound_Game.mp3');
         this.load.audio('backgroundMusicStart', [game1SoundStart]);
         this.load.audio('backgroundMusicLoop', [game1SoundLoop]);
-        // this.load.audio('backgroundMusicEnd', [game1SoundEnd]);
-        //require('../../audio/Sound_Game.mp3')
 
         this.load.spritesheet('franz', franz, {
             frameWidth: 826,
@@ -149,21 +145,22 @@ class MainScene extends Phaser.Scene {
     }
 
     handleMessage(data: any) {
-        if (data.type == 'error') {
+        if (data.type === MessageTypes.error) {
             this.handleError(data.msg);
         } else {
-            if (trackLength === 0 && data.data !== undefined) {
+            if (trackLength === 0 && data.data) {
                 trackLength = data.data.trackLength;
             }
+
             if (!roomId) {
                 roomId = data.data.roomId;
             }
-            if (data.type === 'game1/gameState') {
-                if (logged == false) {
-                    // eslint-disable-next-line no-console
-                    // console.log(data.data.playersState[0]);
+
+            if (data.type === MessageTypes.gameState) {
+                if (!logged) {
                     logged = true;
-                    if (playerNumber == 0) {
+
+                    if (playerNumber === 0) {
                         playerNumber = data.data.playersState.length;
 
                         if (playerNumber < 4) {
@@ -171,6 +168,7 @@ class MainScene extends Phaser.Scene {
                                 players[i].destroy();
                             }
                         }
+
                         for (let i = 0; i < playerNumber; i++) {
                             // players[i].anims.play(animations[i]);
                             if (obstacles.length < data.data.playersState[0].obstacles.length * playerNumber)
