@@ -1,10 +1,15 @@
-import { Button as MuiButton, Typography } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import styled from 'styled-components';
 
 import {
-    disabledBackground, lightgrey, Player1, Player2, Player3, Player4, QRCodeBackground
+    disabledBackground,
+    lightgrey,
+    Player1,
+    Player2,
+    Player3,
+    Player4,
+    QRCodeBackground,
 } from '../../utils/colors';
-import Button from '../common/Button';
 
 function getPlayerBackgroundColor(n: number) {
     switch (n) {
@@ -128,7 +133,7 @@ export const QRCode = styled.div`
     padding: 10px;
 `;
 
-export const CopyToClipboard = styled(MuiButton)`
+export const CopyToClipboard = styled(Button)`
     && {
         color: white;
     }

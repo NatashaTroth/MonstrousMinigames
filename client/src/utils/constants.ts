@@ -35,6 +35,7 @@ export enum MessageTypes {
     started = 'game1/hasStarted',
     pauseResume = 'pauseResume',
     stopGame = 'stopGame',
+    gameState = 'game1/gameState',
 }
 
 export const localDevelopment = false;

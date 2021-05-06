@@ -11,10 +11,22 @@ import { generateQRCode } from '../../utils/generateQRCode';
 import Button from '../common/Button';
 import Logo from '../common/Logo';
 import {
-    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer,
-    ConnectedUserName, ConnectedUsers, Content, CopyToClipboard, Headline, LeftContainer,
-    LobbyContainer, QRCode, QRCodeInstructions, RightButtonContainer, RightContainer,
-    RoomCodeContainer
+    Character,
+    CharacterContainer,
+    ConnectedUserCharacter,
+    ConnectedUserContainer,
+    ConnectedUserName,
+    ConnectedUsers,
+    Content,
+    CopyToClipboard,
+    Headline,
+    LeftContainer,
+    LobbyContainer,
+    QRCode,
+    QRCodeInstructions,
+    RightButtonContainer,
+    RightContainer,
+    RoomCodeContainer,
 } from './Lobby.sc';
 import SelectGameDialog from './SelectGameDialog';
 
@@ -23,8 +35,7 @@ export const Lobby: React.FunctionComponent = () => {
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: IRouteParams = useParams();
     const navigator = window.navigator;
-    const [users, setUsers] = React.useState<ConnectedUsers[]>(getUserArray([]));
-    const [dialogOpen, setDialogOpen] = React.useState(true);
+    const [dialogOpen, setDialogOpen] = React.useState(false);
 
     if (id && !screenSocket) {
         handleSocketConnection(id);
@@ -43,11 +54,7 @@ export const Lobby: React.FunctionComponent = () => {
         } else {
             generateQRCode(`${process.env.REACT_APP_FRONTEND_URL}${roomId}`, 'qrCode');
         }
-
-        if (connectedUsers?.length !== 4) {
-            setUsers(getUserArray(connectedUsers || []));
-        }
-    }, [connectedUsers, roomId, users]);
+    }, [roomId]);
 
     return (
         <LobbyContainer>
@@ -59,7 +66,7 @@ export const Lobby: React.FunctionComponent = () => {
                     </RoomCodeContainer>
 
                     <ConnectedUsers>
-                        {users.map(user => (
+                        {getUserArray(connectedUsers || []).map(user => (
                             <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>
                                 <ConnectedUserCharacter number={user.number} free={user.free}>
                                     {!user.free && (
