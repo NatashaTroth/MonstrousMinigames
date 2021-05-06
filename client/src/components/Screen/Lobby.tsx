@@ -1,9 +1,11 @@
 import { Button as MuiButton } from '@material-ui/core';
 import { Assignment } from '@material-ui/icons';
 import * as React from 'react';
+import { useBeforeunload } from 'react-beforeunload';
 import { useParams } from 'react-router-dom';
 
 import { IRouteParams } from '../../App';
+import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { localDevelopment } from '../../utils/constants';
@@ -30,6 +32,7 @@ import {
 
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers } = React.useContext(GameContext);
+    const { playLobbyMusic, pauseLobbyMusic, permission } = React.useContext(AudioContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const [selectedGame, setSelectedGame] = React.useState(0);
     const { id }: IRouteParams = useParams();
@@ -53,6 +56,15 @@ export const Lobby: React.FunctionComponent = () => {
             generateQRCode(`${process.env.REACT_APP_FRONTEND_URL}${roomId}`, 'qrCode');
         }
     }, [roomId]);
+
+    React.useEffect(() => {
+        playLobbyMusic(permission);
+    }, [permission]);
+
+    useBeforeunload(() => {
+        //eslint-disable-next-line no-console
+        pauseLobbyMusic(permission);
+    });
 
     return (
         <LobbyContainer>
