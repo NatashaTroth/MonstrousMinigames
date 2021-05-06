@@ -60,25 +60,12 @@ class ConnectionHandler {
             /* User join logic */
             let user: User;
             let userId = socket.handshake.query.userId;
-            if (userId) {
-                // check if user is in room
-                user = socket.room.getUserById(userId);
-                if (user) {
-                    // user is in room
-                    user.setRoomId(roomId);
-                    user.setSocketId(socket.id);
-                    user.setActive(true);
-                } else {
-                    user = new User(socket.room.id, socket.id, name);
-                    userId = user.id;
-                    try {
-                        socket.room.addUser(user);
-                    } catch (e) {
-                        emitter.sendErrorMessage(socket, e);
-                        console.error(roomId + ' | ' + e.name + ' | ' + userId);
-                        return;
-                    }
-                }
+            user = socket.room.getUserById(userId);
+            if (user) {
+                // user is in room
+                user.setRoomId(roomId);
+                user.setSocketId(socket.id);
+                user.setActive(true);
             } else {
                 // assign user id
                 user = new User(socket.room.id, socket.id, name);
@@ -88,7 +75,7 @@ class ConnectionHandler {
                     socket.room.addUser(user);
                 } catch (e) {
                     emitter.sendErrorMessage(socket, e);
-                    console.error(roomId + ' | ' + e.name + ' | ' + userId);
+                    console.error(roomId + ' | ' + e.name);
                     return;
                 }
             }
