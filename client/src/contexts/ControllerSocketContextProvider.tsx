@@ -56,6 +56,7 @@ export interface IUser {
     id: string;
     name: string;
     roomId: string;
+    number: number;
 }
 
 const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) => {

@@ -3,15 +3,10 @@ import * as React from 'react';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import history from '../../utils/history';
 import Button from '../common/Button';
+import Logo from '../common/Logo';
 import ConnectDialog from './ConnectDialog';
 import {
-    ButtonContainer,
-    ConnectScreenContainer,
-    LeftButtonContainer,
-    LeftContainer,
-    LogoContainer,
-    RightContainer,
-    StyledTypography,
+    ButtonContainer, ConnectScreenContainer, LeftButtonContainer, LeftContainer, RightContainer
 } from './ConnectScreen.sc';
 
 export const ConnectScreen: React.FunctionComponent = () => {
@@ -41,10 +36,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                 </LeftButtonContainer>
             </LeftContainer>
             <RightContainer>
-                <LogoContainer>
-                    <StyledTypography>Monstrous</StyledTypography>
-                    <StyledTypography>Minigames</StyledTypography>
-                </LogoContainer>
+                <Logo />
 
                 <ButtonContainer>
                     <Button type="button" name="credits" text="Credits" onClick={() => history.push('/credits')} />

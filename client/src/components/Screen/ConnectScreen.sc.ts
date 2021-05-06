@@ -1,4 +1,3 @@
-import { Typography } from '@material-ui/core';
 import styled from 'styled-components';
 
 import fire from '../../images/fire.svg';
@@ -42,14 +41,4 @@ export const RightContainer = styled.div`
     align-items: flex-end;
     justify-content: space-between;
     padding: 60px;
-`;
-
-export const LogoContainer = styled.div``;
-
-export const StyledTypography = styled(Typography)`
-    && {
-        color: white;
-        font-weight: 700;
-        font-size: 50px;
-    }
 `;

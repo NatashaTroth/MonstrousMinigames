@@ -59,6 +59,7 @@ export interface IUser {
     id: string;
     name: string;
     roomId: string;
+    number: number;
 }
 
 interface IGameStarted {
