@@ -4,13 +4,16 @@ import { stringify } from 'querystring';
 // import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
 import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
-import forest from '../../images/forest.png';
+import forest from '../../images/background.png';
+// import finishLine from '../../images/finishLine.png';
 import franz from '../../images/franz_spritesheet.png';
 import goal from '../../images/goal.png';
 import noah from '../../images/noah_spritesheet.png';
 import spider from '../../images/spider.png';
+// import startLine from '../../images/startLine.png';
 import steffi from '../../images/steffi_spritesheet.png';
 import susi from '../../images/susi_spritesheet.png';
+// import track from '../../images/track.png';
 import wood from '../../images/wood.png';
 
 const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
@@ -27,8 +30,18 @@ const animations = ['franzWalk', 'susiWalk', 'noahWalk', 'steffiWalk'];
 let logged = false;
 
 class MainScene extends Phaser.Scene {
+    posX: number;
+    plusX: number;
+    posY: number;
+
+    plusY: number;
+
     constructor() {
         super('MainScene');
+        this.posX = 50;
+        this.plusX = 40;
+        this.posY = 350;
+        this.plusY = 110;
     }
 
     init(data: { roomId: string; playerNumber: number }) {
@@ -52,6 +65,9 @@ class MainScene extends Phaser.Scene {
         this.load.spritesheet('steffi', steffi, { frameWidth: 826, frameHeight: 1163 });
 
         this.load.image('forest', forest);
+        // this.load.image('track', track);
+        // this.load.image('startLine', startLine);
+        // this.load.image('finishLine', finishLine);
         this.load.image('goal', goal);
         this.load.image('wood', wood);
         this.load.image('spider', spider);
@@ -62,6 +78,8 @@ class MainScene extends Phaser.Scene {
         const windowHeight = window.innerHeight;
         const bg = this.add.image(windowWidth / 2, windowHeight / 2, 'forest');
         bg.setDisplaySize(windowWidth, windowHeight);
+
+        // this.add.image(0, 10, 'track');
 
         const backgroundMusicStart = this.sound.add('backgroundMusicStart');
         const backgroundMusicLoop = this.sound.add('backgroundMusicLoop');
@@ -74,15 +92,15 @@ class MainScene extends Phaser.Scene {
             backgroundMusicLoop.play({ loop: true });
         });
 
-        players.push(this.physics.add.sprite(0, 10, 'franz'));
-        players.push(this.physics.add.sprite(0, 300, 'susi'));
-        players.push(this.physics.add.sprite(0, 500, 'noah'));
-        players.push(this.physics.add.sprite(0, 700, 'steffi'));
+        players.push(this.physics.add.sprite(this.posX, this.posY, 'franz'));
+        players.push(this.physics.add.sprite(this.posX + this.plusX, this.posY + this.plusY, 'susi'));
+        players.push(this.physics.add.sprite(this.posX + this.plusX * 2, this.posY + this.plusY * 2, 'noah'));
+        players.push(this.physics.add.sprite(this.posX + this.plusX * 3, this.posY + this.plusY * 3, 'steffi'));
 
         players.forEach(player => {
             player.setBounce(0.2);
             player.setCollideWorldBounds(true);
-            player.setScale(0.2, 0.2);
+            player.setScale(0.15, 0.15);
             player.setCollideWorldBounds(true);
         });
 
@@ -128,7 +146,7 @@ class MainScene extends Phaser.Scene {
             if (data.type === 'game1/gameState') {
                 if (logged == false) {
                     // eslint-disable-next-line no-console
-                    console.log(data.data.playersState[0]);
+                    // console.log(data.data.playersState[0]);
                     logged = true;
                     if (playerNumber == 0) {
                         playerNumber = data.data.playersState.length;
@@ -161,13 +179,13 @@ class MainScene extends Phaser.Scene {
     getYPosition(playerIndex: number) {
         switch (playerIndex) {
             case 0:
-                return 100;
+                return this.posY;
             case 1:
-                return 300;
+                return this.posY + this.plusY;
             case 2:
-                return 500;
+                return this.posY + this.plusY * 2;
             case 3:
-                return 700;
+                return this.posY + this.plusY * 3;
             default:
                 return 0;
         }
@@ -177,15 +195,28 @@ class MainScene extends Phaser.Scene {
         const yPosition = this.getYPosition(playerIndex);
         let obstacle: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
         for (let i = 0; i < obstacleArray.length; i++) {
-            obstacle = this.placeObstacle(obstacleArray[i].positionX, yPosition, obstacleArray[i].type);
-            obstacle.setScale(0.5, 0.5);
+            const posX = (obstacleArray[i].positionX * (window.innerWidth - 200)) / (trackLength || 1);
+            switch (obstacleArray[i].type) {
+                case 'TreeStump':
+                    obstacle = this.placeObstacle(posX, yPosition + 45, obstacleArray[i].type);
+                    obstacle.setScale(0.4, 0.4);
+                    break;
+                case 'Spider':
+                    obstacle = this.placeObstacle(posX, yPosition + 25, obstacleArray[i].type);
+                    obstacle.setScale(0.2, 0.2);
+                    break;
+                default:
+                    obstacle = this.placeObstacle(posX, yPosition + 30, obstacleArray[i].type);
+                    obstacle.setScale(0.3, 0.3);
+            }
+
             obstacles.push(obstacle);
         }
     }
 
     placeObstacle(x: number, y: number, type: string) {
         // eslint-disable-next-line no-console
-        console.log(`x: ${x}y: ${y}${type}`);
+        // console.log(`x: ${x}y: ${y}${type}`);
         let textureName = 'TreeStump';
         switch (type) {
             case 'Spider':
