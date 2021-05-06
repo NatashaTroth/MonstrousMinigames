@@ -334,7 +334,7 @@ class MainScene extends Phaser.Scene {
     addAttentionIcon(playerIndex: number) {
         if (!this.playerAttention[playerIndex]) {
             this.playerAttention[playerIndex] = this.physics.add
-                .sprite(players[playerIndex].x + 75, players[playerIndex].y - 100, 'attention')
+                .sprite(players[playerIndex].x + 75, players[playerIndex].y - 150, 'attention')
                 .setDepth(100)
                 .setScale(0.03, 0.03);
         }
