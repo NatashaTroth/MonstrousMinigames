@@ -10,10 +10,15 @@ let gameStateInfo: GameStateInfo;
 
 describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
+        jest.useFakeTimers();
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES);
-        jest.useFakeTimers();
         gameStateInfo = catchFoodGame.getGameStateInfo();
+    });
+
+    afterEach(async () => {
+        jest.runAllTimers();
+        jest.clearAllMocks();
     });
 
     it('should return the game state', async () => {
