@@ -52,19 +52,105 @@ describe('connectionHandler', () => {
 
         done()
     });
-    it('should send a message of type userinit with the given username on connection', () => {
+    it('should send a message of type userinit with the given username on connection', (done) => {
         const username = 'John'
 
-        receiver = client(`http://${url}/controller?roomId=${roomCode}&name=${username}userId=`, {
+        receiver = client(`http://${url}/controller?roomId=${roomCode}&name=${username}&userId=`, {
+            secure: true,
+            reconnection: true,
+            rejectUnauthorized: false,
+            reconnectionDelayMax: 5000,
+        });
+
+        receiver.on('message', (msg: any) => {
+            expect(msg.type).toEqual('userInit')
+            expect(msg.name).toEqual(username)
+            done()
+
+        });
+    });
+    it('should send an error message if a user tries to join a nonexistent room', (done) => {
+        const username = 'John'
+        roomCode = 'INVALID'
+
+        receiver = client(`http://${url}/controller?roomId=${roomCode}&name=${username}&userId=`, {
             secure: true,
             reconnection: true,
             rejectUnauthorized: false,
             reconnectionDelayMax: 5000,
         });
         receiver.on('message', (msg: any) => {
-            expect(msg.type).toEqual('userInit')
-            expect(msg.name).toEqual(username)
+            expect(msg.type).toEqual('error')
+            done()
+        });
+    });
+    it('should log InvalidRoomCodeError if a user tries to join a nonexistent room', (done) => {
+        const username = 'John'
+        roomCode = 'INVALID'
+        const consoleSpy = jest.spyOn(console, 'error');
+      
+        receiver = client(`http://${url}/controller?roomId=${roomCode}&name=${username}&userId=`, {
+            secure: true,
+            reconnection: true,
+            rejectUnauthorized: false,
+            reconnectionDelayMax: 5000,
+        });
+        receiver.on('message', (msg: any) => {
+            expect(consoleSpy).toHaveBeenCalledWith(`${roomCode} | InvalidRoomCodeError`);
+            done()
+        });
+    });
+    it('should add a user to the room after joining', (done) => {
+        const username = 'John'
 
+        receiver = client(`http://${url}/controller?roomId=${roomCode}&name=${username}&userId=`, {
+            secure: true,
+            reconnection: true,
+            rejectUnauthorized: false,
+            reconnectionDelayMax: 5000,
+        });
+        receiver.on('message', (msg: any) => {
+            const room = rs.getRoomById(roomCode)
+            const user = room.users[0]
+            expect(user.id).toEqual(msg.userId)
+            done()
+        });
+    });
+
+
+    it('should allow a user to rejoin after disconnecting', (done) => {
+        const username = 'John'
+
+        receiver = client(`http://${url}/controller?roomId=${roomCode}&name=${username}&userId=`, {
+            secure: true,
+            reconnection: true,
+            rejectUnauthorized: false,
+            reconnectionDelayMax: 5000,
+        });
+        receiver.on('message', (msg: any) => {
+            const userId = msg.userId
+            const room = rs.getRoomById(roomCode)
+            const user = room.getUserById(userId)
+
+            expect(user.id).toEqual(msg.userId)
+            expect(user.socketId).toEqual(receiver.id)
+            expect(user.active).toEqual(true)
+
+            const receiver2 = client(`http://${url}/controller?roomId=${roomCode}&name=${username}&userId=${userId}`, {
+                secure: true,
+                reconnection: true,
+                rejectUnauthorized: false,
+                reconnectionDelayMax: 5000,
+            });
+            receiver2.on('message', (msg: any) => {
+
+                expect(user.id).toEqual(msg.userId)
+                expect(user.socketId).toEqual(receiver2.id)
+                expect(user.active).toEqual(true)
+
+                receiver2.close()
+                done()
+            });
         });
     });
 
