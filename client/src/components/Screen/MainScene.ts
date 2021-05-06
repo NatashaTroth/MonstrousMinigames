@@ -1,10 +1,11 @@
 import Phaser from 'phaser';
 import { stringify } from 'querystring';
 
+// import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
 import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
-import attention from '../../images/attention.png';
-import forest from '../../images/background.png';
+// import attention from '../../images/attention.png';
+import forest from '../../images/backgroundGame.png';
 // import finishLine from '../../images/finishLine.png';
 import franz from '../../images/franz_spritesheet.png';
 import goal from '../../images/goal.png';
@@ -15,15 +16,14 @@ import steffi from '../../images/steffi_spritesheet.png';
 import susi from '../../images/susi_spritesheet.png';
 // import track from '../../images/track.png';
 import wood from '../../images/wood.png';
-import { MessageTypes } from '../../utils/constants';
 
 const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
 const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
-const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
+// const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
 let playerNumber = 0;
 let roomId = '';
 const moveplayers = [true, true, true, true];
-
+//let obstaclesCleared = [0,0,0,0]
 let socket: SocketIOClient.Socket;
 let trackLength = 0;
 const animations = ['franzWalk', 'susiWalk', 'noahWalk', 'steffiWalk'];
@@ -36,7 +36,10 @@ class MainScene extends Phaser.Scene {
     posY: number;
     plusY: number;
     playerRunning: Array<boolean>;
-    playerAttention: Array<null | Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
+    playerAtObstacle: Array<boolean>;
+    playerObstacles: Array<Array<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>>;
+    playerCountSameDistance: Array<number>;
+    // playerAttention: Array<null | Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
 
     constructor() {
         super('MainScene');
@@ -45,7 +48,10 @@ class MainScene extends Phaser.Scene {
         this.posY = 350;
         this.plusY = 110;
         this.playerRunning = [];
-        this.playerAttention = [];
+        this.playerAtObstacle = [];
+        // this.playerAttention = [];
+        this.playerObstacles = [];
+        this.playerCountSameDistance = [];
     }
 
     init(data: { roomId: string; playerNumber: number }) {
@@ -56,8 +62,12 @@ class MainScene extends Phaser.Scene {
     }
 
     preload(): void {
+        // this.load.audio('music', ['../../assets/audio/Sound_Game.mp3']);
+        // require('../../audio/Sound_Game.mp3');
         this.load.audio('backgroundMusicStart', [game1SoundStart]);
         this.load.audio('backgroundMusicLoop', [game1SoundLoop]);
+        // this.load.audio('backgroundMusicEnd', [game1SoundEnd]);
+        //require('../../audio/Sound_Game.mp3')
 
         this.load.spritesheet('franz', franz, {
             frameWidth: 826,
@@ -74,7 +84,7 @@ class MainScene extends Phaser.Scene {
         // this.load.image('track', track);
         // this.load.image('startLine', startLine);
         // this.load.image('finishLine', finishLine);
-        this.load.image('attention', attention);
+        // this.load.image('attention', attention);
         this.load.image('goal', goal);
         this.load.image('wood', wood);
         this.load.image('spider', spider);
@@ -112,7 +122,10 @@ class MainScene extends Phaser.Scene {
             player.setScale(0.15, 0.15);
             player.setCollideWorldBounds(true);
             this.playerRunning.push(false);
-            this.playerAttention.push(null);
+            this.playerAtObstacle.push(false);
+            this.playerObstacles.push([]);
+            this.playerCountSameDistance.push(0);
+            // this.playerAttention.push(null);
         });
 
         this.anims.create({
@@ -145,22 +158,21 @@ class MainScene extends Phaser.Scene {
     }
 
     handleMessage(data: any) {
-        if (data.type === MessageTypes.error) {
+        if (data.type == 'error') {
             this.handleError(data.msg);
         } else {
-            if (trackLength === 0 && data.data) {
+            if (trackLength === 0 && data.data !== undefined) {
                 trackLength = data.data.trackLength;
             }
-
             if (!roomId) {
                 roomId = data.data.roomId;
             }
-
-            if (data.type === MessageTypes.gameState) {
-                if (!logged) {
+            if (data.type === 'game1/gameState') {
+                if (logged == false) {
+                    // eslint-disable-next-line no-console
+                    // console.log(data.data.playersState[0]);
                     logged = true;
-
-                    if (playerNumber === 0) {
+                    if (playerNumber == 0) {
                         playerNumber = data.data.playersState.length;
 
                         if (playerNumber < 4) {
@@ -168,11 +180,10 @@ class MainScene extends Phaser.Scene {
                                 players[i].destroy();
                             }
                         }
-
                         for (let i = 0; i < playerNumber; i++) {
                             // players[i].anims.play(animations[i]);
-                            if (obstacles.length < data.data.playersState[0].obstacles.length * playerNumber)
-                                this.setObstacles(i, data.data.playersState[i].obstacles);
+                            // if (obstacles.length < data.data.playersState[0].obstacles.length * playerNumber)
+                            this.setObstacles(i, data.data.playersState[i].obstacles);
                             this.setGoal(i);
                         }
                     }
@@ -210,6 +221,7 @@ class MainScene extends Phaser.Scene {
 
     setObstacles(playerIndex: number, obstacleArray: [{ id: number; positionX: number; type: string }]) {
         const yPosition = this.getYPosition(playerIndex);
+        this.playerObstacles[playerIndex] = [];
         let obstacle: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
         for (let i = 0; i < obstacleArray.length; i++) {
             // const posX = (obstacleArray[i].positionX * (window.innerWidth - 200)) / (trackLength || 1);
@@ -228,7 +240,8 @@ class MainScene extends Phaser.Scene {
                     obstacle.setScale(0.3, 0.3);
             }
 
-            obstacles.push(obstacle);
+            this.playerObstacles[playerIndex].push(obstacle);
+            // obstacles.push(obstacle);
         }
     }
 
@@ -255,13 +268,15 @@ class MainScene extends Phaser.Scene {
             player.destroy();
         });
 
-        obstacles.forEach(obstacle => {
-            obstacle.destroy();
+        this.playerObstacles.forEach(pObstacles => {
+            pObstacles.forEach(obstacle => {
+                obstacle.destroy();
+            });
         });
 
-        obstacles.forEach(obstacle => {
-            obstacle.destroy();
-        });
+        // obstacles.forEach(obstacle => {
+        //     obstacle.destroy();
+        // });
     }
 
     removePlayerSprite(index: number) {
@@ -286,39 +301,46 @@ class MainScene extends Phaser.Scene {
     }
 
     checkAtObstacle(playerIndex: number, isAtObstacle: boolean, playerPositionX: number) {
-        if (isAtObstacle && players[playerIndex].anims.isPlaying) {
-            // players[playerIndex].anims.stop();
+        if (isAtObstacle && !this.playerAtObstacle[playerIndex]) {
             this.stopRunningAnimation(players[playerIndex], playerIndex);
+            this.playerAtObstacle[playerIndex] = true;
 
-            this.addAttentionIcon(playerIndex);
-        } else if (!isAtObstacle && !players[playerIndex].anims.isPlaying) {
-            // players[playerIndex].anims.play(animations[playerIndex]);
+            // this.addAttentionIcon(playerIndex);
+        } else if (!isAtObstacle && this.playerAtObstacle[playerIndex]) {
+            this.playerAtObstacle[playerIndex] = false;
             this.startRunningAnimation(players[playerIndex], playerIndex);
             this.destroyObstacle(playerIndex, playerPositionX);
-            this.destroyAttentionIcon(playerIndex);
+            // this.destroyAttentionIcon(playerIndex);
         }
     }
 
-    addAttentionIcon(playerIndex: number) {
-        if (!this.playerAttention[playerIndex]) {
-            this.playerAttention[playerIndex] = this.physics.add
-                .sprite(players[playerIndex].x + 75, players[playerIndex].y - 100, 'attention')
-                .setDepth(4)
-                .setScale(0.03, 0.03);
-        }
-    }
+    // addAttentionIcon(playerIndex: number) {
+    //     if (!this.playerAttention[playerIndex]) {
+    //         this.playerAttention[playerIndex] = this.physics.add
+    //             .sprite(players[playerIndex].x + 75, players[playerIndex].y - 100, 'attention')
+    //             .setDepth(4)
+    //             .setScale(0.03, 0.03);
+    //     }
+    // }
 
-    destroyAttentionIcon(playerIndex: number) {
-        this.playerAttention[playerIndex]?.destroy();
-        this.playerAttention[playerIndex] = null;
-    }
+    // destroyAttentionIcon(playerIndex: number) {
+    //     this.playerAttention[playerIndex]?.destroy();
+    //     this.playerAttention[playerIndex] = null;
+    // }
 
     destroyObstacle(playerIndex: number, playerPositionX: number) {
-        obstacles.forEach(element => {
-            if (element.x === playerPositionX && element.y === this.getYPosition(playerIndex)) {
-                element.destroy();
-            }
-        });
+        if (this.playerObstacles[playerIndex].length > 0) {
+            this.playerObstacles[playerIndex][0].destroy();
+            this.playerObstacles[playerIndex].shift();
+        }
+
+        // this.playerObstacles.forEach(pObstacles => {
+        //     pObstacles.forEach(element => {
+        //         if (element.x === playerPositionX && element.y === this.getYPosition(playerIndex)) {
+        //             element.destroy();
+        //         }
+        //     });
+        // });
     }
 
     update() {
@@ -353,20 +375,46 @@ class MainScene extends Phaser.Scene {
     startRunningAnimation(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, playerIdx: number) {
         player.anims.play(animations[playerIdx]);
         this.playerRunning[playerIdx] = true;
+        // eslint-disable-next-line no-console
+        // console.log('run forward');
     }
     stopRunningAnimation(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, playerIdx: number) {
         player.anims.stop();
         this.playerRunning[playerIdx] = false;
+        // eslint-disable-next-line no-console
+        // console.log('stpop run forward');
     }
 
-    moveForward(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, toX: number, playerIdx: number) {
-        // console.log(toX)
-        if (toX === player.x) {
-            if (this.playerRunning[playerIdx]) this.stopRunningAnimation(player, playerIdx);
+    moveForward(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, toX: number, playerIndex: number) {
+        // eslint-disable-next-line no-console
+        toX = this.mapServerXToWindowX(toX);
+        if (toX == player.x) {
+            this.playerCountSameDistance[playerIndex]++; // if idle for more than a second - means actually stopped, otherwise could just be waiting for new
         } else {
-            if (!this.playerRunning[playerIdx]) this.startRunningAnimation(player, playerIdx);
+            this.playerCountSameDistance[playerIndex] = 0;
+            // eslint-disable-next-line no-console
+            // console.log('not same');
+            // eslint-disable-next-line no-console
+            if (!this.playerRunning[playerIndex]) {
+                // eslint-disable-next-line no-console
+                // console.log('start moving runnnnnn');
+                // console.log('start moving runnnnnn new x: ', toX);
+                // eslint-disable-next-line no-console
+                // console.log('current x: ', player.x);
+
+                this.startRunningAnimation(player, playerIndex);
+            }
         }
-        player.x = this.mapServerXToWindowX(toX);
+
+        if (this.playerRunning[playerIndex] && this.playerCountSameDistance[playerIndex] > 100) {
+            //TODO HANDLE
+            // eslint-disable-next-line no-console
+            // console.log('Stop running');
+            // this.stopRunningAnimation(player, playerIndex);
+            // this.playerCountSameDistance[playerIndex] = 0;
+        }
+
+        player.x = toX;
     }
 }
 
