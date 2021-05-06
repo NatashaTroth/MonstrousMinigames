@@ -111,14 +111,14 @@ class MainScene extends Phaser.Scene {
             backgroundMusicLoop.play({ loop: true });
         });
 
-        players.push(this.physics.add.sprite(this.posX, this.posY, 'franz').setDepth(2));
+        players.push(this.physics.add.sprite(this.posX, this.posY, 'franz').setDepth(50));
 
-        players.push(this.physics.add.sprite(this.posX + this.plusX, this.posY + this.plusY, 'susi').setDepth(2));
+        players.push(this.physics.add.sprite(this.posX + this.plusX, this.posY + this.plusY, 'susi').setDepth(50));
         players.push(
-            this.physics.add.sprite(this.posX + this.plusX * 2, this.posY + this.plusY * 2, 'noah').setDepth(2)
+            this.physics.add.sprite(this.posX + this.plusX * 2, this.posY + this.plusY * 2, 'noah').setDepth(50)
         );
         players.push(
-            this.physics.add.sprite(this.posX + this.plusX * 3, this.posY + this.plusY * 3, 'steffi').setDepth(2)
+            this.physics.add.sprite(this.posX + this.plusX * 3, this.posY + this.plusY * 3, 'steffi').setDepth(50)
         );
 
         players.forEach(player => {
@@ -193,7 +193,7 @@ class MainScene extends Phaser.Scene {
                                     data.data.playersState[i].name,
                                     { font: '16px Arial', align: 'center', fixedWidth: 150 }
                                 )
-                                .setDepth(10);
+                                .setDepth(20);
                             // this.playerText[i].setFixedSize = players[i].width;
                             this.playerText[i].setBackgroundColor('#000000');
                             // players[i].anims.play(animations[i]);
@@ -335,7 +335,7 @@ class MainScene extends Phaser.Scene {
         if (!this.playerAttention[playerIndex]) {
             this.playerAttention[playerIndex] = this.physics.add
                 .sprite(players[playerIndex].x + 75, players[playerIndex].y - 100, 'attention')
-                .setDepth(20)
+                .setDepth(100)
                 .setScale(0.03, 0.03);
         }
     }
