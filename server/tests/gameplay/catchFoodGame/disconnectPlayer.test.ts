@@ -26,11 +26,6 @@ describe('Disconnect Player tests', () => {
         jest.useFakeTimers();
     });
 
-    afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
-    });
-
     it('disconnectPlayer should initialise player isActive as true', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         expect(catchFoodGame.playersState['1'].isActive).toBeTruthy();

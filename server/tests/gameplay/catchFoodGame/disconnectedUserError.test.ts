@@ -11,11 +11,6 @@ describe('DisconnectedUserError handling tests', () => {
         jest.useFakeTimers();
     });
 
-    afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
-    });
-
     it('DisconnectedUserError has userId property of disconnected user', async () => {
         const SPEED = 50;
         const userId = '1';

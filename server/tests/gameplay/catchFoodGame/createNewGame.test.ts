@@ -13,10 +13,6 @@ describe('Create new game tests', () => {
         startAndFinishGame(catchFoodGame);
         catchFoodGame.createNewGame(users, NEW_TRACKLENGTH, NEW_NUMBER_OF_OBSTACLES);
     });
-    afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
-    });
 
     it('should have the correct new number of players', async () => {
         expect(Object.keys(catchFoodGame.playersState).length).toBe(users.length);

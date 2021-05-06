@@ -21,13 +21,8 @@ describe('Reconnect Player tests', () => {
 
     beforeEach(() => {
         // gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
-        jest.useFakeTimers();
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-    });
-
-    afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        jest.useFakeTimers();
     });
 
     it('reconnectPlayer should set player isActive to true', async () => {
