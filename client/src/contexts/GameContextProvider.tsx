@@ -1,21 +1,12 @@
 import * as React from 'react';
 
 import { resetObstacle } from '../components/Controller/Obstacles/TreeTrunk';
-import { Obstacles } from '../utils/constants';
 import { handleSetGameFinished } from '../utils/gameState/handleSetGameFinished';
 import { handleSetGameStarted } from '../utils/gameState/handleSetGameStarted';
 import { IUser } from './ControllerSocketContextProvider';
 import { IPlayerRank } from './ScreenSocketContextProvider';
 
 export const defaultValue = {
-    trackLength: undefined,
-    setTrackLength: () => {
-        // do nothing
-    },
-    players: undefined,
-    setPlayers: () => {
-        // do nothing
-    },
     finished: false,
     setFinished: () => {
         // do nothing
@@ -57,10 +48,6 @@ export const defaultValue = {
     },
 };
 interface IGameContext {
-    trackLength?: number;
-    setTrackLength: (val: number) => void;
-    players?: IPlayerState[];
-    setPlayers: (val: IPlayerState[]) => void;
     finished: boolean;
     setFinished: (val: boolean) => void;
     gameStarted: boolean;
@@ -82,27 +69,9 @@ interface IGameContext {
     setHasPaused: (val: boolean) => void;
 }
 
-interface IObstacle {
-    positionX: number;
-    type: Obstacles;
-}
-
-export interface IPlayerState {
-    atObstacle: boolean;
-    finished: boolean;
-    id: string;
-    name: string;
-    obstacles: IObstacle[];
-    positionX: number;
-    rank: number;
-    number: number;
-}
-
 export const GameContext = React.createContext<IGameContext>(defaultValue);
 
 const GameContextProvider: React.FunctionComponent = ({ children }) => {
-    const [trackLength, setTrackLength] = React.useState<undefined | number>();
-    const [players, setPlayers] = React.useState<undefined | IPlayerState[]>();
     const [playerRanks, setPlayerRanks] = React.useState<undefined | IPlayerRank[]>();
     const [finished, setFinished] = React.useState<boolean>(false);
     const [gameStarted, setGameStarted] = React.useState<boolean>(false);
@@ -114,10 +83,6 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [hasPaused, setHasPaused] = React.useState<boolean>(false);
 
     const content = {
-        trackLength,
-        setTrackLength,
-        players,
-        setPlayers,
         finished,
         setFinished: (val: boolean) => handleSetGameFinished(val, { setFinished }),
         gameStarted,
@@ -127,10 +92,8 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         connectedUsers,
         setConnectedUsers,
         resetGame: () => {
-            setTrackLength(undefined);
             setFinished(false);
             setGameStarted(false);
-            setPlayers(undefined);
             resetObstacle();
         },
         showInstructions,

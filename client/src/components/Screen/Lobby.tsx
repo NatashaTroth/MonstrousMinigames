@@ -49,7 +49,7 @@ export const Lobby: React.FunctionComponent = () => {
     const characters = [franz, noah, susi, steffi];
 
     if (id && !screenSocket) {
-        handleSocketConnection(id);
+        handleSocketConnection(id, 'lobby');
     }
 
     async function handleCopyToClipboard() {

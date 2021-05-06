@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { handleMessageData, MessageData } from '../components/Screen/handleMessageData';
+import { handleMessageData, IPlayerState, MessageData } from '../components/Screen/handleMessageData';
 import { GameState, Obstacles } from '../utils/constants';
 import ScreenSocket from '../utils/screenSocket';
 import { Socket } from '../utils/socket/Socket';
 import { SocketIOAdapter } from '../utils/socket/SocketIOAdapter';
-import { GameContext, IPlayerState } from './GameContextProvider';
+import { GameContext } from './GameContextProvider';
 
 export interface IObstacleMessage {
     type: string;
@@ -15,17 +15,11 @@ export interface IObstacleMessage {
 
 interface IScreenSocketContext {
     screenSocket: Socket | undefined;
-    setScreenSocket: (val: Socket, roomId: string) => void;
-    isScreenConnected: boolean;
-    handleSocketConnection: (val: string) => void;
+    handleSocketConnection: (val: string, route: string) => void;
 }
 
 export const defaultValue = {
     screenSocket: undefined,
-    setScreenSocket: () => {
-        // do nothing
-    },
-    isScreenConnected: false,
     handleSocketConnection: () => {
         // do nothing
     },
@@ -67,11 +61,8 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
     const history = useHistory();
 
     const {
-        setPlayers,
         setPlayerRanks,
-        setTrackLength,
         setFinished,
-        trackLength,
         setGameStarted,
         roomId,
         setRoomId,
@@ -87,29 +78,14 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         history.push(`/screen/${roomId}/finished`);
     }
 
-    function handleGameState(messageData: IGameState) {
-        if (messageData.data) {
-            if (!trackLength) {
-                setTrackLength(messageData.data.trackLength);
-            }
-            if (!roomId) {
-                setRoomId(messageData.data.roomId);
-            }
-
-            if (messageData.data.playersState) {
-                setPlayers(messageData.data.playersState);
-            }
-        }
-    }
-
-    function handleSocketConnection(roomId: string) {
+    function handleSocketConnection(roomId: string, route: string) {
         setRoomId(roomId);
         sessionStorage.setItem('roomId', roomId);
 
-        handleSetScreenSocket(new SocketIOAdapter(roomId, 'screen'), roomId);
+        handleSetScreenSocket(new SocketIOAdapter(roomId, 'screen'), roomId, route);
     }
 
-    function handleSetScreenSocket(socket: Socket, roomId: string) {
+    function handleSetScreenSocket(socket: Socket, roomId: string, route: string) {
         setScreenSocket(socket);
         ScreenSocket.getInstance(socket);
         // TODO change any to IGameState | IConnectedUsers
@@ -119,7 +95,6 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 roomId,
                 dependencies: {
                     setHasPaused,
-                    handleGameState,
                     handleGameHasFinished,
                     setGameStarted,
                     setCountdownTime,
@@ -128,13 +103,11 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 },
             });
         });
-        history.push(`/screen/${roomId}/lobby`);
+        history.push(`/screen/${roomId}/${route}`);
     }
 
     const content = {
         screenSocket,
-        setScreenSocket: (val: Socket, roomId: string) => handleSetScreenSocket(val, roomId),
-        isScreenConnected: screenSocket ? true : false,
         handleSocketConnection,
     };
     return <ScreenSocketContext.Provider value={content}>{children}</ScreenSocketContext.Provider>;

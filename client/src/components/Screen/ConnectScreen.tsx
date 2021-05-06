@@ -32,7 +32,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
         });
 
         const data = await response.json();
-        handleSocketConnection(data.roomId);
+        handleSocketConnection(data.roomId, 'lobby');
 
         const w = window as WindowProps;
         const AudioContext = window.AudioContext || w.webkitAudioContext || false;
