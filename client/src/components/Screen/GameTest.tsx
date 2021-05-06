@@ -1,14 +1,14 @@
-import Phaser from 'phaser'
-import * as React from 'react'
-import Countdown from 'react-countdown'
+import Phaser from 'phaser';
+import * as React from 'react';
+import Countdown from 'react-countdown';
 
-import { GameContext } from '../../contexts/GameContextProvider'
-import { Container, ContainerTimer, CountdownRenderer, Go } from './Game.sc'
-import MainScene from './MainScene'
+import { GameContext } from '../../contexts/GameContextProvider';
+import { Container, ContainerTimer, CountdownRenderer, Go } from './Game.sc';
+import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
-    const { countdownTime, players, finished} = React.useContext(GameContext)
-    const [countdown] = React.useState(Date.now() + countdownTime)
+    const { countdownTime, players, finished } = React.useContext(GameContext);
+    const [countdown] = React.useState(Date.now() + countdownTime);
 
     return (
         <Container>
@@ -17,7 +17,7 @@ const Game: React.FunctionComponent = () => {
                 // autoStart={false}
                 renderer={props =>
                     props.completed ? (
-                        <GameContent displayGo players={players} finished={finished}/>
+                        <GameContent displayGo players={players} finished={finished} />
                     ) : (
                         <ContainerTimer>
                             <CountdownRenderer>{props.seconds}</CountdownRenderer>
@@ -26,15 +26,15 @@ const Game: React.FunctionComponent = () => {
                 }
             />
         </Container>
-    )
-}
+    );
+};
 
-export default Game
+export default Game;
 
 interface IGameContentProps {
-    displayGo?: boolean
-    players?: any[]
-    finished: boolean
+    displayGo?: boolean;
+    players?: any[];
+    finished: boolean;
 }
 
 const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo, players, finished }) => {
@@ -43,12 +43,12 @@ const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo, pl
             {displayGo && <Go>Go!</Go>}
             <GameSetup players={players} finished={finished}></GameSetup>
         </div>
-    )
-}
+    );
+};
 
 interface IGameSetup {
-    players?: any[]
-    finished?: boolean
+    players?: any[];
+    finished?: boolean;
 }
 
 const GameSetup: React.FunctionComponent<IGameSetup> = ({ players, finished }) => {
@@ -64,12 +64,10 @@ const GameSetup: React.FunctionComponent<IGameSetup> = ({ players, finished }) =
                     debug: false,
                 },
             },
-        })
-        game.scene.add('MainScene', MainScene)
-        game.scene.start('MainScene', { player: players, finished: finished })
-    }, [])
+        });
+        game.scene.add('MainScene', MainScene);
+        game.scene.start('MainScene', { player: players, finished: finished });
+    }, []);
 
-    return(
-        <div id="game-root"></div>
-    )
-}
+    return <div id="game-root"></div>;
+};

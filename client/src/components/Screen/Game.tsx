@@ -20,7 +20,7 @@ const Game: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         pauseLobbyMusic(permission);
-    }, [permission]);
+    }, [pauseLobbyMusic, permission]);
 
     React.useEffect(() => {
         const game = new Phaser.Game({

@@ -46,7 +46,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
             <FormContainer
                 onSubmit={e => {
                     e.preventDefault();
-                    handleSocketConnection(formState.roomId, formState?.name);
+                    handleSocketConnection(formState.roomId.toUpperCase(), formState?.name);
                 }}
             >
                 <StyledLabel>
