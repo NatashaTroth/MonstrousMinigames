@@ -31,7 +31,7 @@ const ConnectDialog: React.FunctionComponent<ConnectDialog> = ({ handleClose, ..
             <StyledForm
                 onSubmit={e => {
                     e.preventDefault();
-                    handleSocketConnection((formState?.roomId || '').toUpperCase());
+                    handleSocketConnection((formState?.roomId || '').toUpperCase(), 'lobby');
                 }}
             >
                 <CloseButtonContainer>

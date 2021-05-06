@@ -3,7 +3,9 @@ import { IconButton } from '@material-ui/core';
 import Phaser from 'phaser';
 import * as React from 'react';
 import Countdown from 'react-countdown';
+import { useParams } from 'react-router-dom';
 
+import { IRouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
@@ -16,7 +18,13 @@ const Game: React.FunctionComponent = () => {
     //const { countdownTime, roomId } = React.useContext(GameContext)
     const { roomId } = React.useContext(GameContext);
     const { pauseLobbyMusic, permission } = React.useContext(AudioContext);
+    const { id }: IRouteParams = useParams();
+    const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     //const [countdown] = React.useState(Date.now() + countdownTime)
+
+    if (id && !screenSocket) {
+        handleSocketConnection(id, 'game1');
+    }
 
     React.useEffect(() => {
         pauseLobbyMusic(permission);

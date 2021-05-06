@@ -1,4 +1,4 @@
-import { IPlayerState } from '../../contexts/GameContextProvider';
+import { IObstacle } from '../../contexts/PlayerContextProvider';
 import { IPlayerRank } from '../../contexts/ScreenSocketContextProvider';
 import { GameState, MessageTypes } from '../../utils/constants';
 import history from '../../utils/history';
@@ -10,7 +10,6 @@ interface HandleMessageData {
     roomId: string | undefined;
     dependencies: {
         setHasPaused: (val: boolean) => void;
-        handleGameState: (data: IGameState) => void;
         handleGameHasFinished: (data: IGameState) => void;
         setGameStarted: (val: boolean) => void;
         setCountdownTime: (val: number) => void;
@@ -41,6 +40,17 @@ interface IConnectedUsers {
     users?: IUser[];
 }
 
+export interface IPlayerState {
+    atObstacle: boolean;
+    finished: boolean;
+    id: string;
+    name: string;
+    obstacles: IObstacle[];
+    positionX: number;
+    rank: number;
+    number: number;
+}
+
 interface IGameStateData {
     gameState: GameState;
     numberOfObstacles: number;
@@ -55,7 +65,6 @@ export function handleMessageData(props: HandleMessageData) {
 
     const {
         setHasPaused,
-        handleGameState,
         handleGameHasFinished,
         setGameStarted,
         setCountdownTime,
@@ -65,9 +74,6 @@ export function handleMessageData(props: HandleMessageData) {
     let data;
 
     switch (messageData?.type) {
-        case MessageTypes.gameState:
-            handleGameState(messageData as IGameState);
-            break;
         case MessageTypes.connectedUsers:
             data = messageData as IConnectedUsers;
             if (data.users) {

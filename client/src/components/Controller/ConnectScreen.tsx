@@ -58,6 +58,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                         onChange={e => setFormState({ ...formState, name: e.target.value })}
                         placeholder="Insert your name"
                         required
+                        maxLength={10}
                     />
                 </StyledLabel>
                 <StyledLabel>
