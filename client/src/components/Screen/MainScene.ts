@@ -4,7 +4,7 @@ import { stringify } from 'querystring';
 // import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
 import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
-// import attention from '../../images/attention.png';
+import attention from '../../images/attention.png';
 import forest from '../../images/backgroundGame.png';
 // import finishLine from '../../images/finishLine.png';
 import franz from '../../images/franz_spritesheet.png';
@@ -38,8 +38,10 @@ class MainScene extends Phaser.Scene {
     playerRunning: Array<boolean>;
     playerAtObstacle: Array<boolean>;
     playerObstacles: Array<Array<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>>;
+    playerText: Array<Phaser.GameObjects.Text>;
     playerCountSameDistance: Array<number>;
-    // playerAttention: Array<null | Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
+    playerAttention: Array<null | Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
+    test: number;
 
     constructor() {
         super('MainScene');
@@ -49,9 +51,11 @@ class MainScene extends Phaser.Scene {
         this.plusY = 110;
         this.playerRunning = [];
         this.playerAtObstacle = [];
-        // this.playerAttention = [];
+        this.playerAttention = [];
         this.playerObstacles = [];
         this.playerCountSameDistance = [];
+        this.playerText = [];
+        this.test = 0;
     }
 
     init(data: { roomId: string; playerNumber: number }) {
@@ -84,7 +88,7 @@ class MainScene extends Phaser.Scene {
         // this.load.image('track', track);
         // this.load.image('startLine', startLine);
         // this.load.image('finishLine', finishLine);
-        // this.load.image('attention', attention);
+        this.load.image('attention', attention);
         this.load.image('goal', goal);
         this.load.image('wood', wood);
         this.load.image('spider', spider);
@@ -108,6 +112,7 @@ class MainScene extends Phaser.Scene {
         });
 
         players.push(this.physics.add.sprite(this.posX, this.posY, 'franz').setDepth(2));
+
         players.push(this.physics.add.sprite(this.posX + this.plusX, this.posY + this.plusY, 'susi').setDepth(2));
         players.push(
             this.physics.add.sprite(this.posX + this.plusX * 2, this.posY + this.plusY * 2, 'noah').setDepth(2)
@@ -125,7 +130,7 @@ class MainScene extends Phaser.Scene {
             this.playerAtObstacle.push(false);
             this.playerObstacles.push([]);
             this.playerCountSameDistance.push(0);
-            // this.playerAttention.push(null);
+            this.playerAttention.push(null);
         });
 
         this.anims.create({
@@ -181,6 +186,14 @@ class MainScene extends Phaser.Scene {
                             }
                         }
                         for (let i = 0; i < playerNumber; i++) {
+                            this.playerText[i] = this.add.text(
+                                players[i].x, //+ 50
+                                players[i].y - 100,
+                                data.data.playersState[i].name,
+                                { font: '16px Arial', align: 'center', fixedWidth: 150 }
+                            );
+                            // this.playerText[i].setFixedSize = players[i].width;
+                            this.playerText[i].setBackgroundColor('#000000');
                             // players[i].anims.play(animations[i]);
                             // if (obstacles.length < data.data.playersState[0].obstacles.length * playerNumber)
                             this.setObstacles(i, data.data.playersState[i].obstacles);
@@ -305,28 +318,28 @@ class MainScene extends Phaser.Scene {
             this.stopRunningAnimation(players[playerIndex], playerIndex);
             this.playerAtObstacle[playerIndex] = true;
 
-            // this.addAttentionIcon(playerIndex);
+            this.addAttentionIcon(playerIndex);
         } else if (!isAtObstacle && this.playerAtObstacle[playerIndex]) {
             this.playerAtObstacle[playerIndex] = false;
             this.startRunningAnimation(players[playerIndex], playerIndex);
             this.destroyObstacle(playerIndex, playerPositionX);
-            // this.destroyAttentionIcon(playerIndex);
+            this.destroyAttentionIcon(playerIndex);
         }
     }
 
-    // addAttentionIcon(playerIndex: number) {
-    //     if (!this.playerAttention[playerIndex]) {
-    //         this.playerAttention[playerIndex] = this.physics.add
-    //             .sprite(players[playerIndex].x + 75, players[playerIndex].y - 100, 'attention')
-    //             .setDepth(4)
-    //             .setScale(0.03, 0.03);
-    //     }
-    // }
+    addAttentionIcon(playerIndex: number) {
+        if (!this.playerAttention[playerIndex]) {
+            this.playerAttention[playerIndex] = this.physics.add
+                .sprite(players[playerIndex].x + 75, players[playerIndex].y - 100, 'attention')
+                .setDepth(4)
+                .setScale(0.03, 0.03);
+        }
+    }
 
-    // destroyAttentionIcon(playerIndex: number) {
-    //     this.playerAttention[playerIndex]?.destroy();
-    //     this.playerAttention[playerIndex] = null;
-    // }
+    destroyAttentionIcon(playerIndex: number) {
+        this.playerAttention[playerIndex]?.destroy();
+        this.playerAttention[playerIndex] = null;
+    }
 
     destroyObstacle(playerIndex: number, playerPositionX: number) {
         if (this.playerObstacles[playerIndex].length > 0) {
@@ -415,6 +428,14 @@ class MainScene extends Phaser.Scene {
         }
 
         player.x = toX;
+        this.playerText[playerIndex].x = toX; //-50
+        this.test++;
+
+        // if (this.test == 100) {
+        //     this.test = 0;
+        //     // eslint-disable-next-line no-console
+        //     console.log(`${player.x}   ${this.playerText[playerIndex].x}`);
+        // }
     }
 }
 
