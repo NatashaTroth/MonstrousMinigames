@@ -7,7 +7,9 @@ import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { localDevelopment } from '../../utils/constants';
 import Button from '../common/Button';
 import FullScreenContainer from '../common/FullScreenContainer';
-import { Instruction, InstructionContainer, LobbyScreenContainer, StyledTypography } from './Lobby.sc';
+import {
+    Instruction, InstructionContainer, LobbyScreenContainer, StyledTypography
+} from './Lobby.sc';
 
 export const Lobby: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);

@@ -7,6 +7,6 @@ module.exports = {
     moduleDirectories: ['node_modules', '<rootDir>/src'],
     transform: {
         '^.+\\.js$': 'babel-jest',
-        '^.+\\.(bmp|gif|jpg|jpeg|png|psd|svg|webp|wav|mp3)$': '<rootDir>/jest/mediaFileTransformer.js',
-    },
-};
+        '^.+\\.(bmp|gif|jpg|jpeg|png|psd|svg|webp)$': '<rootDir>/jest/mediaFileTransformer.js',
+    }
+}

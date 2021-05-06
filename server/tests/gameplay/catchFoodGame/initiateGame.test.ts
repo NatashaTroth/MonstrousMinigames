@@ -12,13 +12,9 @@ const OBSTACLE_TYPE_KEYS = Object.keys(ObstacleType);
 
 describe('Initiate CatchFoodGame correctly', () => {
     beforeEach(async () => {
-        jest.useFakeTimers();
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES);
-    });
-    afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        jest.useFakeTimers();
     });
 
     it('initiates players state with correct number of players', async () => {

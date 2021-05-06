@@ -70,7 +70,6 @@ interface IConnectedUsers {
     type: string;
     users: IUser[];
 }
-
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenSocket, setScreenSocket] = React.useState<Socket>(new InMemorySocketFake());
     const [messageData, setMessageData] = React.useState<IGameState | IConnectedUsers | undefined>();

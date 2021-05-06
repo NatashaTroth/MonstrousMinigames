@@ -14,7 +14,6 @@ import { ConnectScreen as ScreenConnectScreen } from './components/Screen/Connec
 import { FinishedScreen as ScreenFinishedScreen } from './components/Screen/FinishedScreen';
 import Game from './components/Screen/Game';
 import { Lobby as ScreenLobbyScreen } from './components/Screen/Lobby';
-import AudioContextProvider from './contexts/AudioContextProvider';
 import ControllerSocketContextProvider from './contexts/ControllerSocketContextProvider';
 import GameContextProvider from './contexts/GameContextProvider';
 import PlayerContextProvider from './contexts/PlayerContextProvider';
@@ -30,45 +29,35 @@ const App: React.FunctionComponent = () => {
     return (
         <Router history={history}>
             <AppContainer className="App">
-                <AudioContextProvider>
-                    <GameContextProvider>
-                        <PlayerContextProvider>
-                            <ScreenSocketContextProvider>
-                                <ControllerSocketContextProvider>
-                                    <Switch>
-                                        <Route path="/impressum" component={Impressum} exact />
-                                        <Route path="/controller/:id/lobby" component={ControllerLobbyScreen} exact />
-                                        <Route path="/controller/:id/game1" component={ShakeInstruction} exact />
-                                        <Route
-                                            path={`/controller/:id/${ObstacleRoutes.treeStump}`}
-                                            component={TreeTrunk}
-                                            exact
-                                        />
-                                        <Route
-                                            path={`/controller/:id/${ObstacleRoutes.spider}`}
-                                            component={Spider}
-                                            exact
-                                        />
-                                        <Route
-                                            path="/controller/:id/finished"
-                                            component={ControllerFinishedScreen}
-                                            exact
-                                        />
+                <GameContextProvider>
+                    <PlayerContextProvider>
+                        <ScreenSocketContextProvider>
+                            <ControllerSocketContextProvider>
+                                <Switch>
+                                    <Route path="/impressum" component={Impressum} exact />
+                                    <Route path="/controller/:id/lobby" component={ControllerLobbyScreen} exact />
+                                    <Route path="/controller/:id/game1" component={ShakeInstruction} exact />
+                                    <Route
+                                        path={`/controller/:id/${ObstacleRoutes.treeStump}`}
+                                        component={TreeTrunk}
+                                        exact
+                                    />
+                                    <Route path={`/controller/:id/${ObstacleRoutes.spider}`} component={Spider} exact />
+                                    <Route path="/controller/:id/finished" component={ControllerFinishedScreen} exact />
 
-                                        <Route path="/screen/:id/lobby" component={ScreenLobbyScreen} exact />
-                                        <Route path="/screen/:id/game1" component={Game} exact />
-                                        <Route path="/screen/:id/finished" component={ScreenFinishedScreen} exact />
+                                    <Route path="/screen/:id/lobby" component={ScreenLobbyScreen} exact />
+                                    <Route path="/screen/:id/game1" component={Game} exact />
+                                    <Route path="/screen/:id/finished" component={ScreenFinishedScreen} exact />
 
-                                        <Route
-                                            path="/:id?"
-                                            component={isMobileOnly ? ControllerConnectScreen : ScreenConnectScreen}
-                                        />
-                                    </Switch>
-                                </ControllerSocketContextProvider>
-                            </ScreenSocketContextProvider>
-                        </PlayerContextProvider>
-                    </GameContextProvider>
-                </AudioContextProvider>
+                                    <Route
+                                        path="/:id?"
+                                        component={isMobileOnly ? ControllerConnectScreen : ScreenConnectScreen}
+                                    />
+                                </Switch>
+                            </ControllerSocketContextProvider>
+                        </ScreenSocketContextProvider>
+                    </PlayerContextProvider>
+                </GameContextProvider>
             </AppContainer>
         </Router>
     );

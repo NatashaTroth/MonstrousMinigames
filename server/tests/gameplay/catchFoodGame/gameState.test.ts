@@ -16,11 +16,6 @@ describe('Change and verify game state', () => {
         jest.useFakeTimers();
     });
 
-    afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
-    });
-
     it('initialises state as initialised', async () => {
         expect(catchFoodGame.gameState).toBe(GameState.Initialised);
     });
