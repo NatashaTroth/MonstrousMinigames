@@ -36,7 +36,7 @@ class MainScene extends Phaser.Scene {
     posY: number;
     plusY: number;
     playerRunning: Array<boolean>;
-    playerAttention: Array<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
+    playerAttention: Array<null | Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
 
     constructor() {
         super('MainScene');
@@ -63,10 +63,16 @@ class MainScene extends Phaser.Scene {
         // this.load.audio('backgroundMusicEnd', [game1SoundEnd]);
         //require('../../audio/Sound_Game.mp3')
 
-        this.load.spritesheet('franz', franz, { frameWidth: 826, frameHeight: 1163 });
+        this.load.spritesheet('franz', franz, {
+            frameWidth: 826,
+            frameHeight: 1163,
+        });
         this.load.spritesheet('susi', susi, { frameWidth: 826, frameHeight: 1163 });
         this.load.spritesheet('noah', noah, { frameWidth: 826, frameHeight: 1163 });
-        this.load.spritesheet('steffi', steffi, { frameWidth: 826, frameHeight: 1163 });
+        this.load.spritesheet('steffi', steffi, {
+            frameWidth: 826,
+            frameHeight: 1163,
+        });
 
         this.load.image('forest', forest);
         // this.load.image('track', track);
@@ -110,6 +116,7 @@ class MainScene extends Phaser.Scene {
             player.setScale(0.15, 0.15);
             player.setCollideWorldBounds(true);
             this.playerRunning.push(false);
+            this.playerAttention.push(null);
         });
 
         this.anims.create({
@@ -208,7 +215,7 @@ class MainScene extends Phaser.Scene {
         let obstacle: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
         for (let i = 0; i < obstacleArray.length; i++) {
             // const posX = (obstacleArray[i].positionX * (window.innerWidth - 200)) / (trackLength || 1);
-            const posX = this.mapServerXToWindowX(obstacleArray[i].positionX) + 20;
+            const posX = this.mapServerXToWindowX(obstacleArray[i].positionX) + 75;
             switch (obstacleArray[i].type) {
                 case 'TreeStump':
                     obstacle = this.placeObstacle(posX, yPosition + 45, obstacleArray[i].type);
@@ -284,19 +291,28 @@ class MainScene extends Phaser.Scene {
         if (isAtObstacle && players[playerIndex].anims.isPlaying) {
             // players[playerIndex].anims.stop();
             this.stopRunningAnimation(players[playerIndex], playerIndex);
-            this.playerAttention[playerIndex] = this.physics.add
-                .sprite(players[playerIndex].x + 100, players[playerIndex].y + 150, 'attention')
-                .setDepth(4);
-            // attention.setBounce(0.2);
-            // attention.setScale(0.03, 0.03);
-            // this.add.image(players[playerIndex].x, players[playerIndex].y, 'attention');
+
+            this.addAttentionIcon(playerIndex);
         } else if (!isAtObstacle && !players[playerIndex].anims.isPlaying) {
             // players[playerIndex].anims.play(animations[playerIndex]);
             this.startRunningAnimation(players[playerIndex], playerIndex);
             this.destroyObstacle(playerIndex, playerPositionX);
-            this.playerAttention[playerIndex].destroy();
-            this.playerAttention.splice(playerIndex, 1);
+            this.destroyAttentionIcon(playerIndex);
         }
+    }
+
+    addAttentionIcon(playerIndex: number) {
+        if (!this.playerAttention[playerIndex]) {
+            this.playerAttention[playerIndex] = this.physics.add
+                .sprite(players[playerIndex].x + 75, players[playerIndex].y - 100, 'attention')
+                .setDepth(4)
+                .setScale(0.03, 0.03);
+        }
+    }
+
+    destroyAttentionIcon(playerIndex: number) {
+        this.playerAttention[playerIndex]?.destroy();
+        this.playerAttention[playerIndex] = null;
     }
 
     destroyObstacle(playerIndex: number, playerPositionX: number) {
