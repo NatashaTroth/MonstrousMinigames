@@ -52,7 +52,9 @@ export default class Leaderboard {
     private updateUserPointsAfterGame(playerRanks: Array<IPlayerRank>): void {
         playerRanks.forEach(playerRank => {
             // if (!Object.prototype.hasOwnProperty.call(this.userPoints, playerRank.id))
-            this.addUserPoints(playerRank.id, playerRank.name, this.rankPointsDictionary[playerRank.rank]);
+            if (playerRank.finished) {
+                this.addUserPoints(playerRank.id, playerRank.name, this.rankPointsDictionary[playerRank.rank]);
+            }
         });
     }
 
