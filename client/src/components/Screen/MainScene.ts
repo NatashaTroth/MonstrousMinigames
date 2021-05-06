@@ -47,7 +47,7 @@ class MainScene extends Phaser.Scene {
         super('MainScene');
         this.posX = 50;
         this.plusX = 40;
-        this.posY = 350;
+        this.posY = window.innerHeight / 2 - 50;
         this.plusY = 110;
         this.playerRunning = [];
         this.playerAtObstacle = [];
