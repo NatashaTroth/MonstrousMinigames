@@ -94,7 +94,7 @@ class ConnectionHandler {
             }
             socket.user = user;
 
-            emitter.sendConnectedUsers(screenNameSpace, socket.room);
+            emitter.sendConnectedUsers([screenNameSpace], socket.room);
             console.info(socket.room.id + ' | Controller connected: ' + socket.user.id);
 
             emitter.sendUserInit(socket, user.number);
@@ -109,7 +109,7 @@ class ConnectionHandler {
                     return;
                 }
                 if (socket.room.isOpen()) {
-                    emitter.sendConnectedUsers(screenNameSpace, socket.room);
+                    emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
                     const admin = socket.room.admin;
                     if (admin) {
                         controllerNamespace.to(admin.socketId).emit('message', {
@@ -183,7 +183,7 @@ class ConnectionHandler {
                                         [controllerNamespace, screenNameSpace],
                                         socket.room.id
                                     );
-                                    emitter.sendConnectedUsers(screenNameSpace, socket.room);
+                                    emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
                                     emitter.sendUserInit(socket, user.number);
                                 });
                             }
@@ -218,7 +218,7 @@ class ConnectionHandler {
 
             console.info(socket.room.id + ' | Screen connected');
 
-            emitter.sendConnectedUsers(screenNameSpace, socket.room);
+            emitter.sendConnectedUsers([screenNameSpace], socket.room);
 
             socket.on('disconnect', () => {
                 console.info(socket.room.id + ' | Screen disconnected');
