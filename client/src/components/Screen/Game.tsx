@@ -1,45 +1,48 @@
+//import Countdown from 'react-countdown'
 import { IconButton } from '@material-ui/core';
+import Phaser from 'phaser';
 import * as React from 'react';
 import Countdown from 'react-countdown';
 
+import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { MessageTypes } from '../../utils/constants';
 import Button from '../common/Button';
-import {
-    Container,
-    ContainerTimer,
-    ControlBar,
-    CountdownRenderer,
-    DialogContent,
-    Go,
-    IconContainer,
-    PauseIcon,
-    StopIcon,
-    StyledDialog,
-} from './Game.sc';
-import Goal from './Goal';
-import Player from './Player';
+import { Container, ControlBar, DialogContent, Go, IconContainer, PauseIcon, StopIcon, StyledDialog } from './Game.sc';
+import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
-    const { countdownTime } = React.useContext(GameContext);
-    const [countdown] = React.useState(Date.now() + countdownTime);
+    //const { countdownTime, roomId } = React.useContext(GameContext)
+    const { roomId } = React.useContext(GameContext);
+    const { pauseLobbyMusic, permission } = React.useContext(AudioContext);
+    //const [countdown] = React.useState(Date.now() + countdownTime)
+
+    React.useEffect(() => {
+        pauseLobbyMusic(permission);
+    }, [pauseLobbyMusic, permission]);
+
+    React.useEffect(() => {
+        const game = new Phaser.Game({
+            parent: 'game-root',
+            type: Phaser.AUTO,
+            width: '100%',
+            height: '100%',
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    debug: false,
+                },
+            },
+        });
+        game.scene.add('MainScene', MainScene);
+        game.scene.start('MainScene', { roomId: roomId });
+    }, [roomId]);
 
     return (
         <Container>
-            <Countdown
-                date={countdown}
-                // autoStart={false}
-                renderer={props =>
-                    props.completed ? (
-                        <GameContent displayGo />
-                    ) : (
-                        <ContainerTimer>
-                            <CountdownRenderer>{props.seconds}</CountdownRenderer>
-                        </ContainerTimer>
-                    )
-                }
-            />
+            <Countdown></Countdown>
+            <GameContent displayGo />
         </Container>
     );
 };
@@ -77,7 +80,8 @@ const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo }) 
                 </DialogContent>
             </StyledDialog>
             {displayGo && <Go>Go!</Go>}
-            <Player />
+            <div id="game-root"></div>
+
             <ControlBar>
                 <IconContainer>
                     <IconButton onClick={handlePauseGame}>
@@ -88,8 +92,6 @@ const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo }) 
                     </IconButton>
                 </IconContainer>
             </ControlBar>
-
-            <Goal />
         </div>
     );
 };

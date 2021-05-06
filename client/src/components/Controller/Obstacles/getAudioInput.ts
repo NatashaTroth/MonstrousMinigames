@@ -42,7 +42,7 @@ export async function getAudioInput(
             javascriptNode.addEventListener('audioprocess', () => {
                 if (currentCount < MAX) {
                     handleInput(analyser, { setProgress });
-                } else if (!send) {
+                } else if (currentCount >= MAX && !send) {
                     send = true;
                     javascriptNode.removeEventListener('audioprocess', () => {
                         // do nothing

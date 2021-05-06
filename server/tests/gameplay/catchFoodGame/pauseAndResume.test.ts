@@ -9,11 +9,12 @@ const dateNow = 1618665766156;
 describe('Pause tests', () => {
     beforeEach(() => {
         // global.Date.now = jest.fn(() => new Date('2019-04-07T10:20:30Z').getTime())
+        jest.useFakeTimers();
         Date.now = jest.fn(() => dateNow);
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        jest.useFakeTimers();
     });
-    afterEach(() => {
+    afterEach(async () => {
+        jest.runAllTimers();
         jest.clearAllMocks();
     });
 

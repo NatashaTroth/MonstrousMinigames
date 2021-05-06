@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom';
 import { handleMessageData, MessageData } from '../components/Screen/handleMessageData';
 import { GameState, Obstacles } from '../utils/constants';
 import ScreenSocket from '../utils/screenSocket';
-import { InMemorySocketFake } from '../utils/socket/InMemorySocketFake';
 import { Socket } from '../utils/socket/Socket';
 import { SocketIOAdapter } from '../utils/socket/SocketIOAdapter';
 import { GameContext, IPlayerState } from './GameContextProvider';
@@ -15,14 +14,14 @@ export interface IObstacleMessage {
 }
 
 interface IScreenSocketContext {
-    screenSocket: Socket;
+    screenSocket: Socket | undefined;
     setScreenSocket: (val: Socket, roomId: string) => void;
     isScreenConnected: boolean;
     handleSocketConnection: (val: string) => void;
 }
 
 export const defaultValue = {
-    screenSocket: new InMemorySocketFake(),
+    screenSocket: undefined,
     setScreenSocket: () => {
         // do nothing
     },
@@ -64,7 +63,7 @@ export interface IUser {
 }
 
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
-    const [screenSocket, setScreenSocket] = React.useState<Socket>(new InMemorySocketFake());
+    const [screenSocket, setScreenSocket] = React.useState<Socket>();
     const history = useHistory();
 
     const {
@@ -105,6 +104,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
 
     function handleSocketConnection(roomId: string) {
         setRoomId(roomId);
+        sessionStorage.setItem('roomId', roomId);
 
         handleSetScreenSocket(new SocketIOAdapter(roomId, 'screen'), roomId);
     }

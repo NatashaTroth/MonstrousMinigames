@@ -36,6 +36,7 @@ export enum MessageTypes {
     pauseResume = 'pauseResume',
     stopGame = 'stopGame',
     gameState = 'game1/gameState',
+    error = 'error',
 }
 
 export const localDevelopment = false;

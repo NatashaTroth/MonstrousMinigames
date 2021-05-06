@@ -26,6 +26,11 @@ describe('Disconnect Player tests', () => {
         jest.useFakeTimers();
     });
 
+    afterEach(async () => {
+        jest.runAllTimers();
+        jest.clearAllMocks();
+    });
+
     it('disconnectPlayer should initialise player isActive as true', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         expect(catchFoodGame.playersState['1'].isActive).toBeTruthy();
@@ -110,6 +115,36 @@ describe('Disconnect Player tests', () => {
         expect(eventData.playerRanks[1].isActive).toBeTruthy();
         expect(eventData.playerRanks[2].isActive).toBeFalsy();
         expect(eventData.playerRanks[3].isActive).toBeFalsy();
+    });
+
+    it('should have the correct ranks for a player was disconnected and the game has finished (disconnected players should share the last place)', async () => {
+        const dateNow = 1618665766156;
+        Date.now = jest.fn(() => dateNow);
+        startGameAndAdvanceCountdown(catchFoodGame);
+        let eventData: GameEvents.GameHasFinished = {
+            roomId: '',
+            gameState: GameState.Started,
+            trackLength: 0,
+            numberOfObstacles: 0,
+            playerRanks: [],
+        };
+        gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
+            eventData = data;
+        });
+        // finish game
+        Date.now = jest.fn(() => dateNow + 10000);
+        catchFoodGame.disconnectPlayer('3');
+        catchFoodGame.disconnectPlayer('4');
+        Date.now = jest.fn(() => dateNow + 15000);
+
+        finishPlayer(catchFoodGame, '1');
+        Date.now = jest.fn(() => dateNow + 20000);
+        finishPlayer(catchFoodGame, '2');
+
+        expect(eventData.playerRanks[0].rank).toBe(1);
+        expect(eventData.playerRanks[1].rank).toBe(2);
+        expect(eventData.playerRanks[2].rank).toBe(3);
+        expect(eventData.playerRanks[3].rank).toBe(3);
     });
 
     it('should stop the game when all players have disconnected', async () => {

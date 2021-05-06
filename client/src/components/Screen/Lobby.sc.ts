@@ -35,18 +35,39 @@ export const LobbyContainer = styled.div`
     justify-content: center;
 `;
 
+export const HeadContainer = styled.div`
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+`;
+
+export const ContentContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+`;
+
 export const Content = styled.div`
     width: 100%;
     max-width: 1560px;
     align-content: center;
     display: flex;
     margin: 60px;
+    flex-direction: column;
 `;
+
 export const RoomCodeContainer = styled.div`
+    width: 100%;
+`;
+
+export const HeadContainerLeft = styled.div`
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 20px 0;
+    width: 70%;
+`;
+
+export const HeadContainerRight = styled.div`
+    display: flex;
+    width: 30%;
+    justify-content: center;
 `;
 
 export const Headline = styled.div`
@@ -57,6 +78,7 @@ export const Headline = styled.div`
     padding-left: 20px;
     width: 100%;
     display: flex;
+    margin: 20px 0;
 `;
 
 export const ConnectedUsers = styled.div`

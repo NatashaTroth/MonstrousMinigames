@@ -12,6 +12,11 @@ describe('Error handling tests', () => {
         jest.useFakeTimers();
     });
 
+    afterEach(async () => {
+        jest.runAllTimers();
+        jest.clearAllMocks();
+    });
+
     it('throws an error when game is created with more than 4 players', () => {
         expect(() => catchFoodGame.createNewGame(longerUsers)).toThrowError(MaxNumberUsersExceededError);
     });

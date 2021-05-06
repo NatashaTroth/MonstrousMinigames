@@ -6,6 +6,15 @@ import { Lobby } from '../../components/Screen/Lobby';
 import { defaultValue, GameContext } from '../../contexts/GameContextProvider';
 import history from '../../utils/history';
 
+// window.HTMLMediaElement.prototype.load = () => { /* do nothing */ };
+// window.HTMLMediaElement.prototype.play = () => { /* do nothing */ };
+
+window.HTMLMediaElement.prototype.play = () => new Promise(resolve => resolve);
+window.HTMLMediaElement.prototype.pause = () => {
+    /* do nothing */
+};
+// window.HTMLMediaElement.prototype.addTextTrack = () => { /* do nothing */ };
+
 afterEach(cleanup);
 describe('Screen Lobby', () => {
     it('renders correct roomId', () => {
