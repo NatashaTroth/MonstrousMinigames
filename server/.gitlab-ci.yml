@@ -7,7 +7,7 @@ npm:server:
     artifacts:
         paths:
             - server/node_modules/
-        expire_in: 1 days
+        expire_in: 2 days
         when: always
 
     script:
@@ -44,6 +44,9 @@ staging:server:
     tags:
         - node
     image: ruby:latest
+    environment:
+        name: staging-server
+        url: https://monstrous-minigames-staging.herokuapp.com/
     script:
         - apt-get update -qy
         - apt-get install -y ruby-dev
@@ -52,12 +55,16 @@ staging:server:
         - dpl --provider=heroku --app=$HEROKU_APP_STAGING --api-key=$HEROKU_API_KEY --skip-cleanup
     only:
         - dev
+    when: manual
 
 production:server:
     stage: production
     tags:
         - node
     image: ruby:latest
+    environment:
+        name: production-server
+        url: https://monstrous-minigames.herokuapp.com/
     script:
         - apt-get update -qy
         - apt-get install -y ruby-dev

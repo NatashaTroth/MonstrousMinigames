@@ -1,100 +1,111 @@
-import * as React from 'react'
-import { useHistory } from 'react-router-dom'
-import { Socket } from 'socket.io-client'
+import * as React from 'react';
 
-import { OBSTACLES } from '../utils/constants'
-import { GameContext } from './GameContextProvider'
-import { PlayerContext } from './PlayerContextProvider'
+import { Obstacles } from '../utils/constants';
+import { handleSetControllerSocket } from '../utils/handleSetControllerSocket';
+import { handleSocketConnection } from '../utils/handleSocketConnection';
+import { InMemorySocketFake } from '../utils/socket/InMemorySocketFake';
+import { Socket } from '../utils/socket/Socket';
+import { GameContext } from './GameContextProvider';
+import { PlayerContext } from './PlayerContextProvider';
 
-export interface IObstacleMessage {
-    type: string
-    obstacleType: OBSTACLES
-    obstacleId: number
+export interface IError {
+    type: string;
+    name: string;
 }
-interface IControllerSocketContext {
-    controllerSocket: Socket | undefined
-    isControllerConnected: boolean
-    setControllerSocket: (val: Socket | undefined, roomId: string) => void
-}
+export type MessageData = IUserInitMessage | IObstacleMessage | IGameFinished | IError;
 
-export const ControllerSocketContext = React.createContext<IControllerSocketContext>({
-    controllerSocket: undefined,
+export const defaultValue = {
+    controllerSocket: new InMemorySocketFake(),
     setControllerSocket: () => {
         // do nothing
     },
     isControllerConnected: false,
-})
-
-interface IUserInitMessage {
-    name?: string
-    type?: string
-    userId?: 'userInit'
-    roomId?: string
-    isAdmin?: boolean
+    handleSocketConnection: () => {
+        // do nothing
+    },
+};
+export interface IObstacleMessage {
+    type: string;
+    obstacleType: Obstacles;
+    obstacleId: number;
+}
+interface IControllerSocketContext {
+    controllerSocket: Socket;
+    isControllerConnected: boolean;
+    setControllerSocket: (val: Socket, roomId: string) => void;
+    handleSocketConnection: (roomId: string, name: string) => void;
 }
 
-interface IGameFinished {
-    type: string
-    rank: number
+export const ControllerSocketContext = React.createContext<IControllerSocketContext>(defaultValue);
+
+export interface IUserInitMessage {
+    name?: string;
+    type?: string;
+    userId?: string;
+    roomId?: string;
+    isAdmin: boolean;
+    number: number;
+}
+
+export interface IGameFinished {
+    type: string;
+    rank: number;
 }
 
 export interface IUser {
-    id: string
-    name: string
-    roomId: string
+    id: string;
+    name: string;
+    roomId: string;
+    number: number;
 }
 
 const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) => {
-    const [controllerSocket, setControllerSocket] = React.useState<Socket | undefined>(undefined)
-    const { setObstacle, setPlayerFinished, setPlayerRank, setIsPlayerAdmin } = React.useContext(PlayerContext)
-    const history = useHistory()
+    const [controllerSocket, setControllerSocket] = React.useState<Socket>(new InMemorySocketFake());
+    const {
+        setObstacle,
+        setPlayerFinished,
+        setPlayerRank,
+        setIsPlayerAdmin,
+        setPlayerNumber,
+        setPermissionGranted,
+        playerFinished,
+        resetPlayer,
+    } = React.useContext(PlayerContext);
 
-    const { setGameStarted, roomId } = React.useContext(GameContext)
+    const { setGameStarted, setRoomId, setHasPaused, resetGame } = React.useContext(GameContext);
 
-    controllerSocket?.on('message', (data: IUserInitMessage | IObstacleMessage | IGameFinished) => {
-        let messageData
-
-        switch (data.type) {
-            case 'userInit':
-                messageData = data as IUserInitMessage
-                sessionStorage.setItem('userId', messageData.userId || '')
-                sessionStorage.setItem('name', messageData.name || '')
-                sessionStorage.setItem('roomId', messageData.roomId || '')
-                setIsPlayerAdmin(messageData.isAdmin || false)
-                break
-            case 'game1/obstacle':
-                messageData = data as IObstacleMessage
-                setObstacle({ type: messageData.obstacleType, id: messageData.obstacleId })
-                break
-            case 'game1/playerFinished':
-                messageData = data as IGameFinished
-                setPlayerFinished(true)
-                setPlayerRank(messageData.rank)
-
-                break
-            case 'game1/hasStarted':
-                document.body.style.overflow = 'hidden'
-                document.body.style.position = 'fixed'
-                setGameStarted(true)
-                history.push(`/controller/${roomId}/game1`)
-                break
-            case 'gameHasReset':
-                history.push(`/controller/${roomId}/lobby`)
-                break
-            default:
-                break
-        }
-    })
+    const dependencies = {
+        setControllerSocket,
+        setPlayerNumber,
+        setPlayerFinished,
+        setObstacle,
+        setPlayerRank,
+        setGameStarted,
+        setPlayerAdmin: setIsPlayerAdmin,
+    };
 
     const content = {
         controllerSocket,
-        setControllerSocket: (val: Socket | undefined, roomId: string) => {
-            setControllerSocket(val)
-            history.push(`/controller/${roomId}/lobby`)
-        },
+        setControllerSocket: (val: Socket, roomId: string) =>
+            handleSetControllerSocket(val, roomId, playerFinished, {
+                ...dependencies,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
+            }),
         isControllerConnected: controllerSocket ? true : false,
-    }
-    return <ControllerSocketContext.Provider value={content}>{children}</ControllerSocketContext.Provider>
-}
+        handleSocketConnection: (roomId: string, name: string) => {
+            handleSocketConnection(roomId, name, playerFinished, {
+                ...dependencies,
+                setPermissionGranted,
+                setRoomId,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
+            });
+        },
+    };
+    return <ControllerSocketContext.Provider value={content}>{children}</ControllerSocketContext.Provider>;
+};
 
-export default ControllerSocketContextProvider
+export default ControllerSocketContextProvider;

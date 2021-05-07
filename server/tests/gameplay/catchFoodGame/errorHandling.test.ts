@@ -1,38 +1,31 @@
-import { CatchFoodGame } from '../../../src/gameplay'
-import { users } from '../mockUsers'
+import User from '../../../src/classes/user';
+import { CatchFoodGame } from '../../../src/gameplay';
+import { MaxNumberUsersExceededError } from '../../../src/gameplay/customErrors';
+import { leaderboard, roomId, users } from '../mockData';
 
-const TRACKLENGTH = 500
-const NUMBER_OF_OBSTACLES = 4
-let catchFoodGame: CatchFoodGame
+let catchFoodGame: CatchFoodGame;
+const longerUsers = [...users, new User('xxx', 'iii', 'Lavender', '5')];
 
 describe('Error handling tests', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES)
-        jest.useFakeTimers()
-        // finishGame(catchFoodGame);
-        // catchFoodGame.resetGame(users, NEW_TRACKLENGTH, NEW_NUMBER_OF_OBSTACLES);
-    })
+        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        jest.useFakeTimers();
+    });
 
-    //TODO
+    afterEach(async () => {
+        jest.runAllTimers();
+        jest.clearAllMocks();
+    });
 
-    it('needs to be implemented', () => {
-        catchFoodGame.startGame()
-        expect(true).toBeTruthy()
-    })
+    it('throws an error when game is created with more than 4 players', () => {
+        expect(() => catchFoodGame.createNewGame(longerUsers)).toThrowError(MaxNumberUsersExceededError);
+    });
 
-    // it("throw an error if userId is not registered to the game", async () => {
-    //   catchFoodGame.startGame();
-    // try {
-    //   catchFoodGame.runForward("notUserId");
-    //   expect(true).toBeFalsy();
-    // } catch (e) {
-    //   //yaay, error was thrown
-    // }
-    // try {
-    //   catchFoodGame.playerHasCompletedObstacle("notUserId");
-    //   expect(true).toBeFalsy();
-    // } catch (e) {
-    //   //yaay, error was thrown
-    // }
-    // });
-})
+    it('throws an error when game is created with more than 4 players with the max number of users', () => {
+        try {
+            catchFoodGame.createNewGame(longerUsers);
+        } catch (e) {
+            expect(e.maxNumberOfUsers).toBe(catchFoodGame.maxNumberOfPlayers);
+        }
+    });
+});

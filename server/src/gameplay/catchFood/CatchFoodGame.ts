@@ -1,69 +1,109 @@
-import GameEventEmitter from '../../classes/GameEventEmitter'
-import { User } from '../../interfaces/interfaces'
-import { verifyGameState } from '../helperFunctions/verifyGameState'
-import { verifyUserId } from '../helperFunctions/verifyUserId'
-import { GameEventTypes, GameInterface, GameState, HashTable } from '../interfaces'
-import { initiatePlayersState } from './initiatePlayerState'
-import { GameStateInfo, Obstacle, PlayerState } from './interfaces'
+// import GameEventEmitter from '../../classes/GameEventEmitter';
 
-interface CatchFoodGameInterface extends GameInterface {
-    playersState: HashTable<PlayerState>
-    trackLength: number
-    numberOfObstacles: number
+import User from '../../classes/user';
+import { Globals } from '../../enums/globals';
+import { MaxNumberUsersExceededError } from '../customErrors';
+import { GameState } from '../enums';
+import { verifyGameState } from '../helperFunctions/verifyGameState';
+import { verifyUserId } from '../helperFunctions/verifyUserId';
+import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
+import { HashTable, IGameInterface } from '../interfaces';
+import { GameType } from '../leaderboard/enums/GameType';
+import Leaderboard from '../leaderboard/Leaderboard';
+import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
+import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
+import { initiatePlayersState } from './helperFunctions/initiatePlayerState';
+import { GameEvents, GameStateInfo, Obstacle, PlayerRank, PlayerState } from './interfaces';
 
-    getGameStateInfo(): GameStateInfo
-    getObstaclePositions(): HashTable<Array<Obstacle>>
-    runForward(userId: string, speed: number): void
-    playerHasCompletedObstacle(userId: string, obstacleId: number): void
-    resetGame(players: Array<User>, trackLength: number, numberOfObstacles: number): void
+interface CatchFoodGameInterface extends IGameInterface {
+    playersState: HashTable<PlayerState>;
+    trackLength: number;
+    numberOfObstacles: number;
+
+    createNewGame(players: Array<User>, trackLength: number, numberOfObstacles: number): void;
+    getGameStateInfo(): GameStateInfo;
+    getObstaclePositions(): HashTable<Array<Obstacle>>;
+    runForward(userId: string, speed: number): void;
+    playerHasCompletedObstacle(userId: string, obstacleId: number): void;
 }
 
 export default class CatchFoodGame implements CatchFoodGameInterface {
-    playersState: HashTable<PlayerState>
-    trackLength: number
-    numberOfObstacles: number
-    currentRank: number
-    gameEventEmitter: GameEventEmitter
-    roomId: string
-    gameState: GameState
-    gameStartedTime: number
-    players: Array<User>
-    timeOutLimit: number
-    timer: ReturnType<typeof setTimeout> //TODO change
+    playersState: HashTable<PlayerState>;
+    trackLength: number;
+    numberOfObstacles: number;
+    currentRank: number;
+    ranksDictionary: HashTable<number>;
+    // gameEventEmitter: GameEventEmitter
+    roomId: string;
+    maxNumberOfPlayers: number;
+    gameState: GameState;
+    gameStartedTime: number;
+    players: Array<User>;
+    timeOutLimit: number;
+    timer: ReturnType<typeof setTimeout>;
+    countdownTime: number;
+    timeOutRemainingTime: number;
+    gamePausedTime: number;
+    leaderboard: Leaderboard;
 
-    constructor(players: Array<User>, trackLength = 2000, numberOfObstacles = 2) {
-        this.gameEventEmitter = GameEventEmitter.getInstance()
-        this.roomId = players[0].roomId
-        this.gameState = GameState.Created
-        this.trackLength = trackLength
-        this.numberOfObstacles = numberOfObstacles
-        this.currentRank = 1
-        this.players = players
-        this.playersState = initiatePlayersState(players, this.numberOfObstacles, this.trackLength)
-        this.gameStartedTime = 0
-        this.timeOutLimit = 300000
-        this.timer = setTimeout(() => ({}), 0)
+    constructor(roomId: string, leaderboard: Leaderboard) {
+        // this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
+        this.roomId = roomId;
+        this.maxNumberOfPlayers = Globals.MAX_PLAYER_NUMBER;
+        this.gameState = GameState.Initialised;
+        this.trackLength = 2000;
+        this.numberOfObstacles = 4;
+        this.currentRank = 1;
+        this.ranksDictionary = {};
+        this.players = [];
+        this.playersState = {};
+        this.gameStartedTime = 0;
+        this.timeOutLimit = 300000;
+        this.timer = setTimeout(() => ({}), 0);
+        this.countdownTime = 3000;
+        this.timeOutRemainingTime = 0;
+        this.gamePausedTime = 0;
+        // this.leaderboard = {};
+        this.leaderboard = leaderboard;
     }
 
-    startGame(): void {
-        try {
-            verifyGameState(this.gameState, GameState.Created)
-            const countdownTime = 3000
-            setTimeout(() => {
-                this.gameState = GameState.Started
-            }, countdownTime)
-            this.gameEventEmitter.emit(GameEventTypes.GameHasStarted, {
-                roomId: this.roomId,
-                countdownTime,
-            })
-            this.gameStartedTime = Date.now()
-            // setInterval(this.onTimerTick, 33);
-            this.timer = setTimeout(() => {
-                this.stopGame(true)
-            }, this.timeOutLimit)
-        } catch (e) {
-            // throw e.Message;
+    createNewGame(
+        players: Array<User>,
+        trackLength = this.trackLength,
+        numberOfObstacles = this.numberOfObstacles
+    ): void {
+        verifyGameState(this.gameState, [GameState.Initialised, GameState.Finished, GameState.Stopped]);
+        if (players.length > this.maxNumberOfPlayers) {
+            throw new MaxNumberUsersExceededError(
+                `Too many players. Max ${this.maxNumberOfPlayers} Players`,
+                this.maxNumberOfPlayers
+            );
         }
+        this.gameState = GameState.Created;
+        this.trackLength = trackLength;
+        this.players = players;
+        this.currentRank = 1;
+        this.gameStartedTime = 0;
+        this.numberOfObstacles = numberOfObstacles;
+        this.playersState = initiatePlayersState(players, this.numberOfObstacles, this.trackLength);
+        clearTimeout(this.timer);
+        this.startGame();
+    }
+
+    //put together
+    private startGame(): void {
+        setTimeout(() => {
+            this.gameState = GameState.Started;
+        }, this.countdownTime);
+        CatchFoodGameEventEmitter.emitGameHasStartedEvent({
+            roomId: this.roomId,
+            countdownTime: this.countdownTime,
+        });
+        this.gameStartedTime = Date.now();
+        // setInterval(this.onTimerTick, 33);
+        this.timer = setTimeout(() => {
+            this.stopGameTimeout();
+        }, this.timeOutLimit);
     }
 
     // private onTimerTick() {
@@ -73,142 +113,294 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     //   }
     // }
 
-    stopGame(timeOut = false): void {
-        try {
-            verifyGameState(this.gameState, GameState.Started)
-            this.gameState = GameState.Stopped
-            if (timeOut) this.gameEventEmitter.emit(GameEventTypes.GameHasTimedOut, {})
-            else {
-                clearTimeout(this.timer)
-            }
-        } catch (e) {
-            // throw e.Message;
-            // console.error(e.message);
-        }
+    pauseGame(): void {
+        verifyGameState(this.gameState, [GameState.Started]);
+        this.gameState = GameState.Paused;
+
+        // update gamePausedTime
+        this.gamePausedTime = Date.now();
+
+        // pause timeout timer
+        clearTimeout(this.timer);
+        this.timeOutRemainingTime = this.timeOutLimit - this.getGameTimePassedBeforePause();
+
+        CatchFoodGameEventEmitter.emitGameHasPausedEvent({ roomId: this.roomId });
+    }
+
+    private getGameTimePassedBeforePause(): number {
+        return this.gamePausedTime - this.gameStartedTime;
+    }
+
+    resumeGame(): void {
+        verifyGameState(this.gameState, [GameState.Paused]);
+        this.gameState = GameState.Started;
+
+        // resume timeout timer
+        this.timer = setTimeout(() => {
+            this.stopGameTimeout();
+        }, this.timeOutRemainingTime);
+        // this.timeOutRemasiningTime = 0
+
+        //update gameStartedTime
+        this.gameStartedTime = Date.now() - this.getGameTimePassedBeforePause();
+
+        CatchFoodGameEventEmitter.emitGameHasResumedEvent({ roomId: this.roomId });
+    }
+
+    private stopGameTimeout() {
+        this.stopGame();
+        const currentGameStateInfo = this.getGameStateInfo();
+        const messageInfo: GameEvents.GameHasFinished = {
+            roomId: currentGameStateInfo.roomId,
+            gameState: currentGameStateInfo.gameState,
+            trackLength: currentGameStateInfo.trackLength,
+            numberOfObstacles: currentGameStateInfo.numberOfObstacles,
+            playerRanks: [...this.createPlayerRanks()],
+        };
+
+        CatchFoodGameEventEmitter.emitGameHasTimedOutEvent(messageInfo);
+    }
+
+    stopGameUserClosed() {
+        this.stopGame();
+        clearTimeout(this.timer);
+        CatchFoodGameEventEmitter.emitGameHasStoppedEvent({ roomId: this.roomId });
+    }
+
+    stopGameAllUsersDisconnected() {
+        this.stopGame();
+        clearTimeout(this.timer);
+        CatchFoodGameEventEmitter.emitAllPlayersHaveDisconnected({ roomId: this.roomId });
+    }
+
+    private stopGame(): void {
+        verifyGameState(this.gameState, [GameState.Started, GameState.Paused]);
+        this.gameState = GameState.Stopped;
     }
 
     getGameStateInfo(): GameStateInfo {
-        const playerInfoArray = []
+        const playerInfoArray = [];
 
         for (const [, playerState] of Object.entries(this.playersState)) {
-            playerInfoArray.push(playerState)
+            playerInfoArray.push(playerState);
         }
 
         return {
             gameState: this.gameState,
             roomId: this.roomId,
-            playersState: playerInfoArray,
+            playersState: [...playerInfoArray],
             trackLength: this.trackLength,
             numberOfObstacles: this.numberOfObstacles,
-        }
+        };
     }
 
     getObstaclePositions(): HashTable<Array<Obstacle>> {
-        const obstaclePositions: HashTable<Array<Obstacle>> = {}
+        const obstaclePositions: HashTable<Array<Obstacle>> = {};
         for (const [, playerState] of Object.entries(this.playersState)) {
-            obstaclePositions[playerState.id] = playerState.obstacles
+            obstaclePositions[playerState.id] = [...playerState.obstacles];
         }
 
-        return obstaclePositions
+        return { ...obstaclePositions };
     }
 
     runForward(userId: string, speed = 1): void {
-        try {
-            verifyUserId(this.playersState, userId)
-            verifyGameState(this.gameState, GameState.Started)
+        verifyGameState(this.gameState, [GameState.Started]);
+        verifyUserId(this.playersState, userId);
+        verifyUserIsActive(userId, this.playersState[userId].isActive);
 
-            if (this.playersState[userId].finished) return
-            if (this.playersState[userId].atObstacle) return
+        if (this.playersState[userId].finished) return;
+        if (this.playersState[userId].atObstacle) return;
 
-            this.playersState[userId].positionX += speed
+        this.playersState[userId].positionX += speed;
 
-            if (this.playerHasReachedObstacle(userId)) this.handlePlayerReachedObstacle(userId)
+        if (this.playerHasReachedObstacle(userId)) this.handlePlayerReachedObstacle(userId);
 
-            if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId)
-        } catch (e) {
-            // throw e;
-            // console.error(e.message);
-        }
+        if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId);
     }
 
     private playerHasReachedObstacle(userId: string): boolean {
         return (
             this.playersState[userId].obstacles.length > 0 &&
             this.playersState[userId].positionX >= this.playersState[userId].obstacles[0].positionX
-        )
+        );
     }
 
     private playerHasPassedGoal(userId: string): boolean {
-        return this.playersState[userId].positionX >= this.trackLength
+        return (
+            this.playersState[userId].positionX >= this.trackLength && this.playersState[userId].obstacles.length === 0
+        );
     }
 
     private handlePlayerReachedObstacle(userId: string): void {
         // block player from running when obstacle is reached
-        this.playersState[userId].atObstacle = true
-        this.gameEventEmitter.emit(GameEventTypes.ObstacleReached, {
+        this.playersState[userId].atObstacle = true;
+
+        //set position x to obstacle position (in case ran past)
+        this.playersState[userId].positionX = this.playersState[userId].obstacles[0].positionX;
+        CatchFoodGameEventEmitter.emitObstacleReachedEvent({
             roomId: this.roomId,
             userId,
             obstacleType: this.playersState[userId].obstacles[0].type,
             obstacleId: this.playersState[userId].obstacles[0].id,
-        })
+        });
     }
 
     playerHasCompletedObstacle(userId: string, obstacleId: number): void {
-        //TODO CHange to stop cheating
-        try {
-            verifyUserId(this.playersState, userId)
-            verifyGameState(this.gameState, GameState.Started)
-            //TODO: BLOCK USER FROM SAYING COMPLETED STRAIGHT AWAY - STOP CHEATING
-            this.playersState[userId].atObstacle = false
-            if (this.playersState[userId].obstacles[0].id === obstacleId) this.playersState[userId].obstacles.shift()
-        } catch (e) {
-            // throw e.Message;
-            // console.error(e.message);
+        verifyGameState(this.gameState, [GameState.Started]);
+        verifyUserId(this.playersState, userId);
+        verifyUserIsActive(userId, this.playersState[userId].isActive);
+
+        this.verifyUserIsAtObstacle(userId);
+
+        this.playersState[userId].atObstacle = false;
+        if (this.playersState[userId].obstacles[0].id === obstacleId) {
+            this.playersState[userId].obstacles.shift();
+        } else {
+            throw new WrongObstacleIdError(`${obstacleId} is not the id for the next obstacle.`, userId, obstacleId);
+        }
+    }
+
+    private verifyUserIsAtObstacle(userId: string) {
+        if (
+            !this.playersState[userId].atObstacle
+            // ||
+            // this.playersState[userId].positionX !== this.playersState[userId].obstacles[0].positionX
+        ) {
+            throw new NotAtObstacleError(`User ${userId} is not at an obstacle`, userId);
         }
     }
 
     private playerHasFinishedGame(userId: string): void {
         //only if player hasn't already been marked as finished
-        if (this.playersState[userId].finished) return
+        // if (this.playersState[userId].finished) return; //don't think I need
 
-        this.playersState[userId].finished = true
-        this.playersState[userId].rank = this.currentRank++
+        this.playersState[userId].finished = true;
+        this.playersState[userId].positionX = this.trackLength;
+        this.playersState[userId].finishedTimeMs = Date.now();
+        this.playersState[userId].rank = this.getRank(this.playersState[userId].finishedTimeMs);
 
-        this.gameEventEmitter.emit(GameEventTypes.PlayerHasFinished, {
+        CatchFoodGameEventEmitter.emitPlayerHasFinishedEvent({
             userId,
             roomId: this.roomId,
             rank: this.playersState[userId].rank,
-        })
+        });
 
         if (this.gameHasFinished()) {
-            this.handleGameFinished()
+            this.handleGameFinished();
         }
     }
 
     private gameHasFinished(): boolean {
-        return this.currentRank > Object.keys(this.playersState).length
+        const userIds = Object.keys(this.playersState);
+        const activePlayers = userIds.filter(userId => {
+            if (this.playersState[userId].isActive) return userId;
+        });
+        return this.currentRank > activePlayers.length;
+    }
+
+    private getRank(timeFinishedInMs: number) {
+        const timeFinishedInMsStr: string = timeFinishedInMs.toString();
+        //here
+        const currentRank = this.currentRank;
+        this.currentRank++;
+
+        // if (!playerIsActive) return this.currentRank;
+
+        // if two players finished at the same time
+        if (Object.prototype.hasOwnProperty.call(this.ranksDictionary, timeFinishedInMsStr)) {
+            return this.ranksDictionary[timeFinishedInMsStr];
+        } else {
+            this.ranksDictionary[timeFinishedInMsStr] = currentRank;
+            return currentRank;
+        }
     }
 
     private handleGameFinished(): void {
-        this.gameState = GameState.Finished
-        clearTimeout(this.timer)
-        const currentGameStateInfo = this.getGameStateInfo()
-        this.gameEventEmitter.emit(GameEventTypes.GameHasFinished, {
+        this.gameState = GameState.Finished;
+        clearTimeout(this.timer);
+        const playerRanks = this.createPlayerRanks();
+        this.leaderboard.addGameToHistory(GameType.CatchFoodGame, [...playerRanks]);
+
+        const currentGameStateInfo = this.getGameStateInfo();
+        CatchFoodGameEventEmitter.emitGameHasFinishedEvent({
             roomId: currentGameStateInfo.roomId,
-            playersState: currentGameStateInfo.playersState,
             gameState: currentGameStateInfo.gameState,
             trackLength: currentGameStateInfo.trackLength,
             numberOfObstacles: currentGameStateInfo.numberOfObstacles,
-        })
+            playerRanks: [...playerRanks],
+        });
         //Broadcast, stop game, return ranks
     }
 
-    resetGame(players = this.players, trackLength = 2000, numberOfObstacles = 4): void {
-        this.gameState = GameState.Created
-        this.trackLength = trackLength
-        this.numberOfObstacles = numberOfObstacles
-        this.currentRank = 1
-        this.playersState = initiatePlayersState(players, this.numberOfObstacles, this.trackLength)
-        clearTimeout(this.timer)
+    createPlayerRanks(): Array<PlayerRank> {
+        const playerRanks: Array<PlayerRank> = [];
+
+        for (const [, playerState] of Object.entries(this.playersState)) {
+            //in case player hasn't finished yet
+            const playerFinishedTime = playerState.finishedTimeMs > 0 ? playerState.finishedTimeMs : Date.now();
+            // console.log(playerFinishedTime)
+            // console.log(this.gameStartedTime)
+            // let rank = this.currentRank
+            // let rank = playerState.rank || this.getRank(playerFinishedTime)
+
+            playerRanks.push({
+                id: playerState.id,
+                name: playerState.name,
+                rank: playerState.finished ? playerState.rank : this.currentRank,
+                finished: playerState.finished,
+                totalTimeInMs: playerFinishedTime - this.gameStartedTime,
+                positionX: playerState.positionX,
+                isActive: playerState.isActive,
+            });
+        }
+
+        return [...playerRanks];
+    }
+
+    disconnectPlayer(userId: string): void {
+        verifyGameState(this.gameState, [
+            GameState.Initialised,
+            GameState.Started,
+            GameState.Created,
+            GameState.Paused,
+        ]);
+        verifyUserId(this.playersState, userId);
+        if (this.playersState[userId].isActive) {
+            this.playersState[userId].isActive = false;
+            CatchFoodGameEventEmitter.emitPlayerHasDisconnected({
+                roomId: this.roomId,
+                userId,
+            });
+
+            if (this.allPlayersDisconnected()) {
+                this.stopGameAllUsersDisconnected();
+            }
+        }
+    }
+
+    private allPlayersDisconnected() {
+        for (const [, playerState] of Object.entries(this.playersState)) {
+            if (playerState.isActive) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    reconnectPlayer(userId: string): void {
+        verifyGameState(this.gameState, [
+            GameState.Initialised,
+            GameState.Started,
+            GameState.Created,
+            GameState.Paused,
+        ]);
+        verifyUserId(this.playersState, userId);
+        if (!this.playersState[userId].isActive) {
+            this.playersState[userId].isActive = true;
+            CatchFoodGameEventEmitter.emitPlayerHasReconnected({
+                roomId: this.roomId,
+                userId,
+            });
+        }
     }
 }

@@ -1,7 +1,5 @@
-import { HashTable } from './HashTable'
-import { GameEventTypes } from './GameEventTypes'
-import { GameState } from './GameState'
-import { GameInterface } from './GameInterface'
-import { GameHasStarted, GameHasFinished, PlayerHasFinished } from './GameEvents'
+import { HashTable } from './HashTable';
+import { IGameInterface } from './IGameInterface';
+import { IPlayerState } from './IPlayerState';
 
-export { HashTable, GameEventTypes, GameState, GameInterface, GameHasStarted, GameHasFinished, PlayerHasFinished }
+export { HashTable, IGameInterface, IPlayerState };

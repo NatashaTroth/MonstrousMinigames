@@ -1,88 +1,176 @@
-import styled from 'styled-components'
+import { Button, Typography } from '@material-ui/core';
+import styled from 'styled-components';
 
-import { lightBlue, lobbyChoiceBackground, orange } from '../../utils/colors'
+import {
+    disabledBackground,
+    lightgrey,
+    Player1,
+    Player2,
+    Player3,
+    Player4,
+    QRCodeBackground,
+} from '../../utils/colors';
 
+function getPlayerBackgroundColor(n: number) {
+    switch (n) {
+        case 1:
+            return Player1;
+        case 2:
+            return Player2;
+        case 3:
+            return Player3;
+        case 4:
+            return Player4;
+        default:
+            return lightgrey;
+    }
+}
 export const LobbyContainer = styled.div`
-    background-color: ${lightBlue};
+    background-color: black;
     height: 100%;
     width: 100%;
     display: flex;
+    flex-direction: row;
+    color: white;
+    justify-content: center;
+`;
+
+export const HeadContainer = styled.div`
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+`;
+
+export const ContentContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+`;
+
+export const Content = styled.div`
+    width: 100%;
+    max-width: 1560px;
+    align-content: center;
+    display: flex;
+    margin: 60px;
     flex-direction: column;
-    align-items: space-evenly;
-`
+`;
+
+export const RoomCodeContainer = styled.div`
+    width: 100%;
+`;
+
+export const HeadContainerLeft = styled.div`
+    display: flex;
+    width: 70%;
+`;
+
+export const HeadContainerRight = styled.div`
+    display: flex;
+    width: 30%;
+    justify-content: center;
+`;
 
 export const Headline = styled.div`
-    font-size: 40px;
+    font-size: 30px;
     font-weight: 700;
-    padding-top: 30px;
-    padding-bottom: 30px;
-`
+    background-color: ${disabledBackground};
+    color: black;
+    padding-left: 20px;
+    width: 100%;
+    display: flex;
+    margin: 20px 0;
+`;
 
-export const JoinedUsersView = styled.div`
+export const ConnectedUsers = styled.div`
     display: flex;
     align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+`;
+
+interface Props {
+    number: number;
+    free?: boolean;
+}
+
+const User = styled.div<Props>`
+    border-radius: 10px;
+    color: ${({ free }) => (free ? lightgrey : 'black')};
+    background-color: ${({ free, number }) => (free ? disabledBackground : getPlayerBackgroundColor(number))};
+    padding: 10px;
+    font-size: 25px;
+`;
+
+export const ConnectedUserName = styled(User)`
+    max-width: 200px;
+    display: flex;
     flex-direction: column;
-`
+`;
+
+export const ConnectedUserCharacter = styled(User)`
+    max-width: 200px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+`;
+
+export const ConnectedUserContainer = styled.div``;
 
 export const Subline = styled.div`
     font-size: 15px;
     font-weight: 700;
     margin-bottom: 20px;
-`
-export const JoinedUser = styled.div`
-    border: 5px solid ${orange};
-    background: white;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
-    color: ${orange};
-    font-weight: 700;
-    display: flex;
-    width: 100%;
-    font-size: 15px;
-    flex-direction: column;
-    text-align: center;
-    box-shadow: 8px 8px 0 #888;
-    border-radius: 4px;
-    margin-bottom: 10px;
-`
+`;
 
-export const GameChoiceContainer = styled.div`
+export const CharacterContainer = styled.div`
     display: flex;
     justify-content: center;
-    flex: 1 1 0px;
-    margin: 5em;
-    padding: 2.5em;
-    background-color: ${lobbyChoiceBackground};
-`
+    padding: 10px;
+`;
 
-export const ListOfGames = styled.div`
-    flex-grow: 1;
-    max-width: 50%;
-    height: 100%;
+export const Character = styled.img`
+    display: flex;
+    width: 80%;
+`;
+
+export const RightContainer = styled.div`
+    display: flex;
+    width: 30%;
+    flex-direction: column;
+    align-items: center;
+`;
+
+export const LeftContainer = styled.div`
+    display: flex;
+    width: 70%;
+    flex-direction: column;
+`;
+
+export const QRCode = styled.div`
+    border-radius: 10px;
+    background-color: ${QRCodeBackground};
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-`
-export const ImagesContainer = styled.div`
-    flex-grow: 1;
-    max-width: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: flex-end;
-`
+    width: 40%;
+    padding: 10px;
+`;
 
-export const InstructionsImg = styled.img`
-    width: 100%;
-`
+export const CopyToClipboard = styled(Button)`
+    && {
+        color: white;
+    }
+`;
 
-export const Instructions = styled.p`
-    color: white;
-    text-align: left;
-`
-export const UserListItem = styled.div`
-    display: flex;
-`
-export const AdminIcon = styled.div`
-    margin-right: 20px;
-`
+export const QRCodeInstructions = styled(Typography)`
+    && {
+        margin-bottom: 5px;
+    }
+`;
+
+export const RightButtonContainer = styled.div`
+    margin-top: 30px;
+
+    div:first-child {
+        margin-bottom: 20px;
+    }
+`;

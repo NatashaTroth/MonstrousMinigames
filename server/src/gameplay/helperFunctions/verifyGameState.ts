@@ -1,11 +1,11 @@
-import { GameState } from "../interfaces";
+import { WrongGameStateError } from '../customErrors';
+import { GameState } from '../enums';
 
-export function verifyGameState(
-  currentGameState: GameState,
-  requiredGameState: GameState
-) : void {
-  if (currentGameState !== requiredGameState)
-    throw new Error(
-      `Current game state is ${currentGameState}, the game state ${requiredGameState} is required to perform this action.`
-    );
+export function verifyGameState(currentGameState: GameState, requiredGameState: Array<GameState>): void {
+    if (!requiredGameState.includes(currentGameState)) {
+        throw new WrongGameStateError(
+            `Current game state is ${currentGameState}, the game state ${requiredGameState} is required to perform this action.`,
+            requiredGameState
+        );
+    }
 }

@@ -1,15 +1,7 @@
-import { Obstacle } from "./Obstacle";
-import { ObstacleType } from "./ObstacleType";
-import { PlayerState } from "./PlayerState";
-import { GameStateInfo } from "./GameStateInfo";
-import { ObstacleReachedInfo } from "./ObstacleReachedInfo";
-import { PlayerFinishedInfo } from "./PlayerFinishedInfo";
+import { CatchFoodGamePlayerRank } from './CatchFoodGamePlayerRank';
+import * as GameEvents from './GameEvents';
+import { GameStateInfo } from './GameStateInfo';
+import { Obstacle } from './Obstacle';
+import { PlayerState } from './PlayerState';
 
-export {
-  Obstacle,
-  ObstacleType,
-  PlayerState,
-  GameStateInfo,
-  ObstacleReachedInfo,
-  PlayerFinishedInfo,
-};
+export { Obstacle, PlayerState, GameStateInfo, GameEvents, CatchFoodGamePlayerRank as PlayerRank };

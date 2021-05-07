@@ -1,19 +1,17 @@
-import { cleanup } from '@testing-library/react'
-import React from 'react'
-import renderer from 'react-test-renderer'
+import { cleanup, queryByText, render } from '@testing-library/react';
+import React from 'react';
 
-import FullScreenContainer from './FullScreenContainer'
+import FullScreenContainer from '../../components/common/FullScreenContainer';
 
-afterEach(cleanup)
+afterEach(cleanup);
 describe('FullScreenContainer', () => {
     it('renders given children', () => {
-        const FullScreenContainerComponent = renderer
-            .create(
-                <FullScreenContainer>
-                    <div>Text</div>
-                </FullScreenContainer>
-            )
-            .toJSON()
-        expect(FullScreenContainerComponent).toMatchSnapshot()
-    })
-})
+        const givenText = 'Fullscreen';
+        const { container } = render(
+            <FullScreenContainer>
+                <div>{givenText}</div>
+            </FullScreenContainer>
+        );
+        expect(queryByText(container, givenText)).toBeTruthy();
+    });
+});

@@ -1,44 +1,60 @@
-import * as React from 'react'
-import { useHistory } from 'react-router-dom'
+import { CircularProgress } from '@material-ui/core';
+import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
-import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider'
-import { GameContext } from '../../contexts/GameContextProvider'
-import { PlayerContext } from '../../contexts/PlayerContextProvider'
-import Button from '../common/Button'
-import FullScreenContainer from '../common/FullScreenContainer'
-import { Instruction, LobbyScreenContainer } from './Lobby.sc'
+import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
+import { GameContext } from '../../contexts/GameContextProvider';
+import { PlayerContext } from '../../contexts/PlayerContextProvider';
+import { localDevelopment } from '../../utils/constants';
+import Button from '../common/Button';
+import FullScreenContainer from '../common/FullScreenContainer';
+import { Instruction, InstructionContainer, LobbyScreenContainer, StyledTypography } from './Lobby.sc';
 
 export const Lobby: React.FunctionComponent = () => {
-    const { controllerSocket } = React.useContext(ControllerSocketContext)
-    const { isPlayerAdmin, permission } = React.useContext(PlayerContext)
-    const { roomId } = React.useContext(GameContext)
-    const history = useHistory()
+    const { controllerSocket } = React.useContext(ControllerSocketContext);
+    const { isPlayerAdmin, permission, playerNumber } = React.useContext(PlayerContext);
+    const { roomId } = React.useContext(GameContext);
+    const history = useHistory();
 
     function startGame() {
-        controllerSocket?.emit('message', {
+        controllerSocket?.emit({
             type: 'game1/start',
             roomId: sessionStorage.getItem('roomId'),
             userId: sessionStorage.getItem('userId'),
-        })
-        history.push(`/controller/${roomId}/game1`)
+        });
+        history.push(`/controller/${roomId}/game1`);
     }
 
     return (
         <FullScreenContainer>
             <LobbyScreenContainer>
-                {isPlayerAdmin ? (
-                    <Button
-                        onClick={() => {
-                            if (permission) {
-                                startGame()
-                            }
-                        }}
-                        text="Start Game"
-                    />
-                ) : (
-                    <Instruction>Wait until the Admin starts the Game</Instruction>
-                )}
+                <InstructionContainer>
+                    {playerNumber ? (
+                        <>
+                            <Instruction>{`You are Player #${playerNumber}`}</Instruction>
+                            <StyledTypography>
+                                {isPlayerAdmin
+                                    ? 'When all other players are ready, you have to press the "Start Game" button to start the game.'
+                                    : 'Wait until Player #1 starts the Game'}
+                            </StyledTypography>
+                            {isPlayerAdmin && (
+                                <div>
+                                    <Button
+                                        onClick={() => {
+                                            if (permission || localDevelopment) {
+                                                startGame();
+                                            }
+                                        }}
+                                        text="Start Game"
+                                    />
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <CircularProgress />
+                    )}
+                </InstructionContainer>
             </LobbyScreenContainer>
         </FullScreenContainer>
-    )
-}
+    );
+};

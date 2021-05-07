@@ -7,11 +7,11 @@
         "node": "12.x"
     },
     "scripts": {
-        "test": "jest --watchAll",
+        "test": "rm -rf dist/ && jest --watchAll",
         "testGameplay": "jest --watchAll ./tests/gameplay",
         "dev": "nodemon src/app.ts",
         "prettier": "prettier --write src/**/*.ts",
-        "lint": "eslint \"**/*.ts\" --fix",
+        "lint": "eslint \"**/*.ts\" --fix && npm run tsc && rm -rf dist/",
         "tsc": "tsc",
         "postinstall": "npm run tsc",
         "start": "node src/app.js",
@@ -25,13 +25,16 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@types/cron": "^1.7.2",
         "@types/shortid": "0.0.29",
         "@types/socket.io": "^2.1.13",
         "@types/socket.io-client": "^1.4.36",
         "ansi-styles": "^5.1.0",
         "cors": "^2.8.5",
+        "cron": "^1.8.2",
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
+        "http-terminator": "^3.0.0",
         "node-code-generator": "^1.0.3",
         "phaser": "^3.52.0",
         "qrcode": "^1.4.4",
@@ -43,7 +46,7 @@
     "devDependencies": {
         "@types/cors": "^2.8.10",
         "@types/express": "^4.17.11",
-        "@types/jest": "^26.0.20",
+        "@types/jest": "^26.0.21",
         "@types/node": "^14.14.22",
         "@typescript-eslint/eslint-plugin": "^4.14.1",
         "@typescript-eslint/parser": "^4.14.1",
@@ -60,7 +63,12 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "npm run prettier && jest && npm run lint"
+            "pre-commit": "rm -rf dist/ && npm run prettier && jest --coverage && npm run lint"
         }
+    },
+    "jest": {
+        "collectCoverageFrom": [
+            "tests/"
+        ]
     }
 }

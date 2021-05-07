@@ -1,23 +1,21 @@
-import * as React from 'react'
+import * as React from 'react';
 
-import { Container, StyledButton } from './Button.sc'
+import { Container, StyledButton } from './Button.sc';
 
 interface IButton {
-    text: string
-    onClick?: React.MouseEventHandler<HTMLButtonElement>
-    type?: 'button' | 'submit' | 'reset' | undefined
-    disabled?: boolean
-    name?: string
+    text: string;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    type?: 'button' | 'submit' | 'reset' | undefined;
+    disabled?: boolean;
+    name?: string;
 }
 
-const Button: React.FunctionComponent<IButton> = ({ text, onClick, type = 'button', disabled, name }) => {
-    return (
-        <Container>
-            <StyledButton disabled={disabled} onClick={onClick} type={type} name={name}>
-                {text}
-            </StyledButton>
-        </Container>
-    )
-}
+const Button: React.FunctionComponent<IButton> = ({ text, onClick, type = 'button', disabled, name }) => (
+    <Container>
+        <StyledButton disabled={disabled} onClick={onClick} type={type} name={name}>
+            {text}
+        </StyledButton>
+    </Container>
+);
 
-export default Button
+export default Button;
