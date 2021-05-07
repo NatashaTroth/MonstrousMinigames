@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { stringify } from 'querystring';
 
-// import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
+import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
 import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
 import attention from '../../images/attention.png';
@@ -76,7 +76,7 @@ class MainScene extends Phaser.Scene {
         // require('../../audio/Sound_Game.mp3');
         this.load.audio('backgroundMusicStart', [game1SoundStart]);
         this.load.audio('backgroundMusicLoop', [game1SoundLoop]);
-        // this.load.audio('backgroundMusicEnd', [game1SoundEnd]);
+        this.load.audio('backgroundMusicEnd', [game1SoundEnd]);
         //require('../../audio/Sound_Game.mp3')
 
         this.load.spritesheet('franz', franz, {
@@ -106,8 +106,8 @@ class MainScene extends Phaser.Scene {
         const bg = this.add.image(windowWidth / 2, windowHeight / 2, 'forest');
         bg.setDisplaySize(windowWidth, windowHeight);
 
-        const backgroundMusicStart = this.sound.add('backgroundMusicStart');
-        this.backgroundMusicLoop = this.sound.add('backgroundMusicLoop');
+        const backgroundMusicStart = this.sound.add('backgroundMusicStart', { volume: 0.2 });
+        this.backgroundMusicLoop = this.sound.add('backgroundMusicLoop', { volume: 0.2 });
 
         // for end: https://rexrainbow.github.io/phaser3-rex-notes/docs/site/audio/
         // const backgroundMusicEnd = this.sound.add('backgroundMusicEnd');
@@ -181,6 +181,9 @@ class MainScene extends Phaser.Scene {
             if (data.type === MessageTypes.gameHasFinished) {
                 this.handleGameOver();
             }
+            if (data.type === MessageTypes.gameHasStopped || data.type === MessageTypes.gameHasTimedOut) {
+                this.backgroundMusicLoop?.stop();
+            }
             if (data.type === 'game1/gameState') {
                 if (logged == false) {
                     // eslint-disable-next-line no-console
@@ -202,7 +205,7 @@ class MainScene extends Phaser.Scene {
                                     data.data.playersState[i].name,
                                     { font: '16px Arial', align: 'center', fixedWidth: 150 }
                                 )
-                                .setDepth(20);
+                                .setDepth(50);
                             // this.playerText[i].setFixedSize = players[i].width;
                             this.playerText[i].setBackgroundColor('#000000');
                             // players[i].anims.play(animations[i]);
@@ -343,6 +346,7 @@ class MainScene extends Phaser.Scene {
         // eslint-disable-next-line no-console
         // console.log('game over');
         this.backgroundMusicLoop?.stop();
+        this.sound.add('backgroundMusicEnd', { volume: 0.2 });
         // eslint-disable-next-line no-console
         // console.log(this.backgroundMusicLoop);
         history.push(`/screen/${roomId}/finished`);
