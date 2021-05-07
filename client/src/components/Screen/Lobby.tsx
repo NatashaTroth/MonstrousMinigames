@@ -54,7 +54,7 @@ export const Lobby: React.FunctionComponent = () => {
 
     async function handleCopyToClipboard() {
         if (navigator.clipboard) {
-            await navigator.clipboard.writeText(`${process.env.REACT_APP_FRONTEND_URL}${roomId}`);
+            await navigator.clipboard.writeText(`${process.env.REACT_APP_FRONTEND_URL}screen/${roomId}/lobby`);
         }
     }
 
