@@ -75,7 +75,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
     function handleGameHasFinished(messageData: IGameState) {
         setFinished(true);
         setPlayerRanks(messageData.data!.playerRanks!);
-        history.push(`/screen/${roomId}/finished`);
+        // history.push(`/screen/${roomId}/finished`);
     }
 
     function handleSocketConnection(roomId: string, route: string) {

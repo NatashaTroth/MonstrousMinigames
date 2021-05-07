@@ -16,6 +16,8 @@ import steffi from '../../images/steffi_spritesheet.png';
 import susi from '../../images/susi_spritesheet.png';
 // import track from '../../images/track.png';
 import wood from '../../images/wood.png';
+import { MessageTypes } from '../../utils/constants';
+import history from '../../utils/history';
 
 const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
 const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
@@ -42,6 +44,8 @@ class MainScene extends Phaser.Scene {
     playerCountSameDistance: Array<number>;
     playerAttention: Array<null | Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
     test: number;
+    numberPlayersFinished: number;
+    backgroundMusicLoop: undefined | Phaser.Sound.BaseSound;
 
     constructor() {
         super('MainScene');
@@ -56,6 +60,8 @@ class MainScene extends Phaser.Scene {
         this.playerCountSameDistance = [];
         this.playerText = [];
         this.test = 0;
+        this.numberPlayersFinished = 0;
+        this.backgroundMusicLoop = undefined;
     }
 
     init(data: { roomId: string; playerNumber: number }) {
@@ -101,14 +107,14 @@ class MainScene extends Phaser.Scene {
         bg.setDisplaySize(windowWidth, windowHeight);
 
         const backgroundMusicStart = this.sound.add('backgroundMusicStart');
-        const backgroundMusicLoop = this.sound.add('backgroundMusicLoop');
+        this.backgroundMusicLoop = this.sound.add('backgroundMusicLoop');
 
         // for end: https://rexrainbow.github.io/phaser3-rex-notes/docs/site/audio/
         // const backgroundMusicEnd = this.sound.add('backgroundMusicEnd');
 
         backgroundMusicStart.play({ loop: false });
         backgroundMusicStart.once('complete', () => {
-            backgroundMusicLoop.play({ loop: true });
+            this.backgroundMusicLoop?.play({ loop: true });
         });
 
         players.push(this.physics.add.sprite(this.posX, this.posY, 'franz').setDepth(50));
@@ -172,6 +178,9 @@ class MainScene extends Phaser.Scene {
             if (!roomId) {
                 roomId = data.data.roomId;
             }
+            if (data.type === MessageTypes.gameHasFinished) {
+                this.handleGameOver();
+            }
             if (data.type === 'game1/gameState') {
                 if (logged == false) {
                     // eslint-disable-next-line no-console
@@ -203,6 +212,14 @@ class MainScene extends Phaser.Scene {
                         }
                     }
                 }
+
+                // setInterval(() => {
+                //     // eslint-disable-next-line no-console
+                //     console.log(data.data.gameState);
+                // }, 5000);
+                // if (data.data.gameState == MessageTypes.gameHasFinished) {
+                //     this.handleGameOver();
+                // }
 
                 this.updateGameState(data.data.playersState);
             }
@@ -291,6 +308,8 @@ class MainScene extends Phaser.Scene {
             });
         });
 
+        this.backgroundMusicLoop?.stop();
+
         // obstacles.forEach(obstacle => {
         //     obstacle.destroy();
         // });
@@ -314,7 +333,20 @@ class MainScene extends Phaser.Scene {
         if (isFinished) {
             // players[playerIndex].anims.stop();
             this.stopRunningAnimation(players[playerIndex], playerIndex);
+            this.numberPlayersFinished++;
         }
+    }
+
+    handleGameOver() {
+        //end of game
+        // if(this.numberPlayersFinished >= players.length){
+        // eslint-disable-next-line no-console
+        // console.log('game over');
+        this.backgroundMusicLoop?.stop();
+        // eslint-disable-next-line no-console
+        // console.log(this.backgroundMusicLoop);
+        history.push(`/screen/${roomId}/finished`);
+        // }
     }
 
     checkAtObstacle(playerIndex: number, isAtObstacle: boolean, playerPositionX: number) {
