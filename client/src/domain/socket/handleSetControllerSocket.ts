@@ -1,6 +1,6 @@
-import { handleMessageData, HandleMessageDataDependencies } from './handleMessageData';
-import history from './history';
-import { Socket } from './socket/Socket';
+import { handleMessageData, HandleMessageDataDependencies } from '../gameState/handleMessageData';
+import history from '../history/history';
+import { Socket } from './Socket';
 
 interface HandleControllerSocketDependencies extends HandleMessageDataDependencies {
     setControllerSocket: (socket: Socket) => void;
@@ -29,9 +29,9 @@ export function handleSetControllerSocket(
     setControllerSocket(socket);
 
     // TOTO remove any
-    socket.listen((data: any) => {
+    socket.listen(<MessageData>(data: MessageData) => {
         handleMessageData({
-            data,
+            data: data as MessageData,
             playerFinished,
             roomId,
             socket,
@@ -45,6 +45,7 @@ export function handleSetControllerSocket(
                 setHasPaused,
                 resetGame,
                 resetPlayer,
+                history,
             },
         });
     });

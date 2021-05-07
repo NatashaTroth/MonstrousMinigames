@@ -1,4 +1,4 @@
-import { MessageTypes } from '../constants';
+import { MessageTypes } from '../../utils/constants';
 import { Socket } from '../socket/Socket';
 
 export function handleResetGame(

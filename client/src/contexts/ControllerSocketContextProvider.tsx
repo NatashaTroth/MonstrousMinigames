@@ -1,10 +1,11 @@
 import * as React from 'react';
 
+import history from '../domain/history/history';
+import { handleSetControllerSocket } from '../domain/socket/handleSetControllerSocket';
+import { handleSocketConnection } from '../domain/socket/handleSocketConnection';
+import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
+import { Socket } from '../domain/socket/Socket';
 import { Obstacles } from '../utils/constants';
-import { handleSetControllerSocket } from '../utils/handleSetControllerSocket';
-import { handleSocketConnection } from '../utils/handleSocketConnection';
-import { InMemorySocketFake } from '../utils/socket/InMemorySocketFake';
-import { Socket } from '../utils/socket/Socket';
 import { GameContext } from './GameContextProvider';
 import { PlayerContext } from './PlayerContextProvider';
 
@@ -92,6 +93,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
                 setHasPaused,
                 resetGame,
                 resetPlayer,
+                history,
             }),
         isControllerConnected: controllerSocket ? true : false,
         handleSocketConnection: (roomId: string, name: string) => {
@@ -102,6 +104,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
                 setHasPaused,
                 resetGame,
                 resetPlayer,
+                history,
             });
         },
     };

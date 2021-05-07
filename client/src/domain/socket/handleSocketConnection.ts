@@ -1,9 +1,9 @@
-import { HandleMessageDataDependencies } from './handleMessageData';
+import { HandleMessageDataDependencies } from '../gameState/handleMessageData';
+import { ClickRequestDeviceMotion } from '../user/permissions';
+import { window } from '../window/WindowAdapter';
 import { handleSetControllerSocket } from './handleSetControllerSocket';
-import { Socket } from './socket/Socket';
-import { SocketIOAdapter } from './socket/SocketIOAdapter';
-import { ClickRequestDeviceMotion } from './user/permissions';
-import { window } from './window/WindowAdapter';
+import { Socket } from './Socket';
+import { SocketIOAdapter } from './SocketIOAdapter';
 
 interface HandleSocketConnDependencies extends HandleMessageDataDependencies {
     setControllerSocket: (socket: Socket) => void;

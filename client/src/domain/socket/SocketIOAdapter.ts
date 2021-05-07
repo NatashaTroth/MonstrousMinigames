@@ -31,6 +31,10 @@ export class SocketIOAdapter implements Socket {
         this.socket.emit('message', val);
     }
 
+    unlisten<T>(callback: (val: T) => void) {
+        this.socket.off('message', callback);
+    }
+
     waitUntilConnected() {
         return this.connectionPromise;
     }

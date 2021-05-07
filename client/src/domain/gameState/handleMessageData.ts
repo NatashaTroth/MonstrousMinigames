@@ -1,20 +1,18 @@
+import { History } from 'history';
+
 import {
-    IGameFinished,
-    IObstacleMessage,
-    IUserInitMessage,
-    MessageData,
-} from '../contexts/ControllerSocketContextProvider';
-import { IObstacle } from '../contexts/PlayerContextProvider';
-import { MessageTypes } from './constants';
-import { gameHasStarted } from './gameState/gameHasStarted';
-import { gameHasTimedOut } from './gameState/gameHasTimedOut';
-import { handleResetGame } from './gameState/handleResetGame';
-import history from './history';
-import { playerHasFinished } from './playerHasFinished';
-import { Socket } from './socket/Socket';
-import { localStorage } from './storage/LocalStorage';
-import { sessionStorage } from './storage/SessionStorage';
-import { persistUser } from './user/persistUser';
+    IGameFinished, IObstacleMessage, IUserInitMessage, MessageData
+} from '../../contexts/ControllerSocketContextProvider';
+import { IObstacle } from '../../contexts/PlayerContextProvider';
+import { MessageTypes } from '../../utils/constants';
+import { Socket } from '../socket/Socket';
+import { localStorage } from '../storage/LocalStorage';
+import { sessionStorage } from '../storage/SessionStorage';
+import { persistUser } from '../user/persistUser';
+import { playerHasFinished } from '../user/playerHasFinished';
+import { gameHasStarted } from './gameHasStarted';
+import { gameHasTimedOut } from './gameHasTimedOut';
+import { handleResetGame } from './handleResetGame';
 
 export interface HandleMessageDataDependencies {
     setPlayerAdmin: (val: boolean) => void;
@@ -26,6 +24,7 @@ export interface HandleMessageDataDependencies {
     setHasPaused: (val: boolean) => void;
     resetGame: () => void;
     resetPlayer: () => void;
+    history: History;
 }
 interface HandleMessageDataProps {
     data: MessageData;
@@ -47,6 +46,7 @@ export function handleMessageData(props: HandleMessageDataProps) {
         setHasPaused,
         resetPlayer,
         resetGame,
+        history,
     } = dependencies;
 
     switch (data.type) {

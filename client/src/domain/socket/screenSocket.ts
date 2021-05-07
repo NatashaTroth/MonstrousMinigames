@@ -1,4 +1,4 @@
-import { Socket } from './socket/Socket';
+import { Socket } from './Socket';
 
 class ScreenSocket {
     private static instance: ScreenSocket;

@@ -2,16 +2,12 @@ import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import history from '../../utils/history';
+import history from '../../domain/history/history';
 import Button from '../common/Button';
 import Logo from '../common/Logo';
 import ConnectDialog from './ConnectDialog';
 import {
-    ButtonContainer,
-    ConnectScreenContainer,
-    LeftButtonContainer,
-    LeftContainer,
-    RightContainer,
+    ButtonContainer, ConnectScreenContainer, LeftButtonContainer, LeftContainer, RightContainer
 } from './ConnectScreen.sc';
 
 interface WindowProps extends Window {

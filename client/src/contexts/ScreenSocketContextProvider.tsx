@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { handleMessageData, IPlayerState, MessageData } from '../components/Screen/handleMessageData';
+import {
+    handleMessageData, IPlayerState, MessageData
+} from '../components/Screen/handleMessageData';
+import ScreenSocket from '../domain/socket/screenSocket';
+import { Socket } from '../domain/socket/Socket';
+import { SocketIOAdapter } from '../domain/socket/SocketIOAdapter';
 import { GameState, Obstacles } from '../utils/constants';
-import ScreenSocket from '../utils/screenSocket';
-import { Socket } from '../utils/socket/Socket';
-import { SocketIOAdapter } from '../utils/socket/SocketIOAdapter';
 import { GameContext } from './GameContextProvider';
 
 export interface IObstacleMessage {

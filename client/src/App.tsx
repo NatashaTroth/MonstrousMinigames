@@ -19,8 +19,8 @@ import ControllerSocketContextProvider from './contexts/ControllerSocketContextP
 import GameContextProvider from './contexts/GameContextProvider';
 import PlayerContextProvider from './contexts/PlayerContextProvider';
 import ScreenSocketContextProvider from './contexts/ScreenSocketContextProvider';
+import history from './domain/history/history';
 import { ObstacleRoutes } from './utils/constants';
-import history from './utils/history';
 
 export interface IRouteParams {
     id?: string;

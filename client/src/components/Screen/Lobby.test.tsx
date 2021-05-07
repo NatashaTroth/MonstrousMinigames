@@ -4,7 +4,7 @@ import { Router } from 'react-router-dom';
 
 import { Lobby } from '../../components/Screen/Lobby';
 import { defaultValue, GameContext } from '../../contexts/GameContextProvider';
-import history from '../../utils/history';
+import history from '../../domain/history/history';
 
 // window.HTMLMediaElement.prototype.load = () => { /* do nothing */ };
 // window.HTMLMediaElement.prototype.play = () => { /* do nothing */ };

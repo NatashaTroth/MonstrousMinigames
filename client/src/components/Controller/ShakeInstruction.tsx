@@ -3,15 +3,11 @@ import * as React from 'react';
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
+import { sendMovement } from '../../domain/gameState/sendMovement';
 import { localDevelopment } from '../../utils/constants';
-import { sendMovement } from '../../utils/sendMovement';
 import FullScreenContainer from '../common/FullScreenContainer';
 import {
-    Container,
-    DialogContent,
-    StyledDialog,
-    StyledRotationIcon,
-    StyledShakeInstruction,
+    Container, DialogContent, StyledDialog, StyledRotationIcon, StyledShakeInstruction
 } from './ShakeInstruction.sc';
 
 const ShakeInstruction: React.FunctionComponent = () => {

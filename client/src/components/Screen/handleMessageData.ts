@@ -1,7 +1,7 @@
 import { IObstacle } from '../../contexts/PlayerContextProvider';
 import { IPlayerRank } from '../../contexts/ScreenSocketContextProvider';
+import history from '../../domain/history/history';
 import { GameState, MessageTypes } from '../../utils/constants';
-import history from '../../utils/history';
 
 export type MessageData = IGameState | IConnectedUsers | undefined;
 

@@ -1,7 +1,9 @@
-import { MessageData } from '../contexts/ControllerSocketContextProvider';
-import { MessageTypes, Obstacles } from './constants';
+import { createMemoryHistory } from 'history';
+
+import { MessageData } from '../../contexts/ControllerSocketContextProvider';
+import { MessageTypes, Obstacles } from '../../utils/constants';
+import { InMemorySocketFake } from '../socket/InMemorySocketFake';
 import { handleMessageData } from './handleMessageData';
-import { InMemorySocketFake } from './socket/InMemorySocketFake';
 
 describe('handleMessageData function', () => {
     let setPlayerRank: jest.Mock<any, any>;
@@ -15,6 +17,7 @@ describe('handleMessageData function', () => {
     let resetPlayer: jest.Mock<any, any>;
     let defaultData: { roomId: string; playerFinished: boolean };
     const fakeSocket = new InMemorySocketFake();
+    const history = createMemoryHistory();
 
     beforeEach(() => {
         setPlayerRank = jest.fn();
@@ -54,6 +57,7 @@ describe('handleMessageData function', () => {
                 setHasPaused,
                 resetGame,
                 resetPlayer,
+                history,
             },
         });
 
@@ -81,6 +85,7 @@ describe('handleMessageData function', () => {
                 setHasPaused,
                 resetGame,
                 resetPlayer,
+                history,
             },
         });
 
@@ -108,6 +113,7 @@ describe('handleMessageData function', () => {
                 setHasPaused,
                 resetGame,
                 resetPlayer,
+                history,
             },
         });
 
@@ -134,6 +140,7 @@ describe('handleMessageData function', () => {
                 setHasPaused,
                 resetGame,
                 resetPlayer,
+                history,
             },
         });
 
@@ -160,6 +167,7 @@ describe('handleMessageData function', () => {
                 setHasPaused,
                 resetGame,
                 resetPlayer,
+                history,
             },
         });
 
@@ -185,33 +193,40 @@ describe('handleMessageData function', () => {
                 setHasPaused,
                 resetGame,
                 resetPlayer,
+                history,
             },
         });
 
         expect(setGameStarted).toHaveBeenLastCalledWith(true);
     });
 
-    // TODO test History
-    // it('when message type is gameHasReset, history push should be called', () => {
-    //     const mockData = {
-    //         type: MessageTypes.gameHasReset,
-    //     };
+    it('when message type is gameHasReset, history push should be called', () => {
+        const mockData = {
+            type: MessageTypes.gameHasReset,
+        };
 
-    //     handleMessageData({
-    //         ...defaultData,
-    //         data: mockData as MessageData,
-    //         dependencies: {
-    //             setPlayerRank,
-    //             setPlayerAdmin,
-    //             setPlayerNumber,
-    //             setObstacle,
-    //             setGameStarted,
-    //             setPlayerFinished,
-    //         },
-    //     });
+        const history = createMemoryHistory();
 
-    //     expect(history).toHaveBeenLastCalledWith(`/controller/${defaultData.roomId}/lobby`);
-    // });
+        handleMessageData({
+            ...defaultData,
+            data: mockData as MessageData,
+            socket: fakeSocket,
+            dependencies: {
+                setPlayerRank,
+                setPlayerAdmin,
+                setPlayerNumber,
+                setObstacle,
+                setGameStarted,
+                setPlayerFinished,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
+                history,
+            },
+        });
+
+        expect(history.location).toHaveProperty('pathname', `/controller/${defaultData.roomId}/lobby`);
+    });
 
     it('when message type is gameHasTimedOut, handed setPlayerFinished should be called with true', () => {
         const mockData = {
@@ -233,6 +248,7 @@ describe('handleMessageData function', () => {
                 setHasPaused,
                 resetGame,
                 resetPlayer,
+                history,
             },
         });
 
@@ -259,6 +275,7 @@ describe('handleMessageData function', () => {
                 setHasPaused,
                 resetGame,
                 resetPlayer,
+                history,
             },
         });
 
@@ -284,6 +301,7 @@ describe('handleMessageData function', () => {
                 setHasPaused,
                 resetGame,
                 resetPlayer,
+                history,
             },
         });
 
@@ -309,6 +327,7 @@ describe('handleMessageData function', () => {
                 setHasPaused,
                 resetGame,
                 resetPlayer,
+                history,
             },
         });
 
@@ -334,9 +353,38 @@ describe('handleMessageData function', () => {
                 setHasPaused,
                 resetGame,
                 resetPlayer,
+                history,
             },
         });
 
         expect(resetGame).toHaveBeenCalledTimes(1);
+    });
+
+    it('when message type is gameHasStopped, history push should be called', () => {
+        const mockData = {
+            type: MessageTypes.gameHasStopped,
+        };
+
+        const history = createMemoryHistory();
+
+        handleMessageData({
+            ...defaultData,
+            data: mockData as MessageData,
+            socket: fakeSocket,
+            dependencies: {
+                setPlayerRank,
+                setPlayerAdmin,
+                setPlayerNumber,
+                setObstacle,
+                setGameStarted,
+                setPlayerFinished,
+                setHasPaused,
+                resetGame,
+                resetPlayer,
+                history,
+            },
+        });
+
+        expect(history.location).toHaveProperty('pathname', `/controller/${defaultData.roomId}/lobby`);
     });
 });

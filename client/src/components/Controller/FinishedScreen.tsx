@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
-import { handleResetGame } from '../../utils/gameState/handleResetGame';
+import { handleResetGame } from '../../domain/gameState/handleResetGame';
 import Button from '../common/Button';
 import FullScreenContainer from '../common/FullScreenContainer';
 import { FinishedScreenContainer, FinishedScreenText } from './FinishedScreen.sc';

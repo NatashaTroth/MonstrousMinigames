@@ -5,9 +5,11 @@ import { IRouteParams } from '../../App';
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
-import { sendMovement } from '../../utils/sendMovement';
+import { sendMovement } from '../../domain/gameState/sendMovement';
 import Button from '../common/Button';
-import { ConnectScreenContainer, FormContainer, ImpressumLink, StyledInput, StyledLabel } from './ConnectScreen.sc';
+import {
+    ConnectScreenContainer, FormContainer, ImpressumLink, StyledInput, StyledLabel
+} from './ConnectScreen.sc';
 
 interface IFormState {
     name: string;
