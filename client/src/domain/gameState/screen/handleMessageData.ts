@@ -1,7 +1,8 @@
-import { IObstacle } from '../../contexts/PlayerContextProvider';
-import { IPlayerRank } from '../../contexts/ScreenSocketContextProvider';
-import history from '../../domain/history/history';
-import { GameState, MessageTypes } from '../../utils/constants';
+import { History } from 'history';
+
+import { IObstacle } from '../../../contexts/PlayerContextProvider';
+import { IPlayerRank } from '../../../contexts/ScreenSocketContextProvider';
+import { GameState, MessageTypes } from '../../../utils/constants';
 
 export type MessageData = IGameState | IConnectedUsers | undefined;
 
@@ -15,6 +16,7 @@ interface HandleMessageData {
         setCountdownTime: (val: number) => void;
         setConnectedUsers: (users: IUser[]) => void;
         setHasTimedOut: (val: boolean) => void;
+        history: History;
     };
 }
 
@@ -70,6 +72,7 @@ export function handleMessageData(props: HandleMessageData) {
         setCountdownTime,
         setConnectedUsers,
         setHasTimedOut,
+        history,
     } = dependencies;
     let data;
 

@@ -1,4 +1,4 @@
-import { HandleMessageDataDependencies } from '../gameState/handleMessageData';
+import { HandleMessageDataDependencies } from '../gameState/controller/handleMessageData';
 import { ClickRequestDeviceMotion } from '../user/permissions';
 import { window } from '../window/WindowAdapter';
 import { handleSetControllerSocket } from './handleSetControllerSocket';

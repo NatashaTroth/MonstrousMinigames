@@ -5,14 +5,14 @@ import {
     IObstacleMessage,
     MessageData,
     UserInitMessage,
-} from '../../contexts/ControllerSocketContextProvider';
-import { IObstacle } from '../../contexts/PlayerContextProvider';
-import { MessageTypes } from '../../utils/constants';
-import { Socket } from '../socket/Socket';
-import { localStorage } from '../storage/LocalStorage';
-import { sessionStorage } from '../storage/SessionStorage';
-import { persistUser } from '../user/persistUser';
-import { playerHasFinished } from '../user/playerHasFinished';
+} from '../../../contexts/ControllerSocketContextProvider';
+import { IObstacle } from '../../../contexts/PlayerContextProvider';
+import { MessageTypes } from '../../../utils/constants';
+import { Socket } from '../../socket/Socket';
+import { localStorage } from '../../storage/LocalStorage';
+import { sessionStorage } from '../../storage/SessionStorage';
+import { persistUser } from '../../user/persistUser';
+import { playerHasFinished } from '../../user/playerHasFinished';
 import { gameHasStarted } from './gameHasStarted';
 import { gameHasTimedOut } from './gameHasTimedOut';
 import { handleResetGame } from './handleResetGame';

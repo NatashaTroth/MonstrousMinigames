@@ -1,8 +1,8 @@
 import { createMemoryHistory } from 'history';
 
-import { MessageData } from '../../contexts/ControllerSocketContextProvider';
-import { MessageTypes, Obstacles } from '../../utils/constants';
-import { InMemorySocketFake } from '../socket/InMemorySocketFake';
+import { MessageData } from '../../../contexts/ControllerSocketContextProvider';
+import { MessageTypes, Obstacles } from '../../../utils/constants';
+import { InMemorySocketFake } from '../../socket/InMemorySocketFake';
 import { handleMessageData } from './handleMessageData';
 
 describe('handleMessageData function', () => {

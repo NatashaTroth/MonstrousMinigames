@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import { resetObstacle } from '../components/Controller/Obstacles/TreeTrunk';
-import { handleSetGameFinished } from '../domain/gameState/handleSetGameFinished';
-import { handleSetGameStarted } from '../domain/gameState/handleSetGameStarted';
+import { handleSetGameFinished } from '../domain/gameState/controller/handleSetGameFinished';
+import { handleSetGameStarted } from '../domain/gameState/controller/handleSetGameStarted';
 import { IUser } from './ControllerSocketContextProvider';
 import { IPlayerRank } from './ScreenSocketContextProvider';
 

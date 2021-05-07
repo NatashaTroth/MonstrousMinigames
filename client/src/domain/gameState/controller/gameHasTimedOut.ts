@@ -1,4 +1,4 @@
-import { IGameFinished } from '../../contexts/ControllerSocketContextProvider';
+import { IGameFinished } from '../../../contexts/ControllerSocketContextProvider';
 
 export function gameHasTimedOut(
     data: IGameFinished,

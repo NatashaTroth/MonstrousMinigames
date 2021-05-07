@@ -1,4 +1,4 @@
-import { handleMessageData, HandleMessageDataDependencies } from '../gameState/handleMessageData';
+import { handleMessageData, HandleMessageDataDependencies } from '../gameState/controller/handleMessageData';
 import history from '../history/history';
 import { Socket } from './Socket';
 

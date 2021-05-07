@@ -1,5 +1,5 @@
-import { MessageTypes } from '../../utils/constants';
-import { InMemorySocketFake } from '../socket/InMemorySocketFake';
+import { MessageTypes } from '../../../utils/constants';
+import { InMemorySocketFake } from '../../socket/InMemorySocketFake';
 import { handleResetGame } from './handleResetGame';
 
 describe('handleResetGame', () => {

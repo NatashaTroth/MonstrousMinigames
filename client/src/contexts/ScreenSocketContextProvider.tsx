@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import {
-    handleMessageData, IPlayerState, MessageData
-} from '../components/Screen/handleMessageData';
+import { handleMessageData, IPlayerState, MessageData } from '../domain/gameState/screen/handleMessageData';
 import ScreenSocket from '../domain/socket/screenSocket';
 import { Socket } from '../domain/socket/Socket';
 import { SocketIOAdapter } from '../domain/socket/SocketIOAdapter';
@@ -102,6 +100,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     setCountdownTime,
                     setConnectedUsers,
                     setHasTimedOut,
+                    history,
                 },
             });
         });
