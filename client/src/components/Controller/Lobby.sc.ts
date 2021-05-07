@@ -34,6 +34,10 @@ export const InstructionContainer = styled.div`
     height: 100%;
     padding: 20px;
     justify-content: center;
+
+    .MuiCircularProgress-colorPrimary {
+        color: ${orange};
+    }
 `;
 
 export const StyledTypography = styled(Typography)`
