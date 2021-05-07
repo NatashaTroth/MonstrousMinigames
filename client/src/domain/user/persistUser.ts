@@ -1,8 +1,8 @@
-import { IUserInitMessage } from '../../contexts/ControllerSocketContextProvider';
+import { UserInitMessage } from '../../contexts/ControllerSocketContextProvider';
 import { Storage } from '../storage/Storage';
 
 export function persistUser(
-    data: IUserInitMessage,
+    data: UserInitMessage,
     dependencies: {
         localStorage: Storage;
         sessionStorage: Storage;

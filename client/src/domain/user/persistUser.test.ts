@@ -8,6 +8,7 @@ beforeAll(() => {
 
 describe('persistUser function', () => {
     const mockData = {
+        type: 'userInit',
         name: 'User',
         userId: '1',
         roomId: '1',

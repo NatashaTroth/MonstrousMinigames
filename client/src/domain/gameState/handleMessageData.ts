@@ -1,7 +1,10 @@
 import { History } from 'history';
 
 import {
-    IGameFinished, IObstacleMessage, IUserInitMessage, MessageData
+    IGameFinished,
+    IObstacleMessage,
+    MessageData,
+    UserInitMessage,
 } from '../../contexts/ControllerSocketContextProvider';
 import { IObstacle } from '../../contexts/PlayerContextProvider';
 import { MessageTypes } from '../../utils/constants';
@@ -51,7 +54,7 @@ export function handleMessageData(props: HandleMessageDataProps) {
 
     switch (data.type) {
         case MessageTypes.userInit:
-            persistUser(data as IUserInitMessage, {
+            persistUser(data as UserInitMessage, {
                 setPlayerAdmin,
                 setPlayerNumber,
                 sessionStorage,

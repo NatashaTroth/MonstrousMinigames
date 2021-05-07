@@ -28,10 +28,10 @@ export function handleSetControllerSocket(
 
     setControllerSocket(socket);
 
-    // TOTO remove any
-    socket.listen(<MessageData>(data: MessageData) => {
+    // TOTO remove any and use typeGuard and M
+    socket.listen((data: any) => {
         handleMessageData({
-            data: data as MessageData,
+            data,
             playerFinished,
             roomId,
             socket,

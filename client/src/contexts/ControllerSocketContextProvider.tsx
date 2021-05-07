@@ -13,7 +13,7 @@ export interface IError {
     type: string;
     name: string;
 }
-export type MessageData = IUserInitMessage | IObstacleMessage | IGameFinished | IError;
+export type MessageData = UserInitMessage | IObstacleMessage | IGameFinished | IError;
 
 export const defaultValue = {
     controllerSocket: new InMemorySocketFake(),
@@ -39,9 +39,9 @@ interface IControllerSocketContext {
 
 export const ControllerSocketContext = React.createContext<IControllerSocketContext>(defaultValue);
 
-export interface IUserInitMessage {
+export interface UserInitMessage {
     name?: string;
-    type?: string;
+    type: string;
     userId?: string;
     roomId?: string;
     isAdmin: boolean;
