@@ -34,6 +34,15 @@ export const ConnectScreen: React.FunctionComponent = () => {
         const data = await response.json();
         handleSocketConnection(data.roomId, 'lobby');
 
+        setAudioContext();
+    }
+
+    async function handleJoinRoom() {
+        setDialogOpen(true);
+        setAudioContext();
+    }
+
+    async function setAudioContext() {
         const w = window as WindowProps;
         const AudioContext = window.AudioContext || w.webkitAudioContext || false;
 
@@ -49,7 +58,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
             <LeftContainer>
                 <LeftButtonContainer>
                     <Button type="button" name="new" text="Create New Room" onClick={handleCreateNewRoom} />
-                    <Button type="button" name="join" text="Join Room" onClick={() => setDialogOpen(true)} />
+                    <Button type="button" name="join" text="Join Room" onClick={handleJoinRoom} />
                     <Button type="button" name="tutorial" text="Tutorial" disabled />
                 </LeftButtonContainer>
             </LeftContainer>
