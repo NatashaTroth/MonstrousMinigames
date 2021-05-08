@@ -39,39 +39,41 @@ test:client:
     except:
         - /^backend-.*$/
 
+#--- Deployment ---
+.some-script: &deployment-script
+    - cd client
+    - CI=false npm run build
+    - npm install -g firebase-tools
+    - firebase use --token $FIREBASE_TOKEN $DEPLOYMENT_DESTINATION
+    - firebase deploy --only hosting -m "Pipeline $CI_PIPELINE_ID, build $CI_BUILD_ID" --non-interactive --token $FIREBASE_TOKEN
+
 staging:client:
     stage: staging
     variables:
         REACT_APP_FRONTEND_URL: 'https://staging-monsters.web.app/'
         REACT_APP_BACKEND_URL: 'https://monstrous-minigames-staging.herokuapp.com/'
+        DEPLOYMENT_DESTINATION: staging
     environment:
         name: staging-client
         url: https://staging-monsters.web.app/
     script:
-        - cd client
-        - CI=false npm run build
-        - npm install -g firebase-tools
-        - firebase use --token $FIREBASE_TOKEN staging
-        - firebase deploy --only hosting -m "Pipeline $CI_PIPELINE_ID, build $CI_BUILD_ID" --non-interactive --token $FIREBASE_TOKEN
+        - *deployment-script
 
     only:
-        - dev
-    when: manual
+        - master
 
 production:client:
     stage: production
     variables:
         REACT_APP_FRONTEND_URL: 'https://monsters-6baec.web.app/'
         REACT_APP_BACKEND_URL: 'https://monstrous-minigames.herokuapp.com/'
+        DEPLOYMENT_DESTINATION: production
     environment:
         name: production-client
         url: https://monsters-6baec.web.app/
     script:
-        - cd client
-        - CI=false npm run build
-        - npm install -g firebase-tools
-        - firebase use --token $FIREBASE_TOKEN production
-        - firebase deploy --only hosting -m "Pipeline $CI_PIPELINE_ID, build $CI_BUILD_ID" --non-interactive --token $FIREBASE_TOKEN
+        - *deployment-script
 
     only:
         - master
+    when: manual
