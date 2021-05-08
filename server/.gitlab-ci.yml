@@ -53,9 +53,8 @@ staging:server:
         - gem install dpl
         - cd server/
         - dpl --provider=heroku --app=$HEROKU_APP_STAGING --api-key=$HEROKU_API_KEY --skip-cleanup
-    only:
-        - dev
-    when: manual
+    # only:
+    #     - master
 
 production:server:
     stage: production
@@ -71,5 +70,6 @@ production:server:
         - gem install dpl
         - cd server/
         - dpl --provider=heroku --app=$HEROKU_APP_PRODUCTION --api-key=$HEROKU_API_KEY --skip-cleanup
-    only:
-        - master
+    # only:
+    #     - master
+    when: manual

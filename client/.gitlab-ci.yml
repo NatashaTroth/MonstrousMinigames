@@ -55,8 +55,7 @@ staging:client:
         - firebase deploy --only hosting -m "Pipeline $CI_PIPELINE_ID, build $CI_BUILD_ID" --non-interactive --token $FIREBASE_TOKEN
 
     only:
-        - dev
-    when: manual
+        - master
 
 production:client:
     stage: production
@@ -75,3 +74,4 @@ production:client:
 
     only:
         - master
+    when: manual
