@@ -54,42 +54,22 @@ test:server:
 staging:server:
     <<: *deployment_configuration
     stage: staging
-    # tags:
-    #     - node
     environment:
         name: staging-server
         url: https://monstrous-minigames-staging.herokuapp.com/
     variables:
         HEROKU_APP: $HEROKU_APP_STAGING
-
-    # script:
-    #     - apt-get update -qy
-    #     - apt-get install -y ruby-dev
-    #     - gem install dpl
-    #     - cd server/
-    #     - dpl --provider=heroku --app=$HEROKU_APP_STAGING --api-key=$HEROKU_API_KEY --skip-cleanup
-    # only:
-    #     - master
+    only:
+        - master
 
 production:server:
     <<: *deployment_configuration
-
     stage: production
-    # tags:
-    #     - node
-    # image: ruby:latest
     environment:
         name: production-server
         url: https://monstrous-minigames.herokuapp.com/
     variables:
         HEROKU_APP: $HEROKU_APP_PRODUCTION
-
-    # script:
-    #     - apt-get update -qy
-    #     - apt-get install -y ruby-dev
-    #     - gem install dpl
-    #     - cd server/
-    #     - dpl --provider=heroku --app=$HEROKU_APP_PRODUCTION --api-key=$HEROKU_API_KEY --skip-cleanup
-    # only:
-    #     - master
+    only:
+        - master
     when: manual
