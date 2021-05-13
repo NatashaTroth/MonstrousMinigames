@@ -45,7 +45,7 @@ const Game: React.FunctionComponent = () => {
         });
         game.scene.add('MainScene', MainScene);
         game.scene.start('MainScene', { roomId: roomId });
-    }, [roomId]);
+    }, [roomId, screenSocket]);
 
     return (
         <Container>
