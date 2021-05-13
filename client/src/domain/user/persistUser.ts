@@ -1,5 +1,5 @@
-import { UserInitMessage } from '../../contexts/ControllerSocketContextProvider';
 import { Storage } from '../storage/Storage';
+import { UserInitMessage } from '../typeGuards/userInit';
 
 export function persistUser(
     data: UserInitMessage,

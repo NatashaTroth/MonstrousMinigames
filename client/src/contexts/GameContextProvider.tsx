@@ -4,7 +4,7 @@ import { resetObstacle } from '../components/Controller/Obstacles/TreeTrunk';
 import { handleSetGameFinished } from '../domain/gameState/controller/handleSetGameFinished';
 import { handleSetGameStarted } from '../domain/gameState/controller/handleSetGameStarted';
 import { IUser } from './ControllerSocketContextProvider';
-import { IPlayerRank } from './ScreenSocketContextProvider';
+import { PlayerRank } from './ScreenSocketContextProvider';
 
 export const defaultValue = {
     finished: false,
@@ -61,8 +61,8 @@ interface IGameContext {
     setShowInstructions: (val: boolean) => void;
     countdownTime: number;
     setCountdownTime: (val: number) => void;
-    playerRanks?: IPlayerRank[];
-    setPlayerRanks: (val: IPlayerRank[]) => void;
+    playerRanks?: PlayerRank[];
+    setPlayerRanks: (val: PlayerRank[]) => void;
     hasTimedOut: boolean;
     setHasTimedOut: (val: boolean) => void;
     hasPaused: boolean;
@@ -72,7 +72,7 @@ interface IGameContext {
 export const GameContext = React.createContext<IGameContext>(defaultValue);
 
 const GameContextProvider: React.FunctionComponent = ({ children }) => {
-    const [playerRanks, setPlayerRanks] = React.useState<undefined | IPlayerRank[]>();
+    const [playerRanks, setPlayerRanks] = React.useState<undefined | PlayerRank[]>();
     const [finished, setFinished] = React.useState<boolean>(false);
     const [gameStarted, setGameStarted] = React.useState<boolean>(false);
     const [roomId, setRoomId] = React.useState<undefined | string>();

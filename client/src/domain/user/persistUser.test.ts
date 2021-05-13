@@ -1,4 +1,6 @@
+import { MessageTypes } from '../../utils/constants';
 import { Storage } from '../storage/Storage';
+import { UserInitMessage } from '../typeGuards/userInit';
 import { persistUser } from './persistUser';
 
 beforeAll(() => {
@@ -7,8 +9,8 @@ beforeAll(() => {
 });
 
 describe('persistUser function', () => {
-    const mockData = {
-        type: 'userInit',
+    const mockData: UserInitMessage = {
+        type: MessageTypes.userInit,
         name: 'User',
         userId: '1',
         roomId: '1',
