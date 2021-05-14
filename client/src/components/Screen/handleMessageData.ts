@@ -51,7 +51,7 @@ export interface IPlayerState {
     number: number;
 }
 
-interface IGameStateData {
+export interface IGameStateData {
     gameState: GameState;
     numberOfObstacles: number;
     roomId: string;
