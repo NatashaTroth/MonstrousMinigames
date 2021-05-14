@@ -1,25 +1,11 @@
 import Phaser from 'phaser';
 import { stringify } from 'querystring';
 
-import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
-import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
-import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
-import attention from '../../images/attention.png';
-import forest from '../../images/backgroundGame.png';
-// import finishLine from '../../images/finishLine.png';
-import franz from '../../images/franz_spritesheet.png';
-import goal from '../../images/goal.png';
-import noah from '../../images/noah_spritesheet.png';
-import spider from '../../images/spider.png';
-// import startLine from '../../images/startLine.png';
-import steffi from '../../images/steffi_spritesheet.png';
-import susi from '../../images/susi_spritesheet.png';
-// import track from '../../images/track.png';
-import wood from '../../images/wood.png';
 import { MessageTypes } from '../../utils/constants';
 import history from '../../utils/history';
+import { audioFiles, characters, images } from './GameAssets';
 
-const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
+// const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
 const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
 // const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
 let playerNumber = 0;
@@ -36,21 +22,18 @@ let paused = false;
 let logged = 0;
 
 let pauseButton: undefined | Phaser.GameObjects.Text;
+
+const windowWidth = window.innerWidth;
+const windowHeight = window.innerHeight;
 class MainScene extends Phaser.Scene {
     posX: number;
     plusX: number;
     posY: number;
     plusY: number;
-    playerRunning: Array<boolean>;
-    playerAtObstacle: Array<boolean>;
-    playerObstacles: Array<Array<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>>;
-    playerText: Array<Phaser.GameObjects.Text>;
-    playerCountSameDistance: Array<number>;
-    playerAttention: Array<null | Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
-    test: number;
     numberPlayersFinished: number;
     backgroundMusicLoop: undefined | Phaser.Sound.BaseSound;
     rightKey: undefined | Phaser.Input.Keyboard.Key;
+    players: Array<Player>;
 
     constructor() {
         super('MainScene');
@@ -58,154 +41,108 @@ class MainScene extends Phaser.Scene {
         this.plusX = 40;
         this.posY = window.innerHeight / 2 - 50;
         this.plusY = 110;
-        this.playerRunning = [];
-        this.playerAtObstacle = [];
-        this.playerAttention = [];
-        this.playerObstacles = [];
-        this.playerCountSameDistance = [];
-        this.playerText = [];
-        this.test = 0;
         this.numberPlayersFinished = 0;
         this.backgroundMusicLoop = undefined;
         this.rightKey = undefined;
+        this.players = [];
     }
 
-    // init(data: { roomId: string; playerNumber: number }) {
     init(data: { roomId: string; playerNumber: number; socketConnection: SocketIOClient.Socket }) {
         if (roomId === '' && data.roomId !== undefined) {
             roomId = data.roomId;
         }
-        // socket = this.handleSocketConnection();
-        socket = data.socketConnection;
-
-        if (socket == undefined) {
-            socket = this.handleSocketConnection();
-        }
+        if (data.socketConnection) socket = data.socketConnection;
+        else socket = this.handleSocketConnection();
     }
 
     preload(): void {
-        // this.load.audio('music', ['../../assets/audio/Sound_Game.mp3']);
-        // require('../../audio/Sound_Game.mp3');
-        this.load.audio('backgroundMusicStart', [game1SoundStart]);
-        this.load.audio('backgroundMusicLoop', [game1SoundLoop]);
-        this.load.audio('backgroundMusicEnd', [game1SoundEnd]);
-        //require('../../audio/Sound_Game.mp3')
+        audioFiles.forEach(audio => this.load.audio(audio.name, audio.file));
 
-        this.load.spritesheet('franz', franz, {
-            frameWidth: 826,
-            frameHeight: 1163,
-        });
-        this.load.spritesheet('susi', susi, { frameWidth: 826, frameHeight: 1163 });
-        this.load.spritesheet('noah', noah, { frameWidth: 826, frameHeight: 1163 });
-        this.load.spritesheet('steffi', steffi, {
-            frameWidth: 826,
-            frameHeight: 1163,
+        characters.forEach(character => {
+            this.load.spritesheet(character.name, character.file, character.properties);
         });
 
-        this.load.image('forest', forest);
-        // this.load.image('track', track);
-        // this.load.image('startLine', startLine);
-        // this.load.image('finishLine', finishLine);
-        this.load.image('attention', attention);
-        this.load.image('goal', goal);
-        this.load.image('wood', wood);
-        this.load.image('spider', spider);
+        images.forEach(image => {
+            this.load.image(image.name, image.file);
+        });
     }
 
     create() {
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-        const bg = this.add.image(windowWidth / 2, windowHeight / 2, 'forest');
-        bg.setDisplaySize(windowWidth, windowHeight);
+        this.createAudio();
+        this.createBackground();
+        this.createPauseButton();
+        this.createPlayers();
 
-        const backgroundMusicStart = this.sound.add('backgroundMusicStart', { volume: 0.2 });
-        this.backgroundMusicLoop = this.sound.add('backgroundMusicLoop', { volume: 0.2 });
+        // this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+    }
 
-        // if (paused) {
-        //     buttonText = 'Resume';
-        // }
+    createAudio() {
+        const backgroundMusicStart = this.sound.add('backgroundMusicStart', {
+            volume: 0.2,
+        });
 
-        pauseButton = this.add.text(window.innerWidth / 2, window.innerHeight - 50, 'Pause');
-        // eslint-disable-next-line no-console
-        console.log(pauseButton);
-
-        pauseButton.setInteractive();
-
-        pauseButton.on('pointerdown', this.handlePauseResumeButton);
-
-        this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-
-        // pausebutton = this.add.button(window.innerWidth / 2, window.innerHeight - 50, 'button', this.pauseGame, this, 2, 1, 0);
-
-        // for end: https://rexrainbow.github.io/phaser3-rex-notes/docs/site/audio/
-        // const backgroundMusicEnd = this.sound.add('backgroundMusicEnd');
+        this.backgroundMusicLoop = this.sound.add('backgroundMusicLoop', {
+            volume: 0.2,
+        });
 
         backgroundMusicStart.play({ loop: false });
         backgroundMusicStart.once('complete', () => {
             this.backgroundMusicLoop?.play({ loop: true });
         });
+    }
 
-        players.push(this.physics.add.sprite(this.posX, this.posY, 'franz').setDepth(50));
+    createBackground() {
+        const bg = this.add.image(windowWidth / 2, windowHeight / 2, 'forest');
+        bg.setDisplaySize(windowWidth, windowHeight);
+    }
 
-        players.push(this.physics.add.sprite(this.posX + this.plusX, this.posY + this.plusY, 'susi').setDepth(50));
-        players.push(
-            this.physics.add.sprite(this.posX + this.plusX * 2, this.posY + this.plusY * 2, 'noah').setDepth(50)
-        );
-        players.push(
-            this.physics.add.sprite(this.posX + this.plusX * 3, this.posY + this.plusY * 3, 'steffi').setDepth(50)
-        );
+    createPauseButton() {
+        pauseButton = this.add.text(window.innerWidth / 2, window.innerHeight - 50, 'Pause');
+        // // eslint-disable-next-line no-console
+        // console.log(pauseButton);
 
-        players.forEach(player => {
-            player.setBounce(0.2);
-            player.setCollideWorldBounds(true);
-            player.setScale(0.15, 0.15);
-            player.setCollideWorldBounds(true);
-            this.playerRunning.push(false);
-            this.playerAtObstacle.push(false);
-            this.playerObstacles.push([]);
-            this.playerCountSameDistance.push(0);
-            this.playerAttention.push(null);
-        });
+        pauseButton.setInteractive();
+        pauseButton.on('pointerdown', this.handlePauseResumeButton);
+    }
 
-        this.anims.create({
-            key: 'franzWalk',
-            frames: this.anims.generateFrameNumbers('franz', { start: 12, end: 15 }),
-            frameRate: 6,
-            repeat: -1,
-        });
+    createPlayers() {
+        let i = 0;
+        characters.forEach(character => {
+            const player = this.physics.add
+                .sprite(this.posX + this.plusX * i, this.posY + this.plusY * i, character.name)
+                .setDepth(50)
+                .setBounce(0.2)
+                .setCollideWorldBounds(true)
+                .setScale(0.15, 0.15)
+                .setCollideWorldBounds(true);
 
-        this.anims.create({
-            key: 'susiWalk',
-            frames: this.anims.generateFrameNumbers('susi', { start: 12, end: 15 }),
-            frameRate: 6,
-            repeat: -1,
-        });
+            this.players.push({
+                phaserObject: player,
+                playerRunning: false,
+                playerAtObstacle: false,
+                playerObstacles: [],
+                playerCountSameDistance: 0,
+                playerAttention: null,
+                playerText: null,
+            });
 
-        this.anims.create({
-            key: 'noahWalk',
-            frames: this.anims.generateFrameNumbers('noah', { start: 12, end: 15 }),
-            frameRate: 6,
-            repeat: -1,
-        });
-
-        this.anims.create({
-            key: 'steffiWalk',
-            frames: this.anims.generateFrameNumbers('steffi', { start: 12, end: 15 }),
-            frameRate: 6,
-            repeat: -1,
+            this.anims.create({
+                key: `${character.name}Walk`,
+                frames: this.anims.generateFrameNumbers(character.name, { start: 12, end: 15 }),
+                frameRate: 6,
+                repeat: -1,
+            });
+            i++;
         });
     }
 
-    // handleMessage(data: any) {
-    //     if (data.type == 'error') {
     handlePauseResumeButton() {
         //TODO connect to backend
-
         if (paused) {
             for (let i = 0; i < playerNumber; i++) {
                 // players[i].anims.play(animations[i])
                 if (!paused) {
-                    players[i].anims.play(animations[i]);
+                    this.players[i].phaserObject.anims.play(animations[i]);
                     // this.startRunningAnimation(players[i], i);
                 }
             }
@@ -216,7 +153,7 @@ class MainScene extends Phaser.Scene {
 
             for (let i = 0; i < playerNumber; i++) {
                 // this.stopRunningAnimation(players[i], i);
-                players[i].anims.pause();
+                this.players[i].phaserObject.anims.pause();
             }
 
             paused = true;
@@ -256,24 +193,24 @@ class MainScene extends Phaser.Scene {
 
                     if (playerNumber < 4) {
                         for (let i = playerNumber; i < 4; i++) {
-                            players[i].destroy();
+                            this.players[i].phaserObject.destroy();
                         }
                     }
                     for (let i = 0; i < playerNumber; i++) {
                         if (!paused) {
-                            players[i].anims.play(animations[i]);
+                            this.players[i].phaserObject.anims.play(animations[i]);
                         }
 
-                        this.playerText[i] = this.add
+                        this.players[i].playerText = this.add
                             .text(
-                                players[i].x, //+ 50
-                                players[i].y - 100,
+                                this.players[i].phaserObject.x, //+ 50
+                                this.players[i].phaserObject.y - 100,
                                 data.data.playersState[i].name,
                                 { font: '16px Arial', align: 'center', fixedWidth: 150 }
                             )
                             .setDepth(50);
-                        // this.playerText[i].setFixedSize = players[i].width;
-                        this.playerText[i].setBackgroundColor('#000000');
+                        // this.players[i].playerText.setFixedSize = players[i].width;
+                        this.players[i].playerText?.setBackgroundColor('#000000');
                         // players[i].anims.play(animations[i]);
                         // if (obstacles.length < data.data.playersState[0].obstacles.length * playerNumber)
                         this.setObstacles(i, data.data.playersState[i].obstacles);
@@ -322,7 +259,7 @@ class MainScene extends Phaser.Scene {
 
     setObstacles(playerIndex: number, obstacleArray: obstacleDetails[]) {
         const yPosition = this.getYPosition(playerIndex);
-        this.playerObstacles[playerIndex] = [];
+        this.players[playerIndex].playerObstacles = [];
         let obstacle: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
         for (let i = 0; i < obstacleArray.length; i++) {
             // const posX = (obstacleArray[i].positionX * (window.innerWidth - 200)) / (trackLength || 1);
@@ -343,7 +280,7 @@ class MainScene extends Phaser.Scene {
 
             obstacle.setDepth(obstacleArray.length - i);
 
-            this.playerObstacles[playerIndex].push(obstacle);
+            this.players[playerIndex].playerObstacles.push(obstacle);
             // obstacles.push(obstacle);
         }
     }
@@ -367,12 +304,12 @@ class MainScene extends Phaser.Scene {
 
     handleError(msg: string) {
         this.add.text(32, 32, `Error: ${msg}`, { font: '30px Arial' });
-        players.forEach(player => {
-            player.destroy();
+        this.players.forEach(player => {
+            player.phaserObject.destroy();
         });
 
-        this.playerObstacles.forEach(pObstacles => {
-            pObstacles.forEach(obstacle => {
+        this.players.forEach(player => {
+            player.playerObstacles.forEach(obstacle => {
                 obstacle.destroy();
             });
         });
@@ -385,13 +322,13 @@ class MainScene extends Phaser.Scene {
     }
 
     removePlayerSprite(index: number) {
-        players[index].destroy();
+        this.players[index].phaserObject.destroy();
     }
 
     updateGameState(playerData: playersState[]) {
         for (let i = 0; i < playerNumber; i++) {
-            if (players[i] !== undefined && playerData !== undefined) {
-                this.moveForward(players[i], playerData[i].positionX, i);
+            if (this.players[i].phaserObject !== undefined && playerData !== undefined) {
+                this.moveForward(this.players[i].phaserObject, playerData[i].positionX, i);
                 this.checkAtObstacle(i, playerData[i].atObstacle, playerData[i].positionX);
                 this.checkFinished(i, playerData[i].finished);
             }
@@ -401,7 +338,7 @@ class MainScene extends Phaser.Scene {
     checkFinished(playerIndex: number, isFinished: boolean) {
         if (isFinished) {
             // players[playerIndex].anims.stop();
-            this.stopRunningAnimation(players[playerIndex], playerIndex);
+            this.stopRunningAnimation(this.players[playerIndex].phaserObject, playerIndex);
             this.numberPlayersFinished++;
         }
     }
@@ -420,37 +357,41 @@ class MainScene extends Phaser.Scene {
     }
 
     checkAtObstacle(playerIndex: number, isAtObstacle: boolean, playerPositionX: number) {
-        if (isAtObstacle && !this.playerAtObstacle[playerIndex]) {
-            this.stopRunningAnimation(players[playerIndex], playerIndex);
-            this.playerAtObstacle[playerIndex] = true;
+        if (isAtObstacle && !this.players[playerIndex].playerAtObstacle) {
+            this.stopRunningAnimation(this.players[playerIndex].phaserObject, playerIndex);
+            this.players[playerIndex].playerAtObstacle = true;
 
             this.addAttentionIcon(playerIndex);
-        } else if (!isAtObstacle && this.playerAtObstacle[playerIndex] && !paused) {
-            this.playerAtObstacle[playerIndex] = false;
-            this.startRunningAnimation(players[playerIndex], playerIndex);
+        } else if (!isAtObstacle && this.players[playerIndex].playerAtObstacle && !paused) {
+            this.players[playerIndex].playerAtObstacle = false;
+            this.startRunningAnimation(this.players[playerIndex].phaserObject, playerIndex);
             this.destroyObstacle(playerIndex, playerPositionX);
             this.destroyAttentionIcon(playerIndex);
         }
     }
 
     addAttentionIcon(playerIndex: number) {
-        if (!this.playerAttention[playerIndex]) {
-            this.playerAttention[playerIndex] = this.physics.add
-                .sprite(players[playerIndex].x + 75, players[playerIndex].y - 150, 'attention')
+        if (!this.players[playerIndex].playerAttention) {
+            this.players[playerIndex].playerAttention = this.physics.add
+                .sprite(
+                    this.players[playerIndex].phaserObject.x + 75,
+                    this.players[playerIndex].phaserObject.y - 150,
+                    'attention'
+                )
                 .setDepth(100)
                 .setScale(0.03, 0.03);
         }
     }
 
     destroyAttentionIcon(playerIndex: number) {
-        this.playerAttention[playerIndex]?.destroy();
-        this.playerAttention[playerIndex] = null;
+        this.players[playerIndex].playerAttention?.destroy();
+        this.players[playerIndex].playerAttention = null;
     }
 
     destroyObstacle(playerIndex: number, playerPositionX: number) {
-        if (this.playerObstacles[playerIndex].length > 0) {
-            this.playerObstacles[playerIndex][0].destroy();
-            this.playerObstacles[playerIndex].shift();
+        if (this.players[playerIndex].playerObstacles.length > 0) {
+            this.players[playerIndex].playerObstacles[0].destroy();
+            this.players[playerIndex].playerObstacles.shift();
         }
 
         // this.playerObstacles.forEach(pObstacles => {
@@ -464,10 +405,10 @@ class MainScene extends Phaser.Scene {
 
     update() {
         socket.on('message', (data: socketMessage) => this.handleMessage(data));
-        for (let i = 0; i < players.length; i++) {
+        for (let i = 0; i < this.players.length; i++) {
             if (!moveplayers[i]) {
                 // players[i].anims.stop();
-                this.stopRunningAnimation(players[i], i);
+                this.stopRunningAnimation(this.players[i].phaserObject, i);
             }
         }
     }
@@ -493,13 +434,13 @@ class MainScene extends Phaser.Scene {
 
     startRunningAnimation(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, playerIdx: number) {
         player.anims.play(animations[playerIdx]);
-        this.playerRunning[playerIdx] = true;
+        this.players[playerIdx].playerRunning = true;
         // eslint-disable-next-line no-console
         // console.log('run forward');
     }
     stopRunningAnimation(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, playerIdx: number) {
         player.anims.stop();
-        this.playerRunning[playerIdx] = false;
+        this.players[playerIdx].playerRunning = false;
         // eslint-disable-next-line no-console
         // console.log('stpop run forward');
     }
@@ -508,13 +449,13 @@ class MainScene extends Phaser.Scene {
         // eslint-disable-next-line no-console
         toX = this.mapServerXToWindowX(toX);
         if (toX == player.x) {
-            this.playerCountSameDistance[playerIndex]++; // if idle for more than a second - means actually stopped, otherwise could just be waiting for new
+            this.players[playerIndex].playerCountSameDistance++; // if idle for more than a second - means actually stopped, otherwise could just be waiting for new
         } else {
-            this.playerCountSameDistance[playerIndex] = 0;
+            this.players[playerIndex].playerCountSameDistance = 0;
             // eslint-disable-next-line no-console
             // console.log('not same');
             // eslint-disable-next-line no-console
-            if (!this.playerRunning[playerIndex]) {
+            if (!this.players[playerIndex].playerRunning) {
                 // eslint-disable-next-line no-console
                 // console.log('start moving runnnnnn');
                 // console.log('start moving runnnnnn new x: ', toX);
@@ -525,7 +466,7 @@ class MainScene extends Phaser.Scene {
             }
         }
 
-        if (this.playerRunning[playerIndex] && this.playerCountSameDistance[playerIndex] > 100) {
+        if (this.players[playerIndex].playerRunning && this.players[playerIndex].playerCountSameDistance > 100) {
             //TODO HANDLE
             // eslint-disable-next-line no-console
             // console.log('Stop running');
@@ -537,8 +478,8 @@ class MainScene extends Phaser.Scene {
             player.x = toX;
         }
 
-        this.playerText[playerIndex].x = toX; //- 100;
-        this.test++;
+        // this.playerText[playerIndex]?.x = toX; //- 100;
+        // this.test++;
 
         // if (this.test == 100) {
         //     this.test = 0;
@@ -589,6 +530,16 @@ interface userData {
     roomId: string;
     socketId: string;
     timestamp: number;
+}
+
+interface Player {
+    phaserObject: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    playerRunning: boolean;
+    playerAtObstacle: boolean;
+    playerObstacles: Array<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
+    playerCountSameDistance: number;
+    playerAttention: null | Phaser.Types.Physics.Arcade.SpriteWithDynamicBody; //TODO change
+    playerText: null | Phaser.GameObjects.Text;
 }
 
 export default MainScene;
