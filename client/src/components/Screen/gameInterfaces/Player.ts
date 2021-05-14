@@ -1,4 +1,7 @@
 export interface Player {
+    name: string;
+    animationName: string;
+    // yPosition: number;
     phaserObject: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     playerRunning: boolean;
     playerAtObstacle: boolean;

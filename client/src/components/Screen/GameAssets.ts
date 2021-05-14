@@ -34,10 +34,11 @@ export const characters = [
     { name: 'steffi', file: steffi, properties: characterSpriteProperties },
 ];
 
+// obstacle textures have to have the same name as obstacle type - lowercase
 export const images = [
     { name: 'forest', file: forest },
     { name: 'attention', file: attention },
     { name: 'goal', file: goal },
-    { name: 'wood', file: wood },
+    { name: 'treestump', file: wood },
     { name: 'spider', file: spider },
 ];
