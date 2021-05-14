@@ -5,7 +5,7 @@ import { MessageTypes } from '../../utils/constants';
 export interface TimedOutMessage {
     type: MessageTypes.gameHasTimedOut;
     rank: number;
-    data?: GameStateData;
+    data: GameStateData;
 }
 
 export const timedOutTypeGuard = (data: MessageData): data is TimedOutMessage =>

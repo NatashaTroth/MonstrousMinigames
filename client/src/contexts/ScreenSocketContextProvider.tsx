@@ -54,8 +54,8 @@ export interface GameStateData {
     numberOfObstacles: number;
     roomId: string;
     trackLength: number;
-    playersState?: PlayerState[];
-    playerRanks?: PlayerRank[];
+    playersState: PlayerState[];
+    playerRanks: PlayerRank[];
 }
 
 export interface IUser {

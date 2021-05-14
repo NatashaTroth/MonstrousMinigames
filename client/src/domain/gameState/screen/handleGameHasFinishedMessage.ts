@@ -18,6 +18,6 @@ export function handleGameHasFinishedMessage(props: HandleGameHasFinishedMessage
     const { data, dependencies, roomId } = props;
     const { setFinished, setPlayerRanks, history } = dependencies;
     setFinished(true);
-    setPlayerRanks(data.data!.playerRanks!);
+    setPlayerRanks(data.data.playerRanks);
     history.push(`/screen/${roomId}/finished`);
 }

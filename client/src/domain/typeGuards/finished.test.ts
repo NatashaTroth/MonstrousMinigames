@@ -7,9 +7,11 @@ describe('finished TypeGuard', () => {
             type: MessageTypes.gameHasFinished,
             data: {
                 gameState: GameState.finished,
-                numberOfObstacles: 2,
+                numberOfObstacles: 4,
                 roomId: '1234',
                 trackLength: 400,
+                playerRanks: [],
+                playersState: [],
             },
         };
 
