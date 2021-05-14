@@ -34,6 +34,8 @@ const animations = ['franzWalk', 'susiWalk', 'noahWalk', 'steffiWalk'];
 let paused = false;
 
 let logged = 0;
+
+let pauseButton: undefined | Phaser.GameObjects.Text;
 class MainScene extends Phaser.Scene {
     posX: number;
     plusX: number;
@@ -48,6 +50,7 @@ class MainScene extends Phaser.Scene {
     test: number;
     numberPlayersFinished: number;
     backgroundMusicLoop: undefined | Phaser.Sound.BaseSound;
+    rightKey: undefined | Phaser.Input.Keyboard.Key;
 
     constructor() {
         super('MainScene');
@@ -64,6 +67,7 @@ class MainScene extends Phaser.Scene {
         this.test = 0;
         this.numberPlayersFinished = 0;
         this.backgroundMusicLoop = undefined;
+        this.rightKey = undefined;
     }
 
     // init(data: { roomId: string; playerNumber: number }) {
@@ -117,17 +121,21 @@ class MainScene extends Phaser.Scene {
         const backgroundMusicStart = this.sound.add('backgroundMusicStart', { volume: 0.2 });
         this.backgroundMusicLoop = this.sound.add('backgroundMusicLoop', { volume: 0.2 });
 
-        let buttonText = 'Pause';
+        // if (paused) {
+        //     buttonText = 'Resume';
+        // }
 
-        if (paused) {
-            buttonText = 'Resume';
-        }
-
-        const pauseButton = this.add.text(window.innerWidth / 2, window.innerHeight - 50, buttonText);
+        pauseButton = this.add.text(window.innerWidth / 2, window.innerHeight - 50, 'Pause');
+        // eslint-disable-next-line no-console
+        console.log(pauseButton);
 
         pauseButton.setInteractive();
 
-        pauseButton.on('pointerdown', this.pauseGame);
+        pauseButton.on('pointerdown', this.handlePauseResumeButton);
+
+        this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+
+        // pausebutton = this.add.button(window.innerWidth / 2, window.innerHeight - 50, 'button', this.pauseGame, this, 2, 1, 0);
 
         // for end: https://rexrainbow.github.io/phaser3-rex-notes/docs/site/audio/
         // const backgroundMusicEnd = this.sound.add('backgroundMusicEnd');
@@ -190,22 +198,25 @@ class MainScene extends Phaser.Scene {
 
     // handleMessage(data: any) {
     //     if (data.type == 'error') {
-    pauseGame() {
-        // eslint-disable-next-line no-console
-        console.log(paused);
+    handlePauseResumeButton() {
+        //TODO connect to backend
 
         if (paused) {
             for (let i = 0; i < playerNumber; i++) {
                 // players[i].anims.play(animations[i])
                 if (!paused) {
                     players[i].anims.play(animations[i]);
+                    // this.startRunningAnimation(players[i], i);
                 }
             }
-
+            pauseButton?.setText('Pause');
             paused = false;
         } else {
+            pauseButton?.setText('Resume');
+
             for (let i = 0; i < playerNumber; i++) {
-                players[i].anims.stop();
+                // this.stopRunningAnimation(players[i], i);
+                players[i].anims.pause();
             }
 
             paused = true;
@@ -213,10 +224,12 @@ class MainScene extends Phaser.Scene {
     }
 
     handleMessage(data: socketMessage) {
-        if (logged < 5) {
-            // eslint-disable-next-line no-console
-            // console.log(data);
+        // //TODO delete
+        // if (this.rightKey?.isDown) {
+        //     this.moveForward(players[0], players[0].x + 50, 0);
+        // }
 
+        if (logged < 5) {
             logged += 1;
         }
 
@@ -238,10 +251,6 @@ class MainScene extends Phaser.Scene {
                 this.backgroundMusicLoop?.stop();
             }
             if (data.type === 'game1/gameState' && data.data !== undefined) {
-                // if (logged == false) {
-                // eslint-disable-next-line no-console
-                // console.log(data.data.playersState[0]);
-                // logged = true;
                 if (playerNumber == 0) {
                     playerNumber = data.data.playersState.length;
 
