@@ -1,5 +1,5 @@
-import { ObstacleDetails } from '../../components/Screen/gameInterfaces';
 import { Obstacles } from '../../utils/constants';
+import { ObstacleDetails } from './gameInterfaces';
 
 interface HandleSetObstacles {
     obstaclesDetails: ObstacleDetails[];

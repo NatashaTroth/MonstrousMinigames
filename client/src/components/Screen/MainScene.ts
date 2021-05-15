@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 
 import history from '../../domain/history/history';
+import { GameAudio } from '../../domain/phaser/createAudio';
+import { GameData, Player, PlayersState } from '../../domain/phaser/gameInterfaces';
 import { handleSetObstacles } from '../../domain/phaser/handleSetObstacles';
 import { MessageSocket } from '../../domain/socket/MessageSocket';
 import ScreenSocket from '../../domain/socket/screenSocket';
@@ -11,8 +13,6 @@ import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../domain/typeG
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../domain/typeGuards/stopped';
 import { TimedOutMessage, timedOutTypeGuard } from '../../domain/typeGuards/timedOut';
 import { audioFiles, characters, images } from './GameAssets';
-import { GameData, PlayersState } from './gameInterfaces';
-import { Player } from './gameInterfaces/Player';
 
 // const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
 const windowWidth = window.innerWidth;
@@ -26,12 +26,13 @@ class MainScene extends Phaser.Scene {
     posY: number;
     plusY: number;
     numberPlayersFinished: number;
-    backgroundMusicLoop: undefined | Phaser.Sound.BaseSound;
+
     players: Array<Player>;
     trackLength: number;
     gameStarted: boolean;
     paused: boolean;
     pauseButton: undefined | Phaser.GameObjects.Text;
+    gameAudio: undefined | GameAudio;
 
     constructor() {
         super('MainScene');
@@ -42,12 +43,13 @@ class MainScene extends Phaser.Scene {
         this.posY = window.innerHeight / 2 - 50;
         this.plusY = 110;
         this.numberPlayersFinished = 0;
-        this.backgroundMusicLoop = undefined;
+
         this.players = [];
         this.trackLength = 2000;
         this.gameStarted = false;
         this.paused = false;
         this.pauseButton = undefined;
+        this.gameAudio = undefined;
     }
 
     init(data: { roomId: string }) {
@@ -68,7 +70,9 @@ class MainScene extends Phaser.Scene {
     }
 
     create() {
-        this.createAudio();
+        // createAudio(this.sound);
+        this.gameAudio = new GameAudio(this.sound);
+        this.gameAudio.initAudio();
         this.createBackground();
         this.createPauseButton();
         // this.createPlayers();
@@ -96,12 +100,12 @@ class MainScene extends Phaser.Scene {
 
         const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);
         stoppedSocket.listen((data: GameHasStoppedMessage) => {
-            this.backgroundMusicLoop?.stop();
+            this.gameAudio?.stopMusic();
         });
 
         const timedOutSocket = new MessageSocket(timedOutTypeGuard, this.socket);
         timedOutSocket.listen((data: TimedOutMessage) => {
-            this.backgroundMusicLoop?.stop();
+            this.gameAudio?.stopMusic();
         });
 
         //         obstacle
@@ -114,21 +118,6 @@ class MainScene extends Phaser.Scene {
         //         this.handleError(data.msg);
         //         return;
         //     }
-    }
-
-    createAudio() {
-        const backgroundMusicStart = this.sound.add('backgroundMusicStart', {
-            volume: 0.2,
-        });
-
-        this.backgroundMusicLoop = this.sound.add('backgroundMusicLoop', {
-            volume: 0.2,
-        });
-
-        backgroundMusicStart.play({ loop: false });
-        backgroundMusicStart.once('complete', () => {
-            this.backgroundMusicLoop?.play({ loop: true });
-        });
     }
 
     createBackground() {
@@ -297,7 +286,8 @@ class MainScene extends Phaser.Scene {
         //end of game
         // if(this.numberPlayersFinished >= players.length){
 
-        this.backgroundMusicLoop?.stop();
+        // this.backgroundMusicLoop?.stop();
+        this.gameAudio?.stopMusic();
         // this.sound.add('backgroundMusicEnd', { volume: 0.2 });
         history.push(`/screen/${this.roomId}/finished`);
         // }
