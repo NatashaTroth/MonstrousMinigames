@@ -1,9 +1,10 @@
 import Phaser from 'phaser';
 
 import history from '../../domain/history/history';
-import { createPlayer } from '../../domain/phaser/createPlayer';
+import { createBackground } from '../../domain/phaser/createBackground';
 import { GameAudio } from '../../domain/phaser/GameAudio';
-import { GameData, Player, PlayersState } from '../../domain/phaser/gameInterfaces';
+import { Player, PlayersState } from '../../domain/phaser/gameInterfaces';
+import { handleStartGame } from '../../domain/phaser/handleStartGame';
 import { moveForward } from '../../domain/phaser/moveForward';
 import { PauseButton } from '../../domain/phaser/PauseButton';
 import { MessageSocket } from '../../domain/socket/MessageSocket';
@@ -72,14 +73,22 @@ class MainScene extends Phaser.Scene {
     }
 
     create() {
-        // createAudio(this.sound);
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
-        this.createBackground();
-        // this.createPauseButton();
+        createBackground(this.add, windowWidth, windowHeight);
         this.pauseButton = new PauseButton(this);
-        // this.createPlayers();
+        this.initiateSockets();
+    }
 
+    handleSocketConnection() {
+        if (this.roomId == '' || this.roomId == undefined) {
+            this.handleError('No room code');
+        }
+
+        return ScreenSocket.getInstance(new SocketIOAdapter(this.roomId, 'screen')).socket;
+    }
+
+    initiateSockets() {
         // use this:
         // const pausedSocket = new MessageSocket(pausedTypeGuard, this.socket);
         // pausedSocket.listen((data: GameHasPausedMessage) => {
@@ -92,13 +101,14 @@ class MainScene extends Phaser.Scene {
         gameStateInfoSocket.listen((data: GameStateInfoMessage) => {
             if (!this.gameStarted) {
                 this.gameStarted = true;
-                this.handleStartGame(data.data);
+                handleStartGame(data.data, this);
             } else this.updateGameState(data.data.playersState);
         });
 
         const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
         gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
-            this.handleGameOver();
+            this.gameAudio?.stopMusic();
+            history.push(`/screen/${this.roomId}/finished`);
         });
 
         const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);
@@ -121,30 +131,6 @@ class MainScene extends Phaser.Scene {
         //         this.handleError(data.msg);
         //         return;
         //     }
-    }
-
-    createBackground() {
-        const bg = this.add.image(windowWidth / 2, windowHeight / 2, 'forest');
-        bg.setDisplaySize(windowWidth, windowHeight);
-    }
-
-    handleSocketConnection() {
-        if (this.roomId == '' || this.roomId == undefined) {
-            this.handleError('No room code');
-        }
-
-        return ScreenSocket.getInstance(new SocketIOAdapter(this.roomId, 'screen')).socket;
-    }
-
-    handleStartGame(gameStateData: GameData) {
-        this.trackLength = gameStateData.trackLength;
-
-        for (let i = 0; i < gameStateData.playersState.length; i++) {
-            createPlayer(i, gameStateData, this);
-
-            // this.players[i].playerText?.setBackgroundColor('#000000');
-            // this.setGoal(i);
-        }
     }
 
     // setGoal(playerIndex: number) {
@@ -192,17 +178,6 @@ class MainScene extends Phaser.Scene {
     //         this.numberPlayersFinished++;
     //     }
     // }
-
-    handleGameOver() {
-        //end of game
-        // if(this.numberPlayersFinished >= players.length){
-
-        // this.backgroundMusicLoop?.stop();
-        this.gameAudio?.stopMusic();
-        // this.sound.add('backgroundMusicEnd', { volume: 0.2 });
-        history.push(`/screen/${this.roomId}/finished`);
-        // }
-    }
 
     checkAtObstacle(playerIndex: number, isAtObstacle: boolean, playerPositionX: number) {
         if (isAtObstacle && !this.players[playerIndex].playerAtObstacle) {
