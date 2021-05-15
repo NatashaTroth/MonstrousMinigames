@@ -1,12 +1,13 @@
 import Phaser from 'phaser';
 
 import history from '../../domain/history/history';
+import { handleSetObstacles } from '../../domain/phaser/handleSetObstacles';
 import ScreenSocket from '../../domain/socket/screenSocket';
 import { Socket } from '../../domain/socket/Socket';
 import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
 import { MessageTypes } from '../../utils/constants';
 import { audioFiles, characters, images } from './GameAssets';
-import { GameData, ObstacleDetails, PlayersState, SocketMessage } from './gameInterfaces';
+import { GameData, PlayersState, SocketMessage } from './gameInterfaces';
 import { Player } from './gameInterfaces/Player';
 
 // const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
@@ -208,7 +209,15 @@ class MainScene extends Phaser.Scene {
             phaserObject: player,
             playerRunning: false,
             playerAtObstacle: false,
-            playerObstacles: this.setObstacles(gameStateData.playersState[index].obstacles, posY),
+            playerObstacles: handleSetObstacles({
+                obstaclesDetails: gameStateData.playersState[index].obstacles,
+                posY,
+                physics: this.physics,
+                trackLength: this.trackLength,
+                dependencies: {
+                    mapServerXToWindowX: this.mapServerXToWindowX,
+                },
+            }),
             playerCountSameDistance: 0,
             playerAttention: null, //TODO change
             playerText: this.add
@@ -269,39 +278,8 @@ class MainScene extends Phaser.Scene {
     //     goals.push(goal);
     // }
 
-    mapServerXToWindowX(positionX: number) {
-        return (positionX * (window.innerWidth - 200)) / (this.trackLength || 1);
-    }
-
-    setObstacles(
-        obstacleArray: Array<ObstacleDetails>,
-        posY: number
-    ): Array<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody> {
-        let obstacle: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-        const obstacles: Array<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody> = [];
-
-        for (let i = 0; i < obstacleArray.length; i++) {
-            const posX = this.mapServerXToWindowX(obstacleArray[i].positionX) + 75;
-            let obstaclePosY = posY + 30;
-            let obstacleScale = 0.3;
-
-            switch (obstacleArray[i].type) {
-                case 'TreeStump':
-                    obstaclePosY = posY + 45;
-                    obstacleScale = 0.4;
-                    break;
-                case 'Spider':
-                    obstaclePosY = posY + 25;
-                    obstacleScale = 0.2;
-                    break;
-            }
-
-            obstacle = this.physics.add.sprite(posX, obstaclePosY, obstacleArray[i].type.toLowerCase());
-            obstacle.setScale(obstacleScale, obstacleScale);
-            obstacle.setDepth(obstacleArray.length - i);
-            obstacles.push(obstacle);
-        }
-        return obstacles;
+    mapServerXToWindowX(positionX: number, trackLength: number) {
+        return (positionX * (window.innerWidth - 200)) / trackLength;
     }
 
     handleError(msg = 'Something went wrong.') {
@@ -404,7 +382,7 @@ class MainScene extends Phaser.Scene {
     }
 
     moveForward(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, toX: number, playerIndex: number) {
-        toX = this.mapServerXToWindowX(toX);
+        toX = this.mapServerXToWindowX(toX, this.trackLength);
         if (toX == player.x) {
             this.players[playerIndex].playerCountSameDistance++; // if idle for more than a second - means actually stopped, otherwise could just be waiting for new
         } else {
