@@ -2,8 +2,8 @@ import Phaser from 'phaser';
 
 import history from '../../domain/history/history';
 import { GameAudio } from '../../domain/phaser/createAudio';
+import { createPlayer } from '../../domain/phaser/createPlayer';
 import { GameData, Player, PlayersState } from '../../domain/phaser/gameInterfaces';
-import { handleSetObstacles } from '../../domain/phaser/handleSetObstacles';
 import { MessageSocket } from '../../domain/socket/MessageSocket';
 import ScreenSocket from '../../domain/socket/screenSocket';
 import { Socket } from '../../domain/socket/Socket';
@@ -144,60 +144,11 @@ class MainScene extends Phaser.Scene {
         this.trackLength = gameStateData.trackLength;
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
-            this.createPlayer(i, gameStateData);
+            createPlayer(i, gameStateData, this);
 
             // this.players[i].playerText?.setBackgroundColor('#000000');
             // this.setGoal(i);
         }
-    }
-
-    createPlayer(index: number, gameStateData: GameData) {
-        const character = characters[index];
-
-        const posX = this.posX + this.plusX * index;
-        const posY = this.posY + this.plusY * index;
-
-        const player = this.physics.add
-            .sprite(posX, posY, character.name)
-            .setDepth(50)
-            .setBounce(0.2)
-            .setCollideWorldBounds(true)
-            .setScale(0.15, 0.15)
-            .setCollideWorldBounds(true);
-
-        this.players.push({
-            name: gameStateData.playersState[index].name,
-            animationName: `${character.name}Walk`,
-            phaserObject: player,
-            playerRunning: false,
-            playerAtObstacle: false,
-            playerObstacles: handleSetObstacles({
-                obstaclesDetails: gameStateData.playersState[index].obstacles,
-                posY,
-                physics: this.physics,
-                trackLength: this.trackLength,
-                dependencies: {
-                    mapServerXToWindowX: this.mapServerXToWindowX,
-                },
-            }),
-            playerCountSameDistance: 0,
-            playerAttention: null, //TODO change
-            playerText: this.add
-                .text(
-                    posX, //+ 50
-                    posY - 100,
-                    character.name,
-                    { font: '16px Arial', align: 'center', fixedWidth: 150 }
-                )
-                .setDepth(50),
-        });
-
-        this.anims.create({
-            key: `${character.name}Walk`,
-            frames: this.anims.generateFrameNumbers(character.name, { start: 12, end: 15 }),
-            frameRate: 6,
-            repeat: -1,
-        });
     }
 
     handlePauseResumeButton() {

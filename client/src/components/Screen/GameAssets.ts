@@ -27,6 +27,12 @@ const characterSpriteProperties = {
     frameHeight: 1163,
 };
 
+// export interface{
+//     name: string,
+//     file: pending,
+
+// }
+
 export const characters = [
     { name: 'franz', file: franz, properties: characterSpriteProperties },
     { name: 'susi', file: susi, properties: characterSpriteProperties },
