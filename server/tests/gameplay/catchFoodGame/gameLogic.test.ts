@@ -124,6 +124,20 @@ describe('Obstacles reached', () => {
         expect(catchFoodGame.playersState['1'].positionX).toBe(tmpPlayerPositionX);
     });
 
+    it('should not backup run forward requests while at obstacle', async () => {
+        startGameAndAdvanceCountdown(catchFoodGame);
+        const distanceToObstacle =
+            catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX;
+        catchFoodGame.runForward('1', distanceToObstacle);
+
+        const tmpPlayerPositionX = catchFoodGame.playersState['1'].positionX;
+        for (let i = 0; i < 10; i++) {
+            catchFoodGame.runForward('1', 50);
+        }
+        completeNextObstacle(catchFoodGame, '1');
+        expect(catchFoodGame.playersState['1'].positionX).toBe(tmpPlayerPositionX);
+    });
+
     it('should recognise when a player has completed an obstacle', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         completeNextObstacle(catchFoodGame, '1');

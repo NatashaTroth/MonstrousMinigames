@@ -25,6 +25,7 @@ export const AudioContext = React.createContext<IAudioContext>(defaultValue);
 
 const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     const audio = new Audio(lobbyMusic);
+    audio.volume = 0.2;
     const [permission, setPermissionGranted] = React.useState<boolean>(false);
 
     const content = {

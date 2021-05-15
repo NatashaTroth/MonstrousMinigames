@@ -5,8 +5,15 @@ import * as React from 'react';
 import game1Img from '../../images/instructions1.png';
 import Button from '../common/Button';
 import {
-    CloseButtonContainer, DialogContent, GamePreviewContainer, GameSelectionContainer,
-    LeftContainer, PreviewImage, RightContainer, SelectGameButton, SelectGameButtonContainer
+    CloseButtonContainer,
+    DialogContent,
+    GamePreviewContainer,
+    GameSelectionContainer,
+    LeftContainer,
+    PreviewImage,
+    RightContainer,
+    SelectGameButton,
+    SelectGameButtonContainer,
 } from './SelectGameDialog.sc';
 
 interface SelectGame {
