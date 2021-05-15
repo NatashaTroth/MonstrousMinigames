@@ -1,8 +1,10 @@
 import Phaser from 'phaser';
-import { stringify } from 'querystring';
 
 import { MessageTypes } from '../../utils/constants';
 import history from '../../utils/history';
+import ScreenSocket from '../../utils/screenSocket';
+import { Socket } from '../../utils/socket/Socket';
+import { SocketIOAdapter } from '../../utils/socket/SocketIOAdapter';
 import { audioFiles, characters, images } from './GameAssets';
 import { GameData, ObstacleDetails, PlayersState, SocketMessage } from './gameInterfaces';
 import { Player } from './gameInterfaces/Player';
@@ -13,7 +15,7 @@ const windowHeight = window.innerHeight;
 
 class MainScene extends Phaser.Scene {
     roomId: string;
-    socket: undefined | SocketIOClient.Socket;
+    socket: undefined | Socket;
     posX: number;
     plusX: number;
     posY: number;
@@ -45,12 +47,9 @@ class MainScene extends Phaser.Scene {
         this.pauseButton = undefined;
     }
 
-    init(data: { roomId: string; socketConnection: SocketIOClient.Socket }) {
-        if (this.roomId === '' && data.roomId !== undefined) {
-            this.roomId = data.roomId;
-        }
-        if (data.socketConnection) this.socket = data.socketConnection;
-        else this.socket = this.handleSocketConnection();
+    init(data: { roomId: string }) {
+        if (this.roomId === '' && data.roomId !== undefined) this.roomId = data.roomId;
+        this.socket = this.handleSocketConnection();
     }
 
     preload(): void {
@@ -71,7 +70,7 @@ class MainScene extends Phaser.Scene {
         this.createPauseButton();
         // this.createPlayers();
 
-        this.socket?.on('message', (data: SocketMessage) => this.handleMessage(data));
+        this.socket?.listen((data: SocketMessage) => this.handleMessage(data));
 
         // this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     }
@@ -112,21 +111,23 @@ class MainScene extends Phaser.Scene {
         if (this.roomId == '' || this.roomId == undefined) {
             this.handleError('No room code');
         }
-        const socket = io(
-            `${process.env.REACT_APP_BACKEND_URL}screen?${stringify({
-                roomId: this.roomId,
-            })}`,
-            {
-                secure: true,
-                reconnection: true,
-                rejectUnauthorized: false,
-                reconnectionDelayMax: 10000,
-                transports: ['websocket'],
-            }
-        );
-        return socket;
+        // const socket = io(
+        //     `${process.env.REACT_APP_BACKEND_URL}screen?${stringify({
+        //         roomId: this.roomId,
+        //     })}`,
+        //     {
+        //         secure: true,
+        //         reconnection: true,
+        //         rejectUnauthorized: false,
+        //         reconnectionDelayMax: 10000,
+        //         transports: ['websocket'],
+        //     }
+        // );
+        // return socket;
 
         // return new SocketIOAdapter(roomId, 'screen')
+
+        return ScreenSocket.getInstance(new SocketIOAdapter(this.roomId, 'screen')).socket;
     }
 
     handleMessage(data: SocketMessage) {

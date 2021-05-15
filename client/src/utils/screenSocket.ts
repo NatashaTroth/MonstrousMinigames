@@ -2,7 +2,7 @@ import { Socket } from './socket/Socket';
 
 class ScreenSocket {
     private static instance: ScreenSocket;
-    private socket: Socket;
+    public socket: Socket;
 
     private constructor(val: Socket) {
         this.socket = val;
