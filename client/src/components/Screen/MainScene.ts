@@ -4,6 +4,7 @@ import { stringify } from 'querystring';
 import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
 import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
+import history from '../../domain/history/history';
 import attention from '../../images/attention.png';
 import forest from '../../images/backgroundGame.png';
 // import finishLine from '../../images/finishLine.png';
@@ -17,7 +18,6 @@ import susi from '../../images/susi_spritesheet.png';
 // import track from '../../images/track.png';
 import wood from '../../images/wood.png';
 import { MessageTypes } from '../../utils/constants';
-import history from '../../utils/history';
 
 const players: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
 const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];

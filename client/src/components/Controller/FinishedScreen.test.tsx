@@ -3,27 +3,18 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 
 import {
-    ControllerSocketContext,
-    defaultValue as controllerDefaultValue,
+    ControllerSocketContext, defaultValue as controllerDefaultValue
 } from '../../contexts/ControllerSocketContextProvider';
-import { defaultValue as gameContextDefaultValue, GameContext } from '../../contexts/GameContextProvider';
+import {
+    defaultValue as gameContextDefaultValue, GameContext
+} from '../../contexts/GameContextProvider';
 import { defaultValue, PlayerContext } from '../../contexts/PlayerContextProvider';
-import history from '../../utils/history';
-import { InMemorySocketFake } from '../../utils/socket/InMemorySocketFake';
+import history from '../../domain/history/history';
+import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
 import { FinishedScreen } from './FinishedScreen';
 
 afterEach(cleanup);
 
-describe('InMemorySocket', () => {
-    it('when data was written, registered callback is called', async () => {
-        const socket = new InMemorySocketFake();
-
-        const callback = jest.fn();
-        await socket.listen(callback);
-        await socket.emit('data');
-        expect(callback).toHaveBeenLastCalledWith('data');
-    });
-});
 describe('Screen FinishedScreen', () => {
     const socket = new InMemorySocketFake();
 
