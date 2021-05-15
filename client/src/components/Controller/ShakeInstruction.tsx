@@ -3,8 +3,8 @@ import * as React from 'react';
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
+import { sendMovement } from '../../domain/gameState/controller/sendMovement';
 import { localDevelopment } from '../../utils/constants';
-import { sendMovement } from '../../utils/sendMovement';
 import FullScreenContainer from '../common/FullScreenContainer';
 import {
     Container,

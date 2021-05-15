@@ -1,54 +1,57 @@
 import * as React from 'react';
 
-import { Obstacles } from '../utils/constants';
-import { handleSetControllerSocket } from '../utils/handleSetControllerSocket';
-import { handleSocketConnection } from '../utils/handleSocketConnection';
-import { InMemorySocketFake } from '../utils/socket/InMemorySocketFake';
-import { Socket } from '../utils/socket/Socket';
+import history from '../domain/history/history';
+import { handleSetSocket } from '../domain/socket/controller/handleSetSocket';
+import { handleSocketConnection } from '../domain/socket/controller/handleSocketConnection';
+import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
+import { Socket } from '../domain/socket/Socket';
+import { ErrorMessage } from '../domain/typeGuards/error';
+import { ObstacleMessage } from '../domain/typeGuards/obstacle';
+import { GameHasPausedMessage } from '../domain/typeGuards/paused';
+import { PlayerFinishedMessage } from '../domain/typeGuards/playerFinished';
+import { GameHasResetMessage } from '../domain/typeGuards/reset';
+import { GameHasResumedMessage } from '../domain/typeGuards/resumed';
+import { GameHasStartedMessage } from '../domain/typeGuards/started';
+import { GameHasStoppedMessage } from '../domain/typeGuards/stopped';
+import { TimedOutMessage } from '../domain/typeGuards/timedOut';
+import { UserInitMessage } from '../domain/typeGuards/userInit';
+import { MessageTypes } from '../utils/constants';
 import { GameContext } from './GameContextProvider';
 import { PlayerContext } from './PlayerContextProvider';
 
-export interface IError {
-    type: string;
-    name: string;
-}
-export type MessageData = IUserInitMessage | IObstacleMessage | IGameFinished | IError;
+export type MessageData =
+    | UserInitMessage
+    | ObstacleMessage
+    | GameFinished
+    | ErrorMessage
+    | PlayerFinishedMessage
+    | TimedOutMessage
+    | GameHasPausedMessage
+    | GameHasStartedMessage
+    | GameHasResumedMessage
+    | GameHasStoppedMessage
+    | GameHasResetMessage;
 
 export const defaultValue = {
     controllerSocket: new InMemorySocketFake(),
     setControllerSocket: () => {
         // do nothing
     },
-    isControllerConnected: false,
     handleSocketConnection: () => {
         // do nothing
     },
 };
-export interface IObstacleMessage {
-    type: string;
-    obstacleType: Obstacles;
-    obstacleId: number;
-}
+
 interface IControllerSocketContext {
     controllerSocket: Socket;
-    isControllerConnected: boolean;
     setControllerSocket: (val: Socket, roomId: string) => void;
     handleSocketConnection: (roomId: string, name: string) => void;
 }
 
 export const ControllerSocketContext = React.createContext<IControllerSocketContext>(defaultValue);
 
-export interface IUserInitMessage {
-    name?: string;
-    type?: string;
-    userId?: string;
-    roomId?: string;
-    isAdmin: boolean;
-    number: number;
-}
-
-export interface IGameFinished {
-    type: string;
+export interface GameFinished {
+    type: MessageTypes.gameHasFinished;
     rank: number;
 }
 
@@ -87,21 +90,22 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
     const content = {
         controllerSocket,
         setControllerSocket: (val: Socket, roomId: string) =>
-            handleSetControllerSocket(val, roomId, playerFinished, {
+            handleSetSocket(val, roomId, playerFinished, {
                 ...dependencies,
                 setHasPaused,
                 resetGame,
                 resetPlayer,
+                history,
             }),
-        isControllerConnected: controllerSocket ? true : false,
         handleSocketConnection: (roomId: string, name: string) => {
             handleSocketConnection(roomId, name, playerFinished, {
                 ...dependencies,
                 setPermissionGranted,
                 setRoomId,
-                setHasPaused,
                 resetGame,
                 resetPlayer,
+                setHasPaused,
+                history,
             });
         },
     };

@@ -1,10 +1,10 @@
 import Phaser from 'phaser';
 
+import history from '../../domain/history/history';
+import ScreenSocket from '../../domain/socket/screenSocket';
+import { Socket } from '../../domain/socket/Socket';
+import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
 import { MessageTypes } from '../../utils/constants';
-import history from '../../utils/history';
-import ScreenSocket from '../../utils/screenSocket';
-import { Socket } from '../../utils/socket/Socket';
-import { SocketIOAdapter } from '../../utils/socket/SocketIOAdapter';
 import { audioFiles, characters, images } from './GameAssets';
 import { GameData, ObstacleDetails, PlayersState, SocketMessage } from './gameInterfaces';
 import { Player } from './gameInterfaces/Player';
