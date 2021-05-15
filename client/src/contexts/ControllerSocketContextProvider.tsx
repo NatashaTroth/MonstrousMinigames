@@ -8,6 +8,7 @@ import { Socket } from '../domain/socket/Socket';
 import { ConnectedUsersMessage } from '../domain/typeGuards/connectedUsers';
 import { ErrorMessage } from '../domain/typeGuards/error';
 import { GameHasFinishedMessage } from '../domain/typeGuards/finished';
+import { GameStateInfoMessage } from '../domain/typeGuards/gameStateInfo';
 import { ObstacleMessage } from '../domain/typeGuards/obstacle';
 import { GameHasPausedMessage } from '../domain/typeGuards/paused';
 import { PlayerFinishedMessage } from '../domain/typeGuards/playerFinished';
@@ -36,7 +37,8 @@ export type MessageData =
     | GameHasResetMessage
     | ConnectedUsersMessage
     | undefined
-    | GameHasFinishedMessage;
+    | GameHasFinishedMessage
+    | GameStateInfoMessage;
 
 export const defaultValue = {
     controllerSocket: new InMemorySocketFake(),

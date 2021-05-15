@@ -2,12 +2,16 @@ import Phaser from 'phaser';
 
 import history from '../../domain/history/history';
 import { handleSetObstacles } from '../../domain/phaser/handleSetObstacles';
+import { MessageSocket } from '../../domain/socket/MessageSocket';
 import ScreenSocket from '../../domain/socket/screenSocket';
 import { Socket } from '../../domain/socket/Socket';
 import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
-import { MessageTypes } from '../../utils/constants';
+import { finishedTypeGuard, GameHasFinishedMessage } from '../../domain/typeGuards/finished';
+import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../domain/typeGuards/gameStateInfo';
+import { GameHasStoppedMessage, stoppedTypeGuard } from '../../domain/typeGuards/stopped';
+import { TimedOutMessage, timedOutTypeGuard } from '../../domain/typeGuards/timedOut';
 import { audioFiles, characters, images } from './GameAssets';
-import { GameData, PlayersState, SocketMessage } from './gameInterfaces';
+import { GameData, PlayersState } from './gameInterfaces';
 import { Player } from './gameInterfaces/Player';
 
 // const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
@@ -16,14 +20,13 @@ const windowHeight = window.innerHeight;
 
 class MainScene extends Phaser.Scene {
     roomId: string;
-    socket: undefined | Socket;
+    socket: Socket;
     posX: number;
     plusX: number;
     posY: number;
     plusY: number;
     numberPlayersFinished: number;
     backgroundMusicLoop: undefined | Phaser.Sound.BaseSound;
-    rightKey: undefined | Phaser.Input.Keyboard.Key;
     players: Array<Player>;
     trackLength: number;
     gameStarted: boolean;
@@ -33,14 +36,13 @@ class MainScene extends Phaser.Scene {
     constructor() {
         super('MainScene');
         this.roomId = '';
-        this.socket = undefined;
+        this.socket = this.handleSocketConnection();
         this.posX = 50;
         this.plusX = 40;
         this.posY = window.innerHeight / 2 - 50;
         this.plusY = 110;
         this.numberPlayersFinished = 0;
         this.backgroundMusicLoop = undefined;
-        this.rightKey = undefined;
         this.players = [];
         this.trackLength = 2000;
         this.gameStarted = false;
@@ -50,7 +52,7 @@ class MainScene extends Phaser.Scene {
 
     init(data: { roomId: string }) {
         if (this.roomId === '' && data.roomId !== undefined) this.roomId = data.roomId;
-        this.socket = this.handleSocketConnection();
+        // this.socket = this.handleSocketConnection();
     }
 
     preload(): void {
@@ -71,15 +73,47 @@ class MainScene extends Phaser.Scene {
         this.createPauseButton();
         // this.createPlayers();
 
-        // TODO remove
-        this.socket?.listen((data: SocketMessage) => this.handleMessage(data));
         // use this:
-        // const pausedSocket = new MessageSocket(pausedTypeGuard, socket);
+        // const pausedSocket = new MessageSocket(pausedTypeGuard, this.socket);
         // pausedSocket.listen((data: GameHasPausedMessage) => {
         //     // handle Game has Paused
+        //     // eslint-disable-next-line no-console
+        //     console.log('paused ', data);
         // });
 
-        // this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        const gameStateInfoSocket = new MessageSocket(gameStateInfoTypeGuard, this.socket);
+        gameStateInfoSocket.listen((data: GameStateInfoMessage) => {
+            if (!this.gameStarted) {
+                this.gameStarted = true;
+                this.handleStartGame(data.data);
+            } else this.updateGameState(data.data.playersState);
+        });
+
+        const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
+        gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
+            this.handleGameOver();
+        });
+
+        const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);
+        stoppedSocket.listen((data: GameHasStoppedMessage) => {
+            this.backgroundMusicLoop?.stop();
+        });
+
+        const timedOutSocket = new MessageSocket(timedOutTypeGuard, this.socket);
+        timedOutSocket.listen((data: TimedOutMessage) => {
+            this.backgroundMusicLoop?.stop();
+        });
+
+        //         obstacle
+        // playerFinished
+        // gameHasReset
+        // gameHasPaused
+        // gameHasResumed
+
+        //     if ((data.type == 'error' && data.msg !== undefined) || !data.data) {
+        //         this.handleError(data.msg);
+        //         return;
+        //     }
     }
 
     createAudio() {
@@ -104,11 +138,6 @@ class MainScene extends Phaser.Scene {
 
     createPauseButton() {
         this.pauseButton = this.add.text(window.innerWidth / 2, window.innerHeight - 50, 'Pause');
-        // // eslint-disable-next-line no-console
-        // console.log(pauseButton);
-
-        // eslint-disable-next-line no-console
-        // console.log(this.players);
 
         this.pauseButton.setInteractive();
         this.pauseButton.on('pointerdown', () => this.handlePauseResumeButton());
@@ -118,70 +147,8 @@ class MainScene extends Phaser.Scene {
         if (this.roomId == '' || this.roomId == undefined) {
             this.handleError('No room code');
         }
-        // const socket = io(
-        //     `${process.env.REACT_APP_BACKEND_URL}screen?${stringify({
-        //         roomId: this.roomId,
-        //     })}`,
-        //     {
-        //         secure: true,
-        //         reconnection: true,
-        //         rejectUnauthorized: false,
-        //         reconnectionDelayMax: 10000,
-        //         transports: ['websocket'],
-        //     }
-        // );
-        // return socket;
-
-        // return new SocketIOAdapter(roomId, 'screen')
 
         return ScreenSocket.getInstance(new SocketIOAdapter(this.roomId, 'screen')).socket;
-    }
-
-    handleMessage(data: SocketMessage) {
-        // //TODO delete
-        // if (this.rightKey?.isDown) {
-        //     this.moveForward(players[0], players[0].x + 50, 0);
-        // }
-
-        if ((data.type == 'error' && data.msg !== undefined) || !data.data) {
-            this.handleError(data.msg);
-            return;
-        }
-
-        switch (data.type) {
-            case MessageTypes.gameState:
-                if (!this.gameStarted) {
-                    this.gameStarted = true;
-                    this.handleStartGame(data.data);
-                } else this.updateGameState(data.data.playersState);
-
-                break;
-            case MessageTypes.obstacle:
-                break;
-            case MessageTypes.playerFinished:
-                break;
-            case MessageTypes.gameHasReset:
-                break;
-            case MessageTypes.gameHasPaused:
-                break;
-            case MessageTypes.gameHasResumed:
-                break;
-            case MessageTypes.gameHasTimedOut:
-            case MessageTypes.gameHasStopped:
-                this.backgroundMusicLoop?.stop();
-                break;
-            case MessageTypes.gameHasFinished:
-                this.handleGameOver();
-
-                break;
-        }
-
-        // if (trackLength === 0 && data !== undefined && data.data !== undefined) {
-        //     trackLength = data.data.trackLength;
-        // }
-        // if (!roomId && data.data !== undefined) {
-        //     roomId = data.data.roomId;
-        // }
     }
 
     handleStartGame(gameStateData: GameData) {
@@ -289,19 +256,16 @@ class MainScene extends Phaser.Scene {
     }
 
     handleError(msg = 'Something went wrong.') {
-        this.add.text(32, 32, `Error: ${msg}`, { font: '30px Arial' });
-        this.players.forEach(player => {
-            player.phaserObject.destroy();
-        });
-
-        this.players.forEach(player => {
-            player.playerObstacles.forEach(obstacle => {
-                obstacle.destroy();
-            });
-        });
-
-        this.backgroundMusicLoop?.stop();
-
+        // this.add.text(32, 32, `Error: ${msg}`, { font: '30px Arial' });
+        // this.players.forEach(player => {
+        //     player.phaserObject.destroy();
+        // });
+        // this.players.forEach(player => {
+        //     player.playerObstacles.forEach(obstacle => {
+        //         obstacle.destroy();
+        //     });
+        // });
+        // this.backgroundMusicLoop?.stop();
         // obstacles.forEach(obstacle => {
         //     obstacle.destroy();
         // });
