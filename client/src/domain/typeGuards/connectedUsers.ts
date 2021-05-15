@@ -1,5 +1,5 @@
+import { MessageData } from '../../contexts/ControllerSocketContextProvider';
 import { MessageTypes } from '../../utils/constants';
-import { MessageData } from '../socket/screen/handleSetSocket';
 
 export interface IUser {
     id: string;

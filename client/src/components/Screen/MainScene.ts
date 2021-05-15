@@ -71,7 +71,13 @@ class MainScene extends Phaser.Scene {
         this.createPauseButton();
         // this.createPlayers();
 
+        // TODO remove
         this.socket?.listen((data: SocketMessage) => this.handleMessage(data));
+        // use this:
+        // const pausedSocket = new MessageSocket(pausedTypeGuard, socket);
+        // pausedSocket.listen((data: GameHasPausedMessage) => {
+        //     // handle Game has Paused
+        // });
 
         // this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     }

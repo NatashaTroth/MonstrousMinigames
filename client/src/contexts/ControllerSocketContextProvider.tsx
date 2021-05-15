@@ -5,7 +5,9 @@ import { handleSetSocket } from '../domain/socket/controller/handleSetSocket';
 import { handleSocketConnection } from '../domain/socket/controller/handleSocketConnection';
 import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
 import { Socket } from '../domain/socket/Socket';
+import { ConnectedUsersMessage } from '../domain/typeGuards/connectedUsers';
 import { ErrorMessage } from '../domain/typeGuards/error';
+import { GameHasFinishedMessage } from '../domain/typeGuards/finished';
 import { ObstacleMessage } from '../domain/typeGuards/obstacle';
 import { GameHasPausedMessage } from '../domain/typeGuards/paused';
 import { PlayerFinishedMessage } from '../domain/typeGuards/playerFinished';
@@ -19,6 +21,7 @@ import { MessageTypes } from '../utils/constants';
 import { GameContext } from './GameContextProvider';
 import { PlayerContext } from './PlayerContextProvider';
 
+// TODO move to better location
 export type MessageData =
     | UserInitMessage
     | ObstacleMessage
@@ -30,7 +33,10 @@ export type MessageData =
     | GameHasStartedMessage
     | GameHasResumedMessage
     | GameHasStoppedMessage
-    | GameHasResetMessage;
+    | GameHasResetMessage
+    | ConnectedUsersMessage
+    | undefined
+    | GameHasFinishedMessage;
 
 export const defaultValue = {
     controllerSocket: new InMemorySocketFake(),
