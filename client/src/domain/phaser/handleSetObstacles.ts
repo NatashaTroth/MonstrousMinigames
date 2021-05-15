@@ -1,23 +1,20 @@
 import { Obstacles } from '../../utils/constants';
 import { ObstacleDetails } from './gameInterfaces';
+import { mapServerPosToWindowPos } from './mapServerPosToWindowPos';
 
 interface HandleSetObstacles {
     obstaclesDetails: ObstacleDetails[];
     posY: number;
     physics: Phaser.Physics.Arcade.ArcadePhysics;
     trackLength: number;
-    dependencies: {
-        mapServerXToWindowX: (posX: number, trackLength: number) => number;
-    };
 }
 export function handleSetObstacles(props: HandleSetObstacles) {
     let phaserObstacle: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-    const { obstaclesDetails: obstaclesArray, dependencies, posY, physics, trackLength } = props;
-    const { mapServerXToWindowX } = dependencies;
+    const { obstaclesDetails: obstaclesArray, posY, physics, trackLength } = props;
     const obstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
 
     obstaclesArray.forEach((obstacle, index) => {
-        const posX = mapServerXToWindowX(obstacle.positionX, trackLength) + 75;
+        const posX = mapServerPosToWindowPos(obstacle.positionX, trackLength) + 75;
         let obstaclePosY = posY + 30;
         let obstacleScale = 0.3;
 

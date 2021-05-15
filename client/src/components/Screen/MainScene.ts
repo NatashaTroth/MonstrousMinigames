@@ -1,9 +1,11 @@
 import Phaser from 'phaser';
 
 import history from '../../domain/history/history';
-import { GameAudio } from '../../domain/phaser/createAudio';
 import { createPlayer } from '../../domain/phaser/createPlayer';
+import { GameAudio } from '../../domain/phaser/GameAudio';
 import { GameData, Player, PlayersState } from '../../domain/phaser/gameInterfaces';
+import { moveForward } from '../../domain/phaser/moveForward';
+import { PauseButton } from '../../domain/phaser/PauseButton';
 import { MessageSocket } from '../../domain/socket/MessageSocket';
 import ScreenSocket from '../../domain/socket/screenSocket';
 import { Socket } from '../../domain/socket/Socket';
@@ -25,13 +27,13 @@ class MainScene extends Phaser.Scene {
     plusX: number;
     posY: number;
     plusY: number;
-    numberPlayersFinished: number;
+    // numberPlayersFinished: number;
 
     players: Array<Player>;
     trackLength: number;
     gameStarted: boolean;
     paused: boolean;
-    pauseButton: undefined | Phaser.GameObjects.Text;
+    pauseButton: undefined | PauseButton;
     gameAudio: undefined | GameAudio;
 
     constructor() {
@@ -42,7 +44,7 @@ class MainScene extends Phaser.Scene {
         this.plusX = 40;
         this.posY = window.innerHeight / 2 - 50;
         this.plusY = 110;
-        this.numberPlayersFinished = 0;
+        // this.numberPlayersFinished = 0;
 
         this.players = [];
         this.trackLength = 2000;
@@ -74,7 +76,8 @@ class MainScene extends Phaser.Scene {
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
         this.createBackground();
-        this.createPauseButton();
+        // this.createPauseButton();
+        this.pauseButton = new PauseButton(this);
         // this.createPlayers();
 
         // use this:
@@ -125,13 +128,6 @@ class MainScene extends Phaser.Scene {
         bg.setDisplaySize(windowWidth, windowHeight);
     }
 
-    createPauseButton() {
-        this.pauseButton = this.add.text(window.innerWidth / 2, window.innerHeight - 50, 'Pause');
-
-        this.pauseButton.setInteractive();
-        this.pauseButton.on('pointerdown', () => this.handlePauseResumeButton());
-    }
-
     handleSocketConnection() {
         if (this.roomId == '' || this.roomId == undefined) {
             this.handleError('No room code');
@@ -151,49 +147,11 @@ class MainScene extends Phaser.Scene {
         }
     }
 
-    handlePauseResumeButton() {
-        //TODO connect to backend
-        if (this.paused) {
-            //TODO emit to server. this.resumeGame is then called by handle message when resume event comes in
-            this.resumeGame();
-        } else {
-            this.pauseGame();
-        }
-    }
-
-    pauseGame() {
-        // this.socket?.emit({ type: MessageTypes.pauseResume }); //TODO
-        this.pauseButton?.setText('Resume');
-
-        for (let i = 0; i < this.players.length; i++) {
-            // this.stopRunningAnimation(players[i], i);
-            this.players[i].phaserObject.anims.pause();
-        }
-
-        this.paused = true;
-    }
-
-    resumeGame() {
-        for (let i = 0; i < this.players.length; i++) {
-            // players[i].anims.play(animations[i])
-            if (!this.paused) {
-                this.players[i].phaserObject.anims.play(this.players[i].animationName);
-                // this.startRunningAnimation(players[i], i);
-            }
-        }
-        this.pauseButton?.setText('Pause');
-        this.paused = false;
-    }
-
     // setGoal(playerIndex: number) {
     //     const goal = this.physics.add.sprite(this.trackLength, this.getYPosition(playerIndex), 'goal');
     //     goal.setScale(0.1, 0.1);
     //     goals.push(goal);
     // }
-
-    mapServerXToWindowX(positionX: number, trackLength: number) {
-        return (positionX * (window.innerWidth - 200)) / trackLength;
-    }
 
     handleError(msg = 'Something went wrong.') {
         // this.add.text(32, 32, `Error: ${msg}`, { font: '30px Arial' });
@@ -211,27 +169,29 @@ class MainScene extends Phaser.Scene {
         // });
     }
 
-    removePlayerSprite(index: number) {
-        this.players[index].phaserObject.destroy();
-    }
+    // removePlayerSprite(index: number) {
+    //     this.players[index].phaserObject.destroy();
+    // }
 
     updateGameState(playerData: PlayersState[]) {
         for (let i = 0; i < this.players.length; i++) {
             if (this.players[i].phaserObject !== undefined && playerData !== undefined) {
-                this.moveForward(this.players[i].phaserObject, playerData[i].positionX, i);
+                moveForward(this.players[i].phaserObject, playerData[i].positionX, i, this);
+
+                //TODO
                 this.checkAtObstacle(i, playerData[i].atObstacle, playerData[i].positionX);
-                this.checkFinished(i, playerData[i].finished);
+                // this.checkFinished(i, playerData[i].finished);
             }
         }
     }
 
-    checkFinished(playerIndex: number, isFinished: boolean) {
-        if (isFinished) {
-            // players[playerIndex].anims.stop();
-            this.stopRunningAnimation(this.players[playerIndex].phaserObject, playerIndex);
-            this.numberPlayersFinished++;
-        }
-    }
+    // checkFinished(playerIndex: number, isFinished: boolean) {
+    //     if (isFinished) {
+    //         // players[playerIndex].anims.stop();
+    //         this.stopRunningAnimation(this.players[playerIndex].phaserObject, playerIndex);
+    //         this.numberPlayersFinished++;
+    //     }
+    // }
 
     handleGameOver() {
         //end of game
@@ -290,37 +250,6 @@ class MainScene extends Phaser.Scene {
     stopRunningAnimation(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, playerIdx: number) {
         player.anims.stop();
         this.players[playerIdx].playerRunning = false;
-    }
-
-    moveForward(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, toX: number, playerIndex: number) {
-        toX = this.mapServerXToWindowX(toX, this.trackLength);
-        if (toX == player.x) {
-            this.players[playerIndex].playerCountSameDistance++; // if idle for more than a second - means actually stopped, otherwise could just be waiting for new
-        } else {
-            this.players[playerIndex].playerCountSameDistance = 0;
-            if (!this.players[playerIndex].playerRunning) {
-                this.startRunningAnimation(player, playerIndex);
-            }
-        }
-
-        if (this.players[playerIndex].playerRunning && this.players[playerIndex].playerCountSameDistance > 100) {
-            //TODO HANDLE
-            // this.stopRunningAnimation(player, playerIndex);
-            // this.playerCountSameDistance[playerIndex] = 0;
-        }
-
-        if (!this.paused) {
-            player.x = toX;
-        }
-
-        // this.playerText[playerIndex]?.x = toX; //- 100;
-        // this.test++;
-
-        // if (this.test == 100) {
-        //     this.test = 0;
-        //     // eslint-disable-next-line no-console
-        //     console.log(`${player.x}   ${this.playerText[playerIndex].x}`);
-        // }
     }
 }
 

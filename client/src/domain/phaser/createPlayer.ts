@@ -27,9 +27,6 @@ export function createPlayer(index: number, gameStateData: GameData, PhaserInsta
             posY,
             physics: PhaserInstance.physics,
             trackLength: PhaserInstance.trackLength,
-            dependencies: {
-                mapServerXToWindowX: PhaserInstance.mapServerXToWindowX,
-            },
         }),
         playerCountSameDistance: 0,
         playerAttention: null, //TODO change
