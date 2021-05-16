@@ -45,8 +45,9 @@ export const Lobby: React.FunctionComponent = () => {
                                                 startGame();
                                             }
                                         }}
-                                        text="Start Game"
-                                    />
+                                    >
+                                        Start Game
+                                    </Button>
                                 </div>
                             )}
                         </>

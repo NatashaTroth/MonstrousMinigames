@@ -7,6 +7,7 @@ import { IRouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import history from '../../domain/history/history';
 import franz from '../../images/franz.png';
 import noah from '../../images/noah.png';
 import steffi from '../../images/steffi.png';
@@ -37,7 +38,6 @@ import {
     RightContainer,
     RoomCodeContainer,
 } from './Lobby.sc';
-import SelectGameDialog from './SelectGameDialog';
 
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers } = React.useContext(GameContext);
@@ -45,7 +45,6 @@ export const Lobby: React.FunctionComponent = () => {
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: IRouteParams = useParams();
     const navigator = window.navigator;
-    const [dialogOpen, setDialogOpen] = React.useState(false);
     const characters = [franz, noah, susi, steffi];
 
     if (id && !screenSocket) {
@@ -77,7 +76,6 @@ export const Lobby: React.FunctionComponent = () => {
 
     return (
         <LobbyContainer>
-            <SelectGameDialog open={dialogOpen} handleClose={() => setDialogOpen(false)} />
             <Content>
                 <HeadContainer>
                     <HeadContainerLeft>
@@ -120,8 +118,11 @@ export const Lobby: React.FunctionComponent = () => {
                             </CopyToClipboard>
                         </QRCode>
                         <RightButtonContainer>
-                            <Button text="Select Game" onClick={() => setDialogOpen(true)} />
-                            <Button text="Leaderboard" disabled />
+                            <Button onClick={() => history.push(`/screen/${roomId}/choose-game`)} variant="secondary">
+                                Choose Game
+                            </Button>
+                            <Button disabled>Leaderboard</Button>
+                            <Button onClick={() => history.push('/screen')}>Back</Button>
                         </RightButtonContainer>
                     </RightContainer>
                 </ContentContainer>

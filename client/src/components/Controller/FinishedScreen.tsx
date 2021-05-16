@@ -30,10 +30,9 @@ export const FinishedScreen: React.FunctionComponent = () => {
                 )}
                 {/* TODO check if all players are finished */}
                 {isPlayerAdmin && (
-                    <Button
-                        onClick={() => handleResetGame(controllerSocket, { resetPlayer, resetGame }, true)}
-                        text="Back to Lobby"
-                    />
+                    <Button onClick={() => handleResetGame(controllerSocket, { resetPlayer, resetGame }, true)}>
+                        Back to Lobby
+                    </Button>
                 )}
             </FinishedScreenContainer>
         </FullScreenContainer>

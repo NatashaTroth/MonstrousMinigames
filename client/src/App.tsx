@@ -10,6 +10,7 @@ import { Lobby as ControllerLobbyScreen } from './components/Controller/Lobby';
 import Spider from './components/Controller/Obstacles/Spider';
 import TreeTrunk from './components/Controller/Obstacles/TreeTrunk';
 import ShakeInstruction from './components/Controller/ShakeInstruction';
+import ChooseGame from './components/Screen/ChooseGame';
 import { ConnectScreen as ScreenConnectScreen } from './components/Screen/ConnectScreen';
 import { FinishedScreen as ScreenFinishedScreen } from './components/Screen/FinishedScreen';
 import Game from './components/Screen/Game';
@@ -56,6 +57,7 @@ const App: React.FunctionComponent = () => {
                                         />
 
                                         <Route path="/screen/:id/lobby" component={ScreenLobbyScreen} exact />
+                                        <Route path="/screen/:id/choose-game" component={ChooseGame} exact />
                                         <Route path="/screen/:id/game1" component={Game} exact />
                                         <Route path="/screen/:id/finished" component={ScreenFinishedScreen} exact />
 

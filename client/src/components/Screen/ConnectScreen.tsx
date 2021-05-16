@@ -57,23 +57,27 @@ export const ConnectScreen: React.FunctionComponent = () => {
             <ConnectDialog open={dialogOpen} handleClose={() => setDialogOpen(false)} />
             <LeftContainer>
                 <LeftButtonContainer>
-                    <Button type="button" name="new" text="Create New Room" onClick={handleCreateNewRoom} />
-                    <Button type="button" name="join" text="Join Room" onClick={handleJoinRoom} />
-                    <Button type="button" name="tutorial" text="Tutorial" disabled />
+                    <Button type="button" name="new" onClick={handleCreateNewRoom}>
+                        Create New Room
+                    </Button>
+                    <Button type="button" name="join" onClick={handleJoinRoom}>
+                        Join Room
+                    </Button>
+                    <Button type="button" name="tutorial" disabled>
+                        Tutorial
+                    </Button>
                 </LeftButtonContainer>
             </LeftContainer>
             <RightContainer>
                 <Logo />
 
                 <ButtonContainer>
-                    <Button type="button" name="credits" text="Credits" onClick={() => history.push('/credits')} />
-                    <Button
-                        type="button"
-                        name="settings"
-                        text="Settings"
-                        onClick={() => history.push('/settings')}
-                        disabled
-                    />
+                    <Button type="button" name="credits" onClick={() => history.push('/credits')}>
+                        Credits
+                    </Button>
+                    <Button type="button" name="settings" onClick={() => history.push('/settings')} disabled>
+                        Settings
+                    </Button>
                 </ButtonContainer>
             </RightContainer>
         </ConnectScreenContainer>

@@ -72,7 +72,9 @@ export const ConnectScreen: React.FunctionComponent = () => {
                         required
                     />
                 </StyledLabel>
-                <Button type="submit" text="Connect" disabled={!formState?.name || !formState?.roomId} />
+                <Button type="submit" disabled={!formState?.name || !formState?.roomId}>
+                    Connect
+                </Button>
             </FormContainer>
             <ImpressumLink to="/impressum">Impressum</ImpressumLink>
         </ConnectScreenContainer>

@@ -1,3 +1,4 @@
+// TODO refactor
 export const lightBlue = '#bfeff0';
 export const orange = '#e98f23';
 export const grey = '#9c9c9c';
@@ -13,4 +14,10 @@ export const Player2 = '#fae348';
 export const Player3 = '#64be6f';
 export const Player4 = '#19a3bc';
 
-export const disabledBackground = '#9a9a9a';
+export const primary = '#A1C3B3';
+export const primaryShadow = '#83A29B';
+export const disabled = '#b9b8b8';
+export const disabledShadow = '#9a9a9a';
+
+export const secondary = '#DFA551';
+export const secondaryShadow = '#7F5C32';

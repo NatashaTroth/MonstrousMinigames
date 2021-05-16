@@ -1,15 +1,8 @@
 import { Button, Typography } from '@material-ui/core';
 import styled from 'styled-components';
 
-import {
-    disabledBackground,
-    lightgrey,
-    Player1,
-    Player2,
-    Player3,
-    Player4,
-    QRCodeBackground,
-} from '../../utils/colors';
+import forest from '../../images/forest.svg';
+import { disabled, lightgrey, Player1, Player2, Player3, Player4, primary, QRCodeBackground } from '../../utils/colors';
 
 function getPlayerBackgroundColor(n: number) {
     switch (n) {
@@ -26,7 +19,8 @@ function getPlayerBackgroundColor(n: number) {
     }
 }
 export const LobbyContainer = styled.div`
-    background-color: black;
+    background-image: url(${forest});
+    background-size: cover;
     height: 100%;
     width: 100%;
     display: flex;
@@ -73,7 +67,7 @@ export const HeadContainerRight = styled.div`
 export const Headline = styled.div`
     font-size: 30px;
     font-weight: 700;
-    background-color: ${disabledBackground};
+    background-color: ${disabled};
     color: black;
     padding-left: 20px;
     width: 100%;
@@ -95,8 +89,8 @@ interface Props {
 
 const User = styled.div<Props>`
     border-radius: 10px;
-    color: ${({ free }) => (free ? lightgrey : 'black')};
-    background-color: ${({ free, number }) => (free ? disabledBackground : getPlayerBackgroundColor(number))};
+    color: black;
+    background-color: ${({ free, number }) => (free ? primary : getPlayerBackgroundColor(number))};
     padding: 10px;
     font-size: 25px;
 `;
@@ -108,13 +102,17 @@ export const ConnectedUserName = styled(User)`
 `;
 
 export const ConnectedUserCharacter = styled(User)`
+    height: 240px;
     max-width: 200px;
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
+    justify-content: ${({ free }) => (free ? 'flex-end' : 'space-between')};
 `;
 
-export const ConnectedUserContainer = styled.div``;
+export const ConnectedUserContainer = styled.div`
+    width: 20%;
+`;
 
 export const Subline = styled.div`
     font-size: 15px;
@@ -151,7 +149,7 @@ export const QRCode = styled.div`
     background-color: ${QRCodeBackground};
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 60%;
     padding: 10px;
 `;
 
@@ -170,7 +168,7 @@ export const QRCodeInstructions = styled(Typography)`
 export const RightButtonContainer = styled.div`
     margin-top: 30px;
 
-    div:first-child {
+    div:not(:last-child) {
         margin-bottom: 20px;
     }
 `;

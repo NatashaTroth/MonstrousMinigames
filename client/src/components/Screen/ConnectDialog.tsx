@@ -50,7 +50,9 @@ const ConnectDialog: React.FunctionComponent<ConnectDialog> = ({ handleClose, ..
                             placeholder="Insert a room code"
                         />
                     </StyledLabel>
-                    <Button type="submit" name="join" text="Join" disabled={!formState?.roomId} />
+                    <Button type="submit" name="join" disabled={!formState?.roomId}>
+                        Join
+                    </Button>
                 </DialogContent>
             </StyledForm>
         </Dialog>

@@ -84,7 +84,7 @@ const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo }) 
             <StyledDialog open={hasPaused}>
                 <DialogContent>
                     <h3>Game has paused</h3>
-                    <Button text="Resume" onClick={handleResumeGame} />
+                    <Button onClick={handleResumeGame}>Resume</Button>
                 </DialogContent>
             </StyledDialog>
             {displayGo && <Go>Go!</Go>}
