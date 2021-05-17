@@ -31,7 +31,7 @@ function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
 }
 function sendErrorMessage(socket: Socket, e: Error): void {
     socket.emit('message', {
-        type: 'error',
+        type: MessageTypes.ERROR,
         name: e.name,
         msg: e.message,
     });
