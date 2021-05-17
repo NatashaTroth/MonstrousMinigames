@@ -34,6 +34,13 @@ class ConnectionHandler {
         this.handleScreens();
         this.handleGameEvents();
     }
+
+    public shutdown(): void {
+        this.controllerNamespace.removeAllListeners();
+        this.screenNameSpace.removeAllListeners();
+        this.io.removeAllListeners();
+        this.gameEventEmitter.removeAllListeners();
+    }
     private handleControllers() {
         const rs = this.rs;
         const controllerNamespace = this.controllerNamespace;
