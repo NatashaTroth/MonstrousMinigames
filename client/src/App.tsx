@@ -4,6 +4,7 @@ import { Route, Router, Switch } from 'react-router-dom';
 
 import { AppContainer } from './App.sc';
 import Credits from './components/common/Credits';
+import ChooseCharacter from './components/Controller/ChooseCharacter';
 import { ConnectScreen as ControllerConnectScreen } from './components/Controller/ConnectScreen';
 import { FinishedScreen as ControllerFinishedScreen } from './components/Controller/FinishedScreen';
 import { Lobby as ControllerLobbyScreen } from './components/Controller/Lobby';
@@ -39,6 +40,11 @@ const App: React.FunctionComponent = () => {
                                 <ControllerSocketContextProvider>
                                     <Switch>
                                         <Route path="/credits" component={Credits} exact />
+                                        <Route
+                                            path="/controller/:id/choose-character"
+                                            component={ChooseCharacter}
+                                            exact
+                                        />
                                         <Route path="/controller/:id/lobby" component={ControllerLobbyScreen} exact />
                                         <Route path="/controller/:id/game1" component={ShakeInstruction} exact />
                                         <Route

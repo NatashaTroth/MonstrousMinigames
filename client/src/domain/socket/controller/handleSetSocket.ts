@@ -32,6 +32,7 @@ export interface HandleSetSocketDependencies {
     resetGame: () => void;
     resetPlayer: () => void;
     setGameStarted: (val: boolean) => void;
+    setName: (val: string) => void;
     history: History;
 }
 
@@ -52,6 +53,7 @@ export function handleSetSocket(
         resetGame,
         resetPlayer,
         setGameStarted,
+        setName,
         history,
     } = dependencies;
 
@@ -74,6 +76,7 @@ export function handleSetSocket(
             dependencies: {
                 setPlayerAdmin,
                 setPlayerNumber,
+                setName,
             },
         });
     });
@@ -138,6 +141,6 @@ export function handleSetSocket(
     });
 
     if (socket) {
-        history.push(`/controller/${roomId}/lobby`);
+        history.push(`/controller/${roomId}/choose-character`);
     }
 }

@@ -53,13 +53,6 @@ export const FormContainer = styled.form`
     align-items: center;
 `;
 
-export const Label = styled.div`
-    color: ${primary};
-    font-size: 24px;
-    font-weight: 700;
-    font-style: italic;
-`;
-
 export const CreditsButtonContainer = styled.div`
     margin-bottom: 30px;
     color: ${primary};

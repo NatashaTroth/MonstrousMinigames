@@ -73,6 +73,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         setPermissionGranted,
         playerFinished,
         resetPlayer,
+        setName,
     } = React.useContext(PlayerContext);
 
     const { setGameStarted, setRoomId, setHasPaused, resetGame } = React.useContext(GameContext);
@@ -85,6 +86,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         setPlayerRank,
         setGameStarted,
         setPlayerAdmin: setIsPlayerAdmin,
+        setName,
     };
 
     const content = {

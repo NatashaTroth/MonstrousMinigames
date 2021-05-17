@@ -7,12 +7,12 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { sendMovement } from '../../domain/gameState/controller/sendMovement';
 import Button from '../common/Button';
+import { Label } from '../common/Label.sc';
 import {
     ConnectInstructions,
     ConnectScreenContainer,
     CreditsButtonContainer,
     FormContainer,
-    Label,
     StyledInput,
 } from './ConnectScreen.sc';
 
@@ -34,6 +34,10 @@ export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history 
     const { controllerSocket, handleSocketConnection } = React.useContext(ControllerSocketContext);
     const { playerFinished, permission } = React.useContext(PlayerContext);
     const { hasPaused } = React.useContext(GameContext);
+
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.userSelect = 'none';
 
     React.useEffect(() => {
         if (roomId) {

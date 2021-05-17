@@ -18,8 +18,7 @@ describe('PlayerContextProvider', () => {
     });
 
     it('when user is admin, an instruction is rendered', () => {
-        const givenText =
-            'When all other players are ready, you have to press the "Start Game" button to start the game.';
+        const givenText = 'Press the "Start Game" button to start the game.';
         const { container } = render(
             <PlayerContext.Provider value={{ ...defaultValue, isPlayerAdmin: true, playerNumber: 1 }}>
                 <Lobby />
@@ -29,7 +28,7 @@ describe('PlayerContextProvider', () => {
     });
 
     it('when user is not admin, some instructions are rendered', () => {
-        const givenText = 'Wait until Player #1 starts the Game';
+        const givenText = 'Wait for Player #1 to start your game!';
         const { container } = render(
             <PlayerContext.Provider value={{ ...defaultValue, isPlayerAdmin: false, playerNumber: 1 }}>
                 <Lobby />
@@ -39,7 +38,7 @@ describe('PlayerContextProvider', () => {
     });
 
     it('when data is loading, no instructions are rendered', () => {
-        const givenText = 'Wait until Player #1 starts the Game';
+        const givenText = 'Wait for Player #1 to start your game!';
         const { container } = render(
             <PlayerContext.Provider value={{ ...defaultValue }}>
                 <Lobby />

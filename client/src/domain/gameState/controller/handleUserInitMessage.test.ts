@@ -15,12 +15,14 @@ describe('handleUserInitMessage', () => {
     it('when message type is user init, handed setPlayerAdmin should be called', () => {
         const setPlayerAdmin = jest.fn();
         const setPlayerNumber = jest.fn();
+        const setName = jest.fn();
 
         handleUserInitMessage({
             data: mockData,
             dependencies: {
                 setPlayerAdmin,
                 setPlayerNumber,
+                setName,
             },
         });
 
@@ -30,12 +32,14 @@ describe('handleUserInitMessage', () => {
     it('when message type is user init, handed setPlayerNumber should be called', () => {
         const setPlayerAdmin = jest.fn();
         const setPlayerNumber = jest.fn();
+        const setName = jest.fn();
 
         handleUserInitMessage({
             data: mockData,
             dependencies: {
                 setPlayerAdmin,
                 setPlayerNumber,
+                setName,
             },
         });
 

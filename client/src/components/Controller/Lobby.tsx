@@ -8,11 +8,21 @@ import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { localDevelopment } from '../../utils/constants';
 import Button from '../common/Button';
 import FullScreenContainer from '../common/FullScreenContainer';
-import { InstructionContainer, LobbyScreenContainer, StyledTypography } from './Lobby.sc';
+import { Label } from '../common/Label.sc';
+import {
+    Character,
+    CharacterContainer,
+    Content,
+    LeftContainer,
+    LobbyContainer,
+    PlayerContent,
+    PlayerName,
+    RightContainer,
+} from './Lobby.sc';
 
 export const Lobby: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);
-    const { isPlayerAdmin, permission, playerNumber } = React.useContext(PlayerContext);
+    const { isPlayerAdmin, permission, playerNumber, name, character } = React.useContext(PlayerContext);
     const { roomId } = React.useContext(GameContext);
     const history = useHistory();
 
@@ -27,35 +37,46 @@ export const Lobby: React.FunctionComponent = () => {
 
     return (
         <FullScreenContainer>
-            <LobbyScreenContainer>
-                <InstructionContainer>
-                    {playerNumber ? (
-                        <>
-                            {/* <Instruction>{`You are Player #${playerNumber}`}</Instruction> */}
-                            <StyledTypography>
-                                {isPlayerAdmin
-                                    ? 'When all other players are ready, you have to press the "Start Game" button to start the game.'
-                                    : 'Wait until Player #1 starts the Game'}
-                            </StyledTypography>
-                            {isPlayerAdmin && (
-                                <div>
-                                    <Button
-                                        onClick={() => {
-                                            if (permission || localDevelopment) {
-                                                startGame();
-                                            }
-                                        }}
-                                    >
-                                        Start Game
-                                    </Button>
-                                </div>
-                            )}
-                        </>
-                    ) : (
-                        <CircularProgress />
-                    )}
-                </InstructionContainer>
-            </LobbyScreenContainer>
+            <LobbyContainer>
+                {playerNumber ? (
+                    <Content>
+                        <Label>{`You are Player #${playerNumber}`}</Label>
+                        <Label>
+                            {isPlayerAdmin
+                                ? 'Press the "Start Game" button to start the game.'
+                                : 'Wait for Player #1 to start your game!'}
+                        </Label>
+                        <PlayerContent>
+                            <LeftContainer>
+                                <CharacterContainer>
+                                    <Character src={character?.src} />
+                                </CharacterContainer>
+                            </LeftContainer>
+                            <RightContainer>
+                                <PlayerName>{name}</PlayerName>
+                                <Button>I am ready!</Button>
+                            </RightContainer>
+                        </PlayerContent>
+
+                        {/* TODO remove start game from controller */}
+                        {isPlayerAdmin && (
+                            <div>
+                                <Button
+                                    onClick={() => {
+                                        if (permission || localDevelopment) {
+                                            startGame();
+                                        }
+                                    }}
+                                >
+                                    Start Game
+                                </Button>
+                            </div>
+                        )}
+                    </Content>
+                ) : (
+                    <CircularProgress />
+                )}
+            </LobbyContainer>
         </FullScreenContainer>
     );
 };
