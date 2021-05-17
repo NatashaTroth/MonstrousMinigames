@@ -8,7 +8,7 @@ import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { localDevelopment } from '../../utils/constants';
 import Button from '../common/Button';
 import FullScreenContainer from '../common/FullScreenContainer';
-import { Instruction, InstructionContainer, LobbyScreenContainer, StyledTypography } from './Lobby.sc';
+import { InstructionContainer, LobbyScreenContainer, StyledTypography } from './Lobby.sc';
 
 export const Lobby: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);
@@ -31,7 +31,7 @@ export const Lobby: React.FunctionComponent = () => {
                 <InstructionContainer>
                     {playerNumber ? (
                         <>
-                            <Instruction>{`You are Player #${playerNumber}`}</Instruction>
+                            {/* <Instruction>{`You are Player #${playerNumber}`}</Instruction> */}
                             <StyledTypography>
                                 {isPlayerAdmin
                                     ? 'When all other players are ready, you have to press the "Start Game" button to start the game.'

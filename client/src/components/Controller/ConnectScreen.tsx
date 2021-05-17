@@ -1,28 +1,45 @@
+import { Typography } from '@material-ui/core';
+import { History } from 'history';
 import * as React from 'react';
-import { useParams } from 'react-router';
 
-import { IRouteParams } from '../../App';
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { sendMovement } from '../../domain/gameState/controller/sendMovement';
 import Button from '../common/Button';
-import { ConnectScreenContainer, FormContainer, ImpressumLink, StyledInput, StyledLabel } from './ConnectScreen.sc';
+import {
+    ConnectInstructions,
+    ConnectScreenContainer,
+    CreditsButtonContainer,
+    FormContainer,
+    Label,
+    StyledInput,
+} from './ConnectScreen.sc';
 
 interface IFormState {
     name: string;
     roomId: string;
 }
 
-export const ConnectScreen: React.FunctionComponent = () => {
-    const { id }: IRouteParams = useParams();
+interface ConnectScreen {
+    history: History;
+}
+export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history }) => {
+    const { location } = history;
+    const roomId = location.pathname.slice(1);
     const [formState, setFormState] = React.useState<IFormState>({
         name: localStorage.getItem('name') || '',
-        roomId: id || '',
+        roomId: roomId || '',
     });
     const { controllerSocket, handleSocketConnection } = React.useContext(ControllerSocketContext);
     const { playerFinished, permission } = React.useContext(PlayerContext);
     const { hasPaused } = React.useContext(GameContext);
+
+    React.useEffect(() => {
+        if (roomId) {
+            sessionStorage.setItem('roomId', roomId);
+        }
+    }, [roomId]);
 
     if (permission) {
         window.addEventListener(
@@ -43,40 +60,37 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
     return (
         <ConnectScreenContainer>
-            <FormContainer
-                onSubmit={e => {
-                    e.preventDefault();
-                    handleSocketConnection(formState.roomId.toUpperCase(), formState?.name);
-                }}
-            >
-                <StyledLabel>
-                    Name
-                    <StyledInput
-                        type="text"
-                        name="name"
-                        value={formState?.name}
-                        onChange={e => setFormState({ ...formState, name: e.target.value })}
-                        placeholder="Insert your name"
-                        required
-                        maxLength={10}
-                    />
-                </StyledLabel>
-                <StyledLabel>
-                    Room Code
-                    <StyledInput
-                        type="text"
-                        name="roomId"
-                        value={formState?.roomId}
-                        onChange={e => setFormState({ ...formState, roomId: e.target.value })}
-                        placeholder="Insert a room code"
-                        required
-                    />
-                </StyledLabel>
-                <Button type="submit" disabled={!formState?.name || !formState?.roomId}>
-                    Connect
-                </Button>
-            </FormContainer>
-            <ImpressumLink to="/impressum">Impressum</ImpressumLink>
+            {roomId ? (
+                <>
+                    <FormContainer
+                        onSubmit={e => {
+                            e.preventDefault();
+                            handleSocketConnection(formState.roomId.toUpperCase(), formState?.name);
+                        }}
+                    >
+                        <Label>Enter your name:</Label>
+                        <StyledInput
+                            type="text"
+                            name="name"
+                            value={formState?.name}
+                            onChange={e => setFormState({ ...formState, name: e.target.value })}
+                            placeholder="Insert your name"
+                            required
+                            maxLength={10}
+                        />
+                        <Button type="submit" disabled={!formState?.name}>
+                            Enter
+                        </Button>
+                    </FormContainer>
+                    <CreditsButtonContainer>
+                        <Typography onClick={() => history.push('/credits')}>Credits</Typography>
+                    </CreditsButtonContainer>
+                </>
+            ) : (
+                <ConnectInstructions>
+                    <Label>Please connect device via QR Code</Label>
+                </ConnectInstructions>
+            )}
         </ConnectScreenContainer>
     );
 };

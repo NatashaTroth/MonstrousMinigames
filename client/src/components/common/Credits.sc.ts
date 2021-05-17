@@ -1,31 +1,46 @@
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { lightBlue, orange } from '../../utils/colors';
+import forest from '../../images/forest.svg';
+import { secondary, secondaryShadow } from '../../utils/colors';
+
+const boxShadowDepth = 7;
 
 export const CreditsContainer = styled.div`
-    background-color: ${lightBlue};
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom;
+    background-image: url(${forest});
     width: 100%;
     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
 export const Headline = styled.div`
     font-weight: 700;
     font-size: 25px;
-    padding-top: 20px;
 `;
-export const HomeLink = styled(Link)`
-    text-decoration: none;
-    border: 2px solid ${orange};
-    background: white;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
-    color: ${orange};
-    font-weight: 700;
-    font-size: 12px;
+
+export const Content = styled.div`
+    display: flex;
+    width: 100%;
+    height: 100%;
     flex-direction: column;
-    text-align: center;
-    box-shadow: 4px 4px 0 #888;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    padding: 5px;
+`;
+
+export const ContentContainer = styled.div`
+    width: 80%;
+    height: 80%;
+    display: flex;
+    background-color: ${secondary};
+    padding: 20px;
+    border-radius: 40px;
+    flex-direction: column;
+    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${secondaryShadow};
+`;
+
+export const BackButtonContainer = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
 `;

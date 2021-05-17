@@ -65,7 +65,13 @@ const App: React.FunctionComponent = () => {
 
                                         <Route
                                             path="/:id?"
-                                            component={isMobileOnly ? ControllerConnectScreen : ScreenConnectScreen}
+                                            component={() =>
+                                                isMobileOnly ? (
+                                                    <ControllerConnectScreen history={history} />
+                                                ) : (
+                                                    <ScreenConnectScreen />
+                                                )
+                                            }
                                         />
                                     </Switch>
                                 </ControllerSocketContextProvider>
