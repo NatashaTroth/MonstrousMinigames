@@ -304,6 +304,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         const currentRank = this.currentRank;
         this.currentRank++;
 
+        // if (!playerIsActive) return this.currentRank;
+
         // if two players finished at the same time
         if (Object.prototype.hasOwnProperty.call(this.ranksDictionary, timeFinishedInMsStr)) {
             return this.ranksDictionary[timeFinishedInMsStr];
@@ -338,10 +340,13 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             const playerFinishedTime = playerState.finishedTimeMs > 0 ? playerState.finishedTimeMs : Date.now();
             // console.log(playerFinishedTime)
             // console.log(this.gameStartedTime)
+            // let rank = this.currentRank
+            // let rank = playerState.rank || this.getRank(playerFinishedTime)
+
             playerRanks.push({
                 id: playerState.id,
                 name: playerState.name,
-                rank: playerState.rank || this.getRank(playerFinishedTime),
+                rank: playerState.finished ? playerState.rank : this.currentRank,
                 finished: playerState.finished,
                 totalTimeInMs: playerFinishedTime - this.gameStartedTime,
                 positionX: playerState.positionX,

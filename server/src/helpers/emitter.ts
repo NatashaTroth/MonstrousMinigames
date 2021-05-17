@@ -77,10 +77,12 @@ function sendPlayerFinished(nsp: Namespace, user: User, data: GameEvents.PlayerH
     });
 }
 
-function sendConnectedUsers(nsp: Namespace, room: Room): void {
-    nsp.to(room.id).emit('message', {
-        type: MessageTypes.CONNECTED_USERS,
-        users: room.users,
+function sendConnectedUsers(nsps: Array<Namespace>, room: Room): void {
+    nsps.forEach(function (namespace: Namespace) {
+        namespace.to(room.id).emit('message', {
+            type: MessageTypes.CONNECTED_USERS,
+            users: room.users,
+        });
     });
 }
 function sendMessage(type: MessageTypes, nsps: Array<Namespace>, roomId: string): void {

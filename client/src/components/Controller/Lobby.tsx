@@ -1,3 +1,4 @@
+import { CircularProgress } from '@material-ui/core';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -16,7 +17,7 @@ export const Lobby: React.FunctionComponent = () => {
     const history = useHistory();
 
     function startGame() {
-        controllerSocket?.emit('message', {
+        controllerSocket?.emit({
             type: 'game1/start',
             roomId: sessionStorage.getItem('roomId'),
             userId: sessionStorage.getItem('userId'),
@@ -28,23 +29,29 @@ export const Lobby: React.FunctionComponent = () => {
         <FullScreenContainer>
             <LobbyScreenContainer>
                 <InstructionContainer>
-                    <Instruction>{`You are Player #${playerNumber}`}</Instruction>
-                    <StyledTypography>
-                        {isPlayerAdmin
-                            ? 'When all other players are ready, you have to press the "Start Game" button to start the game.'
-                            : 'Wait until Player #1 starts the Game'}
-                    </StyledTypography>
-                    {isPlayerAdmin && (
-                        <div>
-                            <Button
-                                onClick={() => {
-                                    if (permission || localDevelopment) {
-                                        startGame();
-                                    }
-                                }}
-                                text="Start Game"
-                            />
-                        </div>
+                    {playerNumber ? (
+                        <>
+                            <Instruction>{`You are Player #${playerNumber}`}</Instruction>
+                            <StyledTypography>
+                                {isPlayerAdmin
+                                    ? 'When all other players are ready, you have to press the "Start Game" button to start the game.'
+                                    : 'Wait until Player #1 starts the Game'}
+                            </StyledTypography>
+                            {isPlayerAdmin && (
+                                <div>
+                                    <Button
+                                        onClick={() => {
+                                            if (permission || localDevelopment) {
+                                                startGame();
+                                            }
+                                        }}
+                                        text="Start Game"
+                                    />
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <CircularProgress />
                     )}
                 </InstructionContainer>
             </LobbyScreenContainer>

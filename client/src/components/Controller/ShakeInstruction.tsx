@@ -3,8 +3,8 @@ import * as React from 'react';
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
+import { sendMovement } from '../../domain/gameState/controller/sendMovement';
 import { localDevelopment } from '../../utils/constants';
-import { sendMovement } from '../../utils/sendMovement';
 import FullScreenContainer from '../common/FullScreenContainer';
 import {
     Container,
@@ -21,7 +21,7 @@ const ShakeInstruction: React.FunctionComponent = () => {
 
     if (localDevelopment) {
         if (!playerFinished) {
-            setInterval(() => sendMovement(controllerSocket, hasPaused), 500);
+            setInterval(() => sendMovement(controllerSocket, hasPaused), 100);
         }
     }
 

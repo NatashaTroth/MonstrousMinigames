@@ -16,7 +16,8 @@ describe('Game logic tests', () => {
         jest.useFakeTimers();
     });
 
-    afterEach(() => {
+    afterEach(async () => {
+        jest.runAllTimers();
         jest.clearAllMocks();
     });
 

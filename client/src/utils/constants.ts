@@ -1,10 +1,10 @@
 export enum Obstacles {
-    treeStump = 'TREE_STUMP',
-    spider = 'SPIDER',
+    treeStump = 'TreeStump',
+    spider = 'Spider',
 }
 
 export enum ObstacleRoutes {
-    treeStump = 'tree_stump',
+    treeStump = 'treestump',
     spider = 'spider',
 }
 
@@ -24,14 +24,24 @@ export enum MessageTypes {
     userInit = 'userInit',
     connectedUsers = 'connectedUsers',
     backToLobby = 'backToLobby',
+
     gameHasFinished = 'gameHasFinished',
     gameHasReset = 'gameHasReset',
     gameHasStopped = 'gameHasStopped',
     gameHasTimedOut = 'gameHasTimedOut',
     gameHasPaused = 'gameHasPaused',
     gameHasResumed = 'gameHasResumed',
+
     pauseResume = 'pauseResume',
     stopGame = 'stopGame',
+
+    error = 'error',
+
+    runForward = 'game1/runForward',
+    obstacle = 'game1/obstacle',
+    playerFinished = 'game1/playerFinished',
+    started = 'game1/hasStarted',
+    gameState = 'game1/gameState',
 }
 
 export const localDevelopment = false;

@@ -27,6 +27,7 @@ export const StyledButton = styled.button`
     position: relative;
     transition: box-shadow 0.15s ease;
     border-radius: 4px;
+    min-width: 180px;
 
     &:hover {
         box-shadow: calc(${boxShadowDepth} / 2 * 1px) calc(${boxShadowDepth} / 2 * 1px) 0 #888;

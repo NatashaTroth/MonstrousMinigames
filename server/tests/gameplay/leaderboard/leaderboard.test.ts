@@ -198,6 +198,31 @@ describe('Add Game to Game History', () => {
                 },
             });
         });
+
+        it('does not add points to players that did not finish the game', async () => {
+            const playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
+            playerRanks[0].finished = false; // player 1
+            playerRanks[2].finished = false; // player 3
+            leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks);
+            expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(1);
+
+            // leaderboard.updateUserPointsAfterGame(playerRanks);
+            // expect(leaderboard.userPoints[user.id].points).toBe(points);
+            expect(leaderboard.userPoints).toMatchObject({
+                '1': {
+                    points: 0,
+                },
+                '2': {
+                    points: 3,
+                },
+                '3': {
+                    points: 0,
+                },
+                '4': {
+                    points: 1,
+                },
+            });
+        });
         it('Updates user points object when new points are added with duplicate ranks', async () => {
             const playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
             leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks);

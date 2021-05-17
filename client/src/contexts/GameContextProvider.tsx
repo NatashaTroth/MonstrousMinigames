@@ -1,19 +1,12 @@
 import * as React from 'react';
 
 import { resetObstacle } from '../components/Controller/Obstacles/TreeTrunk';
-import { Obstacles } from '../utils/constants';
+import { handleSetGameFinished } from '../domain/gameState/controller/handleSetGameFinished';
+import { handleSetGameStarted } from '../domain/gameState/controller/handleSetGameStarted';
 import { IUser } from './ControllerSocketContextProvider';
-import { IPlayerRank } from './ScreenSocketContextProvider';
+import { PlayerRank } from './ScreenSocketContextProvider';
 
 export const defaultValue = {
-    trackLength: undefined,
-    setTrackLength: () => {
-        // do nothing
-    },
-    players: undefined,
-    setPlayers: () => {
-        // do nothing
-    },
     finished: false,
     setFinished: () => {
         // do nothing
@@ -55,10 +48,6 @@ export const defaultValue = {
     },
 };
 interface IGameContext {
-    trackLength?: number;
-    setTrackLength: (val: number) => void;
-    players?: IPlayerState[];
-    setPlayers: (val: IPlayerState[]) => void;
     finished: boolean;
     setFinished: (val: boolean) => void;
     gameStarted: boolean;
@@ -72,36 +61,18 @@ interface IGameContext {
     setShowInstructions: (val: boolean) => void;
     countdownTime: number;
     setCountdownTime: (val: number) => void;
-    playerRanks?: IPlayerRank[];
-    setPlayerRanks: (val: IPlayerRank[]) => void;
+    playerRanks?: PlayerRank[];
+    setPlayerRanks: (val: PlayerRank[]) => void;
     hasTimedOut: boolean;
     setHasTimedOut: (val: boolean) => void;
     hasPaused: boolean;
     setHasPaused: (val: boolean) => void;
 }
 
-interface IObstacle {
-    positionX: number;
-    type: Obstacles;
-}
-
-export interface IPlayerState {
-    atObstacle: boolean;
-    finished: boolean;
-    id: string;
-    name: string;
-    obstacles: IObstacle[];
-    positionX: number;
-    rank: number;
-    number: number;
-}
-
 export const GameContext = React.createContext<IGameContext>(defaultValue);
 
 const GameContextProvider: React.FunctionComponent = ({ children }) => {
-    const [trackLength, setTrackLength] = React.useState<undefined | number>();
-    const [players, setPlayers] = React.useState<undefined | IPlayerState[]>();
-    const [playerRanks, setPlayerRanks] = React.useState<undefined | IPlayerRank[]>();
+    const [playerRanks, setPlayerRanks] = React.useState<undefined | PlayerRank[]>();
     const [finished, setFinished] = React.useState<boolean>(false);
     const [gameStarted, setGameStarted] = React.useState<boolean>(false);
     const [roomId, setRoomId] = React.useState<undefined | string>();
@@ -112,35 +83,17 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [hasPaused, setHasPaused] = React.useState<boolean>(false);
 
     const content = {
-        trackLength,
-        setTrackLength,
-        players,
-        setPlayers,
         finished,
-        setFinished: (val: boolean) => {
-            document.body.style.overflow = 'visible';
-            document.body.style.position = 'static';
-            document.body.style.userSelect = 'auto';
-
-            setFinished(val);
-        },
+        setFinished: (val: boolean) => handleSetGameFinished(val, { setFinished }),
         gameStarted,
-        setGameStarted: (val: boolean) => {
-            document.body.style.overflow = 'hidden';
-            document.body.style.position = 'fixed';
-            document.body.style.userSelect = 'none';
-
-            setGameStarted(val);
-        },
+        setGameStarted: (val: boolean) => handleSetGameStarted(val, { setGameStarted }),
         roomId,
         setRoomId,
         connectedUsers,
         setConnectedUsers,
         resetGame: () => {
-            setTrackLength(undefined);
             setFinished(false);
             setGameStarted(false);
-            setPlayers(undefined);
             resetObstacle();
         },
         showInstructions,
