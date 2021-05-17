@@ -3,20 +3,21 @@ import * as React from 'react';
 import { GameContext } from '../../contexts/GameContextProvider';
 import history from '../../domain/history/history';
 import game1Img from '../../images/instructions1.png';
+import oliverLobby from '../../images/oliverLobby.svg';
 import Button from '../common/Button';
 import Logo from '../common/Logo';
 import {
     BackButtonContainer,
-    ContentContainer,
+    Content,
     GamePreviewContainer,
     GameSelectionContainer,
     LeftContainer,
+    OliverImage,
     PreviewImage,
     RightContainer,
     SelectGameButtonContainer,
 } from './ChooseGame.sc';
 import {
-    Content,
     HeadContainer,
     HeadContainerLeft,
     HeadContainerRight,
@@ -53,9 +54,10 @@ const ChooseGame: React.FunctionComponent = () => {
                         <Logo />
                     </HeadContainerRight>
                 </HeadContainer>
-                <ContentContainer>
-                    <GameSelectionContainer>
-                        <LeftContainer>
+
+                <GameSelectionContainer>
+                    <LeftContainer>
+                        <div>
                             {games.map((game, index) => (
                                 <Button
                                     key={game.name}
@@ -66,21 +68,25 @@ const ChooseGame: React.FunctionComponent = () => {
                                     {game.name}
                                 </Button>
                             ))}
-                        </LeftContainer>
-                        <RightContainer>
-                            <GamePreviewContainer>
-                                <PreviewImage src={games[selectedGame].image} />
-                            </GamePreviewContainer>
-                            <SelectGameButtonContainer>
-                                {/* TODO add start game*/}
-                                <Button variant="secondary" fullwidth>{`Start ${games[selectedGame].name}`}</Button>
-                            </SelectGameButtonContainer>
-                            <BackButtonContainer>
-                                <Button onClick={() => history.push(`/screen/${roomId}/lobby`)}>Back</Button>
-                            </BackButtonContainer>
-                        </RightContainer>
-                    </GameSelectionContainer>
-                </ContentContainer>
+                        </div>
+                        <OliverImage src={oliverLobby} />
+                    </LeftContainer>
+                    <RightContainer>
+                        <GamePreviewContainer>
+                            <PreviewImage src={games[selectedGame].image} />
+                        </GamePreviewContainer>
+                        <SelectGameButtonContainer>
+                            <Button
+                                variant="secondary"
+                                onClick={() => history.push(`/screen/${roomId}/game-intro`)}
+                                fullwidth
+                            >{`Start ${games[selectedGame].name}`}</Button>
+                        </SelectGameButtonContainer>
+                        <BackButtonContainer>
+                            <Button onClick={() => history.push(`/screen/${roomId}/lobby`)}>Back</Button>
+                        </BackButtonContainer>
+                    </RightContainer>
+                </GameSelectionContainer>
             </Content>
         </LobbyContainer>
     );

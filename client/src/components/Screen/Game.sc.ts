@@ -2,7 +2,6 @@ import { Dialog } from '@material-ui/core';
 import { Pause, PlayArrow, Stop } from '@material-ui/icons';
 import styled, { keyframes } from 'styled-components';
 
-import forest from '../../images/forest.png';
 import { orange } from '../../utils/colors';
 
 const fadeOut = keyframes`
@@ -21,11 +20,7 @@ export const Container = styled.div`
     width: 100%;
     position: absolute;
     height: 100%;
-    background-size: cover;
-    background-repeat-y: repeat;
     top: 0;
-    background-position: bottom;
-    background-image: url(${forest});
 `;
 
 export const ContainerTimer = styled.div`

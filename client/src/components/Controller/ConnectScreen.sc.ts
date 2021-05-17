@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import camp from '../../images/camp.svg';
+import forest from '../../images/forest.svg';
 import { orange } from '../../utils/colors';
 
 const borderWidth = 5;
@@ -16,7 +16,7 @@ export const ConnectScreenContainer = styled.div`
     background-repeat: no-repeat;
     background-size: cover;
     background-position: bottom;
-    background-image: url(${camp});
+    background-image: url(${forest});
     display: flex;
     flex-direction: column;
     justify-content: space-between;

@@ -4,11 +4,6 @@ import { secondary, secondaryShadow } from '../../utils/colors';
 
 const boxShadowDepth = 7;
 
-export const ContentContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-`;
-
 export const CloseButtonContainer = styled.div`
     width: 100%;
     display: flex;
@@ -20,10 +15,19 @@ export const DialogContent = styled.div`
 `;
 
 export const GameSelectionContainer = styled.div`
-    margin-bottom: 30px;
     display: flex;
     width: 100%;
     flex-direction: row;
+    height: 100%;
+`;
+
+export const Content = styled.div`
+    width: 100%;
+    align-content: center;
+    display: flex;
+    margin: 60px;
+    margin-bottom: 0px;
+    flex-direction: column;
 `;
 
 export const LeftContainer = styled.div`
@@ -31,6 +35,7 @@ export const LeftContainer = styled.div`
     flex-direction: column;
     width: 20%;
     margin-right: 20px;
+    justify-content: space-between;
 
     div:not(:last-child) {
         margin-bottom: 10px;
@@ -55,7 +60,6 @@ export const GamePreviewContainer = styled.div`
 
 export const SelectGameButtonContainer = styled.div`
     margin-top: 20px;
-    margin-bottom: 30px;
 `;
 
 export const PreviewImage = styled.img`
@@ -67,4 +71,10 @@ export const BackButtonContainer = styled.div`
     display: flex;
     width: 100%;
     justify-content: flex-end;
+    margin: 30px 0;
+`;
+
+export const OliverImage = styled.img`
+    display: flex;
+    width: 100%;
 `;

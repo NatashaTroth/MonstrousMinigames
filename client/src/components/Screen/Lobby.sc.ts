@@ -42,7 +42,6 @@ export const ContentContainer = styled.div`
 
 export const Content = styled.div`
     width: 100%;
-    max-width: 1560px;
     align-content: center;
     display: flex;
     margin: 60px;
