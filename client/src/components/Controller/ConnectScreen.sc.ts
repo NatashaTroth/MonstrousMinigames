@@ -26,13 +26,12 @@ export const StyledInput = styled.input`
     font-size: calc(${fontSize} * 1rem);
     margin-bottom: 30px;
     margin-top: 30px;
-    width: 60%;
+    width: 40%;
 
     height: 50px;
-    padding: 5px 10px;
+    padding: 5px 20px;
     border-radius: 10px;
     font-size: 20px;
-    text-align: center;
 
     &::placeholder {
         color: grey;
