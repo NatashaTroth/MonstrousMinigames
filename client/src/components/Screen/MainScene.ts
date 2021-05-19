@@ -3,10 +3,11 @@ import Phaser from 'phaser';
 import history from '../../domain/history/history';
 import { createBackground } from '../../domain/phaser/createBackground';
 import { GameAudio } from '../../domain/phaser/GameAudio';
-import { Player, PlayersState } from '../../domain/phaser/gameInterfaces';
+import { Player } from '../../domain/phaser/gameInterfaces';
+import { addAttentionIcon, destroyAttentionIcon } from '../../domain/phaser/handleAttentionIcon';
 import { handleStartGame } from '../../domain/phaser/handleStartGame';
-import { moveForward } from '../../domain/phaser/moveForward';
 import { PauseButton } from '../../domain/phaser/PauseButton';
+import { updateGameState } from '../../domain/phaser/updateGameState';
 import { MessageSocket } from '../../domain/socket/MessageSocket';
 import ScreenSocket from '../../domain/socket/screenSocket';
 import { Socket } from '../../domain/socket/Socket';
@@ -81,6 +82,7 @@ class MainScene extends Phaser.Scene {
     }
 
     handleSocketConnection() {
+        //TODO
         if (this.roomId == '' || this.roomId == undefined) {
             this.handleError('No room code');
         }
@@ -102,7 +104,7 @@ class MainScene extends Phaser.Scene {
             if (!this.gameStarted) {
                 this.gameStarted = true;
                 handleStartGame(data.data, this);
-            } else this.updateGameState(data.data.playersState);
+            } else updateGameState(data.data.playersState, this);
         });
 
         const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
@@ -159,18 +161,6 @@ class MainScene extends Phaser.Scene {
     //     this.players[index].phaserObject.destroy();
     // }
 
-    updateGameState(playerData: PlayersState[]) {
-        for (let i = 0; i < this.players.length; i++) {
-            if (this.players[i].phaserObject !== undefined && playerData !== undefined) {
-                moveForward(this.players[i].phaserObject, playerData[i].positionX, i, this);
-
-                //TODO
-                this.checkAtObstacle(i, playerData[i].atObstacle, playerData[i].positionX);
-                // this.checkFinished(i, playerData[i].finished);
-            }
-        }
-    }
-
     // checkFinished(playerIndex: number, isFinished: boolean) {
     //     if (isFinished) {
     //         // players[playerIndex].anims.stop();
@@ -184,32 +174,32 @@ class MainScene extends Phaser.Scene {
             this.stopRunningAnimation(this.players[playerIndex].phaserObject, playerIndex);
             this.players[playerIndex].playerAtObstacle = true;
 
-            this.addAttentionIcon(playerIndex);
+            addAttentionIcon(playerIndex, this.players, this.physics);
         } else if (!isAtObstacle && this.players[playerIndex].playerAtObstacle && !this.paused) {
             this.players[playerIndex].playerAtObstacle = false;
             this.startRunningAnimation(this.players[playerIndex].phaserObject, playerIndex);
             this.destroyObstacle(playerIndex, playerPositionX);
-            this.destroyAttentionIcon(playerIndex);
+            destroyAttentionIcon(playerIndex, this.players);
         }
     }
 
-    addAttentionIcon(playerIndex: number) {
-        if (!this.players[playerIndex].playerAttention) {
-            this.players[playerIndex].playerAttention = this.physics.add
-                .sprite(
-                    this.players[playerIndex].phaserObject.x + 75,
-                    this.players[playerIndex].phaserObject.y - 150,
-                    'attention'
-                )
-                .setDepth(100)
-                .setScale(0.03, 0.03);
-        }
-    }
+    // addAttentionIcon(playerIndex: number) {
+    //     if (!this.players[playerIndex].playerAttention) {
+    //         this.players[playerIndex].playerAttention = this.physics.add
+    //             .sprite(
+    //                 this.players[playerIndex].phaserObject.x + 75,
+    //                 this.players[playerIndex].phaserObject.y - 150,
+    //                 'attention'
+    //             )
+    //             .setDepth(100)
+    //             .setScale(0.03, 0.03);
+    //     }
+    // }
 
-    destroyAttentionIcon(playerIndex: number) {
-        this.players[playerIndex].playerAttention?.destroy();
-        this.players[playerIndex].playerAttention = null;
-    }
+    // destroyAttentionIcon(playerIndex: number) {
+    //     this.players[playerIndex].playerAttention?.destroy();
+    //     this.players[playerIndex].playerAttention = null;
+    // }
 
     destroyObstacle(playerIndex: number, playerPositionX: number) {
         if (this.players[playerIndex].playerObstacles.length > 0) {
