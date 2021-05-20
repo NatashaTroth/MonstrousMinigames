@@ -100,8 +100,7 @@ class MainScene extends Phaser.Scene {
             if (!this.gameStarted) {
                 this.gameStarted = true;
                 this.handleStartGame(data.data);
-            }
-            // else updateGameState(data.data.playersState, this);
+            } else this.updateGameState(data.data);
         });
         // const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
         // gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
@@ -136,6 +135,14 @@ class MainScene extends Phaser.Scene {
             // this.players[i].playerText?.setBackgroundColor('#000000');
             // this.setGoal(i);
         }
+    }
+
+    updateGameState(gameStateData: GameData) {
+        this.players.forEach((player, i) => {
+            player.moveForward(gameStateData.playersState[i].positionX, this.trackLength);
+            player.checkAtObstacle(gameStateData.playersState[i].atObstacle);
+            player.checkFinished(gameStateData.playersState[i].finished);
+        });
     }
 
     // createPlayer(index: number, gameStateData: GameData, PhaserInstance: MainScene) {
@@ -235,20 +242,6 @@ class MainScene extends Phaser.Scene {
     //     }
     // }
 
-    checkAtObstacle(playerIndex: number, isAtObstacle: boolean, playerPositionX: number) {
-        //TODO
-        // if (isAtObstacle && !this.players[playerIndex].playerAtObstacle) {
-        //     this.stopRunningAnimation(this.players[playerIndex].renderer.player, playerIndex);
-        //     this.players[playerIndex].playerAtObstacle = true;
-        //     addAttentionIcon(playerIndex, this.players, this.physics);
-        // } else if (!isAtObstacle && this.players[playerIndex].playerAtObstacle && !this.paused) {
-        //     this.players[playerIndex].playerAtObstacle = false;
-        //     this.startRunningAnimation(this.players[playerIndex].phaserObject, playerIndex);
-        //     this.destroyObstacle(playerIndex, playerPositionX);
-        //     destroyAttentionIcon(playerIndex, this.players);
-        // }
-    }
-
     // addAttentionIcon(playerIndex: number) {
     //     if (!this.players[playerIndex].playerAttention) {
     //         this.players[playerIndex].playerAttention = this.physics.add
@@ -274,14 +267,14 @@ class MainScene extends Phaser.Scene {
     //     }
     // }
 
-    startRunningAnimation(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, playerIdx: number) {
-        player.anims.play(this.players[playerIdx].animationName);
-        this.players[playerIdx].playerRunning = true;
-    }
-    stopRunningAnimation(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, playerIdx: number) {
-        player.anims.stop();
-        this.players[playerIdx].playerRunning = false;
-    }
+    // startRunningAnimation(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, playerIdx: number) {
+    //     player.anims.play(this.players[playerIdx].animationName);
+    //     this.players[playerIdx].playerRunning = true;
+    // }
+    // stopRunningAnimation(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, playerIdx: number) {
+    //     player.anims.stop();
+    //     this.players[playerIdx].playerRunning = false;
+    // }
 }
 
 export default MainScene;

@@ -7,10 +7,12 @@ export type Coordinates = { x: number; y: number };
  */
 
 export interface PlayerRenderer {
-    renderText(coordinates: Coordinates, text: string, background?: string): void;
+    // renderText(coordinates: Coordinates, text: string, background?: string): void;
 
     renderPlayer(coordinates: Coordinates, playerName: string, background?: string): void;
     renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number): void;
+    movePlayerForward(newXPosition: number): void;
+    destroyObstacle(): void;
     startRunningAnimation(animationName: string): void;
     stopRunningAnimation(): void;
 }

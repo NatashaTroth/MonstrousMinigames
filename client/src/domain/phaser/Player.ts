@@ -58,22 +58,80 @@ export class Player {
         this.setObstacles();
     }
 
-    moveForward(x: number) {
+    moveForward(x: number, trackLength: number) {
         // TODO ...
         // check if player can move forward (eg. no obstacle upfront)
 
         // update coordinates and rerender. In the test you can spy on the renderPlayer function and verify
         // that it was called with the correct and updated coordinates.
-        this.coordinates = { ...this.coordinates, x: x };
-        this.renderPlayer();
+        //this.coordinates = { ...this.coordinates, x: x };
+        //this.renderPlayer();
+
+        const newXPosition = mapServerPosToWindowPos(x, trackLength);
+        if (newXPosition == this.coordinates.x) {
+            this.playerCountSameDistance++; // if idle for more than a second - means actually stopped, otherwise could just be waiting for new
+        } else {
+            this.playerCountSameDistance = 0;
+            if (!this.playerRunning) {
+                this.startRunningAnimation();
+            }
+        }
+
+        if (this.playerRunning && this.playerCountSameDistance > 100) {
+            //TODO HANDLE
+            // PhaserInstance.stopRunningAnimation(player, playerIndex);
+            // PhaserInstance.playerCountSameDistance[playerIndex] = 0;
+        }
+
+        this.coordinates.x = newXPosition;
+        this.renderer.movePlayerForward(newXPosition);
+        // PhaserInstance.playerText[playerIndex]?.x = toX; //- 100;
+        // PhaserInstance.test++;
+
+        // if (PhaserInstance.test == 100) {
+        //     PhaserInstance.test = 0;
+        //     // eslint-disable-next-line no-console
+        //     console.log(`${player.x}   ${PhaserInstance.playerText[playerIndex].x}`);
+        // }
     }
 
-    markPlayerAsFinished(): void {
-        // TODO ...
+    checkAtObstacle(isAtObstacle: boolean) {
+        if (this.justArrivedAtObstacle(isAtObstacle)) {
+            this.arrivedAtObstacle();
+        } else if (this.finishedObstacle(isAtObstacle)) {
+            this.finishObstacle();
+        }
     }
 
-    finishObstacle(): void {
-        // TODO ...
+    checkFinished(isFinished: boolean) {
+        if (isFinished) {
+            this.stopRunningAnimation();
+            //TODO winning animation
+        }
+    }
+
+    private justArrivedAtObstacle(isAtObstacle: boolean) {
+        return isAtObstacle && !this.playerAtObstacle;
+    }
+
+    private finishedObstacle(isAtObstacle: boolean) {
+        return !isAtObstacle && this.playerAtObstacle; //&& !this.paused //TODO
+    }
+
+    private arrivedAtObstacle(): void {
+        this.stopRunningAnimation();
+        this.playerAtObstacle = true;
+        //TODO
+        // addAttentionIcon(playerIndex, this.players, this.physics);
+    }
+
+    private finishObstacle(): void {
+        this.playerAtObstacle = false;
+        this.startRunningAnimation();
+        //TODO
+        this.renderer.destroyObstacle();
+        //TODO
+        // this.renderer.destroyAttentionIcon(playerIndex, this.players);
     }
 
     private renderPlayer() {

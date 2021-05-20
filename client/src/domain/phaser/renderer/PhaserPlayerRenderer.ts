@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 
-import print from '../printMethod';
 import { Coordinates, PlayerRenderer } from './PlayerRenderer';
 
 /**
@@ -9,7 +8,7 @@ import { Coordinates, PlayerRenderer } from './PlayerRenderer';
  */
 export class PhaserPlayerRenderer implements PlayerRenderer {
     private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-    private playerText?: Phaser.GameObjects.Text;
+    // private playerText?: Phaser.GameObjects.Text;
     private playerObstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[];
 
     constructor(private scene: Phaser.Scene) {
@@ -27,24 +26,23 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         }
     }
 
-    renderText(coordinates: Coordinates, text: string, background?: string): void {
-        this.playerText?.destroy(); // TODO: maybe reuse existing text (see renderPlayer)
-        this.playerText = this.scene.add
-            .text(
-                coordinates.x, //+ 50
-                coordinates.y - 100,
-                text,
-                { font: '16px Arial', align: 'center', fixedWidth: 150 }
-            )
-            .setDepth(50);
+    // renderText(coordinates: Coordinates, text: string, background?: string): void {
+    //     this.playerText?.destroy(); // TODO: maybe reuse existing text (see renderPlayer)
+    //     this.playerText = this.scene.add
+    //         .text(
+    //             coordinates.x, //+ 50
+    //             coordinates.y - 100,
+    //             text,
+    //             { font: '16px Arial', align: 'center', fixedWidth: 150 }
+    //         )
+    //         .setDepth(50);
 
-        if (background) {
-            this.playerText.setBackgroundColor(background);
-        }
-    }
+    //     if (background) {
+    //         this.playerText.setBackgroundColor(background);
+    //     }
+    // }
 
     renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number) {
-        print('rendering obstacles');
         const obstacle = this.scene.physics.add.sprite(posX, posY, obstacleType);
         obstacle.setScale(obstacleScale, obstacleScale);
         obstacle.setDepth(depth);
@@ -57,6 +55,19 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     }
     stopRunningAnimation() {
         this.player?.anims.stop();
+    }
+
+    movePlayerForward(newXPosition: number) {
+        if (this.player) {
+            this.player.x = newXPosition;
+        }
+    }
+
+    destroyObstacle() {
+        if (this.playerObstacles.length > 0) {
+            this.playerObstacles[0].destroy();
+            this.playerObstacles.shift();
+        }
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
