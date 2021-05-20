@@ -169,17 +169,16 @@ class MainScene extends Phaser.Scene {
     private pauseGame() {
         this.paused = true;
         this.gameRenderer?.pauseGame();
-
         this.players.forEach(player => {
-            player.stopRunningAnimation();
+            player.stopRunning();
         });
     }
 
     private resumeGame() {
         this.paused = false;
-        this.gameRenderer?.pauseGame();
+        this.gameRenderer?.resumeGame();
         this.players.forEach(player => {
-            player.startRunningAnimation();
+            player.startRunning();
         });
     }
 

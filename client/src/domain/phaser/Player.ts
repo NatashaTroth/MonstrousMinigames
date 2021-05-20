@@ -1,6 +1,8 @@
-import { Obstacles } from '../../utils/constants';
+
+import { localDevelopment, Obstacles } from '../../utils/constants';
 import { GameData } from './gameInterfaces';
 import { mapServerPosToWindowPos } from './mapServerPosToWindowPos';
+// import print from './printMethod';
 import { Coordinates, PlayerRenderer } from './renderer/PlayerRenderer';
 
 /**
@@ -43,32 +45,36 @@ export class Player {
     }
 
     moveForward(x: number, trackLength: number) {
+        // TODO delete local development stuff
         const newXPosition = mapServerPosToWindowPos(x, trackLength);
-        if (newXPosition == this.coordinates.x) {
-            this.playerCountSameDistance++; // if idle for more than a second - means actually stopped, otherwise could just be waiting for new
+        if (newXPosition == this.coordinates.x && this.playerRunning) {
+            if (localDevelopment) {
+                // so that running animation works in local development
+                this.playerCountSameDistance++;
+            } else {
+                this.stopRunning();
+            }
         } else {
-            this.playerCountSameDistance = 0;
+            // this.playerCountSameDistance = 0;
             if (!this.playerRunning) {
-                this.startRunningAnimation();
+                this.startRunning();
+                if (localDevelopment) {
+                    // so that running animation works in local development
+                    this.playerCountSameDistance = 0;
+                }
             }
         }
 
-        if (this.playerRunning && this.playerCountSameDistance > 100) {
-            //TODO HANDLE
-            // PhaserInstance.stopRunningAnimation(player, playerIndex);
-            // PhaserInstance.playerCountSameDistance[playerIndex] = 0;
+        if (localDevelopment) {
+            // so that running animation works in local development
+            if (this.playerRunning && this.playerCountSameDistance > 50) {
+                this.stopRunning();
+                this.playerCountSameDistance = 0;
+            }
         }
 
         this.coordinates.x = newXPosition;
         this.renderer.movePlayerForward(newXPosition);
-        // PhaserInstance.playerText[playerIndex]?.x = toX; //- 100;
-        // PhaserInstance.test++;
-
-        // if (PhaserInstance.test == 100) {
-        //     PhaserInstance.test = 0;
-        //     // eslint-disable-next-line no-console
-        //     console.log(`${player.x}   ${PhaserInstance.playerText[playerIndex].x}`);
-        // }
     }
 
     checkAtObstacle(isAtObstacle: boolean) {
@@ -81,7 +87,7 @@ export class Player {
 
     checkFinished(isFinished: boolean) {
         if (isFinished) {
-            this.stopRunningAnimation();
+            this.stopRunning();
             //TODO winning animation
         }
     }
@@ -95,14 +101,14 @@ export class Player {
     }
 
     private arrivedAtObstacle(): void {
-        this.stopRunningAnimation();
+        this.stopRunning();
         this.playerAtObstacle = true;
         this.renderer.addAttentionIcon();
     }
 
     private finishObstacle(): void {
         this.playerAtObstacle = false;
-        this.startRunningAnimation();
+        this.startRunning();
         this.renderer.destroyObstacle();
         this.renderer.destroyAttentionIcon();
     }
@@ -147,12 +153,12 @@ export class Player {
         });
     }
 
-    startRunningAnimation() {
+    startRunning() {
         this.renderer.startRunningAnimation(this.animationName);
         this.playerRunning = true;
     }
 
-    stopRunningAnimation() {
+    stopRunning() {
         this.renderer.stopRunningAnimation();
         this.playerRunning = false;
     }
