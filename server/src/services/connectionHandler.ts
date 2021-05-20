@@ -222,6 +222,30 @@ class ConnectionHandler {
             socket.on('message', function (message: IMessage) {
                 const type = message.type;
                 switch (type) {
+                    case CatchFoodMsgType.START: {
+                        if (socket.room.isOpen() && socket.room.isAdminScreen(socket.id)) {
+                            try {
+                                room.startGame();
+                            } catch (e) {
+                                console.error(socket.room.id + ' | ' + e.name);
+                                emitter.sendErrorMessage(socket, e);
+                            }
+
+                            emitter.sendGameState(screenNameSpace, socket.room);
+
+                            const gameStateInterval = setInterval(() => {
+                                if (!socket.room.isPlaying() && !socket.room.isPaused()) {
+                                    clearInterval(gameStateInterval);
+                                }
+                                // send gamestate volatile
+                                if (socket.room.isPlaying()) {
+                                    emitter.sendGameState(screenNameSpace, socket.room, true);
+                                }
+                            }, Globals.GAME_STATE_UPDATE_MS);
+                        }
+
+                        break;
+                    }
                     case MessageTypes.PAUSE_RESUME: {
                         if (socket.room.isPlaying()) {
                             console.info(socket.room.id + ' | Pause Game');
