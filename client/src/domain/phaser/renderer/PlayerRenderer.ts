@@ -13,6 +13,8 @@ export interface PlayerRenderer {
     renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number): void;
     movePlayerForward(newXPosition: number): void;
     destroyObstacle(): void;
+    addAttentionIcon(): void;
+    destroyAttentionIcon(): void;
     startRunningAnimation(animationName: string): void;
     stopRunningAnimation(): void;
 }

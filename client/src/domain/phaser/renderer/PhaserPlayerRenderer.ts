@@ -10,6 +10,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     // private playerText?: Phaser.GameObjects.Text;
     private playerObstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[];
+    private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
     constructor(private scene: Phaser.Scene) {
         this.playerObstacles = [];
@@ -68,6 +69,21 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
             this.playerObstacles[0].destroy();
             this.playerObstacles.shift();
         }
+    }
+
+    addAttentionIcon() {
+        if (!this.playerAttention && this.player) {
+            this.playerAttention = this.scene.physics.add
+                .sprite(this.player.x + 75, this.player.y - 150, 'attention')
+                .setDepth(100)
+                .setScale(0.03, 0.03);
+        }
+    }
+
+    destroyAttentionIcon() {
+        //TODO reuse
+        this.playerAttention?.destroy();
+        this.playerAttention = undefined;
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {

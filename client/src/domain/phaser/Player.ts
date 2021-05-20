@@ -122,7 +122,7 @@ export class Player {
         this.stopRunningAnimation();
         this.playerAtObstacle = true;
         //TODO
-        // addAttentionIcon(playerIndex, this.players, this.physics);
+        this.renderer.addAttentionIcon();
     }
 
     private finishObstacle(): void {
@@ -131,7 +131,7 @@ export class Player {
         //TODO
         this.renderer.destroyObstacle();
         //TODO
-        // this.renderer.destroyAttentionIcon(playerIndex, this.players);
+        this.renderer.destroyAttentionIcon();
     }
 
     private renderPlayer() {
