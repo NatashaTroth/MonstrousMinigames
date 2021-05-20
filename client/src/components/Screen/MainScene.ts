@@ -1,16 +1,19 @@
 import Phaser from 'phaser';
 
-import { createBackground } from '../../domain/phaser/createBackground';
-import { GameAudio } from '../../domain/phaser/GameAudio';
 import { GameData } from '../../domain/phaser/gameInterfaces';
-import { PauseButton } from '../../domain/phaser/PauseButton';
 import { Player } from '../../domain/phaser/Player';
+import print from '../../domain/phaser/printMethod';
+import { GameRenderer } from '../../domain/phaser/renderer/GameRenderer';
+import { PhaserGameRenderer } from '../../domain/phaser/renderer/PhaserGameRenderer';
 import { PhaserPlayerRenderer } from '../../domain/phaser/renderer/PhaserPlayerRenderer';
 import { MessageSocket } from '../../domain/socket/MessageSocket';
 import ScreenSocket from '../../domain/socket/screenSocket';
 import { Socket } from '../../domain/socket/Socket';
 import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
 import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../domain/typeGuards/gameStateInfo';
+import { GameHasPausedMessage, pausedTypeGuard } from '../../domain/typeGuards/paused';
+import { GameHasResumedMessage, resumedTypeGuard } from '../../domain/typeGuards/resumed';
+import { MessageTypes } from '../../utils/constants';
 import { audioFiles, characters, images } from './GameAssets';
 
 // const goals: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[] = [];
@@ -25,14 +28,12 @@ class MainScene extends Phaser.Scene {
     posY: number;
     plusY: number;
     // numberPlayersFinished: number;
-
     players: Array<Player>;
     trackLength: number;
     gameStarted: boolean;
     paused: boolean;
-    pauseButton: undefined | PauseButton;
-    gameAudio: undefined | GameAudio;
     newPlayers: any;
+    gameRenderer?: GameRenderer;
 
     constructor() {
         super('MainScene');
@@ -43,13 +44,11 @@ class MainScene extends Phaser.Scene {
         this.posY = window.innerHeight / 2 - 50;
         this.plusY = 110;
         // this.numberPlayersFinished = 0;
-
         this.players = [];
         this.trackLength = 2000;
         this.gameStarted = false;
         this.paused = false;
-        this.pauseButton = undefined;
-        this.gameAudio = undefined;
+        this.gameRenderer = undefined;
     }
 
     init(data: { roomId: string }) {
@@ -70,15 +69,13 @@ class MainScene extends Phaser.Scene {
     }
 
     create() {
-        this.gameAudio = new GameAudio(this.sound);
-        this.gameAudio.initAudio();
-        createBackground(this.add, windowWidth, windowHeight);
-        this.pauseButton = new PauseButton(this);
+        this.gameRenderer = new PhaserGameRenderer(this);
+        this.gameRenderer?.renderBackground(windowWidth, windowHeight);
+        this.gameRenderer?.renderPauseButton();
         this.initiateSockets();
     }
 
     handleSocketConnection() {
-        //TODO
         if (this.roomId == '' || this.roomId == undefined) {
             this.handleError('No room code');
         }
@@ -87,19 +84,28 @@ class MainScene extends Phaser.Scene {
     }
 
     initiateSockets() {
-        // use this:
-        // const pausedSocket = new MessageSocket(pausedTypeGuard, this.socket);
-        // pausedSocket.listen((data: GameHasPausedMessage) => {
-        //     // handle Game has Paused
-        //     // eslint-disable-next-line no-console
-        //     console.log('paused ', data);
-        // });
+        const pausedSocket = new MessageSocket(pausedTypeGuard, this.socket);
+        pausedSocket.listen((data: GameHasPausedMessage) => {
+            print('Received paused message');
+            this.pauseGame();
+        });
+
+        const resumedSocket = new MessageSocket(resumedTypeGuard, this.socket);
+        resumedSocket.listen((data: GameHasResumedMessage) => {
+            print('Received resumed message');
+            this.resumeGame();
+        });
         const gameStateInfoSocket = new MessageSocket(gameStateInfoTypeGuard, this.socket);
         gameStateInfoSocket.listen((data: GameStateInfoMessage) => {
             //todo
             if (!this.gameStarted) {
                 this.gameStarted = true;
                 this.handleStartGame(data.data);
+
+                // setTimeout(() => {
+                //     print('in timeout');
+                //     this.handlePauseResumeButton();
+                // }, 5000);
             } else this.updateGameState(data.data);
         });
         // const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
@@ -131,8 +137,6 @@ class MainScene extends Phaser.Scene {
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);
-            // print('here');
-            // this.players[i].playerText?.setBackgroundColor('#000000');
             // this.setGoal(i);
         }
     }
@@ -161,11 +165,34 @@ class MainScene extends Phaser.Scene {
         //return player.player;
     }
 
-    // setGoal(playerIndex: number) {
-    //     const goal = this.physics.add.sprite(this.trackLength, this.getYPosition(playerIndex), 'goal');
-    //     goal.setScale(0.1, 0.1);
-    //     goals.push(goal);
-    // }
+    handlePauseResumeButton() {
+        //TODO connect to backend
+
+        //TODO emit to server. this.resumeGame is then called by handle message when resume event comes in
+        print('emitting pause');
+        print(this.socket);
+        this.socket?.emit({ type: MessageTypes.pauseResume });
+    }
+
+    private pauseGame() {
+        print('pausing game');
+        this.paused = true;
+        this.gameRenderer?.pauseGame();
+
+        this.players.forEach(player => {
+            player.stopRunningAnimation();
+        });
+    }
+
+    private resumeGame() {
+        print('resuming game');
+
+        this.paused = false;
+        this.gameRenderer?.pauseGame();
+        this.players.forEach(player => {
+            player.startRunningAnimation();
+        });
+    }
 
     handleError(msg = 'Something went wrong.') {
         // this.add.text(32, 32, `Error: ${msg}`, { font: '30px Arial' });
@@ -182,36 +209,6 @@ class MainScene extends Phaser.Scene {
         //     obstacle.destroy();
         // });
     }
-
-    // removePlayerSprite(index: number) {
-    //     this.players[index].phaserObject.destroy();
-    // }
-
-    // checkFinished(playerIndex: number, isFinished: boolean) {
-    //     if (isFinished) {
-    //         // players[playerIndex].anims.stop();
-    //         this.stopRunningAnimation(this.players[playerIndex].phaserObject, playerIndex);
-    //         this.numberPlayersFinished++;
-    //     }
-    // }
-
-    // addAttentionIcon(playerIndex: number) {
-    //     if (!this.players[playerIndex].playerAttention) {
-    //         this.players[playerIndex].playerAttention = this.physics.add
-    //             .sprite(
-    //                 this.players[playerIndex].phaserObject.x + 75,
-    //                 this.players[playerIndex].phaserObject.y - 150,
-    //                 'attention'
-    //             )
-    //             .setDepth(100)
-    //             .setScale(0.03, 0.03);
-    //     }
-    // }
-
-    // destroyAttentionIcon(playerIndex: number) {
-    //     this.players[playerIndex].playerAttention?.destroy();
-    //     this.players[playerIndex].playerAttention = null;
-    // }
 }
 
 export default MainScene;

@@ -128,9 +128,7 @@ export class Player {
     private finishObstacle(): void {
         this.playerAtObstacle = false;
         this.startRunningAnimation();
-        //TODO
         this.renderer.destroyObstacle();
-        //TODO
         this.renderer.destroyAttentionIcon();
     }
 
@@ -174,12 +172,12 @@ export class Player {
         });
     }
 
-    private startRunningAnimation() {
+    startRunningAnimation() {
         this.renderer.startRunningAnimation(this.animationName);
         this.playerRunning = true;
     }
 
-    private stopRunningAnimation() {
+    stopRunningAnimation() {
         this.renderer.stopRunningAnimation();
         this.playerRunning = false;
     }

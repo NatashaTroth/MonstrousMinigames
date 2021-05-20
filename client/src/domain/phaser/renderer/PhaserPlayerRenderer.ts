@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 
+import MainScene from '../../../components/Screen/MainScene';
 import { Coordinates, PlayerRenderer } from './PlayerRenderer';
 
 /**
@@ -12,7 +13,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     private playerObstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
-    constructor(private scene: Phaser.Scene) {
+    constructor(private scene: MainScene) {
         this.playerObstacles = [];
     }
 
