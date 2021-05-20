@@ -14,6 +14,7 @@ import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../domain/typeGuards/finished';
 import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../domain/typeGuards/gameStateInfo';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../domain/typeGuards/paused';
+import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../domain/typeGuards/playerFinished';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../domain/typeGuards/resumed';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../domain/typeGuards/stopped';
 import { TimedOutMessage, timedOutTypeGuard } from '../../domain/typeGuards/timedOut';
@@ -104,6 +105,11 @@ class MainScene extends Phaser.Scene {
             } else this.updateGameState(data.data);
         });
 
+        const playerFinishedSocket = new MessageSocket(playerFinishedTypeGuard, this.socket);
+        playerFinishedSocket.listen((data: PlayerFinishedMessage) => {
+            this.players[data.userId].checkFinished(true);
+        });
+
         const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
         gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
             this.gameAudio?.stopMusic();
@@ -121,7 +127,6 @@ class MainScene extends Phaser.Scene {
         });
 
         //TODO
-        // playerFinished
         // gameHasReset
 
         // if ((data.type == 'error' && data.msg !== undefined) || !data.data) {

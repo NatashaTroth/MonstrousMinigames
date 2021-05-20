@@ -9,6 +9,7 @@ describe('playerHasFinished function', () => {
     const mockData: PlayerFinishedMessage = {
         type: MessageTypes.playerFinished,
         rank: 1,
+        userId: 1,
     };
 
     beforeEach(() => {
