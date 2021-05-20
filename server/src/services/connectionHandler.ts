@@ -208,19 +208,18 @@ class ConnectionHandler {
                 return;
             }
             socket.room = room;
+            socket.room.addScreen(socket.id);
             socket.join(socket.room.id);
-
             console.info(socket.room.id + ' | Screen connected');
 
             emitter.sendConnectedUsers([screenNameSpace], socket.room);
 
             socket.on('disconnect', () => {
                 console.info(socket.room.id + ' | Screen disconnected');
+                socket.room.removeScreen(socket.id);
             });
 
             socket.on('message', function (message: IMessage) {
-                console.info(message);
-
                 const type = message.type;
                 switch (type) {
                     case MessageTypes.PAUSE_RESUME: {
@@ -257,7 +256,7 @@ class ConnectionHandler {
                         break;
                     }
                     default: {
-                        //console.info(message);
+                        console.info(message);
                     }
                 }
             });
