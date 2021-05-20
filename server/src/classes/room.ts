@@ -1,4 +1,5 @@
 import { GameAlreadyStartedError } from '../customErrors';
+import CannotStartEmptyGameError from '../customErrors/CannotStartEmptyGameError';
 import { Globals } from '../enums/globals';
 import { CatchFoodGame } from '../gameplay';
 import { GameStateInfo } from '../gameplay/catchFood/interfaces';
@@ -114,6 +115,9 @@ class Room {
     }
 
     public startGame(): GameStateInfo {
+        if (this.users.length === 0) {
+            throw new CannotStartEmptyGameError();
+        }
         this.setState(RoomStates.PLAYING);
         this.game.createNewGame(this.users);
         this.updateTimestamp();
