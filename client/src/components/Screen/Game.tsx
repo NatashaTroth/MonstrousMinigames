@@ -58,21 +58,6 @@ interface IGameContentProps {
 }
 
 const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo }) => {
-    // TODO remove
-    // function handlePauseGame() {
-    //     screenSocket?.emit({ type: MessageTypes.pauseResume });
-    //     setHasPaused(true);
-    // }
-
-    // function handleResumeGame() {
-    //     screenSocket?.emit({ type: MessageTypes.pauseResume });
-    //     setHasPaused(false);
-    // }
-
-    // function handleStopGame() {
-    //     screenSocket?.emit({ type: MessageTypes.stopGame });
-    // }
-
     return (
         <div>
             {displayGo && <Go>Go!</Go>}

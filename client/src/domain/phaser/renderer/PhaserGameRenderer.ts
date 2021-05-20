@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 
 import MainScene from '../../../components/Screen/MainScene';
-import { GameAudio } from '../GameAudio';
 import { GameRenderer } from './GameRenderer';
 
 /**
@@ -9,13 +8,10 @@ import { GameRenderer } from './GameRenderer';
  * integration tests. That's why we want to keep this class as small as possible.
  */
 export class PhaserGameRenderer implements GameRenderer {
-    gameAudio?: GameAudio;
     pauseButton?: Phaser.GameObjects.Text;
 
     constructor(private scene: MainScene) {
         this.scene = scene;
-        this.gameAudio = new GameAudio(this.scene.sound);
-        this.gameAudio.initAudio();
     }
 
     renderBackground(windowWidth: number, windowHeight: number) {
@@ -24,8 +20,6 @@ export class PhaserGameRenderer implements GameRenderer {
     }
 
     renderPauseButton() {
-        //this.pauseButton = new PauseButton(this.scene);
-
         this.pauseButton = this.scene.add.text(window.innerWidth / 2, window.innerHeight - 50, 'Pause');
         this.pauseButton.setInteractive();
         this.pauseButton.on('pointerdown', () => {
@@ -34,7 +28,6 @@ export class PhaserGameRenderer implements GameRenderer {
     }
 
     pauseGame() {
-        // this.socket?.emit({ type: MessageTypes.pauseResume }); //TODO
         this.pauseButton?.setText('Resume');
     }
 

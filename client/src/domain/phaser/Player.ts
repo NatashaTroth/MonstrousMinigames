@@ -13,22 +13,14 @@ export class Player {
     plusX = 40;
     plusY = 110;
     username: string;
-    // name: string;
     animationName: string;
-    // yPosition: number
-    // phaserObject: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
     playerRunning: boolean;
     playerAtObstacle: boolean;
-    // playerObstacles: Array<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>
-    // playerObstacles: Array<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
-    // playerCountSameDistance: number
     playerAttention: null | Phaser.Types.Physics.Arcade.SpriteWithDynamicBody; //TODO change
-    // playerText: Phaser.GameObjects.Text
-    phaserObject: any; //TODO DELETE
     playerCountSameDistance: number;
 
     constructor(
-        public renderer: PlayerRenderer, // TODO MAKE PRIVATE
+        private renderer: PlayerRenderer, // TODO MAKE PRIVATE
         private index: number,
         private coordinates: Coordinates,
         private gameStateData: GameData,
@@ -41,16 +33,8 @@ export class Player {
 
         this.animationName = `${monsterName}Walk`;
         this.username = gameStateData.playersState[index].name;
-        this.phaserObject = {};
         this.playerRunning = false;
         this.playerAtObstacle = false;
-        // this.playerObstacles = this.setObstacles();
-        // this.playerObstacles = handleSetObstacles({
-        //     this.obstaclesDetails = gameStateData.playersState[index].obstacles
-        //     posY
-        //     this.physics = PhaserInstance.physics
-        //     this.trackLength = PhaserInstance.trackLength
-        // }
         this.playerCountSameDistance = 0;
         this.playerAttention = null;
 
@@ -59,14 +43,6 @@ export class Player {
     }
 
     moveForward(x: number, trackLength: number) {
-        // TODO ...
-        // check if player can move forward (eg. no obstacle upfront)
-
-        // update coordinates and rerender. In the test you can spy on the renderPlayer function and verify
-        // that it was called with the correct and updated coordinates.
-        //this.coordinates = { ...this.coordinates, x: x };
-        //this.renderPlayer();
-
         const newXPosition = mapServerPosToWindowPos(x, trackLength);
         if (newXPosition == this.coordinates.x) {
             this.playerCountSameDistance++; // if idle for more than a second - means actually stopped, otherwise could just be waiting for new
@@ -115,13 +91,12 @@ export class Player {
     }
 
     private finishedObstacle(isAtObstacle: boolean) {
-        return !isAtObstacle && this.playerAtObstacle; //&& !this.paused //TODO
+        return !isAtObstacle && this.playerAtObstacle;
     }
 
     private arrivedAtObstacle(): void {
         this.stopRunningAnimation();
         this.playerAtObstacle = true;
-        //TODO
         this.renderer.addAttentionIcon();
     }
 

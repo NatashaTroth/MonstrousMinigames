@@ -10,8 +10,6 @@ export class GameAudio {
             | Phaser.Sound.WebAudioSoundManager
     ) {
         this.sound = sound;
-        // // eslint-disable-next-line no-console
-        // console.log(this.sound);
         this.backgroundMusicStart = this.sound.add('backgroundMusicStart', {
             volume: 0.2,
         });
