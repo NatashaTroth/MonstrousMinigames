@@ -20,8 +20,6 @@ import { MessageSocket } from '../MessageSocket';
 import ScreenSocket from '../screenSocket';
 import { Socket } from '../Socket';
 
-export type MessageData = ConnectedUsersMessage | undefined | GameHasFinishedMessage | ConnectedUsersMessage;
-
 export interface HandleSetSocketDependencies {
     setScreenSocket: (socket: Socket) => void;
     setConnectedUsers: (users: IUser[]) => void;
