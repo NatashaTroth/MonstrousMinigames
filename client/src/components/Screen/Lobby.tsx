@@ -15,7 +15,6 @@ import susi from '../../images/susi.png';
 import { localDevelopment } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';
 import Button from '../common/Button';
-import Logo from '../common/Logo';
 import {
     Character,
     CharacterContainer,
@@ -26,18 +25,14 @@ import {
     Content,
     ContentContainer,
     CopyToClipboard,
-    HeadContainer,
-    HeadContainerLeft,
-    HeadContainerRight,
-    Headline,
     LeftContainer,
     LobbyContainer,
     QRCode,
     QRCodeInstructions,
     RightButtonContainer,
     RightContainer,
-    RoomCodeContainer,
 } from './Lobby.sc';
+import LobbyHeader from './LobbyHeader';
 
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers } = React.useContext(GameContext);
@@ -77,16 +72,7 @@ export const Lobby: React.FunctionComponent = () => {
     return (
         <LobbyContainer>
             <Content>
-                <HeadContainer>
-                    <HeadContainerLeft>
-                        <RoomCodeContainer>
-                            <Headline>Room Code: {roomId}</Headline>
-                        </RoomCodeContainer>
-                    </HeadContainerLeft>
-                    <HeadContainerRight>
-                        <Logo />
-                    </HeadContainerRight>
-                </HeadContainer>
+                <LobbyHeader />
                 <ContentContainer>
                     <LeftContainer>
                         <ConnectedUsers>
@@ -102,7 +88,7 @@ export const Lobby: React.FunctionComponent = () => {
                                         {`Player ${user.number}`}
                                     </ConnectedUserCharacter>
                                     <ConnectedUserName number={user.number} free={user.free}>
-                                        {user.name}
+                                        {user.name.toUpperCase()}
                                     </ConnectedUserName>
                                 </ConnectedUserContainer>
                             ))}
@@ -139,7 +125,7 @@ interface ConnectedUsers {
     free?: boolean;
 }
 
-function getUserArray(connectedUsers: ConnectedUsers[]): ConnectedUsers[] {
+export function getUserArray(connectedUsers: ConnectedUsers[]): ConnectedUsers[] {
     if (connectedUsers.length === 4) {
         return connectedUsers as ConnectedUsers[];
     }

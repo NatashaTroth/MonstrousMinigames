@@ -17,6 +17,7 @@ import { FinishedScreen as ScreenFinishedScreen } from './components/Screen/Fini
 import Game from './components/Screen/Game';
 import GameIntro from './components/Screen/GameIntro';
 import { Lobby as ScreenLobbyScreen } from './components/Screen/Lobby';
+import PlayersGetReady from './components/Screen/PlayersGetReady';
 import AudioContextProvider from './contexts/AudioContextProvider';
 import ControllerSocketContextProvider from './contexts/ControllerSocketContextProvider';
 import GameContextProvider from './contexts/GameContextProvider';
@@ -66,6 +67,7 @@ const App: React.FunctionComponent = () => {
                                         <Route path="/screen/:id/lobby" component={ScreenLobbyScreen} exact />
                                         <Route path="/screen/:id/choose-game" component={ChooseGame} exact />
                                         <Route path="/screen/:id/game-intro" component={GameIntro} exact />
+                                        <Route path="/screen/:id/get-ready" component={PlayersGetReady} exact />
                                         <Route path="/screen/:id/game1" component={Game} exact />
                                         <Route path="/screen/:id/finished" component={ScreenFinishedScreen} exact />
 

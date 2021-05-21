@@ -64,7 +64,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                         Join Room
                     </Button>
                     <Button type="button" name="tutorial" disabled>
-                        Tutorial
+                        Getting Started
                     </Button>
                 </LeftButtonContainer>
             </LeftContainer>

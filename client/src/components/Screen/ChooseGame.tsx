@@ -5,7 +5,6 @@ import history from '../../domain/history/history';
 import game1Img from '../../images/instructions1.png';
 import oliverLobby from '../../images/oliverLobby.svg';
 import Button from '../common/Button';
-import Logo from '../common/Logo';
 import {
     BackButtonContainer,
     Content,
@@ -17,14 +16,8 @@ import {
     RightContainer,
     SelectGameButtonContainer,
 } from './ChooseGame.sc';
-import {
-    HeadContainer,
-    HeadContainerLeft,
-    HeadContainerRight,
-    Headline,
-    LobbyContainer,
-    RoomCodeContainer,
-} from './Lobby.sc';
+import { LobbyContainer } from './Lobby.sc';
+import LobbyHeader from './LobbyHeader';
 
 const ChooseGame: React.FunctionComponent = () => {
     const [selectedGame, setSelectedGame] = React.useState(0);
@@ -44,17 +37,7 @@ const ChooseGame: React.FunctionComponent = () => {
     return (
         <LobbyContainer>
             <Content>
-                <HeadContainer>
-                    <HeadContainerLeft>
-                        <RoomCodeContainer>
-                            <Headline>Room Code: {roomId}</Headline>
-                        </RoomCodeContainer>
-                    </HeadContainerLeft>
-                    <HeadContainerRight>
-                        <Logo />
-                    </HeadContainerRight>
-                </HeadContainer>
-
+                <LobbyHeader />
                 <GameSelectionContainer>
                     <LeftContainer>
                         <div>

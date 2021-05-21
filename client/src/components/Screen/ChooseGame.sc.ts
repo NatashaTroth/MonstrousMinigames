@@ -19,6 +19,7 @@ export const GameSelectionContainer = styled.div`
     width: 100%;
     flex-direction: row;
     height: 100%;
+    justify-content: space-between;
 `;
 
 export const Content = styled.div`
@@ -33,22 +34,30 @@ export const Content = styled.div`
 export const LeftContainer = styled.div`
     display: flex;
     flex-direction: column;
-    width: 20%;
+    width: 30%;
     margin-right: 20px;
     justify-content: space-between;
 
     div:not(:last-child) {
         margin-bottom: 10px;
     }
+
+    @media (min-width: 1000px) {
+        width: 15%;
+    }
 `;
 
 export const RightContainer = styled.div`
-    width: 80%;
+    width: 70%;
     height: 100%;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+
+    @media (min-width: 1000px) {
+        width: 75%;
+    }
 `;
 export const GamePreviewContainer = styled.div`
     height: 100%;
@@ -77,4 +86,5 @@ export const BackButtonContainer = styled.div`
 export const OliverImage = styled.img`
     display: flex;
     width: 100%;
+    min-width: 200px;
 `;

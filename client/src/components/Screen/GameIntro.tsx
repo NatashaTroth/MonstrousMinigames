@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { GameContext } from '../../contexts/GameContextProvider';
+import history from '../../domain/history/history';
 import Button from '../common/Button';
 import {
     BackButtonContainer,
@@ -15,12 +17,13 @@ import {
 
 const GameIntro: React.FunctionComponent = () => {
     const [showFirstIntro, setShowFirstIntro] = React.useState(true);
+    const { roomId } = React.useContext(GameContext);
 
     function handleSkip() {
         if (showFirstIntro) {
             setShowFirstIntro(false);
         } else {
-            // TODO start Game
+            history.push(`/screen/${roomId}/get-ready`);
         }
     }
     return (
