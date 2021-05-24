@@ -52,13 +52,6 @@ export const FormContainer = styled.form`
     align-items: center;
 `;
 
-export const CreditsButtonContainer = styled.div`
-    margin-bottom: 30px;
-    color: ${primary};
-    cursor: pointer;
-    text-decoration: underline;
-`;
-
 export const ConnectInstructions = styled.div`
     width: 100%;
     height: 100%;

@@ -41,6 +41,10 @@ export const defaultValue = {
     setName: () => {
         // do nothing
     },
+    ready: false,
+    setReady: () => {
+        // do nothing
+    },
 };
 export interface IObstacle {
     type: Obstacles;
@@ -64,6 +68,8 @@ interface IPlayerContext {
     setCharacter: (val: Character) => void;
     name: string;
     setName: (val: string) => void;
+    ready: boolean;
+    setReady: (val: boolean) => void;
 }
 
 export const PlayerContext = React.createContext<IPlayerContext>(defaultValue);
@@ -79,6 +85,8 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [character, setCharacter] = React.useState<undefined | Character>(undefined);
     const { roomId } = React.useContext(GameContext);
     const [name, setName] = React.useState<string>('');
+    // TODO use data from socket
+    const [ready, setReady] = React.useState(false);
 
     let reroute = true;
 
@@ -117,6 +125,8 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setCharacter,
         name,
         setName,
+        ready,
+        setReady,
     };
     return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>;
 };

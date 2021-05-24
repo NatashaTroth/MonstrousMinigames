@@ -22,16 +22,6 @@ describe('Controller ConnectScreen', () => {
         expect(container.querySelectorAll('input')).toHaveProperty('length', 1);
     });
 
-    it('should render Credits button', () => {
-        const givenText = 'Credits';
-        const { container } = render(
-            <Router history={history}>
-                <ConnectScreen history={history} />
-            </Router>
-        );
-        expect(queryByText(container, givenText)).toBeTruthy();
-    });
-
     it('should render name input label', () => {
         const givenText = 'Enter your name:';
         const { container } = render(

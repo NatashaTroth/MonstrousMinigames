@@ -20,8 +20,6 @@ const ChooseCharacter: React.FunctionComponent = () => {
                         width={80 / characters.length}
                         key={`character${index}`}
                         onClick={() => {
-                            // eslint-disable-next-line no-console
-                            console.log('hier');
                             setCharacter(character);
                             history.push(`/controller/${roomId}/lobby`);
                         }}

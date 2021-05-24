@@ -100,4 +100,8 @@ export const CharacterContainer = styled.div`
 export const Character = styled.img`
     display: flex;
     width: 100%;
+
+    @media (min-width: 1200px) {
+        width: 80%;
+    }
 `;

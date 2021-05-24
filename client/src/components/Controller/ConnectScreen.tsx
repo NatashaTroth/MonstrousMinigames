@@ -1,4 +1,3 @@
-import { Typography } from '@material-ui/core';
 import { History } from 'history';
 import * as React from 'react';
 
@@ -8,13 +7,7 @@ import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { sendMovement } from '../../domain/gameState/controller/sendMovement';
 import Button from '../common/Button';
 import { Label } from '../common/Label.sc';
-import {
-    ConnectInstructions,
-    ConnectScreenContainer,
-    CreditsButtonContainer,
-    FormContainer,
-    StyledInput,
-} from './ConnectScreen.sc';
+import { ConnectInstructions, ConnectScreenContainer, FormContainer, StyledInput } from './ConnectScreen.sc';
 
 interface IFormState {
     name: string;
@@ -86,9 +79,6 @@ export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history 
                             Enter
                         </Button>
                     </FormContainer>
-                    <CreditsButtonContainer>
-                        <Typography onClick={() => history.push('/credits')}>Credits</Typography>
-                    </CreditsButtonContainer>
                 </>
             ) : (
                 <ConnectInstructions>
