@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { GameContext } from '../../contexts/GameContextProvider';
+import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import franz from '../../images/franz.png';
 import noah from '../../images/noah.png';
 import steffi from '../../images/steffi.png';
@@ -20,8 +21,18 @@ import {
 } from './PlayersGetReady.sc';
 
 const PlayersGetReady: React.FC = () => {
+    const { screenSocket } = React.useContext(ScreenSocketContext);
+
     const { roomId, connectedUsers } = React.useContext(GameContext);
     const characters = [franz, noah, susi, steffi];
+
+    function startGame() {
+        screenSocket?.emit({
+            type: 'game1/start',
+            roomId: sessionStorage.getItem('roomId'),
+            userId: sessionStorage.getItem('userId'),
+        });
+    }
 
     return (
         <GetReadyContainer>
@@ -45,7 +56,15 @@ const PlayersGetReady: React.FC = () => {
                             </ConnectedUserContainer>
                         ))}
                     </ConnectedUsers>
-                    <Button>Start</Button>
+                    <Button
+                        onClick={() => {
+                            if (getUserArray(connectedUsers || []).length > 0) {
+                                startGame();
+                            }
+                        }}
+                    >
+                        Start
+                    </Button>
                 </Content>
             </GetReadyBackground>
         </GetReadyContainer>
