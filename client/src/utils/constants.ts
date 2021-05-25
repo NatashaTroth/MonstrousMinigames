@@ -24,6 +24,7 @@ export enum MessageTypes {
     userInit = 'userInit',
     connectedUsers = 'connectedUsers',
     backToLobby = 'backToLobby',
+    screenAdmin = 'screenAdmin',
 
     gameHasFinished = 'gameHasFinished',
     gameHasReset = 'gameHasReset',

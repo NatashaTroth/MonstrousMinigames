@@ -37,7 +37,7 @@ import {
 import LobbyHeader from './LobbyHeader';
 
 export const Lobby: React.FunctionComponent = () => {
-    const { roomId, connectedUsers } = React.useContext(GameContext);
+    const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
     const { playLobbyMusic, pauseLobbyMusic, permission, playing, setPermissionGranted } = React.useContext(
         AudioContext
     );
@@ -131,9 +131,14 @@ export const Lobby: React.FunctionComponent = () => {
                             </CopyToClipboard>
                         </QRCode>
                         <RightButtonContainer>
-                            <Button onClick={() => history.push(`/screen/${roomId}/choose-game`)} variant="secondary">
-                                Choose Game
-                            </Button>
+                            {screenAdmin && (
+                                <Button
+                                    onClick={() => history.push(`/screen/${roomId}/choose-game`)}
+                                    variant="secondary"
+                                >
+                                    Choose Game
+                                </Button>
+                            )}
                             <Button disabled>Leaderboard</Button>
                             <Button onClick={() => history.push('/screen')}>Back</Button>
                         </RightButtonContainer>
