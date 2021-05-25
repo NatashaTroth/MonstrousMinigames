@@ -21,6 +21,9 @@ describe('Event Emitter', () => {
     });
 
     afterEach(() => {
+        // if (catchFoodGame.updateChasersInterval) {
+        //     clearInterval(catchFoodGame.updateChasersInterval);
+        // }
         jest.runAllTimers();
         jest.clearAllMocks();
     });

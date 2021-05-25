@@ -7,4 +7,5 @@ export interface GameStateInfo {
     gameState: GameState;
     trackLength: number;
     numberOfObstacles: number;
+    chasersPosition: number;
 }
