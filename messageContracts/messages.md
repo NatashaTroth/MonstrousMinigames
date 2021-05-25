@@ -61,10 +61,24 @@ example:
 
 * * *
 ## Server → Screen
+### screenAdmin
+
+-   notifies the admin screen about its status
+-   is being sent on admin change
+
+example:
+
+```json
+{
+    "type": "screenAdmin"
+}
+```
+
+
 ### game1/gameState
 
 -   sent periodically to all screens in the room
--   
+
 
 example:
 

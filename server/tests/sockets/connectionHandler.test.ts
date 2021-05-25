@@ -287,9 +287,11 @@ describe('connectionHandler', () => {
                 });
 
                 screen.on('message', (msg: any) => {
-                    expect(msg.type).toEqual(MessageTypes.CONNECTED_USERS);
-                    expect(msg.users[0].socketId).toEqual(controller.id);
-                    done();
+                    if(msg.type !== MessageTypes.SCREEN_ADMIN){
+                        expect(msg.type).toEqual(MessageTypes.CONNECTED_USERS);
+                        expect(msg.users[0].socketId).toEqual(controller.id);
+                        done();
+                    }
                 });
             }
         });
