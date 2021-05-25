@@ -1,15 +1,22 @@
 import Hammer from 'hammerjs';
 import * as React from 'react';
-import { useHistory } from 'react-router';
 
 import { ControllerSocketContext } from '../../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import wood from '../../../images/wood.png';
 import { Obstacles } from '../../../utils/constants';
+import Button from '../../common/Button';
 import LinearProgressBar from '../../common/LinearProgressBar';
 import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
-import { Line, ObstacleItem, StyledObstacleImage, StyledTouchAppIcon, TouchContainer } from './TreeTrunk.sc';
+import {
+    Line,
+    ObstacleItem,
+    SkipButton,
+    StyledObstacleImage,
+    StyledTouchAppIcon,
+    TouchContainer,
+} from './TreeTrunk.sc';
 
 const MAX = 30;
 let sec = 0;
@@ -27,9 +34,9 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { obstacle, setObstacle } = React.useContext(PlayerContext);
     const [progress, setProgress] = React.useState(0);
+    const [skip, setSkip] = React.useState(false);
     const [initialized, setInitialize] = React.useState(false);
     const [hammerTime, setHammerTime] = React.useState<HammerManager | undefined>();
-    const history = useHistory();
     const { showInstructions, setShowInstructions, roomId } = React.useContext(GameContext);
 
     React.useEffect(() => {
@@ -44,7 +51,13 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
             const hammertime = touchContainer && new Hammer(touchContainer);
             setHammerTime(hammertime);
         }
-    }, [controllerSocket, history, initialized, obstacle, progress, roomId, setObstacle, setShowInstructions]);
+
+        setTimeout(() => {
+            if (sec === 0) {
+                setSkip(true);
+            }
+        }, 5000);
+    }, [initialized]);
 
     if (hammerTime) {
         hammerTime.get('pan').set({ threshold: 0 });
@@ -86,7 +99,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
     const solveObstacle = (): void => {
         controllerSocket?.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
         setShowInstructions(false);
-        setTimeout(() => setObstacle(roomId, undefined), 100);
+        setObstacle(roomId, undefined);
     };
 
     return (
@@ -97,6 +110,11 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
                     <StyledObstacleImage src={wood} />
                 </ObstacleItem>
                 <TouchContainer id="touchContainer">
+                    {skip && (
+                        <SkipButton>
+                            <Button>Skip</Button>
+                        </SkipButton>
+                    )}
                     <Line />
                     {showInstructions && <StyledTouchAppIcon />}
                 </TouchContainer>

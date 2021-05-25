@@ -70,3 +70,7 @@ export const StyledTouchAppIcon = styled(TouchApp)`
         opacity: 0;
     }
 `;
+
+export const SkipButton = styled.div`
+    z-index: 2;
+`;
