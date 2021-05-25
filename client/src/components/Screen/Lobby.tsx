@@ -7,6 +7,7 @@ import { IRouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import history from '../../domain/history/history';
 import franz from '../../images/franz.png';
 import noah from '../../images/noah.png';
 import steffi from '../../images/steffi.png';
@@ -14,7 +15,6 @@ import susi from '../../images/susi.png';
 import { localDevelopment } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';
 import Button from '../common/Button';
-import Logo from '../common/Logo';
 import {
     Character,
     CharacterContainer,
@@ -25,19 +25,14 @@ import {
     Content,
     ContentContainer,
     CopyToClipboard,
-    HeadContainer,
-    HeadContainerLeft,
-    HeadContainerRight,
-    Headline,
     LeftContainer,
     LobbyContainer,
     QRCode,
     QRCodeInstructions,
     RightButtonContainer,
     RightContainer,
-    RoomCodeContainer,
 } from './Lobby.sc';
-import SelectGameDialog from './SelectGameDialog';
+import LobbyHeader from './LobbyHeader';
 
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers } = React.useContext(GameContext);
@@ -45,7 +40,6 @@ export const Lobby: React.FunctionComponent = () => {
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: IRouteParams = useParams();
     const navigator = window.navigator;
-    const [dialogOpen, setDialogOpen] = React.useState(false);
     const characters = [franz, noah, susi, steffi];
 
     if (id && !screenSocket) {
@@ -77,18 +71,8 @@ export const Lobby: React.FunctionComponent = () => {
 
     return (
         <LobbyContainer>
-            <SelectGameDialog open={dialogOpen} handleClose={() => setDialogOpen(false)} />
             <Content>
-                <HeadContainer>
-                    <HeadContainerLeft>
-                        <RoomCodeContainer>
-                            <Headline>Room Code: {roomId}</Headline>
-                        </RoomCodeContainer>
-                    </HeadContainerLeft>
-                    <HeadContainerRight>
-                        <Logo />
-                    </HeadContainerRight>
-                </HeadContainer>
+                <LobbyHeader />
                 <ContentContainer>
                     <LeftContainer>
                         <ConnectedUsers>
@@ -104,7 +88,7 @@ export const Lobby: React.FunctionComponent = () => {
                                         {`Player ${user.number}`}
                                     </ConnectedUserCharacter>
                                     <ConnectedUserName number={user.number} free={user.free}>
-                                        {user.name}
+                                        {user.name.toUpperCase()}
                                     </ConnectedUserName>
                                 </ConnectedUserContainer>
                             ))}
@@ -120,8 +104,11 @@ export const Lobby: React.FunctionComponent = () => {
                             </CopyToClipboard>
                         </QRCode>
                         <RightButtonContainer>
-                            <Button text="Select Game" onClick={() => setDialogOpen(true)} />
-                            <Button text="Leaderboard" disabled />
+                            <Button onClick={() => history.push(`/screen/${roomId}/choose-game`)} variant="secondary">
+                                Choose Game
+                            </Button>
+                            <Button disabled>Leaderboard</Button>
+                            <Button onClick={() => history.push('/screen')}>Back</Button>
                         </RightButtonContainer>
                     </RightContainer>
                 </ContentContainer>
@@ -138,7 +125,7 @@ interface ConnectedUsers {
     free?: boolean;
 }
 
-function getUserArray(connectedUsers: ConnectedUsers[]): ConnectedUsers[] {
+export function getUserArray(connectedUsers: ConnectedUsers[]): ConnectedUsers[] {
     if (connectedUsers.length === 4) {
         return connectedUsers as ConnectedUsers[];
     }

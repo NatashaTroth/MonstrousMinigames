@@ -46,6 +46,14 @@ export const defaultValue = {
     setHasPaused: () => {
         // do nothing
     },
+    gameChosen: false,
+    setGameChosen: () => {
+        // do nothing
+    },
+    tutorial: false,
+    setTutorial: () => {
+        // do nothing
+    },
 };
 interface IGameContext {
     finished: boolean;
@@ -67,6 +75,10 @@ interface IGameContext {
     setHasTimedOut: (val: boolean) => void;
     hasPaused: boolean;
     setHasPaused: (val: boolean) => void;
+    gameChosen: boolean;
+    setGameChosen: (val: boolean) => void;
+    tutorial: boolean;
+    setTutorial: (val: boolean) => void;
 }
 
 export const GameContext = React.createContext<IGameContext>(defaultValue);
@@ -81,6 +93,9 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [countdownTime, setCountdownTime] = React.useState<number>(0);
     const [hasTimedOut, setHasTimedOut] = React.useState<boolean>(false);
     const [hasPaused, setHasPaused] = React.useState<boolean>(false);
+    // TODO use data from socket
+    const [gameChosen, setGameChosen] = React.useState(false);
+    const [tutorial, setTutorial] = React.useState(true);
 
     const content = {
         finished,
@@ -106,6 +121,10 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setHasTimedOut,
         hasPaused,
         setHasPaused,
+        gameChosen,
+        setGameChosen,
+        tutorial,
+        setTutorial,
     };
     return <GameContext.Provider value={content}>{children}</GameContext.Provider>;
 };

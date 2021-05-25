@@ -1,4 +1,3 @@
-
 import { localDevelopment, Obstacles } from '../../utils/constants';
 import { GameData } from './gameInterfaces';
 import { mapServerPosToWindowPos } from './mapServerPosToWindowPos';

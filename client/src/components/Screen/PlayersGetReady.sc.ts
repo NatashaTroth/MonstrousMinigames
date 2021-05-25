@@ -1,47 +1,46 @@
-import { Button, Typography } from '@material-ui/core';
 import styled from 'styled-components';
 
 import forest from '../../images/forest.svg';
-import { primary, QRCodeBackground } from '../../utils/colors';
+import { primary, secondary, secondaryShadow } from '../../utils/colors';
 
-export const LobbyContainer = styled.div`
+const boxShadowDepth = 7;
+
+export const GetReadyContainer = styled.div`
     background-image: url(${forest});
     background-size: cover;
     height: 100%;
     width: 100%;
     display: flex;
-    flex-direction: row;
-    color: white;
     justify-content: center;
-`;
-
-export const ContentContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-
-    @media (min-width: 1060px) {
-        flex-direction: row;
-    }
+    align-items: center;
 `;
 
 export const Content = styled.div`
     width: 100%;
     align-content: center;
     display: flex;
-    margin: 30px;
+    padding: 60px 60px;
+    justify-content: center;
     flex-direction: column;
-
-    @media (min-width: 1200px) {
-        margin: 60px;
-    }
 `;
 
+export const GetReadyBackground = styled.div`
+    background-color: ${secondary};
+    border-radius: 40px;
+    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${secondaryShadow};
+    display: flex;
+    width: 80%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+`;
 export const ConnectedUsers = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
+    margin-bottom: 30px;
 `;
 
 interface Props {
@@ -92,12 +91,6 @@ export const ConnectedUserContainer = styled.div`
     width: 20%;
 `;
 
-export const Subline = styled.div`
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 20px;
-`;
-
 export const CharacterContainer = styled.div`
     display: flex;
     justify-content: center;
@@ -110,70 +103,5 @@ export const Character = styled.img`
 
     @media (min-width: 1200px) {
         width: 80%;
-    }
-`;
-
-export const RightContainer = styled.div`
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-    margin-top: 30px;
-
-    @media (min-width: 1060px) {
-        width: 25%;
-        flex-direction: column;
-        margin-top: 0;
-        justify-content: space-between;
-    }
-
-    @media (min-width: 1200px) {
-        width: 30%;
-    }
-`;
-
-export const LeftContainer = styled.div`
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-
-    @media (min-width: 1060px) {
-        width: 75%;
-    }
-
-    @media (min-width: 1200px) {
-        width: 70%;
-    }
-`;
-
-export const QRCode = styled.div`
-    border-radius: 10px;
-    background-color: ${QRCodeBackground};
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-
-    @media (min-width: 1060px) {
-        width: 60%;
-    }
-`;
-
-export const CopyToClipboard = styled(Button)`
-    && {
-        color: white;
-    }
-`;
-
-export const QRCodeInstructions = styled(Typography)`
-    && {
-        margin-bottom: 5px;
-        font-weight: 700;
-    }
-`;
-
-export const RightButtonContainer = styled.div`
-    div:not(:last-child) {
-        margin-bottom: 20px;
     }
 `;
