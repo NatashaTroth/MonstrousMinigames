@@ -22,6 +22,7 @@ import LobbyHeader from './LobbyHeader';
 const ChooseGame: React.FunctionComponent = () => {
     const [selectedGame, setSelectedGame] = React.useState(0);
     const { roomId } = React.useContext(GameContext);
+    const tutorial = localStorage.getItem('tutorial') ? false : true;
 
     const games = [
         {
@@ -61,7 +62,11 @@ const ChooseGame: React.FunctionComponent = () => {
                         <SelectGameButtonContainer>
                             <Button
                                 variant="secondary"
-                                onClick={() => history.push(`/screen/${roomId}/game-intro`)}
+                                onClick={() =>
+                                    tutorial
+                                        ? history.push(`/screen/${roomId}/game-intro`)
+                                        : history.push(`/screen/${roomId}/get-ready`)
+                                }
                                 fullwidth
                             >{`Start ${games[selectedGame].name}`}</Button>
                         </SelectGameButtonContainer>

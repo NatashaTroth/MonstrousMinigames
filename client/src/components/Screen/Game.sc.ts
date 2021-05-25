@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
-import { orange } from '../../utils/colors';
+import { secondary } from '../../utils/colors';
 
 const fadeOut = keyframes`
     0% {
@@ -24,7 +24,7 @@ export const Container = styled.div`
 export const Go = styled.p`
     font-size: 200px;
     font-weight: 900;
-    color: ${orange};
+    color: ${secondary};
     -webkit-animation: fadeInOut 6s;
     animation: ${fadeOut} 2s;
     opacity: 0;
