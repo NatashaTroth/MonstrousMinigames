@@ -32,11 +32,15 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     const [playing, setPlaying] = React.useState<boolean>(false);
     const [audio, setAudio] = React.useState<HTMLAudioElement>(new Audio(lobbyMusic));
 
-    const playMusic = () => {
-        audio.play();
-        audio.volume = 0.2;
-        audio.loop = true;
-        setPlaying(true);
+    const playMusic = async () => {
+        try {
+            await audio.play();
+            audio.volume = 0.2;
+            audio.loop = true;
+            setPlaying(true);
+        } catch {
+            setPermissionGranted(false);
+        }
     };
 
     const pauseMusic = () => {

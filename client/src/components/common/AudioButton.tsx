@@ -12,6 +12,7 @@ interface IButton {
     variant?: 'primary' | 'secondary';
     fullwidth?: boolean;
     playing: boolean;
+    permission: boolean;
 }
 
 const AudioButton: React.FunctionComponent<IButton> = ({
@@ -23,6 +24,7 @@ const AudioButton: React.FunctionComponent<IButton> = ({
     variant = 'primary',
     fullwidth = false,
     playing = false,
+    permission = false,
 }) => (
     <StyledAudioButton
         disabled={disabled}
@@ -32,7 +34,11 @@ const AudioButton: React.FunctionComponent<IButton> = ({
         variant={variant}
         fullwidth={fullwidth}
     >
-        {playing ? <img src={audioIcon} className="muteImg" /> : <img src={audioMutedIcon} className="muteImg" />}
+        {playing && permission ? (
+            <img src={audioIcon} className="muteImg" />
+        ) : (
+            <img src={audioMutedIcon} className="muteImg" />
+        )}
     </StyledAudioButton>
 );
 

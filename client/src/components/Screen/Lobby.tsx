@@ -14,6 +14,7 @@ import steffi from '../../images/steffi.png';
 import susi from '../../images/susi.png';
 import { localDevelopment } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';
+import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
 import {
     Character,
@@ -34,9 +35,15 @@ import {
 } from './Lobby.sc';
 import LobbyHeader from './LobbyHeader';
 
+interface WindowProps extends Window {
+    webkitAudioContext?: typeof AudioContext;
+}
+
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers } = React.useContext(GameContext);
-    const { playLobbyMusic, pauseLobbyMusic, permission } = React.useContext(AudioContext);
+    const { playLobbyMusic, pauseLobbyMusic, permission, playing, setPermissionGranted } = React.useContext(
+        AudioContext
+    );
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: IRouteParams = useParams();
     const navigator = window.navigator;
@@ -61,17 +68,64 @@ export const Lobby: React.FunctionComponent = () => {
         }
     }, [roomId]);
 
+    // React.useEffect(() => {
+    //     playLobbyMusic(permission);
+    // }, [permission, playLobbyMusic]);
     React.useEffect(() => {
+        const w = window as WindowProps;
+        const AudioContext = window.AudioContext || w.webkitAudioContext || false;
+        if (AudioContext) {
+            // eslint-disable-next-line no-console
+            console.log('loggy permission granted');
+            setPermissionGranted(true);
+            new AudioContext().resume();
+        }
         playLobbyMusic(permission);
-    }, [permission, playLobbyMusic]);
+    }, []);
+
+    // React.useEffect(() => {
+    //     const w = window as WindowProps;
+    //     const AudioContext = window.AudioContext || w.webkitAudioContext || false;
+    //     if (AudioContext) {
+    //         setPermissionGranted(true);
+    //         new AudioContext().resume();
+    //     }
+    // }, []);
 
     useBeforeunload(() => {
         pauseLobbyMusic(permission);
     });
 
+    async function handleAudio() {
+        const w = window as WindowProps;
+        const AudioContext = window.AudioContext || w.webkitAudioContext || false;
+
+        if (!permission) {
+            if (AudioContext) {
+                // eslint-disable-next-line no-console
+                console.log('loggy permission granted');
+                setPermissionGranted(true);
+                new AudioContext().resume();
+            }
+        }
+
+        if (playing) {
+            pauseLobbyMusic(permission);
+        } else {
+            playLobbyMusic(permission);
+        }
+    }
+
     return (
         <LobbyContainer>
             <Content>
+                <AudioButton
+                    type="button"
+                    name="new"
+                    onClick={handleAudio}
+                    playing={playing}
+                    permission={permission}
+                ></AudioButton>
                 <LobbyHeader />
                 <ContentContainer>
                     <LeftContainer>

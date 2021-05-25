@@ -51,8 +51,6 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
         if (!permission) {
             if (AudioContext) {
-                // eslint-disable-next-line no-console
-                console.log('setting permission');
                 setPermissionGranted(true);
                 new AudioContext().resume();
             }
@@ -68,7 +66,13 @@ export const ConnectScreen: React.FunctionComponent = () => {
     return (
         <ConnectScreenContainer>
             <ConnectDialog open={dialogOpen} handleClose={() => setDialogOpen(false)} />
-            <AudioButton type="button" name="new" onClick={handleAudio} playing={playing}></AudioButton>
+            <AudioButton
+                type="button"
+                name="new"
+                onClick={handleAudio}
+                playing={playing}
+                permission={permission}
+            ></AudioButton>
             <LeftContainer>
                 <LeftButtonContainer>
                     <Button type="button" name="new" onClick={handleCreateNewRoom}>
