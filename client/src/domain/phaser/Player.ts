@@ -29,7 +29,7 @@ export class Player {
     ) {
         this.coordinates = {
             x: this.coordinates.x + this.plusX * this.index,
-            y: this.coordinates.y + this.plusY * this.index,
+            y: (index * window.innerHeight) / 4 + this.plusY,
         };
 
         this.animationName = `${monsterName}Walk`;

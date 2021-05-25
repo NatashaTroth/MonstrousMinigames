@@ -2,7 +2,9 @@ import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { handlePermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
+import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
 import Logo from '../common/Logo';
 import ConnectDialog from './ConnectDialog';
@@ -14,14 +16,12 @@ import {
     RightContainer,
 } from './ConnectScreen.sc';
 
-interface WindowProps extends Window {
-    webkitAudioContext?: typeof AudioContext;
-}
-
 export const ConnectScreen: React.FunctionComponent = () => {
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const { handleSocketConnection } = React.useContext(ScreenSocketContext);
-    const { setPermissionGranted } = React.useContext(AudioContext);
+    const { playLobbyMusic, pauseLobbyMusic, permission, setPermissionGranted, playing } = React.useContext(
+        AudioContext
+    );
 
     async function handleCreateNewRoom() {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}create-room`, {
@@ -34,27 +34,34 @@ export const ConnectScreen: React.FunctionComponent = () => {
         const data = await response.json();
         handleSocketConnection(data.roomId, 'lobby');
 
-        setAudioContext();
+        handleAudio();
     }
 
     async function handleJoinRoom() {
         setDialogOpen(true);
-        setAudioContext();
+        handleAudio();
     }
 
-    async function setAudioContext() {
-        const w = window as WindowProps;
-        const AudioContext = window.AudioContext || w.webkitAudioContext || false;
+    async function handleAudio() {
+        if (handlePermission(permission)) setPermissionGranted(true);
 
-        if (AudioContext) {
-            setPermissionGranted(true);
-            new AudioContext().resume();
+        if (playing) {
+            pauseLobbyMusic(permission);
+        } else {
+            playLobbyMusic(permission);
         }
     }
 
     return (
         <ConnectScreenContainer>
             <ConnectDialog open={dialogOpen} handleClose={() => setDialogOpen(false)} />
+            <AudioButton
+                type="button"
+                name="new"
+                onClick={handleAudio}
+                playing={playing}
+                permission={permission}
+            ></AudioButton>
             <LeftContainer>
                 <LeftButtonContainer>
                     <Button type="button" name="new" onClick={handleCreateNewRoom}>
@@ -75,7 +82,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                     <Button type="button" name="credits" onClick={() => history.push('/credits')}>
                         Credits
                     </Button>
-                    <Button type="button" name="settings" onClick={() => history.push('/settings')} disabled>
+                    <Button type="button" name="settings" onClick={() => history.push('/settings')}>
                         Settings
                     </Button>
                 </ButtonContainer>

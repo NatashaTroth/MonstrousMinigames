@@ -7,6 +7,7 @@ import { IRouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { handlePermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import franz from '../../images/franz.png';
 import noah from '../../images/noah.png';
@@ -14,6 +15,7 @@ import steffi from '../../images/steffi.png';
 import susi from '../../images/susi.png';
 import { localDevelopment } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';
+import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
 import {
     Character,
@@ -35,8 +37,10 @@ import {
 import LobbyHeader from './LobbyHeader';
 
 export const Lobby: React.FunctionComponent = () => {
-    const { roomId, connectedUsers } = React.useContext(GameContext);
-    const { playLobbyMusic, pauseLobbyMusic, permission } = React.useContext(AudioContext);
+    const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
+    const { playLobbyMusic, pauseLobbyMusic, permission, playing, setPermissionGranted } = React.useContext(
+        AudioContext
+    );
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: IRouteParams = useParams();
     const navigator = window.navigator;
@@ -61,17 +65,40 @@ export const Lobby: React.FunctionComponent = () => {
         }
     }, [roomId]);
 
+    const handleAudioPermission = () => {
+        if (handlePermission(permission)) {
+            setPermissionGranted(true);
+        }
+    };
+
     React.useEffect(() => {
-        playLobbyMusic(permission);
-    }, [permission, playLobbyMusic]);
+        handleAudioPermission();
+    }, []);
 
     useBeforeunload(() => {
         pauseLobbyMusic(permission);
     });
 
+    async function handleAudio() {
+        handleAudioPermission();
+
+        if (playing) {
+            pauseLobbyMusic(permission);
+        } else {
+            playLobbyMusic(permission);
+        }
+    }
+
     return (
         <LobbyContainer>
             <Content>
+                <AudioButton
+                    type="button"
+                    name="new"
+                    onClick={handleAudio}
+                    playing={playing}
+                    permission={permission}
+                ></AudioButton>
                 <LobbyHeader />
                 <ContentContainer>
                     <LeftContainer>
@@ -104,9 +131,14 @@ export const Lobby: React.FunctionComponent = () => {
                             </CopyToClipboard>
                         </QRCode>
                         <RightButtonContainer>
-                            <Button onClick={() => history.push(`/screen/${roomId}/choose-game`)} variant="secondary">
-                                Choose Game
-                            </Button>
+                            {screenAdmin && (
+                                <Button
+                                    onClick={() => history.push(`/screen/${roomId}/choose-game`)}
+                                    variant="secondary"
+                                >
+                                    Choose Game
+                                </Button>
+                            )}
                             <Button disabled>Leaderboard</Button>
                             <Button onClick={() => history.push('/screen')}>Back</Button>
                         </RightButtonContainer>

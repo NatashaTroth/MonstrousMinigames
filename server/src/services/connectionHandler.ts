@@ -208,21 +208,52 @@ class ConnectionHandler {
                 return;
             }
             socket.room = room;
+            socket.room.addScreen(socket.id);
             socket.join(socket.room.id);
-
             console.info(socket.room.id + ' | Screen connected');
 
             emitter.sendConnectedUsers([screenNameSpace], socket.room);
 
+            if (socket.room.isAdminScreen(socket.id)) {
+                emitter.sendScreenAdmin(screenNameSpace, socket.id)
+            }
+
             socket.on('disconnect', () => {
                 console.info(socket.room.id + ' | Screen disconnected');
+                socket.room.removeScreen(socket.id);
+
+                if (socket.room.getAdminScreenId()) {
+                    emitter.sendScreenAdmin(screenNameSpace, socket.room.getAdminScreenId())
+                }
             });
 
             socket.on('message', function (message: IMessage) {
-                console.info(message);
-
                 const type = message.type;
                 switch (type) {
+                    case CatchFoodMsgType.START: {
+                        if (socket.room.isOpen() && socket.room.isAdminScreen(socket.id)) {
+                            try {
+                                room.startGame();
+                            } catch (e) {
+                                console.error(socket.room.id + ' | ' + e.name);
+                                emitter.sendErrorMessage(socket, e);
+                            }
+
+                            emitter.sendGameState(screenNameSpace, socket.room);
+
+                            const gameStateInterval = setInterval(() => {
+                                if (!socket.room.isPlaying() && !socket.room.isPaused()) {
+                                    clearInterval(gameStateInterval);
+                                }
+                                // send gamestate volatile
+                                if (socket.room.isPlaying()) {
+                                    emitter.sendGameState(screenNameSpace, socket.room, true);
+                                }
+                            }, Globals.GAME_STATE_UPDATE_MS);
+                        }
+
+                        break;
+                    }
                     case MessageTypes.PAUSE_RESUME: {
                         if (socket.room.isPlaying()) {
                             console.info(socket.room.id + ' | Pause Game');
@@ -257,7 +288,7 @@ class ConnectionHandler {
                         break;
                     }
                     default: {
-                        //console.info(message);
+                        console.info(message);
                     }
                 }
             });

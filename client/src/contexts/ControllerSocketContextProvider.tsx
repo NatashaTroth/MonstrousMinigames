@@ -14,6 +14,7 @@ import { GameHasPausedMessage } from '../domain/typeGuards/paused';
 import { PlayerFinishedMessage } from '../domain/typeGuards/playerFinished';
 import { GameHasResetMessage } from '../domain/typeGuards/reset';
 import { GameHasResumedMessage } from '../domain/typeGuards/resumed';
+import { ScreenAdminMessage } from '../domain/typeGuards/screenAdmin';
 import { GameHasStartedMessage } from '../domain/typeGuards/started';
 import { GameHasStoppedMessage } from '../domain/typeGuards/stopped';
 import { TimedOutMessage } from '../domain/typeGuards/timedOut';
@@ -38,7 +39,8 @@ export type MessageData =
     | ConnectedUsersMessage
     | undefined
     | GameHasFinishedMessage
-    | GameStateInfoMessage;
+    | GameStateInfoMessage
+    | ScreenAdminMessage;
 
 export const defaultValue = {
     controllerSocket: new InMemorySocketFake(),

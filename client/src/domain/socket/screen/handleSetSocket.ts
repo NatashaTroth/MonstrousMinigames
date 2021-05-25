@@ -13,6 +13,7 @@ import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/fini
 import { pausedTypeGuard } from '../../typeGuards/paused';
 import { resetTypeGuard } from '../../typeGuards/reset';
 import { resumedTypeGuard } from '../../typeGuards/resumed';
+import { screenAdminTypeGuard } from '../../typeGuards/screenAdmin';
 import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/started';
 import { stoppedTypeGuard } from '../../typeGuards/stopped';
 import { TimedOutMessage, timedOutTypeGuard } from '../../typeGuards/timedOut';
@@ -29,6 +30,7 @@ export interface HandleSetSocketDependencies {
     setHasTimedOut: (val: boolean) => void;
     setFinished: (val: boolean) => void;
     setPlayerRanks: (val: PlayerRank[]) => void;
+    setScreenAdmin: (val: boolean) => void;
     history: History;
 }
 
@@ -47,6 +49,7 @@ export function handleSetSocket(
         setHasTimedOut,
         setPlayerRanks,
         setFinished,
+        setScreenAdmin,
         history,
     } = dependencies;
 
@@ -62,6 +65,7 @@ export function handleSetSocket(
     const stoppedSocket = new MessageSocket(stoppedTypeGuard, socket);
     const errorSocket = new MessageSocket(errorTypeGuard, socket);
     const timedOutSocket = new MessageSocket(timedOutTypeGuard, socket);
+    const screenAdminSocket = new MessageSocket(screenAdminTypeGuard, socket);
 
     connectedUsersSocket.listen((data: ConnectedUsersMessage) =>
         handleConnectedUsersMessage({ data, dependencies: { setConnectedUsers } })
@@ -91,6 +95,8 @@ export function handleSetSocket(
     errorSocket.listen((data: ErrorMessage) => {
         // TODO handle errors
     });
+
+    screenAdminSocket.listen(() => setScreenAdmin(true));
 
     if (socket) {
         history.push(`/screen/${roomId}/${route || 'lobby'}`);
