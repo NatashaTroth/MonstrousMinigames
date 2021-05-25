@@ -5,10 +5,8 @@ import { useHistory } from 'react-router-dom';
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
-import { localDevelopment } from '../../utils/constants';
-import Button from '../common/Button';
 import FullScreenContainer from '../common/FullScreenContainer';
-import { AdminLabel, Label } from '../common/Label.sc';
+import { Label } from '../common/Label.sc';
 import {
     Character,
     CharacterContainer,
@@ -26,9 +24,7 @@ import {
 
 export const Lobby: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);
-    const { isPlayerAdmin, permission, playerNumber, name, character, ready, setReady } = React.useContext(
-        PlayerContext
-    );
+    const { playerNumber, name, character, ready, setReady } = React.useContext(PlayerContext);
     const { roomId, gameChosen, setGameChosen, tutorial, setTutorial } = React.useContext(GameContext);
     const history = useHistory();
 
@@ -72,13 +68,10 @@ export const Lobby: React.FunctionComponent = () => {
                             </>
                         ) : (
                             <>
-                                {isPlayerAdmin && <AdminLabel>{`You are Player #${playerNumber}`}</AdminLabel>}
                                 <Label>
                                     {!ready
                                         ? `Show that you are ready to play!`
-                                        : isPlayerAdmin
-                                        ? 'Press the "Start Game" button to start the game.'
-                                        : 'Wait for Player #1 to start your game!'}
+                                        : 'Wait for the admin to start your game!'}
                                 </Label>
                                 <PlayerContent>
                                     <LeftContainer>
@@ -93,21 +86,6 @@ export const Lobby: React.FunctionComponent = () => {
                                         </ReadyButton>
                                     </RightContainer>
                                 </PlayerContent>
-
-                                {/* TODO remove start game from controller */}
-                                {isPlayerAdmin && (
-                                    <div>
-                                        <Button
-                                            onClick={() => {
-                                                if (permission || localDevelopment) {
-                                                    startGame();
-                                                }
-                                            }}
-                                        >
-                                            Start Game
-                                        </Button>
-                                    </div>
-                                )}
                             </>
                         )}
                     </Content>

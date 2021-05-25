@@ -54,6 +54,10 @@ export const defaultValue = {
     setTutorial: () => {
         // do nothing
     },
+    screenAdmin: false,
+    setScreenAdmin: () => {
+        // do nothing
+    },
 };
 interface IGameContext {
     finished: boolean;
@@ -79,6 +83,8 @@ interface IGameContext {
     setGameChosen: (val: boolean) => void;
     tutorial: boolean;
     setTutorial: (val: boolean) => void;
+    screenAdmin: boolean;
+    setScreenAdmin: (val: boolean) => void;
 }
 
 export const GameContext = React.createContext<IGameContext>(defaultValue);
@@ -96,6 +102,7 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     // TODO use data from socket
     const [gameChosen, setGameChosen] = React.useState(false);
     const [tutorial, setTutorial] = React.useState(true);
+    const [screenAdmin, setScreenAdmin] = React.useState<boolean>(false);
 
     const content = {
         finished,
@@ -125,6 +132,8 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setGameChosen,
         tutorial,
         setTutorial,
+        screenAdmin,
+        setScreenAdmin,
     };
     return <GameContext.Provider value={content}>{children}</GameContext.Provider>;
 };
