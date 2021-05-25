@@ -34,6 +34,13 @@ class ConnectionHandler {
         this.handleScreens();
         this.handleGameEvents();
     }
+
+    public shutdown(): void {
+        this.controllerNamespace.removeAllListeners();
+        this.screenNameSpace.removeAllListeners();
+        this.io.removeAllListeners();
+        this.gameEventEmitter.removeAllListeners();
+    }
     private handleControllers() {
         const rs = this.rs;
         const controllerNamespace = this.controllerNamespace;
@@ -60,25 +67,12 @@ class ConnectionHandler {
             /* User join logic */
             let user: User;
             let userId = socket.handshake.query.userId;
-            if (userId) {
-                // check if user is in room
-                user = socket.room.getUserById(userId);
-                if (user) {
-                    // user is in room
-                    user.setRoomId(roomId);
-                    user.setSocketId(socket.id);
-                    user.setActive(true);
-                } else {
-                    user = new User(socket.room.id, socket.id, name);
-                    userId = user.id;
-                    try {
-                        socket.room.addUser(user);
-                    } catch (e) {
-                        emitter.sendErrorMessage(socket, e);
-                        console.error(roomId + ' | ' + e.name + ' | ' + userId);
-                        return;
-                    }
-                }
+            user = socket.room.getUserById(userId);
+            if (user) {
+                // user is in room
+                user.setRoomId(roomId);
+                user.setSocketId(socket.id);
+                user.setActive(true);
             } else {
                 // assign user id
                 user = new User(socket.room.id, socket.id, name);
@@ -88,7 +82,7 @@ class ConnectionHandler {
                     socket.room.addUser(user);
                 } catch (e) {
                     emitter.sendErrorMessage(socket, e);
-                    console.error(roomId + ' | ' + e.name + ' | ' + userId);
+                    console.error(roomId + ' | ' + e.name);
                     return;
                 }
             }
@@ -214,21 +208,52 @@ class ConnectionHandler {
                 return;
             }
             socket.room = room;
+            socket.room.addScreen(socket.id);
             socket.join(socket.room.id);
-
             console.info(socket.room.id + ' | Screen connected');
 
             emitter.sendConnectedUsers([screenNameSpace], socket.room);
 
+            if (socket.room.isAdminScreen(socket.id)) {
+                emitter.sendScreenAdmin(screenNameSpace, socket.id)
+            }
+
             socket.on('disconnect', () => {
                 console.info(socket.room.id + ' | Screen disconnected');
+                socket.room.removeScreen(socket.id);
+
+                if (socket.room.getAdminScreenId()) {
+                    emitter.sendScreenAdmin(screenNameSpace, socket.room.getAdminScreenId())
+                }
             });
 
             socket.on('message', function (message: IMessage) {
-                console.info(message);
-
                 const type = message.type;
                 switch (type) {
+                    case CatchFoodMsgType.START: {
+                        if (socket.room.isOpen() && socket.room.isAdminScreen(socket.id)) {
+                            try {
+                                room.startGame();
+                            } catch (e) {
+                                console.error(socket.room.id + ' | ' + e.name);
+                                emitter.sendErrorMessage(socket, e);
+                            }
+
+                            emitter.sendGameState(screenNameSpace, socket.room);
+
+                            const gameStateInterval = setInterval(() => {
+                                if (!socket.room.isPlaying() && !socket.room.isPaused()) {
+                                    clearInterval(gameStateInterval);
+                                }
+                                // send gamestate volatile
+                                if (socket.room.isPlaying()) {
+                                    emitter.sendGameState(screenNameSpace, socket.room, true);
+                                }
+                            }, Globals.GAME_STATE_UPDATE_MS);
+                        }
+
+                        break;
+                    }
                     case MessageTypes.PAUSE_RESUME: {
                         if (socket.room.isPlaying()) {
                             console.info(socket.room.id + ' | Pause Game');
@@ -263,7 +288,7 @@ class ConnectionHandler {
                         break;
                     }
                     default: {
-                        //console.info(message);
+                        console.info(message);
                     }
                 }
             });

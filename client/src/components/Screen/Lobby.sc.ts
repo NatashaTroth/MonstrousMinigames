@@ -1,32 +1,12 @@
 import { Button, Typography } from '@material-ui/core';
 import styled from 'styled-components';
 
-import {
-    disabledBackground,
-    lightgrey,
-    Player1,
-    Player2,
-    Player3,
-    Player4,
-    QRCodeBackground,
-} from '../../utils/colors';
+import forest from '../../images/forest.svg';
+import { primary, QRCodeBackground } from '../../utils/colors';
 
-function getPlayerBackgroundColor(n: number) {
-    switch (n) {
-        case 1:
-            return Player1;
-        case 2:
-            return Player2;
-        case 3:
-            return Player3;
-        case 4:
-            return Player4;
-        default:
-            return lightgrey;
-    }
-}
 export const LobbyContainer = styled.div`
-    background-color: black;
+    background-image: url(${forest});
+    background-size: cover;
     height: 100%;
     width: 100%;
     display: flex;
@@ -35,50 +15,26 @@ export const LobbyContainer = styled.div`
     justify-content: center;
 `;
 
-export const HeadContainer = styled.div`
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-`;
-
 export const ContentContainer = styled.div`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    height: 100%;
+
+    @media (min-width: 1060px) {
+        flex-direction: row;
+    }
 `;
 
 export const Content = styled.div`
     width: 100%;
-    max-width: 1560px;
     align-content: center;
     display: flex;
-    margin: 60px;
+    margin: 30px;
     flex-direction: column;
-`;
 
-export const RoomCodeContainer = styled.div`
-    width: 100%;
-`;
-
-export const HeadContainerLeft = styled.div`
-    display: flex;
-    width: 70%;
-`;
-
-export const HeadContainerRight = styled.div`
-    display: flex;
-    width: 30%;
-    justify-content: center;
-`;
-
-export const Headline = styled.div`
-    font-size: 30px;
-    font-weight: 700;
-    background-color: ${disabledBackground};
-    color: black;
-    padding-left: 20px;
-    width: 100%;
-    display: flex;
-    margin: 20px 0;
+    @media (min-width: 1200px) {
+        margin: 60px;
+    }
 `;
 
 export const ConnectedUsers = styled.div`
@@ -95,26 +51,46 @@ interface Props {
 
 const User = styled.div<Props>`
     border-radius: 10px;
-    color: ${({ free }) => (free ? lightgrey : 'black')};
-    background-color: ${({ free, number }) => (free ? disabledBackground : getPlayerBackgroundColor(number))};
+    color: black;
+    background-color: ${primary};
     padding: 10px;
-    font-size: 25px;
+    font-size: 20px;
 `;
 
 export const ConnectedUserName = styled(User)`
     max-width: 200px;
     display: flex;
     flex-direction: column;
+
+    @media (min-width: 1200px) {
+        font-size: 25px;
+    }
 `;
 
 export const ConnectedUserCharacter = styled(User)`
+    height: 240px;
     max-width: 200px;
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
+    justify-content: ${({ free }) => (free ? 'flex-end' : 'center')};
+
+    @media (min-width: 875px) {
+        justify-content: ${({ free }) => (free ? 'flex-end' : 'space-between')};
+    }
+    @media (min-width: 1000px) {
+        justify-content: ${({ free }) => (free ? 'flex-end' : 'center')};
+    }
+
+    @media (min-width: 1200px) {
+        font-size: 25px;
+        justify-content: ${({ free }) => (free ? 'flex-end' : 'space-between')};
+    }
 `;
 
-export const ConnectedUserContainer = styled.div``;
+export const ConnectedUserContainer = styled.div`
+    width: 20%;
+`;
 
 export const Subline = styled.div`
     font-size: 15px;
@@ -130,20 +106,45 @@ export const CharacterContainer = styled.div`
 
 export const Character = styled.img`
     display: flex;
-    width: 80%;
+    width: 100%;
+
+    @media (min-width: 1200px) {
+        width: 80%;
+    }
 `;
 
 export const RightContainer = styled.div`
     display: flex;
-    width: 30%;
-    flex-direction: column;
+    width: 100%;
+    flex-direction: row;
     align-items: center;
+    justify-content: space-evenly;
+    margin-top: 30px;
+
+    @media (min-width: 1060px) {
+        width: 25%;
+        flex-direction: column;
+        margin-top: 0;
+        justify-content: space-between;
+    }
+
+    @media (min-width: 1200px) {
+        width: 30%;
+    }
 `;
 
 export const LeftContainer = styled.div`
     display: flex;
-    width: 70%;
+    width: 100%;
     flex-direction: column;
+
+    @media (min-width: 1060px) {
+        width: 75%;
+    }
+
+    @media (min-width: 1200px) {
+        width: 70%;
+    }
 `;
 
 export const QRCode = styled.div`
@@ -151,8 +152,11 @@ export const QRCode = styled.div`
     background-color: ${QRCodeBackground};
     display: flex;
     flex-direction: column;
-    width: 40%;
     padding: 10px;
+
+    @media (min-width: 1060px) {
+        width: 60%;
+    }
 `;
 
 export const CopyToClipboard = styled(Button)`
@@ -164,13 +168,12 @@ export const CopyToClipboard = styled(Button)`
 export const QRCodeInstructions = styled(Typography)`
     && {
         margin-bottom: 5px;
+        font-weight: 700;
     }
 `;
 
 export const RightButtonContainer = styled.div`
-    margin-top: 30px;
-
-    div:first-child {
+    div:not(:last-child) {
         margin-bottom: 20px;
     }
 `;

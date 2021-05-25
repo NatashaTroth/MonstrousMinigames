@@ -5,37 +5,37 @@ import { grey } from '../../../utils/colors';
 
 const slide = keyframes`
     0%, 33% { 
-        transform: translateY(-200);
+        transform: translateX(-200);
           opacity: 1;
     }
     16% {
-        transform: translateY(200px); 
+        transform: translateX(200px); 
           opacity: 1;
     }
     33%{
-       transform: translateY(-200px);
+       transform: translateX(-200px);
          opacity: 1;  
     }
     49%{
-       transform: translateY(200px);  
+       transform: translateX(200px);  
          opacity: 1;
     }
     66%{
-       transform: translateY(-200px);  
+       transform: translateX(-200px);  
          opacity: 1;
     }
     82%{
-       transform: translateY(200px);  
+       transform: translateX(200px);  
        opacity: 1;
     }
     100% { 
-        transform: translateY(200px);
+        transform: translateX(200px);
         opacity: 0;  
     }
 `;
 
 export const ObstacleItem = styled.div`
-    transform: rotate(348deg);
+    transform: rotate(275deg);
 `;
 export const StyledObstacleImage = styled.img`
     width: 100%;
@@ -47,13 +47,13 @@ export const TouchContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40%;
+    width: 80%;
 `;
 
 export const Line = styled.div`
-    height: 80%;
+    width: 80%;
     position: absolute;
-    border-left: 5px dashed red;
+    border-top: 8px dashed white;
 `;
 
 export const StyledTouchAppIcon = styled(TouchApp)`
@@ -69,4 +69,8 @@ export const StyledTouchAppIcon = styled(TouchApp)`
         animation-name: ${slide};
         opacity: 0;
     }
+`;
+
+export const SkipButton = styled.div`
+    z-index: 2;
 `;

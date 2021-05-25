@@ -16,20 +16,22 @@ describe('Controller FinishedScreen', () => {
     it('finished users and their rank are rendered', () => {
         const playerRanks = [
             {
-                id: 1,
+                id: '1',
                 rank: 1,
                 name: 'User 1',
                 totalTimeInMs: 5000,
                 finished: true,
                 positionX: 0,
+                isActive: true,
             },
             {
-                id: 2,
+                id: '2',
                 rank: 2,
                 name: 'User 2',
                 totalTimeInMs: 5600,
                 finished: true,
                 positionX: 0,
+                isActive: true,
             },
         ];
 
@@ -52,20 +54,22 @@ describe('Controller FinishedScreen', () => {
     it('users times are formatted and rendered', () => {
         const playerRanks = [
             {
-                id: 1,
+                id: '1',
                 rank: 1,
                 name: 'User 1',
                 totalTimeInMs: 5000,
                 finished: true,
                 positionX: 0,
+                isActive: true,
             },
             {
-                id: 2,
+                id: '2',
                 rank: 2,
                 name: 'User 2',
                 totalTimeInMs: 5600,
                 finished: true,
                 positionX: 0,
+                isActive: true,
             },
         ];
 
@@ -84,28 +88,31 @@ describe('Controller FinishedScreen', () => {
     it('if game has timed out, a section for unfinished users is rendered', () => {
         const playerRanks = [
             {
-                id: 1,
+                id: '1',
                 rank: 1,
                 name: 'User 1',
                 totalTimeInMs: 5000,
                 finished: true,
                 positionX: 0,
+                isActive: true,
             },
             {
-                id: 2,
+                id: '2',
                 rank: 2,
                 name: 'User 2',
                 totalTimeInMs: 5600,
                 finished: true,
                 positionX: 0,
+                isActive: true,
             },
             {
-                id: 3,
+                id: '3',
                 rank: undefined,
                 name: 'User 3',
                 totalTimeInMs: undefined,
                 finished: false,
                 positionX: 0,
+                isActive: true,
             },
         ];
 

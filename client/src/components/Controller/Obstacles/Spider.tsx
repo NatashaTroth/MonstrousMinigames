@@ -13,7 +13,7 @@ const Spider: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { roomId } = React.useContext(GameContext);
     const { obstacle, setObstacle } = React.useContext(PlayerContext);
-    const MAX = 20;
+    const MAX = 15;
 
     React.useEffect(() => {
         const solveObstacle = () => {

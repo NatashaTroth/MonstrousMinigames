@@ -29,9 +29,10 @@ function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
         });
     }
 }
+
 function sendErrorMessage(socket: Socket, e: Error): void {
     socket.emit('message', {
-        type: 'error',
+        type: MessageTypes.ERROR,
         name: e.name,
         msg: e.message,
     });
@@ -62,14 +63,6 @@ function sendGameHasTimedOut(nsps: Array<Namespace>, data: GameEvents.GameHasFin
     });
 }
 
-function sendGameHasStopped(nsps: Array<Namespace>, roomId: string): void {
-    nsps.forEach(function (namespace: Namespace) {
-        namespace.to(roomId).emit('message', {
-            type: MessageTypes.GAME_HAS_STOPPED,
-        });
-    });
-}
-
 function sendPlayerFinished(nsp: Namespace, user: User, data: GameEvents.PlayerHasFinished): void {
     nsp.to(user.socketId).emit('message', {
         type: CatchFoodMsgType.PLAYER_FINISHED,
@@ -85,6 +78,15 @@ function sendConnectedUsers(nsps: Array<Namespace>, room: Room): void {
         });
     });
 }
+
+function sendScreenAdmin(nsp: Namespace, socketId: string): void {
+    nsp.to(socketId).emit('message',
+        {
+            type: MessageTypes.SCREEN_ADMIN
+        }
+    )
+}
+
 function sendMessage(type: MessageTypes, nsps: Array<Namespace>, roomId: string): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(roomId).emit('message', {
@@ -103,5 +105,5 @@ export default {
     sendGameHasTimedOut,
     sendConnectedUsers,
     sendMessage,
-    sendGameHasStopped,
+    sendScreenAdmin,
 };

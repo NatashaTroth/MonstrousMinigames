@@ -1,6 +1,7 @@
 import Room from '../../src/classes/room';
 import User from '../../src/classes/user';
 import { GameAlreadyStartedError } from '../../src/customErrors';
+import CannotStartEmptyGameError from '../../src/customErrors/CannotStartEmptyGameError';
 import { Globals } from '../../src/enums/globals';
 import { MaxNumberUsersExceededError } from '../../src/gameplay/customErrors';
 
@@ -96,5 +97,12 @@ describe('Room: Users', () => {
         expect(() => {
             room.addUser(new User(room.id, '999', 'User'));
         }).toThrow(GameAlreadyStartedError);
+    });
+    it('should throw an CannotStartEmptyGameError if a game without players is started', () => {
+        room.removeUser(user1)
+        room.removeUser(user2)
+        expect(() => {
+            room.startGame();
+        }).toThrow(CannotStartEmptyGameError);
     });
 });
