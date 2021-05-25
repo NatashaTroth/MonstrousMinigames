@@ -65,15 +65,15 @@ export const Lobby: React.FunctionComponent = () => {
         }
     }, [roomId]);
 
-    const handleAudioPermission = () => {
+    const handleAudioPermission = React.useCallback(() => {
         if (handlePermission(permission)) {
             setPermissionGranted(true);
         }
-    };
+    }, [permission, setPermissionGranted]);
 
     React.useEffect(() => {
         handleAudioPermission();
-    }, []);
+    }, [handleAudioPermission]);
 
     useBeforeunload(() => {
         pauseLobbyMusic(permission);
@@ -133,6 +133,7 @@ export const Lobby: React.FunctionComponent = () => {
                         <RightButtonContainer>
                             {screenAdmin && (
                                 <Button
+                                    disabled={!connectedUsers || connectedUsers?.length === 0}
                                     onClick={() => history.push(`/screen/${roomId}/choose-game`)}
                                     variant="secondary"
                                 >
