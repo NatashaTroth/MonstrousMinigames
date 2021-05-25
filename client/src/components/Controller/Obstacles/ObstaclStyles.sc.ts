@@ -1,7 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
 import forest from '../../../images/forest.svg';
-import { orange } from '../../../utils/colors';
 
 export const swing = keyframes`
     0% {
@@ -56,25 +55,6 @@ export const ObstacleContainer = styled.div`
         user-select: none;
         pointer-events: none;
     }
-`;
-
-export const ObstacleInstructions = styled.div`
-    border: 5px solid ${orange};
-    background: white;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
-    color: ${orange};
-    font-weight: 700;
-    display: flex;
-    width: 80%;
-    font-size: 20px;
-    flex-direction: column;
-    text-align: center;
-    box-shadow: 8px 8px 0 #888;
-    border-radius: 4px;
-    margin-top: 50px;
-    margin-bottom: 20px;
-    z-index: 3;
 `;
 
 export const ObstacleContent = styled.div`

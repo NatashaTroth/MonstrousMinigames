@@ -8,14 +8,12 @@ import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { localDevelopment } from '../../utils/constants';
 import Button from '../common/Button';
 import FullScreenContainer from '../common/FullScreenContainer';
+import { Instruction, InstructionContainer, InstructionText } from '../common/Instruction.sc';
 import { AdminLabel, Label } from '../common/Label.sc';
 import {
     Character,
     CharacterContainer,
     Content,
-    Instruction,
-    InstructionContainer,
-    InstructionText,
     LeftContainer,
     LobbyContainer,
     PlayerContent,
@@ -29,7 +27,7 @@ export const Lobby: React.FunctionComponent = () => {
     const { isPlayerAdmin, permission, playerNumber, name, character, ready, setReady } = React.useContext(
         PlayerContext
     );
-    const { roomId, gameChosen, setGameChosen, tutorial, setTutorial } = React.useContext(GameContext);
+    const { roomId, gameChosen, tutorial } = React.useContext(GameContext);
     const history = useHistory();
 
     function startGame() {
@@ -48,8 +46,7 @@ export const Lobby: React.FunctionComponent = () => {
                     <Content>
                         {!gameChosen ? (
                             <InstructionContainer variant="light">
-                                {/* TODO remove onclick */}
-                                <Instruction onClick={() => setGameChosen(true)}>
+                                <Instruction>
                                     <InstructionText>Player 1 is now choosing a game!</InstructionText>
                                 </Instruction>
                                 <Instruction>
@@ -59,8 +56,7 @@ export const Lobby: React.FunctionComponent = () => {
                         ) : tutorial ? (
                             <>
                                 <InstructionContainer>
-                                    {/* TODO remove onclick */}
-                                    <Instruction variant="dark" onClick={() => setTutorial(false)}>
+                                    <Instruction variant="dark">
                                         <InstructionText>Watch the tutorial on your monitor!</InstructionText>
                                     </Instruction>
                                 </InstructionContainer>

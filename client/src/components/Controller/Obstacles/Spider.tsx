@@ -5,7 +5,7 @@ import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import LinearProgressBar from '../../common/LinearProgressBar';
 import { getAudioInput, resetCurrentCount } from './getAudioInput';
-import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from './ObstaclStyles.sc';
+import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
 import { StyledNet, StyledSpider } from './Spider.sc';
 
 const Spider: React.FunctionComponent = () => {
@@ -31,7 +31,6 @@ const Spider: React.FunctionComponent = () => {
 
     return (
         <ObstacleContainer>
-            <ObstacleInstructions>Blow into the microphone to scare away the spider!</ObstacleInstructions>
             <LinearProgressBar progress={progress} MAX={MAX} />
             <ObstacleContent>
                 <StyledNet />

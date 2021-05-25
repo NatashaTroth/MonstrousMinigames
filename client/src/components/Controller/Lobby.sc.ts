@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
-import { darkGreen, playerName, readyButton, secondary } from '../../utils/colors';
-import { Label } from '../common/Label.sc';
+import { playerName, readyButton, secondary } from '../../utils/colors';
 
 export const LobbyContainer = styled.div`
     display: flex;
@@ -74,36 +73,4 @@ export const ReadyButton = styled.div<Props>`
     padding: 10px 15px;
     border-radius: 20px;
     letter-spacing: 4px;
-`;
-
-interface Instruction {
-    variant?: 'light' | 'dark' | 'none';
-}
-
-export const Instruction = styled(Label)<Instruction>`
-    background-color: ${({ variant = 'none' }) =>
-        variant === 'light' ? readyButton : variant === 'dark' ? darkGreen : ''};
-    border-radius: 10px;
-    margin-bottom: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
-
-export const InstructionText = styled.div`
-    max-width: 260px;
-    font-size: 30px;
-    padding: 20px;
-`;
-
-export const InstructionContainer = styled(Instruction)`
-    background-color: ${({ variant = 'none' }) =>
-        variant === 'light' ? readyButton : variant === 'dark' ? darkGreen : ''};
-    max-width: unset;
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 `;
