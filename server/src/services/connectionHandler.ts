@@ -214,9 +214,17 @@ class ConnectionHandler {
 
             emitter.sendConnectedUsers([screenNameSpace], socket.room);
 
+            if (socket.room.isAdminScreen(socket.id)) {
+                emitter.sendScreenAdmin(screenNameSpace, socket.id)
+            }
+
             socket.on('disconnect', () => {
                 console.info(socket.room.id + ' | Screen disconnected');
                 socket.room.removeScreen(socket.id);
+
+                if (socket.room.getAdminScreenId()) {
+                    emitter.sendScreenAdmin(screenNameSpace, socket.room.getAdminScreenId())
+                }
             });
 
             socket.on('message', function (message: IMessage) {
