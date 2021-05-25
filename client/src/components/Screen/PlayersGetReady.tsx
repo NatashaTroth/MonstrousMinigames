@@ -23,7 +23,7 @@ import {
 const PlayersGetReady: React.FC = () => {
     const { screenSocket } = React.useContext(ScreenSocketContext);
 
-    const { roomId, connectedUsers } = React.useContext(GameContext);
+    const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
     const characters = [franz, noah, susi, steffi];
 
     function startGame() {
@@ -56,15 +56,17 @@ const PlayersGetReady: React.FC = () => {
                             </ConnectedUserContainer>
                         ))}
                     </ConnectedUsers>
-                    <Button
-                        onClick={() => {
-                            if (getUserArray(connectedUsers || []).length > 0) {
-                                startGame();
-                            }
-                        }}
-                    >
-                        Start
-                    </Button>
+                    {screenAdmin && (
+                        <Button
+                            onClick={() => {
+                                if (getUserArray(connectedUsers || []).length > 0) {
+                                    startGame();
+                                }
+                            }}
+                        >
+                            Start
+                        </Button>
+                    )}
                 </Content>
             </GetReadyBackground>
         </GetReadyContainer>
