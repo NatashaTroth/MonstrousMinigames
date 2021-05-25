@@ -5,7 +5,7 @@ import { secondary, secondaryShadow } from '../../utils/colors';
 
 const boxShadowDepth = 7;
 
-export const CreditsContainer = styled.div`
+export const SettingsContainer = styled.div`
     background-repeat: no-repeat;
     background-size: cover;
     background-position: bottom;

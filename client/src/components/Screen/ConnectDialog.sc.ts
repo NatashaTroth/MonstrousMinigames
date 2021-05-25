@@ -1,26 +1,23 @@
 import styled from 'styled-components';
 
-import { orange } from '../../utils/colors';
+import { secondary, secondaryShadow } from '../../utils/colors';
 
-const borderWidth = 5;
 const boxShadowDepth = 8;
 const fontSize = 1;
-const horizontalPadding = 16;
-const verticalPadding = 8;
 
 export const StyledInput = styled.input`
     color: black;
     border: none;
-    background: white;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
+    background: #bde5dd;
     cursor: pointer;
     font-weight: 700;
     font-size: calc(${fontSize} * 1rem);
-
-    &::placeholder {
-        color: lightgray;
-    }
+    margin: 30px 0;
+    height: 50px;
+    width: 100%;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 20px;
 
     &:focus,
     &:active {
@@ -46,35 +43,22 @@ export const FormContainer = styled.div`
     }
 `;
 
-export const StyledLabel = styled.label`
-    margin: 0px 30px 30px 30px;
-    display: flex;
-    flex-direction: column;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
-    font-size: calc(${fontSize} * 1rem);
-    text-align: left;
-    color: black;
-    border: calc(${borderWidth} * 1px) solid ${orange};
-    background: white;
-    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 #888;
-    cursor: pointer;
-    font-size: calc(${fontSize} * 1rem);
-    outline: transparent;
-    padding: calc(${verticalPadding} * 1px) calc(${horizontalPadding} * 1px);
-    position: relative;
-    border-radius: 4px;
+export const InputLabel = styled.label`
+    color: white;
+    font-size: 24px;
+    font-weight: 500;
 `;
 
-export const CloseButtonContainer = styled.div`
-    display: flex;
-    width: 100%;
-    justify-content: flex-end;
-`;
-
-export const DialogContent = styled.div`
+export const InputContainer = styled.div`
     padding: 0 30px 30px 30px;
     display: flex;
     align-items: center;
     flex-direction: column;
+`;
+
+export const DialogContent = styled.div`
+    padding: 40px 100px;
+    background-color: ${secondary};
+    border-radius: 10px;
+    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${secondaryShadow};
 `;
