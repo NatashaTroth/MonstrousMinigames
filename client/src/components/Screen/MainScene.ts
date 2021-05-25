@@ -1,4 +1,3 @@
-import { Speed } from '@material-ui/icons';
 import Phaser from 'phaser';
 
 import history from '../../domain/history/history';
@@ -13,9 +12,13 @@ import ScreenSocket from '../../domain/socket/screenSocket';
 import { Socket } from '../../domain/socket/Socket';
 import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../domain/typeGuards/finished';
-import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../domain/typeGuards/gameStateInfo';
+import {
+    GameStateInfoMessage, gameStateInfoTypeGuard
+} from '../../domain/typeGuards/gameStateInfo';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../domain/typeGuards/paused';
-import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../domain/typeGuards/playerFinished';
+import {
+    PlayerFinishedMessage, playerFinishedTypeGuard
+} from '../../domain/typeGuards/playerFinished';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../domain/typeGuards/resumed';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../domain/typeGuards/stopped';
 import { TimedOutMessage, timedOutTypeGuard } from '../../domain/typeGuards/timedOut';
@@ -158,12 +161,11 @@ class MainScene extends Phaser.Scene {
         this.moveCamera();
     }
 
-    moveCamera(){
-        if(this.camera){
+    moveCamera() {
+        if (this.camera) {
             this.camera.scrollX += this.cameraSpeed;
-            this.camera.setBounds(0,0,this.trackLength, windowHeight)
+            this.camera.setBounds(0, 0, this.trackLength, windowHeight);
         }
-        
     }
 
     private createPlayer(index: number, gameStateData: GameData) {
