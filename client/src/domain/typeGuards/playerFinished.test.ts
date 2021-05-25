@@ -6,6 +6,7 @@ describe('playerFinished TypeGuard', () => {
         const data: PlayerFinishedMessage = {
             type: MessageTypes.playerFinished,
             rank: 1,
+            userId: 1,
         };
 
         expect(playerFinishedTypeGuard(data)).toEqual(true);

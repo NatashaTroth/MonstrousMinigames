@@ -38,7 +38,7 @@ export enum MessageTypes {
     error = 'error',
 
     runForward = 'game1/runForward',
-    obstacle = 'game1/obstacle',
+    obstacle = 'game1/obstacle', //obstacle reached
     playerFinished = 'game1/playerFinished',
     started = 'game1/hasStarted',
     gameState = 'game1/gameState',

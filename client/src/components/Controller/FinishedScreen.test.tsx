@@ -3,11 +3,10 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 
 import {
-    ControllerSocketContext, defaultValue as controllerDefaultValue
+    ControllerSocketContext,
+    defaultValue as controllerDefaultValue,
 } from '../../contexts/ControllerSocketContextProvider';
-import {
-    defaultValue as gameContextDefaultValue, GameContext
-} from '../../contexts/GameContextProvider';
+import { defaultValue as gameContextDefaultValue, GameContext } from '../../contexts/GameContextProvider';
 import { defaultValue, PlayerContext } from '../../contexts/PlayerContextProvider';
 import history from '../../domain/history/history';
 import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';

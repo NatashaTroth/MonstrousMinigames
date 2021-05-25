@@ -120,6 +120,7 @@ export function handleSetSocket(
         });
     });
 
+    // TODO remove when phaser is ready
     pausedSocket.listen((data: GameHasPausedMessage) => {
         setHasPaused(true);
     });

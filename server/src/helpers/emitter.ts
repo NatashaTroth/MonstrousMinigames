@@ -31,7 +31,7 @@ function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
 }
 function sendErrorMessage(socket: Socket, e: Error): void {
     socket.emit('message', {
-        type: 'error',
+        type: MessageTypes.ERROR,
         name: e.name,
         msg: e.message,
     });
@@ -58,14 +58,6 @@ function sendGameHasTimedOut(nsps: Array<Namespace>, data: GameEvents.GameHasFin
         namespace.to(data.roomId).emit('message', {
             type: MessageTypes.GAME_HAS_TIMED_OUT,
             data: data,
-        });
-    });
-}
-
-function sendGameHasStopped(nsps: Array<Namespace>, roomId: string): void {
-    nsps.forEach(function (namespace: Namespace) {
-        namespace.to(roomId).emit('message', {
-            type: MessageTypes.GAME_HAS_STOPPED,
         });
     });
 }
@@ -103,5 +95,4 @@ export default {
     sendGameHasTimedOut,
     sendConnectedUsers,
     sendMessage,
-    sendGameHasStopped,
 };
