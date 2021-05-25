@@ -27,7 +27,7 @@ interface IClickObstacle {
     setObstacle: (value: undefined | Obstacles) => void;
 }
 
-export function resetObstacle() {
+function resetObstacle() {
     sec = 0;
     stoptime = true;
 }
@@ -43,6 +43,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
     const [particles, setParticles] = React.useState(false);
 
     React.useEffect(() => {
+        resetObstacle();
         let touchContainer;
 
         if (!touchContainer) {
@@ -104,6 +105,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
         controllerSocket?.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
         setShowInstructions(false);
         setObstacle(roomId, undefined);
+        resetObstacle();
     };
 
     return (

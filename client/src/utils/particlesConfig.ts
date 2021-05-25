@@ -28,7 +28,7 @@ export const particlesConfig = {
             },
         },
         opacity: {
-            value: 0.49716301422833176,
+            value: 0.8,
             random: true,
             anim: {
                 enable: false,
@@ -38,7 +38,7 @@ export const particlesConfig = {
             },
         },
         size: {
-            value: 15.782952832645451,
+            value: 10,
             random: true,
             anim: {
                 enable: false,
@@ -56,7 +56,7 @@ export const particlesConfig = {
         },
         move: {
             enable: true,
-            speed: 20,
+            speed: 16,
             direction: MoveDirection.none,
             random: true,
             straight: false,
