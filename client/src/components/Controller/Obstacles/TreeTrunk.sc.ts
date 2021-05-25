@@ -1,7 +1,9 @@
 import { TouchApp } from '@material-ui/icons';
+import Particles from 'react-particles-js';
 import styled, { keyframes } from 'styled-components';
 
 import { grey } from '../../../utils/colors';
+import { ObstacleContainer } from './ObstaclStyles.sc';
 
 const slide = keyframes`
     0%, 33% { 
@@ -38,7 +40,7 @@ export const ObstacleItem = styled.div`
     transform: rotate(275deg);
 `;
 export const StyledObstacleImage = styled.img`
-    width: 100%;
+    width: 80%;
 `;
 
 export const TouchContainer = styled.div`
@@ -71,6 +73,14 @@ export const StyledTouchAppIcon = styled(TouchApp)`
     }
 `;
 
-export const SkipButton = styled.div`
-    z-index: 2;
+export const StyledParticles = styled(Particles)`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+`;
+
+export const TreeTrunkContainer = styled(ObstacleContainer)`
+    && {
+        justify-content: center;
+    }
 `;

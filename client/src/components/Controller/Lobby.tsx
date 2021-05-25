@@ -1,19 +1,15 @@
 import { CircularProgress } from '@material-ui/core';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import FullScreenContainer from '../common/FullScreenContainer';
+import { Instruction, InstructionContainer, InstructionText } from '../common/Instruction.sc';
 import { Label } from '../common/Label.sc';
 import {
     Character,
     CharacterContainer,
     Content,
-    Instruction,
-    InstructionContainer,
-    InstructionText,
     LeftContainer,
     LobbyContainer,
     PlayerContent,
@@ -23,19 +19,8 @@ import {
 } from './Lobby.sc';
 
 export const Lobby: React.FunctionComponent = () => {
-    const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { playerNumber, name, character, ready, setReady } = React.useContext(PlayerContext);
-    const { roomId, gameChosen, setGameChosen, tutorial, setTutorial } = React.useContext(GameContext);
-    const history = useHistory();
-
-    function startGame() {
-        controllerSocket?.emit({
-            type: 'game1/start',
-            roomId: sessionStorage.getItem('roomId'),
-            userId: sessionStorage.getItem('userId'),
-        });
-        history.push(`/controller/${roomId}/game1`);
-    }
+    const { gameChosen, tutorial } = React.useContext(GameContext);
 
     return (
         <FullScreenContainer>
@@ -44,8 +29,7 @@ export const Lobby: React.FunctionComponent = () => {
                     <Content>
                         {!gameChosen ? (
                             <InstructionContainer variant="light">
-                                {/* TODO remove onclick */}
-                                <Instruction onClick={() => setGameChosen(true)}>
+                                <Instruction>
                                     <InstructionText>Player 1 is now choosing a game!</InstructionText>
                                 </Instruction>
                                 <Instruction>
@@ -55,8 +39,7 @@ export const Lobby: React.FunctionComponent = () => {
                         ) : tutorial ? (
                             <>
                                 <InstructionContainer>
-                                    {/* TODO remove onclick */}
-                                    <Instruction variant="dark" onClick={() => setTutorial(false)}>
+                                    <Instruction variant="dark">
                                         <InstructionText>Watch the tutorial on your monitor!</InstructionText>
                                     </Instruction>
                                 </InstructionContainer>

@@ -6,16 +6,18 @@ import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import wood from '../../../images/wood.png';
 import { Obstacles } from '../../../utils/constants';
+import { particlesConfig } from '../../../utils/particlesConfig';
 import Button from '../../common/Button';
-import LinearProgressBar from '../../common/LinearProgressBar';
-import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
+import { SkipButton } from '../../common/SkipButton.sc';
+import { ObstacleContent } from './ObstaclStyles.sc';
 import {
     Line,
     ObstacleItem,
-    SkipButton,
     StyledObstacleImage,
+    StyledParticles,
     StyledTouchAppIcon,
     TouchContainer,
+    TreeTrunkContainer,
 } from './TreeTrunk.sc';
 
 const MAX = 30;
@@ -25,7 +27,7 @@ interface IClickObstacle {
     setObstacle: (value: undefined | Obstacles) => void;
 }
 
-export function resetObstacle() {
+function resetObstacle() {
     sec = 0;
     stoptime = true;
 }
@@ -33,13 +35,15 @@ export function resetObstacle() {
 const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { obstacle, setObstacle } = React.useContext(PlayerContext);
-    const [progress, setProgress] = React.useState(0);
     const [skip, setSkip] = React.useState(false);
     const [initialized, setInitialize] = React.useState(false);
     const [hammerTime, setHammerTime] = React.useState<HammerManager | undefined>();
     const { showInstructions, setShowInstructions, roomId } = React.useContext(GameContext);
 
+    const [particles, setParticles] = React.useState(false);
+
     React.useEffect(() => {
+        resetObstacle();
         let touchContainer;
 
         if (!touchContainer) {
@@ -74,6 +78,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
     function handleStartTimer() {
         if (stoptime) {
             stoptime = false;
+            setParticles(true);
             timerCycle();
         }
     }
@@ -81,6 +86,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
     function handleStopTimer() {
         if (!stoptime) {
             stoptime = true;
+            setParticles(false);
         }
     }
 
@@ -90,7 +96,6 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
                 solveObstacle();
             }
             sec += 1;
-            setProgress(sec);
 
             setTimeout(() => timerCycle(), 100);
         }
@@ -100,11 +105,11 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
         controllerSocket?.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
         setShowInstructions(false);
         setObstacle(roomId, undefined);
+        resetObstacle();
     };
 
     return (
-        <ObstacleContainer>
-            <LinearProgressBar progress={progress} MAX={MAX} />
+        <TreeTrunkContainer>
             <ObstacleContent>
                 <ObstacleItem>
                     <StyledObstacleImage src={wood} />
@@ -118,8 +123,9 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
                     <Line />
                     {showInstructions && <StyledTouchAppIcon />}
                 </TouchContainer>
+                {particles && <StyledParticles params={particlesConfig} />}
             </ObstacleContent>
-        </ObstacleContainer>
+        </TreeTrunkContainer>
     );
 };
 
