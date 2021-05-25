@@ -47,13 +47,13 @@ export const TouchContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60%;
+    width: 80%;
 `;
 
 export const Line = styled.div`
     width: 80%;
     position: absolute;
-    border-top: 5px dashed red;
+    border-top: 8px dashed white;
 `;
 
 export const StyledTouchAppIcon = styled(TouchApp)`

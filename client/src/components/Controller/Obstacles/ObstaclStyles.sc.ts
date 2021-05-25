@@ -1,6 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 
-import { lightBlue, orange } from '../../../utils/colors';
+import forest from '../../../images/forest.svg';
+import { orange } from '../../../utils/colors';
 
 export const swing = keyframes`
     0% {
@@ -43,7 +44,10 @@ export const eyeRollRight = keyframes`
 export const ObstacleContainer = styled.div`
     width: 100%;
     height: 100%;
-    background-color: ${lightBlue};
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom;
+    background-image: url(${forest});
     display: flex;
     align-items: center;
     flex-direction: column;
