@@ -96,7 +96,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
         }
     }
 
-    const solveObstacle = (): void => {
+    const solveObstacle = () => {
         controllerSocket?.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
         setShowInstructions(false);
         setObstacle(roomId, undefined);
@@ -112,7 +112,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
                 <TouchContainer id="touchContainer">
                     {skip && (
                         <SkipButton>
-                            <Button>Skip</Button>
+                            <Button onClick={solveObstacle}>Skip</Button>
                         </SkipButton>
                     )}
                     <Line />
