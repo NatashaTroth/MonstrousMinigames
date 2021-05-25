@@ -4,6 +4,7 @@ import { Route, Router, Switch } from 'react-router-dom';
 
 import { AppContainer } from './App.sc';
 import Credits from './components/common/Credits';
+import Settings from './components/common/Settings';
 import ChooseCharacter from './components/Controller/ChooseCharacter';
 import { ConnectScreen as ControllerConnectScreen } from './components/Controller/ConnectScreen';
 import { FinishedScreen as ControllerFinishedScreen } from './components/Controller/FinishedScreen';
@@ -41,6 +42,7 @@ const App: React.FunctionComponent = () => {
                                 <ControllerSocketContextProvider>
                                     <Switch>
                                         <Route path="/credits" component={Credits} exact />
+                                        <Route path="/settings" component={Settings} exact />
                                         <Route
                                             path="/controller/:id/choose-character"
                                             component={ChooseCharacter}
