@@ -8,20 +8,19 @@ import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import wood from '../../../images/wood.png';
 import { Obstacles } from '../../../utils/constants';
 import LinearProgressBar from '../../common/LinearProgressBar';
-import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from './ObstaclStyles.sc';
+import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
 import { Line, ObstacleItem, StyledObstacleImage, StyledTouchAppIcon, TouchContainer } from './TreeTrunk.sc';
 
-const MAX = 5000;
-const Treshold = 0;
-let distance = 0;
-let send = true;
+const MAX = 30;
+let sec = 0;
+let stoptime = true;
 interface IClickObstacle {
     setObstacle: (value: undefined | Obstacles) => void;
 }
 
 export function resetObstacle() {
-    distance = 0;
-    send = true;
+    sec = 0;
+    stoptime = true;
 }
 
 const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
@@ -29,14 +28,12 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
     const { obstacle, setObstacle } = React.useContext(PlayerContext);
     const [progress, setProgress] = React.useState(0);
     const [initialized, setInitialize] = React.useState(false);
+    const [hammerTime, setHammerTime] = React.useState<HammerManager | undefined>();
     const history = useHistory();
     const { showInstructions, setShowInstructions, roomId } = React.useContext(GameContext);
 
     React.useEffect(() => {
-        let touchEvent: null | string = null;
         let touchContainer;
-        let currentDistance = 0;
-        let hammertime: HammerManager;
 
         if (!touchContainer) {
             touchContainer = document.getElementById('touchContainer');
@@ -44,62 +41,56 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
 
         if (touchContainer && !initialized) {
             setInitialize(true);
-            distance = 0;
             const hammertime = touchContainer && new Hammer(touchContainer);
-
-            hammertime?.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
-
-            if (distance <= MAX + Treshold) {
-                hammertime?.on('panup pandown', e => {
-                    handleTouchEvent({ event: e.type, eventDistance: e.distance });
-                });
-            }
+            setHammerTime(hammertime);
         }
-
-        function handleTouchEvent({ event, eventDistance }: { event: string; eventDistance: number }) {
-            if (distance >= MAX + Treshold && send) {
-                send = false;
-                solveObstacle();
-                return;
-            }
-            if (!touchEvent) {
-                touchEvent = event;
-                distance += eventDistance;
-            } else {
-                if (event !== touchEvent) {
-                    if (eventDistance > currentDistance) {
-                        currentDistance = eventDistance;
-                    } else {
-                        distance += currentDistance;
-                    }
-
-                    setProgress(distance);
-                    touchEvent = event;
-                }
-            }
-        }
-
-        const solveObstacle = (): void => {
-            distance = 0;
-            currentDistance = 0;
-            touchEvent = null;
-            send = true;
-
-            controllerSocket?.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
-            setShowInstructions(false);
-            setTimeout(() => setObstacle(roomId, undefined), 100);
-        };
-
-        return () => {
-            hammertime?.off('panup pandown', () => {
-                // do nothing
-            });
-        };
     }, [controllerSocket, history, initialized, obstacle, progress, roomId, setObstacle, setShowInstructions]);
+
+    if (hammerTime) {
+        hammerTime.get('pan').set({ threshold: 0 });
+
+        hammerTime.on('panstart', e => {
+            handleStartTimer();
+        });
+
+        hammerTime.on('panend pancancel', e => {
+            handleStopTimer();
+        });
+    }
+
+    function handleStartTimer() {
+        if (stoptime) {
+            stoptime = false;
+            timerCycle();
+        }
+    }
+
+    function handleStopTimer() {
+        if (!stoptime) {
+            stoptime = true;
+        }
+    }
+
+    function timerCycle() {
+        if (!stoptime) {
+            if (sec >= MAX) {
+                solveObstacle();
+            }
+            sec += 1;
+            setProgress(sec);
+
+            setTimeout(() => timerCycle(), 100);
+        }
+    }
+
+    const solveObstacle = (): void => {
+        controllerSocket?.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
+        setShowInstructions(false);
+        setTimeout(() => setObstacle(roomId, undefined), 100);
+    };
 
     return (
         <ObstacleContainer>
-            <ObstacleInstructions>Saw along the line to cut it!</ObstacleInstructions>
             <LinearProgressBar progress={progress} MAX={MAX} />
             <ObstacleContent>
                 <ObstacleItem>

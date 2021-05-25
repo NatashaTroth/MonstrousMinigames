@@ -74,7 +74,6 @@ export const ObstacleInstructions = styled.div`
 `;
 
 export const ObstacleContent = styled.div`
-    margin-top: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
