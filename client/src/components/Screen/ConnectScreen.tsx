@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { handlePermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
@@ -14,10 +15,6 @@ import {
     LeftContainer,
     RightContainer,
 } from './ConnectScreen.sc';
-
-interface WindowProps extends Window {
-    webkitAudioContext?: typeof AudioContext;
-}
 
 export const ConnectScreen: React.FunctionComponent = () => {
     const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -46,15 +43,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
     }
 
     async function handleAudio() {
-        const w = window as WindowProps;
-        const AudioContext = window.AudioContext || w.webkitAudioContext || false;
-
-        if (!permission) {
-            if (AudioContext) {
-                setPermissionGranted(true);
-                new AudioContext().resume();
-            }
-        }
+        if (handlePermission(permission)) setPermissionGranted(true);
 
         if (playing) {
             pauseLobbyMusic(permission);
@@ -93,7 +82,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                     <Button type="button" name="credits" onClick={() => history.push('/credits')}>
                         Credits
                     </Button>
-                    <Button type="button" name="settings" onClick={() => history.push('/settings')} disabled>
+                    <Button type="button" name="settings" onClick={() => history.push('/settings')}>
                         Settings
                     </Button>
                 </ButtonContainer>

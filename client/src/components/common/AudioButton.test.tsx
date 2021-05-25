@@ -44,7 +44,6 @@ describe('AudioButton', () => {
     //     expect(getByText(/A Button/i).closest('button')?.disabled).toBeTruthy();
     // });
     it('when the button is clicked, it the onClick handler', () => {
-        const givenText = 'A Button';
         const onClick = jest.fn();
         const { container } = render(<AudioButton playing={true} permission={true} onClick={onClick}></AudioButton>);
         const button = container.querySelector('button');

@@ -7,6 +7,7 @@ import { IRouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { handlePermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import franz from '../../images/franz.png';
 import noah from '../../images/noah.png';
@@ -34,10 +35,6 @@ import {
     RightContainer,
 } from './Lobby.sc';
 import LobbyHeader from './LobbyHeader';
-
-interface WindowProps extends Window {
-    webkitAudioContext?: typeof AudioContext;
-}
 
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers } = React.useContext(GameContext);
@@ -68,46 +65,22 @@ export const Lobby: React.FunctionComponent = () => {
         }
     }, [roomId]);
 
-    // React.useEffect(() => {
-    //     playLobbyMusic(permission);
-    // }, [permission, playLobbyMusic]);
-    React.useEffect(() => {
-        const w = window as WindowProps;
-        const AudioContext = window.AudioContext || w.webkitAudioContext || false;
-        if (AudioContext) {
-            // eslint-disable-next-line no-console
-            console.log('loggy permission granted');
+    const handleAudioPermission = () => {
+        if (handlePermission(permission)) {
             setPermissionGranted(true);
-            new AudioContext().resume();
         }
-        playLobbyMusic(permission);
-    }, []);
+    };
 
-    // React.useEffect(() => {
-    //     const w = window as WindowProps;
-    //     const AudioContext = window.AudioContext || w.webkitAudioContext || false;
-    //     if (AudioContext) {
-    //         setPermissionGranted(true);
-    //         new AudioContext().resume();
-    //     }
-    // }, []);
+    React.useEffect(() => {
+        handleAudioPermission();
+    }, []);
 
     useBeforeunload(() => {
         pauseLobbyMusic(permission);
     });
 
     async function handleAudio() {
-        const w = window as WindowProps;
-        const AudioContext = window.AudioContext || w.webkitAudioContext || false;
-
-        if (!permission) {
-            if (AudioContext) {
-                // eslint-disable-next-line no-console
-                console.log('loggy permission granted');
-                setPermissionGranted(true);
-                new AudioContext().resume();
-            }
-        }
+        handleAudioPermission();
 
         if (playing) {
             pauseLobbyMusic(permission);
