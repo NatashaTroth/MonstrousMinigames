@@ -1,3 +1,4 @@
+import { Speed } from '@material-ui/icons';
 import Phaser from 'phaser';
 
 import history from '../../domain/history/history';
@@ -38,6 +39,8 @@ class MainScene extends Phaser.Scene {
     newPlayers: any;
     gameRenderer?: GameRenderer;
     gameAudio?: GameAudio;
+    camera?: Phaser.Cameras.Scene2D.Camera;
+    cameraSpeed: number;
 
     constructor() {
         super('MainScene');
@@ -51,9 +54,11 @@ class MainScene extends Phaser.Scene {
         this.trackLength = 2000;
         this.gameStarted = false;
         this.paused = false;
+        this.cameraSpeed = 1;
     }
 
     init(data: { roomId: string }) {
+        this.camera = this.cameras.main;
         if (this.roomId === '' && data.roomId !== undefined) this.roomId = data.roomId;
     }
 
@@ -71,7 +76,7 @@ class MainScene extends Phaser.Scene {
 
     create() {
         this.gameRenderer = new PhaserGameRenderer(this);
-        this.gameRenderer?.renderBackground(windowWidth, windowHeight);
+        this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
         this.gameRenderer?.renderPauseButton();
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
@@ -150,6 +155,15 @@ class MainScene extends Phaser.Scene {
             player.checkAtObstacle(gameStateData.playersState[i].atObstacle);
             player.checkFinished(gameStateData.playersState[i].finished);
         });
+        this.moveCamera();
+    }
+
+    moveCamera(){
+        if(this.camera){
+            this.camera.scrollX += this.cameraSpeed;
+            this.camera.setBounds(0,0,this.trackLength, windowHeight)
+        }
+        
     }
 
     private createPlayer(index: number, gameStateData: GameData) {

@@ -14,9 +14,18 @@ export class PhaserGameRenderer implements GameRenderer {
         this.scene = scene;
     }
 
-    renderBackground(windowWidth: number, windowHeight: number) {
-        const bg = this.scene.add.image(windowWidth / 2, windowHeight / 2, 'forest');
-        bg.setDisplaySize(windowWidth, windowHeight);
+    renderBackground(windowWidth: number, windowHeight: number, trackLength: number) {
+        // eslint-disable-next-line no-console
+        console.log(`${trackLength  }, ${  windowWidth}`)
+        const reps = trackLength/(windowWidth/4)
+        for(let i = 0; i < reps; i++){
+            for(let j = 0; j < 4; j++){
+                const lane = this.scene.add.image(i*windowWidth/4, j*windowHeight/4 + windowHeight/4, 'forest2');
+                lane.setDisplaySize(windowWidth/4, windowHeight/4);
+                lane.setOrigin(0,1);
+                lane.setScrollFactor(1);
+            }
+        }
     }
 
     renderPauseButton() {
