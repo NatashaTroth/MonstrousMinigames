@@ -26,6 +26,8 @@ const PlayersGetReady: React.FC = () => {
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
     const characters = [franz, noah, susi, steffi];
 
+    const emptyGame = !connectedUsers || connectedUsers.length === 0;
+
     function startGame() {
         screenSocket?.emit({
             type: 'game1/start',
@@ -58,6 +60,7 @@ const PlayersGetReady: React.FC = () => {
                     </ConnectedUsers>
                     {screenAdmin && (
                         <Button
+                            disabled={emptyGame}
                             onClick={() => {
                                 if (getUserArray(connectedUsers || []).length > 0) {
                                     startGame();
