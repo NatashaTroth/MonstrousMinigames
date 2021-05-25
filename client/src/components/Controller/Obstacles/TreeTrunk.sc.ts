@@ -73,10 +73,6 @@ export const StyledTouchAppIcon = styled(TouchApp)`
     }
 `;
 
-export const SkipButton = styled.div`
-    z-index: 2;
-`;
-
 export const StyledParticles = styled(Particles)`
     position: absolute;
 `;

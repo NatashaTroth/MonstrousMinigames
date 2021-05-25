@@ -8,11 +8,11 @@ import wood from '../../../images/wood.png';
 import { Obstacles } from '../../../utils/constants';
 import { particlesConfig } from '../../../utils/particlesConfig';
 import Button from '../../common/Button';
+import { SkipButton } from '../../common/SkipButton.sc';
 import { ObstacleContent } from './ObstaclStyles.sc';
 import {
     Line,
     ObstacleItem,
-    SkipButton,
     StyledObstacleImage,
     StyledParticles,
     StyledTouchAppIcon,
