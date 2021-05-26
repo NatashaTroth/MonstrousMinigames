@@ -10,7 +10,9 @@ import { AudioContext } from '../../contexts/AudioContextProvider';
 import { handlePermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import Button from './Button';
-import { BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer } from './Settings.sc';
+import {
+    BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer
+} from './Settings.sc';
 
 const useStyles = makeStyles({
     root: {
@@ -21,16 +23,7 @@ const useStyles = makeStyles({
 const Settings: React.FunctionComponent = () => {
     const roomId = sessionStorage.getItem('roomId');
     const classes = useStyles();
-    const {
-        setAudioVolume,
-        volume,
-        setVolume,
-        playLobbyMusic,
-        pauseLobbyMusic,
-        permission,
-        playing,
-        setPermissionGranted,
-    } = React.useContext(AudioContext);
+    const { setAudioVolume, volume, permission, setPermissionGranted } = React.useContext(AudioContext);
     const [value, setValue] = React.useState(volume);
 
     // React.useEffect(() => {
@@ -52,7 +45,7 @@ const Settings: React.FunctionComponent = () => {
     //     setVolume(value);
     // });
 
-    const handleChange = (event: React.ChangeEvent<any>, newValue: number | number[]): void => {
+    const handleChange = (event: React.ChangeEvent<unknown>, newValue: number | number[]): void => {
         if (handlePermission(permission)) setPermissionGranted(true);
         if (typeof newValue == 'number') {
             setAudioVolume(newValue);
