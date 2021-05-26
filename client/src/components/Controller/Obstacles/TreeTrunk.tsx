@@ -11,13 +11,8 @@ import Button from '../../common/Button';
 import { SkipButton } from '../../common/SkipButton.sc';
 import { ObstacleContent } from './ObstaclStyles.sc';
 import {
-    Line,
-    ObstacleItem,
-    StyledObstacleImage,
-    StyledParticles,
-    StyledTouchAppIcon,
-    TouchContainer,
-    TreeTrunkContainer,
+    Line, ObstacleItem, StyledObstacleImage, StyledParticles, StyledTouchAppIcon, TouchContainer,
+    TreeTrunkContainer
 } from './TreeTrunk.sc';
 
 const MAX = 30;
@@ -60,7 +55,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
             if (sec === 0) {
                 setSkip(true);
             }
-        }, 5000);
+        }, 10000);
     }, [initialized]);
 
     if (hammerTime) {

@@ -6,7 +6,7 @@ import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import Button from '../../common/Button';
 import LinearProgressBar from '../../common/LinearProgressBar';
 import { SkipButton } from '../../common/SkipButton.sc';
-import { getAudioInput, resetCurrentCount } from './getAudioInput';
+import { currentCount, getAudioInput, resetCurrentCount } from './getAudioInput';
 import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
 import { StyledNet, StyledSpider } from './Spider.sc';
 
@@ -18,25 +18,29 @@ const Spider: React.FunctionComponent = () => {
     const [skip, setSkip] = React.useState(false);
     const MAX = 15;
 
-    const solveObstacle = React.useCallback(() => {
+    const solveObstacle = () => {
         if (obstacle) {
             controllerSocket.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle.id });
             setObstacle(roomId, undefined);
         }
-    }, [controllerSocket, obstacle, roomId, setObstacle]);
+    };
 
     React.useEffect(() => {
-        if (obstacle) {
-            resetCurrentCount();
-            getAudioInput(MAX, { solveObstacle, setProgress });
-        }
+        resetCurrentCount();
 
-        setTimeout(() => {
-            if (progress === 0) {
-                setSkip(true);
-            }
-        }, 5000);
-    }, [controllerSocket, obstacle, progress, roomId, setObstacle, solveObstacle]);
+        getAudioInput(MAX, { solveObstacle, setProgress });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    React.useEffect(() => {
+        if (!skip) {
+            setTimeout(() => {
+                if (currentCount === 0) {
+                    setSkip(true);
+                }
+            }, 10000);
+        }
+    }, [progress, skip]);
 
     return (
         <ObstacleContainer>

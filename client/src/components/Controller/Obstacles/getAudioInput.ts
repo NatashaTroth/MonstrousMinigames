@@ -44,9 +44,6 @@ export async function getAudioInput(
                     handleInput(analyser, { setProgress });
                 } else if (currentCount >= MAX && !send) {
                     send = true;
-                    javascriptNode.removeEventListener('audioprocess', () => {
-                        // do nothing
-                    });
 
                     stream!.getTracks().forEach(track => track.stop());
                     solveObstacle();
