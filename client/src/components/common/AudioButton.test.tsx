@@ -11,26 +11,31 @@ afterEach(cleanup);
 describe('AudioButton', () => {
     //TODO
     it('renders an image', () => {
-        const { container } = render(<AudioButton playing={true} permission={true}></AudioButton>);
+        const { container } = render(<AudioButton playing={true} permission={true} volume={0.2}></AudioButton>);
         expect(container.querySelectorAll('img')).toHaveProperty('length', 1);
     });
     it('renders an audio image when playing is true', () => {
-        const { container } = render(<AudioButton playing={true} permission={true}></AudioButton>);
+        const { container } = render(<AudioButton playing={true} permission={true} volume={0.2}></AudioButton>);
         const src = container.querySelector('img')?.src;
         expect(src).toEqual(expect.stringContaining(audioIcon.split('"')[1]));
     });
     it('renders an audioMuted image when playing is false', () => {
-        const { container } = render(<AudioButton playing={false} permission={true}></AudioButton>);
+        const { container } = render(<AudioButton playing={false} permission={true} volume={0.2}></AudioButton>);
         const src = container.querySelector('img')?.src;
         expect(src).toEqual(expect.stringContaining(audioMutedIcon.split('"')[1]));
     });
     it('renders an audio image when permission is true', () => {
-        const { container } = render(<AudioButton playing={true} permission={true}></AudioButton>);
+        const { container } = render(<AudioButton playing={true} permission={true} volume={0.2}></AudioButton>);
         const src = container.querySelector('img')?.src;
         expect(src).toEqual(expect.stringContaining(audioIcon.split('"')[1]));
     });
     it('renders an audioMuted image when permission is false', () => {
-        const { container } = render(<AudioButton playing={true} permission={false}></AudioButton>);
+        const { container } = render(<AudioButton playing={true} permission={false} volume={0.2}></AudioButton>);
+        const src = container.querySelector('img')?.src;
+        expect(src).toEqual(expect.stringContaining(audioMutedIcon.split('"')[1]));
+    });
+    it('renders an audioMuted image when volume is 0', () => {
+        const { container } = render(<AudioButton playing={true} permission={true} volume={0}></AudioButton>);
         const src = container.querySelector('img')?.src;
         expect(src).toEqual(expect.stringContaining(audioMutedIcon.split('"')[1]));
     });
@@ -45,7 +50,9 @@ describe('AudioButton', () => {
     // });
     it('when the button is clicked, it the onClick handler', () => {
         const onClick = jest.fn();
-        const { container } = render(<AudioButton playing={true} permission={true} onClick={onClick}></AudioButton>);
+        const { container } = render(
+            <AudioButton playing={true} permission={true} onClick={onClick} volume={0.2}></AudioButton>
+        );
         const button = container.querySelector('button');
         if (button) {
             fireEvent.click(button);

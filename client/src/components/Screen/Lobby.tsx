@@ -1,6 +1,5 @@
 import { Assignment } from '@material-ui/icons';
 import * as React from 'react';
-import { useBeforeunload } from 'react-beforeunload';
 import { useParams } from 'react-router-dom';
 
 import { IRouteParams } from '../../App';
@@ -38,7 +37,7 @@ import LobbyHeader from './LobbyHeader';
 
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
-    const { playLobbyMusic, pauseLobbyMusic, permission, playing, setPermissionGranted } = React.useContext(
+    const { playLobbyMusic, pauseLobbyMusic, permission, playing, setPermissionGranted, volume } = React.useContext(
         AudioContext
     );
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
@@ -75,9 +74,9 @@ export const Lobby: React.FunctionComponent = () => {
         handleAudioPermission();
     }, []);
 
-    useBeforeunload(() => {
-        pauseLobbyMusic(permission);
-    });
+    // useBeforeunload(() => {
+    //     pauseLobbyMusic(permission);
+    // });
 
     async function handleAudio() {
         handleAudioPermission();
@@ -98,6 +97,7 @@ export const Lobby: React.FunctionComponent = () => {
                     onClick={handleAudio}
                     playing={playing}
                     permission={permission}
+                    volume={volume}
                 ></AudioButton>
                 <LobbyHeader />
                 <ContentContainer>
@@ -133,14 +133,24 @@ export const Lobby: React.FunctionComponent = () => {
                         <RightButtonContainer>
                             {screenAdmin && (
                                 <Button
-                                    onClick={() => history.push(`/screen/${roomId}/choose-game`)}
+                                    onClick={() => {
+                                        handlePermission(permission);
+                                        history.push(`/screen/${roomId}/choose-game`);
+                                    }}
                                     variant="secondary"
                                 >
                                     Choose Game
                                 </Button>
                             )}
                             <Button disabled>Leaderboard</Button>
-                            <Button onClick={() => history.push('/screen')}>Back</Button>
+                            <Button
+                                onClick={() => {
+                                    handlePermission(permission);
+                                    history.push('/screen');
+                                }}
+                            >
+                                Back
+                            </Button>
                         </RightButtonContainer>
                     </RightContainer>
                 </ContentContainer>

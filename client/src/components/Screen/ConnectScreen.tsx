@@ -19,7 +19,7 @@ import {
 export const ConnectScreen: React.FunctionComponent = () => {
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const { handleSocketConnection } = React.useContext(ScreenSocketContext);
-    const { playLobbyMusic, pauseLobbyMusic, permission, setPermissionGranted, playing } = React.useContext(
+    const { playLobbyMusic, pauseLobbyMusic, permission, setPermissionGranted, playing, volume } = React.useContext(
         AudioContext
     );
 
@@ -33,17 +33,26 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
         const data = await response.json();
         handleSocketConnection(data.roomId, 'lobby');
-
-        handleAudio();
+        handleAudioPermission();
     }
+
+    const handleAudioPermission = () => {
+        if (handlePermission(permission)) {
+            setPermissionGranted(true);
+        }
+    };
+
+    React.useEffect(() => {
+        handleAudioPermission();
+    }, []);
 
     async function handleJoinRoom() {
         setDialogOpen(true);
-        handleAudio();
+        handleAudioPermission();
     }
 
     async function handleAudio() {
-        if (handlePermission(permission)) setPermissionGranted(true);
+        handleAudioPermission();
 
         if (playing) {
             pauseLobbyMusic(permission);
@@ -61,6 +70,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                 onClick={handleAudio}
                 playing={playing}
                 permission={permission}
+                volume={volume}
             ></AudioButton>
             <LeftContainer>
                 <LeftButtonContainer>
@@ -72,6 +82,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                     </Button>
                     <Button type="button" name="tutorial" disabled>
                         Getting Started
+                        {/*TODO add handleAudioPermission() to onClick event*/}
                     </Button>
                 </LeftButtonContainer>
             </LeftContainer>
@@ -79,10 +90,24 @@ export const ConnectScreen: React.FunctionComponent = () => {
                 <Logo />
 
                 <ButtonContainer>
-                    <Button type="button" name="credits" onClick={() => history.push('/credits')}>
+                    <Button
+                        type="button"
+                        name="credits"
+                        onClick={() => {
+                            handleAudioPermission();
+                            history.push('/credits');
+                        }}
+                    >
                         Credits
                     </Button>
-                    <Button type="button" name="settings" onClick={() => history.push('/settings')}>
+                    <Button
+                        type="button"
+                        name="settings"
+                        onClick={() => {
+                            handleAudioPermission();
+                            history.push('/settings');
+                        }}
+                    >
                         Settings
                     </Button>
                 </ButtonContainer>

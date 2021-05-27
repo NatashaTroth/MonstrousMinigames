@@ -9,6 +9,7 @@ import * as React from 'react';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { handlePermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
+import AudioButton from './AudioButton';
 import Button from './Button';
 import { BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer } from './Settings.sc';
 
@@ -33,6 +34,20 @@ const Settings: React.FunctionComponent = () => {
     } = React.useContext(AudioContext);
     const [value, setValue] = React.useState(volume);
 
+    const handleAudioPermission = () => {
+        if (handlePermission(permission)) {
+            setPermissionGranted(true);
+        }
+    };
+
+    React.useEffect(() => {
+        handleAudioPermission();
+    }, []);
+
+    React.useEffect(() => {
+        setValue(volume);
+    }, [volume]);
+
     // React.useEffect(() => {
     //     // eslint-disable-next-line no-console
     //     // console.log('here ', volume);
@@ -53,7 +68,7 @@ const Settings: React.FunctionComponent = () => {
     // });
 
     const handleChange = (event: React.ChangeEvent<any>, newValue: number | number[]): void => {
-        if (handlePermission(permission)) setPermissionGranted(true);
+        handleAudioPermission();
         if (typeof newValue == 'number') {
             setAudioVolume(newValue);
             setValue(newValue);
@@ -62,6 +77,18 @@ const Settings: React.FunctionComponent = () => {
             setValue(newValue[0]);
         }
     };
+
+    async function handleAudio() {
+        // eslint-disable-next-line no-console
+        console.log('here 1 ');
+        handleAudioPermission();
+
+        if (playing) {
+            pauseLobbyMusic(permission);
+        } else {
+            playLobbyMusic(permission);
+        }
+    }
 
     return (
         <SettingsContainer>
@@ -89,6 +116,14 @@ const Settings: React.FunctionComponent = () => {
                             <Grid item>
                                 <VolumeUp />
                             </Grid>
+                            <AudioButton
+                                type="button"
+                                name="new"
+                                onClick={handleAudio}
+                                playing={playing}
+                                permission={permission}
+                                volume={volume}
+                            ></AudioButton>
                         </Grid>
                     </div>
                 </Content>

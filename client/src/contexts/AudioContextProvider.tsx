@@ -41,13 +41,40 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     const [permission, setPermissionGranted] = React.useState<boolean>(false);
     const [playing, setPlaying] = React.useState<boolean>(false);
     const [audio, setAudio] = React.useState<HTMLAudioElement>(new Audio(lobbyMusic));
-    React.useEffect(() => {
-        audio.volume = 0.2;
-    }, []);
     const [volume, setVolume] = React.useState<number>(0.2);
+
+    React.useEffect(() => {
+        const oldVolumeFromLocalStorage = localStorage.getItem('audioVolume');
+        let initialVolume = 0.2;
+        if (oldVolumeFromLocalStorage !== null && oldVolumeFromLocalStorage !== undefined) {
+            initialVolume = Number(oldVolumeFromLocalStorage);
+        }
+        audio.volume = initialVolume;
+        setVolume(initialVolume);
+    }, []);
 
     const changeVolume = (value: number) => {
         audio.volume = value;
+    };
+
+    const updateVolumeEverywhere = (value: number) => {
+        changeVolume(value);
+        setVolume(value); //TODO change - laggy when change volume
+        localStorage.setItem('audioVolume', value.toString());
+    };
+
+    const muteVolumeEverywhere = () => {
+        localStorage.setItem('audioVolumeBefore', volume.toString());
+        changeVolume(0);
+        setVolume(0);
+        localStorage.setItem('audioVolume', '0');
+    };
+
+    const unMuteVolumeEverywhere = () => {
+        const newVolume = Number(localStorage.getItem('audioVolumeBefore'));
+        changeVolume(newVolume);
+        setVolume(newVolume);
+        localStorage.setItem('audioVolume', newVolume.toString());
     };
 
     const playMusic = async () => {
@@ -56,14 +83,19 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
             // audio.volume = 0.2;
             audio.loop = true;
             setPlaying(true);
+            if (volume == 0) unMuteVolumeEverywhere();
         } catch {
             setPermissionGranted(false);
         }
+        // print('played music ');
     };
 
     const pauseMusic = () => {
+        // print('pause music');
         audio.pause();
         setPlaying(false);
+
+        if (volume > 0) muteVolumeEverywhere();
     };
 
     const content = {
@@ -74,9 +106,10 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
             //start playing here - permission doesn't update quick enough
             if (p && !playing) {
                 playMusic();
-            } else if (p && playing) {
-                pauseMusic();
             }
+            // else if (p && playing) {
+            //     pauseMusic();
+            // }
         },
         playing,
         audio,
@@ -100,8 +133,11 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
         setAudioVolume: (v: number) => {
             // eslint-disable-next-line no-console
             // console.log('setting AUDIo volume ', v);
-            changeVolume(v);
-            setVolume(v); //TODO change - laggy when change volume
+            // changeVolume(v);
+            // setVolume(v); //TODO change - laggy when change volume
+            // localStorage.setItem('audioVolume', v.toString());
+            // print('setting AUDIo volume ');
+            updateVolumeEverywhere(v);
         },
     };
     return <AudioContext.Provider value={content}>{children}</AudioContext.Provider>;
