@@ -7,13 +7,14 @@ import { IRouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { handlePermission } from '../../domain/audio/handlePermission';
 import { Container, Go } from './Game.sc';
 import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
     //const { countdownTime, roomId } = React.useContext(GameContext)
     const { roomId } = React.useContext(GameContext);
-    const { pauseLobbyMusic, permission } = React.useContext(AudioContext);
+    const { pauseLobbyMusic, permission, setPermissionGranted } = React.useContext(AudioContext);
     const { id }: IRouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     //const [countdown] = React.useState(Date.now() + countdownTime)
@@ -23,8 +24,11 @@ const Game: React.FunctionComponent = () => {
     }
 
     React.useEffect(() => {
+        if (handlePermission(permission)) {
+            setPermissionGranted(true);
+        }
         pauseLobbyMusic(permission);
-    }, [pauseLobbyMusic, permission]);
+    }, []);
 
     React.useEffect(() => {
         const game = new Phaser.Game({
