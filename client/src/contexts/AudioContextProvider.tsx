@@ -41,10 +41,12 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     const [permission, setPermissionGranted] = React.useState<boolean>(false);
     const [playing, setPlaying] = React.useState<boolean>(false);
     const [audio, setAudio] = React.useState<HTMLAudioElement>(new Audio(lobbyMusic));
-    React.useEffect(() => {
-        audio.volume = 0.2;
-    }, []);
     const [volume, setVolume] = React.useState<number>(0.2);
+
+    React.useEffect(() => {
+        audio.volume = volume;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const changeVolume = (value: number) => {
         audio.volume = value;

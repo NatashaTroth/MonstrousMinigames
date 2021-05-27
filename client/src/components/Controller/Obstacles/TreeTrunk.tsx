@@ -8,13 +8,13 @@ import wood from '../../../images/wood.png';
 import { Obstacles } from '../../../utils/constants';
 import { particlesConfig } from '../../../utils/particlesConfig';
 import Button from '../../common/Button';
-import { SkipButton } from '../../common/SkipButton.sc';
 import { ObstacleContent } from './ObstaclStyles.sc';
 import {
     Line,
     ObstacleItem,
     StyledObstacleImage,
     StyledParticles,
+    StyledSkipButton,
     StyledTouchAppIcon,
     TouchContainer,
     TreeTrunkContainer,
@@ -60,7 +60,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
             if (sec === 0) {
                 setSkip(true);
             }
-        }, 5000);
+        }, 10000);
     }, [initialized]);
 
     if (hammerTime) {
@@ -116,9 +116,9 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
                 </ObstacleItem>
                 <TouchContainer id="touchContainer">
                     {skip && (
-                        <SkipButton>
+                        <StyledSkipButton>
                             <Button onClick={solveObstacle}>Skip</Button>
-                        </SkipButton>
+                        </StyledSkipButton>
                     )}
                     <Line />
                     {showInstructions && <StyledTouchAppIcon />}

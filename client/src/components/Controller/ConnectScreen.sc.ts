@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import forest from '../../images/forest.svg';
 import { primary } from '../../utils/colors';
+import { Label } from '../common/Label.sc';
 
 const fontSize = 1;
 
@@ -25,8 +26,8 @@ export const StyledInput = styled.input`
     font-weight: 700;
     font-size: calc(${fontSize} * 1rem);
     margin-bottom: 30px;
-    margin-top: 30px;
-    width: 40%;
+    margin-top: 10px;
+    width: 70%;
 
     height: 50px;
     padding: 5px 20px;
@@ -52,10 +53,8 @@ export const FormContainer = styled.form`
     align-items: center;
 `;
 
-export const ConnectInstructions = styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+export const InputLabel = styled(Label)`
+    && {
+        margin-bottom: 0;
+    }
 `;
