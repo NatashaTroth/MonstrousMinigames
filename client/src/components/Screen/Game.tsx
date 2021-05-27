@@ -14,7 +14,7 @@ import MainScene from './MainScene';
 const Game: React.FunctionComponent = () => {
     //const { countdownTime, roomId } = React.useContext(GameContext)
     const { roomId } = React.useContext(GameContext);
-    const { pauseLobbyMusic, permission, setPermissionGranted } = React.useContext(AudioContext);
+    const { pauseLobbyMusicNoMute, permission, setPermissionGranted, pauseLobbyMusic } = React.useContext(AudioContext);
     const { id }: IRouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     //const [countdown] = React.useState(Date.now() + countdownTime)
@@ -27,8 +27,11 @@ const Game: React.FunctionComponent = () => {
         if (handlePermission(permission)) {
             setPermissionGranted(true);
         }
-        pauseLobbyMusic(permission);
     }, []);
+
+    React.useEffect(() => {
+        pauseLobbyMusicNoMute(permission);
+    }, [permission]);
 
     React.useEffect(() => {
         const game = new Phaser.Game({
@@ -45,7 +48,7 @@ const Game: React.FunctionComponent = () => {
         });
         game.scene.add('MainScene', MainScene);
         game.scene.start('MainScene', { roomId: roomId });
-    }, [roomId, screenSocket]);
+    }, []); //roomId -> but being called twice
 
     return (
         <Container>

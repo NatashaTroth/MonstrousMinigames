@@ -16,6 +16,7 @@ export class GameAudio {
 
         this.backgroundMusicLoop = this.sound.add('backgroundMusicLoop', {
             volume: 0.2,
+            //TODO -  should be the same volume as lobby music
         });
     }
 

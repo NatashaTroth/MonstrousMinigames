@@ -15,6 +15,9 @@ export const defaultValue = {
     pauseLobbyMusic: () => {
         //do nothing
     },
+    pauseLobbyMusicNoMute: () => {
+        //do nothing
+    },
     volume: 0.2,
     setVolume: () => {
         //do nothing
@@ -33,6 +36,7 @@ interface IAudioContext {
     pauseLobbyMusic: (p: boolean) => void;
     setVolume: (v: number) => void;
     setAudioVolume: (v: number) => void;
+    pauseLobbyMusicNoMute: (p: boolean) => void;
 }
 
 export const AudioContext = React.createContext<IAudioContext>(defaultValue);
@@ -122,6 +126,12 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
         pauseLobbyMusic: (p: boolean) => {
             if (p && playing) {
                 pauseMusic();
+            }
+        },
+        pauseLobbyMusicNoMute: (p: boolean) => {
+            if (p) {
+                audio.pause();
+                setPlaying(false);
             }
         },
         volume,
