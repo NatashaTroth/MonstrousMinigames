@@ -2,6 +2,7 @@ import styled, { keyframes } from 'styled-components';
 
 import { ReactComponent as NetImage } from '../../../images/net.svg';
 import { ReactComponent as SpiderImage } from '../../../images/spider.svg';
+import { SkipButton } from '../../common/SkipButton.sc';
 
 const slideIn = keyframes`
     0% {
@@ -21,7 +22,11 @@ const slideIn = keyframes`
     }
 `;
 
-export const StyledSpider = styled(SpiderImage)`
+interface Spider {
+    strokeWidth: number;
+}
+
+export const StyledSpider = styled(SpiderImage)<Spider>`
     width: 80%;
     height: 100%;
     position: absolute;
@@ -32,6 +37,10 @@ export const StyledSpider = styled(SpiderImage)`
     transform-origin: top;
     transition: 1s;
     animation-timing-function: ease;
+
+    .st0 {
+        stroke-width: ${({ strokeWidth }) => strokeWidth}px;
+    }
 `;
 
 export const StyledNet = styled(NetImage)`
@@ -42,5 +51,12 @@ export const StyledNet = styled(NetImage)`
     .net0 {
         stroke-width: 5px;
         stroke: white;
+    }
+`;
+
+export const StyledSkipButton = styled(SkipButton)`
+    && {
+        position: absolute;
+        top: 45%;
     }
 `;

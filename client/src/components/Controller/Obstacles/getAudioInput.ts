@@ -10,13 +10,10 @@ export function resetCurrentCount() {
     currentCount = 0;
 }
 
-export async function getAudioInput(
-    MAX: number,
-    dependencies: { solveObstacle: (obstacle?: IObstacle) => void; setProgress: (val: number) => void }
-) {
+export async function getAudioInput(MAX: number, dependencies: { solveObstacle: (obstacle?: IObstacle) => void }) {
     let stream: MediaStream | null = null;
     const w = window as WindowProps;
-    const { setProgress, solveObstacle } = dependencies;
+    const { solveObstacle } = dependencies;
     currentCount = 0;
     let send = false;
 
@@ -41,7 +38,7 @@ export async function getAudioInput(
 
             javascriptNode.addEventListener('audioprocess', () => {
                 if (currentCount < MAX) {
-                    handleInput(analyser, { setProgress });
+                    handleInput(analyser);
                 } else if (currentCount >= MAX && !send) {
                     send = true;
 
@@ -56,7 +53,7 @@ export async function getAudioInput(
     }
 }
 
-function handleInput(analyser: AnalyserNode, dependencies: { setProgress: (val: number) => void }) {
+function handleInput(analyser: AnalyserNode) {
     const array = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(array);
     let values = 0;
@@ -70,6 +67,5 @@ function handleInput(analyser: AnalyserNode, dependencies: { setProgress: (val: 
 
     if (average > 50) {
         currentCount += 0.5;
-        dependencies.setProgress(currentCount);
     }
 }

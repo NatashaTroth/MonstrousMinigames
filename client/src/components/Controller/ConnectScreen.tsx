@@ -6,8 +6,7 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { sendMovement } from '../../domain/gameState/controller/sendMovement';
 import Button from '../common/Button';
-import { Label } from '../common/Label.sc';
-import { ConnectInstructions, ConnectScreenContainer, FormContainer, StyledInput } from './ConnectScreen.sc';
+import { ConnectScreenContainer, FormContainer, InputLabel, StyledInput } from './ConnectScreen.sc';
 
 interface IFormState {
     name: string;
@@ -19,7 +18,7 @@ interface ConnectScreen {
 }
 export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history }) => {
     const { location } = history;
-    const roomId = location.pathname.slice(1);
+    const roomId = checkRoomCode(location.pathname.slice(1));
     const [formState, setFormState] = React.useState<IFormState>({
         name: localStorage.getItem('name') || '',
         roomId: roomId || '',
@@ -53,34 +52,49 @@ export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history 
 
     return (
         <ConnectScreenContainer>
-            {roomId ? (
-                <>
-                    <FormContainer
-                        onSubmit={e => {
-                            e.preventDefault();
-                            handleSocketConnection(formState.roomId.toUpperCase(), formState?.name);
-                        }}
-                    >
-                        <Label>Enter your name:</Label>
+            <FormContainer
+                onSubmit={e => {
+                    e.preventDefault();
+                    handleSocketConnection(formState.roomId.toUpperCase(), formState?.name);
+                }}
+            >
+                <InputLabel>Enter your name:</InputLabel>
+                <StyledInput
+                    type="text"
+                    name="name"
+                    value={formState?.name}
+                    onChange={e => setFormState({ ...formState, name: e.target.value })}
+                    required
+                    maxLength={10}
+                />
+                {!roomId && (
+                    <>
+                        <InputLabel>Enter the roomCode:</InputLabel>
                         <StyledInput
                             type="text"
-                            name="name"
-                            value={formState?.name}
-                            onChange={e => setFormState({ ...formState, name: e.target.value })}
-                            placeholder="Insert your name"
+                            name="roomId"
+                            value={formState?.roomId}
+                            onChange={e => setFormState({ ...formState, roomId: e.target.value })}
+                            placeholder="ABCD"
                             required
-                            maxLength={10}
+                            maxLength={4}
                         />
-                        <Button type="submit" disabled={!formState?.name}>
-                            Enter
-                        </Button>
-                    </FormContainer>
-                </>
-            ) : (
-                <ConnectInstructions>
-                    <Label>Please connect device via QR Code</Label>
-                </ConnectInstructions>
-            )}
+                    </>
+                )}
+                <Button type="submit" disabled={!formState?.name}>
+                    Enter
+                </Button>
+            </FormContainer>
         </ConnectScreenContainer>
     );
 };
+
+function checkRoomCode(roomId: string) {
+    if (roomId.length !== 4) {
+        return null;
+    } else if (!roomId.match('[a-zA-Z]')) {
+        return null;
+    }
+
+    return roomId;
+}

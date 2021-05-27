@@ -40,6 +40,12 @@ export const eyeRollRight = keyframes`
     }
 `;
 
+const fallOff = keyframes`
+    100% {
+        transform: translateY(800px);
+    }
+`;
+
 export const ObstacleContainer = styled.div`
     width: 100%;
     height: 100%;
@@ -65,7 +71,7 @@ export const ObstacleContent = styled.div`
 
     .swing {
         animation-duration: 3s;
-        animation-iteration-count: 1;
+        animation-iteration-count: infinite;
         animation-name: ${swing};
         transform-origin: top;
         transition: 1s;
@@ -74,7 +80,7 @@ export const ObstacleContent = styled.div`
         .eyeRight {
             animation-duration: 2s;
             animation-delay: 2s;
-            animation-iteration-count: 1;
+            animation-iteration-count: infinite;
             animation-name: ${eyeRollRight};
             transition: 1s;
             animation-timing-function: ease;
@@ -84,11 +90,21 @@ export const ObstacleContent = styled.div`
         .eyeLeft {
             animation-duration: 2s;
             animation-delay: 2s;
-            animation-iteration-count: 1;
+            animation-iteration-count: infinite;
             animation-name: ${eyeRollLeft};
             transition: 1s;
             animation-timing-function: ease;
             transform-origin: 68.8px 613.5px;
         }
+    }
+
+    .fallOff {
+        animation-duration: 1s;
+        animation-iteration-count: 1;
+        animation-name: ${fallOff};
+        transform-origin: bottom;
+        transition: 1s;
+        animation-timing-function: ease;
+        animation-fill-mode: forwards;
     }
 `;
