@@ -2,42 +2,42 @@ import { TouchApp } from '@material-ui/icons';
 import Particles from 'react-particles-js';
 import styled, { keyframes } from 'styled-components';
 
-import { grey } from '../../../utils/colors';
+import { SkipButton } from '../../common/SkipButton.sc';
 import { ObstacleContainer } from './ObstaclStyles.sc';
 
 const slide = keyframes`
     0%, 33% { 
-        transform: translateX(-200);
+        transform: translateY(-200);
           opacity: 1;
     }
     16% {
-        transform: translateX(200px); 
+        transform: translateY(200px); 
           opacity: 1;
     }
     33%{
-       transform: translateX(-200px);
+       transform: translateY(-200px);
          opacity: 1;  
     }
     49%{
-       transform: translateX(200px);  
+       transform: translateY(200px);  
          opacity: 1;
     }
     66%{
-       transform: translateX(-200px);  
+       transform: translateY(-200px);  
          opacity: 1;
     }
     82%{
-       transform: translateX(200px);  
+       transform: translateY(200px);  
        opacity: 1;
     }
     100% { 
-        transform: translateX(200px);
+        transform: translateY(200px);
         opacity: 0;  
     }
 `;
 
 export const ObstacleItem = styled.div`
-    transform: rotate(275deg);
+    transform: rotate(325deg);
 `;
 export const StyledObstacleImage = styled.img`
     width: 80%;
@@ -53,9 +53,9 @@ export const TouchContainer = styled.div`
 `;
 
 export const Line = styled.div`
-    width: 80%;
+    height: 80%;
     position: absolute;
-    border-top: 8px dashed white;
+    border-left: 8px dashed white;
 `;
 
 export const StyledTouchAppIcon = styled(TouchApp)`
@@ -64,7 +64,7 @@ export const StyledTouchAppIcon = styled(TouchApp)`
         z-index: 2;
         width: 50px;
         height: 50px;
-        color: ${grey};
+        color: white;
         animation-duration: 6s;
         animation-iteration-count: 1;
         transform-origin: bottom;
@@ -82,5 +82,12 @@ export const StyledParticles = styled(Particles)`
 export const TreeTrunkContainer = styled(ObstacleContainer)`
     && {
         justify-content: center;
+    }
+`;
+
+export const StyledSkipButton = styled(SkipButton)`
+    && {
+        position: absolute;
+        bottom: -20px;
     }
 `;

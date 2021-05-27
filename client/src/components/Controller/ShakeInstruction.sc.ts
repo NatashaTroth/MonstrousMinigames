@@ -27,5 +27,5 @@ export const DialogContent = styled.div`
 
 export const ShakeIt = styled.img`
     display: flex;
-    width: 100%;
+    width: 80%;
 `;

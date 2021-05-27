@@ -8,11 +8,16 @@ import wood from '../../../images/wood.png';
 import { Obstacles } from '../../../utils/constants';
 import { particlesConfig } from '../../../utils/particlesConfig';
 import Button from '../../common/Button';
-import { SkipButton } from '../../common/SkipButton.sc';
 import { ObstacleContent } from './ObstaclStyles.sc';
 import {
-    Line, ObstacleItem, StyledObstacleImage, StyledParticles, StyledTouchAppIcon, TouchContainer,
-    TreeTrunkContainer
+    Line,
+    ObstacleItem,
+    StyledObstacleImage,
+    StyledParticles,
+    StyledSkipButton,
+    StyledTouchAppIcon,
+    TouchContainer,
+    TreeTrunkContainer,
 } from './TreeTrunk.sc';
 
 const MAX = 30;
@@ -111,9 +116,9 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
                 </ObstacleItem>
                 <TouchContainer id="touchContainer">
                     {skip && (
-                        <SkipButton>
+                        <StyledSkipButton>
                             <Button onClick={solveObstacle}>Skip</Button>
-                        </SkipButton>
+                        </StyledSkipButton>
                     )}
                     <Line />
                     {showInstructions && <StyledTouchAppIcon />}
