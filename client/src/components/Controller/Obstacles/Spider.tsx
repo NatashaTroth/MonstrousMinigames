@@ -9,11 +9,12 @@ import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
 import { StyledNet, StyledSkipButton, StyledSpider } from './Spider.sc';
 
 const Spider: React.FunctionComponent = () => {
+    const [progress, setProgress] = React.useState(0);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { roomId } = React.useContext(GameContext);
     const { obstacle, setObstacle } = React.useContext(PlayerContext);
     const [skip, setSkip] = React.useState(false);
-    const [progress, setProgress] = React.useState(0);
+
     const MAX = 15;
     let handleSkip: ReturnType<typeof setTimeout>;
 
@@ -27,8 +28,6 @@ const Spider: React.FunctionComponent = () => {
 
     const solveObstacle = () => {
         if (obstacle) {
-            // eslint-disable-next-line no-console
-            console.log('solve');
             controllerSocket.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle.id });
             setObstacle(roomId, undefined);
             clearTimeout(handleSkip);
@@ -38,13 +37,8 @@ const Spider: React.FunctionComponent = () => {
     React.useEffect(() => {
         resetCurrentCount();
         initializeSkip();
-        let isSubscribed = true;
 
-        getAudioInput(MAX, { solveObstacle, setProgress, isSubscribed });
-
-        return () => {
-            isSubscribed = false;
-        };
+        getAudioInput(MAX, { solveObstacle, setProgress });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

@@ -94,8 +94,6 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         obstacle,
         setObstacle: (roomId: string | undefined, val: undefined | IObstacle) => {
             setObstacle(val);
-            // eslint-disable-next-line no-console
-            console.log(val);
             if (val) {
                 reroute = true;
                 history.push(`/controller/${roomId}/${val.type.toLowerCase()}`);

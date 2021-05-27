@@ -64,6 +64,7 @@ export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history 
                     name="name"
                     value={formState?.name}
                     onChange={e => setFormState({ ...formState, name: e.target.value })}
+                    placeholder="James P."
                     required
                     maxLength={10}
                 />

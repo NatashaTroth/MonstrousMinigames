@@ -1,15 +1,12 @@
 import { IObstacle } from '../../../contexts/PlayerContextProvider';
 
 export let currentCount = 0;
-let send = false;
-
 interface WindowProps extends Window {
     webkitAudioContext?: typeof AudioContext;
 }
 
 export function resetCurrentCount() {
     currentCount = 0;
-    send = false;
 }
 
 export async function getAudioInput(
@@ -17,13 +14,13 @@ export async function getAudioInput(
     dependencies: {
         solveObstacle: (obstacle?: IObstacle) => void;
         setProgress: (val: number) => void;
-        isSubscribed: boolean;
     }
 ) {
     let stream: MediaStream | null = null;
     const w = window as WindowProps;
-    const { solveObstacle, setProgress, isSubscribed } = dependencies;
-    resetCurrentCount();
+    const { solveObstacle, setProgress } = dependencies;
+    currentCount = 0;
+    let send = false;
 
     try {
         stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -46,7 +43,7 @@ export async function getAudioInput(
 
             javascriptNode.addEventListener('audioprocess', () => {
                 if (currentCount < MAX) {
-                    handleInput(analyser, { setProgress, isSubscribed });
+                    handleInput(analyser, { setProgress });
                 } else if (currentCount >= MAX && !send) {
                     send = true;
 
@@ -61,10 +58,7 @@ export async function getAudioInput(
     }
 }
 
-function handleInput(
-    analyser: AnalyserNode,
-    dependencies: { setProgress: (val: number) => void; isSubscribed: boolean }
-) {
+function handleInput(analyser: AnalyserNode, dependencies: { setProgress: (val: number) => void }) {
     const array = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(array);
     let values = 0;
@@ -77,11 +71,7 @@ function handleInput(
     const average = values / length;
 
     if (average > 50) {
-        if (dependencies.isSubscribed) {
-            // eslint-disable-next-line no-console
-            console.log('Set State');
-            currentCount += 0.5;
-            dependencies.setProgress(currentCount);
-        }
+        currentCount += 0.5;
+        dependencies.setProgress(currentCount);
     }
 }
