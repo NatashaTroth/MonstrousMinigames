@@ -13,31 +13,40 @@ const Spider: React.FunctionComponent = () => {
     const { roomId } = React.useContext(GameContext);
     const { obstacle, setObstacle } = React.useContext(PlayerContext);
     const [skip, setSkip] = React.useState(false);
+    const [progress, setProgress] = React.useState(0);
     const MAX = 15;
+    let handleSkip: ReturnType<typeof setTimeout>;
+
+    function initializeSkip() {
+        handleSkip = setTimeout(() => {
+            if (currentCount === 0) {
+                setSkip(true);
+            }
+        }, 10000);
+    }
 
     const solveObstacle = () => {
         if (obstacle) {
+            // eslint-disable-next-line no-console
+            console.log('solve');
             controllerSocket.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle.id });
             setObstacle(roomId, undefined);
+            clearTimeout(handleSkip);
         }
     };
 
     React.useEffect(() => {
         resetCurrentCount();
+        initializeSkip();
+        let isSubscribed = true;
 
-        getAudioInput(MAX, { solveObstacle });
+        getAudioInput(MAX, { solveObstacle, setProgress, isSubscribed });
+
+        return () => {
+            isSubscribed = false;
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    React.useEffect(() => {
-        if (!skip) {
-            setTimeout(() => {
-                if (currentCount === 0) {
-                    setSkip(true);
-                }
-            }, 10000);
-        }
-    }, [skip]);
 
     return (
         <ObstacleContainer>
@@ -45,11 +54,11 @@ const Spider: React.FunctionComponent = () => {
                 <StyledNet />
                 <StyledSpider
                     className={[
-                        (currentCount > 0 && currentCount < 12 && 'swing') || '',
+                        (progress > 0 && progress < 14 && 'swing') || '',
                         'eyeRoll',
-                        ((currentCount >= 12 || skip) && 'fallOff') || '',
+                        ((progress >= 14 || skip) && 'fallOff') || '',
                     ].join(' ')}
-                    strokeWidth={skip ? 0 : (MAX - currentCount) / 2}
+                    strokeWidth={skip ? 0 : (MAX - progress) / 2}
                 />
             </ObstacleContent>
             {skip && (

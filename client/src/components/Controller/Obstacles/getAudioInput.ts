@@ -1,6 +1,7 @@
 import { IObstacle } from '../../../contexts/PlayerContextProvider';
 
 export let currentCount = 0;
+let send = false;
 
 interface WindowProps extends Window {
     webkitAudioContext?: typeof AudioContext;
@@ -8,14 +9,21 @@ interface WindowProps extends Window {
 
 export function resetCurrentCount() {
     currentCount = 0;
+    send = false;
 }
 
-export async function getAudioInput(MAX: number, dependencies: { solveObstacle: (obstacle?: IObstacle) => void }) {
+export async function getAudioInput(
+    MAX: number,
+    dependencies: {
+        solveObstacle: (obstacle?: IObstacle) => void;
+        setProgress: (val: number) => void;
+        isSubscribed: boolean;
+    }
+) {
     let stream: MediaStream | null = null;
     const w = window as WindowProps;
-    const { solveObstacle } = dependencies;
-    currentCount = 0;
-    let send = false;
+    const { solveObstacle, setProgress, isSubscribed } = dependencies;
+    resetCurrentCount();
 
     try {
         stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -38,7 +46,7 @@ export async function getAudioInput(MAX: number, dependencies: { solveObstacle: 
 
             javascriptNode.addEventListener('audioprocess', () => {
                 if (currentCount < MAX) {
-                    handleInput(analyser);
+                    handleInput(analyser, { setProgress, isSubscribed });
                 } else if (currentCount >= MAX && !send) {
                     send = true;
 
@@ -53,7 +61,10 @@ export async function getAudioInput(MAX: number, dependencies: { solveObstacle: 
     }
 }
 
-function handleInput(analyser: AnalyserNode) {
+function handleInput(
+    analyser: AnalyserNode,
+    dependencies: { setProgress: (val: number) => void; isSubscribed: boolean }
+) {
     const array = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(array);
     let values = 0;
@@ -66,6 +77,11 @@ function handleInput(analyser: AnalyserNode) {
     const average = values / length;
 
     if (average > 50) {
-        currentCount += 0.5;
+        if (dependencies.isSubscribed) {
+            // eslint-disable-next-line no-console
+            console.log('Set State');
+            currentCount += 0.5;
+            dependencies.setProgress(currentCount);
+        }
     }
 }
