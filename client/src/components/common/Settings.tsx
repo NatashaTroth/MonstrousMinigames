@@ -25,12 +25,11 @@ const Settings: React.FunctionComponent = () => {
     const {
         setAudioVolume,
         volume,
-        setVolume,
-        playLobbyMusic,
-        pauseLobbyMusic,
         permission,
-        playing,
         setPermissionGranted,
+        playing,
+        pauseLobbyMusic,
+        playLobbyMusic,
     } = React.useContext(AudioContext);
     const [value, setValue] = React.useState(volume);
 
@@ -67,7 +66,7 @@ const Settings: React.FunctionComponent = () => {
     //     setVolume(value);
     // });
 
-    const handleChange = (event: React.ChangeEvent<any>, newValue: number | number[]): void => {
+    const handleChange = (event: React.ChangeEvent<unknown>, newValue: number | number[]): void => {
         handleAudioPermission();
         if (typeof newValue == 'number') {
             setAudioVolume(newValue);
@@ -79,8 +78,6 @@ const Settings: React.FunctionComponent = () => {
     };
 
     async function handleAudio() {
-        // eslint-disable-next-line no-console
-        console.log('here 1 ');
         handleAudioPermission();
 
         if (playing) {

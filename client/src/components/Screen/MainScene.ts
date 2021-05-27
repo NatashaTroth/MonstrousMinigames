@@ -12,13 +12,9 @@ import ScreenSocket from '../../domain/socket/screenSocket';
 import { Socket } from '../../domain/socket/Socket';
 import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../domain/typeGuards/finished';
-import {
-    GameStateInfoMessage, gameStateInfoTypeGuard
-} from '../../domain/typeGuards/gameStateInfo';
+import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../domain/typeGuards/gameStateInfo';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../domain/typeGuards/paused';
-import {
-    PlayerFinishedMessage, playerFinishedTypeGuard
-} from '../../domain/typeGuards/playerFinished';
+import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../domain/typeGuards/playerFinished';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../domain/typeGuards/resumed';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../domain/typeGuards/stopped';
 import { TimedOutMessage, timedOutTypeGuard } from '../../domain/typeGuards/timedOut';
@@ -39,7 +35,6 @@ class MainScene extends Phaser.Scene {
     trackLength: number;
     gameStarted: boolean;
     paused: boolean;
-    newPlayers: any;
     gameRenderer?: GameRenderer;
     gameAudio?: GameAudio;
     camera?: Phaser.Cameras.Scene2D.Camera;

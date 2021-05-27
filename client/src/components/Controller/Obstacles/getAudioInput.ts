@@ -1,7 +1,6 @@
 import { IObstacle } from '../../../contexts/PlayerContextProvider';
 
 export let currentCount = 0;
-
 interface WindowProps extends Window {
     webkitAudioContext?: typeof AudioContext;
 }
@@ -12,11 +11,14 @@ export function resetCurrentCount() {
 
 export async function getAudioInput(
     MAX: number,
-    dependencies: { solveObstacle: (obstacle?: IObstacle) => void; setProgress: (val: number) => void }
+    dependencies: {
+        solveObstacle: (obstacle?: IObstacle) => void;
+        setProgress: (val: number) => void;
+    }
 ) {
     let stream: MediaStream | null = null;
     const w = window as WindowProps;
-    const { setProgress, solveObstacle } = dependencies;
+    const { solveObstacle, setProgress } = dependencies;
     currentCount = 0;
     let send = false;
 
@@ -44,9 +46,6 @@ export async function getAudioInput(
                     handleInput(analyser, { setProgress });
                 } else if (currentCount >= MAX && !send) {
                     send = true;
-                    javascriptNode.removeEventListener('audioprocess', () => {
-                        // do nothing
-                    });
 
                     stream!.getTracks().forEach(track => track.stop());
                     solveObstacle();

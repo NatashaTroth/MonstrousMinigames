@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
-import { lightBlue, orange, progressBarGreen } from '../../utils/colors';
+import forest from '../../images/forest.svg';
+import { progressBarGreen } from '../../utils/colors';
+import { Label } from '../common/Label.sc';
 
 export const RankTable = styled.div`
     width: 50%;
@@ -14,33 +16,16 @@ export const FinishedScreenContainer = styled.div`
     align-items: center;
     width: 100%;
     height: 100%;
-    background-color: ${lightBlue};
+    background-image: url(${forest});
+    background-size: cover;
 `;
 
-export const FinishedScreenPlayerRank = styled.div`
-    border: 5px solid ${orange};
-    background: white;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
-    color: ${orange};
-    font-weight: 700;
-    display: flex;
-    width: 28%;
-    font-size: 25px;
-    flex-direction: column;
-    text-align: center;
-    box-shadow: 8px 8px 0 #888;
-    border-radius: 4px;
-    padding: 5px;
-    text-align: left;
-`;
-export const Headline = styled.div`
-    color: black;
-    font-weight: 700;
+export const Headline = styled(Label)`
     font-size: 40px;
     margin-top: 30px;
     margin-bottom: 30px;
 `;
+
 export const LeaderBoardRow = styled.div`
     display: flex;
     justify-content: space-between;
@@ -86,14 +71,6 @@ export const PlayerTime = styled.div`
     border-radius: 4px;
     padding: 5px;
     text-align: right;
-`;
-
-export const UnfinishedSectionHeadline = styled.div`
-    color: black;
-    font-weight: 700;
-    font-size: 20px;
-    margin-top: 30px;
-    margin-bottom: 30px;
 `;
 
 export const UnfinishedUserRow = styled.div`

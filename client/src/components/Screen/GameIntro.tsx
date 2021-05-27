@@ -23,6 +23,7 @@ const GameIntro: React.FunctionComponent = () => {
         if (showFirstIntro) {
             setShowFirstIntro(false);
         } else {
+            localStorage.setItem('tutorial', 'seen');
             history.push(`/screen/${roomId}/get-ready`);
         }
     }
