@@ -1,12 +1,21 @@
 import * as React from 'react';
 
 import lobbyMusic from '../assets/audio/Lobby_Sound.wav';
+import GameEventEmitter from '../domain/phaser/GameEventEmitter';
+import { GameEventTypes } from '../domain/phaser/GameEventTypes';
+
+// import print from '../domain/phaser/printMethod';
+
+const gameEventEmitter = GameEventEmitter.getInstance();
 
 export const defaultValue = {
     permission: false,
     playing: false,
     audio: new Audio(lobbyMusic),
     setPermissionGranted: () => {
+        // do nothing
+    },
+    setPermissionGrantedAndPlay: () => {
         // do nothing
     },
     playLobbyMusic: () => {
@@ -32,6 +41,7 @@ interface IAudioContext {
     audio: HTMLAudioElement;
     volume: number;
     setPermissionGranted: (val: boolean) => void;
+    setPermissionGrantedAndPlay: (val: boolean) => void;
     playLobbyMusic: (p: boolean) => void;
     pauseLobbyMusic: (p: boolean) => void;
     setVolume: (v: number) => void;
@@ -55,6 +65,17 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
         }
         audio.volume = initialVolume;
         setVolume(initialVolume);
+
+        gameEventEmitter.on(GameEventTypes.PauseAudio, () => {
+            // print('pause audio event received context');
+            setPlaying(false);
+        });
+
+        gameEventEmitter.on(GameEventTypes.PlayAudio, () => {
+            // print('play audio event received context');
+
+            setPlaying(true);
+        });
     }, []);
 
     const changeVolume = (value: number) => {
@@ -82,23 +103,29 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     };
 
     const playMusic = async () => {
+        // print('PLAY');
         try {
             await audio.play();
             // audio.volume = 0.2;
             audio.loop = true;
             setPlaying(true);
             if (volume == 0) unMuteVolumeEverywhere();
-        } catch {
-            setPermissionGranted(false);
+        } catch (e) {
+            // print('IN CATCH');
+            // print(JSON.stringify(e));
+            // setPermissionGranted(false);
+            setPlaying(false);
         }
+        // print(playing);
         // print('played music ');
     };
 
     const pauseMusic = () => {
         // print('pause music');
+
         audio.pause();
         setPlaying(false);
-
+        // print(playing);
         if (volume > 0) muteVolumeEverywhere();
     };
 
@@ -106,6 +133,10 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
         permission,
         setPermissionGranted: (p: boolean) => {
             setPermissionGranted(p);
+        },
+        setPermissionGrantedAndPlay: (p: boolean) => {
+            setPermissionGranted(p);
+            // print('HERE1');
 
             //start playing here - permission doesn't update quick enough
             if (p && !playing) {
@@ -136,8 +167,6 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
         },
         volume,
         setVolume: (v: number) => {
-            // eslint-disable-next-line no-console
-            // console.log('setting volume ', v);
             setVolume(v);
         },
         setAudioVolume: (v: number) => {

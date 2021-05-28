@@ -37,9 +37,14 @@ import LobbyHeader from './LobbyHeader';
 
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
-    const { playLobbyMusic, pauseLobbyMusic, permission, playing, setPermissionGranted, volume } = React.useContext(
-        AudioContext
-    );
+    const {
+        playLobbyMusic,
+        pauseLobbyMusic,
+        permission,
+        playing,
+        setPermissionGrantedAndPlay,
+        volume,
+    } = React.useContext(AudioContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: IRouteParams = useParams();
     const navigator = window.navigator;
@@ -66,9 +71,9 @@ export const Lobby: React.FunctionComponent = () => {
 
     const handleAudioPermission = React.useCallback(() => {
         if (handlePermission(permission)) {
-            setPermissionGranted(true);
+            setPermissionGrantedAndPlay(true);
         }
-    }, [permission, setPermissionGranted]);
+    }, [permission, setPermissionGrantedAndPlay]);
 
     React.useEffect(() => {
         handleAudioPermission();

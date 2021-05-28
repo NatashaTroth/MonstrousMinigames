@@ -26,7 +26,7 @@ const Settings: React.FunctionComponent = () => {
         setAudioVolume,
         volume,
         permission,
-        setPermissionGranted,
+        setPermissionGrantedAndPlay,
         playing,
         pauseLobbyMusic,
         playLobbyMusic,
@@ -35,7 +35,7 @@ const Settings: React.FunctionComponent = () => {
 
     const handleAudioPermission = () => {
         if (handlePermission(permission)) {
-            setPermissionGranted(true);
+            setPermissionGrantedAndPlay(true);
         }
     };
 
@@ -83,6 +83,8 @@ const Settings: React.FunctionComponent = () => {
         if (playing) {
             pauseLobbyMusic(permission);
         } else {
+            // eslint-disable-next-line no-console
+            console.log('MMM settings');
             playLobbyMusic(permission);
         }
     }
