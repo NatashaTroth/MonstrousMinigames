@@ -9,15 +9,12 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handlePermission } from '../../domain/audio/handlePermission';
 import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
-import print from '../../domain/phaser/printMethod';
+// import print from '../../domain/phaser/printMethod';
 import AudioButton from '../common/AudioButton';
 import { Container, Go } from './Game.sc';
 import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
-    // const { playLobbyMusic, pauseLobbyMusic, permission, playing, setPermissionGranted, volume } = React.useContext(
-    //     AudioContext
-    // );
     //const { countdownTime, roomId } = React.useContext(GameContext)
     const { roomId } = React.useContext(GameContext);
     const {
@@ -39,7 +36,6 @@ const Game: React.FunctionComponent = () => {
 
     const handleAudioPermission = () => {
         if (handlePermission(permission)) {
-            print('permission granted');
             setPermissionGranted(true);
         }
     };
@@ -47,12 +43,6 @@ const Game: React.FunctionComponent = () => {
     React.useEffect(() => {
         handleAudioPermission();
     }, []);
-
-    // React.useEffect(() => {
-    //     if (handlePermission(permission)) {
-    //         setPermissionGranted(true);
-    //     }
-    // }, []);
 
     React.useEffect(() => {
         pauseLobbyMusicNoMute(permission);
@@ -79,15 +69,9 @@ const Game: React.FunctionComponent = () => {
 
     async function handleAudio() {
         // handleAudioPermission();
-        print(playing);
         if (playing) {
-            // game.scene.keys.MainScene.
-            print('sending pause event');
-            // pauseLobbyMusic(permission);
             GameEventEmitter.emitPauseAudioEvent();
         } else {
-            print('sending play event');
-            // playLobbyMusic(permission);
             GameEventEmitter.emitPlayAudioEvent();
         }
     }

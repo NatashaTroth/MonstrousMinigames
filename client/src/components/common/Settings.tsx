@@ -83,8 +83,6 @@ const Settings: React.FunctionComponent = () => {
         if (playing) {
             pauseLobbyMusic(permission);
         } else {
-            // eslint-disable-next-line no-console
-            console.log('MMM settings');
             playLobbyMusic(permission);
         }
     }

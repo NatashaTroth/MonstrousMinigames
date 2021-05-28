@@ -36,22 +36,6 @@ const AudioButton: React.FunctionComponent<IButton> = ({
         variant={variant}
         fullwidth={fullwidth}
     >
-        {
-            // eslint-disable-next-line no-console
-            console.log('rerender button')
-        }
-        {
-            // eslint-disable-next-line no-console
-            console.log('playing: ', playing)
-        }
-        {
-            // eslint-disable-next-line no-console
-            console.log('permission: ', permission)
-        }
-        {
-            // eslint-disable-next-line no-console
-            console.log('volume: ', volume)
-        }
         {playing && permission && volume > 0 ? (
             <img src={audioIcon} className="muteImg" />
         ) : (

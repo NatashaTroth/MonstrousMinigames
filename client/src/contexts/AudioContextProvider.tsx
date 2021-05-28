@@ -103,7 +103,6 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     };
 
     const playMusic = async () => {
-        // print('PLAY');
         try {
             await audio.play();
             // audio.volume = 0.2;
@@ -111,21 +110,14 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
             setPlaying(true);
             if (volume == 0) unMuteVolumeEverywhere();
         } catch (e) {
-            // print('IN CATCH');
-            // print(JSON.stringify(e));
             // setPermissionGranted(false);
             setPlaying(false);
         }
-        // print(playing);
-        // print('played music ');
     };
 
     const pauseMusic = () => {
-        // print('pause music');
-
         audio.pause();
         setPlaying(false);
-        // print(playing);
         if (volume > 0) muteVolumeEverywhere();
     };
 
@@ -136,7 +128,6 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
         },
         setPermissionGrantedAndPlay: (p: boolean) => {
             setPermissionGranted(p);
-            // print('HERE1');
 
             //start playing here - permission doesn't update quick enough
             if (p && !playing) {
