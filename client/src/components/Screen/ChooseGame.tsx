@@ -1,9 +1,12 @@
 import * as React from 'react';
 
+import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
+import { handlePermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import game1Img from '../../images/instructions1.png';
 import oliverLobby from '../../images/oliverLobby.svg';
+import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
 import {
     BackButtonContainer,
@@ -23,6 +26,9 @@ const ChooseGame: React.FunctionComponent = () => {
     const [selectedGame, setSelectedGame] = React.useState(0);
     const { roomId } = React.useContext(GameContext);
     const tutorial = localStorage.getItem('tutorial') ? false : true;
+    const { playLobbyMusic, pauseLobbyMusic, permission, playing, setPermissionGranted, volume } = React.useContext(
+        AudioContext
+    );
 
     const games = [
         {
@@ -35,10 +41,38 @@ const ChooseGame: React.FunctionComponent = () => {
         { id: 4, name: 'Game 4' },
     ];
 
+    const handleAudioPermission = React.useCallback(() => {
+        if (handlePermission(permission)) {
+            setPermissionGranted(true);
+        }
+    }, [permission, setPermissionGranted]);
+
+    React.useEffect(() => {
+        handleAudioPermission();
+    }, [handleAudioPermission]);
+
+    async function handleAudio() {
+        handleAudioPermission();
+
+        if (playing) {
+            pauseLobbyMusic(permission);
+        } else {
+            playLobbyMusic(permission);
+        }
+    }
+
     return (
         <LobbyContainer>
             <Content>
                 <LobbyHeader />
+                <AudioButton
+                    type="button"
+                    name="new"
+                    onClick={handleAudio}
+                    playing={playing}
+                    permission={permission}
+                    volume={volume}
+                ></AudioButton>
                 <GameSelectionContainer>
                     <LeftContainer>
                         <div>

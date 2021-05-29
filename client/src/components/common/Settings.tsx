@@ -26,7 +26,7 @@ const Settings: React.FunctionComponent = () => {
         setAudioVolume,
         volume,
         permission,
-        setPermissionGrantedAndPlay,
+        setPermissionGranted,
         playing,
         pauseLobbyMusic,
         playLobbyMusic,
@@ -35,7 +35,7 @@ const Settings: React.FunctionComponent = () => {
 
     const handleAudioPermission = () => {
         if (handlePermission(permission)) {
-            setPermissionGrantedAndPlay(true);
+            setPermissionGranted(true);
         }
     };
 
@@ -58,13 +58,6 @@ const Settings: React.FunctionComponent = () => {
     //         setVolume(value);
     //     };
     // }, [value]);
-
-    //TODO but not yet working
-    // useBeforeunload(() => {
-    //     // eslint-disable-next-line no-console
-    //     console.log('UNLOADING ');
-    //     setVolume(value);
-    // });
 
     const handleChange = (event: React.ChangeEvent<unknown>, newValue: number | number[]): void => {
         handleAudioPermission();

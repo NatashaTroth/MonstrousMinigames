@@ -46,7 +46,7 @@ export class GameAudio {
             this.currentMusic = this.backgroundMusicLoop;
         });
         if (this.startMuted) {
-            // this.pause();
+            this.pause();
             GameEventEmitter.emitPauseAudioEvent();
         } else {
             GameEventEmitter.emitPlayAudioEvent(); //so playing is true

@@ -1,11 +1,14 @@
 import * as React from 'react';
 
+import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { handlePermission } from '../../domain/audio/handlePermission';
 import franz from '../../images/franz.png';
 import noah from '../../images/noah.png';
 import steffi from '../../images/steffi.png';
 import susi from '../../images/susi.png';
+import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
 import { getUserArray } from './Lobby';
 import {
@@ -22,7 +25,9 @@ import {
 
 const PlayersGetReady: React.FC = () => {
     const { screenSocket } = React.useContext(ScreenSocketContext);
-
+    const { playLobbyMusic, pauseLobbyMusic, permission, playing, setPermissionGranted, volume } = React.useContext(
+        AudioContext
+    );
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
     const characters = [franz, noah, susi, steffi];
 
@@ -36,10 +41,38 @@ const PlayersGetReady: React.FC = () => {
         });
     }
 
+    const handleAudioPermission = React.useCallback(() => {
+        if (handlePermission(permission)) {
+            setPermissionGranted(true);
+        }
+    }, [permission, setPermissionGranted]);
+
+    React.useEffect(() => {
+        handleAudioPermission();
+    }, [handleAudioPermission]);
+
+    async function handleAudio() {
+        handleAudioPermission();
+
+        if (playing) {
+            pauseLobbyMusic(permission);
+        } else {
+            playLobbyMusic(permission);
+        }
+    }
+
     return (
         <GetReadyContainer>
             <GetReadyBackground>
                 <Content>
+                    <AudioButton
+                        type="button"
+                        name="new"
+                        onClick={handleAudio}
+                        playing={playing}
+                        permission={permission}
+                        volume={volume}
+                    ></AudioButton>
                     <ConnectedUsers>
                         {getUserArray(connectedUsers || []).map((user, index) => (
                             <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>

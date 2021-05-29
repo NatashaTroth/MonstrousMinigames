@@ -19,14 +19,9 @@ import {
 export const ConnectScreen: React.FunctionComponent = () => {
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const { handleSocketConnection } = React.useContext(ScreenSocketContext);
-    const {
-        playLobbyMusic,
-        pauseLobbyMusic,
-        permission,
-        setPermissionGrantedAndPlay,
-        playing,
-        volume,
-    } = React.useContext(AudioContext);
+    const { playLobbyMusic, pauseLobbyMusic, permission, setPermissionGranted, playing, volume } = React.useContext(
+        AudioContext
+    );
 
     async function handleCreateNewRoom() {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}create-room`, {
@@ -43,7 +38,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
     const handleAudioPermission = () => {
         if (handlePermission(permission)) {
-            setPermissionGrantedAndPlay(true);
+            setPermissionGranted(true);
         }
     };
 

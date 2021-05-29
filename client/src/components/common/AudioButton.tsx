@@ -14,6 +14,7 @@ interface IButton {
     playing: boolean;
     permission: boolean;
     volume: number;
+    gameAudioPlaying?: boolean;
 }
 
 const AudioButton: React.FunctionComponent<IButton> = ({
@@ -27,6 +28,7 @@ const AudioButton: React.FunctionComponent<IButton> = ({
     playing = false,
     permission = false,
     volume = 0.2,
+    gameAudioPlaying = false,
 }) => (
     <StyledAudioButton
         disabled={disabled}
@@ -36,23 +38,7 @@ const AudioButton: React.FunctionComponent<IButton> = ({
         variant={variant}
         fullwidth={fullwidth}
     >
-        {
-            // eslint-disable-next-line no-console
-            console.log('rerender button')
-        }
-        {
-            // eslint-disable-next-line no-console
-            console.log('playing: ', playing)
-        }
-        {
-            // eslint-disable-next-line no-console
-            console.log('permission: ', permission)
-        }
-        {
-            // eslint-disable-next-line no-console
-            console.log('volume: ', volume)
-        }
-        {playing && permission && volume > 0 ? (
+        {(playing || gameAudioPlaying) && permission && volume > 0 ? (
             <img src={audioIcon} className="muteImg" />
         ) : (
             <img src={audioMutedIcon} className="muteImg" />
