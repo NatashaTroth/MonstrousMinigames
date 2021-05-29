@@ -9,6 +9,7 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handlePermission } from '../../domain/audio/handlePermission';
 import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
+import { GameEventTypes } from '../../domain/phaser/GameEventTypes';
 // import print from '../../domain/phaser/printMethod';
 import AudioButton from '../common/AudioButton';
 import { Container, Go } from './Game.sc';
@@ -23,12 +24,16 @@ const Game: React.FunctionComponent = () => {
         setPermissionGranted,
         pauseLobbyMusic,
         playing,
+        setPlaying,
         playLobbyMusic,
         volume,
+        mute,
+        unMute,
     } = React.useContext(AudioContext);
     const { id }: IRouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     //const [countdown] = React.useState(Date.now() + countdownTime)
+    const gameEventEmitter = GameEventEmitter.getInstance();
 
     if (id && !screenSocket) {
         handleSocketConnection(id, 'game1');
@@ -42,6 +47,16 @@ const Game: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         handleAudioPermission();
+
+        gameEventEmitter.on(GameEventTypes.PauseAudio, () => {
+            setPlaying(false);
+            if (volume > 0) mute();
+        });
+
+        gameEventEmitter.on(GameEventTypes.PlayAudio, () => {
+            setPlaying(true);
+            if (volume === 0) unMute();
+        });
     }, []);
 
     React.useEffect(() => {
@@ -68,11 +83,17 @@ const Game: React.FunctionComponent = () => {
     }, []); //roomId -> but being called twice
 
     async function handleAudio() {
+        // eslint-disable-next-line no-console
+        console.log('VOLI', volume);
         // handleAudioPermission();
         if (playing) {
             GameEventEmitter.emitPauseAudioEvent();
+            // setPlaying(false);
+            // if (volume > 0) mute();
         } else {
             GameEventEmitter.emitPlayAudioEvent();
+            // setPlaying(true);
+            // if (volume === 0) unMute();
         }
     }
 

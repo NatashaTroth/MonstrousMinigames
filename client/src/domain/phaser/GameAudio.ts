@@ -1,8 +1,11 @@
+import GameEventEmitter from './GameEventEmitter';
+
 export class GameAudio {
     backgroundMusicStart: Phaser.Sound.BaseSound;
     backgroundMusicLoop: Phaser.Sound.BaseSound;
     currentMusic?: Phaser.Sound.BaseSound;
     sound: Phaser.Sound.HTML5AudioSoundManager | Phaser.Sound.NoAudioSoundManager | Phaser.Sound.WebAudioSoundManager;
+    startMuted: boolean;
 
     constructor(
         sound:
@@ -10,7 +13,17 @@ export class GameAudio {
             | Phaser.Sound.NoAudioSoundManager
             | Phaser.Sound.WebAudioSoundManager
     ) {
-        const oldVolumeFromLocalStorage = localStorage.getItem('audioVolume');
+        let oldVolumeFromLocalStorage = localStorage.getItem('audioVolume');
+        this.startMuted = false;
+        if (Number(oldVolumeFromLocalStorage) === 0) {
+            oldVolumeFromLocalStorage = localStorage.getItem('audioVolumeBefore');
+            this.startMuted = true;
+        }
+
+        // // eslint-disable-next-line no-console
+        // console.log('startMuted ', this.startMuted);
+        // // eslint-disable-next-line no-console
+        // console.log(localStorage.getItem('audioVolumeBefore'));
         let initialVolume = 0.2;
         if (oldVolumeFromLocalStorage !== null && oldVolumeFromLocalStorage !== undefined) {
             initialVolume = Number(oldVolumeFromLocalStorage);
@@ -32,6 +45,12 @@ export class GameAudio {
             this.backgroundMusicLoop.play({ loop: true });
             this.currentMusic = this.backgroundMusicLoop;
         });
+        if (this.startMuted) {
+            // this.pause();
+            GameEventEmitter.emitPauseAudioEvent();
+        } else {
+            GameEventEmitter.emitPlayAudioEvent(); //so playing is true
+        }
     }
 
     stopMusic() {
