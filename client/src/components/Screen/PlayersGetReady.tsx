@@ -3,7 +3,7 @@ import * as React from 'react';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handlePermission } from '../../domain/audio/handlePermission';
+import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import franz from '../../images/franz.png';
 import noah from '../../images/noah.png';
 import steffi from '../../images/steffi.png';
@@ -41,18 +41,16 @@ const PlayersGetReady: React.FC = () => {
         });
     }
 
-    const handleAudioPermission = React.useCallback(() => {
-        if (handlePermission(permission)) {
-            setPermissionGranted(true);
-        }
+    const handleAudioPermissionCallback = React.useCallback(() => {
+        handleAudioPermission(permission, { setPermissionGranted });
     }, [permission, setPermissionGranted]);
 
     React.useEffect(() => {
-        handleAudioPermission();
-    }, [handleAudioPermission]);
+        handleAudioPermissionCallback();
+    }, [handleAudioPermissionCallback]);
 
     async function handleAudio() {
-        handleAudioPermission();
+        handleAudioPermissionCallback();
 
         if (playing) {
             pauseLobbyMusic(permission);

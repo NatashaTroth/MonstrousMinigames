@@ -7,7 +7,7 @@ import { IRouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handlePermission } from '../../domain/audio/handlePermission';
+import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
 import AudioButton from '../common/AudioButton';
 import { Container, Go } from './Game.sc';
@@ -38,14 +38,8 @@ const Game: React.FunctionComponent = () => {
         handleSocketConnection(id, 'game1');
     }
 
-    const handleAudioPermission = () => {
-        if (handlePermission(permission)) {
-            setPermissionGranted(true);
-        }
-    };
-
     React.useEffect(() => {
-        handleAudioPermission();
+        handleAudioPermission(permission, { setPermissionGranted });
 
         if (Number(localStorage.getItem('audioVolume')) > 0) {
             setGameAudioPlaying(true);

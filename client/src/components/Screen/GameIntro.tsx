@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
-import { handlePermission } from '../../domain/audio/handlePermission';
+import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
@@ -33,18 +33,16 @@ const GameIntro: React.FunctionComponent = () => {
             history.push(`/screen/${roomId}/get-ready`);
         }
     }
-    const handleAudioPermission = React.useCallback(() => {
-        if (handlePermission(permission)) {
-            setPermissionGranted(true);
-        }
+    const handleAudioPermissionCallback = React.useCallback(() => {
+        handleAudioPermission(permission, { setPermissionGranted });
     }, [permission, setPermissionGranted]);
 
     React.useEffect(() => {
-        handleAudioPermission();
-    }, [handleAudioPermission]);
+        handleAudioPermissionCallback();
+    }, [handleAudioPermissionCallback]);
 
     async function handleAudio() {
-        handleAudioPermission();
+        handleAudioPermissionCallback();
 
         if (playing) {
             pauseLobbyMusic(permission);

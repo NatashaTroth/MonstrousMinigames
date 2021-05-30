@@ -7,7 +7,7 @@ import VolumeUp from '@material-ui/icons/VolumeUp';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
-import { handlePermission } from '../../domain/audio/handlePermission';
+import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import AudioButton from './AudioButton';
 import Button from './Button';
@@ -33,14 +33,8 @@ const Settings: React.FunctionComponent = () => {
     } = React.useContext(AudioContext);
     const [value, setValue] = React.useState(volume);
 
-    const handleAudioPermission = () => {
-        if (handlePermission(permission)) {
-            setPermissionGranted(true);
-        }
-    };
-
     React.useEffect(() => {
-        handleAudioPermission();
+        handleAudioPermission(permission, { setPermissionGranted });
     }, []);
 
     React.useEffect(() => {
@@ -60,7 +54,8 @@ const Settings: React.FunctionComponent = () => {
     // }, [value]);
 
     const handleChange = (event: React.ChangeEvent<unknown>, newValue: number | number[]): void => {
-        handleAudioPermission();
+        handleAudioPermission(permission, { setPermissionGranted });
+
         if (typeof newValue == 'number') {
             setAudioVolume(newValue);
             setValue(newValue);
@@ -71,7 +66,7 @@ const Settings: React.FunctionComponent = () => {
     };
 
     async function handleAudio() {
-        handleAudioPermission();
+        handleAudioPermission(permission, { setPermissionGranted });
 
         if (playing) {
             pauseLobbyMusic(permission);

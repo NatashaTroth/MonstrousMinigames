@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handlePermission } from '../../domain/audio/handlePermission';
+import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
@@ -33,26 +33,20 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
         const data = await response.json();
         handleSocketConnection(data.roomId, 'lobby');
-        handleAudioPermission();
+        handleAudioPermission(permission, { setPermissionGranted });
     }
 
-    const handleAudioPermission = () => {
-        if (handlePermission(permission)) {
-            setPermissionGranted(true);
-        }
-    };
-
     React.useEffect(() => {
-        handleAudioPermission();
+        handleAudioPermission(permission, { setPermissionGranted });
     }, []);
 
     async function handleJoinRoom() {
         setDialogOpen(true);
-        handleAudioPermission();
+        handleAudioPermission(permission, { setPermissionGranted });
     }
 
     async function handleAudio() {
-        handleAudioPermission();
+        handleAudioPermission(permission, { setPermissionGranted });
 
         if (playing) {
             pauseLobbyMusic(permission);
@@ -82,7 +76,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                     </Button>
                     <Button type="button" name="tutorial" disabled>
                         Getting Started
-                        {/*TODO add handleAudioPermission() to onClick event*/}
+                        {/*TODO add  handleAudioPermission(permission, setPermissionGranted) to onClick event*/}
                     </Button>
                 </LeftButtonContainer>
             </LeftContainer>
@@ -94,7 +88,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                         type="button"
                         name="credits"
                         onClick={() => {
-                            handleAudioPermission();
+                            handleAudioPermission(permission, { setPermissionGranted });
                             history.push('/credits');
                         }}
                     >
@@ -104,7 +98,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                         type="button"
                         name="settings"
                         onClick={() => {
-                            handleAudioPermission();
+                            handleAudioPermission(permission, { setPermissionGranted });
                             history.push('/settings');
                         }}
                     >

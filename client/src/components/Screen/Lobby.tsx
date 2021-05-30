@@ -6,7 +6,7 @@ import { IRouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handlePermission } from '../../domain/audio/handlePermission';
+import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import franz from '../../images/franz.png';
 import noah from '../../images/noah.png';
@@ -64,18 +64,16 @@ export const Lobby: React.FunctionComponent = () => {
         }
     }, [roomId]);
 
-    const handleAudioPermission = React.useCallback(() => {
-        if (handlePermission(permission)) {
-            setPermissionGranted(true);
-        }
+    const handleAudioPermissionCallback = React.useCallback(() => {
+        handleAudioPermission(permission, { setPermissionGranted });
     }, [permission, setPermissionGranted]);
 
     React.useEffect(() => {
-        handleAudioPermission();
-    }, [handleAudioPermission]);
+        handleAudioPermissionCallback();
+    }, [handleAudioPermissionCallback]);
 
     async function handleAudio() {
-        handleAudioPermission();
+        handleAudioPermissionCallback();
 
         if (playing) {
             pauseLobbyMusic(permission);
@@ -130,7 +128,7 @@ export const Lobby: React.FunctionComponent = () => {
                             {screenAdmin && (
                                 <Button
                                     onClick={() => {
-                                        handlePermission(permission);
+                                        handleAudioPermission(permission, { setPermissionGranted });
                                         history.push(`/screen/${roomId}/choose-game`);
                                     }}
                                     disabled={!connectedUsers || connectedUsers?.length === 0}
@@ -142,7 +140,7 @@ export const Lobby: React.FunctionComponent = () => {
                             <Button disabled>Leaderboard</Button>
                             <Button
                                 onClick={() => {
-                                    handlePermission(permission);
+                                    handleAudioPermission(permission, { setPermissionGranted });
                                     history.push('/screen');
                                 }}
                             >
