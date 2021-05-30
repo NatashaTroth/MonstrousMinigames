@@ -30,6 +30,7 @@ export const PlayerName = styled.div`
     font-size: 45px;
     letter-spacing: 0.1em;
     font-style: italic;
+    margin-bottom: 10px;
 `;
 
 export const Character = styled.img`
@@ -41,23 +42,15 @@ export const Character = styled.img`
 export const CharacterContainer = styled.div`
     display: flex;
     width: 100%;
+    justify-content: center;
 `;
 
 export const PlayerContent = styled.div`
     display: flex;
-    flex-direction: row;
-    width: 50%;
-`;
-
-export const LeftContainer = styled.div``;
-
-export const RightContainer = styled.div`
-    display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     width: 100%;
-    padding: 20px;
 `;
 
 interface Props {
@@ -70,7 +63,17 @@ export const ReadyButton = styled.div<Props>`
     font-style: italic;
     text-transform: uppercase;
     font-size: 26px;
-    padding: 10px 15px;
+    padding: 20px 25px;
     border-radius: 20px;
     letter-spacing: 4px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+`;
+
+export const Arrow = styled.img`
+    width: 80px;
+    margin-left: 110px;
+    margin-top: 100px;
+    position: absolute;
 `;

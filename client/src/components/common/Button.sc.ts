@@ -30,6 +30,11 @@ export const StyledButton = styled.button<ButtonProps>`
 
     &:not([disabled]) {
         &:hover {
+            box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${secondaryShadow};
+            background: ${secondary};
+        }
+
+        &:active {
             transform: translateY(4px);
             box-shadow: calc(${boxShadowDepth} * 1px - 4px) calc(${boxShadowDepth} * 1px - 4px) 0 ${secondaryShadow};
             background: ${secondary};
