@@ -49,6 +49,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     timeWhenChasersAppear: number;
     chasersPositionX: number;
     updateChasersInterval?: ReturnType<typeof setInterval>;
+    updateChasersIntervalTime: number;
 
     constructor(roomId: string, leaderboard: Leaderboard) {
         // this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
@@ -73,6 +74,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.timeWhenChasersAppear = 10000; //10 sec
         this.chasersPositionX = 0;
         this.updateChasersInterval = undefined;
+        this.updateChasersIntervalTime = 100;
     }
 
     createNewGame(
@@ -117,8 +119,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         }, this.timeOutLimit);
 
         this.updateChasersInterval = setInterval(() => {
-            this.updateChasersPosition;
-        }, 100);
+            this.updateChasersPosition();
+        }, this.updateChasersIntervalTime);
     }
 
     // private onTimerTick() {
@@ -160,7 +162,9 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             this.stopGameTimeout();
         }, this.timeOutRemainingTime);
 
-        this.updateChasersInterval = setInterval(() => this.updateChasersPosition, 100);
+        this.updateChasersInterval = setInterval(() => {
+            this.updateChasersPosition();
+        }, this.updateChasersIntervalTime);
 
         //update gameStartedTime
         this.gameStartedTime = Date.now() - this.getGameTimePassedBeforePause();
@@ -218,13 +222,15 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         };
     }
 
+    //TODO test (and the intervals)
     private updateChasersPosition(): void {
-        // console.log(this);
-        const timePassed = Date.now() - this.gameStartedTime;
-        //10000 to 90000  * timePassed //TODO - make faster over time??
-        if (timePassed >= this.timeWhenChasersAppear) {
-            this.chasersPositionX += this.speed;
-        }
+        //TODO
+        // const timePassed = Date.now() - this.gameStartedTime;
+        // //10000 to 90000  * timePassed //TODO - make faster over time??
+        // if (timePassed >= this.timeWhenChasersAppear) {
+        //     this.chasersPositionX += this.speed;
+        // }
+        this.chasersPositionX += this.speed;
     }
 
     getObstaclePositions(): HashTable<Array<Obstacle>> {

@@ -64,4 +64,8 @@ describe('Get Obstacle Positions test', () => {
     it('returns player with correct number of obstacles (all)', async () => {
         expect(gameStateInfo.playersState[0].obstacles.length).toBe(NUMBER_OF_OBSTACLES);
     });
+
+    it('returns chaser position', async () => {
+        expect(gameStateInfo.chasersPosition).toBe(0);
+    });
 });
