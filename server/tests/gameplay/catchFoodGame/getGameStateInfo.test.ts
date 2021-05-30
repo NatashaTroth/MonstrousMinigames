@@ -2,6 +2,7 @@ import { CatchFoodGame } from '../../../src/gameplay';
 import { GameStateInfo } from '../../../src/gameplay/catchFood/interfaces';
 import { GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
+import { clearTimersAndIntervals } from './gameHelperFunctions';
 
 const TRACKLENGTH = 500;
 const NUMBER_OF_OBSTACLES = 4;
@@ -17,8 +18,7 @@ describe('Get Obstacle Positions test', () => {
     });
 
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('should return the game state', async () => {

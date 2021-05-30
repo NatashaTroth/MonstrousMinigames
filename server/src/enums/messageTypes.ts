@@ -12,5 +12,4 @@ export enum MessageTypes {
     GAME_HAS_RESUMED = 'gameHasResumed',
     ERROR = 'error',
     SCREEN_ADMIN = 'screenAdmin',
-
 }

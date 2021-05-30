@@ -116,10 +116,9 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             this.stopGameTimeout();
         }, this.timeOutLimit);
 
-        //TODO
-        // this.updateChasersInterval = setInterval(() => {
-        //     this.updateChasersPosition;
-        // }, 100);
+        this.updateChasersInterval = setInterval(() => {
+            this.updateChasersPosition;
+        }, 100);
     }
 
     // private onTimerTick() {
@@ -138,9 +137,9 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
         // pause timeout timer
         clearTimeout(this.timer);
-        console.log(this.updateChasersInterval);
+        // console.log(this.updateChasersInterval);
         if (this.updateChasersInterval) {
-            console.log('CLEARING INTERVAL');
+            // console.log('CLEARING INTERVAL');
             clearInterval(this.updateChasersInterval);
         }
         this.timeOutRemainingTime = this.timeOutLimit - this.getGameTimePassedBeforePause();
@@ -161,9 +160,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             this.stopGameTimeout();
         }, this.timeOutRemainingTime);
 
-        // this.updateChasersInterval = setInterval(() => this.updateChasersPosition, 100);
-        // console.log(this.updateChasersInterval);
-        // this.timeOutRemasiningTime = 0
+        this.updateChasersInterval = setInterval(() => this.updateChasersPosition, 100);
 
         //update gameStartedTime
         this.gameStartedTime = Date.now() - this.getGameTimePassedBeforePause();
@@ -250,7 +247,6 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.playersState[userId].positionX += speed;
 
         if (this.playerHasReachedObstacle(userId)) this.handlePlayerReachedObstacle(userId);
-
         if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId);
     }
 

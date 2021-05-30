@@ -3,6 +3,7 @@ import { ObstacleType } from '../../../src/gameplay/catchFood/enums';
 import { Obstacle } from '../../../src/gameplay/catchFood/interfaces';
 import { GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
+import { clearTimersAndIntervals } from './gameHelperFunctions';
 
 const TRACKLENGTH = 500;
 const NUMBER_OF_OBSTACLES = 4;
@@ -17,8 +18,7 @@ describe('Initiate CatchFoodGame correctly', () => {
         catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES);
     });
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('initiates players state with correct number of players', async () => {

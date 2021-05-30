@@ -5,10 +5,21 @@ import { ObstacleType } from '../../../src/gameplay/catchFood/enums';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces/';
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
-import { finishGame, finishPlayer, startGameAndAdvanceCountdown } from './gameHelperFunctions';
+import {
+    clearTimersAndIntervals, finishGame, finishPlayer, startGameAndAdvanceCountdown
+} from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
 let gameEventEmitter: CatchFoodGameEventEmitter;
+
+const beforeEachFunction = () => {
+    catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+    jest.useFakeTimers();
+};
+
+const afterEachFunction = () => {
+    clearTimersAndIntervals(catchFoodGame);
+};
 
 describe('Event Emitter', () => {
     beforeAll(() => {
@@ -16,16 +27,11 @@ describe('Event Emitter', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        jest.useFakeTimers();
+        beforeEachFunction();
     });
 
     afterEach(() => {
-        // if (catchFoodGame.updateChasersInterval) {
-        //     clearInterval(catchFoodGame.updateChasersInterval);
-        // }
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        afterEachFunction();
     });
 
     // test super is being called
@@ -55,13 +61,11 @@ describe('Start Game events ', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        jest.useFakeTimers();
+        beforeEachFunction();
     });
 
     afterEach(() => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        afterEachFunction();
     });
 
     it('should emit a GameHasStarted event when the game is started', async () => {
@@ -99,13 +103,11 @@ describe('Obstacle reached events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        jest.useFakeTimers();
+        beforeEachFunction();
     });
 
     afterEach(() => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        afterEachFunction();
     });
 
     it('should emit an ObstacleReached event when an obstacle is reached', async () => {
@@ -154,13 +156,11 @@ describe('Game has paused events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        jest.useFakeTimers();
+        beforeEachFunction();
     });
 
     afterEach(() => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        afterEachFunction();
     });
 
     it('should emit a GameHasPaused event when the game has been paused', async () => {
@@ -194,13 +194,11 @@ describe('Game has resumed events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        jest.useFakeTimers();
+        beforeEachFunction();
     });
 
     afterEach(() => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        afterEachFunction();
     });
 
     it('should emit a GameHasResumed event when the game has been paused', async () => {
@@ -236,13 +234,11 @@ describe('Game has stopped events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        jest.useFakeTimers();
+        beforeEachFunction();
     });
 
     afterEach(() => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        afterEachFunction();
     });
 
     it('should emit a GameHasStopped event when the game has been stopped by the user', async () => {
@@ -276,13 +272,11 @@ describe('Player has disconnected events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        jest.useFakeTimers();
+        beforeEachFunction();
     });
 
     afterEach(() => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        afterEachFunction();
     });
 
     it('should emit a PlayerHasDisconnected event when a player is disconnected', async () => {
@@ -339,13 +333,11 @@ describe('Player has reconnected events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        jest.useFakeTimers();
+        beforeEachFunction();
     });
 
     afterEach(() => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        afterEachFunction();
     });
 
     it('should emit a PlayerHasReconnected event when a player is reconnected', async () => {
@@ -393,13 +385,11 @@ describe('Player has finished events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        jest.useFakeTimers();
+        beforeEachFunction();
     });
 
     afterEach(() => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        afterEachFunction();
     });
 
     it('should emit a PlayerHasFinished event when a player has reached the end of the race', async () => {
@@ -439,13 +429,11 @@ describe('Game has finished events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        jest.useFakeTimers();
+        beforeEachFunction();
     });
 
     afterEach(() => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        afterEachFunction();
     });
 
     it('should emit a GameHasFinished event when a all the players have finished race', async () => {
@@ -504,13 +492,11 @@ describe('Game has timed out events', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        jest.useFakeTimers();
+        beforeEachFunction();
     });
 
     afterEach(() => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        afterEachFunction();
     });
 
     it('should emit a GameHasTimedOut event when the game has timed out', async () => {
@@ -519,7 +505,8 @@ describe('Game has timed out events', () => {
             gameTimedOutEvent = true;
         });
         startGameAndAdvanceCountdown(catchFoodGame);
-        jest.runAllTimers();
+        jest.advanceTimersByTime(catchFoodGame.timeOutLimit);
+
         expect(gameTimedOutEvent).toBeTruthy();
     });
 

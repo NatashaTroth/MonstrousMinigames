@@ -3,8 +3,8 @@ import { WrongGameStateError } from '../../../src/gameplay/customErrors';
 import { GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
 import {
-    getToCreatedGameState, getToFinishedGameState, getToPausedGameState, getToStartedGameState,
-    getToStoppedGameState, startGameAndAdvanceCountdown
+    clearTimersAndIntervals, getToCreatedGameState, getToFinishedGameState, getToPausedGameState,
+    getToStartedGameState, getToStoppedGameState, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
@@ -16,8 +16,7 @@ describe('Create new game', () => {
     });
 
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('throws an error with requiredGameStates property on create game when wrong game state', () => {

@@ -3,7 +3,7 @@ import {
     NotAtObstacleError, WrongObstacleIdError
 } from '../../../src/gameplay/catchFood/customErrors';
 import { leaderboard, roomId } from '../mockData';
-import { startGameAndAdvanceCountdown } from './gameHelperFunctions';
+import { clearTimersAndIntervals, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
 const USER_ID = '1';
@@ -19,8 +19,7 @@ describe('NotAtObstacleError handling tests', () => {
     });
 
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('the NotAtObstacleError has a userId property', async () => {

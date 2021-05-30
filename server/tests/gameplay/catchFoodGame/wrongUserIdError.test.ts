@@ -1,7 +1,7 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { WrongUserIdError } from '../../../src/gameplay/customErrors';
 import { leaderboard, roomId } from '../mockData';
-import { startGameAndAdvanceCountdown } from './gameHelperFunctions';
+import { clearTimersAndIntervals, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
 const USER_ID_THAT_DOES_NOT_EXIST = '50';
@@ -14,8 +14,7 @@ describe('WrongUserIdError handling tests', () => {
     });
 
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('the WrongUserIdError has a userId property', async () => {

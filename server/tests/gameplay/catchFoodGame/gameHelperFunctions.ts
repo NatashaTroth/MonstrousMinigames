@@ -8,10 +8,25 @@ const TRACK_LENGTH = 500;
 const gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
 const dateNow = 1618665766156;
 
+export function clearTimersAndIntervals(catchFoodGame: CatchFoodGame) {
+    //to clear intervals
+    jest.advanceTimersByTime(catchFoodGame.timeOutLimit);
+    jest.runAllTimers();
+    jest.clearAllMocks();
+}
+
 export function startGameAndAdvanceCountdown(catchFoodGameInstance: CatchFoodGame) {
     catchFoodGameInstance.createNewGame(users, TRACK_LENGTH, 4);
+    advanceCountdown();
+}
+export function advanceCountdown() {
     //run countdown
     jest.advanceTimersByTime(3000);
+}
+
+export function finishCreatedGame(catchFoodGame: CatchFoodGame) {
+    advanceCountdown();
+    return finishGame(catchFoodGame);
 }
 
 export function startAndFinishGame(catchFoodGame: CatchFoodGame): CatchFoodGame {
@@ -22,16 +37,16 @@ export function startAndFinishGame(catchFoodGame: CatchFoodGame): CatchFoodGame 
 }
 
 export function finishGame(catchFoodGame: CatchFoodGame): CatchFoodGame {
-    for (let i = 1; i <= catchFoodGame.numberOfObstacles; i++) {
+    const numberOfUsers = Object.keys(catchFoodGame.playersState).length;
+    for (let i = 1; i <= numberOfUsers; i++) {
         finishPlayer(catchFoodGame, i.toString());
     }
-
     return catchFoodGame;
 }
 
 export function finishPlayer(catchFoodGame: CatchFoodGame, userId: string) {
     completePlayersObstacles(catchFoodGame, userId);
-    catchFoodGame.runForward(userId, TRACK_LENGTH - catchFoodGame.playersState[userId].positionX);
+    catchFoodGame.runForward(userId, catchFoodGame.trackLength - catchFoodGame.playersState[userId].positionX);
 }
 
 export function completePlayersObstacles(catchFoodGame: CatchFoodGame, userId: string) {
