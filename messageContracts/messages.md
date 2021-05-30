@@ -362,3 +362,15 @@ example:
     "type": "stopGame"
 }
 ```
+### backToLobby
+
+-   resets game (if the screen is admin)
+    -   invokes 'gameHasReset' message
+
+example:
+
+```json
+{
+    "type": "backToLobby"
+}
+```

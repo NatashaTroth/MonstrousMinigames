@@ -167,22 +167,6 @@ class ConnectionHandler {
                         }
                         break;
                     }
-                    case MessageTypes.BACK_TO_LOBBY:
-                        {
-                            if (!socket.room.isOpen() && socket.room.isAdmin(socket.user)) {
-                                console.info(socket.room.id + ' | Reset Game');
-                                socket.room.resetGame().then(() => {
-                                    emitter.sendMessage(
-                                        MessageTypes.GAME_HAS_RESET,
-                                        [controllerNamespace, screenNameSpace],
-                                        socket.room.id
-                                    );
-                                    emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
-                                    emitter.sendUserInit(socket, user.number);
-                                });
-                            }
-                        }
-                        break;
                     default: {
                         console.info(message);
                     }
@@ -192,6 +176,7 @@ class ConnectionHandler {
     }
     private handleScreens() {
         const rs = this.rs;
+        const controllerNamespace = this.controllerNamespace;
         const screenNameSpace = this.screenNameSpace;
 
         this.screenNameSpace.on('connection', function (socket) {
@@ -287,6 +272,21 @@ class ConnectionHandler {
                         }
                         break;
                     }
+                    case MessageTypes.BACK_TO_LOBBY:
+                        {
+                            if (!socket.room.isOpen() && socket.room.isAdminScreen(socket.id)) {
+                                console.info(socket.room.id + ' | Reset Game');
+                                socket.room.resetGame().then(() => {
+                                    emitter.sendMessage(
+                                        MessageTypes.GAME_HAS_RESET,
+                                        [controllerNamespace, screenNameSpace],
+                                        socket.room.id
+                                    );
+                                    emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
+                                });
+                            }
+                        }
+                        break;
                     default: {
                         console.info(message);
                     }
