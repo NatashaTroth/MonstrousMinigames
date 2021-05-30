@@ -7,14 +7,16 @@ import { IRouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { handlePermission } from '../../domain/audio/handlePermission';
+import history from '../../domain/history/history';
 import franz from '../../images/franz.png';
 import noah from '../../images/noah.png';
 import steffi from '../../images/steffi.png';
 import susi from '../../images/susi.png';
 import { localDevelopment } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';
+import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
-import Logo from '../common/Logo';
 import {
     Character,
     CharacterContainer,
@@ -25,27 +27,23 @@ import {
     Content,
     ContentContainer,
     CopyToClipboard,
-    HeadContainer,
-    HeadContainerLeft,
-    HeadContainerRight,
-    Headline,
     LeftContainer,
     LobbyContainer,
     QRCode,
     QRCodeInstructions,
     RightButtonContainer,
     RightContainer,
-    RoomCodeContainer,
 } from './Lobby.sc';
-import SelectGameDialog from './SelectGameDialog';
+import LobbyHeader from './LobbyHeader';
 
 export const Lobby: React.FunctionComponent = () => {
-    const { roomId, connectedUsers } = React.useContext(GameContext);
-    const { playLobbyMusic, pauseLobbyMusic, permission } = React.useContext(AudioContext);
+    const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
+    const { playLobbyMusic, pauseLobbyMusic, permission, playing, setPermissionGranted } = React.useContext(
+        AudioContext
+    );
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: IRouteParams = useParams();
     const navigator = window.navigator;
-    const [dialogOpen, setDialogOpen] = React.useState(false);
     const characters = [franz, noah, susi, steffi];
 
     if (id && !screenSocket) {
@@ -67,28 +65,41 @@ export const Lobby: React.FunctionComponent = () => {
         }
     }, [roomId]);
 
+    const handleAudioPermission = React.useCallback(() => {
+        if (handlePermission(permission)) {
+            setPermissionGranted(true);
+        }
+    }, [permission, setPermissionGranted]);
+
     React.useEffect(() => {
-        playLobbyMusic(permission);
-    }, [permission, playLobbyMusic]);
+        handleAudioPermission();
+    }, [handleAudioPermission]);
 
     useBeforeunload(() => {
         pauseLobbyMusic(permission);
     });
 
+    async function handleAudio() {
+        handleAudioPermission();
+
+        if (playing) {
+            pauseLobbyMusic(permission);
+        } else {
+            playLobbyMusic(permission);
+        }
+    }
+
     return (
         <LobbyContainer>
-            <SelectGameDialog open={dialogOpen} handleClose={() => setDialogOpen(false)} />
             <Content>
-                <HeadContainer>
-                    <HeadContainerLeft>
-                        <RoomCodeContainer>
-                            <Headline>Room Code: {roomId}</Headline>
-                        </RoomCodeContainer>
-                    </HeadContainerLeft>
-                    <HeadContainerRight>
-                        <Logo />
-                    </HeadContainerRight>
-                </HeadContainer>
+                <AudioButton
+                    type="button"
+                    name="new"
+                    onClick={handleAudio}
+                    playing={playing}
+                    permission={permission}
+                ></AudioButton>
+                <LobbyHeader />
                 <ContentContainer>
                     <LeftContainer>
                         <ConnectedUsers>
@@ -104,7 +115,7 @@ export const Lobby: React.FunctionComponent = () => {
                                         {`Player ${user.number}`}
                                     </ConnectedUserCharacter>
                                     <ConnectedUserName number={user.number} free={user.free}>
-                                        {user.name}
+                                        {user.name.toUpperCase()}
                                     </ConnectedUserName>
                                 </ConnectedUserContainer>
                             ))}
@@ -120,8 +131,17 @@ export const Lobby: React.FunctionComponent = () => {
                             </CopyToClipboard>
                         </QRCode>
                         <RightButtonContainer>
-                            <Button text="Select Game" onClick={() => setDialogOpen(true)} />
-                            <Button text="Leaderboard" disabled />
+                            {screenAdmin && (
+                                <Button
+                                    disabled={!connectedUsers || connectedUsers?.length === 0}
+                                    onClick={() => history.push(`/screen/${roomId}/choose-game`)}
+                                    variant="secondary"
+                                >
+                                    Choose Game
+                                </Button>
+                            )}
+                            <Button disabled>Leaderboard</Button>
+                            <Button onClick={() => history.push('/screen')}>Back</Button>
                         </RightButtonContainer>
                     </RightContainer>
                 </ContentContainer>
@@ -138,7 +158,7 @@ interface ConnectedUsers {
     free?: boolean;
 }
 
-function getUserArray(connectedUsers: ConnectedUsers[]): ConnectedUsers[] {
+export function getUserArray(connectedUsers: ConnectedUsers[]): ConnectedUsers[] {
     if (connectedUsers.length === 4) {
         return connectedUsers as ConnectedUsers[];
     }

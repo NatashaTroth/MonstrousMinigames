@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { resetObstacle } from '../components/Controller/Obstacles/TreeTrunk';
 import { handleSetGameFinished } from '../domain/gameState/controller/handleSetGameFinished';
 import { handleSetGameStarted } from '../domain/gameState/controller/handleSetGameStarted';
 import { IUser } from './ControllerSocketContextProvider';
@@ -46,6 +45,18 @@ export const defaultValue = {
     setHasPaused: () => {
         // do nothing
     },
+    gameChosen: false,
+    setGameChosen: () => {
+        // do nothing
+    },
+    tutorial: false,
+    setTutorial: () => {
+        // do nothing
+    },
+    screenAdmin: false,
+    setScreenAdmin: () => {
+        // do nothing
+    },
 };
 interface IGameContext {
     finished: boolean;
@@ -67,6 +78,12 @@ interface IGameContext {
     setHasTimedOut: (val: boolean) => void;
     hasPaused: boolean;
     setHasPaused: (val: boolean) => void;
+    gameChosen: boolean;
+    setGameChosen: (val: boolean) => void;
+    tutorial: boolean;
+    setTutorial: (val: boolean) => void;
+    screenAdmin: boolean;
+    setScreenAdmin: (val: boolean) => void;
 }
 
 export const GameContext = React.createContext<IGameContext>(defaultValue);
@@ -81,6 +98,10 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [countdownTime, setCountdownTime] = React.useState<number>(0);
     const [hasTimedOut, setHasTimedOut] = React.useState<boolean>(false);
     const [hasPaused, setHasPaused] = React.useState<boolean>(false);
+    // TODO use data from socket
+    const [gameChosen, setGameChosen] = React.useState(false);
+    const [tutorial, setTutorial] = React.useState(true);
+    const [screenAdmin, setScreenAdmin] = React.useState<boolean>(false);
 
     const content = {
         finished,
@@ -94,7 +115,6 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         resetGame: () => {
             setFinished(false);
             setGameStarted(false);
-            resetObstacle();
         },
         showInstructions,
         setShowInstructions,
@@ -106,6 +126,12 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setHasTimedOut,
         hasPaused,
         setHasPaused,
+        gameChosen,
+        setGameChosen,
+        tutorial,
+        setTutorial,
+        screenAdmin,
+        setScreenAdmin,
     };
     return <GameContext.Provider value={content}>{children}</GameContext.Provider>;
 };

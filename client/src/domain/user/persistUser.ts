@@ -8,13 +8,15 @@ export function persistUser(
         sessionStorage: Storage;
         setPlayerAdmin: (val: boolean) => void;
         setPlayerNumber: (val: number) => void;
+        setName: (val: string) => void;
     }
 ) {
-    const { setPlayerAdmin, setPlayerNumber } = dependencies;
+    const { setPlayerAdmin, setPlayerNumber, setName } = dependencies;
     sessionStorage.setItem('userId', data.userId || '');
     localStorage.setItem('name', data.name || '');
     sessionStorage.setItem('roomId', data.roomId || '');
 
+    setName(data.name);
     setPlayerAdmin(data.isAdmin);
     setPlayerNumber(data.number);
 }

@@ -2,7 +2,7 @@
 import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
 import attention from '../../images/attention.png';
-import forest from '../../images/backgroundGame.png';
+import forest2 from '../../images/forest2.png';
 // import finishLine from '../../images/finishLine.png';
 import franz from '../../images/franz_spritesheet.png';
 import goal from '../../images/goal.png';
@@ -42,7 +42,7 @@ export const characters = [
 
 // obstacle textures have to have the same name as obstacle type - lowercase
 export const images = [
-    { name: 'forest', file: forest },
+    { name: 'forest2', file: forest2 },
     { name: 'attention', file: attention },
     { name: 'goal', file: goal },
     { name: 'treestump', file: wood },

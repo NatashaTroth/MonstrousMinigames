@@ -6,6 +6,7 @@ import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { handleResetGame } from '../../domain/gameState/controller/handleResetGame';
 import Button from '../common/Button';
 import FullScreenContainer from '../common/FullScreenContainer';
+import { Instruction, InstructionText } from '../common/Instruction.sc';
 import { FinishedScreenContainer, FinishedScreenText } from './FinishedScreen.sc';
 
 export const FinishedScreen: React.FunctionComponent = () => {
@@ -17,23 +18,32 @@ export const FinishedScreen: React.FunctionComponent = () => {
         <FullScreenContainer>
             <FinishedScreenContainer>
                 {(playerRank || hasTimedOut) && (
-                    <FinishedScreenText>
+                    <FinishedScreenText variant="light">
                         {playerRank ? (
                             <>
-                                #{playerRank}
-                                <span>Finished!</span>
+                                <Instruction>
+                                    <InstructionText>#{playerRank}</InstructionText>
+                                </Instruction>
+                                <Instruction>
+                                    <InstructionText>Finished!</InstructionText>
+                                </Instruction>
                             </>
                         ) : (
-                            'Game has timed out'
+                            <Instruction>
+                                <InstructionText>Game has timed out</InstructionText>
+                            </Instruction>
                         )}
                     </FinishedScreenText>
                 )}
+                <FinishedScreenText variant="light">
+                    <></>
+                </FinishedScreenText>
+
                 {/* TODO check if all players are finished */}
                 {isPlayerAdmin && (
-                    <Button
-                        onClick={() => handleResetGame(controllerSocket, { resetPlayer, resetGame }, true)}
-                        text="Back to Lobby"
-                    />
+                    <Button onClick={() => handleResetGame(controllerSocket, { resetPlayer, resetGame }, true)}>
+                        Back to Lobby
+                    </Button>
                 )}
             </FinishedScreenContainer>
         </FullScreenContainer>

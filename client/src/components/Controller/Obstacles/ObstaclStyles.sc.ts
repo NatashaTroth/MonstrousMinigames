@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
-import { lightBlue, orange } from '../../../utils/colors';
+import forest from '../../../images/forest.svg';
 
 export const swing = keyframes`
     0% {
@@ -40,10 +40,19 @@ export const eyeRollRight = keyframes`
     }
 `;
 
+const fallOff = keyframes`
+    100% {
+        transform: translateY(800px);
+    }
+`;
+
 export const ObstacleContainer = styled.div`
     width: 100%;
     height: 100%;
-    background-color: ${lightBlue};
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom;
+    background-image: url(${forest});
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -54,27 +63,7 @@ export const ObstacleContainer = styled.div`
     }
 `;
 
-export const ObstacleInstructions = styled.div`
-    border: 5px solid ${orange};
-    background: white;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
-    color: ${orange};
-    font-weight: 700;
-    display: flex;
-    width: 80%;
-    font-size: 20px;
-    flex-direction: column;
-    text-align: center;
-    box-shadow: 8px 8px 0 #888;
-    border-radius: 4px;
-    margin-top: 50px;
-    margin-bottom: 20px;
-    z-index: 3;
-`;
-
 export const ObstacleContent = styled.div`
-    margin-top: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -82,7 +71,7 @@ export const ObstacleContent = styled.div`
 
     .swing {
         animation-duration: 3s;
-        animation-iteration-count: 1;
+        animation-iteration-count: infinite;
         animation-name: ${swing};
         transform-origin: top;
         transition: 1s;
@@ -91,7 +80,7 @@ export const ObstacleContent = styled.div`
         .eyeRight {
             animation-duration: 2s;
             animation-delay: 2s;
-            animation-iteration-count: 1;
+            animation-iteration-count: infinite;
             animation-name: ${eyeRollRight};
             transition: 1s;
             animation-timing-function: ease;
@@ -101,11 +90,21 @@ export const ObstacleContent = styled.div`
         .eyeLeft {
             animation-duration: 2s;
             animation-delay: 2s;
-            animation-iteration-count: 1;
+            animation-iteration-count: infinite;
             animation-name: ${eyeRollLeft};
             transition: 1s;
             animation-timing-function: ease;
             transform-origin: 68.8px 613.5px;
         }
+    }
+
+    .fallOff {
+        animation-duration: 1s;
+        animation-iteration-count: 1;
+        animation-name: ${fallOff};
+        transform-origin: bottom;
+        transition: 1s;
+        animation-timing-function: ease;
+        animation-fill-mode: forwards;
     }
 `;

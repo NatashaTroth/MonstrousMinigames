@@ -1,49 +1,76 @@
-import { Typography } from '@material-ui/core';
 import styled from 'styled-components';
 
-import { orange } from '../../utils/colors';
+import { playerName, readyButton, secondary } from '../../utils/colors';
 
-export const LobbyScreenContainer = styled.div`
+export const LobbyContainer = styled.div`
     display: flex;
-    height: 100%;
     flex-direction: column;
+    align-items: center;
+    height: 100%;
     width: 100%;
-    justify-content: center;
-    align-items: center;
-`;
-export const Instruction = styled.div`
-    border: 5px solid ${orange};
-    background: white;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
-    color: ${orange};
-    font-weight: 700;
-    display: flex;
-    width: 80%;
-    font-size: 25px;
-    flex-direction: column;
-    text-align: center;
-    box-shadow: 8px 8px 0 #888;
-    border-radius: 4px;
-`;
-
-export const InstructionContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
     padding: 20px;
     justify-content: center;
 
     .MuiCircularProgress-colorPrimary {
-        color: ${orange};
+        color: ${secondary};
     }
 `;
 
-export const StyledTypography = styled(Typography)`
-    && {
-        font-weight: 700;
-        margin-top: 20px;
-        margin-bottom: 50px;
-    }
+export const Content = styled.div`
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
+
+export const PlayerName = styled.div`
+    color: ${playerName};
+    font-size: 45px;
+    letter-spacing: 0.1em;
+    font-style: italic;
+`;
+
+export const Character = styled.img`
+    display: flex;
+    height: 200px;
+    max-width: 200px;
+`;
+
+export const CharacterContainer = styled.div`
+    display: flex;
+    width: 100%;
+`;
+
+export const PlayerContent = styled.div`
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+`;
+
+export const LeftContainer = styled.div``;
+
+export const RightContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+`;
+
+interface Props {
+    ready: boolean;
+}
+
+export const ReadyButton = styled.div<Props>`
+    background-color: ${({ ready }) => (ready ? playerName : readyButton)};
+    color: white;
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: 26px;
+    padding: 10px 15px;
+    border-radius: 20px;
+    letter-spacing: 4px;
 `;

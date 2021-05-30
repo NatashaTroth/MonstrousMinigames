@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router';
 
+import { Character } from '../utils/characters';
 import { Obstacles } from '../utils/constants';
 import { GameContext } from './GameContextProvider';
 
@@ -32,6 +33,18 @@ export const defaultValue = {
     setPlayerNumber: () => {
         // do nothing
     },
+    character: undefined,
+    setCharacter: () => {
+        // do nothing
+    },
+    name: '',
+    setName: () => {
+        // do nothing
+    },
+    ready: false,
+    setReady: () => {
+        // do nothing
+    },
 };
 export interface IObstacle {
     type: Obstacles;
@@ -51,6 +64,12 @@ interface IPlayerContext {
     resetPlayer: () => void;
     playerNumber: number | undefined;
     setPlayerNumber: (val: number) => void;
+    character: undefined | Character;
+    setCharacter: (val: Character) => void;
+    name: string;
+    setName: (val: string) => void;
+    ready: boolean;
+    setReady: (val: boolean) => void;
 }
 
 export const PlayerContext = React.createContext<IPlayerContext>(defaultValue);
@@ -63,7 +82,11 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [playerNumber, setPlayerNumber] = React.useState<number | undefined>();
     const [permission, setPermissionGranted] = React.useState<boolean>(false);
     const history = useHistory();
+    const [character, setCharacter] = React.useState<undefined | Character>(undefined);
     const { roomId } = React.useContext(GameContext);
+    const [name, setName] = React.useState<string>('');
+    // TODO use data from socket
+    const [ready, setReady] = React.useState(false);
 
     let reroute = true;
 
@@ -98,6 +121,12 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         },
         playerNumber,
         setPlayerNumber,
+        character,
+        setCharacter,
+        name,
+        setName,
+        ready,
+        setReady,
     };
     return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>;
 };

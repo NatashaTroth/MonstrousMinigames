@@ -1,4 +1,5 @@
 import { GameAlreadyStartedError } from '../customErrors';
+import CannotStartEmptyGameError from '../customErrors/CannotStartEmptyGameError';
 import { Globals } from '../enums/globals';
 import { CatchFoodGame } from '../gameplay';
 import { GameStateInfo } from '../gameplay/catchFood/interfaces';
@@ -14,6 +15,7 @@ class Room {
     public admin: User | null;
     private state: RoomStates;
     private leaderboard: Leaderboard;
+    public screens: Array<string>;
 
     constructor(id: string) {
         this.id = id;
@@ -23,12 +25,14 @@ class Room {
         this.game = new CatchFoodGame(this.id, this.leaderboard);
         this.admin = null;
         this.state = RoomStates.OPEN;
+        this.screens = [];
     }
 
     public clear(): void {
         this.users.forEach(user => {
             user.clear();
         });
+        this.screens = [];
         this.state = RoomStates.CLOSED;
     }
 
@@ -111,6 +115,9 @@ class Room {
     }
 
     public startGame(): GameStateInfo {
+        if (this.users.length === 0) {
+            throw new CannotStartEmptyGameError();
+        }
         this.setState(RoomStates.PLAYING);
         this.game.createNewGame(this.users);
         this.updateTimestamp();
@@ -184,6 +191,20 @@ class Room {
 
     public resumeGame(): void {
         this.game.resumeGame();
+    }
+
+    public addScreen(screenId: string): void {
+        this.screens.push(screenId);
+    }
+    public removeScreen(screenId: string): void {
+        const index = this.screens.indexOf(screenId);
+        this.screens.splice(index, 1);
+    }
+    public isAdminScreen(screenId: string): boolean {
+        return this.screens.indexOf(screenId) === 0;
+    }
+    public getAdminScreenId(): string {
+        return this.screens[0];
     }
 }
 

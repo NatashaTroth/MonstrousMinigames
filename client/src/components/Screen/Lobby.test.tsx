@@ -19,7 +19,7 @@ afterEach(cleanup);
 describe('Screen Lobby', () => {
     it('renders correct roomId', () => {
         const roomId = 'ABCDE';
-        const givenText = `Room Code: ${roomId}`;
+        const givenText = `${roomId}`;
         const { container } = render(
             <Router history={history}>
                 <GameContext.Provider value={{ ...defaultValue, roomId }}>
@@ -44,13 +44,13 @@ describe('Screen Lobby', () => {
         const connectedUsers = [
             {
                 id: '1',
-                name: 'User 1',
+                name: 'User 1'.toUpperCase(),
                 roomId: 'ABCDE',
                 number: 1,
             },
             {
                 id: '2',
-                name: 'User 2',
+                name: 'User 2'.toUpperCase(),
                 roomId: 'ABCDE',
                 number: 2,
             },

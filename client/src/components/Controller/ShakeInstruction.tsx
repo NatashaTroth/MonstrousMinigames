@@ -4,15 +4,10 @@ import { ControllerSocketContext } from '../../contexts/ControllerSocketContextP
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { sendMovement } from '../../domain/gameState/controller/sendMovement';
+import shakeIt from '../../images/shakeIt.svg';
 import { localDevelopment } from '../../utils/constants';
 import FullScreenContainer from '../common/FullScreenContainer';
-import {
-    Container,
-    DialogContent,
-    StyledDialog,
-    StyledRotationIcon,
-    StyledShakeInstruction,
-} from './ShakeInstruction.sc';
+import { Container, DialogContent, ShakeIt, StyledDialog } from './ShakeInstruction.sc';
 
 const ShakeInstruction: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);
@@ -34,11 +29,7 @@ const ShakeInstruction: React.FunctionComponent = () => {
             </StyledDialog>
             <FullScreenContainer>
                 <Container>
-                    <StyledRotationIcon />
-                    <StyledShakeInstruction>
-                        <span>SHAKE YOUR PHONE!</span>
-                        <span>(and maybe your booty)</span>
-                    </StyledShakeInstruction>
+                    <ShakeIt src={shakeIt} />
                 </Container>
             </FullScreenContainer>
         </>

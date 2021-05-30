@@ -1,14 +1,10 @@
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import camp from '../../images/camp.svg';
-import { orange } from '../../utils/colors';
+import forest from '../../images/forest.svg';
+import { primary } from '../../utils/colors';
+import { Label } from '../common/Label.sc';
 
-const borderWidth = 5;
-const boxShadowDepth = 8;
 const fontSize = 1;
-const horizontalPadding = 16;
-const verticalPadding = 8;
 
 export const ConnectScreenContainer = styled.div`
     height: 100%;
@@ -16,7 +12,7 @@ export const ConnectScreenContainer = styled.div`
     background-repeat: no-repeat;
     background-size: cover;
     background-position: bottom;
-    background-image: url(${camp});
+    background-image: url(${forest});
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -25,15 +21,21 @@ export const ConnectScreenContainer = styled.div`
 export const StyledInput = styled.input`
     color: black;
     border: none;
-    background: white;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
+    background: ${primary};
     cursor: pointer;
     font-weight: 700;
     font-size: calc(${fontSize} * 1rem);
+    margin-bottom: 30px;
+    margin-top: 10px;
+    width: 70%;
+
+    height: 50px;
+    padding: 5px 20px;
+    border-radius: 10px;
+    font-size: 20px;
 
     &::placeholder {
-        color: lightgray;
+        color: grey;
     }
 
     &:focus,
@@ -45,42 +47,14 @@ export const FormContainer = styled.form`
     width: 100%;
     display: flex;
     flex-direction: column;
-    margin-top: 100px;
+    margin-bottom: 30px;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
 `;
 
-export const StyledLabel = styled.label`
-    margin: 0px 30px 30px 30px;
-    display: flex;
-    flex-direction: column;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
-    font-size: calc(${fontSize} * 1rem);
-    text-align: left;
-    color: black;
-    border: calc(${borderWidth} * 1px) solid ${orange};
-    background: white;
-    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 #888;
-    cursor: pointer;
-    font-size: calc(${fontSize} * 1rem);
-    outline: transparent;
-    padding: calc(${verticalPadding} * 1px) calc(${horizontalPadding} * 1px);
-    position: relative;
-    border-radius: 4px;
-`;
-
-export const ImpressumLink = styled(Link)`
-    text-decoration: none;
-    border: 2px solid ${orange};
-    background: white;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
-    color: ${orange};
-    font-weight: 700;
-    font-size: 12px;
-    flex-direction: column;
-    text-align: center;
-    box-shadow: 4px 4px 0 #888;
-    border-radius: 4px;
-    width: 30%;
-    margin-bottom: 20px;
+export const InputLabel = styled(Label)`
+    && {
+        margin-bottom: 0;
+    }
 `;
