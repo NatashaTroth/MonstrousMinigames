@@ -63,7 +63,7 @@
                     type: 'game1/runForward',
                 });
             if (type == 'backToLobby')
-                socket.emit('message', {
+                ssocket.emit('message', {
                     type: 'backToLobby',
                 });
             if (type == 'obstacleSolved')
