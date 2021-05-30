@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import forest from '../../images/forest.svg';
+import forest from '../../images/forest_mobile.svg';
 
 export const ChooseCharacterContainer = styled.div`
     height: 100%;

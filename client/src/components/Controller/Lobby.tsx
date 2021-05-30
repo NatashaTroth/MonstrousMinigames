@@ -3,19 +3,19 @@ import * as React from 'react';
 
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
+import arrow from '../../images/arrow_blue.svg';
 import FullScreenContainer from '../common/FullScreenContainer';
 import { Instruction, InstructionContainer, InstructionText } from '../common/Instruction.sc';
 import { Label } from '../common/Label.sc';
 import {
+    Arrow,
     Character,
     CharacterContainer,
     Content,
-    LeftContainer,
     LobbyContainer,
     PlayerContent,
     PlayerName,
     ReadyButton,
-    RightContainer,
 } from './Lobby.sc';
 
 export const Lobby: React.FunctionComponent = () => {
@@ -57,17 +57,15 @@ export const Lobby: React.FunctionComponent = () => {
                                         : 'Wait for the admin to start your game!'}
                                 </Label>
                                 <PlayerContent>
-                                    <LeftContainer>
-                                        <CharacterContainer>
-                                            <Character src={character?.src} />
-                                        </CharacterContainer>
-                                    </LeftContainer>
-                                    <RightContainer>
-                                        <PlayerName>{name}</PlayerName>
-                                        <ReadyButton ready={ready} onClick={() => setReady(true)}>
-                                            I am ready!
-                                        </ReadyButton>
-                                    </RightContainer>
+                                    <PlayerName>{name}</PlayerName>
+                                    <CharacterContainer>
+                                        <Character src={character?.src} />
+                                    </CharacterContainer>
+                                    <ReadyButton ready={ready} onClick={() => setReady(true)}>
+                                        <span>I am </span>
+                                        <span>ready!</span>
+                                    </ReadyButton>
+                                    {!ready && <Arrow src={arrow} />}
                                 </PlayerContent>
                             </>
                         )}
