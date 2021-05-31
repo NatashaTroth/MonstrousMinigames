@@ -20,6 +20,7 @@ export function initiatePlayersState(
             atObstacle: false,
             finished: false,
             finishedTimeMs: 0,
+            dead: false,
             rank: 0,
             isActive: true,
         };

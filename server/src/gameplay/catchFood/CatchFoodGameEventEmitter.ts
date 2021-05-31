@@ -49,8 +49,10 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
     }
 
     public static emitPlayerHasFinishedEvent(data: GameEvents.PlayerHasFinished) {
-        //*
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerHasFinished, data);
+    }
+    public static emitPlayerIsDead(data: GameEvents.PlayerIsDead) {
+        this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerIsDead, data);
     }
 
     public static emitGameHasFinishedEvent(data: GameEvents.GameHasFinished) {

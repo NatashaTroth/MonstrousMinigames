@@ -10,6 +10,8 @@ describe('Create new game tests', () => {
     beforeEach(() => {
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
+        // console.log(catchFoodGame.playersState['1']);
+
         startAndFinishGame(catchFoodGame);
         catchFoodGame.createNewGame(users, NEW_TRACKLENGTH, NEW_NUMBER_OF_OBSTACLES);
     });

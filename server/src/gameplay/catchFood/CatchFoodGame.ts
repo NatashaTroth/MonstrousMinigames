@@ -47,17 +47,18 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     gamePausedTime: number;
     leaderboard: Leaderboard;
     timeWhenChasersAppear: number;
+    // usingChasers: boolean //TODO try and remove (for tests)
     chasersPositionX: number;
     updateChasersInterval?: ReturnType<typeof setInterval>;
     updateChasersIntervalTime: number;
 
-    constructor(roomId: string, leaderboard: Leaderboard) {
+    constructor(roomId: string, leaderboard: Leaderboard /*, public usingChasers = false*/) {
         // this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
         this.roomId = roomId;
         this.maxNumberOfPlayers = Globals.MAX_PLAYER_NUMBER;
         this.gameState = GameState.Initialised;
-        this.trackLength = 2000;
-        this.numberOfObstacles = 4;
+        this.trackLength = 4000;
+        this.numberOfObstacles = 5;
         this.speed = 0;
         this.currentRank = 1;
         this.ranksDictionary = {};
@@ -107,20 +108,20 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     private startGame(): void {
         setTimeout(() => {
             this.gameState = GameState.Started;
+            this.gameStartedTime = Date.now();
+            // setInterval(this.onTimerTick, 33);
+
+            this.updateChasersInterval = setInterval(() => {
+                this.updateChasersPosition();
+            }, this.updateChasersIntervalTime);
         }, this.countdownTime);
+        this.timer = setTimeout(() => {
+            this.stopGameTimeout();
+        }, this.timeOutLimit);
         CatchFoodGameEventEmitter.emitGameHasStartedEvent({
             roomId: this.roomId,
             countdownTime: this.countdownTime,
         });
-        this.gameStartedTime = Date.now();
-        // setInterval(this.onTimerTick, 33);
-        this.timer = setTimeout(() => {
-            this.stopGameTimeout();
-        }, this.timeOutLimit);
-
-        this.updateChasersInterval = setInterval(() => {
-            this.updateChasersPosition();
-        }, this.updateChasersIntervalTime);
     }
 
     // private onTimerTick() {
@@ -231,6 +232,29 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         //     this.chasersPositionX += this.speed;
         // }
         this.chasersPositionX += this.speed;
+
+        //TODO test
+        for (const [, playerState] of Object.entries(this.playersState)) {
+            if (!playerState.finished && this.chaserCaughtPlayer(playerState)) {
+                this.handlePlayerCaught(playerState);
+            }
+        }
+    }
+
+    private handlePlayerCaught(playerState: PlayerState) {
+        playerState.dead = true;
+        this.updatePlayerStateFinished(playerState.id);
+
+        //TODO emit dead event
+        CatchFoodGameEventEmitter.emitPlayerIsDead({
+            roomId: this.roomId,
+            userId: playerState.id,
+            rank: playerState.rank,
+        });
+    }
+
+    private chaserCaughtPlayer(playerState: PlayerState) {
+        return playerState.positionX <= this.chasersPositionX;
     }
 
     getObstaclePositions(): HashTable<Array<Obstacle>> {
@@ -247,13 +271,18 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         verifyUserId(this.playersState, userId);
         verifyUserIsActive(userId, this.playersState[userId].isActive);
 
-        if (this.playersState[userId].finished) return;
-        if (this.playersState[userId].atObstacle) return;
+        if (this.userIsNotAllowedToRun(userId)) return;
 
-        this.playersState[userId].positionX += speed;
+        this.playersState[userId].positionX += Math.abs(speed);
 
         if (this.playerHasReachedObstacle(userId)) this.handlePlayerReachedObstacle(userId);
         if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId);
+    }
+
+    private userIsNotAllowedToRun(userId: string) {
+        return (
+            this.playersState[userId].finished || this.playersState[userId].dead || this.playersState[userId].atObstacle
+        );
     }
 
     private playerHasReachedObstacle(userId: string): boolean {
@@ -312,10 +341,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         //only if player hasn't already been marked as finished
         // if (this.playersState[userId].finished) return; //don't think I need
 
-        this.playersState[userId].finished = true;
+        this.updatePlayerStateFinished(userId);
         this.playersState[userId].positionX = this.trackLength;
-        this.playersState[userId].finishedTimeMs = Date.now();
-        this.playersState[userId].rank = this.getRank(this.playersState[userId].finishedTimeMs);
 
         CatchFoodGameEventEmitter.emitPlayerHasFinishedEvent({
             userId,
@@ -326,6 +353,12 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         if (this.gameHasFinished()) {
             this.handleGameFinished();
         }
+    }
+
+    private updatePlayerStateFinished(userId: string) {
+        this.playersState[userId].finished = true;
+        this.playersState[userId].finishedTimeMs = Date.now();
+        this.playersState[userId].rank = this.getRank(this.playersState[userId].finishedTimeMs);
     }
 
     private gameHasFinished(): boolean {
@@ -387,6 +420,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
                 name: playerState.name,
                 rank: playerState.finished ? playerState.rank : this.currentRank,
                 finished: playerState.finished,
+                dead: playerState.dead,
                 totalTimeInMs: playerFinishedTime - this.gameStartedTime,
                 positionX: playerState.positionX,
                 isActive: playerState.isActive,

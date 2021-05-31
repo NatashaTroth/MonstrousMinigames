@@ -10,22 +10,23 @@ const dateNow = 1618665766156;
 
 export function clearTimersAndIntervals(catchFoodGame: CatchFoodGame) {
     //to clear intervals
+    jest.advanceTimersByTime(catchFoodGame.countdownTime);
     jest.advanceTimersByTime(catchFoodGame.timeOutLimit);
     jest.runAllTimers();
     jest.clearAllMocks();
 }
 
-export function startGameAndAdvanceCountdown(catchFoodGameInstance: CatchFoodGame) {
-    catchFoodGameInstance.createNewGame(users, TRACK_LENGTH, 4);
-    advanceCountdown();
+export function startGameAndAdvanceCountdown(catchFoodGame: CatchFoodGame) {
+    catchFoodGame.createNewGame(users, TRACK_LENGTH, 4);
+    advanceCountdown(catchFoodGame.countdownTime);
 }
-export function advanceCountdown() {
+export function advanceCountdown(time: number) {
     //run countdown
-    jest.advanceTimersByTime(3000);
+    jest.advanceTimersByTime(time);
 }
 
 export function finishCreatedGame(catchFoodGame: CatchFoodGame) {
-    advanceCountdown();
+    advanceCountdown(catchFoodGame.countdownTime);
     return finishGame(catchFoodGame);
 }
 

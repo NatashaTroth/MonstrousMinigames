@@ -63,6 +63,7 @@ describe('Timer tests', () => {
         const dateNow = 1618665766156;
         Date.now = jest.fn(() => dateNow);
         startGameAndAdvanceCountdown(catchFoodGame);
+        Date.now = jest.fn(() => catchFoodGame.countdownTime);
 
         finishPlayer(catchFoodGame, '1');
 
@@ -82,9 +83,13 @@ describe('Timer tests', () => {
 
         const eventData = getGameFinishedDataAfterTimeOut(catchFoodGame, dateNow);
         expect(eventData.playerRanks[0].finished).toBeTruthy();
-        expect(eventData.playerRanks[1].finished).toBeFalsy();
-        expect(eventData.playerRanks[2].finished).toBeFalsy();
-        expect(eventData.playerRanks[3].finished).toBeFalsy();
+        expect(eventData.playerRanks[0].dead).toBeFalsy();
+        expect(eventData.playerRanks[1].dead).toBeTruthy(); //should be dead cause caught (cause didn't run)
+        expect(eventData.playerRanks[2].dead).toBeTruthy();
+        expect(eventData.playerRanks[3].dead).toBeTruthy();
+        // expect(eventData.playerRanks[1].finished).toBeFalsy();
+        // expect(eventData.playerRanks[2].finished).toBeFalsy();
+        // expect(eventData.playerRanks[3].finished).toBeFalsy();
     });
 });
 
