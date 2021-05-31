@@ -14,6 +14,16 @@ import { IMessageObstacle } from '../interfaces/messageObstacle';
 import { IMessage } from '../interfaces/messages';
 import RoomService from './roomService';
 
+//TODO delete
+let messageCounter = 0;
+let time = Date.now();
+
+setInterval(() => {
+    console.log('----number messages: ', messageCounter);
+    time = Date.now();
+    messageCounter = 0;
+}, 1000);
+
 class ConnectionHandler {
     private io: Server;
     private gameEventEmitter: CatchFoodGameEventEmitter;
@@ -147,6 +157,8 @@ class ConnectionHandler {
                     }
                     case CatchFoodMsgType.MOVE: {
                         if (socket.room.isPlaying()) {
+                            //todo delete
+                            messageCounter++;
                             try {
                                 socket.room.game?.runForward(socket.user.id, parseInt(`${process.env.SPEED}`, 10) || 2);
                             } catch (e) {
