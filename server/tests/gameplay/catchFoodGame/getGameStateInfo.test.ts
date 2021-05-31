@@ -57,6 +57,10 @@ describe('Get Obstacle Positions test', () => {
         expect(gameStateInfo.playersState[0].finished).toBeFalsy();
     });
 
+    it('returns player as not finished', async () => {
+        expect(gameStateInfo.playersState[0].dead).toBeFalsy();
+    });
+
     it('returns player is active', async () => {
         expect(gameStateInfo.playersState[0].isActive).toBeTruthy();
     });
