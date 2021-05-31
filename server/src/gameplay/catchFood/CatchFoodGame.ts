@@ -58,7 +58,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.roomId = roomId;
         this.maxNumberOfPlayers = Globals.MAX_PLAYER_NUMBER;
         this.gameState = GameState.Initialised;
-        this.trackLength = 4000;
+        this.trackLength = 7500;
         this.numberOfObstacles = 5;
         this.speed = 0;
         this.currentRank = 1;
