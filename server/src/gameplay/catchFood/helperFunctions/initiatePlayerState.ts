@@ -24,6 +24,7 @@ export function initiatePlayersState(
             rank: 0,
             isActive: true,
             stunned: false,
+            stunnedTimeout: undefined,
             timeWhenStunned: 0,
         };
     });

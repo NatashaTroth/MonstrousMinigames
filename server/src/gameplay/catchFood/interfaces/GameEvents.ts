@@ -26,6 +26,10 @@ export interface PlayerIsDead extends GameEventInterface {
     userId: string;
     rank: number;
 }
+export interface PlayerIsStunned extends GameEventInterface {
+    roomId: string;
+    userId: string;
+}
 
 export interface GameHasFinished extends GameEventInterface {
     roomId: string;
