@@ -61,6 +61,11 @@
         "ts-node": "^9.1.1",
         "typescript": "^4.1.3"
     },
+    "husky": {
+        "hooks": {
+            "pre-commit": "rm -rf dist/ && npm run prettier && jest --coverage && npm run lint"
+        }
+    },
     "jest": {
         "collectCoverageFrom": [
             "tests/"
