@@ -10,9 +10,7 @@ import { AudioContext } from '../../contexts/AudioContextProvider';
 import { handlePermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import Button from './Button';
-import {
-    BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer
-} from './Settings.sc';
+import { BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer } from './Settings.sc';
 
 const useStyles = makeStyles({
     root: {
@@ -86,7 +84,7 @@ const Settings: React.FunctionComponent = () => {
                     </div>
                 </Content>
                 <BackButtonContainer>
-                    <Button onClick={() => history.push(`/${roomId}`)}>Back</Button>
+                    <Button onClick={history.goBack}>Back</Button>
                 </BackButtonContainer>
             </ContentContainer>
         </SettingsContainer>

@@ -1,11 +1,12 @@
+import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handlePermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
-import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
+import IconButton from '../common/IconButton';
 import Logo from '../common/Logo';
 import ConnectDialog from './ConnectDialog';
 import {
@@ -55,13 +56,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
     return (
         <ConnectScreenContainer>
             <ConnectDialog open={dialogOpen} handleClose={() => setDialogOpen(false)} />
-            <AudioButton
-                type="button"
-                name="new"
-                onClick={handleAudio}
-                playing={playing}
-                permission={permission}
-            ></AudioButton>
+            <IconButton onClick={handleAudio}>{playing && permission ? <VolumeUp /> : <VolumeOff />}</IconButton>
             <LeftContainer>
                 <LeftButtonContainer>
                     <Button type="button" name="new" onClick={handleCreateNewRoom}>

@@ -1,4 +1,4 @@
-import { Assignment } from '@material-ui/icons';
+import { Assignment, Settings, VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 import { useBeforeunload } from 'react-beforeunload';
 import { useParams } from 'react-router-dom';
@@ -15,8 +15,8 @@ import steffi from '../../images/steffi.png';
 import susi from '../../images/susi.png';
 import { localDevelopment } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';
-import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
+import IconButton from '../common/IconButton';
 import {
     Character,
     CharacterContainer,
@@ -92,13 +92,10 @@ export const Lobby: React.FunctionComponent = () => {
     return (
         <LobbyContainer>
             <Content>
-                <AudioButton
-                    type="button"
-                    name="new"
-                    onClick={handleAudio}
-                    playing={playing}
-                    permission={permission}
-                ></AudioButton>
+                <IconButton onClick={() => history.push('/settings')} right={80}>
+                    <Settings />
+                </IconButton>
+                <IconButton onClick={handleAudio}>{playing && permission ? <VolumeUp /> : <VolumeOff />}</IconButton>
                 <LobbyHeader />
                 <ContentContainer>
                     <LeftContainer>
