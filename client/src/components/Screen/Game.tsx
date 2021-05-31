@@ -1,3 +1,4 @@
+import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import Phaser from 'phaser';
 import * as React from 'react';
 import Countdown from 'react-countdown';
@@ -7,27 +8,47 @@ import { IRouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { handleAudioPermission } from '../../domain/audio/handlePermission';
+import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
+import IconButton from '../common/IconButton';
 import { Container, Go } from './Game.sc';
 import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
-    //const { countdownTime, roomId } = React.useContext(GameContext)
     const { roomId } = React.useContext(GameContext);
-    const { pauseLobbyMusic, permission } = React.useContext(AudioContext);
+    const {
+        pauseLobbyMusicNoMute,
+        permission,
+        setPermissionGranted,
+        musicIsPlaying,
+        gameAudioPlaying,
+        setGameAudioPlaying,
+        mute,
+        unMute,
+    } = React.useContext(AudioContext);
     const { id }: IRouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
-    //const [countdown] = React.useState(Date.now() + countdownTime)
 
     if (id && !screenSocket) {
         handleSocketConnection(id, 'game1');
     }
 
     React.useEffect(() => {
-        pauseLobbyMusic(permission);
-    }, [pauseLobbyMusic, permission]);
+        handleAudioPermission(permission, { setPermissionGranted });
+
+        if (Number(localStorage.getItem('audioVolume')) > 0) {
+            setGameAudioPlaying(true);
+        }
+    }, []);
 
     React.useEffect(() => {
-        const game = new Phaser.Game({
+        pauseLobbyMusicNoMute(permission);
+    }, [permission]);
+
+    let game: Phaser.Game;
+
+    React.useEffect(() => {
+        game = new Phaser.Game({
             parent: 'game-root',
             type: Phaser.AUTO,
             width: '100%',
@@ -41,10 +62,23 @@ const Game: React.FunctionComponent = () => {
         });
         game.scene.add('MainScene', MainScene);
         game.scene.start('MainScene', { roomId: roomId });
-    }, [roomId, screenSocket]);
+    }, []); //roomId -> but being called twice
+
+    async function handleAudio() {
+        if (gameAudioPlaying) {
+            GameEventEmitter.emitPauseAudioEvent();
+            setGameAudioPlaying(false);
+            mute();
+        } else {
+            GameEventEmitter.emitPlayAudioEvent();
+            setGameAudioPlaying(true);
+            unMute();
+        }
+    }
 
     return (
         <Container>
+            <IconButton onClick={handleAudio}>{musicIsPlaying ? <VolumeUp /> : <VolumeOff />}</IconButton>
             <Countdown></Countdown>
             <GameContent displayGo />
         </Container>
