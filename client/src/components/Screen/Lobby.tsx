@@ -1,13 +1,13 @@
 import { Assignment } from '@material-ui/icons';
 import * as React from 'react';
-import { useBeforeunload } from 'react-beforeunload';
 import { useParams } from 'react-router-dom';
 
 import { IRouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handlePermission } from '../../domain/audio/handlePermission';
+import { handleAudio } from '../../domain/audio/handleAudio';
+import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import franz from '../../images/franz.png';
 import noah from '../../images/noah.png';
@@ -18,27 +18,15 @@ import { generateQRCode } from '../../utils/generateQRCode';
 import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
 import {
-    Character,
-    CharacterContainer,
-    ConnectedUserCharacter,
-    ConnectedUserContainer,
-    ConnectedUserName,
-    ConnectedUsers,
-    Content,
-    ContentContainer,
-    CopyToClipboard,
-    LeftContainer,
-    LobbyContainer,
-    QRCode,
-    QRCodeInstructions,
-    RightButtonContainer,
-    RightContainer,
+    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer,
+    ConnectedUserName, ConnectedUsers, Content, ContentContainer, CopyToClipboard, LeftContainer,
+    LobbyContainer, QRCode, QRCodeInstructions, RightButtonContainer, RightContainer
 } from './Lobby.sc';
 import LobbyHeader from './LobbyHeader';
 
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
-    const { playLobbyMusic, pauseLobbyMusic, permission, playing, setPermissionGranted } = React.useContext(
+    const { playLobbyMusic, pauseLobbyMusic, permission, playing, setPermissionGranted, volume } = React.useContext(
         AudioContext
     );
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
@@ -65,29 +53,9 @@ export const Lobby: React.FunctionComponent = () => {
         }
     }, [roomId]);
 
-    const handleAudioPermission = React.useCallback(() => {
-        if (handlePermission(permission)) {
-            setPermissionGranted(true);
-        }
-    }, [permission, setPermissionGranted]);
-
     React.useEffect(() => {
-        handleAudioPermission();
-    }, [handleAudioPermission]);
-
-    useBeforeunload(() => {
-        pauseLobbyMusic(permission);
-    });
-
-    async function handleAudio() {
-        handleAudioPermission();
-
-        if (playing) {
-            pauseLobbyMusic(permission);
-        } else {
-            playLobbyMusic(permission);
-        }
-    }
+        handleAudioPermission(permission, { setPermissionGranted });
+    }, []);
 
     return (
         <LobbyContainer>
@@ -95,9 +63,12 @@ export const Lobby: React.FunctionComponent = () => {
                 <AudioButton
                     type="button"
                     name="new"
-                    onClick={handleAudio}
+                    onClick={() =>
+                        handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
+                    }
                     playing={playing}
                     permission={permission}
+                    volume={volume}
                 ></AudioButton>
                 <LobbyHeader />
                 <ContentContainer>
@@ -133,15 +104,25 @@ export const Lobby: React.FunctionComponent = () => {
                         <RightButtonContainer>
                             {screenAdmin && (
                                 <Button
+                                    onClick={() => {
+                                        handleAudioPermission(permission, { setPermissionGranted });
+                                        history.push(`/screen/${roomId}/choose-game`);
+                                    }}
                                     disabled={!connectedUsers || connectedUsers?.length === 0}
-                                    onClick={() => history.push(`/screen/${roomId}/choose-game`)}
                                     variant="secondary"
                                 >
                                     Choose Game
                                 </Button>
                             )}
                             <Button disabled>Leaderboard</Button>
-                            <Button onClick={() => history.push('/screen')}>Back</Button>
+                            <Button
+                                onClick={() => {
+                                    handleAudioPermission(permission, { setPermissionGranted });
+                                    history.push('/screen');
+                                }}
+                            >
+                                Back
+                            </Button>
                         </RightButtonContainer>
                     </RightContainer>
                 </ContentContainer>

@@ -2,24 +2,21 @@ import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handlePermission } from '../../domain/audio/handlePermission';
+import { handleAudio } from '../../domain/audio/handleAudio';
+import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
 import Logo from '../common/Logo';
 import ConnectDialog from './ConnectDialog';
 import {
-    ButtonContainer,
-    ConnectScreenContainer,
-    LeftButtonContainer,
-    LeftContainer,
-    RightContainer,
+    ButtonContainer, ConnectScreenContainer, LeftButtonContainer, LeftContainer, RightContainer
 } from './ConnectScreen.sc';
 
 export const ConnectScreen: React.FunctionComponent = () => {
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const { handleSocketConnection } = React.useContext(ScreenSocketContext);
-    const { playLobbyMusic, pauseLobbyMusic, permission, setPermissionGranted, playing } = React.useContext(
+    const { playLobbyMusic, pauseLobbyMusic, permission, setPermissionGranted, playing, volume } = React.useContext(
         AudioContext
     );
 
@@ -33,23 +30,16 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
         const data = await response.json();
         handleSocketConnection(data.roomId, 'lobby');
-
-        handleAudio();
+        handleAudioPermission(permission, { setPermissionGranted });
     }
+
+    React.useEffect(() => {
+        handleAudioPermission(permission, { setPermissionGranted });
+    }, []);
 
     async function handleJoinRoom() {
         setDialogOpen(true);
-        handleAudio();
-    }
-
-    async function handleAudio() {
-        if (handlePermission(permission)) setPermissionGranted(true);
-
-        if (playing) {
-            pauseLobbyMusic(permission);
-        } else {
-            playLobbyMusic(permission);
-        }
+        handleAudioPermission(permission, { setPermissionGranted });
     }
 
     return (
@@ -58,9 +48,12 @@ export const ConnectScreen: React.FunctionComponent = () => {
             <AudioButton
                 type="button"
                 name="new"
-                onClick={handleAudio}
+                onClick={() =>
+                    handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
+                }
                 playing={playing}
                 permission={permission}
+                volume={volume}
             ></AudioButton>
             <LeftContainer>
                 <LeftButtonContainer>
@@ -72,6 +65,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                     </Button>
                     <Button type="button" name="tutorial" disabled>
                         Getting Started
+                        {/*TODO add  handleAudioPermission(permission, setPermissionGranted) to onClick event*/}
                     </Button>
                 </LeftButtonContainer>
             </LeftContainer>
@@ -79,10 +73,24 @@ export const ConnectScreen: React.FunctionComponent = () => {
                 <Logo />
 
                 <ButtonContainer>
-                    <Button type="button" name="credits" onClick={() => history.push('/credits')}>
+                    <Button
+                        type="button"
+                        name="credits"
+                        onClick={() => {
+                            handleAudioPermission(permission, { setPermissionGranted });
+                            history.push('/credits');
+                        }}
+                    >
                         Credits
                     </Button>
-                    <Button type="button" name="settings" onClick={() => history.push('/settings')}>
+                    <Button
+                        type="button"
+                        name="settings"
+                        onClick={() => {
+                            handleAudioPermission(permission, { setPermissionGranted });
+                            history.push('/settings');
+                        }}
+                    >
                         Settings
                     </Button>
                 </ButtonContainer>

@@ -1,6 +1,8 @@
 ## Deploy from server (run this in git root)
 
 https://monstrous-minigames.herokuapp.com/
+git config --get remote.heroku.url
+git remote remove origin
 
 ```
 heroku git:remote -a monstrous-minigames-staging
