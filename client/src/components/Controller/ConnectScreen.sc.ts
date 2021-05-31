@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import forest from '../../images/forest.svg';
+import forest from '../../images/forest_mobile.svg';
 import { primary } from '../../utils/colors';
 import { Label } from '../common/Label.sc';
 

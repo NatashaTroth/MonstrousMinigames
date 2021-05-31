@@ -45,7 +45,7 @@ export const InstructionContainer = styled(Instruction)`
     background-color: ${({ variant = 'none' }) =>
         variant === 'light' ? readyButton : variant === 'dark' ? darkGreen : ''};
     max-width: unset;
-    width: 60%;
+    width: 80%;
     display: flex;
     flex-direction: column;
     justify-content: center;
