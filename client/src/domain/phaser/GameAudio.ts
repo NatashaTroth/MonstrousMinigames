@@ -20,14 +20,8 @@ export class GameAudio {
             this.startMuted = true;
         }
 
-        // // eslint-disable-next-line no-console
-        // console.log('startMuted ', this.startMuted);
-        // // eslint-disable-next-line no-console
-        // console.log(localStorage.getItem('audioVolumeBefore'));
-        let initialVolume = 0.2;
-        if (oldVolumeFromLocalStorage !== null && oldVolumeFromLocalStorage !== undefined) {
-            initialVolume = Number(oldVolumeFromLocalStorage);
-        }
+        const initialVolume = oldVolumeFromLocalStorage ? Number(oldVolumeFromLocalStorage) : 0.2;
+
         this.sound = sound;
         this.backgroundMusicStart = this.sound.add('backgroundMusicStart', {
             volume: initialVolume,
@@ -64,9 +58,5 @@ export class GameAudio {
 
     resume() {
         this.currentMusic?.resume();
-        // this.backgroundMusicStart.once('complete', () => {
-        //     this.backgroundMusicLoop.play({ loop: true });
-        //     this.currentMusic = this.backgroundMusicLoop;
-        // });
     }
 }

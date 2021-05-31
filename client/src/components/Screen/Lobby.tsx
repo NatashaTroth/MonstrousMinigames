@@ -6,6 +6,7 @@ import { IRouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import franz from '../../images/franz.png';
@@ -17,21 +18,9 @@ import { generateQRCode } from '../../utils/generateQRCode';
 import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
 import {
-    Character,
-    CharacterContainer,
-    ConnectedUserCharacter,
-    ConnectedUserContainer,
-    ConnectedUserName,
-    ConnectedUsers,
-    Content,
-    ContentContainer,
-    CopyToClipboard,
-    LeftContainer,
-    LobbyContainer,
-    QRCode,
-    QRCodeInstructions,
-    RightButtonContainer,
-    RightContainer,
+    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer,
+    ConnectedUserName, ConnectedUsers, Content, ContentContainer, CopyToClipboard, LeftContainer,
+    LobbyContainer, QRCode, QRCodeInstructions, RightButtonContainer, RightContainer
 } from './Lobby.sc';
 import LobbyHeader from './LobbyHeader';
 
@@ -64,23 +53,9 @@ export const Lobby: React.FunctionComponent = () => {
         }
     }, [roomId]);
 
-    const handleAudioPermissionCallback = React.useCallback(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
-    }, [permission, setPermissionGranted]);
-
     React.useEffect(() => {
-        handleAudioPermissionCallback();
-    }, [handleAudioPermissionCallback]);
-
-    async function handleAudio() {
-        handleAudioPermissionCallback();
-
-        if (playing) {
-            pauseLobbyMusic(permission);
-        } else {
-            playLobbyMusic(permission);
-        }
-    }
+        handleAudioPermission(permission, { setPermissionGranted });
+    }, []);
 
     return (
         <LobbyContainer>
@@ -88,7 +63,9 @@ export const Lobby: React.FunctionComponent = () => {
                 <AudioButton
                     type="button"
                     name="new"
-                    onClick={handleAudio}
+                    onClick={() =>
+                        handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
+                    }
                     playing={playing}
                     permission={permission}
                     volume={volume}

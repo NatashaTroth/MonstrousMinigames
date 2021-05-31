@@ -69,11 +69,7 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     const [volume, setVolume] = React.useState<number>(0.2);
 
     React.useEffect(() => {
-        const oldVolumeFromLocalStorage = localStorage.getItem('audioVolume');
-        let initialVolume = 0.2;
-        if (oldVolumeFromLocalStorage !== null && oldVolumeFromLocalStorage !== undefined) {
-            initialVolume = Number(oldVolumeFromLocalStorage);
-        }
+        const initialVolume = localStorage.getItem('audioVolume') ? Number(localStorage.getItem('audioVolume')) : 0.2;
         audio.volume = initialVolume;
         setVolume(initialVolume);
         if (initialVolume > 0) {

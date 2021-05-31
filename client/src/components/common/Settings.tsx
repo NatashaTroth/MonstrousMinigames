@@ -7,11 +7,14 @@ import VolumeUp from '@material-ui/icons/VolumeUp';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
+import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import AudioButton from './AudioButton';
 import Button from './Button';
-import { BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer } from './Settings.sc';
+import {
+    BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer
+} from './Settings.sc';
 
 const useStyles = makeStyles({
     root: {
@@ -41,14 +44,11 @@ const Settings: React.FunctionComponent = () => {
         setValue(volume);
     }, [volume]);
 
+    //TODO natasha
     // React.useEffect(() => {
-    //     // eslint-disable-next-line no-console
-    //     // console.log('here ', volume);
     //     // setValue(volume);
 
     //     return () => {
-    //         // eslint-disable-next-line no-console
-    //         console.log('UNLOADING ', value);
     //         setVolume(value);
     //     };
     // }, [value]);
@@ -64,16 +64,6 @@ const Settings: React.FunctionComponent = () => {
             setValue(newValue[0]);
         }
     };
-
-    async function handleAudio() {
-        handleAudioPermission(permission, { setPermissionGranted });
-
-        if (playing) {
-            pauseLobbyMusic(permission);
-        } else {
-            playLobbyMusic(permission);
-        }
-    }
 
     return (
         <SettingsContainer>
@@ -104,7 +94,15 @@ const Settings: React.FunctionComponent = () => {
                             <AudioButton
                                 type="button"
                                 name="new"
-                                onClick={handleAudio}
+                                onClick={() =>
+                                    handleAudio({
+                                        playing,
+                                        permission,
+                                        pauseLobbyMusic,
+                                        playLobbyMusic,
+                                        setPermissionGranted,
+                                    })
+                                }
                                 playing={playing}
                                 permission={permission}
                                 volume={volume}

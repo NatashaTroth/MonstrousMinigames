@@ -3,6 +3,7 @@ import * as React from 'react';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import franz from '../../images/franz.png';
 import noah from '../../images/noah.png';
@@ -12,15 +13,8 @@ import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
 import { getUserArray } from './Lobby';
 import {
-    Character,
-    CharacterContainer,
-    ConnectedUserCharacter,
-    ConnectedUserContainer,
-    ConnectedUserName,
-    ConnectedUsers,
-    Content,
-    GetReadyBackground,
-    GetReadyContainer,
+    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer,
+    ConnectedUserName, ConnectedUsers, Content, GetReadyBackground, GetReadyContainer
 } from './PlayersGetReady.sc';
 
 const PlayersGetReady: React.FC = () => {
@@ -41,23 +35,9 @@ const PlayersGetReady: React.FC = () => {
         });
     }
 
-    const handleAudioPermissionCallback = React.useCallback(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
-    }, [permission, setPermissionGranted]);
-
     React.useEffect(() => {
-        handleAudioPermissionCallback();
-    }, [handleAudioPermissionCallback]);
-
-    async function handleAudio() {
-        handleAudioPermissionCallback();
-
-        if (playing) {
-            pauseLobbyMusic(permission);
-        } else {
-            playLobbyMusic(permission);
-        }
-    }
+        handleAudioPermission(permission, { setPermissionGranted });
+    }, []);
 
     return (
         <GetReadyContainer>
@@ -66,7 +46,9 @@ const PlayersGetReady: React.FC = () => {
                     <AudioButton
                         type="button"
                         name="new"
-                        onClick={handleAudio}
+                        onClick={() =>
+                            handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
+                        }
                         playing={playing}
                         permission={permission}
                         volume={volume}

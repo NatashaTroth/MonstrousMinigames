@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import AudioButton from '../common/AudioButton';
@@ -9,11 +10,7 @@ import Button from '../common/Button';
 import Logo from '../common/Logo';
 import ConnectDialog from './ConnectDialog';
 import {
-    ButtonContainer,
-    ConnectScreenContainer,
-    LeftButtonContainer,
-    LeftContainer,
-    RightContainer,
+    ButtonContainer, ConnectScreenContainer, LeftButtonContainer, LeftContainer, RightContainer
 } from './ConnectScreen.sc';
 
 export const ConnectScreen: React.FunctionComponent = () => {
@@ -45,23 +42,15 @@ export const ConnectScreen: React.FunctionComponent = () => {
         handleAudioPermission(permission, { setPermissionGranted });
     }
 
-    async function handleAudio() {
-        handleAudioPermission(permission, { setPermissionGranted });
-
-        if (playing) {
-            pauseLobbyMusic(permission);
-        } else {
-            playLobbyMusic(permission);
-        }
-    }
-
     return (
         <ConnectScreenContainer>
             <ConnectDialog open={dialogOpen} handleClose={() => setDialogOpen(false)} />
             <AudioButton
                 type="button"
                 name="new"
-                onClick={handleAudio}
+                onClick={() =>
+                    handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
+                }
                 playing={playing}
                 permission={permission}
                 volume={volume}
