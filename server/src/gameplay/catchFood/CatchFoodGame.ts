@@ -25,6 +25,7 @@ interface CatchFoodGameInterface extends IGameInterface {
     getObstaclePositions(): HashTable<Array<Obstacle>>;
     runForward(userId: string, speed: number): void;
     playerHasCompletedObstacle(userId: string, obstacleId: number): void;
+    stunPlayer(userId: string): void;
 }
 
 export default class CatchFoodGame implements CatchFoodGameInterface {
@@ -52,7 +53,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     updateChasersInterval?: ReturnType<typeof setInterval>;
     updateChasersIntervalTime: number;
 
-    constructor(roomId: string, leaderboard: Leaderboard /*, public usingChasers = false*/) {
+    constructor(roomId: string, leaderboard: Leaderboard /*, public usingChasers = false*/, public stunnedTime = 3000) {
         // this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
         this.roomId = roomId;
         this.maxNumberOfPlayers = Globals.MAX_PLAYER_NUMBER;
@@ -110,7 +111,6 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             this.gameState = GameState.Started;
             this.gameStartedTime = Date.now();
             // setInterval(this.onTimerTick, 33);
-
             this.updateChasersInterval = setInterval(() => {
                 this.updateChasersPosition();
             }, this.updateChasersIntervalTime);
@@ -118,6 +118,12 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.timer = setTimeout(() => {
             this.stopGameTimeout();
         }, this.timeOutLimit);
+
+        //TODO
+        // setTimeout(() => {
+
+        // }, this.countdownTime + this.timeWhenChasersAppear);
+
         CatchFoodGameEventEmitter.emitGameHasStartedEvent({
             roomId: this.roomId,
             countdownTime: this.countdownTime,
@@ -148,6 +154,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.timeOutRemainingTime = this.timeOutLimit - this.getGameTimePassedBeforePause();
 
         CatchFoodGameEventEmitter.emitGameHasPausedEvent({ roomId: this.roomId });
+
+        //TODO UPDATE STUNNED TIME!!
     }
 
     private getGameTimePassedBeforePause(): number {
@@ -169,6 +177,14 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
         //update gameStartedTime
         this.gameStartedTime = Date.now() - this.getGameTimePassedBeforePause();
+
+        //update stunned time
+        for (const [, playerState] of Object.entries(this.playersState)) {
+            if (playerState.stunned) {
+                const stunnedTimeAlreadyPassed = this.gamePausedTime - playerState.timeWhenStunned;
+                playerState.timeWhenStunned = Date.now() - stunnedTimeAlreadyPassed;
+            }
+        }
 
         CatchFoodGameEventEmitter.emitGameHasResumedEvent({ roomId: this.roomId });
     }
@@ -273,6 +289,14 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
         if (this.userIsNotAllowedToRun(userId)) return;
 
+        if (this.playersState[userId].stunned) {
+            if (this.stunnedTimeIsOver(userId)) {
+                this.playersState[userId].stunned = false;
+            } else {
+                return;
+            }
+        }
+
         this.playersState[userId].positionX += Math.abs(speed);
 
         if (this.playerHasReachedObstacle(userId)) this.handlePlayerReachedObstacle(userId);
@@ -283,6 +307,10 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         return (
             this.playersState[userId].finished || this.playersState[userId].dead || this.playersState[userId].atObstacle
         );
+    }
+
+    private stunnedTimeIsOver(userId: string) {
+        return Date.now() - this.playersState[userId].timeWhenStunned >= this.stunnedTime;
     }
 
     private playerHasReachedObstacle(userId: string): boolean {
@@ -310,6 +338,17 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             obstacleType: this.playersState[userId].obstacles[0].type,
             obstacleId: this.playersState[userId].obstacles[0].id,
         });
+    }
+
+    //TODO test
+    stunPlayer(userId: string) {
+        verifyGameState(this.gameState, [GameState.Started]);
+        verifyUserId(this.playersState, userId);
+        verifyUserIsActive(userId, this.playersState[userId].isActive);
+        if (this.userIsNotAllowedToRun(userId)) return;
+
+        this.playersState[userId].stunned = true;
+        this.playersState[userId].timeWhenStunned = Date.now();
     }
 
     playerHasCompletedObstacle(userId: string, obstacleId: number): void {

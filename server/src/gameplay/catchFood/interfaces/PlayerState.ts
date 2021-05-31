@@ -12,4 +12,6 @@ export interface PlayerState extends IPlayerState {
     dead: boolean; //TODO test
     rank: number;
     isActive: boolean;
+    stunned: boolean;
+    timeWhenStunned: number;
 }

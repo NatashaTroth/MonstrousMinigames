@@ -23,6 +23,8 @@ export function initiatePlayersState(
             dead: false,
             rank: 0,
             isActive: true,
+            stunned: false,
+            timeWhenStunned: 0,
         };
     });
 

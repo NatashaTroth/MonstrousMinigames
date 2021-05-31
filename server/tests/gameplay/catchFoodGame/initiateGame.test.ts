@@ -66,6 +66,18 @@ describe('Initiate CatchFoodGame correctly', () => {
         expect(catchFoodGame.playersState['1'].finished).toBeFalsy();
     });
 
+    it('initiates player as not dead', async () => {
+        expect(catchFoodGame.playersState['1'].dead).toBeFalsy();
+    });
+
+    it('initiates player as not stunned', async () => {
+        expect(catchFoodGame.playersState['1'].stunned).toBeFalsy();
+    });
+
+    it('initiates player time when stunned as 0', async () => {
+        expect(catchFoodGame.playersState['1'].timeWhenStunned).toBe(0);
+    });
+
     it('initiates player with correct number of obstacles (all)', async () => {
         expect(catchFoodGame.playersState['1'].obstacles.length).toBe(NUMBER_OF_OBSTACLES);
     });
