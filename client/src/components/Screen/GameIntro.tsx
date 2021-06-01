@@ -1,11 +1,12 @@
+import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
-import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
+import IconButton from '../common/IconButton';
 import {
     BackButtonContainer,
     ControlInstruction,
@@ -21,9 +22,14 @@ import {
 const GameIntro: React.FunctionComponent = () => {
     const [showFirstIntro, setShowFirstIntro] = React.useState(true);
     const { roomId } = React.useContext(GameContext);
-    const { playLobbyMusic, pauseLobbyMusic, permission, playing, setPermissionGranted, volume } = React.useContext(
-        AudioContext
-    );
+    const {
+        playLobbyMusic,
+        pauseLobbyMusic,
+        permission,
+        playing,
+        setPermissionGranted,
+        musicIsPlaying,
+    } = React.useContext(AudioContext);
 
     function handleSkip() {
         if (showFirstIntro) {
@@ -52,14 +58,7 @@ const GameIntro: React.FunctionComponent = () => {
     }
     return (
         <GameIntroContainer>
-            <AudioButton
-                type="button"
-                name="new"
-                onClick={handleAudio}
-                playing={playing}
-                permission={permission}
-                volume={volume}
-            ></AudioButton>
+            <IconButton onClick={handleAudio}>{musicIsPlaying ? <VolumeUp /> : <VolumeOff />}</IconButton>
             <GameIntroBackground>
                 {showFirstIntro ? (
                     <IntroText>

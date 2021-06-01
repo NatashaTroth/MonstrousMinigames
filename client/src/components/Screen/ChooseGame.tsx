@@ -1,3 +1,4 @@
+import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
@@ -7,11 +8,18 @@ import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import game1Img from '../../images/instructions1.png';
 import oliverLobby from '../../images/oliverLobby.svg';
-import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
+import IconButton from '../common/IconButton';
 import {
-    BackButtonContainer, Content, GamePreviewContainer, GameSelectionContainer, LeftContainer,
-    OliverImage, PreviewImage, RightContainer, SelectGameButtonContainer
+    BackButtonContainer,
+    Content,
+    GamePreviewContainer,
+    GameSelectionContainer,
+    LeftContainer,
+    OliverImage,
+    PreviewImage,
+    RightContainer,
+    SelectGameButtonContainer,
 } from './ChooseGame.sc';
 import { LobbyContainer } from './Lobby.sc';
 import LobbyHeader from './LobbyHeader';
@@ -20,9 +28,14 @@ const ChooseGame: React.FunctionComponent = () => {
     const [selectedGame, setSelectedGame] = React.useState(0);
     const { roomId } = React.useContext(GameContext);
     const tutorial = localStorage.getItem('tutorial') ? false : true;
-    const { playLobbyMusic, pauseLobbyMusic, permission, playing, setPermissionGranted, volume } = React.useContext(
-        AudioContext
-    );
+    const {
+        playLobbyMusic,
+        pauseLobbyMusic,
+        permission,
+        playing,
+        setPermissionGranted,
+        musicIsPlaying,
+    } = React.useContext(AudioContext);
 
     const games = [
         {
@@ -43,16 +56,13 @@ const ChooseGame: React.FunctionComponent = () => {
         <LobbyContainer>
             <Content>
                 <LobbyHeader />
-                <AudioButton
-                    type="button"
-                    name="new"
+                <IconButton
                     onClick={() =>
                         handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
                     }
-                    playing={playing}
-                    permission={permission}
-                    volume={volume}
-                ></AudioButton>
+                >
+                    {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
+                </IconButton>
                 <GameSelectionContainer>
                     <LeftContainer>
                         <div>

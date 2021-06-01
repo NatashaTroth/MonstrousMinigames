@@ -1,3 +1,4 @@
+import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
@@ -9,19 +10,31 @@ import franz from '../../images/franz.png';
 import noah from '../../images/noah.png';
 import steffi from '../../images/steffi.png';
 import susi from '../../images/susi.png';
-import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
+import IconButton from '../common/IconButton';
 import { getUserArray } from './Lobby';
 import {
-    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer,
-    ConnectedUserName, ConnectedUsers, Content, GetReadyBackground, GetReadyContainer
+    Character,
+    CharacterContainer,
+    ConnectedUserCharacter,
+    ConnectedUserContainer,
+    ConnectedUserName,
+    ConnectedUsers,
+    Content,
+    GetReadyBackground,
+    GetReadyContainer,
 } from './PlayersGetReady.sc';
 
 const PlayersGetReady: React.FC = () => {
     const { screenSocket } = React.useContext(ScreenSocketContext);
-    const { playLobbyMusic, pauseLobbyMusic, permission, playing, setPermissionGranted, volume } = React.useContext(
-        AudioContext
-    );
+    const {
+        playLobbyMusic,
+        pauseLobbyMusic,
+        permission,
+        playing,
+        setPermissionGranted,
+        musicIsPlaying,
+    } = React.useContext(AudioContext);
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
     const characters = [franz, noah, susi, steffi];
 
@@ -43,16 +56,13 @@ const PlayersGetReady: React.FC = () => {
         <GetReadyContainer>
             <GetReadyBackground>
                 <Content>
-                    <AudioButton
-                        type="button"
-                        name="new"
+                    <IconButton
                         onClick={() =>
                             handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
                         }
-                        playing={playing}
-                        permission={permission}
-                        volume={volume}
-                    ></AudioButton>
+                    >
+                        {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
+                    </IconButton>
                     <ConnectedUsers>
                         {getUserArray(connectedUsers || []).map((user, index) => (
                             <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>

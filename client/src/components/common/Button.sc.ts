@@ -8,10 +8,10 @@ export const Container = styled.div``;
 
 interface ButtonProps {
     variant: 'primary' | 'secondary';
-    fullwidth: boolean;
+    fullwidth?: boolean;
 }
 
-export const StyledButton = styled.button<ButtonProps>`
+export const StyledButtonBase = styled.button<ButtonProps>`
     color: black;
     background: ${({ variant = 'primary' }) => (variant === 'primary' ? primary : secondary)};
     box-shadow: ${({ variant = 'primary' }) =>
@@ -20,9 +20,6 @@ export const StyledButton = styled.button<ButtonProps>`
         }}`};
     cursor: pointer;
     padding: 10px;
-    border-radius: 10px;
-    min-width: 200px;
-    ${({ fullwidth }) => fullwidth && 'width: 100%;'}
     font-weight: 700;
     font-size: 22px;
     border: none;
@@ -45,5 +42,13 @@ export const StyledButton = styled.button<ButtonProps>`
         color: lightgray;
         box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${disabledShadow};
         background: ${disabled};
+    }
+`;
+
+export const StyledButton = styled(StyledButtonBase)<ButtonProps>`
+    && {
+        border-radius: 10px;
+        min-width: 200px;
+        ${({ fullwidth }) => fullwidth && 'width: 100%;'}
     }
 `;
