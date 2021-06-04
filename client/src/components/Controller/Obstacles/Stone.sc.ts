@@ -15,7 +15,7 @@ const ray_anim = keyframes`
 export const StyledStone = styled.div`
     display: flex;
     width: 100%;
-    height: 80%;
+    height: 70%;
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -24,10 +24,9 @@ export const StyledStone = styled.div`
 
 export const Sun = styled.div`
     position: absolute;
-    top: -45px;
+    top: 150px;
     left: 0;
     right: 0;
-    bottom: 0;
     margin: auto;
     width: 70px;
     height: 70px;
@@ -148,8 +147,12 @@ export const Ray10 = styled(Ray)`
     left: -60px;
 `;
 
-export const StoneContainer = styled(ObstacleContainer)`
-    justify-content: center;
+interface StoneContainer {
+    pebble: boolean;
+}
+
+export const StoneContainer = styled(ObstacleContainer)<StoneContainer>`
+    justify-content: ${({ pebble }) => (pebble ? 'flex-start' : 'center')};
 `;
 
 export const StyledStoneImage = styled.img`
@@ -159,6 +162,20 @@ export const StyledStoneImage = styled.img`
 export const StyledPebbleImage = styled.img`
     width: 40%;
     z-index: 2;
+    top: 110px;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
 `;
 
-export const ButtonContainer = styled.div``;
+export const ButtonContainer = styled.div`
+    display: flex;
+    height: 30%;
+`;
+
+export const PebbleContainer = styled(ObstacleContainer)`
+    height: 500px;
+    display: block;
+    width: 100%;
+`;

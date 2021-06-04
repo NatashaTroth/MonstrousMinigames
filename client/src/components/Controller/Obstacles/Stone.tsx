@@ -5,6 +5,7 @@ import stone from '../../../images/stone.svg';
 import Button from '../../common/Button';
 import {
     ButtonContainer,
+    PebbleContainer,
     Ray1,
     Ray2,
     Ray3,
@@ -38,30 +39,31 @@ const Stone: React.FunctionComponent = () => {
     }
 
     return (
-        <StoneContainer>
-            <StyledStone onTouchStart={handleTouch}>
-                {counter <= limit ? (
+        <StoneContainer pebble={counter > limit}>
+            {counter <= limit ? (
+                <StyledStone onTouchStart={handleTouch}>
                     <StyledStoneImage src={stone} />
-                ) : (
-                    <>
-                        <StyledPebbleImage src={pebble} />
-                        <Sun>
-                            <RayBox>
-                                <Ray1 />
-                                <Ray2 />
-                                <Ray3 />
-                                <Ray4 />
-                                <Ray5 />
-                                <Ray6 />
-                                <Ray7 />
-                                <Ray8 />
-                                <Ray9 />
-                                <Ray10 />
-                            </RayBox>
-                        </Sun>
-                    </>
-                )}
-            </StyledStone>
+                </StyledStone>
+            ) : (
+                <PebbleContainer>
+                    <StyledPebbleImage src={pebble} />
+                    <Sun>
+                        <RayBox>
+                            <Ray1 />
+                            <Ray2 />
+                            <Ray3 />
+                            <Ray4 />
+                            <Ray5 />
+                            <Ray6 />
+                            <Ray7 />
+                            <Ray8 />
+                            <Ray9 />
+                            <Ray10 />
+                        </RayBox>
+                    </Sun>
+                </PebbleContainer>
+            )}
+
             {counter > limit && (
                 <ButtonContainer>
                     <Button onClick={handleThrow}>Throw</Button>
