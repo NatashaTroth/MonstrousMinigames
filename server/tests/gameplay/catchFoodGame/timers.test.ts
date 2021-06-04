@@ -81,15 +81,21 @@ describe('Timer tests', () => {
 
         finishPlayer(catchFoodGame, '1');
 
+        //players 3 and 4 should not be caught
+        catchFoodGame.playersState['3'].positionX = catchFoodGame.chasersPositionX + 1000;
+        catchFoodGame.playersState['4'].positionX = catchFoodGame.chasersPositionX + 1000;
+
+        //catch player 2
+        catchFoodGame.playersState['2'].positionX = 0;
+        Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear + 1000);
+        jest.advanceTimersByTime(catchFoodGame.timeWhenChasersAppear + 1000);
+
         const eventData = getGameFinishedDataAfterTimeOut(catchFoodGame, dateNow);
         expect(eventData.playerRanks[0].finished).toBeTruthy();
         expect(eventData.playerRanks[0].dead).toBeFalsy();
         expect(eventData.playerRanks[1].dead).toBeTruthy(); //should be dead cause caught (cause didn't run)
-        expect(eventData.playerRanks[2].dead).toBeTruthy();
-        expect(eventData.playerRanks[3].dead).toBeTruthy();
-        // expect(eventData.playerRanks[1].finished).toBeFalsy();
-        // expect(eventData.playerRanks[2].finished).toBeFalsy();
-        // expect(eventData.playerRanks[3].finished).toBeFalsy();
+        expect(eventData.playerRanks[2].dead).toBeFalsy();
+        expect(eventData.playerRanks[3].dead).toBeFalsy();
     });
 });
 
@@ -109,6 +115,8 @@ function getGameFinishedDataAfterTimeOut(catchFoodGame: CatchFoodGame, dateNow: 
 
     Date.now = jest.fn(() => dateNow + catchFoodGame.timeOutLimit);
 
+    //avoid being caught (for this test)
+    catchFoodGame.chasersPositionX = catchFoodGame.trackLength * -100;
     // Time out game
     jest.advanceTimersByTime(catchFoodGame.timeOutLimit);
     jest.runAllTimers();

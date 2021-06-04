@@ -45,3 +45,9 @@ timeLeftForRunning = (90000 - obstacleTime)
 howFarCanRun = 0.12\*timeLeftForRunning
 
 (90000-25000) \* 0.12 = 7800
+
+## where should chasers appear
+
+6 \* 2speed per 100ms
+
+12 \* 100 (to get to 10 sec) = 1200 -> chasers should appear at around 800, to give runners a head start

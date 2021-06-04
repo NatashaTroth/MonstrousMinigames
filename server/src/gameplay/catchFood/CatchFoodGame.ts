@@ -34,7 +34,9 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     numberOfObstacles: number;
     speed: number;
     currentRank: number;
+    currentRankFromTheBack: number;
     ranksDictionary: HashTable<number>;
+    ranksFromTheBackDictionary: HashTable<number>;
     // gameEventEmitter: GameEventEmitter
     roomId: string;
     maxNumberOfPlayers: number;
@@ -52,6 +54,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     chasersPositionX: number;
     updateChasersInterval?: ReturnType<typeof setInterval>;
     updateChasersIntervalTime: number;
+    chasersAreRunning: boolean;
 
     constructor(roomId: string, leaderboard: Leaderboard /*, public usingChasers = false*/, public stunnedTime = 3000) {
         // this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
@@ -62,7 +65,9 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.numberOfObstacles = 5;
         this.speed = 0;
         this.currentRank = 1;
+        this.currentRankFromTheBack = 4;
         this.ranksDictionary = {};
+        this.ranksFromTheBackDictionary = {};
         this.players = [];
         this.playersState = {};
         this.gameStartedTime = 0;
@@ -74,16 +79,17 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         // this.leaderboard = {};
         this.leaderboard = leaderboard;
         this.timeWhenChasersAppear = 10000; //10 sec
-        this.chasersPositionX = 0;
+        this.chasersPositionX = 800;
         this.updateChasersInterval = undefined;
         this.updateChasersIntervalTime = 100;
+        this.chasersAreRunning = false;
     }
 
     createNewGame(
         players: Array<User>,
         trackLength = this.trackLength,
         numberOfObstacles = this.numberOfObstacles,
-        speed = 1
+        speed = 2
     ): void {
         verifyGameState(this.gameState, [GameState.Initialised, GameState.Finished, GameState.Stopped]);
         if (players.length > this.maxNumberOfPlayers) {
@@ -96,7 +102,9 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.trackLength = trackLength;
         this.players = players;
         this.currentRank = 1;
+        this.currentRankFromTheBack = players.length;
         this.gameStartedTime = 0;
+        this.chasersAreRunning = false;
         this.numberOfObstacles = numberOfObstacles;
         this.playersState = initiatePlayersState(players, this.numberOfObstacles, this.trackLength);
         clearTimeout(this.timer);
@@ -254,12 +262,13 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     //TODO test (and the intervals)
     private updateChasersPosition(): void {
         //TODO
-        // const timePassed = Date.now() - this.gameStartedTime;
-        // //10000 to 90000  * timePassed //TODO - make faster over time??
-        // if (timePassed >= this.timeWhenChasersAppear) {
-        //     this.chasersPositionX += this.speed;
-        // }
+        const timePassed = Date.now() - this.gameStartedTime;
+
+        //10000 to 90000  * timePassed //TODO - make faster over time??
+        if (timePassed < this.timeWhenChasersAppear) return;
         this.chasersPositionX += this.speed;
+
+        // console.log('here---' + this.chasersPositionX);
 
         //TODO test
         for (const [, playerState] of Object.entries(this.playersState)) {
@@ -272,13 +281,17 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     private handlePlayerCaught(playerState: PlayerState) {
         playerState.dead = true;
         this.updatePlayerStateFinished(playerState.id);
+        playerState.rank = this.getRankFromTheBack(playerState.finishedTimeMs);
 
-        //TODO emit dead event
         CatchFoodGameEventEmitter.emitPlayerIsDead({
             roomId: this.roomId,
             userId: playerState.id,
             rank: playerState.rank,
         });
+
+        if (this.gameHasFinished()) {
+            this.handleGameFinished();
+        }
     }
 
     private chaserCaughtPlayer(playerState: PlayerState) {
@@ -406,6 +419,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         // if (this.playersState[userId].finished) return; //don't think I need
 
         this.updatePlayerStateFinished(userId);
+        this.playersState[userId].rank = this.getRank(this.playersState[userId].finishedTimeMs);
         this.playersState[userId].positionX = this.trackLength;
 
         CatchFoodGameEventEmitter.emitPlayerHasFinishedEvent({
@@ -422,15 +436,15 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     private updatePlayerStateFinished(userId: string) {
         this.playersState[userId].finished = true;
         this.playersState[userId].finishedTimeMs = Date.now();
-        this.playersState[userId].rank = this.getRank(this.playersState[userId].finishedTimeMs);
     }
 
     private gameHasFinished(): boolean {
         const userIds = Object.keys(this.playersState);
-        const activePlayers = userIds.filter(userId => {
-            if (this.playersState[userId].isActive) return userId;
+        const activeUnfinishedPlayers = userIds.filter(userId => {
+            if (this.playersState[userId].isActive && !this.playersState[userId].finished) return userId;
         });
-        return this.currentRank > activePlayers.length;
+        return activeUnfinishedPlayers.length === 0;
+        // return this.currentRank > activePlayers.length;
     }
 
     private getRank(timeFinishedInMs: number) {
@@ -446,6 +460,30 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             return this.ranksDictionary[timeFinishedInMsStr];
         } else {
             this.ranksDictionary[timeFinishedInMsStr] = currentRank;
+            return currentRank;
+        }
+    }
+
+    private getRankFromTheBack(timeFinishedInMs: number) {
+        const timeFinishedInMsStr: string = timeFinishedInMs.toString();
+        //here
+        const currentRank = this.currentRankFromTheBack;
+        this.currentRankFromTheBack--;
+
+        // if two players finished at the same time
+        if (Object.prototype.hasOwnProperty.call(this.ranksFromTheBackDictionary, timeFinishedInMsStr)) {
+            //take a better rank (3 instead of 4)
+            const newRank = this.ranksFromTheBackDictionary[timeFinishedInMsStr] - 1;
+            this.ranksFromTheBackDictionary[timeFinishedInMsStr] = newRank;
+            //update players with the old rank (change them from 4 to 3)
+            Object.keys(this.playersState).forEach(userId => {
+                if (this.playersState[userId].finishedTimeMs === parseInt(timeFinishedInMsStr))
+                    this.playersState[userId].rank = newRank;
+            });
+
+            return this.ranksFromTheBackDictionary[timeFinishedInMsStr];
+        } else {
+            this.ranksFromTheBackDictionary[timeFinishedInMsStr] = currentRank;
             return currentRank;
         }
     }
@@ -470,10 +508,10 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
     createPlayerRanks(): Array<PlayerRank> {
         const playerRanks: Array<PlayerRank> = [];
-
         for (const [, playerState] of Object.entries(this.playersState)) {
             //in case player hasn't finished yet
             const playerFinishedTime = playerState.finishedTimeMs > 0 ? playerState.finishedTimeMs : Date.now();
+
             // console.log(playerFinishedTime)
             // console.log(this.gameStartedTime)
             // let rank = this.currentRank
