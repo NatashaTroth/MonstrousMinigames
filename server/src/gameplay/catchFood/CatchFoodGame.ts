@@ -371,6 +371,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         verifyUserId(this.playersState, userId);
         verifyUserIsActive(userId, this.playersState[userId].isActive);
         if (this.userIsNotAllowedToRun(userId)) return;
+        if (this.playersState[userId].stunned || this.playersState[userId].atObstacle) return;
 
         this.playersState[userId].stunned = true;
         this.playersState[userId].timeWhenStunned = Date.now();

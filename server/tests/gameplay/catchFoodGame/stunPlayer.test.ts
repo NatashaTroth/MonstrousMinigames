@@ -80,5 +80,21 @@ describe('Stun player tests', () => {
         expect(catchFoodGame.playersState['1'].stunned).toBeFalsy();
     });
 
+    it('should not stun a player who is already stunned', async () => {
+        finishPlayer(catchFoodGame, '1');
+        catchFoodGame.stunPlayer('1');
+        jest.advanceTimersByTime(2000);
+        catchFoodGame.stunPlayer('1');
+        jest.advanceTimersByTime(1000);
+        expect(catchFoodGame.playersState['1'].stunned).toBeFalsy();
+    });
+
+    it('should not stun a player who is at an obstacle', async () => {
+        finishPlayer(catchFoodGame, '1');
+        catchFoodGame.runForward('1', catchFoodGame.trackLength);
+        catchFoodGame.stunPlayer('1');
+        expect(catchFoodGame.playersState['1'].stunned).toBeFalsy();
+    });
+
     //TODO how to handle stun when at obstacle?
 });
