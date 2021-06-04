@@ -16,15 +16,12 @@ export function dragMoveListener(event: { target: any; dx: number; dy: number })
 
 export let stoneCounter = 0;
 
-export function initializeInteractListeners() {
-    // enable draggables to be dropped into this
-    interact('.dropzone').dropzone({
-        // only accept elements matching this CSS selector
-        accept: '#stone',
-        // Require a 75% element overlap for a drop to be possible
-        overlap: 1,
+export function initializeInteractListeners(solveObstacle: () => void) {
+    stoneCounter = 0;
 
-        // listen for drop related events:
+    interact('.dropzone').dropzone({
+        accept: '#stone',
+        overlap: 1,
 
         ondropactivate: function (event) {
             // add active dropzone feedback
@@ -48,9 +45,7 @@ export function initializeInteractListeners() {
             event.relatedTarget.classList.remove('drag-drop');
 
             if (stoneCounter === 3) {
-                // TODO
-                // eslint-disable-next-line no-console
-                console.log('obstacle solved');
+                solveObstacle();
             }
         },
         ondropdeactivate: function (event) {
