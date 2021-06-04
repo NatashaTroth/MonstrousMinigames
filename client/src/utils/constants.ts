@@ -1,14 +1,14 @@
 export enum Obstacles {
     treeStump = 'TreeStump',
     spider = 'Spider',
-    whole = 'Whole',
+    hole = 'Hole',
     stone = 'Stone',
 }
 
 export enum ObstacleRoutes {
     treeStump = 'treestump',
     spider = 'spider',
-    whole = 'whole',
+    hole = 'hole',
     stone = 'stone',
 }
 

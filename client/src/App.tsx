@@ -9,10 +9,10 @@ import ChooseCharacter from './components/Controller/ChooseCharacter';
 import { ConnectScreen as ControllerConnectScreen } from './components/Controller/ConnectScreen';
 import { FinishedScreen as ControllerFinishedScreen } from './components/Controller/FinishedScreen';
 import { Lobby as ControllerLobbyScreen } from './components/Controller/Lobby';
+import Hole from './components/Controller/Obstacles/Hole';
 import Spider from './components/Controller/Obstacles/Spider';
 import Stone from './components/Controller/Obstacles/Stone';
 import TreeTrunk from './components/Controller/Obstacles/TreeTrunk';
-import Whole from './components/Controller/Obstacles/Whole';
 import ShakeInstruction from './components/Controller/ShakeInstruction';
 import ChooseGame from './components/Screen/ChooseGame';
 import { ConnectScreen as ScreenConnectScreen } from './components/Screen/ConnectScreen';
@@ -62,11 +62,7 @@ const App: React.FunctionComponent = () => {
                                             component={Spider}
                                             exact
                                         />
-                                        <Route
-                                            path={`/controller/:id/${ObstacleRoutes.whole}`}
-                                            component={Whole}
-                                            exact
-                                        />
+                                        <Route path={`/controller/:id/${ObstacleRoutes.hole}`} component={Hole} exact />
                                         <Route
                                             path={`/controller/:id/${ObstacleRoutes.stone}`}
                                             component={Stone}
