@@ -20,8 +20,13 @@ export function initiatePlayersState(
             atObstacle: false,
             finished: false,
             finishedTimeMs: 0,
+            dead: false,
             rank: 0,
             isActive: true,
+            stunned: false,
+            stunnedTimeout: undefined,
+            timeWhenStunned: 0,
+            characterNumber: player.characterNumber, //TODO test
         };
     });
 

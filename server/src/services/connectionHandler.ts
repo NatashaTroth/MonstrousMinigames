@@ -215,7 +215,7 @@ class ConnectionHandler {
             emitter.sendConnectedUsers([screenNameSpace], socket.room);
 
             if (socket.room.isAdminScreen(socket.id)) {
-                emitter.sendScreenAdmin(screenNameSpace, socket.id)
+                emitter.sendScreenAdmin(screenNameSpace, socket.id);
             }
 
             socket.on('disconnect', () => {
@@ -223,7 +223,7 @@ class ConnectionHandler {
                 socket.room.removeScreen(socket.id);
 
                 if (socket.room.getAdminScreenId()) {
-                    emitter.sendScreenAdmin(screenNameSpace, socket.room.getAdminScreenId())
+                    emitter.sendScreenAdmin(screenNameSpace, socket.room.getAdminScreenId());
                 }
             });
 

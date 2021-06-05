@@ -2,9 +2,10 @@ import User from '../../../src/classes/user';
 import { CatchFoodGame } from '../../../src/gameplay';
 import { MaxNumberUsersExceededError } from '../../../src/gameplay/customErrors';
 import { leaderboard, roomId, users } from '../mockData';
+import { clearTimersAndIntervals } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
-const longerUsers = [...users, new User('xxx', 'iii', 'Lavender', '5')];
+const longerUsers = [...users, new User('xxx', 'iii', 'Lavender', 1, '5')];
 
 describe('Error handling tests', () => {
     beforeEach(() => {
@@ -13,8 +14,7 @@ describe('Error handling tests', () => {
     });
 
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('throws an error when game is created with more than 4 players', () => {

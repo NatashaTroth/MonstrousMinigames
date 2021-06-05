@@ -3,7 +3,8 @@ import { GameState } from '../../../src/gameplay/enums';
 import { verifyGameState } from '../../../src/gameplay/helperFunctions/verifyGameState';
 import { leaderboard, roomId, users } from '../mockData';
 import {
-    completeNextObstacle, finishGame, finishPlayer, startGameAndAdvanceCountdown
+    clearTimersAndIntervals, completeNextObstacle, finishGame, finishPlayer,
+    startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 const TRACKLENGTH = 500;
@@ -17,8 +18,7 @@ describe('Change and verify game state', () => {
     });
 
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('initialises state as initialised', async () => {

@@ -1,7 +1,7 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/enums/GameState';
 import { leaderboard, roomId } from '../mockData';
-import { startGameAndAdvanceCountdown } from './gameHelperFunctions';
+import { clearTimersAndIntervals, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
 const dateNow = 1618665766156;
@@ -14,8 +14,7 @@ describe('Pause tests', () => {
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
     });
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('Can pause game when game has started', async () => {

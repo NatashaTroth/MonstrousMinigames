@@ -2,8 +2,9 @@ import { CatchFoodGame } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId } from '../mockData';
 import {
-    completeNextObstacle, completePlayersObstacles, finishPlayer, getGameFinishedDataDifferentTimes,
-    startAndFinishGameDifferentTimes, startGameAndAdvanceCountdown
+    clearTimersAndIntervals, completeNextObstacle, completePlayersObstacles, finishPlayer,
+    getGameFinishedDataDifferentTimes, startAndFinishGameDifferentTimes,
+    startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 const TRACKLENGTH = 500;
@@ -17,8 +18,7 @@ describe('Start game', () => {
         jest.useFakeTimers();
     });
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('starts players at positionX 0', async () => {
@@ -40,7 +40,7 @@ describe('Run forward', () => {
         jest.useFakeTimers();
     });
     afterEach(() => {
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('moves players forward when runForward is called', async () => {
@@ -64,7 +64,7 @@ describe('Obstacles reached', () => {
         jest.useFakeTimers();
     });
     afterEach(() => {
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('playerHasReachedObstacle is called and returns false', async () => {
@@ -179,7 +179,7 @@ describe('Player has finished race', () => {
         jest.useFakeTimers();
     });
     afterEach(() => {
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('should set a player as finished when they have reached the end of the race', async () => {
@@ -246,7 +246,7 @@ describe('Game finished', () => {
         jest.useFakeTimers();
     });
     afterEach(() => {
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('all players should be marked as finished', async () => {

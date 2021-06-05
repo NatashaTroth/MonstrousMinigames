@@ -128,7 +128,7 @@ describe('Add Game to Game History', () => {
 
         //add second game
         const newUserName = 'New Player';
-        const playerRanks2 = createPlayerRanksArray([new User('xxx', 'iii', newUserName, '10')], [2, 2, 2, 2]);
+        const playerRanks2 = createPlayerRanksArray([new User('xxx', 'iii', newUserName, 1, '10')], [2, 2, 2, 2]);
         leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks2);
 
         expect(leaderboard.gameHistory.length).toBe(2);

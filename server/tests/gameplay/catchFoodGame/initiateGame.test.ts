@@ -3,6 +3,7 @@ import { ObstacleType } from '../../../src/gameplay/catchFood/enums';
 import { Obstacle } from '../../../src/gameplay/catchFood/interfaces';
 import { GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
+import { clearTimersAndIntervals } from './gameHelperFunctions';
 
 const TRACKLENGTH = 500;
 const NUMBER_OF_OBSTACLES = 4;
@@ -17,8 +18,7 @@ describe('Initiate CatchFoodGame correctly', () => {
         catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES);
     });
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('initiates players state with correct number of players', async () => {
@@ -64,6 +64,22 @@ describe('Initiate CatchFoodGame correctly', () => {
 
     it('initiates player as not finished', async () => {
         expect(catchFoodGame.playersState['1'].finished).toBeFalsy();
+    });
+
+    it('initiates player as not dead', async () => {
+        expect(catchFoodGame.playersState['1'].dead).toBeFalsy();
+    });
+
+    it('initiates player as not stunned', async () => {
+        expect(catchFoodGame.playersState['1'].stunned).toBeFalsy();
+    });
+
+    it('initiates player time when stunned as 0', async () => {
+        expect(catchFoodGame.playersState['1'].timeWhenStunned).toBe(0);
+    });
+
+    it('initiates character number', async () => {
+        expect(catchFoodGame.playersState['1'].characterNumber).toBe(users[0].characterNumber);
     });
 
     it('initiates player with correct number of obstacles (all)', async () => {

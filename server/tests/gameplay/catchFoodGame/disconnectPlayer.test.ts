@@ -6,7 +6,7 @@ import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
 import {
-    completeNextObstacle, finishPlayer, startAndFinishGameDifferentTimes,
+    clearTimersAndIntervals, completeNextObstacle, finishPlayer, startAndFinishGameDifferentTimes,
     startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
@@ -27,8 +27,7 @@ describe('Disconnect Player tests', () => {
     });
 
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('disconnectPlayer should initialise player isActive as true', async () => {
