@@ -80,7 +80,6 @@ class MainScene extends Phaser.Scene {
     create() {
         this.gameRenderer = new PhaserGameRenderer(this);
         this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
-        this.gameRenderer?.renderPauseButton();
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
         this.initiateSockets();
@@ -152,6 +151,10 @@ class MainScene extends Phaser.Scene {
         this.gameEventEmitter.on(GameEventTypes.PlayAudio, () => {
             this.gameAudio?.resume();
         });
+
+        this.gameEventEmitter.on(GameEventTypes.PauseResume, () => {
+            this.handlePauseResumeButton();
+        });
     }
 
     handleStartGame(gameStateData: GameData) {
@@ -194,13 +197,8 @@ class MainScene extends Phaser.Scene {
         this.players.push(player);
     }
 
-    handlePauseResumeButton() {
-        this.socket?.emit({ type: MessageTypes.pauseResume });
-    }
-
     private pauseGame() {
         this.paused = true;
-        this.gameRenderer?.pauseGame();
         this.players.forEach(player => {
             player.stopRunning();
         });
@@ -208,10 +206,13 @@ class MainScene extends Phaser.Scene {
 
     private resumeGame() {
         this.paused = false;
-        this.gameRenderer?.resumeGame();
         this.players.forEach(player => {
             player.startRunning();
         });
+    }
+
+    handlePauseResumeButton() {
+        this.socket?.emit({ type: MessageTypes.pauseResume });
     }
 
     handleError(msg = 'Something went wrong.') {

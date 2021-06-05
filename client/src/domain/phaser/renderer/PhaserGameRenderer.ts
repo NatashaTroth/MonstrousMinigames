@@ -30,22 +30,6 @@ export class PhaserGameRenderer implements GameRenderer {
         }
     }
 
-    renderPauseButton() {
-        this.pauseButton = this.scene.add.text(window.innerWidth / 2, window.innerHeight - 50, 'Pause');
-        this.pauseButton.setInteractive();
-        this.pauseButton.on('pointerdown', () => {
-            this.scene.handlePauseResumeButton();
-        });
-    }
-
-    pauseGame() {
-        this.pauseButton?.setText('Resume');
-    }
-
-    resumeGame() {
-        this.pauseButton?.setText('Pause');
-    }
-
     //TODO
     // setGoal(playerIndex: number) {
     //     const goal = this.physics.add.sprite(this.trackLength, this.getYPosition(playerIndex), 'goal');
