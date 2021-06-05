@@ -289,7 +289,13 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             rank: playerState.rank,
         });
 
-        if (this.gameHasFinished()) {
+        //todo duplicate
+        const userIds = Object.keys(this.playersState);
+        const activeUnfinishedPlayers = userIds.filter(userId => {
+            if (this.playersState[userId].isActive && !this.playersState[userId].dead) return userId;
+        });
+
+        if (activeUnfinishedPlayers.length <= 1 || this.gameHasFinished()) {
             this.handleGameFinished();
         }
     }
@@ -561,6 +567,12 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             }
         }
         return true;
+
+        //TODO (?) - finish game when only one player left connected - but not good if player tries to reconnect
+        // const userIds = Object.keys(this.playersState);
+        // const activeUnfinishedPlayers = userIds.filter(userId => {
+        //     if (this.playersState[userId].isActive) return userId;
+        // });
     }
 
     reconnectPlayer(userId: string): void {

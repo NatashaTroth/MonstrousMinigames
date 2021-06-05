@@ -628,6 +628,9 @@ describe('Chaser event', () => {
         });
 
         catchFoodGame.runForward(userId, chasersStartPosX + 20);
+        catchFoodGame.playersState['2'].positionX = chasersStartPosX + 2000;
+        catchFoodGame.playersState['3'].positionX = chasersStartPosX + 2000;
+        catchFoodGame.playersState['4'].positionX = chasersStartPosX + 2000;
 
         // should catch the other three players
         skipTimeToStartChasers(catchFoodGame);
@@ -636,7 +639,7 @@ describe('Chaser event', () => {
         expect(eventData).toMatchObject({
             roomId: catchFoodGame.roomId,
             userId: userId,
-            rank: 1,
+            rank: 4,
         });
     });
 });

@@ -200,8 +200,8 @@ describe('Chasers', () => {
         catchFoodGame.runForward('2', chasersStartPosX + 30); //should be 3rd (caught second)
 
         //should not be caught
-        catchFoodGame.runForward('3', chasersStartPosX + 200);
-        catchFoodGame.runForward('4', chasersStartPosX + 200);
+        catchFoodGame.playersState['3'].positionX = chasersStartPosX + 2000;
+        catchFoodGame.playersState['4'].positionX = chasersStartPosX + 2000;
 
         // should finish naturally
         Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear + 2000);
@@ -219,5 +219,33 @@ describe('Chasers', () => {
         expect(eventData.playerRanks[1].rank).toBe(3);
         expect(eventData.playerRanks[2].rank).toBe(1);
         expect(eventData.playerRanks[3].rank).toBe(2);
+    });
+
+    it('should test that the game stops when only one player was not caught', async () => {
+        let event = false;
+        const userId = '1';
+        gameEventEmitter.on(GameEventTypes.GameHasFinished, data => {
+            event = true;
+        });
+
+        //finish game
+        for (let i = 1; i <= Object.keys(catchFoodGame.playersState).length; i++) {
+            catchFoodGame.playersState[i.toString()].obstacles = [];
+        }
+        // should catch the other three players
+        skipTimeToStartChasers(catchFoodGame);
+        catchFoodGame.runForward(userId, chasersStartPosX + 20);
+        catchFoodGame.runForward('2', chasersStartPosX + 20);
+        catchFoodGame.runForward('3', chasersStartPosX + 20);
+
+        // one last player - should automatically finish when the others are caught
+        catchFoodGame.playersState['4'].positionX = chasersStartPosX + 2000;
+
+        //are caught
+        Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear + 4000);
+        jest.advanceTimersByTime(2000); //to catch the first 3 players
+
+        expect(catchFoodGame.gameState).toBe(GameState.Finished);
+        expect(event).toBeTruthy();
     });
 });
