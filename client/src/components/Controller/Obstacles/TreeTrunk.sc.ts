@@ -39,8 +39,9 @@ const slide = keyframes`
 export const ObstacleItem = styled.div`
     transform: rotate(325deg);
 `;
+
 export const StyledObstacleImage = styled.img`
-    width: 80%;
+    width: 100%;
 `;
 
 export const TouchContainer = styled.div`

@@ -7,11 +7,20 @@ export const handlePermission = (permission: boolean) => {
         const w = window as WindowProps;
         const AudioContext = window.AudioContext || w.webkitAudioContext || false;
         if (AudioContext) {
-            // // eslint-disable-next-line no-console
-            // console.log('loggy permission granted');
+            //TODO fix laggy audio
             new AudioContext().resume();
             return true;
         }
     }
     return false;
+};
+
+interface PermissionDependencies {
+    setPermissionGranted: (permission: boolean) => void;
+}
+
+export const handleAudioPermission = (permission: boolean, dependencies: PermissionDependencies) => {
+    if (handlePermission(permission)) {
+        dependencies.setPermissionGranted(true);
+    }
 };

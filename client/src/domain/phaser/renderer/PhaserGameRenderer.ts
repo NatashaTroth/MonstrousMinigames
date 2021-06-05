@@ -15,8 +15,6 @@ export class PhaserGameRenderer implements GameRenderer {
     }
 
     renderBackground(windowWidth: number, windowHeight: number, trackLength: number) {
-        // eslint-disable-next-line no-console
-        // console.log(`${trackLength}, ${windowWidth}`);
         const reps = trackLength / (windowWidth / 4);
         for (let i = 0; i < reps; i++) {
             for (let j = 0; j < 4; j++) {
