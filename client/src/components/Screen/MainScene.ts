@@ -202,6 +202,7 @@ class MainScene extends Phaser.Scene {
         this.players.forEach(player => {
             player.stopRunning();
         });
+        this.scene.pause();
     }
 
     private resumeGame() {
@@ -209,6 +210,7 @@ class MainScene extends Phaser.Scene {
         this.players.forEach(player => {
             player.startRunning();
         });
+        this.scene.resume();
     }
 
     handlePauseResumeButton() {
