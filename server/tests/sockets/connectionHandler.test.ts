@@ -80,9 +80,10 @@ describe('connectionHandler', () => {
         });
 
         controller.on('message', (msg: any) => {
-            expect(msg.type).toEqual('userInit');
-            expect(msg.name).toEqual(username);
-            done();
+            if (msg.type === 'userInit') {
+                expect(msg.name).toEqual(username);
+                done();
+            }
         });
     });
     it('should send an error message if a user tries to join a nonexistent room', async done => {
@@ -128,10 +129,12 @@ describe('connectionHandler', () => {
             reconnectionDelayMax: 5000,
         });
         controller.on('message', (msg: any) => {
-            const room = rs.getRoomById(roomCode);
-            const user = room.users[0];
-            expect(user.id).toEqual(msg.userId);
-            done();
+            if (msg.type === 'userInit') {
+                const room = rs.getRoomById(roomCode);
+                const user = room.users[0];
+                expect(user.id).toEqual(msg.userId);
+                done();
+            }
         });
     });
 
@@ -145,31 +148,35 @@ describe('connectionHandler', () => {
             reconnectionDelayMax: 5000,
         });
         controller.on('message', (msg: any) => {
-            const userId = msg.userId;
-            const room = rs.getRoomById(roomCode);
-            const user = room.getUserById(userId);
+            if (msg.type === 'userInit') {
+                const userId = msg.userId;
+                const room = rs.getRoomById(roomCode);
+                const user = room.getUserById(userId);
 
-            expect(user.id).toEqual(msg.userId);
-            expect(user.socketId).toEqual(controller.id);
-            expect(user.active).toEqual(true);
-
-            const controller2 = client(
-                `http://${url}/controller?roomId=${roomCode}&name=${username}&userId=${userId}`,
-                {
-                    secure: true,
-                    reconnection: true,
-                    rejectUnauthorized: false,
-                    reconnectionDelayMax: 5000,
-                }
-            );
-            controller2.on('message', (msg: any) => {
                 expect(user.id).toEqual(msg.userId);
-                expect(user.socketId).toEqual(controller2.id);
+                expect(user.socketId).toEqual(controller.id);
                 expect(user.active).toEqual(true);
 
-                controller2.close();
-                done();
-            });
+                const controller2 = client(
+                    `http://${url}/controller?roomId=${roomCode}&name=${username}&userId=${userId}`,
+                    {
+                        secure: true,
+                        reconnection: true,
+                        rejectUnauthorized: false,
+                        reconnectionDelayMax: 5000,
+                    }
+                );
+                controller2.on('message', (msg: any) => {
+                    if (msg.type === 'userInit') {
+                        expect(user.id).toEqual(msg.userId);
+                        expect(user.socketId).toEqual(controller2.id);
+                        expect(user.active).toEqual(true);
+
+                        controller2.close();
+                        done();
+                    }
+                });
+            }
         });
     });
 
@@ -287,7 +294,7 @@ describe('connectionHandler', () => {
                 });
 
                 screen.on('message', (msg: any) => {
-                    if(msg.type !== MessageTypes.SCREEN_ADMIN){
+                    if (msg.type !== MessageTypes.SCREEN_ADMIN) {
                         expect(msg.type).toEqual(MessageTypes.CONNECTED_USERS);
                         expect(msg.users[0].socketId).toEqual(controller.id);
                         done();
