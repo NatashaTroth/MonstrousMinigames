@@ -2,7 +2,9 @@ import * as React from 'react';
 
 import pebble from '../../../images/pebble.svg';
 import stone from '../../../images/stone.svg';
+import { stoneParticlesConfig } from '../../../utils/particlesConfig';
 import Button from '../../common/Button';
+import { StyledParticles } from '../../common/Particles.sc';
 import {
     ButtonContainer,
     PebbleContainer,
@@ -27,9 +29,11 @@ import {
 const Stone: React.FunctionComponent = () => {
     const [counter, setCounter] = React.useState(0);
     const limit = Math.floor(Math.random() * 16) + 10;
+    const [particles, setParticles] = React.useState(false);
 
     function handleTouch() {
         if (counter <= limit) {
+            setParticles(true);
             setCounter(counter + 1);
         }
     }
@@ -43,6 +47,7 @@ const Stone: React.FunctionComponent = () => {
             {counter <= limit ? (
                 <StyledStone onTouchStart={handleTouch}>
                     <StyledStoneImage src={stone} />
+                    {particles && <StyledParticles params={stoneParticlesConfig} />}
                 </StyledStone>
             ) : (
                 <PebbleContainer>

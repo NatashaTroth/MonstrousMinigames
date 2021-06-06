@@ -6,12 +6,18 @@ import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import wood from '../../../images/wood.svg';
 import { Obstacles } from '../../../utils/constants';
-import { particlesConfig } from '../../../utils/particlesConfig';
+import { treeParticlesConfig } from '../../../utils/particlesConfig';
 import Button from '../../common/Button';
+import { StyledParticles } from '../../common/Particles.sc';
 import { ObstacleContent } from './ObstaclStyles.sc';
 import {
-    Line, ObstacleItem, StyledObstacleImage, StyledParticles, StyledSkipButton, StyledTouchAppIcon,
-    TouchContainer, TreeTrunkContainer
+    Line,
+    ObstacleItem,
+    StyledObstacleImage,
+    StyledSkipButton,
+    StyledTouchAppIcon,
+    TouchContainer,
+    TreeTrunkContainer,
 } from './TreeTrunk.sc';
 
 const MAX = 30;
@@ -117,7 +123,7 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
                     <Line />
                     {showInstructions && <StyledTouchAppIcon />}
                 </TouchContainer>
-                {particles && <StyledParticles params={particlesConfig} />}
+                {particles && <StyledParticles params={treeParticlesConfig} />}
             </ObstacleContent>
         </TreeTrunkContainer>
     );
