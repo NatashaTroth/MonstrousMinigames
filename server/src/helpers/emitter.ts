@@ -14,6 +14,7 @@ function sendUserInit(socket: any, number: number): void {
         name: socket.user.name,
         isAdmin: socket.room.isAdmin(socket.user),
         number: number,
+        characterNumber: socket.user.characterNumber,
     });
 }
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {

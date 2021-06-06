@@ -88,7 +88,7 @@ class ConnectionHandler {
             }
             socket.user = user;
 
-            emitter.sendConnectedUsers([screenNameSpace], socket.room);
+            emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
             console.info(socket.room.id + ' | Controller connected: ' + socket.user.id);
 
             emitter.sendUserInit(socket, user.number);
@@ -164,6 +164,19 @@ class ConnectionHandler {
                         } catch (e) {
                             emitter.sendErrorMessage(socket, e);
                             console.error(roomId + ' | ' + e.name);
+                        }
+                        break;
+                    }
+                    case MessageTypes.SELECT_CHARACTER: {
+                        console.log('asidniasdni');
+                        if (message.characterNumber) {
+                            try {
+                                socket.room.setUserCharacter(socket.user, parseInt(message.characterNumber));
+                                emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
+                            } catch (e) {
+                                emitter.sendErrorMessage(socket, e);
+                                console.error(roomId + ' | ' + e.name);
+                            }
                         }
                         break;
                     }

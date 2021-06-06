@@ -221,7 +221,7 @@ class Room {
         });
         return chosenCharacters;
     }
-    public updateUserCharacter(user: User, character: number): void {
+    public setUserCharacter(user: User, character: number): void {
         if (this.getAvailableCharacters().includes(character)) {
             user.setCharacterNumber(character);
         } else {
