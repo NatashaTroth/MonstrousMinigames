@@ -8,13 +8,13 @@ class User {
     public timestamp: number;
     public active: boolean;
     public number: number;
-    public characterNumber: number; //TODO robin
+    public characterNumber: number;
 
     constructor(
         roomId: string,
         socketId: string,
         name: string,
-        characterNumber = 1,
+        characterNumber = -1,
         id: string = shortid.generate(),
         number = 0
     ) {

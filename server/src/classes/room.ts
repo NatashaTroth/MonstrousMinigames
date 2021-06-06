@@ -48,6 +48,7 @@ class Room {
         }
 
         if (this.users.length === 0) this.admin = user;
+        user.setCharacterNumber(this.getAvailableCharacters()[0]);
         this.users.push(user);
         this.updateUserNumbers();
     }
@@ -205,6 +206,28 @@ class Room {
     }
     public getAdminScreenId(): string {
         return this.screens[0];
+    }
+    public getAvailableCharacters(): Array<number> {
+        const characters: Array<number> = [];
+        for (let i = 0; i < Globals.CHARACTER_COUNT; i++) {
+            characters.push(i);
+        }
+        return characters.filter(x => !this.getChosenCharacters().includes(x));
+    }
+    public getChosenCharacters(): Array<number> {
+        const chosenCharacters: Array<number> = [];
+        this.users.forEach(user => {
+            chosenCharacters.push(user.characterNumber);
+        });
+        return chosenCharacters;
+    }
+    public updateUserCharacter(user: User, character: number): void {
+        if (this.getAvailableCharacters().includes(character)) {
+            user.setCharacterNumber(character);
+        } else {
+            //todo define error
+            throw new Error('Character is not available');
+        }
     }
 }
 
