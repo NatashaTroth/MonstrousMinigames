@@ -1,3 +1,4 @@
+import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
@@ -5,20 +6,29 @@ import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
 import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
-import AudioButton from '../common/AudioButton';
 import Button from '../common/Button';
+import IconButton from '../common/IconButton';
 import Logo from '../common/Logo';
 import ConnectDialog from './ConnectDialog';
 import {
-    ButtonContainer, ConnectScreenContainer, LeftButtonContainer, LeftContainer, RightContainer
+    ButtonContainer,
+    ConnectScreenContainer,
+    LeftButtonContainer,
+    LeftContainer,
+    RightContainer,
 } from './ConnectScreen.sc';
 
 export const ConnectScreen: React.FunctionComponent = () => {
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const { handleSocketConnection } = React.useContext(ScreenSocketContext);
-    const { playLobbyMusic, pauseLobbyMusic, permission, setPermissionGranted, playing, volume } = React.useContext(
-        AudioContext
-    );
+    const {
+        playLobbyMusic,
+        pauseLobbyMusic,
+        permission,
+        setPermissionGranted,
+        playing,
+        musicIsPlaying,
+    } = React.useContext(AudioContext);
 
     async function handleCreateNewRoom() {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}create-room`, {
@@ -45,16 +55,13 @@ export const ConnectScreen: React.FunctionComponent = () => {
     return (
         <ConnectScreenContainer>
             <ConnectDialog open={dialogOpen} handleClose={() => setDialogOpen(false)} />
-            <AudioButton
-                type="button"
-                name="new"
+            <IconButton
                 onClick={() =>
                     handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
                 }
-                playing={playing}
-                permission={permission}
-                volume={volume}
-            ></AudioButton>
+            >
+                {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
+            </IconButton>
             <LeftContainer>
                 <LeftButtonContainer>
                     <Button type="button" name="new" onClick={handleCreateNewRoom}>

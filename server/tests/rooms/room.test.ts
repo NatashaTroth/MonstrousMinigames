@@ -4,6 +4,7 @@ import { GameAlreadyStartedError } from '../../src/customErrors';
 import CannotStartEmptyGameError from '../../src/customErrors/CannotStartEmptyGameError';
 import { Globals } from '../../src/enums/globals';
 import { MaxNumberUsersExceededError } from '../../src/gameplay/customErrors';
+import { clearTimersAndIntervals } from '../gameplay/catchFoodGame/gameHelperFunctions';
 
 describe('Room ID', () => {
     it("creates a room with id 'ABCD'", () => {
@@ -26,6 +27,7 @@ describe('Room: Users', () => {
         room.addUser(user2);
         done();
     });
+
     it('should have one play after two users join and one leaves', () => {
         expect(room.users[0]).toEqual(user1);
         expect(room.isAdmin(user1)).toBeTruthy;
@@ -48,6 +50,7 @@ describe('Room: Users', () => {
             room.userDisconnected(user2.id);
             expect(room.isClosed()).toEqual(true);
         }, 3000);
+        clearTimersAndIntervals(room.game);
         jest.runAllTimers();
     });
     it('should label a player inactive after leaving a running game', () => {
@@ -58,6 +61,7 @@ describe('Room: Users', () => {
             room.userDisconnected(user1.id);
             expect(user1.active).toEqual(false);
         }, 3000);
+        clearTimersAndIntervals(room.game);
         jest.runAllTimers();
     });
     it('should remove inactive players after room is restarted', () => {
@@ -68,6 +72,7 @@ describe('Room: Users', () => {
             room.resetGame();
             expect(room.users).not.toContain(user1);
         }, 3000);
+        clearTimersAndIntervals(room.game);
         jest.runAllTimers();
     });
     it('should return a user count of 2 after 2 players joined', () => {
@@ -99,8 +104,8 @@ describe('Room: Users', () => {
         }).toThrow(GameAlreadyStartedError);
     });
     it('should throw an CannotStartEmptyGameError if a game without players is started', () => {
-        room.removeUser(user1)
-        room.removeUser(user2)
+        room.removeUser(user1);
+        room.removeUser(user2);
         expect(() => {
             room.startGame();
         }).toThrow(CannotStartEmptyGameError);

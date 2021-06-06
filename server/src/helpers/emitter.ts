@@ -80,11 +80,9 @@ function sendConnectedUsers(nsps: Array<Namespace>, room: Room): void {
 }
 
 function sendScreenAdmin(nsp: Namespace, socketId: string): void {
-    nsp.to(socketId).emit('message',
-        {
-            type: MessageTypes.SCREEN_ADMIN
-        }
-    )
+    nsp.to(socketId).emit('message', {
+        type: MessageTypes.SCREEN_ADMIN,
+    });
 }
 
 function sendMessage(type: MessageTypes, nsps: Array<Namespace>, roomId: string): void {

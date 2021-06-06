@@ -1,3 +1,4 @@
+import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import Phaser from 'phaser';
 import * as React from 'react';
 import Countdown from 'react-countdown';
@@ -9,30 +10,24 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
-import AudioButton from '../common/AudioButton';
+import IconButton from '../common/IconButton';
 import { Container, Go } from './Game.sc';
 import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
-    //const { countdownTime, roomId } = React.useContext(GameContext)
     const { roomId } = React.useContext(GameContext);
     const {
         pauseLobbyMusicNoMute,
         permission,
         setPermissionGranted,
-        pauseLobbyMusic,
-        playing,
+        musicIsPlaying,
         gameAudioPlaying,
         setGameAudioPlaying,
-        playLobbyMusic,
-        volume,
         mute,
         unMute,
     } = React.useContext(AudioContext);
     const { id }: IRouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
-    //const [countdown] = React.useState(Date.now() + countdownTime)
-    const gameEventEmitter = GameEventEmitter.getInstance();
 
     if (id && !screenSocket) {
         handleSocketConnection(id, 'game1');
@@ -83,15 +78,7 @@ const Game: React.FunctionComponent = () => {
 
     return (
         <Container>
-            <AudioButton
-                type="button"
-                name="new"
-                onClick={handleAudio}
-                playing={playing}
-                gameAudioPlaying={gameAudioPlaying}
-                permission={permission}
-                volume={volume}
-            ></AudioButton>
+            <IconButton onClick={handleAudio}>{musicIsPlaying ? <VolumeUp /> : <VolumeOff />}</IconButton>
             <Countdown></Countdown>
             <GameContent displayGo />
         </Container>

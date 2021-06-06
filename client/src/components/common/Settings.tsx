@@ -2,6 +2,7 @@ import Grid from '@material-ui/core/Grid';
 import Slider from '@material-ui/core/Slider';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import { VolumeOff } from '@material-ui/icons';
 import VolumeDown from '@material-ui/icons/VolumeDown';
 import VolumeUp from '@material-ui/icons/VolumeUp';
 import * as React from 'react';
@@ -10,11 +11,9 @@ import { AudioContext } from '../../contexts/AudioContextProvider';
 import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
-import AudioButton from './AudioButton';
 import Button from './Button';
-import {
-    BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer
-} from './Settings.sc';
+import IconButton from './IconButton';
+import { BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer } from './Settings.sc';
 
 const useStyles = makeStyles({
     root: {
@@ -23,7 +22,6 @@ const useStyles = makeStyles({
 });
 
 const Settings: React.FunctionComponent = () => {
-    const roomId = sessionStorage.getItem('roomId');
     const classes = useStyles();
     const {
         setAudioVolume,
@@ -33,6 +31,7 @@ const Settings: React.FunctionComponent = () => {
         playing,
         pauseLobbyMusic,
         playLobbyMusic,
+        musicIsPlaying,
     } = React.useContext(AudioContext);
     const [value, setValue] = React.useState(volume);
 
@@ -91,9 +90,7 @@ const Settings: React.FunctionComponent = () => {
                             <Grid item>
                                 <VolumeUp />
                             </Grid>
-                            <AudioButton
-                                type="button"
-                                name="new"
+                            <IconButton
                                 onClick={() =>
                                     handleAudio({
                                         playing,
@@ -103,15 +100,14 @@ const Settings: React.FunctionComponent = () => {
                                         setPermissionGranted,
                                     })
                                 }
-                                playing={playing}
-                                permission={permission}
-                                volume={volume}
-                            ></AudioButton>
+                            >
+                                {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
+                            </IconButton>
                         </Grid>
                     </div>
                 </Content>
                 <BackButtonContainer>
-                    <Button onClick={() => history.push(`/${roomId}`)}>Back</Button>
+                    <Button onClick={history.goBack}>Back</Button>
                 </BackButtonContainer>
             </ContentContainer>
         </SettingsContainer>

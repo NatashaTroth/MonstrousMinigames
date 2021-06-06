@@ -14,12 +14,13 @@ const ShakeInstruction: React.FunctionComponent = () => {
     const { playerFinished } = React.useContext(PlayerContext);
     const { hasPaused } = React.useContext(GameContext);
 
-    if (localDevelopment) {
-        if (!playerFinished) {
-            setInterval(() => sendMovement(controllerSocket, hasPaused), 100);
+    React.useEffect(() => {
+        if (localDevelopment) {
+            if (!playerFinished) {
+                setInterval(() => sendMovement(controllerSocket, hasPaused), 16.66667);
+            }
         }
-    }
-
+    }, []);
     return (
         <>
             <StyledDialog open={hasPaused}>

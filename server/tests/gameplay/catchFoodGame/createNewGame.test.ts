@@ -1,6 +1,6 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { leaderboard, roomId, users } from '../mockData';
-import { startAndFinishGame } from './gameHelperFunctions';
+import { clearTimersAndIntervals, startAndFinishGame } from './gameHelperFunctions';
 
 const NEW_TRACKLENGTH = 1000;
 const NEW_NUMBER_OF_OBSTACLES = 6;
@@ -10,12 +10,13 @@ describe('Create new game tests', () => {
     beforeEach(() => {
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
+        // console.log(catchFoodGame.playersState['1']);
+
         startAndFinishGame(catchFoodGame);
         catchFoodGame.createNewGame(users, NEW_TRACKLENGTH, NEW_NUMBER_OF_OBSTACLES);
     });
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('should have the correct new number of players', async () => {

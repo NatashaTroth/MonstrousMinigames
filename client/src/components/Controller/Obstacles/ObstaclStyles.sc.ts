@@ -65,6 +65,7 @@ export const ObstacleContainer = styled.div`
 
 export const ObstacleContent = styled.div`
     display: flex;
+    width: 100%;
     justify-content: center;
     align-items: center;
     z-index: 2;

@@ -5,6 +5,7 @@ export interface CatchFoodGamePlayerRank extends IPlayerRank {
     name: string;
     rank: number;
     finished: boolean;
+    dead: boolean; //TODO test
     totalTimeInMs: number;
     positionX: number;
     isActive: boolean;

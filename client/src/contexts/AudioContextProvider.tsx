@@ -40,6 +40,7 @@ export const defaultValue = {
     unMute: () => {
         //do nothing
     },
+    musicIsPlaying: false,
 };
 interface IAudioContext {
     permission: boolean;
@@ -57,6 +58,7 @@ interface IAudioContext {
     pauseLobbyMusicNoMute: (p: boolean) => void;
     mute: () => void;
     unMute: () => void;
+    musicIsPlaying: boolean;
 }
 
 export const AudioContext = React.createContext<IAudioContext>(defaultValue);
@@ -166,6 +168,7 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
         unMute: () => {
             if (volume === 0) unMuteVolumeEverywhere();
         },
+        musicIsPlaying: (playing || gameAudioPlaying) && permission && volume > 0,
     };
     return <AudioContext.Provider value={content}>{children}</AudioContext.Provider>;
 };
