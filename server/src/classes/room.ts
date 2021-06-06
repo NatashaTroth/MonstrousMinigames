@@ -1,5 +1,6 @@
 import { GameAlreadyStartedError } from '../customErrors';
 import CannotStartEmptyGameError from '../customErrors/CannotStartEmptyGameError';
+import CharacterNotAvailableError from '../customErrors/CharacterNotAvailableError';
 import { Globals } from '../enums/globals';
 import { CatchFoodGame } from '../gameplay';
 import { GameStateInfo } from '../gameplay/catchFood/interfaces';
@@ -225,8 +226,7 @@ class Room {
         if (this.getAvailableCharacters().includes(character)) {
             user.setCharacterNumber(character);
         } else {
-            //todo define error
-            throw new Error('Character is not available');
+            throw new CharacterNotAvailableError();
         }
     }
 }
