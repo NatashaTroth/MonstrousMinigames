@@ -356,6 +356,19 @@ example:
     "type": "game1/obstacleSolved"
 }
 ```
+
+### game1/stunPlayer
+
+-   stuns player with given userId
+  
+example:
+
+```json
+{
+    "type": "game1/obstacleSolved",
+    "userId": "XXxXX"
+}
+```
 * * *
 
 ## Screen → Server

@@ -167,8 +167,19 @@ class ConnectionHandler {
                         }
                         break;
                     }
+                    case CatchFoodMsgType.STUN_PLAYER:
+                        {
+                            if (message.userId) {
+                                try {
+                                    socket.room.game?.stunPlayer(message.userId);
+                                } catch (e) {
+                                    emitter.sendErrorMessage(socket, e);
+                                    console.error(roomId + ' | ' + e.name);
+                                }
+                            }
+                        }
+                        break;
                     case MessageTypes.SELECT_CHARACTER: {
-                        console.log('asidniasdni');
                         if (message.characterNumber) {
                             try {
                                 socket.room.setUserCharacter(socket.user, parseInt(message.characterNumber));
