@@ -16,6 +16,11 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     constructor(private scene: MainScene) {
         this.playerObstacles = [];
     }
+    destroyPlayer() {
+        this.player?.destroy()
+        // eslint-disable-next-line no-console
+        console.log("ded")
+    }
 
     renderPlayer(coordinates: Coordinates, monsterName: string, animationName: string, background?: string): void {
         if (!this.player) {

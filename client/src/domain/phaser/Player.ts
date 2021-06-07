@@ -11,6 +11,11 @@ import { Coordinates, PlayerRenderer } from './renderer/PlayerRenderer';
  * the InMemoryPlayerRenderer, testing this class should be pretty straight forward.
  */
 export class Player {
+    checkDead(dead: boolean) {
+        if(dead == true){
+            this.renderer.destroyPlayer()
+        }
+    }
     plusX = 40;
     plusY = 110;
     username: string;
@@ -19,6 +24,7 @@ export class Player {
     playerAtObstacle: boolean;
     playerAttention: null | Phaser.Types.Physics.Arcade.SpriteWithDynamicBody; //TODO change
     playerCountSameDistance: number;
+    dead: boolean;
 
     constructor(
         private renderer: PlayerRenderer, // TODO MAKE PRIVATE
@@ -38,6 +44,7 @@ export class Player {
         this.playerAtObstacle = false;
         this.playerCountSameDistance = 0;
         this.playerAttention = null;
+        this.dead = false;
 
         this.renderPlayer();
         this.setObstacles();
@@ -86,6 +93,8 @@ export class Player {
 
     checkFinished(isFinished: boolean) {
         if (isFinished) {
+            // eslint-disable-next-line no-console
+        console.log("finish")
             this.stopRunning();
             //TODO winning animation
         }

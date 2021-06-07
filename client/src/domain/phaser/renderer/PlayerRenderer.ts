@@ -17,4 +17,5 @@ export interface PlayerRenderer {
     destroyAttentionIcon(): void;
     startRunningAnimation(animationName: string): void;
     stopRunningAnimation(): void;
+    destroyPlayer(): void;
 }
