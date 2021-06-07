@@ -365,6 +365,18 @@ class ConnectionHandler {
             room.setPlaying();
             emitter.sendMessage(MessageTypes.GAME_HAS_RESUMED, [controllerNamespace, screenNameSpace], data.roomId);
         });
+        this.gameEventEmitter.on(GameEventTypes.PlayerIsDead, (data: GameEvents.PlayerIsDead) => {
+            this.consoleInfo(data.roomId, GameEventTypes.GameHasResumed);
+            const room = rs.getRoomById(data.roomId);
+            const user = room.getUserById(data.userId);
+            emitter.sendPlayerDied(controllerNamespace, user.socketId, data.rank);
+        });
+        this.gameEventEmitter.on(GameEventTypes.PlayerIsStunned, (data: GameEvents.PlayerIsStunned) => {
+            this.consoleInfo(data.roomId, GameEventTypes.GameHasResumed);
+            const room = rs.getRoomById(data.roomId);
+            const user = room.getUserById(data.userId);
+            emitter.sendPlayerStunned(controllerNamespace, user.socketId);
+        });
     }
     private consoleInfo(roomId: string, msg: string) {
         console.info(`${roomId} | ${msg}`);
