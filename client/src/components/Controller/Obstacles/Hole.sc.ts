@@ -4,6 +4,7 @@ import hole from '../../../images/hole.svg';
 import leaf from '../../../images/leaf.svg';
 import pebble from '../../../images/pebble.svg';
 import { secondary } from '../../../utils/colors';
+import { SkipButton } from '../../common/SkipButton.sc';
 
 export const Container = styled.div`
     display: flex;
@@ -108,3 +109,10 @@ function getDraggableTopPosition(index: number) {
             `;
     }
 }
+
+export const StyledSkipButton = styled(SkipButton)`
+    && {
+        position: absolute;
+        top: 45%;
+    }
+`;
