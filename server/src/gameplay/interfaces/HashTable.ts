@@ -1,3 +1,3 @@
 export interface HashTable<T> {
-  [key: string]: T;
+    [key: string]: T;
 }
