@@ -48,7 +48,6 @@ export class Player {
 
         this.renderPlayer();
         this.setObstacles();
-        this.setChasers();
     }
 
     moveForward(x: number, trackLength: number) {
@@ -148,6 +147,14 @@ export class Player {
                     obstaclePosY = this.coordinates.y + 25;
                     obstacleScale = 0.2;
                     break;
+                case Obstacles.hole:
+                    obstaclePosY = this.coordinates.y + 75;
+                    obstacleScale = 0.2;
+                    break;
+                case Obstacles.stone:
+                    obstaclePosY = this.coordinates.y + 25;
+                    obstacleScale = 0.2;
+                    break;
             }
 
             this.renderer.renderObstacles(
@@ -160,8 +167,7 @@ export class Player {
         });
     }
 
-    private setChasers() {
-        const chasersPositionX = this.gameStateData.chasersPositionX;
+    setChasers(chasersPositionX: number) {
         const chasersPositionY = this.coordinates.y + 30;
 
             this.renderer.renderChasers(

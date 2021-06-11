@@ -168,6 +168,7 @@ class MainScene extends Phaser.Scene {
             player.moveForward(gameStateData.playersState[i].positionX, this.trackLength);
             player.checkAtObstacle(gameStateData.playersState[i].atObstacle);
             player.checkDead(gameStateData.playersState[i].dead)
+            player.setChasers(gameStateData.chasersPositionX)
             // eslint-disable-next-line no-console
             console.log(gameStateData)
             player.checkFinished(gameStateData.playersState[i].finished);
