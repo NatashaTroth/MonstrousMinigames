@@ -16,6 +16,12 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     constructor(private scene: MainScene) {
         this.playerObstacles = [];
     }
+    renderChasers(chasersPositionX: number, chasersPositionY: number) {
+        const obstacle = this.scene.physics.add.sprite(chasersPositionX, chasersPositionY, "chasers");
+        obstacle.setScale(0.5, 0.5);
+        obstacle.setDepth(1);
+
+    }
     destroyPlayer() {
         this.player?.destroy()
         // eslint-disable-next-line no-console

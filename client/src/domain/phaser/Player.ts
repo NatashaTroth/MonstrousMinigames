@@ -48,6 +48,7 @@ export class Player {
 
         this.renderPlayer();
         this.setObstacles();
+        this.setChasers();
     }
 
     moveForward(x: number, trackLength: number) {
@@ -93,8 +94,6 @@ export class Player {
 
     checkFinished(isFinished: boolean) {
         if (isFinished) {
-            // eslint-disable-next-line no-console
-        console.log("finish")
             this.stopRunning();
             //TODO winning animation
         }
@@ -161,6 +160,15 @@ export class Player {
         });
     }
 
+    private setChasers() {
+        const chasersPositionX = this.gameStateData.chasersPositionX;
+        const chasersPositionY = this.coordinates.y + 30;
+
+            this.renderer.renderChasers(
+                chasersPositionX, chasersPositionY
+            );
+        }
+    
     startRunning() {
         this.renderer.startRunningAnimation(this.animationName);
         this.playerRunning = true;

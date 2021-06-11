@@ -6,6 +6,7 @@ import forest2 from '../../images/forest2.png';
 // import finishLine from '../../images/finishLine.png';
 import franz from '../../images/franz_spritesheet.png';
 import goal from '../../images/goal.png';
+import chasers from "../../images/insects_placeholder.jpg";
 import noah from '../../images/noah_spritesheet.png';
 import spider from '../../images/spider.png';
 // import startLine from '../../images/startLine.png';
@@ -47,4 +48,5 @@ export const images = [
     { name: 'goal', file: goal },
     { name: 'treestump', file: wood },
     { name: 'spider', file: spider },
+    { name: 'chasers', file: chasers },
 ];
