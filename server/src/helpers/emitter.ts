@@ -14,6 +14,7 @@ function sendUserInit(socket: any, number: number): void {
         name: socket.user.name,
         isAdmin: socket.room.isAdmin(socket.user),
         number: number,
+        characterNumber: socket.user.characterNumber,
     });
 }
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
@@ -85,9 +86,22 @@ function sendScreenAdmin(nsp: Namespace, socketId: string): void {
     });
 }
 
-function sendMessage(type: MessageTypes, nsps: Array<Namespace>, roomId: string): void {
+function sendPlayerDied(nsp: Namespace, socketId: string, rank: number): void {
+    nsp.to(socketId).emit('message', {
+        type: CatchFoodMsgType.PLAYER_DIED,
+        rank: rank,
+    });
+}
+
+function sendPlayerStunned(nsp: Namespace, socketId: string): void {
+    nsp.to(socketId).emit('message', {
+        type: CatchFoodMsgType.PLAYER_STUNNED,
+    });
+}
+
+function sendMessage(type: MessageTypes | CatchFoodMsgType, nsps: Array<Namespace>, recipient: string): void {
     nsps.forEach(function (namespace: Namespace) {
-        namespace.to(roomId).emit('message', {
+        namespace.to(recipient).emit('message', {
             type: type,
         });
     });
@@ -104,4 +118,6 @@ export default {
     sendConnectedUsers,
     sendMessage,
     sendScreenAdmin,
+    sendPlayerDied,
+    sendPlayerStunned,
 };

@@ -1,5 +1,6 @@
 import { GameAlreadyStartedError } from '../customErrors';
 import CannotStartEmptyGameError from '../customErrors/CannotStartEmptyGameError';
+import CharacterNotAvailableError from '../customErrors/CharacterNotAvailableError';
 import { Globals } from '../enums/globals';
 import { CatchFoodGame } from '../gameplay';
 import { GameStateInfo } from '../gameplay/catchFood/interfaces';
@@ -48,6 +49,7 @@ class Room {
         }
 
         if (this.users.length === 0) this.admin = user;
+        user.setCharacterNumber(this.getAvailableCharacters()[0]);
         this.users.push(user);
         this.updateUserNumbers();
     }
@@ -205,6 +207,27 @@ class Room {
     }
     public getAdminScreenId(): string {
         return this.screens[0];
+    }
+    public getAvailableCharacters(): Array<number> {
+        const characters: Array<number> = [];
+        for (let i = 0; i < Globals.CHARACTER_COUNT; i++) {
+            characters.push(i);
+        }
+        return characters.filter(x => !this.getChosenCharacters().includes(x));
+    }
+    public getChosenCharacters(): Array<number> {
+        const chosenCharacters: Array<number> = [];
+        this.users.forEach(user => {
+            chosenCharacters.push(user.characterNumber);
+        });
+        return chosenCharacters;
+    }
+    public setUserCharacter(user: User, character: number): void {
+        if (this.getAvailableCharacters().includes(character)) {
+            user.setCharacterNumber(character);
+        } else {
+            throw new CharacterNotAvailableError();
+        }
     }
 }
 
