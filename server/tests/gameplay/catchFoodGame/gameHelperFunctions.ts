@@ -17,12 +17,16 @@ export function clearTimersAndIntervals(catchFoodGame: CatchFoodGame) {
 }
 
 export function startGameAndAdvanceCountdown(catchFoodGame: CatchFoodGame) {
-    catchFoodGame.createNewGame(users, TRACK_LENGTH, 4);
+    catchFoodGame.createNewGame(users, TRACK_LENGTH, 4, 1);
     advanceCountdown(catchFoodGame.countdownTime);
 }
 export function advanceCountdown(time: number) {
     //run countdown
     jest.advanceTimersByTime(time);
+}
+
+export function skipTimeToStartChasers(catchFoodGame: CatchFoodGame) {
+    Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear);
 }
 
 export function finishCreatedGame(catchFoodGame: CatchFoodGame) {
@@ -130,6 +134,21 @@ export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
     Date.now = jest.fn(() => dateNow + 15000);
     catchFoodGame.runForward('4', TRACK_LENGTH);
 
+    return eventData;
+}
+
+export function getGameFinishedDataWithSomeDead(catchFoodGame: CatchFoodGame): GameEvents.GameHasFinished {
+    let eventData: GameEvents.GameHasFinished = {
+        roomId: '',
+        gameState: GameState.Started,
+        trackLength: 0,
+        numberOfObstacles: 0,
+        playerRanks: [],
+    };
+    gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
+        eventData = data;
+    });
+    catchFoodGame = startAndFinishGameDifferentTimes(catchFoodGame);
     return eventData;
 }
 

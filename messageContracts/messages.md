@@ -57,6 +57,37 @@ example:
 }
 ```
 
+### game1/playerDied
+
+-   on 'PlayerIsDead' game event
+-   sent to the individual controller
+    -   when the player died
+-   sends the player rank 
+
+example:
+
+```json
+{
+    "type": "game1/playerDied",
+    "rank": 1
+}
+```
+
+### game1/playerStunned
+
+-   on 'PlayerIsStunned' game event
+-   sent to the individual controller
+    -   when the player is stunned by a rock
+-   sends the player rank 
+
+example:
+
+```json
+{
+    "type": "game1/playerStunned",
+    "rank": 1
+}
+```
 
 
 * * *
@@ -114,7 +145,10 @@ example:
 ### connectedUsers
 
 -   contains array of connected users
+-   contains character numbers
 -   on new controller/screen join: sent to screens
+-   on new controller join: sent to controllers/screens
+-   on 'selectCharacter': sent to controllers/screens
 -   on controller disconnect: sent to controllers & screens
 -   on game reset: sent to controllers & screens
 
@@ -284,28 +318,17 @@ example:
 * * *
 ## Controller → Server
 
-### backToLobby
+### selectCharacter
 
--   resets game (if the user is admin)
-    -   invokes 'gameHasReset' message
-
-example:
-
-```json
-{
-    "type": "backToLobby"
-}
-```
-
-### game1/start
-
--   starts the game (if the user is admin)
+-   player selects a character (color)
+-   characterNumber starts at 0
   
 example:
 
 ```json
 {
-    "type": "game1/start"
+    "type": "selectCharacter",
+    "characterNumber": 0
 }
 ```
 
@@ -331,6 +354,19 @@ example:
 ```json
 {
     "type": "game1/obstacleSolved"
+}
+```
+
+### game1/stunPlayer
+
+-   stuns player with given userId
+  
+example:
+
+```json
+{
+    "type": "game1/obstacleSolved",
+    "userId": "XXxXX"
 }
 ```
 * * *
@@ -360,5 +396,30 @@ example:
 ```json
 {
     "type": "stopGame"
+}
+```
+
+### backToLobby
+
+-   resets game (if the screen is admin)
+    -   invokes 'gameHasReset' message
+
+example:
+
+```json
+{
+    "type": "backToLobby"
+}
+```
+
+### game1/start
+
+-   starts the game (if the screen is admin)
+  
+example:
+
+```json
+{
+    "type": "game1/start"
 }
 ```

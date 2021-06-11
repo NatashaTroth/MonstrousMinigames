@@ -70,6 +70,6 @@ describe('Get Obstacle Positions test', () => {
     });
 
     it('returns chaser position', async () => {
-        expect(gameStateInfo.chasersPositionX).toBe(0);
+        expect(gameStateInfo.chasersPositionX).toBe(catchFoodGame.chasersPositionX);
     });
 });

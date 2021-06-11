@@ -1,6 +1,8 @@
 ## Deploy from server (run this in git root)
 
 https://monstrous-minigames.herokuapp.com/
+git config --get remote.heroku.url
+git remote remove origin
 
 ```
 heroku git:remote -a monstrous-minigames-staging
@@ -32,13 +34,22 @@ https://docs.google.com/spreadsheets/d/1YqFcClidcsZotvGdvUa4qLCsIBh16DGblUIBrWJz
 
 ## calc length of track
 
+58-60 run forward messages per second!!!!
+so 6 per 100ms
+
 time = 90 sec = 90000ms
 
-speed = 2 - every 100 ms (0.1 sec)
+speed = 2\*6 - every 100 ms (0.1 sec) = 12 (= 0.12 per ms)
 obstacles = 5 \* 5000 ms
 
 obstacleTime = 25000
-numberOfMovementUpdates = (90000 - obstacleTime) / 33
-howFarCanRun = 2 \* numberOfMovementUpdates
+timeLeftForRunning = (90000 - obstacleTime)
+howFarCanRun = 0.12\*timeLeftForRunning
 
-2\*((90000 - 25000) / 33) = 4000
+(90000-25000) \* 0.12 = 7800
+
+## where should chasers appear
+
+6 \* 2speed per 100ms
+
+12 \* 100 (to get to 10 sec) = 1200 -> chasers should appear at around 800, to give runners a head start

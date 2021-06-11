@@ -88,7 +88,7 @@ class ConnectionHandler {
             }
             socket.user = user;
 
-            emitter.sendConnectedUsers([screenNameSpace], socket.room);
+            emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
             console.info(socket.room.id + ' | Controller connected: ' + socket.user.id);
 
             emitter.sendUserInit(socket, user.number);
@@ -164,6 +164,30 @@ class ConnectionHandler {
                         } catch (e) {
                             emitter.sendErrorMessage(socket, e);
                             console.error(roomId + ' | ' + e.name);
+                        }
+                        break;
+                    }
+                    case CatchFoodMsgType.STUN_PLAYER:
+                        {
+                            if (message.userId) {
+                                try {
+                                    socket.room.game?.stunPlayer(message.userId);
+                                } catch (e) {
+                                    emitter.sendErrorMessage(socket, e);
+                                    console.error(roomId + ' | ' + e.name);
+                                }
+                            }
+                        }
+                        break;
+                    case MessageTypes.SELECT_CHARACTER: {
+                        if (message.characterNumber) {
+                            try {
+                                socket.room.setUserCharacter(socket.user, parseInt(message.characterNumber));
+                                emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
+                            } catch (e) {
+                                emitter.sendErrorMessage(socket, e);
+                                console.error(roomId + ' | ' + e.name);
+                            }
                         }
                         break;
                     }
@@ -351,6 +375,18 @@ class ConnectionHandler {
             const room = rs.getRoomById(data.roomId);
             room.setPlaying();
             emitter.sendMessage(MessageTypes.GAME_HAS_RESUMED, [controllerNamespace, screenNameSpace], data.roomId);
+        });
+        this.gameEventEmitter.on(GameEventTypes.PlayerIsDead, (data: GameEvents.PlayerIsDead) => {
+            this.consoleInfo(data.roomId, GameEventTypes.GameHasResumed);
+            const room = rs.getRoomById(data.roomId);
+            const user = room.getUserById(data.userId);
+            emitter.sendPlayerDied(controllerNamespace, user.socketId, data.rank);
+        });
+        this.gameEventEmitter.on(GameEventTypes.PlayerIsStunned, (data: GameEvents.PlayerIsStunned) => {
+            this.consoleInfo(data.roomId, GameEventTypes.GameHasResumed);
+            const room = rs.getRoomById(data.roomId);
+            const user = room.getUserById(data.userId);
+            emitter.sendPlayerStunned(controllerNamespace, user.socketId);
         });
     }
     private consoleInfo(roomId: string, msg: string) {

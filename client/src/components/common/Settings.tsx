@@ -2,17 +2,18 @@ import Grid from '@material-ui/core/Grid';
 import Slider from '@material-ui/core/Slider';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import { VolumeOff } from '@material-ui/icons';
 import VolumeDown from '@material-ui/icons/VolumeDown';
 import VolumeUp from '@material-ui/icons/VolumeUp';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
-import { handlePermission } from '../../domain/audio/handlePermission';
+import { handleAudio } from '../../domain/audio/handleAudio';
+import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import Button from './Button';
-import {
-    BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer
-} from './Settings.sc';
+import IconButton from './IconButton';
+import { BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer } from './Settings.sc';
 
 const useStyles = makeStyles({
     root: {
@@ -21,32 +22,39 @@ const useStyles = makeStyles({
 });
 
 const Settings: React.FunctionComponent = () => {
-    const roomId = sessionStorage.getItem('roomId');
     const classes = useStyles();
-    const { setAudioVolume, volume, permission, setPermissionGranted } = React.useContext(AudioContext);
+    const {
+        setAudioVolume,
+        volume,
+        permission,
+        setPermissionGranted,
+        playing,
+        pauseLobbyMusic,
+        playLobbyMusic,
+        musicIsPlaying,
+    } = React.useContext(AudioContext);
     const [value, setValue] = React.useState(volume);
 
+    React.useEffect(() => {
+        handleAudioPermission(permission, { setPermissionGranted });
+    }, []);
+
+    React.useEffect(() => {
+        setValue(volume);
+    }, [volume]);
+
+    //TODO natasha
     // React.useEffect(() => {
-    //     // eslint-disable-next-line no-console
-    //     // console.log('here ', volume);
     //     // setValue(volume);
 
     //     return () => {
-    //         // eslint-disable-next-line no-console
-    //         console.log('UNLOADING ', value);
     //         setVolume(value);
     //     };
     // }, [value]);
 
-    //TODO but not yet working
-    // useBeforeunload(() => {
-    //     // eslint-disable-next-line no-console
-    //     console.log('UNLOADING ');
-    //     setVolume(value);
-    // });
-
     const handleChange = (event: React.ChangeEvent<unknown>, newValue: number | number[]): void => {
-        if (handlePermission(permission)) setPermissionGranted(true);
+        handleAudioPermission(permission, { setPermissionGranted });
+
         if (typeof newValue == 'number') {
             setAudioVolume(newValue);
             setValue(newValue);
@@ -82,11 +90,24 @@ const Settings: React.FunctionComponent = () => {
                             <Grid item>
                                 <VolumeUp />
                             </Grid>
+                            <IconButton
+                                onClick={() =>
+                                    handleAudio({
+                                        playing,
+                                        permission,
+                                        pauseLobbyMusic,
+                                        playLobbyMusic,
+                                        setPermissionGranted,
+                                    })
+                                }
+                            >
+                                {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
+                            </IconButton>
                         </Grid>
                     </div>
                 </Content>
                 <BackButtonContainer>
-                    <Button onClick={() => history.push(`/${roomId}`)}>Back</Button>
+                    <Button onClick={history.goBack}>Back</Button>
                 </BackButtonContainer>
             </ContentContainer>
         </SettingsContainer>

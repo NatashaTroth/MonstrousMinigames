@@ -78,6 +78,10 @@ describe('Initiate CatchFoodGame correctly', () => {
         expect(catchFoodGame.playersState['1'].timeWhenStunned).toBe(0);
     });
 
+    it('initiates character number', async () => {
+        expect(catchFoodGame.playersState['1'].characterNumber).toBe(users[0].characterNumber);
+    });
+
     it('initiates player with correct number of obstacles (all)', async () => {
         expect(catchFoodGame.playersState['1'].obstacles.length).toBe(NUMBER_OF_OBSTACLES);
     });

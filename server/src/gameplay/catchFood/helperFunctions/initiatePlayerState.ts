@@ -26,6 +26,7 @@ export function initiatePlayersState(
             stunned: false,
             stunnedTimeout: undefined,
             timeWhenStunned: 0,
+            characterNumber: player.characterNumber, //TODO test
         };
     });
 

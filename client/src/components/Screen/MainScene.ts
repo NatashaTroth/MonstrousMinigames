@@ -2,8 +2,11 @@ import Phaser from 'phaser';
 
 import history from '../../domain/history/history';
 import { GameAudio } from '../../domain/phaser/GameAudio';
+import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
+import { GameEventTypes } from '../../domain/phaser/GameEventTypes';
 import { GameData } from '../../domain/phaser/gameInterfaces';
 import { Player } from '../../domain/phaser/Player';
+// import print from '../../domain/phaser/printMethod';
 import { GameRenderer } from '../../domain/phaser/renderer/GameRenderer';
 import { PhaserGameRenderer } from '../../domain/phaser/renderer/PhaserGameRenderer';
 import { PhaserPlayerRenderer } from '../../domain/phaser/renderer/PhaserPlayerRenderer';
@@ -12,13 +15,9 @@ import ScreenSocket from '../../domain/socket/screenSocket';
 import { Socket } from '../../domain/socket/Socket';
 import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../domain/typeGuards/finished';
-import {
-    GameStateInfoMessage, gameStateInfoTypeGuard
-} from '../../domain/typeGuards/gameStateInfo';
+import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../domain/typeGuards/gameStateInfo';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../domain/typeGuards/paused';
-import {
-    PlayerFinishedMessage, playerFinishedTypeGuard
-} from '../../domain/typeGuards/playerFinished';
+import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../domain/typeGuards/playerFinished';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../domain/typeGuards/resumed';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../domain/typeGuards/stopped';
 import { TimedOutMessage, timedOutTypeGuard } from '../../domain/typeGuards/timedOut';
@@ -43,6 +42,7 @@ class MainScene extends Phaser.Scene {
     gameAudio?: GameAudio;
     camera?: Phaser.Cameras.Scene2D.Camera;
     cameraSpeed: number;
+    gameEventEmitter: GameEventEmitter;
 
     constructor() {
         super('MainScene');
@@ -57,6 +57,7 @@ class MainScene extends Phaser.Scene {
         this.gameStarted = false;
         this.paused = false;
         this.cameraSpeed = 0.5;
+        this.gameEventEmitter = GameEventEmitter.getInstance();
     }
 
     init(data: { roomId: string }) {
@@ -83,6 +84,7 @@ class MainScene extends Phaser.Scene {
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
         this.initiateSockets();
+        this.initiateEventEmitters();
     }
 
     handleSocketConnection() {
@@ -140,6 +142,16 @@ class MainScene extends Phaser.Scene {
         //     this.handleError(data.msg);
         //     return;
         // }
+    }
+
+    initiateEventEmitters() {
+        this.gameEventEmitter.on(GameEventTypes.PauseAudio, () => {
+            this.gameAudio?.pause();
+        });
+
+        this.gameEventEmitter.on(GameEventTypes.PlayAudio, () => {
+            this.gameAudio?.resume();
+        });
     }
 
     handleStartGame(gameStateData: GameData) {

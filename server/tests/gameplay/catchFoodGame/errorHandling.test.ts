@@ -5,7 +5,7 @@ import { leaderboard, roomId, users } from '../mockData';
 import { clearTimersAndIntervals } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
-const longerUsers = [...users, new User('xxx', 'iii', 'Lavender', '5')];
+const longerUsers = [...users, new User('xxx', 'iii', 'Lavender', 1, '5')];
 
 describe('Error handling tests', () => {
     beforeEach(() => {
