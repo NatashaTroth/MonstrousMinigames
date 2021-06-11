@@ -13,7 +13,9 @@ import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import Button from './Button';
 import IconButton from './IconButton';
-import { BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer } from './Settings.sc';
+import {
+    BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer
+} from './Settings.sc';
 
 const useStyles = makeStyles({
     root: {
@@ -26,9 +28,9 @@ const Settings: React.FunctionComponent = () => {
     const {
         setAudioVolume,
         volume,
-        permission,
-        setPermissionGranted,
-        playing,
+        audioPermission,
+        setAudioPermissionGranted,
+        lobbyMusicPlaying,
         pauseLobbyMusic,
         playLobbyMusic,
         musicIsPlaying,
@@ -36,7 +38,14 @@ const Settings: React.FunctionComponent = () => {
     const [value, setValue] = React.useState(volume);
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        // handleAudio({
+        //     lobbyMusicPlaying,
+        //     audioPermission: true, //context provider is too slow to update
+        //     pauseLobbyMusic,
+        //     playLobbyMusic,
+        //     setAudioPermissionGranted,
+        // });
     }, []);
 
     React.useEffect(() => {
@@ -53,7 +62,7 @@ const Settings: React.FunctionComponent = () => {
     // }, [value]);
 
     const handleChange = (event: React.ChangeEvent<unknown>, newValue: number | number[]): void => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
 
         if (typeof newValue == 'number') {
             setAudioVolume(newValue);
@@ -93,11 +102,11 @@ const Settings: React.FunctionComponent = () => {
                             <IconButton
                                 onClick={() =>
                                     handleAudio({
-                                        playing,
-                                        permission,
+                                        lobbyMusicPlaying,
+                                        audioPermission,
                                         pauseLobbyMusic,
                                         playLobbyMusic,
-                                        setPermissionGranted,
+                                        setAudioPermissionGranted,
                                     })
                                 }
                             >

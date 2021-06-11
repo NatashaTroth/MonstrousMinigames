@@ -1,24 +1,24 @@
 import { handleAudioPermission } from './handlePermission';
 
 interface AudioDependencies {
-    playing: boolean;
-    permission: boolean;
+    lobbyMusicPlaying: boolean;
+    audioPermission: boolean;
     pauseLobbyMusic: (permission: boolean) => void;
     playLobbyMusic: (permission: boolean) => void;
-    setPermissionGranted: (permission: boolean) => void;
+    setAudioPermissionGranted: (permission: boolean) => void;
 }
 
 export async function handleAudio({
-    playing,
-    permission,
+    lobbyMusicPlaying,
+    audioPermission,
     pauseLobbyMusic,
     playLobbyMusic,
-    setPermissionGranted,
+    setAudioPermissionGranted,
 }: AudioDependencies) {
-    handleAudioPermission(permission, { setPermissionGranted });
-    if (playing) {
-        pauseLobbyMusic(permission);
+    handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+    if (lobbyMusicPlaying) {
+        pauseLobbyMusic(audioPermission);
     } else {
-        playLobbyMusic(permission);
+        playLobbyMusic(audioPermission);
     }
 }

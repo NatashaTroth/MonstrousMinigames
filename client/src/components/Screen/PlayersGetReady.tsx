@@ -14,15 +14,8 @@ import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import { getUserArray } from './Lobby';
 import {
-    Character,
-    CharacterContainer,
-    ConnectedUserCharacter,
-    ConnectedUserContainer,
-    ConnectedUserName,
-    ConnectedUsers,
-    Content,
-    GetReadyBackground,
-    GetReadyContainer,
+    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer,
+    ConnectedUserName, ConnectedUsers, Content, GetReadyBackground, GetReadyContainer
 } from './PlayersGetReady.sc';
 
 const PlayersGetReady: React.FC = () => {
@@ -30,9 +23,9 @@ const PlayersGetReady: React.FC = () => {
     const {
         playLobbyMusic,
         pauseLobbyMusic,
-        permission,
-        playing,
-        setPermissionGranted,
+        audioPermission,
+        lobbyMusicPlaying,
+        setAudioPermissionGranted,
         musicIsPlaying,
     } = React.useContext(AudioContext);
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
@@ -49,7 +42,8 @@ const PlayersGetReady: React.FC = () => {
     }
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        playLobbyMusic(true);
     }, []);
 
     return (
@@ -58,7 +52,13 @@ const PlayersGetReady: React.FC = () => {
                 <Content>
                     <IconButton
                         onClick={() =>
-                            handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
+                            handleAudio({
+                                lobbyMusicPlaying,
+                                audioPermission,
+                                pauseLobbyMusic,
+                                playLobbyMusic,
+                                setAudioPermissionGranted,
+                            })
                         }
                     >
                         {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}

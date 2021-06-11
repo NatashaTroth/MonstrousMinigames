@@ -11,11 +11,7 @@ import IconButton from '../common/IconButton';
 import Logo from '../common/Logo';
 import ConnectDialog from './ConnectDialog';
 import {
-    ButtonContainer,
-    ConnectScreenContainer,
-    LeftButtonContainer,
-    LeftContainer,
-    RightContainer,
+    ButtonContainer, ConnectScreenContainer, LeftButtonContainer, LeftContainer, RightContainer
 } from './ConnectScreen.sc';
 
 export const ConnectScreen: React.FunctionComponent = () => {
@@ -24,9 +20,9 @@ export const ConnectScreen: React.FunctionComponent = () => {
     const {
         playLobbyMusic,
         pauseLobbyMusic,
-        permission,
-        setPermissionGranted,
-        playing,
+        audioPermission,
+        setAudioPermissionGranted,
+        lobbyMusicPlaying,
         musicIsPlaying,
     } = React.useContext(AudioContext);
 
@@ -40,16 +36,17 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
         const data = await response.json();
         handleSocketConnection(data.roomId, 'lobby');
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
     }
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        playLobbyMusic(true);
     }, []);
 
     async function handleJoinRoom() {
         setDialogOpen(true);
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
     }
 
     return (
@@ -57,7 +54,13 @@ export const ConnectScreen: React.FunctionComponent = () => {
             <ConnectDialog open={dialogOpen} handleClose={() => setDialogOpen(false)} />
             <IconButton
                 onClick={() =>
-                    handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
+                    handleAudio({
+                        lobbyMusicPlaying,
+                        audioPermission,
+                        pauseLobbyMusic,
+                        playLobbyMusic,
+                        setAudioPermissionGranted,
+                    })
                 }
             >
                 {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
@@ -84,7 +87,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                         type="button"
                         name="credits"
                         onClick={() => {
-                            handleAudioPermission(permission, { setPermissionGranted });
+                            handleAudioPermission(audioPermission, { setAudioPermissionGranted });
                             history.push('/credits');
                         }}
                     >
@@ -94,7 +97,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                         type="button"
                         name="settings"
                         onClick={() => {
-                            handleAudioPermission(permission, { setPermissionGranted });
+                            handleAudioPermission(audioPermission, { setAudioPermissionGranted });
                             history.push('/settings');
                         }}
                     >

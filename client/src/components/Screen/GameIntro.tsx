@@ -3,20 +3,14 @@ import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
+import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import {
-    BackButtonContainer,
-    ControlInstruction,
-    ControlInstructionsContainer,
-    GameIntroBackground,
-    GameIntroContainer,
-    ImageDescription,
-    IntroText,
-    PaddingContainer,
-    PreviewImageContainer,
+    BackButtonContainer, ControlInstruction, ControlInstructionsContainer, GameIntroBackground,
+    GameIntroContainer, ImageDescription, IntroText, PaddingContainer, PreviewImageContainer
 } from './GameIntro.sc';
 
 const GameIntro: React.FunctionComponent = () => {
@@ -25,9 +19,9 @@ const GameIntro: React.FunctionComponent = () => {
     const {
         playLobbyMusic,
         pauseLobbyMusic,
-        permission,
-        playing,
-        setPermissionGranted,
+        audioPermission,
+        lobbyMusicPlaying,
+        setAudioPermissionGranted,
         musicIsPlaying,
     } = React.useContext(AudioContext);
 
@@ -39,26 +33,27 @@ const GameIntro: React.FunctionComponent = () => {
             history.push(`/screen/${roomId}/get-ready`);
         }
     }
-    const handleAudioPermissionCallback = React.useCallback(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
-    }, [permission, setPermissionGranted]);
 
     React.useEffect(() => {
-        handleAudioPermissionCallback();
-    }, [handleAudioPermissionCallback]);
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        playLobbyMusic(true);
+    }, []);
 
-    async function handleAudio() {
-        handleAudioPermissionCallback();
-
-        if (playing) {
-            pauseLobbyMusic(permission);
-        } else {
-            playLobbyMusic(permission);
-        }
-    }
     return (
         <GameIntroContainer>
-            <IconButton onClick={handleAudio}>{musicIsPlaying ? <VolumeUp /> : <VolumeOff />}</IconButton>
+            <IconButton
+                onClick={() =>
+                    handleAudio({
+                        lobbyMusicPlaying,
+                        audioPermission,
+                        pauseLobbyMusic,
+                        playLobbyMusic,
+                        setAudioPermissionGranted,
+                    })
+                }
+            >
+                {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
+            </IconButton>
             <GameIntroBackground>
                 {showFirstIntro ? (
                     <IntroText>

@@ -18,21 +18,9 @@ import { generateQRCode } from '../../utils/generateQRCode';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import {
-    Character,
-    CharacterContainer,
-    ConnectedUserCharacter,
-    ConnectedUserContainer,
-    ConnectedUserName,
-    ConnectedUsers,
-    Content,
-    ContentContainer,
-    CopyToClipboard,
-    LeftContainer,
-    LobbyContainer,
-    QRCode,
-    QRCodeInstructions,
-    RightButtonContainer,
-    RightContainer,
+    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer,
+    ConnectedUserName, ConnectedUsers, Content, ContentContainer, CopyToClipboard, LeftContainer,
+    LobbyContainer, QRCode, QRCodeInstructions, RightButtonContainer, RightContainer
 } from './Lobby.sc';
 import LobbyHeader from './LobbyHeader';
 
@@ -41,9 +29,9 @@ export const Lobby: React.FunctionComponent = () => {
     const {
         playLobbyMusic,
         pauseLobbyMusic,
-        permission,
-        playing,
-        setPermissionGranted,
+        audioPermission,
+        lobbyMusicPlaying,
+        setAudioPermissionGranted,
         musicIsPlaying,
     } = React.useContext(AudioContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
@@ -71,7 +59,8 @@ export const Lobby: React.FunctionComponent = () => {
     }, [roomId]);
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        playLobbyMusic(true);
     }, []);
 
     return (
@@ -82,7 +71,13 @@ export const Lobby: React.FunctionComponent = () => {
                 </IconButton>
                 <IconButton
                     onClick={() =>
-                        handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
+                        handleAudio({
+                            lobbyMusicPlaying,
+                            audioPermission,
+                            pauseLobbyMusic,
+                            playLobbyMusic,
+                            setAudioPermissionGranted,
+                        })
                     }
                 >
                     {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
@@ -122,7 +117,7 @@ export const Lobby: React.FunctionComponent = () => {
                             {screenAdmin && (
                                 <Button
                                     onClick={() => {
-                                        handleAudioPermission(permission, { setPermissionGranted });
+                                        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
                                         history.push(`/screen/${roomId}/choose-game`);
                                     }}
                                     disabled={!connectedUsers || connectedUsers?.length === 0}
@@ -134,7 +129,7 @@ export const Lobby: React.FunctionComponent = () => {
                             <Button disabled>Leaderboard</Button>
                             <Button
                                 onClick={() => {
-                                    handleAudioPermission(permission, { setPermissionGranted });
+                                    handleAudioPermission(audioPermission, { setAudioPermissionGranted });
                                     history.push('/screen');
                                 }}
                             >

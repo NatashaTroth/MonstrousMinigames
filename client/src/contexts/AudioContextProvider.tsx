@@ -1,27 +1,39 @@
 import * as React from 'react';
 
-import lobbyMusic from '../assets/audio/Lobby_Sound.wav';
+import lobbyMusicFile from '../assets/audio/LobbySound2_Loop.wav';
+import finishedMusicFile from '../assets/audio/WinnerSound.wav';
 
 // import print from '../domain/phaser/printMethod';
 
 export const defaultValue = {
-    permission: false,
-    playing: false,
-    setPlaying: () => {
+    audioPermission: false,
+    lobbyMusicPlaying: false,
+    setLobbyMusicPlaying: () => {
         // do nothing
     },
     gameAudioPlaying: false,
     setGameAudioPlaying: () => {
         // do nothing
     },
-    audio: new Audio(lobbyMusic),
-    setPermissionGranted: () => {
+    // finishedMusicPlaying: false,
+    // setFinishedMusicPlaying: () => {
+    //     // do nothing
+    // },
+    setAudioPermissionGranted: () => {
         // do nothing
     },
+    lobbyMusic: new Audio(lobbyMusicFile),
     playLobbyMusic: () => {
         //do nothing
     },
     pauseLobbyMusic: () => {
+        //do nothing
+    },
+    finishedMusic: new Audio(finishedMusicFile),
+    playFinishedMusic: () => {
+        //do nothing
+    },
+    pauseFinishedMusic: () => {
         //do nothing
     },
     pauseLobbyMusicNoMute: () => {
@@ -43,16 +55,21 @@ export const defaultValue = {
     musicIsPlaying: false,
 };
 interface IAudioContext {
-    permission: boolean;
-    playing: boolean;
+    audioPermission: boolean;
+    lobbyMusicPlaying: boolean;
     gameAudioPlaying: boolean;
-    audio: HTMLAudioElement;
+    // finishedMusicPlaying: boolean;
+    lobbyMusic: HTMLAudioElement;
+    finishedMusic: HTMLAudioElement;
     volume: number;
-    setPermissionGranted: (val: boolean) => void;
+    setAudioPermissionGranted: (val: boolean) => void;
     playLobbyMusic: (p: boolean) => void;
     pauseLobbyMusic: (p: boolean) => void;
-    setPlaying: (p: boolean) => void;
+    playFinishedMusic: (p: boolean) => void;
+    pauseFinishedMusic: (p: boolean) => void;
+    setLobbyMusicPlaying: (p: boolean) => void;
     setGameAudioPlaying: (p: boolean) => void;
+    // setFinishedMusicPlaying: (p: boolean) => void;
     setVolume: (v: number) => void;
     setAudioVolume: (v: number) => void;
     pauseLobbyMusicNoMute: (p: boolean) => void;
@@ -64,26 +81,33 @@ interface IAudioContext {
 export const AudioContext = React.createContext<IAudioContext>(defaultValue);
 
 const AudioContextProvider: React.FunctionComponent = ({ children }) => {
-    const [permission, setPermissionGranted] = React.useState<boolean>(false);
-    const [playing, setPlaying] = React.useState<boolean>(false);
+    const [audioPermission, setAudioPermissionGranted] = React.useState<boolean>(false);
+    const [lobbyMusicPlaying, setLobbyMusicPlaying] = React.useState<boolean>(false);
     const [gameAudioPlaying, setGameAudioPlaying] = React.useState<boolean>(false);
-    const [audio, setAudio] = React.useState<HTMLAudioElement>(new Audio(lobbyMusic));
+    // const [finishedMusicPlaying, setFinishedMusicPlaying] = React.useState<boolean>(false);
+    const [lobbyMusic, setLobbyMusic] = React.useState<HTMLAudioElement>(new Audio(lobbyMusicFile));
+    const [finishedMusic, setFinishedMusic] = React.useState<HTMLAudioElement>(new Audio(finishedMusicFile));
     const [volume, setVolume] = React.useState<number>(0.2);
 
     React.useEffect(() => {
         const initialVolume = localStorage.getItem('audioVolume') ? Number(localStorage.getItem('audioVolume')) : 0.2;
-        audio.volume = initialVolume;
+        // lobbyMusic.volume = initialVolume;
+        // finishedMusic.volume = initialVolume;
+        changeVolume(initialVolume);
         setVolume(initialVolume);
-        if (initialVolume > 0) {
-            setPlaying(true);
-            playMusic();
-        } else {
-            setPlaying(false);
-        }
+
+        // //Todo change
+        // if (initialVolume > 0) {
+        //     setLobbyMusicPlaying(true);
+        //     playLobbyMusic();
+        // } else {
+        //     setLobbyMusicPlaying(false);
+        // }
     }, []);
 
     const changeVolume = (value: number) => {
-        audio.volume = value;
+        lobbyMusic.volume = value;
+        finishedMusic.volume = value;
     };
 
     const updateVolumeEverywhere = (value: number) => {
@@ -106,49 +130,81 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
         localStorage.setItem('audioVolume', newVolume.toString());
     };
 
-    const playMusic = async () => {
+    const playLobbyMusic = async () => {
         try {
-            await audio.play();
-            audio.loop = true;
-            setPlaying(true);
+            await lobbyMusic.play();
+            lobbyMusic.loop = true;
+            setLobbyMusicPlaying(true);
             if (volume === 0) unMuteVolumeEverywhere();
         } catch (e) {
             // setPermissionGranted(false);
-            setPlaying(false);
+            setLobbyMusicPlaying(false);
         }
     };
 
-    const pauseMusic = () => {
-        audio.pause();
-        setPlaying(false);
+    const pauseLobbyMusic = () => {
+        lobbyMusic.pause();
+        setLobbyMusicPlaying(false);
+        if (volume > 0) muteVolumeEverywhere();
+    };
+
+    const playFinishedMusic = async () => {
+        try {
+            await finishedMusic.play();
+            setLobbyMusicPlaying(true);
+            if (volume === 0) unMuteVolumeEverywhere();
+        } catch (e) {
+            // setPermissionGranted(false);
+            setLobbyMusicPlaying(false);
+        }
+    };
+
+    const pauseFinishedMusic = () => {
+        finishedMusic.pause();
+        setLobbyMusicPlaying(false);
         if (volume > 0) muteVolumeEverywhere();
     };
 
     const content = {
-        permission,
-        setPermissionGranted: (p: boolean) => {
-            setPermissionGranted(p);
+        audioPermission: audioPermission,
+        setAudioPermissionGranted: (p: boolean) => {
+            setAudioPermissionGranted(p);
         },
-        playing,
-        setPlaying,
-        audio,
-        setAudio,
+        lobbyMusicPlaying: lobbyMusicPlaying,
+        setLobbyMusicPlaying: setLobbyMusicPlaying,
+        lobbyMusic: lobbyMusic,
+        finishedMusic: finishedMusic,
+        setAudio: setLobbyMusic,
         gameAudioPlaying,
         setGameAudioPlaying,
+        // finishedMusicPlaying,
+        // setFinishedMusicPlaying,
         playLobbyMusic: (p: boolean) => {
-            if (p && !playing) {
-                playMusic();
+            if (p && !lobbyMusicPlaying) {
+                playLobbyMusic();
             }
         },
         pauseLobbyMusic: (p: boolean) => {
-            if (p && playing) {
-                pauseMusic();
+            if (p && lobbyMusicPlaying) {
+                pauseLobbyMusic();
             }
         },
+
+        //TODO
+        // playFinishedMusic: (p: boolean) => {
+        //     if (p && !finishedMusicPlaying) {
+
+        //     }
+        // },
+        // pauseFinishedMusic: (p: boolean) => {
+        //     if (p && finishedMusicPlaying) {
+        //         pauseMusic();
+        //     }
+        // },
         pauseLobbyMusicNoMute: (p: boolean) => {
             if (p) {
-                audio.pause();
-                setPlaying(false);
+                lobbyMusic.pause();
+                setLobbyMusicPlaying(false);
             }
         },
         volume,
@@ -168,7 +224,13 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
         unMute: () => {
             if (volume === 0) unMuteVolumeEverywhere();
         },
-        musicIsPlaying: (playing || gameAudioPlaying) && permission && volume > 0,
+        musicIsPlaying: (lobbyMusicPlaying || gameAudioPlaying) && audioPermission && volume > 0,
+        playFinishedMusic: () => {
+            playFinishedMusic();
+        },
+        pauseFinishedMusic: () => {
+            pauseFinishedMusic();
+        },
     };
     return <AudioContext.Provider value={content}>{children}</AudioContext.Provider>;
 };
