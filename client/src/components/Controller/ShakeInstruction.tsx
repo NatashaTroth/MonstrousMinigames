@@ -20,6 +20,7 @@ const ShakeInstruction: React.FunctionComponent = () => {
                 setInterval(() => sendMovement(controllerSocket, hasPaused), 16.66667);
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <>
