@@ -19,10 +19,10 @@ export const FinishedScreen: React.FunctionComponent = () => {
         playLobbyMusic,
         pauseLobbyMusic,
         audioPermission,
-        lobbyMusicPlaying,
+        playing,
         setAudioPermissionGranted,
         musicIsPlaying,
-        playFinishedMusic,
+        initialPlayFinishedMusic,
     } = React.useContext(AudioContext);
 
     const unfinishedPlayers = playerRanks?.filter(playerRank => !playerRank.rank) || [];
@@ -30,7 +30,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-        playFinishedMusic(true);
+        initialPlayFinishedMusic(true);
     }, []);
 
     return (
@@ -38,7 +38,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
             <IconButton
                 onClick={() =>
                     handleAudio({
-                        lobbyMusicPlaying,
+                        playing,
                         audioPermission,
                         pauseLobbyMusic,
                         playLobbyMusic,

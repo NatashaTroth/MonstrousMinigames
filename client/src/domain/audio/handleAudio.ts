@@ -1,7 +1,7 @@
 import { handleAudioPermission } from './handlePermission';
 
 interface AudioDependencies {
-    lobbyMusicPlaying: boolean;
+    playing: boolean;
     audioPermission: boolean;
     pauseLobbyMusic: (permission: boolean) => void;
     playLobbyMusic: (permission: boolean) => void;
@@ -9,14 +9,18 @@ interface AudioDependencies {
 }
 
 export async function handleAudio({
-    lobbyMusicPlaying,
+    playing,
     audioPermission,
     pauseLobbyMusic,
     playLobbyMusic,
     setAudioPermissionGranted,
 }: AudioDependencies) {
     handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-    if (lobbyMusicPlaying) {
+    // eslint-disable-next-line no-console
+    console.log(playing);
+    // eslint-disable-next-line no-console
+    console.log(audioPermission);
+    if (playing) {
         pauseLobbyMusic(audioPermission);
     } else {
         playLobbyMusic(audioPermission);

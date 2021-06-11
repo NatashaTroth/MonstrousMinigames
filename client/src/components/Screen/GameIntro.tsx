@@ -20,9 +20,10 @@ const GameIntro: React.FunctionComponent = () => {
         playLobbyMusic,
         pauseLobbyMusic,
         audioPermission,
-        lobbyMusicPlaying,
+        playing,
         setAudioPermissionGranted,
         musicIsPlaying,
+        initialPlayLobbyMusic,
     } = React.useContext(AudioContext);
 
     function handleSkip() {
@@ -36,7 +37,7 @@ const GameIntro: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-        playLobbyMusic(true);
+        initialPlayLobbyMusic(true);
     }, []);
 
     return (
@@ -44,7 +45,7 @@ const GameIntro: React.FunctionComponent = () => {
             <IconButton
                 onClick={() =>
                     handleAudio({
-                        lobbyMusicPlaying,
+                        playing,
                         audioPermission,
                         pauseLobbyMusic,
                         playLobbyMusic,

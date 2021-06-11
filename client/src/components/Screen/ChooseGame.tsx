@@ -25,9 +25,10 @@ const ChooseGame: React.FunctionComponent = () => {
         playLobbyMusic,
         pauseLobbyMusic,
         audioPermission,
-        lobbyMusicPlaying,
+        playing,
         setAudioPermissionGranted,
         musicIsPlaying,
+        initialPlayLobbyMusic,
     } = React.useContext(AudioContext);
 
     const games = [
@@ -43,6 +44,7 @@ const ChooseGame: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        initialPlayLobbyMusic(true);
     }, []);
 
     return (
@@ -52,7 +54,7 @@ const ChooseGame: React.FunctionComponent = () => {
                 <IconButton
                     onClick={() =>
                         handleAudio({
-                            lobbyMusicPlaying,
+                            playing,
                             audioPermission,
                             pauseLobbyMusic,
                             playLobbyMusic,

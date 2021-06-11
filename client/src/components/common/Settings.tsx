@@ -30,22 +30,17 @@ const Settings: React.FunctionComponent = () => {
         volume,
         audioPermission,
         setAudioPermissionGranted,
-        lobbyMusicPlaying,
+        playing,
         pauseLobbyMusic,
         playLobbyMusic,
         musicIsPlaying,
+        initialPlayLobbyMusic,
     } = React.useContext(AudioContext);
     const [value, setValue] = React.useState(volume);
 
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-        // handleAudio({
-        //     lobbyMusicPlaying,
-        //     audioPermission: true, //context provider is too slow to update
-        //     pauseLobbyMusic,
-        //     playLobbyMusic,
-        //     setAudioPermissionGranted,
-        // });
+        initialPlayLobbyMusic(true);
     }, []);
 
     React.useEffect(() => {
@@ -102,7 +97,7 @@ const Settings: React.FunctionComponent = () => {
                             <IconButton
                                 onClick={() =>
                                     handleAudio({
-                                        lobbyMusicPlaying,
+                                        playing,
                                         audioPermission,
                                         pauseLobbyMusic,
                                         playLobbyMusic,

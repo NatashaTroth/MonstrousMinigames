@@ -30,9 +30,10 @@ export const Lobby: React.FunctionComponent = () => {
         playLobbyMusic,
         pauseLobbyMusic,
         audioPermission,
-        lobbyMusicPlaying,
+        playing,
         setAudioPermissionGranted,
         musicIsPlaying,
+        initialPlayLobbyMusic,
     } = React.useContext(AudioContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: IRouteParams = useParams();
@@ -60,7 +61,7 @@ export const Lobby: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-        playLobbyMusic(true);
+        initialPlayLobbyMusic(true);
     }, []);
 
     return (
@@ -72,7 +73,7 @@ export const Lobby: React.FunctionComponent = () => {
                 <IconButton
                     onClick={() =>
                         handleAudio({
-                            lobbyMusicPlaying,
+                            playing,
                             audioPermission,
                             pauseLobbyMusic,
                             playLobbyMusic,

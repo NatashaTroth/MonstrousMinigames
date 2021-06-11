@@ -22,8 +22,9 @@ export const ConnectScreen: React.FunctionComponent = () => {
         pauseLobbyMusic,
         audioPermission,
         setAudioPermissionGranted,
-        lobbyMusicPlaying,
+        playing,
         musicIsPlaying,
+        initialPlayLobbyMusic,
     } = React.useContext(AudioContext);
 
     async function handleCreateNewRoom() {
@@ -41,7 +42,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-        playLobbyMusic(true);
+        initialPlayLobbyMusic(true);
     }, []);
 
     async function handleJoinRoom() {
@@ -55,7 +56,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
             <IconButton
                 onClick={() =>
                     handleAudio({
-                        lobbyMusicPlaying,
+                        playing,
                         audioPermission,
                         pauseLobbyMusic,
                         playLobbyMusic,
