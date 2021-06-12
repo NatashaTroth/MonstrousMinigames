@@ -185,7 +185,6 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
         setGameAudioPlaying,
         playLobbyMusic: (p: boolean) => {
             setInitialAudio();
-            print('play');
             if (p && !playing) {
                 playLobbyMusic();
             }

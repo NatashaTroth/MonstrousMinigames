@@ -58,14 +58,21 @@ const Settings: React.FunctionComponent = () => {
 
     const handleChange = (event: React.ChangeEvent<unknown>, newValue: number | number[]): void => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        if (typeof newValue == 'number') updateVolume(newValue);
+        else updateVolume(newValue[0]);
+    };
 
-        if (typeof newValue == 'number') {
-            setAudioVolume(newValue);
-            setValue(newValue);
-        } else {
-            setAudioVolume(newValue[0]);
-            setValue(newValue[0]);
-        }
+    const updateVolume = async (newValue: number) => {
+        if (newValue === 0) await pauseLobbyMusic(true);
+        else if (volumeHasBeenUnmuted(newValue)) await playLobbyMusic(true);
+
+        //called before volume is updated in context - TODO change (bug is that when volume slider is on 0 and you slide it forwards, it takes on the before value from the local storage instead of the value you just set)
+        setAudioVolume(newValue);
+        setValue(newValue);
+    };
+
+    const volumeHasBeenUnmuted = (newValue: number) => {
+        return newValue > 0 && volume === 0;
     };
 
     return (

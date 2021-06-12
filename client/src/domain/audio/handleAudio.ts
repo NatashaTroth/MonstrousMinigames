@@ -16,10 +16,6 @@ export async function handleAudio({
     setAudioPermissionGranted,
 }: AudioDependencies) {
     handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-    // eslint-disable-next-line no-console
-    console.log(playing);
-    // eslint-disable-next-line no-console
-    console.log(audioPermission);
     if (playing) {
         pauseLobbyMusic(audioPermission);
     } else {
