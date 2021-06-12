@@ -84,7 +84,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.leaderboard = leaderboard;
         this.timeWhenChasersAppear = 10000; //10 sec
         this.initialPlayerPositionX = 500;
-        this.chasersPositionX = 800;
+        this.chasersPositionX = 900;
         this.updateChasersInterval = undefined;
         this.updateChasersIntervalTime = 100;
         this.chasersAreRunning = false;
