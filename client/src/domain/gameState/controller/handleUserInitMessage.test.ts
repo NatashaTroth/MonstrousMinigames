@@ -16,6 +16,7 @@ describe('handleUserInitMessage', () => {
         const setPlayerAdmin = jest.fn();
         const setPlayerNumber = jest.fn();
         const setName = jest.fn();
+        const setUserId = jest.fn();
 
         handleUserInitMessage({
             data: mockData,
@@ -23,6 +24,7 @@ describe('handleUserInitMessage', () => {
                 setPlayerAdmin,
                 setPlayerNumber,
                 setName,
+                setUserId,
             },
         });
 
@@ -33,6 +35,7 @@ describe('handleUserInitMessage', () => {
         const setPlayerAdmin = jest.fn();
         const setPlayerNumber = jest.fn();
         const setName = jest.fn();
+        const setUserId = jest.fn();
 
         handleUserInitMessage({
             data: mockData,
@@ -40,6 +43,7 @@ describe('handleUserInitMessage', () => {
                 setPlayerAdmin,
                 setPlayerNumber,
                 setName,
+                setUserId,
             },
         });
 

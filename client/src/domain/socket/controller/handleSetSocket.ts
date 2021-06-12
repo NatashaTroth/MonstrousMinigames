@@ -36,6 +36,7 @@ export interface HandleSetSocketDependencies {
     setGameStarted: (val: boolean) => void;
     setName: (val: string) => void;
     setAvailableCharacters: (val: number[]) => void;
+    setUserId: (val: string) => void;
     history: History;
 }
 
@@ -58,6 +59,7 @@ export function handleSetSocket(
         setGameStarted,
         setName,
         setAvailableCharacters,
+        setUserId,
         history,
     } = dependencies;
 
@@ -82,6 +84,7 @@ export function handleSetSocket(
                 setPlayerAdmin,
                 setPlayerNumber,
                 setName,
+                setUserId,
             },
         });
     });
