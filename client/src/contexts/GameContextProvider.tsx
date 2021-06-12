@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { handleSetGameFinished } from '../domain/gameState/controller/handleSetGameFinished';
 import { handleSetGameStarted } from '../domain/gameState/controller/handleSetGameStarted';
-import { IUser } from './ControllerSocketContextProvider';
+import { IUser } from '../domain/typeGuards/connectedUsers';
 import { PlayerRank } from './ScreenSocketContextProvider';
 
 export const defaultValue = {

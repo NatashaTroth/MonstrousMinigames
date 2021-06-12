@@ -6,6 +6,8 @@ export interface IUser {
     name: string;
     roomId: string;
     number: number;
+    characterNumber: number;
+    active: boolean;
 }
 
 export interface ConnectedUsersMessage {
