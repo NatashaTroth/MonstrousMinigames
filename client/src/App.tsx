@@ -14,6 +14,7 @@ import Spider from './components/Controller/Obstacles/Spider';
 import Stone from './components/Controller/Obstacles/Stone';
 import TreeTrunk from './components/Controller/Obstacles/TreeTrunk';
 import PlayerDead from './components/Controller/PlayerDead';
+import PlayerStunned from './components/Controller/PlayerStunned';
 import ShakeInstruction from './components/Controller/ShakeInstruction';
 import ChooseGame from './components/Screen/ChooseGame';
 import { ConnectScreen as ScreenConnectScreen } from './components/Screen/ConnectScreen';
@@ -58,6 +59,7 @@ const App: React.FunctionComponent = () => {
                                         <Route path={Routes.controllerHole} component={Hole} exact />
                                         <Route path={Routes.controllerStone} component={Stone} exact />
                                         <Route path={Routes.controllerPlayerDead} component={PlayerDead} exact />
+                                        <Route path={Routes.controllerPlayerStunned} component={PlayerStunned} exact />
                                         <Route
                                             path={Routes.controllerPlayerFinished}
                                             component={ControllerFinishedScreen}

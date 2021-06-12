@@ -49,6 +49,7 @@ export enum MessageTypes {
     started = 'game1/hasStarted',
     gameState = 'game1/gameState',
     playerDied = 'game1/playerDied',
+    playerStunned = 'game1/playerStunned',
 }
 
 export const localDevelopment = false;
