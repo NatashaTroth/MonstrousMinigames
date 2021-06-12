@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router';
 
 import { Obstacles } from '../utils/constants';
+import { controllerFinishedRoute, controllerGame1Route, controllerObstacleRoute } from '../utils/routes';
 import { GameContext } from './GameContextProvider';
 
 export const defaultValue = {
@@ -109,17 +110,17 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
             setObstacle(val);
             if (val) {
                 reroute = true;
-                history.push(`/controller/${roomId}/${val.type.toLowerCase()}`);
+                history.push(controllerObstacleRoute(roomId, val.type));
             } else if (reroute) {
                 reroute = false;
-                history.push(`/controller/${roomId}/game1`);
+                history.push(controllerGame1Route(roomId));
             }
         },
         playerFinished,
         setPlayerFinished: (val: boolean) => {
             setPlayerFinished(val);
             if (val) {
-                history.push(`/controller/${roomId}/finished`);
+                history.push(controllerFinishedRoute(roomId));
             }
         },
         playerRank,

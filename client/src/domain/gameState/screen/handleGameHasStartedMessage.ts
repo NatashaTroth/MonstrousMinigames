@@ -1,5 +1,6 @@
 import { History } from 'history';
 
+import { screenGame1Route } from '../../../utils/routes';
 import { GameHasStartedMessage } from '../../typeGuards/started';
 
 interface HandleGameHasStartedMessage {
@@ -18,5 +19,5 @@ export function handleGameHasStartedMessage(props: HandleGameHasStartedMessage) 
 
     setCountdownTime(data.countdownTime);
     setGameStarted(true);
-    history.push(`/screen/${roomId}/game1`);
+    history.push(screenGame1Route(roomId));
 }

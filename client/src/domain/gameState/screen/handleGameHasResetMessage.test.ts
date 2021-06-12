@@ -1,5 +1,6 @@
 import { createMemoryHistory } from 'history';
 
+import { screenLobbyRoute } from '../../../utils/routes';
 import { handleGameHasResetMessage } from './handleGameHasResetMessage';
 
 describe('handleGameHasResetMessage', () => {
@@ -10,6 +11,6 @@ describe('handleGameHasResetMessage', () => {
 
         handleGameHasResetMessage({ roomId, dependencies: { history } });
 
-        expect(history.location).toHaveProperty('pathname', `/screen/${roomId}/lobby`);
+        expect(history.location).toHaveProperty('pathname', screenLobbyRoute(roomId));
     });
 });
