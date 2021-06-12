@@ -67,9 +67,9 @@ const PlayersGetReady: React.FC = () => {
                         {getUserArray(connectedUsers || []).map((user, index) => (
                             <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>
                                 <ConnectedUserCharacter number={user.number} free={user.free}>
-                                    {!user.free && (
+                                    {!user.free && user.characterNumber && (
                                         <CharacterContainer>
-                                            <Character src={characters[index]} />
+                                            <Character src={characters[user.characterNumber]} />
                                         </CharacterContainer>
                                     )}
 

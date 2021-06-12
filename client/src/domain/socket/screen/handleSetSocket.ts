@@ -1,6 +1,7 @@
 import { History } from 'history';
 
 import { PlayerRank } from '../../../contexts/ScreenSocketContextProvider';
+import { Routes } from '../../../utils/routes';
 import { handleConnectedUsersMessage } from '../../gameState/screen/handleConnectedUsersMessage';
 import { handleGameHasFinishedMessage } from '../../gameState/screen/handleGameHasFinishedMessage';
 import { handleGameHasResetMessage } from '../../gameState/screen/handleGameHasResetMessage';
@@ -99,6 +100,6 @@ export function handleSetSocket(
     screenAdminSocket.listen(() => setScreenAdmin(true));
 
     if (socket) {
-        history.push(`/screen/${roomId}/${route || 'lobby'}`);
+        history.push(`${Routes.screen}/${roomId}/${route || Routes.lobby}`);
     }
 }

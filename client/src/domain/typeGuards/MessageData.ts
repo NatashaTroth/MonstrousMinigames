@@ -4,7 +4,9 @@ import { GameHasFinishedMessage } from './finished';
 import { GameStateInfoMessage } from './gameStateInfo';
 import { ObstacleMessage } from './obstacle';
 import { GameHasPausedMessage } from './paused';
+import { PlayerDiedMessage } from './playerDied';
 import { PlayerFinishedMessage } from './playerFinished';
+import { PlayerStunneddMessage } from './playerStunned';
 import { GameHasResetMessage } from './reset';
 import { GameHasResumedMessage } from './resumed';
 import { ScreenAdminMessage } from './screenAdmin';
@@ -30,4 +32,6 @@ export type MessageData =
     | GameStateInfoMessage
     | ScreenAdminMessage
     | ConnectedUsersMessage
+    | PlayerDiedMessage
+    | PlayerStunneddMessage
     | undefined;

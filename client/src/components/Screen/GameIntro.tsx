@@ -5,6 +5,7 @@ import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
+import { screenGetReadyRoute } from '../../utils/routes';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import {
@@ -36,7 +37,7 @@ const GameIntro: React.FunctionComponent = () => {
             setShowFirstIntro(false);
         } else {
             localStorage.setItem('tutorial', 'seen');
-            history.push(`/screen/${roomId}/get-ready`);
+            history.push(screenGetReadyRoute(roomId));
         }
     }
     const handleAudioPermissionCallback = React.useCallback(() => {

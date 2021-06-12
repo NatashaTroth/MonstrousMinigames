@@ -20,6 +20,7 @@ import { GameHasResumedMessage, resumedTypeGuard } from '../../domain/typeGuards
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../domain/typeGuards/stopped';
 import { TimedOutMessage, timedOutTypeGuard } from '../../domain/typeGuards/timedOut';
 import { MessageTypes } from '../../utils/constants';
+import { screenFinishedRoute } from '../../utils/routes';
 import { audioFiles, characters, flaresJson, flaresPng, images } from './GameAssets';
 
 const windowWidth = window.innerWidth;
@@ -116,7 +117,7 @@ class MainScene extends Phaser.Scene {
         const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
         gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
             this.gameAudio?.stopMusic();
-            history.push(`/screen/${this.roomId}/finished`);
+            history.push(screenFinishedRoute(this.roomId));
         });
 
         const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);

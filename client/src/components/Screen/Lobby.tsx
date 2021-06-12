@@ -15,6 +15,7 @@ import steffi from '../../images/characters/steffi.png';
 import susi from '../../images/characters/susi.png';
 import { localDevelopment } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';
+import { Routes, screenChooseGameRoute } from '../../utils/routes';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import {
@@ -77,7 +78,7 @@ export const Lobby: React.FunctionComponent = () => {
     return (
         <LobbyContainer>
             <Content>
-                <IconButton onClick={() => history.push('/settings')} right={80}>
+                <IconButton onClick={() => history.push(Routes.settings)} right={80}>
                     <Settings />
                 </IconButton>
                 <IconButton
@@ -123,7 +124,7 @@ export const Lobby: React.FunctionComponent = () => {
                                 <Button
                                     onClick={() => {
                                         handleAudioPermission(permission, { setPermissionGranted });
-                                        history.push(`/screen/${roomId}/choose-game`);
+                                        history.push(screenChooseGameRoute(roomId));
                                     }}
                                     disabled={!connectedUsers || connectedUsers?.length === 0}
                                     variant="secondary"
@@ -135,7 +136,7 @@ export const Lobby: React.FunctionComponent = () => {
                             <Button
                                 onClick={() => {
                                     handleAudioPermission(permission, { setPermissionGranted });
-                                    history.push('/screen');
+                                    history.push(Routes.screen);
                                 }}
                             >
                                 Back

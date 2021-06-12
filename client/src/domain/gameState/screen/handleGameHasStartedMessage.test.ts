@@ -1,6 +1,7 @@
 import { createMemoryHistory } from 'history';
 
 import { MessageTypes } from '../../../utils/constants';
+import { screenGame1Route } from '../../../utils/routes';
 import { GameHasStartedMessage } from '../../typeGuards/started';
 import { handleGameHasStartedMessage } from './handleGameHasStartedMessage';
 
@@ -15,7 +16,7 @@ describe('handleGameHasStartedMessage', () => {
 
         handleGameHasStartedMessage({ data, roomId, dependencies: { history, setCountdownTime, setGameStarted } });
 
-        expect(history.location).toHaveProperty('pathname', `/screen/${roomId}/game1`);
+        expect(history.location).toHaveProperty('pathname', screenGame1Route(roomId));
     });
 
     it('handed setCountdownTime should be called with passed data', () => {
