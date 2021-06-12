@@ -6,6 +6,7 @@ import { ObstacleMessage } from './obstacle';
 import { GameHasPausedMessage } from './paused';
 import { PlayerDiedMessage } from './playerDied';
 import { PlayerFinishedMessage } from './playerFinished';
+import { PlayerStunneddMessage } from './playerStunned';
 import { GameHasResetMessage } from './reset';
 import { GameHasResumedMessage } from './resumed';
 import { ScreenAdminMessage } from './screenAdmin';
@@ -32,4 +33,5 @@ export type MessageData =
     | ScreenAdminMessage
     | ConnectedUsersMessage
     | PlayerDiedMessage
+    | PlayerStunneddMessage
     | undefined;
