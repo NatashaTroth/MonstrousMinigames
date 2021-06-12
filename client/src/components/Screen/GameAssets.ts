@@ -18,6 +18,8 @@ import stone from '../../images/obstacles/stone/stone.png';
 import wood from '../../images/obstacles/wood/wood.png';
 import attention from '../../images/ui/attention.png';
 import forest2 from '../../images/ui/forest2.png';
+import forest2Smaller from '../../images/ui/forest2Smaller.png';
+import forestTile from '../../images/ui/forestTile.png';
 import { characterDictionary } from '../../utils/characterDictionary';
 
 //TODO types
@@ -67,6 +69,8 @@ export const characters = characterFiles.map((file, idx) => {
 // obstacle textures have to have the same name as obstacle type - lowercase
 export const images = [
     { name: 'forest2', file: forest2 },
+    { name: 'forest2Smaller', file: forest2Smaller },
+    { name: 'forestTile', file: forestTile },
     { name: 'attention', file: attention },
     { name: 'treestump', file: wood },
     { name: 'stone', file: stone },

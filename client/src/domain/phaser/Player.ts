@@ -10,8 +10,6 @@ import { Coordinates, PlayerRenderer } from './renderer/PlayerRenderer';
  * the InMemoryPlayerRenderer, testing this class should be pretty straight forward.
  */
 export class Player {
-    plusX = 40;
-    plusY = 110;
     username: string;
     animationName: string;
     playerRunning: boolean;
@@ -30,8 +28,8 @@ export class Player {
         private monsterName: string
     ) {
         this.coordinates = {
-            x: this.coordinates.x + this.plusX * this.index,
-            y: (index * window.innerHeight) / 4 + this.plusY,
+            x: this.coordinates.x,
+            y: this.coordinates.y,
         };
 
         this.animationName = `${monsterName}Walk`;
@@ -47,6 +45,8 @@ export class Player {
         this.renderPlayer();
         this.setObstacles();
         this.setGoal(gameStateData.trackLength);
+        // eslint-disable-next-line no-console
+        console.log(this.coordinates);
     }
 
     moveForward(x: number, trackLength: number) {
@@ -98,7 +98,7 @@ export class Player {
     }
 
     handlePlayerFinished() {
-        this.renderer.renderFireworks(this.coordinates.x, this.coordinates.y - window.innerHeight / 8);
+        this.renderer.renderFireworks(this.coordinates.x, this.coordinates.y - window.innerHeight / 8 + 50);
         this.destroyPlayer();
     }
 
@@ -173,15 +173,15 @@ export class Player {
 
             switch (obstacle.type) {
                 case Obstacles.treeStump:
-                    obstaclePosY = this.coordinates.y + 45;
+                    obstaclePosY = this.coordinates.y + 35;
                     obstacleScale = 0.4;
                     break;
                 case Obstacles.spider:
-                    obstaclePosY = this.coordinates.y + 25;
+                    obstaclePosY = this.coordinates.y + 5;
                     obstacleScale = 0.2;
                     break;
                 case Obstacles.hole:
-                    obstaclePosY = this.coordinates.y + 75;
+                    obstaclePosY = this.coordinates.y + 65;
                     obstacleScale = 0.1;
                     posX += 40;
 

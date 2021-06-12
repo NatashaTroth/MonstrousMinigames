@@ -50,7 +50,7 @@ class MainScene extends Phaser.Scene {
         this.posY = window.innerHeight / 2 - 50;
         this.plusY = 110;
         this.players = [];
-        this.trackLength = 500;
+        this.trackLength = 5000;
         this.gameStarted = false;
         this.paused = false;
         this.cameraSpeed = 2;
@@ -78,29 +78,42 @@ class MainScene extends Phaser.Scene {
 
     create() {
         this.gameRenderer = new PhaserGameRenderer(this);
-        this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
         this.gameRenderer?.renderPauseButton();
+        this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
         this.initiateSockets();
         this.initiateEventEmitters();
 
-        //todo move
-        // const particles = this.add.particles('flares');
-        // const particlesEmitter = particles.createEmitter({
-        //     frame: ['red', 'green', 'blue'],
-        //     x: 400,
-        //     y: 100,
-        //     angle: { min: 200, max: 250 },
-        //     speed: { min: 0, max: -500 },
-        //     gravityY: 200,
-        //     lifespan: 500,
-        //     scale: 0.1,
-        //     blendMode: 'ADD',
-        // });
-
-        // setTimeout(() => (particlesEmitter.on = false), 1200);
-        // this.physics.world.setBounds(0, 0, this.trackLength, windowHeight);
+        // //TODO delete
+        // const playerSate = {
+        //     dead: false,
+        //     atObstacle: false,
+        //     finished: false,
+        //     finishedTimeMs: 0,
+        //     id: '1',
+        //     isActive: true,
+        //     name: 'name',
+        //     obstacles: [],
+        //     positionX: 50,
+        //     rank: 0,
+        //     characterNumber: 1,
+        //     stunned: false,
+        // };
+        // const gameState = {
+        //     gameState: '444',
+        //     numberOfObstacles: 0,
+        //     playersState: [playerSate, playerSate, playerSate, playerSate],
+        //     roomId: 'xx',
+        //     trackLength: 1000,
+        //     chasersPositionX: 50,
+        //     chasersAreRunning: false,
+        //     cameraPositionX: 0,
+        // };
+        // this.createPlayer(0, gameState);
+        // this.createPlayer(1, gameState);
+        // this.createPlayer(2, gameState);
+        // this.createPlayer(3, gameState);
     }
 
     handleSocketConnection() {
@@ -174,6 +187,8 @@ class MainScene extends Phaser.Scene {
 
     handleStartGame(gameStateData: GameData) {
         this.trackLength = gameStateData.trackLength;
+        this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
+
         this.physics.world.setBounds(0, 0, 7500, windowHeight);
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
@@ -218,8 +233,9 @@ class MainScene extends Phaser.Scene {
 
     private createPlayer(index: number, gameStateData: GameData) {
         const character = characters[gameStateData.playersState[index].characterNumber];
-        const posX = this.posX + this.plusX * index;
-        const posY = this.posY + this.plusY * index;
+        const posX = this.posX + this.plusX;
+        const posY = index * (window.innerHeight / 4) + this.plusY - 20;
+        // const posY = this.posY + this.plusY * index;
 
         const player = new Player(
             new PhaserPlayerRenderer(this),

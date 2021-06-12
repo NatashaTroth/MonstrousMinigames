@@ -24,7 +24,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     renderChasers(chasersPositionX: number, chasersPositionY: number) {
         if (!this.chaser) {
             this.chaser = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasers');
-            this.chaser.setScale(0.5, 0.5);
+            this.chaser.setScale(0.4, 0.4);
             this.chaser.setDepth(depthDictionary.chaser);
         }
         this.chaser.setX(chasersPositionX - 50); // - 50 so that not quite on top of player when caught
@@ -54,7 +54,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
 
     renderGoal(posX: number, posY: number) {
         const cave = this.scene.physics.add.sprite(posX, posY, 'cave'); //TODO change cave to enum
-        cave.setScale(0.15, 0.15);
+        cave.setScale(0.13, 0.13);
         cave.setDepth(depthDictionary.cave);
     }
 
@@ -96,7 +96,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         });
 
         particlesEmitter.on = true;
-        setTimeout(() => (particlesEmitter.on = false), 1200);
+        setTimeout(() => (particlesEmitter.on = false), 900);
     }
 
     startRunningAnimation(animationName: string) {
