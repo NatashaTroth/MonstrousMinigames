@@ -17,15 +17,19 @@ export const ChooseCharacterContainer = styled.div`
     justify-content: center;
 `;
 
-export const Character = styled.img`
+interface Props {
+    available: boolean;
+}
+
+export const Character = styled.img<Props>`
     width: 100%;
     height: 100%;
+    opacity: ${({ available }) => (available ? 1 : 0.5)};
 `;
 
 export const CharacterContainer = styled.div`
     width: 100%;
     height: 100%;
-    padding: 0 20px;
 `;
 
 export const ChooseButtonContainer = styled.div`

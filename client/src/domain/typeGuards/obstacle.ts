@@ -1,5 +1,5 @@
-import { MessageData } from '../../contexts/ControllerSocketContextProvider';
 import { MessageTypes, Obstacles } from '../../utils/constants';
+import { MessageData } from './MessageData';
 
 export interface ObstacleMessage {
     type: MessageTypes.obstacle;
