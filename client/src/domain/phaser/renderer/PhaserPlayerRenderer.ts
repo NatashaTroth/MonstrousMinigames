@@ -18,16 +18,15 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         this.playerObstacles = [];
     }
     renderChasers(chasersPositionX: number, chasersPositionY: number) {
-        if(!this.chasers){
-            this.chasers = this.scene.physics.add.sprite(-1, chasersPositionY, "chasers");
+        if (!this.chasers) {
+            this.chasers = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasers');
             this.chasers.setScale(0.5, 0.5);
             this.chasers.setDepth(1);
         }
-        this.chasers.setX(chasersPositionX)
-
+        this.chasers.setX(chasersPositionX);
     }
     destroyPlayer() {
-        this.player?.destroy()
+        this.player?.destroy();
     }
 
     renderPlayer(coordinates: Coordinates, monsterName: string, animationName: string, background?: string): void {
@@ -75,6 +74,8 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     movePlayerForward(newXPosition: number) {
         if (this.player) {
             this.player.x = newXPosition;
+            // eslint-disable-next-line no-console
+            console.log('player pos: ', newXPosition);
         }
     }
 

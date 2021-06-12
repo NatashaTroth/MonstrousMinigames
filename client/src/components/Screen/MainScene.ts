@@ -53,10 +53,10 @@ class MainScene extends Phaser.Scene {
         this.posY = window.innerHeight / 2 - 50;
         this.plusY = 110;
         this.players = [];
-        this.trackLength = 2000;
+        this.trackLength = 500;
         this.gameStarted = false;
         this.paused = false;
-        this.cameraSpeed = 0.5;
+        this.cameraSpeed = 2;
         this.gameEventEmitter = GameEventEmitter.getInstance();
     }
 
@@ -85,6 +85,7 @@ class MainScene extends Phaser.Scene {
         this.gameAudio.initAudio();
         this.initiateSockets();
         this.initiateEventEmitters();
+        // this.physics.world.setBounds(0, 0, this.trackLength, windowHeight);
     }
 
     handleSocketConnection() {
@@ -156,6 +157,7 @@ class MainScene extends Phaser.Scene {
 
     handleStartGame(gameStateData: GameData) {
         this.trackLength = gameStateData.trackLength;
+        this.physics.world.setBounds(0, 0, 7500, windowHeight);
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);
@@ -167,10 +169,10 @@ class MainScene extends Phaser.Scene {
         this.players.forEach((player, i) => {
             player.moveForward(gameStateData.playersState[i].positionX, this.trackLength);
             player.checkAtObstacle(gameStateData.playersState[i].atObstacle);
-            player.checkDead(gameStateData.playersState[i].dead)
-            player.setChasers(gameStateData.chasersPositionX)
+            player.checkDead(gameStateData.playersState[i].dead);
+            if (gameStateData.chasersAreRunning) player.setChasers(gameStateData.chasersPositionX);
             // eslint-disable-next-line no-console
-            console.log(gameStateData)
+            // console.log(gameStateData);
             player.checkFinished(gameStateData.playersState[i].finished);
         });
         this.moveCamera();

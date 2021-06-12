@@ -60,6 +60,8 @@ const Game: React.FunctionComponent = () => {
         });
         game.scene.add('MainScene', MainScene);
         game.scene.start('MainScene', { roomId: roomId });
+
+        // game.world.setBounds(0,0,7500, window.innerHeight)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

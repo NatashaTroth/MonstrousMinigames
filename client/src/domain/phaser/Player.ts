@@ -1,7 +1,5 @@
 import { localDevelopment, Obstacles } from '../../utils/constants';
 import { GameData } from './gameInterfaces';
-import { mapServerPosToWindowPos } from './mapServerPosToWindowPos';
-// import print from './printMethod';
 import { Coordinates, PlayerRenderer } from './renderer/PlayerRenderer';
 
 /**
@@ -12,8 +10,8 @@ import { Coordinates, PlayerRenderer } from './renderer/PlayerRenderer';
  */
 export class Player {
     checkDead(dead: boolean) {
-        if(dead == true){
-            this.renderer.destroyPlayer()
+        if (dead) {
+            this.renderer.destroyPlayer();
         }
     }
     plusX = 40;
@@ -52,7 +50,8 @@ export class Player {
 
     moveForward(x: number, trackLength: number) {
         // TODO delete local development stuff
-        const newXPosition = mapServerPosToWindowPos(x, trackLength);
+        const newXPosition = x; //+ window.innerWidth / 2;
+        // const newXPosition = mapServerPosToWindowPos(x, trackLength);
         if (newXPosition == this.coordinates.x && this.playerRunning) {
             if (localDevelopment) {
                 // so that running animation works in local development
@@ -85,6 +84,7 @@ export class Player {
 
     checkAtObstacle(isAtObstacle: boolean) {
         if (this.justArrivedAtObstacle(isAtObstacle)) {
+            // eslint-disable-next-line no-console
             this.arrivedAtObstacle();
         } else if (this.finishedObstacle(isAtObstacle)) {
             this.finishObstacle();
@@ -110,6 +110,8 @@ export class Player {
         this.stopRunning();
         this.playerAtObstacle = true;
         this.renderer.addAttentionIcon();
+        // eslint-disable-next-line no-console
+        // console.log('at obstacle: ', this.coordinates.x);
     }
 
     private finishObstacle(): void {
@@ -134,7 +136,8 @@ export class Player {
         const obstaclesArray = this.gameStateData.playersState[this.index].obstacles;
 
         obstaclesArray.forEach((obstacle, index) => {
-            const posX = mapServerPosToWindowPos(obstacle.positionX, this.gameStateData.trackLength) + 75;
+            let posX = obstacle.positionX + 75;
+            // const posX = mapServerPosToWindowPos(obstacle.positionX, this.gameStateData.trackLength) + 75;
             let obstaclePosY = this.coordinates.y + 30;
             let obstacleScale = 0.3;
 
@@ -149,14 +152,17 @@ export class Player {
                     break;
                 case Obstacles.hole:
                     obstaclePosY = this.coordinates.y + 75;
-                    obstacleScale = 0.2;
+                    obstacleScale = 0.1;
+                    posX += 40;
+
                     break;
                 case Obstacles.stone:
                     obstaclePosY = this.coordinates.y + 25;
                     obstacleScale = 0.2;
                     break;
             }
-
+            // eslint-disable-next-line no-console
+            // console.log('obstacle position: ', posX);
             this.renderer.renderObstacles(
                 posX,
                 obstaclePosY,
@@ -170,11 +176,13 @@ export class Player {
     setChasers(chasersPositionX: number) {
         const chasersPositionY = this.coordinates.y + 30;
 
-            this.renderer.renderChasers(
-                chasersPositionX, chasersPositionY
-            );
-        }
-    
+        //TODO CHANGE FOR WIDTH OF SCREEN
+        // this.renderer.renderChasers(
+        //     chasersPositionX, chasersPositionY
+        // );
+        this.renderer.renderChasers(chasersPositionX, chasersPositionY);
+    }
+
     startRunning() {
         this.renderer.startRunningAnimation(this.animationName);
         this.playerRunning = true;

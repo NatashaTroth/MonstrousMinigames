@@ -15,7 +15,7 @@ export function initiatePlayersState(
         playersState[player.id] = {
             id: player.id,
             name: player.name,
-            positionX: 0,
+            positionX: 500,
             obstacles: createObstacles(obstacleTypes, numberOfObstacles, trackLength),
             atObstacle: false,
             finished: false,
