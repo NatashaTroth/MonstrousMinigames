@@ -93,9 +93,29 @@ interface IGameContentProps {
 }
 
 const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo }) => {
+    const [countdownNrValue, setCountDownValue] = React.useState('3');
+    const [counter, setCounter] = React.useState(3);
+    const [showCountdown, setShowCountdown] = React.useState(true);
+
+    React.useEffect(() => {
+        let timer: ReturnType<typeof setInterval>;
+        if (counter === 0) {
+            setCountDownValue('Go!');
+            setTimeout(() => setShowCountdown(false), 1000);
+            // setCounter(counter - 1);
+        } else if (counter > 0)
+            timer = setInterval(() => {
+                setCounter(counter - 1);
+                setCountDownValue((counter - 1).toString());
+            }, 1000);
+
+        return () => clearInterval(timer);
+    }, [counter]);
+
     return (
         <div>
-            {displayGo && <Go>Go!</Go>}
+            {/* {displayGo && <Go>Go!</Go>} */}
+            <Go>{showCountdown && countdownNrValue}</Go>
             <div id="game-root"></div>
         </div>
     );
