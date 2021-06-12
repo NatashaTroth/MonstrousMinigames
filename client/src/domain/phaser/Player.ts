@@ -118,16 +118,6 @@ export class Player {
         this.finished = true;
     }
 
-    // checkFinished(isFinished: boolean) {
-    //     if (isFinished) {
-    //         // this.stopRunning();
-    //         this.renderer.destroyPlayer();
-    //         //TODO winning animation
-    //         return true;
-    //     }
-    //     return false;
-    // }
-
     private justArrivedAtObstacle(isAtObstacle: boolean) {
         return isAtObstacle && !this.playerAtObstacle;
     }
@@ -140,8 +130,6 @@ export class Player {
         this.stopRunning();
         this.playerAtObstacle = true;
         this.renderer.addAttentionIcon();
-        // eslint-disable-next-line no-console
-        // console.log('at obstacle: ', this.coordinates.x);
     }
 
     private finishObstacle(): void {
@@ -167,7 +155,6 @@ export class Player {
 
         obstaclesArray.forEach((obstacle, index) => {
             let posX = obstacle.positionX + 75;
-            // const posX = mapServerPosToWindowPos(obstacle.positionX, this.gameStateData.trackLength) + 75;
             let obstaclePosY = this.coordinates.y + 30;
             let obstacleScale = 0.3;
 
@@ -191,8 +178,7 @@ export class Player {
                     obstacleScale = 0.2;
                     break;
             }
-            // eslint-disable-next-line no-console
-            // console.log('obstacle position: ', posX);
+
             this.renderer.renderObstacles(
                 posX,
                 obstaclePosY,
@@ -206,11 +192,6 @@ export class Player {
     setChasers(chasersPositionX: number) {
         if (!this.dead) {
             const chasersPositionY = this.coordinates.y + 30;
-
-            //TODO CHANGE FOR WIDTH OF SCREEN
-            // this.renderer.renderChasers(
-            //     chasersPositionX, chasersPositionY
-            // );
             this.renderer.renderChasers(chasersPositionX, chasersPositionY);
         }
     }
@@ -218,13 +199,6 @@ export class Player {
     setGoal(posX: number) {
         this.renderer.renderGoal(posX, this.coordinates.y);
     }
-
-    //TODO
-    // setGoal(playerIndex: number) {
-    //     const goal = this.physics.add.sprite(this.trackLength, this.getYPosition(playerIndex), 'goal');
-    //     goal.setScale(0.1, 0.1);
-    //     goals.push(goal);
-    // }
 
     startRunning() {
         this.renderer.startRunningAnimation(this.animationName);

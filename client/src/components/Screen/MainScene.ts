@@ -84,36 +84,6 @@ class MainScene extends Phaser.Scene {
         this.gameAudio.initAudio();
         this.initiateSockets();
         this.initiateEventEmitters();
-
-        // //TODO delete
-        // const playerSate = {
-        //     dead: false,
-        //     atObstacle: false,
-        //     finished: false,
-        //     finishedTimeMs: 0,
-        //     id: '1',
-        //     isActive: true,
-        //     name: 'name',
-        //     obstacles: [],
-        //     positionX: 50,
-        //     rank: 0,
-        //     characterNumber: 1,
-        //     stunned: false,
-        // };
-        // const gameState = {
-        //     gameState: '444',
-        //     numberOfObstacles: 0,
-        //     playersState: [playerSate, playerSate, playerSate, playerSate],
-        //     roomId: 'xx',
-        //     trackLength: 1000,
-        //     chasersPositionX: 50,
-        //     chasersAreRunning: false,
-        //     cameraPositionX: 0,
-        // };
-        // this.createPlayer(0, gameState);
-        // this.createPlayer(1, gameState);
-        // this.createPlayer(2, gameState);
-        // this.createPlayer(3, gameState);
     }
 
     handleSocketConnection() {
@@ -142,13 +112,6 @@ class MainScene extends Phaser.Scene {
                 this.handleStartGame(data.data);
             } else this.updateGameState(data.data);
         });
-
-        // const playerFinishedSocket = new MessageSocket(playerFinishedTypeGuard, this.socket);
-        // playerFinishedSocket.listen((data: PlayerFinishedMessage) => {
-        //     print('FINSIHED ');
-        //     print(data.userId);
-        //     this.destroyPlayer(data.userId); //TODO
-        // });
 
         const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
         gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
@@ -235,7 +198,6 @@ class MainScene extends Phaser.Scene {
         const character = characters[gameStateData.playersState[index].characterNumber];
         const posX = this.posX + this.plusX;
         const posY = index * (window.innerHeight / 4) + this.plusY - 20;
-        // const posY = this.posY + this.plusY * index;
 
         const player = new Player(
             new PhaserPlayerRenderer(this),

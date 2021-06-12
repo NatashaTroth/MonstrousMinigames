@@ -1,20 +1,16 @@
-// import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
 import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
 import flaresJsonFile from '../../assets/flares/flares.json';
 import flaresPngFile from '../../assets/flares/flares.png';
-// import finishLine from '../../images/finishLine.png';
 import franz from '../../images/characters/franz_spritesheet.png';
 import chasers from '../../images/characters/Mosquito.png';
 import noah from '../../images/characters/noah_spritesheet.png';
-// import startLine from '../../images/startLine.png';
 import steffi from '../../images/characters/steffi_spritesheet.png';
 import susi from '../../images/characters/susi_spritesheet.png';
 import cave from '../../images/obstacles/cave/cave.png';
 import hole from '../../images/obstacles/hole/hole.png';
 import spider from '../../images/obstacles/spider/spider.png';
 import stone from '../../images/obstacles/stone/stone.png';
-// import track from '../../images/track.png';
 import wood from '../../images/obstacles/wood/wood.png';
 import attention from '../../images/ui/attention.png';
 import forest2 from '../../images/ui/forest2.png';
@@ -35,12 +31,6 @@ const characterSpriteProperties = {
     frameHeight: 1163,
 };
 
-// export interface{
-//     name: string,
-//     file: pending,
-
-// }
-
 export const characterFiles: string[] = [franz, noah, susi, steffi];
 export const defaultAvailableCharacters = [
     characterDictionary.franz,
@@ -58,13 +48,6 @@ export const characters = characterFiles.map((file, idx) => {
         properties: characterSpriteProperties,
     };
 });
-
-// export const characters = [
-//     { name: 'franz', file: franz, properties: characterSpriteProperties },
-//     { name: 'susi', file: susi, properties: characterSpriteProperties },
-//     { name: 'noah', file: noah, properties: characterSpriteProperties },
-//     { name: 'steffi', file: steffi, properties: characterSpriteProperties },
-// ];
 
 // obstacle textures have to have the same name as obstacle type - lowercase
 export const images = [

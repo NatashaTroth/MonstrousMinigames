@@ -15,23 +15,6 @@ export class PhaserGameRenderer implements GameRenderer {
     }
 
     renderBackground(windowWidth: number, windowHeight: number, trackLength: number) {
-        // for (let i = 0; i < 4; i++) {
-        //     const tilesSprite = this.scene.add
-        //         .tileSprite(
-        //             0,
-        //             i * (windowHeight / 4),
-        //             trackLength * 100,
-        //             this.scene.physics.world.bounds.height,
-        //             'forestTile'
-        //         )
-        //         .setScale((windowHeight / 4) * 0.0025)
-        //         .setOrigin(0, 0)
-        //         .setScrollFactor(0);
-        // }
-        // eslint-disable-next-line no-console
-        // console.log(trackLength);
-        // // eslint-disable-next-line no-console
-        // console.log(windowWidth);
         const reps = Math.ceil(trackLength / (windowWidth / 4)) + 1;
         for (let i = 0; i < reps; i++) {
             for (let j = 0; j < 4; j++) {
