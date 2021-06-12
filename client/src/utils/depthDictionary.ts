@@ -4,4 +4,5 @@ export const depthDictionary = {
     player: 20,
     chaser: 25,
     attention: 30,
+    flares: 35,
 };

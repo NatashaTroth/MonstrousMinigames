@@ -1,6 +1,8 @@
 // import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
 import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
+import flaresJsonFile from '../../assets/flares/flares.json';
+import flaresPngFile from '../../assets/flares/flares.png';
 // import finishLine from '../../images/finishLine.png';
 import franz from '../../images/characters/franz_spritesheet.png';
 import chasers from '../../images/characters/Mosquito.png';
@@ -74,3 +76,6 @@ export const images = [
     { name: 'cave', file: cave },
     { name: 'stone', file: stone },
 ];
+
+export const flaresPng = flaresPngFile;
+export const flaresJson = flaresJsonFile;

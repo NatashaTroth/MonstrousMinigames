@@ -85,7 +85,6 @@ export class Player {
     checkAtObstacle(isAtObstacle: boolean) {
         if (this.finished) return;
         if (this.justArrivedAtObstacle(isAtObstacle)) {
-            // eslint-disable-next-line no-console
             this.arrivedAtObstacle();
         } else if (this.finishedObstacle(isAtObstacle)) {
             this.finishObstacle();
@@ -93,14 +92,13 @@ export class Player {
     }
 
     handlePlayerDead() {
-        // eslint-disable-next-line no-console
-        console.log('DEAD');
         this.destroyPlayer();
         this.renderer.destroyChaser();
         this.dead = true;
     }
 
     handlePlayerFinished() {
+        this.renderer.renderFireworks(this.coordinates.x, this.coordinates.y - window.innerHeight / 8);
         this.destroyPlayer();
     }
 

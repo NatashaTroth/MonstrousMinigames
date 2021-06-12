@@ -6,7 +6,6 @@ import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
 import { GameEventTypes } from '../../domain/phaser/GameEventTypes';
 import { GameData } from '../../domain/phaser/gameInterfaces';
 import { Player } from '../../domain/phaser/Player';
-import print from '../../domain/phaser/printMethod';
 import { GameRenderer } from '../../domain/phaser/renderer/GameRenderer';
 import { PhaserGameRenderer } from '../../domain/phaser/renderer/PhaserGameRenderer';
 import { PhaserPlayerRenderer } from '../../domain/phaser/renderer/PhaserPlayerRenderer';
@@ -21,11 +20,10 @@ import { GameHasResumedMessage, resumedTypeGuard } from '../../domain/typeGuards
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../domain/typeGuards/stopped';
 import { TimedOutMessage, timedOutTypeGuard } from '../../domain/typeGuards/timedOut';
 import { MessageTypes } from '../../utils/constants';
-import { audioFiles, characters, images } from './GameAssets';
+import { audioFiles, characters, flaresJson, flaresPng, images } from './GameAssets';
 
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;
-let once = true;
 class MainScene extends Phaser.Scene {
     roomId: string;
     socket: Socket;
@@ -74,6 +72,8 @@ class MainScene extends Phaser.Scene {
         images.forEach(image => {
             this.load.image(image.name, image.file);
         });
+
+        this.load.atlas('flares', flaresPng, flaresJson);
     }
 
     create() {
@@ -84,6 +84,22 @@ class MainScene extends Phaser.Scene {
         this.gameAudio.initAudio();
         this.initiateSockets();
         this.initiateEventEmitters();
+
+        //todo move
+        // const particles = this.add.particles('flares');
+        // const particlesEmitter = particles.createEmitter({
+        //     frame: ['red', 'green', 'blue'],
+        //     x: 400,
+        //     y: 100,
+        //     angle: { min: 200, max: 250 },
+        //     speed: { min: 0, max: -500 },
+        //     gravityY: 200,
+        //     lifespan: 500,
+        //     scale: 0.1,
+        //     blendMode: 'ADD',
+        // });
+
+        // setTimeout(() => (particlesEmitter.on = false), 1200);
         // this.physics.world.setBounds(0, 0, this.trackLength, windowHeight);
     }
 
@@ -167,32 +183,23 @@ class MainScene extends Phaser.Scene {
         if (this.camera) this.camera.scrollX = gameStateData.cameraPositionX;
     }
 
-    // destroyPlayer(index: number) {
-    //     this.players[index].destroyPlayer();
-    //     // this.players.splice(index, 1);
-    // }
-
     updateGameState(gameStateData: GameData) {
-        //TODO delete
         for (let i = 0; i < this.players.length; i++) {
-            if (once) {
-                this.players[i].handlePlayerStunned();
-                once = false;
-            } else {
-                this.players[i].handlePlayerUnStunned();
-            }
             if (gameStateData.playersState[i].dead) {
                 if (!this.players[i].finished) {
                     this.players[i].handlePlayerDead();
                 }
             } else if (gameStateData.playersState[i].finished) {
-                print(gameStateData.playersState);
                 if (!this.players[i].finished) {
                     this.players[i].handlePlayerFinished();
                 }
             } else if (gameStateData.playersState[i].stunned) {
                 this.players[i].handlePlayerStunned();
             } else {
+                if (this.players[i].stunned) {
+                    this.players[i].handlePlayerUnStunned();
+                }
+
                 this.players[i].moveForward(gameStateData.playersState[i].positionX, this.trackLength);
                 this.players[i].checkAtObstacle(gameStateData.playersState[i].atObstacle);
             }

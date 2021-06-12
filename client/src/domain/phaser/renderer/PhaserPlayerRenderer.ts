@@ -14,9 +14,12 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     private chaser?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private playerObstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    private particles: Phaser.GameObjects.Particles.ParticleEmitterManager;
 
     constructor(private scene: MainScene) {
         this.playerObstacles = [];
+        this.particles = this.scene.add.particles('flares');
+        this.particles.setDepth(depthDictionary.flares);
     }
     renderChasers(chasersPositionX: number, chasersPositionY: number) {
         if (!this.chaser) {
@@ -77,6 +80,23 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         obstacle.setDepth(depth);
 
         this.playerObstacles.push(obstacle);
+    }
+
+    renderFireworks(posX: number, posY: number) {
+        const particlesEmitter = this.particles.createEmitter({
+            frame: ['red', 'green', 'blue'],
+            x: posX,
+            y: posY,
+            angle: { min: 200, max: 250 },
+            speed: { min: 0, max: -500 },
+            gravityY: 200,
+            lifespan: 500,
+            scale: 0.1,
+            blendMode: 'ADD',
+        });
+
+        particlesEmitter.on = true;
+        setTimeout(() => (particlesEmitter.on = false), 1200);
     }
 
     startRunningAnimation(animationName: string) {
