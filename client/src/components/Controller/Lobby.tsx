@@ -59,7 +59,7 @@ export const Lobby: React.FunctionComponent = () => {
                                 <PlayerContent>
                                     <PlayerName>{name}</PlayerName>
                                     <CharacterContainer>
-                                        <Character src={character?.src} />
+                                        <Character src={character!} />
                                     </CharacterContainer>
                                     <ReadyButton ready={ready} onClick={() => setReady(true)}>
                                         <span>I am </span>
