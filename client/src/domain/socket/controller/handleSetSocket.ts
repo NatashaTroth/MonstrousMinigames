@@ -1,6 +1,7 @@
 import { History } from 'history';
 
 import { IObstacle } from '../../../contexts/PlayerContextProvider';
+import { controllerChooseCharacterRoute } from '../../../utils/routes';
 import { handleConnectedUsersMessage } from '../../gameState/controller/handleConnectedUsersMessage';
 import { handleGameHasResetMessage } from '../../gameState/controller/handleGameHasResetMessage';
 import { handleGameHasStoppedMessage } from '../../gameState/controller/handleGameHasStoppedMessage';
@@ -169,6 +170,6 @@ export function handleSetSocket(
     });
 
     if (socket) {
-        history.push(`/controller/${roomId}/choose-character`);
+        history.push(controllerChooseCharacterRoute(roomId));
     }
 }

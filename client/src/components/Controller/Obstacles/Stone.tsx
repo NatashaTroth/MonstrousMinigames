@@ -7,6 +7,7 @@ import history from '../../../domain/history/history';
 import pebble from '../../../images/pebble.svg';
 import stone from '../../../images/stone.svg';
 import { stoneParticlesConfig } from '../../../utils/particlesConfig';
+import { controllerPlayerDeadRoute } from '../../../utils/routes';
 import Button from '../../common/Button';
 import { StyledParticles } from '../../common/Particles.sc';
 import {
@@ -50,7 +51,7 @@ const Stone: React.FunctionComponent = () => {
             type: 'game1/stunPlayer',
             userId,
         });
-        history.push(`/controller/${roomId}/dead`);
+        history.push(controllerPlayerDeadRoute(roomId));
     }
 
     return (

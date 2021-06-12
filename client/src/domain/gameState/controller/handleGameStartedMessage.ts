@@ -1,6 +1,7 @@
 import { History } from 'history';
 
 import { MessageTypes } from '../../../utils/constants';
+import { controllerGame1Route } from '../../../utils/routes';
 
 export interface GameStartedMessage {
     type: MessageTypes.started;
@@ -19,5 +20,5 @@ export function handleGameStartedMessage(props: HandleGameStarted) {
     document.body.style.userSelect = 'none';
     setGameStarted(true);
 
-    history.push(`/controller/${roomId}/game1`);
+    history.push(controllerGame1Route(roomId));
 }

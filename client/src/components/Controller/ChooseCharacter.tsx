@@ -11,6 +11,7 @@ import history from '../../domain/history/history';
 import { carouselOptions } from '../../utils/carouselOptions';
 import { characters } from '../../utils/characters';
 import { MessageTypes } from '../../utils/constants';
+import { controllerLobbyRoute } from '../../utils/routes';
 import Button from '../common/Button';
 import { Label } from '../common/Label.sc';
 import {
@@ -66,7 +67,7 @@ const ChooseCharacter: React.FunctionComponent = () => {
                             characterNumber: actualCharacter,
                         });
                         setCharacter(characters[actualCharacter]);
-                        history.push(`/controller/${roomId}/lobby`);
+                        history.push(controllerLobbyRoute(roomId));
                     }}
                     disabled={!availableCharacters.includes(actualCharacter)}
                 >
