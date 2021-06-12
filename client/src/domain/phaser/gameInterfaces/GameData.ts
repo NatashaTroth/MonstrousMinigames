@@ -8,4 +8,5 @@ export interface GameData {
     trackLength: number;
     chasersPositionX: number;
     chasersAreRunning: boolean;
+    cameraPositionX: number;
 }

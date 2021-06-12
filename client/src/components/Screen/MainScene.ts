@@ -163,6 +163,8 @@ class MainScene extends Phaser.Scene {
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);
         }
+
+        if (this.camera) this.camera.scrollX = gameStateData.cameraPositionX;
     }
 
     // destroyPlayer(index: number) {
@@ -188,12 +190,12 @@ class MainScene extends Phaser.Scene {
             if (gameStateData.chasersAreRunning) this.players[i].setChasers(gameStateData.chasersPositionX);
         }
 
-        this.moveCamera();
+        this.moveCamera(gameStateData.cameraPositionX);
     }
 
-    moveCamera() {
+    moveCamera(posX: number) {
         if (this.camera) {
-            this.camera.scrollX += this.cameraSpeed;
+            this.camera.scrollX = posX;
             this.camera.setBounds(0, 0, this.trackLength + 150, windowHeight); //+150 so the cave can be fully seen
         }
     }

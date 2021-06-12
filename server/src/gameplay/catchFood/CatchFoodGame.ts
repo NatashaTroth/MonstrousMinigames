@@ -57,6 +57,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     updateChasersInterval?: ReturnType<typeof setInterval>;
     updateChasersIntervalTime: number;
     chasersAreRunning: boolean;
+    cameraPositionX: number;
+    cameraSpeed: number;
 
     constructor(roomId: string, leaderboard: Leaderboard /*, public usingChasers = false*/, public stunnedTime = 3000) {
         // this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
@@ -86,6 +88,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.updateChasersInterval = undefined;
         this.updateChasersIntervalTime = 100;
         this.chasersAreRunning = false;
+        this.cameraPositionX = 0;
+        this.cameraSpeed = 2;
     }
 
     createNewGame(
@@ -271,6 +275,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             playerInfoArray.push(playerState);
         }
 
+        this.cameraPositionX += this.cameraSpeed;
+
         return {
             gameState: this.gameState,
             roomId: this.roomId,
@@ -279,6 +285,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             numberOfObstacles: this.numberOfObstacles,
             chasersPositionX: this.chasersPositionX,
             chasersAreRunning: this.chasersAreRunning,
+            cameraPositionX: this.cameraPositionX,
         };
     }
 
