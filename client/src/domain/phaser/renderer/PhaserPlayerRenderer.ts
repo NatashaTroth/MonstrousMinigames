@@ -11,7 +11,7 @@ import { Coordinates, PlayerRenderer } from './PlayerRenderer';
 export class PhaserPlayerRenderer implements PlayerRenderer {
     private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     // private playerText?: Phaser.GameObjects.Text;
-    private chasers?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    private chaser?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private playerObstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
@@ -19,12 +19,12 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         this.playerObstacles = [];
     }
     renderChasers(chasersPositionX: number, chasersPositionY: number) {
-        if (!this.chasers) {
-            this.chasers = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasers');
-            this.chasers.setScale(0.5, 0.5);
-            this.chasers.setDepth(depthDictionary.chaser);
+        if (!this.chaser) {
+            this.chaser = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasers');
+            this.chaser.setScale(0.5, 0.5);
+            this.chaser.setDepth(depthDictionary.chaser);
         }
-        this.chasers.setX(chasersPositionX - 50); // - 50 so that not quite on top of player when caught
+        this.chaser.setX(chasersPositionX - 50); // - 50 so that not quite on top of player when caught
     }
     destroyPlayer() {
         this.player?.destroy();
@@ -39,6 +39,12 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
             this.player.x = coordinates.x;
             this.player.y = coordinates.y;
         }
+    }
+
+    renderGoal(posX: number, posY: number) {
+        const cave = this.scene.physics.add.sprite(posX, posY, 'cave'); //TODO change cave to enum
+        cave.setScale(0.15, 0.15);
+        cave.setDepth(depthDictionary.cave);
     }
 
     // renderText(coordinates: Coordinates, text: string, background?: string): void {
@@ -75,8 +81,6 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     movePlayerForward(newXPosition: number) {
         if (this.player) {
             this.player.x = newXPosition;
-            // eslint-disable-next-line no-console
-            console.log('player pos: ', newXPosition);
         }
     }
 
@@ -85,6 +89,10 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
             this.playerObstacles[0].destroy();
             this.playerObstacles.shift();
         }
+    }
+
+    destroyChaser() {
+        this.chaser?.destroy();
     }
 
     addAttentionIcon() {

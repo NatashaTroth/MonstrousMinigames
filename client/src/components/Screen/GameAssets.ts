@@ -16,7 +16,6 @@ import stone from '../../images/obstacles/stone/stone.png';
 import wood from '../../images/obstacles/wood/wood.png';
 import attention from '../../images/ui/attention.png';
 import forest2 from '../../images/ui/forest2.png';
-import goal from '../../images/ui/goal.png';
 import { characterDictionary } from '../../utils/characterDictionary';
 
 //TODO types
@@ -67,7 +66,6 @@ export const characters = characterFiles.map((file, idx) => {
 export const images = [
     { name: 'forest2', file: forest2 },
     { name: 'attention', file: attention },
-    { name: 'goal', file: goal },
     { name: 'treestump', file: wood },
     { name: 'stone', file: stone },
     { name: 'hole', file: hole },

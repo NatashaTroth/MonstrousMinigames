@@ -10,11 +10,6 @@ import { Coordinates, PlayerRenderer } from './renderer/PlayerRenderer';
  * the InMemoryPlayerRenderer, testing this class should be pretty straight forward.
  */
 export class Player {
-    checkDead(dead: boolean) {
-        if (dead) {
-            this.renderer.destroyPlayer();
-        }
-    }
     plusX = 40;
     plusY = 110;
     username: string;
@@ -24,6 +19,7 @@ export class Player {
     playerAttention: null | Phaser.Types.Physics.Arcade.SpriteWithDynamicBody; //TODO change
     playerCountSameDistance: number;
     dead: boolean;
+    finished: boolean;
 
     constructor(
         private renderer: PlayerRenderer, // TODO MAKE PRIVATE
@@ -44,15 +40,16 @@ export class Player {
         this.playerCountSameDistance = 0;
         this.playerAttention = null;
         this.dead = false;
+        this.finished = false;
 
         this.renderPlayer();
         this.setObstacles();
+        this.setGoal(gameStateData.trackLength);
     }
 
     moveForward(x: number, trackLength: number) {
-        // TODO delete local development stuff
-        const newXPosition = x; //+ window.innerWidth / 2;
-        // const newXPosition = mapServerPosToWindowPos(x, trackLength);
+        if (this.finished) return;
+        const newXPosition = x;
         if (newXPosition == this.coordinates.x && this.playerRunning) {
             if (localDevelopment) {
                 // so that running animation works in local development
@@ -61,7 +58,6 @@ export class Player {
                 this.stopRunning();
             }
         } else {
-            // this.playerCountSameDistance = 0;
             if (!this.playerRunning) {
                 this.startRunning();
                 if (localDevelopment) {
@@ -71,6 +67,7 @@ export class Player {
             }
         }
 
+        //TODO delete
         if (localDevelopment) {
             // so that running animation works in local development
             if (this.playerRunning && this.playerCountSameDistance > 50) {
@@ -84,6 +81,7 @@ export class Player {
     }
 
     checkAtObstacle(isAtObstacle: boolean) {
+        if (this.finished) return;
         if (this.justArrivedAtObstacle(isAtObstacle)) {
             // eslint-disable-next-line no-console
             this.arrivedAtObstacle();
@@ -92,12 +90,32 @@ export class Player {
         }
     }
 
-    checkFinished(isFinished: boolean) {
-        if (isFinished) {
-            this.stopRunning();
-            //TODO winning animation
-        }
+    handlePlayerDead() {
+        // eslint-disable-next-line no-console
+        console.log('DEAD');
+        this.destroyPlayer();
+        this.renderer.destroyChaser();
+        this.dead = true;
     }
+
+    handlePlayerFinished() {
+        this.destroyPlayer();
+    }
+
+    private destroyPlayer() {
+        this.renderer.destroyPlayer();
+        this.finished = true;
+    }
+
+    // checkFinished(isFinished: boolean) {
+    //     if (isFinished) {
+    //         // this.stopRunning();
+    //         this.renderer.destroyPlayer();
+    //         //TODO winning animation
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     private justArrivedAtObstacle(isAtObstacle: boolean) {
         return isAtObstacle && !this.playerAtObstacle;
@@ -175,14 +193,27 @@ export class Player {
     }
 
     setChasers(chasersPositionX: number) {
-        const chasersPositionY = this.coordinates.y + 30;
+        if (!this.dead) {
+            const chasersPositionY = this.coordinates.y + 30;
 
-        //TODO CHANGE FOR WIDTH OF SCREEN
-        // this.renderer.renderChasers(
-        //     chasersPositionX, chasersPositionY
-        // );
-        this.renderer.renderChasers(chasersPositionX, chasersPositionY);
+            //TODO CHANGE FOR WIDTH OF SCREEN
+            // this.renderer.renderChasers(
+            //     chasersPositionX, chasersPositionY
+            // );
+            this.renderer.renderChasers(chasersPositionX, chasersPositionY);
+        }
     }
+
+    setGoal(posX: number) {
+        this.renderer.renderGoal(posX, this.coordinates.y);
+    }
+
+    //TODO
+    // setGoal(playerIndex: number) {
+    //     const goal = this.physics.add.sprite(this.trackLength, this.getYPosition(playerIndex), 'goal');
+    //     goal.setScale(0.1, 0.1);
+    //     goals.push(goal);
+    // }
 
     startRunning() {
         this.renderer.startRunningAnimation(this.animationName);

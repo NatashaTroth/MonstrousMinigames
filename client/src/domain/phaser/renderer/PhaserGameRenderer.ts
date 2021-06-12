@@ -46,11 +46,4 @@ export class PhaserGameRenderer implements GameRenderer {
     resumeGame() {
         this.pauseButton?.setText('Pause');
     }
-
-    //TODO
-    // setGoal(playerIndex: number) {
-    //     const goal = this.physics.add.sprite(this.trackLength, this.getYPosition(playerIndex), 'goal');
-    //     goal.setScale(0.1, 0.1);
-    //     goals.push(goal);
-    // }
 }

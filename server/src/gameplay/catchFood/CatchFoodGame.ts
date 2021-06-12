@@ -63,7 +63,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.roomId = roomId;
         this.maxNumberOfPlayers = Globals.MAX_PLAYER_NUMBER;
         this.gameState = GameState.Initialised;
-        this.trackLength = 5000; // TODO 7500;
+        this.trackLength = 5000; // TODO 5000;
         this.numberOfObstacles = 5;
         this.speed = 0;
         this.currentRank = 1;
@@ -75,7 +75,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.gameStartedTime = 0;
         this.timeOutLimit = 300000;
         this.timer = setTimeout(() => ({}), 0);
-        this.countdownTime = 3000;
+        this.countdownTime = 4000; //should be 1 second more than client - TODO make sure it is
         this.timeOutRemainingTime = 0;
         this.gamePausedTime = 0;
         // this.leaderboard = {};

@@ -6,7 +6,7 @@ import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
 import { GameEventTypes } from '../../domain/phaser/GameEventTypes';
 import { GameData } from '../../domain/phaser/gameInterfaces';
 import { Player } from '../../domain/phaser/Player';
-// import print from '../../domain/phaser/printMethod';
+import print from '../../domain/phaser/printMethod';
 import { GameRenderer } from '../../domain/phaser/renderer/GameRenderer';
 import { PhaserGameRenderer } from '../../domain/phaser/renderer/PhaserGameRenderer';
 import { PhaserPlayerRenderer } from '../../domain/phaser/renderer/PhaserPlayerRenderer';
@@ -17,7 +17,6 @@ import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../domain/typeGuards/finished';
 import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../domain/typeGuards/gameStateInfo';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../domain/typeGuards/paused';
-import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../domain/typeGuards/playerFinished';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../domain/typeGuards/resumed';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../domain/typeGuards/stopped';
 import { TimedOutMessage, timedOutTypeGuard } from '../../domain/typeGuards/timedOut';
@@ -115,10 +114,12 @@ class MainScene extends Phaser.Scene {
             } else this.updateGameState(data.data);
         });
 
-        const playerFinishedSocket = new MessageSocket(playerFinishedTypeGuard, this.socket);
-        playerFinishedSocket.listen((data: PlayerFinishedMessage) => {
-            this.players[data.userId].checkFinished(true);
-        });
+        // const playerFinishedSocket = new MessageSocket(playerFinishedTypeGuard, this.socket);
+        // playerFinishedSocket.listen((data: PlayerFinishedMessage) => {
+        //     print('FINSIHED ');
+        //     print(data.userId);
+        //     this.destroyPlayer(data.userId); //TODO
+        // });
 
         const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
         gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
@@ -161,27 +162,39 @@ class MainScene extends Phaser.Scene {
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);
-            // this.setGoal(i);
         }
     }
 
+    // destroyPlayer(index: number) {
+    //     this.players[index].destroyPlayer();
+    //     // this.players.splice(index, 1);
+    // }
+
     updateGameState(gameStateData: GameData) {
-        this.players.forEach((player, i) => {
-            player.moveForward(gameStateData.playersState[i].positionX, this.trackLength);
-            player.checkAtObstacle(gameStateData.playersState[i].atObstacle);
-            player.checkDead(gameStateData.playersState[i].dead);
-            if (gameStateData.chasersAreRunning) player.setChasers(gameStateData.chasersPositionX);
-            // eslint-disable-next-line no-console
-            // console.log(gameStateData);
-            player.checkFinished(gameStateData.playersState[i].finished);
-        });
+        for (let i = 0; i < this.players.length; i++) {
+            if (gameStateData.playersState[i].dead) {
+                if (!this.players[i].finished) {
+                    this.players[i].handlePlayerDead();
+                }
+            } else if (gameStateData.playersState[i].finished) {
+                print(gameStateData.playersState);
+                if (!this.players[i].finished) {
+                    this.players[i].handlePlayerFinished();
+                }
+            } else {
+                this.players[i].moveForward(gameStateData.playersState[i].positionX, this.trackLength);
+                this.players[i].checkAtObstacle(gameStateData.playersState[i].atObstacle);
+            }
+            if (gameStateData.chasersAreRunning) this.players[i].setChasers(gameStateData.chasersPositionX);
+        }
+
         this.moveCamera();
     }
 
     moveCamera() {
         if (this.camera) {
             this.camera.scrollX += this.cameraSpeed;
-            this.camera.setBounds(0, 0, this.trackLength, windowHeight);
+            this.camera.setBounds(0, 0, this.trackLength + 150, windowHeight); //+150 so the cave can be fully seen
         }
     }
 
