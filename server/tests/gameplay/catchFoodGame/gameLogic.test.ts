@@ -21,9 +21,9 @@ describe('Start game', () => {
         clearTimersAndIntervals(catchFoodGame);
     });
 
-    it('starts players at positionX 0', async () => {
+    it('starts players at initial positionX', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        expect(catchFoodGame.playersState['1'].positionX).toBe(0);
+        expect(catchFoodGame.playersState['1'].positionX).toBe(catchFoodGame.initialPlayerPositionX);
     });
 
     it('gameStartedTime is now', async () => {
@@ -47,14 +47,14 @@ describe('Run forward', () => {
         const SPEED = 10;
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.runForward('1', SPEED);
-        expect(catchFoodGame.playersState['1'].positionX).toBe(SPEED);
+        expect(catchFoodGame.playersState['1'].positionX).toBe(catchFoodGame.initialPlayerPositionX + SPEED);
     });
 
     it('moves players forward correctly when runForward is called multiple times', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.runForward('1', 10);
         catchFoodGame.runForward('1', 5);
-        expect(catchFoodGame.playersState['1'].positionX).toBe(15);
+        expect(catchFoodGame.playersState['1'].positionX).toBe(catchFoodGame.initialPlayerPositionX + 15);
     });
 });
 

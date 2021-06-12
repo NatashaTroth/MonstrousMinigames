@@ -1,7 +1,7 @@
 import { InteractivityDetect, IParticlesParams, MoveDirection, OutMode, RotateDirection } from 'react-particles-js';
 
-import pebble from '../images/pebbleParticle.svg';
-import splinter from '../images/splinter.svg';
+import pebble from '../images/obstacles/stone/pebbleParticle.svg';
+import splinter from '../images/obstacles/wood/splinter.svg';
 
 export const stoneParticlesConfig: IParticlesParams = {
     fpsLimit: 60,

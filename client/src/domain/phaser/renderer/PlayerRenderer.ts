@@ -12,11 +12,16 @@ export interface PlayerRenderer {
 
     renderPlayer(coordinates: Coordinates, playerName: string, background?: string): void;
     renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number): void;
+    renderGoal(posX: number, posY: number): void;
+    renderFireworks(posX: number, posY: number): void;
     movePlayerForward(newXPosition: number): void;
     destroyObstacle(): void;
+    destroyChaser(): void;
     addAttentionIcon(): void;
     destroyAttentionIcon(): void;
     startRunningAnimation(animationName: string): void;
     stopRunningAnimation(): void;
     destroyPlayer(): void;
+    stunPlayer(): void;
+    unStunPlayer(): void;
 }

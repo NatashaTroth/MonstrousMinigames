@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import forest from '../../images/forest.svg';
+import forest from '../../images/ui/forest.svg';
 
 export const StyledFullScreenContainer = styled.div`
     background-repeat: no-repeat;

@@ -27,7 +27,7 @@ export const Go = styled.p`
     color: ${secondary};
     -webkit-animation: fadeInOut 6s;
     animation: ${fadeOut} 2s;
-    opacity: 0;
+    // opacity: 0;
     position: absolute;
     left: calc(50% - 140px);
     top: 18%;

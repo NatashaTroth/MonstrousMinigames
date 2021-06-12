@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 import MainScene from '../../../components/Screen/MainScene';
+import { depthDictionary } from '../../../utils/depthDictionary';
 import { Coordinates, PlayerRenderer } from './PlayerRenderer';
 
 /**
@@ -10,24 +11,34 @@ import { Coordinates, PlayerRenderer } from './PlayerRenderer';
 export class PhaserPlayerRenderer implements PlayerRenderer {
     private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     // private playerText?: Phaser.GameObjects.Text;
-    private chasers?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    private chaser?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private playerObstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    private particles: Phaser.GameObjects.Particles.ParticleEmitterManager;
 
     constructor(private scene: MainScene) {
         this.playerObstacles = [];
+        this.particles = this.scene.add.particles('flares');
+        this.particles.setDepth(depthDictionary.flares);
     }
     renderChasers(chasersPositionX: number, chasersPositionY: number) {
-        if(!this.chasers){
-            this.chasers = this.scene.physics.add.sprite(-1, chasersPositionY, "chasers");
-            this.chasers.setScale(0.5, 0.5);
-            this.chasers.setDepth(1);
+        if (!this.chaser) {
+            this.chaser = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasers');
+            this.chaser.setScale(0.4, 0.4);
+            this.chaser.setDepth(depthDictionary.chaser);
         }
-        this.chasers.setX(chasersPositionX)
-
+        this.chaser.setX(chasersPositionX - 50); // - 50 so that not quite on top of player when caught
     }
     destroyPlayer() {
-        this.player?.destroy()
+        this.player?.destroy();
+    }
+
+    stunPlayer() {
+        if (this.player) this.player.alpha = 0.5;
+    }
+
+    unStunPlayer() {
+        if (this.player) this.player.alpha = 1;
     }
 
     renderPlayer(coordinates: Coordinates, monsterName: string, animationName: string, background?: string): void {
@@ -39,6 +50,12 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
             this.player.x = coordinates.x;
             this.player.y = coordinates.y;
         }
+    }
+
+    renderGoal(posX: number, posY: number) {
+        const cave = this.scene.physics.add.sprite(posX, posY, 'cave'); //TODO change cave to enum
+        cave.setScale(0.13, 0.13);
+        cave.setDepth(depthDictionary.cave);
     }
 
     // renderText(coordinates: Coordinates, text: string, background?: string): void {
@@ -65,6 +82,23 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         this.playerObstacles.push(obstacle);
     }
 
+    renderFireworks(posX: number, posY: number) {
+        const particlesEmitter = this.particles.createEmitter({
+            frame: ['red', 'green', 'blue'],
+            x: posX,
+            y: posY,
+            angle: { min: 200, max: 250 },
+            speed: { min: 0, max: -500 },
+            gravityY: 200,
+            lifespan: 500,
+            scale: 0.1,
+            blendMode: 'ADD',
+        });
+
+        particlesEmitter.on = true;
+        setTimeout(() => (particlesEmitter.on = false), 900);
+    }
+
     startRunningAnimation(animationName: string) {
         this.player?.play(animationName);
     }
@@ -85,11 +119,15 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         }
     }
 
+    destroyChaser() {
+        this.chaser?.destroy();
+    }
+
     addAttentionIcon() {
         if (!this.playerAttention && this.player) {
             this.playerAttention = this.scene.physics.add
                 .sprite(this.player.x + 75, this.player.y - 150, 'attention')
-                .setDepth(100)
+                .setDepth(depthDictionary.attention)
                 .setScale(0.03, 0.03);
         }
     }
@@ -103,7 +141,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
         this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterName);
 
-        this.player.setDepth(50);
+        this.player.setDepth(depthDictionary.player);
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
         this.player.setScale(0.15, 0.15);

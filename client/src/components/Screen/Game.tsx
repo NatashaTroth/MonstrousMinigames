@@ -60,6 +60,8 @@ const Game: React.FunctionComponent = () => {
         });
         game.scene.add('MainScene', MainScene);
         game.scene.start('MainScene', { roomId: roomId });
+
+        // game.world.setBounds(0,0,7500, window.innerHeight)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -91,9 +93,30 @@ interface IGameContentProps {
 }
 
 const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo }) => {
+    const [countdownNrValue, setCountDownValue] = React.useState('3');
+    const [counter, setCounter] = React.useState(3);
+    const [showCountdown, setShowCountdown] = React.useState(true);
+
+    React.useEffect(() => {
+        let timer: ReturnType<typeof setInterval>;
+        if (counter === 0) {
+            setCountDownValue('Go!');
+            setTimeout(() => setShowCountdown(false), 1000);
+            // setCounter(counter - 1);
+        } else if (counter > 0)
+            timer = setInterval(() => {
+                setCounter(counter - 1);
+                setCountDownValue((counter - 1).toString());
+            }, 1000);
+
+        return () => clearInterval(timer);
+    }, [counter]);
+
     return (
         <div>
-            {displayGo && <Go>Go!</Go>}
+            {/* {displayGo && <Go>Go!</Go>} */}
+            <Go>{showCountdown && countdownNrValue}</Go>{' '}
+            {/*TODO: do with phaser, otherwise when come to page after game has started, still get countdown. & need to take number for countdown from backend - 1*/}
             <div id="game-root"></div>
         </div>
     );

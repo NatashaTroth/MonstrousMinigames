@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import forest from '../../images/forest.svg';
-import introImg from '../../images/forest2.png';
+import forest from '../../images/ui/forest.svg';
+import introImg from '../../images/ui/forest2.png';
 import { secondary, secondaryShadow } from '../../utils/colors';
 
 const boxShadowDepth = 7;
