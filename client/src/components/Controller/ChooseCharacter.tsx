@@ -24,7 +24,7 @@ import {
 
 const ChooseCharacter: React.FunctionComponent = () => {
     const { setCharacter } = React.useContext(PlayerContext);
-    const { roomId } = React.useContext(GameContext);
+    const { roomId, availableCharacters } = React.useContext(GameContext);
     const [actualCharacter, setActualCharacter] = React.useState(0);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
 
@@ -53,8 +53,8 @@ const ChooseCharacter: React.FunctionComponent = () => {
                 customLeftArrow={<CustomLeftArrow handleOnClick={handleLeftClick} />}
             >
                 {characters.map((character, index) => (
-                    <CharacterContainer key={`character${index}`}>
-                        <Character src={character.src} />
+                    <CharacterContainer key={`character${character}`}>
+                        <Character src={character} available={availableCharacters.includes(index)} />
                     </CharacterContainer>
                 ))}
             </Carousel>
@@ -63,11 +63,12 @@ const ChooseCharacter: React.FunctionComponent = () => {
                     onClick={() => {
                         controllerSocket.emit({
                             type: MessageTypes.selectCharacter,
-                            characterNumber: characters[actualCharacter].id,
+                            characterNumber: actualCharacter,
                         });
                         setCharacter(characters[actualCharacter]);
                         history.push(`/controller/${roomId}/lobby`);
                     }}
+                    disabled={!availableCharacters.includes(actualCharacter)}
                 >
                     Choose Character
                 </Button>

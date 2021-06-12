@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useHistory } from 'react-router';
 
-import { Character } from '../utils/characters';
 import { Obstacles } from '../utils/constants';
 import { GameContext } from './GameContextProvider';
 
@@ -64,8 +63,8 @@ interface IPlayerContext {
     resetPlayer: () => void;
     playerNumber: number | undefined;
     setPlayerNumber: (val: number) => void;
-    character: undefined | Character;
-    setCharacter: (val: Character) => void;
+    character: undefined | string;
+    setCharacter: (val: string) => void;
     name: string;
     setName: (val: string) => void;
     ready: boolean;
@@ -82,7 +81,7 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [playerNumber, setPlayerNumber] = React.useState<number | undefined>();
     const [permission, setPermissionGranted] = React.useState<boolean>(false);
     const history = useHistory();
-    const [character, setCharacter] = React.useState<undefined | Character>(undefined);
+    const [character, setCharacter] = React.useState<undefined | string>(undefined);
     const { roomId } = React.useContext(GameContext);
     const [name, setName] = React.useState<string>('');
     // TODO use data from socket

@@ -1,6 +1,7 @@
 import { History } from 'history';
 
 import { IObstacle } from '../../../contexts/PlayerContextProvider';
+import { handleConnectedUsersMessage } from '../../gameState/controller/handleConnectedUsersMessage';
 import { handleGameHasResetMessage } from '../../gameState/controller/handleGameHasResetMessage';
 import { handleGameHasStoppedMessage } from '../../gameState/controller/handleGameHasStoppedMessage';
 import { handleGameHasTimedOutMessage } from '../../gameState/controller/handleGameHasTimedOutMessage';
@@ -8,6 +9,7 @@ import { handleGameStartedMessage } from '../../gameState/controller/handleGameS
 import { handleObstacleMessage } from '../../gameState/controller/handleObstacleMessage';
 import { handlePlayerFinishedMessage } from '../../gameState/controller/handlePlayerFinishedMessage';
 import { handleUserInitMessage } from '../../gameState/controller/handleUserInitMessage';
+import { ConnectedUsersMessage, connectedUsersTypeGuard } from '../../typeGuards/connectedUsers';
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
 import { ObstacleMessage, obstacleTypeGuard } from '../../typeGuards/obstacle';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
@@ -33,6 +35,7 @@ export interface HandleSetSocketDependencies {
     resetPlayer: () => void;
     setGameStarted: (val: boolean) => void;
     setName: (val: string) => void;
+    setAvailableCharacters: (val: number[]) => void;
     history: History;
 }
 
@@ -54,6 +57,7 @@ export function handleSetSocket(
         resetPlayer,
         setGameStarted,
         setName,
+        setAvailableCharacters,
         history,
     } = dependencies;
 
@@ -69,6 +73,7 @@ export function handleSetSocket(
     const stoppedSocket = new MessageSocket(stoppedTypeGuard, socket);
     const resetSocket = new MessageSocket(resetTypeGuard, socket);
     const errorSocket = new MessageSocket(errorTypeGuard, socket);
+    const connectedUsersSocket = new MessageSocket(connectedUsersTypeGuard, socket);
 
     userInitSocket.listen((data: UserInitMessage) => {
         handleUserInitMessage({
@@ -139,6 +144,10 @@ export function handleSetSocket(
 
     errorSocket.listen((data: ErrorMessage) => {
         // TODO handle errors
+    });
+
+    connectedUsersSocket.listen((data: ConnectedUsersMessage) => {
+        handleConnectedUsersMessage({ data, dependencies: { setAvailableCharacters } });
     });
 
     if (socket) {
