@@ -39,6 +39,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         resetPlayer,
         setName,
         setUserId,
+        setPlayerDead,
     } = React.useContext(PlayerContext);
 
     const { setGameStarted, setRoomId, setHasPaused, resetGame, setAvailableCharacters } = React.useContext(
@@ -60,6 +61,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         resetPlayer,
         setHasPaused,
         setUserId,
+        setPlayerDead,
     };
 
     const content = {

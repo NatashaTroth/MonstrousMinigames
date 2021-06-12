@@ -48,6 +48,10 @@ export const defaultValue = {
     setUserId: () => {
         // do nothing
     },
+    dead: false,
+    setPlayerDead: () => {
+        // do nothing
+    },
 };
 export interface IObstacle {
     type: Obstacles;
@@ -75,6 +79,8 @@ interface IPlayerContext {
     setReady: (val: boolean) => void;
     userId: string;
     setUserId: (val: string) => void;
+    dead: boolean;
+    setPlayerDead: (val: boolean) => void;
 }
 
 export const PlayerContext = React.createContext<IPlayerContext>(defaultValue);
@@ -93,6 +99,7 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [name, setName] = React.useState<string>('');
     // TODO use data from socket
     const [ready, setReady] = React.useState(false);
+    const [dead, setPlayerDead] = React.useState(false);
 
     let reroute = true;
 
@@ -135,6 +142,8 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setReady,
         userId,
         setUserId,
+        dead,
+        setPlayerDead,
     };
     return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>;
 };

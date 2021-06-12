@@ -1,7 +1,9 @@
 import * as React from 'react';
 
 import { ControllerSocketContext } from '../../../contexts/ControllerSocketContextProvider';
+import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
+import history from '../../../domain/history/history';
 import pebble from '../../../images/pebble.svg';
 import stone from '../../../images/stone.svg';
 import { stoneParticlesConfig } from '../../../utils/particlesConfig';
@@ -34,6 +36,7 @@ const Stone: React.FunctionComponent = () => {
     const [particles, setParticles] = React.useState(false);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { userId } = React.useContext(PlayerContext);
+    const { roomId } = React.useContext(GameContext);
 
     function handleTouch() {
         if (counter <= limit) {
@@ -43,11 +46,11 @@ const Stone: React.FunctionComponent = () => {
     }
 
     function handleThrow() {
-        // TODO add timer
         controllerSocket.emit({
             type: 'game1/stunPlayer',
             userId,
         });
+        history.push(`/controller/${roomId}/dead`);
     }
 
     return (
