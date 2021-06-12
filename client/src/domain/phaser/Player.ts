@@ -20,6 +20,7 @@ export class Player {
     playerCountSameDistance: number;
     dead: boolean;
     finished: boolean;
+    stunned: boolean;
 
     constructor(
         private renderer: PlayerRenderer, // TODO MAKE PRIVATE
@@ -41,6 +42,7 @@ export class Player {
         this.playerAttention = null;
         this.dead = false;
         this.finished = false;
+        this.stunned = false;
 
         this.renderPlayer();
         this.setObstacles();
@@ -100,6 +102,17 @@ export class Player {
 
     handlePlayerFinished() {
         this.destroyPlayer();
+    }
+
+    handlePlayerStunned() {
+        this.renderer.stunPlayer();
+        this.stunned = true;
+    }
+
+    handlePlayerUnStunned() {
+        this.renderer.unStunPlayer();
+
+        this.stunned = false;
     }
 
     private destroyPlayer() {

@@ -21,4 +21,6 @@ export interface PlayerRenderer {
     startRunningAnimation(animationName: string): void;
     stopRunningAnimation(): void;
     destroyPlayer(): void;
+    stunPlayer(): void;
+    unStunPlayer(): void;
 }

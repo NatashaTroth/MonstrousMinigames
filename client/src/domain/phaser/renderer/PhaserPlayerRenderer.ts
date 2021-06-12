@@ -30,6 +30,14 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         this.player?.destroy();
     }
 
+    stunPlayer() {
+        if (this.player) this.player.alpha = 0.5;
+    }
+
+    unStunPlayer() {
+        if (this.player) this.player.alpha = 1;
+    }
+
     renderPlayer(coordinates: Coordinates, monsterName: string, animationName: string, background?: string): void {
         if (!this.player) {
             this.renderPlayerInitially(coordinates, monsterName);

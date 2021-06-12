@@ -25,7 +25,7 @@ import { audioFiles, characters, images } from './GameAssets';
 
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;
-
+let once = true;
 class MainScene extends Phaser.Scene {
     roomId: string;
     socket: Socket;
@@ -173,7 +173,14 @@ class MainScene extends Phaser.Scene {
     // }
 
     updateGameState(gameStateData: GameData) {
+        //TODO delete
         for (let i = 0; i < this.players.length; i++) {
+            if (once) {
+                this.players[i].handlePlayerStunned();
+                once = false;
+            } else {
+                this.players[i].handlePlayerUnStunned();
+            }
             if (gameStateData.playersState[i].dead) {
                 if (!this.players[i].finished) {
                     this.players[i].handlePlayerDead();
@@ -183,6 +190,8 @@ class MainScene extends Phaser.Scene {
                 if (!this.players[i].finished) {
                     this.players[i].handlePlayerFinished();
                 }
+            } else if (gameStateData.playersState[i].stunned) {
+                this.players[i].handlePlayerStunned();
             } else {
                 this.players[i].moveForward(gameStateData.playersState[i].positionX, this.trackLength);
                 this.players[i].checkAtObstacle(gameStateData.playersState[i].atObstacle);
