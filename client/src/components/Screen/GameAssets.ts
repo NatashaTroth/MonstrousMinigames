@@ -1,22 +1,22 @@
 // import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
 import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
-import attention from '../../images/attention.png';
-import stone from '../../images/Felsen.png';
-import forest2 from '../../images/forest2.png';
 // import finishLine from '../../images/finishLine.png';
-import franz from '../../images/franz_spritesheet.png';
-import goal from '../../images/goal.png';
-import cave from '../../images/Hoehle.png'
-import hole from '../../images/Loch.png';
-import chasers from "../../images/Mosquito.png";
-import noah from '../../images/noah_spritesheet.png';
-import spider from '../../images/spider.png';
+import franz from '../../images/characters/franz_spritesheet.png';
+import chasers from '../../images/characters/Mosquito.png';
+import noah from '../../images/characters/noah_spritesheet.png';
 // import startLine from '../../images/startLine.png';
-import steffi from '../../images/steffi_spritesheet.png';
-import susi from '../../images/susi_spritesheet.png';
+import steffi from '../../images/characters/steffi_spritesheet.png';
+import susi from '../../images/characters/susi_spritesheet.png';
+import cave from '../../images/obstacles/cave/cave.png';
+import hole from '../../images/obstacles/hole/hole.png';
+import spider from '../../images/obstacles/spider/spider.png';
+import stone from '../../images/obstacles/stone/stone.png';
 // import track from '../../images/track.png';
-import wood from '../../images/wood.png';
+import wood from '../../images/obstacles/wood/wood.png';
+import attention from '../../images/ui/attention.png';
+import forest2 from '../../images/ui/forest2.png';
+import goal from '../../images/ui/goal.png';
 
 //TODO types
 

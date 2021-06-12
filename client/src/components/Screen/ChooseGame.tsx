@@ -6,8 +6,8 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
-import game1Img from '../../images/instructions1.png';
-import oliverLobby from '../../images/oliverLobby.svg';
+import oliverLobby from '../../images/characters/oliverLobby.svg';
+import game1Img from '../../images/ui/instructions1.png';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import {

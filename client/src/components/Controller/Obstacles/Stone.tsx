@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import pebble from '../../../images/pebble.svg';
-import stone from '../../../images/stone.svg';
+import pebble from '../../../images/obstacles/stone/pebble.svg';
+import stone from '../../../images/obstacles/stone/stone.svg';
 import { stoneParticlesConfig } from '../../../utils/particlesConfig';
 import Button from '../../common/Button';
 import { StyledParticles } from '../../common/Particles.sc';
