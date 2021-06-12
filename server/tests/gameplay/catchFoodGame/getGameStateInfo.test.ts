@@ -45,8 +45,8 @@ describe('Get Obstacle Positions test', () => {
         expect(gameStateInfo.playersState[0].name).toBe(users[0].name);
     });
 
-    it('returns player positionX with 0', async () => {
-        expect(gameStateInfo.playersState[0].positionX).toBe(0);
+    it('returns player positionX with initial position', async () => {
+        expect(gameStateInfo.playersState[0].positionX).toBe(catchFoodGame.initialPlayerPositionX);
     });
 
     it('returns player not at an obstacle', async () => {

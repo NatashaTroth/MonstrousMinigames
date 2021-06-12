@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 import MainScene from '../../../components/Screen/MainScene';
+import { depthDictionary } from '../../../utils/depthDictionary';
 import { Coordinates, PlayerRenderer } from './PlayerRenderer';
 
 /**
@@ -21,9 +22,9 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         if (!this.chasers) {
             this.chasers = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasers');
             this.chasers.setScale(0.5, 0.5);
-            this.chasers.setDepth(1);
+            this.chasers.setDepth(depthDictionary.chaser);
         }
-        this.chasers.setX(chasersPositionX);
+        this.chasers.setX(chasersPositionX - 50); // - 50 so that not quite on top of player when caught
     }
     destroyPlayer() {
         this.player?.destroy();
@@ -90,7 +91,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         if (!this.playerAttention && this.player) {
             this.playerAttention = this.scene.physics.add
                 .sprite(this.player.x + 75, this.player.y - 150, 'attention')
-                .setDepth(100)
+                .setDepth(depthDictionary.attention)
                 .setScale(0.03, 0.03);
         }
     }
@@ -104,7 +105,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
         this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterName);
 
-        this.player.setDepth(50);
+        this.player.setDepth(depthDictionary.player);
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
         this.player.setScale(0.15, 0.15);

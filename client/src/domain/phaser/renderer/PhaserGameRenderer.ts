@@ -23,6 +23,7 @@ export class PhaserGameRenderer implements GameRenderer {
                     (j * windowHeight) / 4 + windowHeight / 4,
                     'forest2'
                 );
+
                 lane.setDisplaySize(windowWidth / 4, windowHeight / 4);
                 lane.setOrigin(0, 1);
                 lane.setScrollFactor(1);

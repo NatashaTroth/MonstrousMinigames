@@ -1,4 +1,5 @@
 import { localDevelopment, Obstacles } from '../../utils/constants';
+import { depthDictionary } from '../../utils/depthDictionary';
 import { GameData } from './gameInterfaces';
 import { Coordinates, PlayerRenderer } from './renderer/PlayerRenderer';
 
@@ -168,7 +169,7 @@ export class Player {
                 obstaclePosY,
                 obstacleScale,
                 obstacle.type.toLowerCase(),
-                obstaclesArray.length - index
+                depthDictionary.obstacle - index
             );
         });
     }
