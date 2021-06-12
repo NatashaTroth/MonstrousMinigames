@@ -17,6 +17,7 @@ import wood from '../../images/obstacles/wood/wood.png';
 import attention from '../../images/ui/attention.png';
 import forest2 from '../../images/ui/forest2.png';
 import goal from '../../images/ui/goal.png';
+import { characterDictionary } from '../../utils/characterDictionary';
 
 //TODO types
 
@@ -37,12 +38,30 @@ const characterSpriteProperties = {
 
 // }
 
-export const characters = [
-    { name: 'franz', file: franz, properties: characterSpriteProperties },
-    { name: 'susi', file: susi, properties: characterSpriteProperties },
-    { name: 'noah', file: noah, properties: characterSpriteProperties },
-    { name: 'steffi', file: steffi, properties: characterSpriteProperties },
+export const characterFiles: string[] = [franz, noah, susi, steffi];
+export const defaultAvailableCharacters = [
+    characterDictionary.franz,
+    characterDictionary.noah,
+    characterDictionary.susi,
+    characterDictionary.steffi,
 ];
+
+export const characterSpriteSheetPrefix = 'character_';
+
+export const characters = characterFiles.map((file, idx) => {
+    return {
+        name: `${characterSpriteSheetPrefix}${defaultAvailableCharacters[idx].toString()}`,
+        file: file,
+        properties: characterSpriteProperties,
+    };
+});
+
+// export const characters = [
+//     { name: 'franz', file: franz, properties: characterSpriteProperties },
+//     { name: 'susi', file: susi, properties: characterSpriteProperties },
+//     { name: 'noah', file: noah, properties: characterSpriteProperties },
+//     { name: 'steffi', file: steffi, properties: characterSpriteProperties },
+// ];
 
 // obstacle textures have to have the same name as obstacle type - lowercase
 export const images = [

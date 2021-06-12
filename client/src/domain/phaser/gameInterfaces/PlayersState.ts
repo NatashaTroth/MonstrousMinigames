@@ -11,4 +11,5 @@ export interface PlayersState {
     obstacles: ObstacleDetails[];
     positionX: number;
     rank: number;
+    characterNumber: number;
 }

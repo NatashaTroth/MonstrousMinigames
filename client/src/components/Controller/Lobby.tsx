@@ -30,7 +30,7 @@ export const Lobby: React.FunctionComponent = () => {
                         {!gameChosen ? (
                             <InstructionContainer variant="light">
                                 <Instruction>
-                                    <InstructionText>Player 1 is now choosing a game!</InstructionText>
+                                    <InstructionText>The admin monitor is now choosing a game!</InstructionText>
                                 </Instruction>
                                 <Instruction>
                                     <InstructionText>Watch on your monitor!</InstructionText>

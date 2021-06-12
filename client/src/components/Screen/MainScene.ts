@@ -186,7 +186,7 @@ class MainScene extends Phaser.Scene {
     }
 
     private createPlayer(index: number, gameStateData: GameData) {
-        const character = characters[index];
+        const character = characters[gameStateData.playersState[index].characterNumber];
         const posX = this.posX + this.plusX * index;
         const posY = this.posY + this.plusY * index;
 

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
-import shakeIt from '../../images/shakeIt.svg';
+import shakeIt from '../../images/ui/shakeIt.svg';
 import FullScreenContainer from '../common/FullScreenContainer';
 import { Container, DialogContent, ShakeIt, StyledDialog } from './ShakeInstruction.sc';
 
