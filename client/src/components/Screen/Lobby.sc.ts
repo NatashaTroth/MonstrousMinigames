@@ -1,7 +1,7 @@
 import { Button, Typography } from '@material-ui/core';
 import styled from 'styled-components';
 
-import forest from '../../images/forest.svg';
+import forest from '../../images/ui/forest.svg';
 import { primary, QRCodeBackground } from '../../utils/colors';
 
 export const LobbyContainer = styled.div`

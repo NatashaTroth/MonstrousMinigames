@@ -1,7 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 
-import { ReactComponent as NetImage } from '../../../images/net.svg';
-import { ReactComponent as SpiderImage } from '../../../images/spider.svg';
+import { ReactComponent as NetImage } from '../../../images/obstacles/spider/net.svg';
+import { ReactComponent as SpiderImage } from '../../../images/obstacles/spider/spider.svg';
 import { SkipButton } from '../../common/SkipButton.sc';
 
 const slideIn = keyframes`

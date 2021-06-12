@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components';
 
-import hole from '../../../images/hole.svg';
-import leaf from '../../../images/leaf.svg';
-import pebble from '../../../images/pebble.svg';
+import hole from '../../../images/obstacles/hole/hole.svg';
+import leaf from '../../../images/obstacles/hole/leaf.svg';
+import pebble from '../../../images/obstacles/stone/pebble.svg';
 import { secondary } from '../../../utils/colors';
 import { SkipButton } from '../../common/SkipButton.sc';
 

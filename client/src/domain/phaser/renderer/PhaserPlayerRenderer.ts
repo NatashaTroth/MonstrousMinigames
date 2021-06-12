@@ -20,7 +20,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     renderChasers(chasersPositionX: number, chasersPositionY: number) {
         if(!this.chasers){
             this.chasers = this.scene.physics.add.sprite(-1, chasersPositionY, "chasers");
-            this.chasers.setScale(0.5, 0.5);
+            this.chasers.setScale(window.devicePixelRatio/3, window.devicePixelRatio/3);
             this.chasers.setDepth(1);
         }
         this.chasers.setX(chasersPositionX)

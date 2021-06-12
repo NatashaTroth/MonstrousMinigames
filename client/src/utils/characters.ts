@@ -1,7 +1,7 @@
-import franz from '../images/franz.png';
-import noah from '../images/noah.png';
-import steffi from '../images/steffi.png';
-import susi from '../images/susi.png';
+import franz from '../images/characters/franz.png';
+import noah from '../images/characters/noah.png';
+import steffi from '../images/characters/steffi.png';
+import susi from '../images/characters/susi.png';
 
 export interface Character {
     id: number;

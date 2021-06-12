@@ -4,7 +4,7 @@ import { ControllerSocketContext } from '../../contexts/ControllerSocketContextP
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { sendMovement } from '../../domain/gameState/controller/sendMovement';
-import shakeIt from '../../images/shakeIt.svg';
+import shakeIt from '../../images/ui/shakeIt.svg';
 import { localDevelopment } from '../../utils/constants';
 import FullScreenContainer from '../common/FullScreenContainer';
 import { Container, DialogContent, ShakeIt, StyledDialog } from './ShakeInstruction.sc';
