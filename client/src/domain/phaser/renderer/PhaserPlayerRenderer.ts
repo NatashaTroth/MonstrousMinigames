@@ -10,11 +10,24 @@ import { Coordinates, PlayerRenderer } from './PlayerRenderer';
 export class PhaserPlayerRenderer implements PlayerRenderer {
     private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     // private playerText?: Phaser.GameObjects.Text;
+    private chasers?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private playerObstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
     constructor(private scene: MainScene) {
         this.playerObstacles = [];
+    }
+    renderChasers(chasersPositionX: number, chasersPositionY: number) {
+        if(!this.chasers){
+            this.chasers = this.scene.physics.add.sprite(-1, chasersPositionY, "chasers");
+            this.chasers.setScale(0.5, 0.5);
+            this.chasers.setDepth(1);
+        }
+        this.chasers.setX(chasersPositionX)
+
+    }
+    destroyPlayer() {
+        this.player?.destroy()
     }
 
     renderPlayer(coordinates: Coordinates, monsterName: string, animationName: string, background?: string): void {

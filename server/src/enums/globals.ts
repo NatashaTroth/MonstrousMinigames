@@ -3,5 +3,5 @@ export enum Globals {
     ROOM_TIME_OUT_HOURS = 1,
     GAME_STATE_UPDATE_MS = 33,
     CRON_JOB_CLEANUP = '*/10 * * * *',
-    CHARACTER_COUNT = 4
+    CHARACTER_COUNT = 4,
 }

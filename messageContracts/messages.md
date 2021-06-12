@@ -365,7 +365,7 @@ example:
 
 ```json
 {
-    "type": "game1/obstacleSolved",
+    "type": "game1/stunPlayer",
     "userId": "XXxXX"
 }
 ```

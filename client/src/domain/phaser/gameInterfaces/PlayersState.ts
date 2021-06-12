@@ -1,6 +1,7 @@
 import { ObstacleDetails } from './';
 
 export interface PlayersState {
+    dead: boolean;
     atObstacle: boolean;
     finished: boolean;
     finishedTimeMs: number;

@@ -13,6 +13,7 @@ import Hole from './components/Controller/Obstacles/Hole';
 import Spider from './components/Controller/Obstacles/Spider';
 import Stone from './components/Controller/Obstacles/Stone';
 import TreeTrunk from './components/Controller/Obstacles/TreeTrunk';
+import PlayerDead from './components/Controller/PlayerDead';
 import ShakeInstruction from './components/Controller/ShakeInstruction';
 import ChooseGame from './components/Screen/ChooseGame';
 import { ConnectScreen as ScreenConnectScreen } from './components/Screen/ConnectScreen';
@@ -43,6 +44,7 @@ const App: React.FunctionComponent = () => {
                             <ScreenSocketContextProvider>
                                 <ControllerSocketContextProvider>
                                     <Switch>
+                                        {/* TODO enum routes */}
                                         <Route path="/credits" component={Credits} exact />
                                         <Route path="/settings" component={Settings} exact />
                                         <Route
@@ -68,6 +70,7 @@ const App: React.FunctionComponent = () => {
                                             component={Stone}
                                             exact
                                         />
+                                        <Route path="/controller/:id/dead" component={PlayerDead} exact />
                                         <Route
                                             path="/controller/:id/finished"
                                             component={ControllerFinishedScreen}

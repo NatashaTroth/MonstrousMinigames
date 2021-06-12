@@ -1,5 +1,5 @@
 export interface Player {
-  id: string;
-  name: string;
-  roomId: number;
+    id: string;
+    name: string;
+    roomId: number;
 }

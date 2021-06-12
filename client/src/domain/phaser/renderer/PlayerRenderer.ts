@@ -7,6 +7,7 @@ export type Coordinates = { x: number; y: number };
  */
 
 export interface PlayerRenderer {
+    renderChasers(chasersPositionX: number, chasersPositionY: number): void;
     // renderText(coordinates: Coordinates, text: string, background?: string): void;
 
     renderPlayer(coordinates: Coordinates, playerName: string, background?: string): void;
@@ -17,4 +18,5 @@ export interface PlayerRenderer {
     destroyAttentionIcon(): void;
     startRunningAnimation(animationName: string): void;
     stopRunningAnimation(): void;
+    destroyPlayer(): void;
 }

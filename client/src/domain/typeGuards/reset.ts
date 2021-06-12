@@ -1,5 +1,5 @@
-import { MessageData } from '../../contexts/ControllerSocketContextProvider';
 import { MessageTypes } from '../../utils/constants';
+import { MessageData } from './MessageData';
 
 export interface GameHasResetMessage {
     type: MessageTypes.gameHasReset;

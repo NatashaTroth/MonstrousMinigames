@@ -1,6 +1,6 @@
-import { MessageData } from '../../contexts/ControllerSocketContextProvider';
 import { MessageTypes } from '../../utils/constants';
 import { GameData } from '../phaser/gameInterfaces';
+import { MessageData } from './MessageData';
 
 export interface GameStateInfoMessage {
     type: MessageTypes.gameState;

@@ -9,12 +9,13 @@ interface HandleUserInit {
         setPlayerAdmin: (val: boolean) => void;
         setPlayerNumber: (val: number) => void;
         setName: (val: string) => void;
+        setUserId: (val: string) => void;
     };
 }
 
 export function handleUserInitMessage(props: HandleUserInit) {
     const { data, dependencies } = props;
-    const { setPlayerAdmin, setPlayerNumber, setName } = dependencies;
+    const { setPlayerAdmin, setPlayerNumber, setName, setUserId } = dependencies;
 
     persistUser(data, {
         setPlayerAdmin,
@@ -22,5 +23,6 @@ export function handleUserInitMessage(props: HandleUserInit) {
         sessionStorage,
         localStorage,
         setName,
+        setUserId,
     });
 }
