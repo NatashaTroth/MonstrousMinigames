@@ -23,6 +23,7 @@ describe('Controller FinishedScreen', () => {
                 finished: true,
                 positionX: 0,
                 isActive: true,
+                dead: false,
             },
             {
                 id: '2',
@@ -32,6 +33,7 @@ describe('Controller FinishedScreen', () => {
                 finished: true,
                 positionX: 0,
                 isActive: true,
+                dead: false,
             },
         ];
 
@@ -61,6 +63,7 @@ describe('Controller FinishedScreen', () => {
                 finished: true,
                 positionX: 0,
                 isActive: true,
+                dead: false,
             },
             {
                 id: '2',
@@ -70,6 +73,7 @@ describe('Controller FinishedScreen', () => {
                 finished: true,
                 positionX: 0,
                 isActive: true,
+                dead: false,
             },
         ];
 
@@ -95,6 +99,7 @@ describe('Controller FinishedScreen', () => {
                 finished: true,
                 positionX: 0,
                 isActive: true,
+                dead: false,
             },
             {
                 id: '2',
@@ -104,6 +109,7 @@ describe('Controller FinishedScreen', () => {
                 finished: true,
                 positionX: 0,
                 isActive: true,
+                dead: false,
             },
             {
                 id: '3',
@@ -113,6 +119,7 @@ describe('Controller FinishedScreen', () => {
                 finished: false,
                 positionX: 0,
                 isActive: true,
+                dead: true,
             },
         ];
 

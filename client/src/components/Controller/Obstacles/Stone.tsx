@@ -1,8 +1,13 @@
 import * as React from 'react';
 
-import pebble from '../../../images/pebble.svg';
-import stone from '../../../images/stone.svg';
+import { ControllerSocketContext } from '../../../contexts/ControllerSocketContextProvider';
+import { GameContext } from '../../../contexts/GameContextProvider';
+import { PlayerContext } from '../../../contexts/PlayerContextProvider';
+import history from '../../../domain/history/history';
+import pebble from '../../../images/obstacles/stone/pebble.svg';
+import stone from '../../../images/obstacles/stone/stone.svg';
 import { stoneParticlesConfig } from '../../../utils/particlesConfig';
+import { controllerPlayerDeadRoute } from '../../../utils/routes';
 import Button from '../../common/Button';
 import { StyledParticles } from '../../common/Particles.sc';
 import {
@@ -30,6 +35,9 @@ const Stone: React.FunctionComponent = () => {
     const [counter, setCounter] = React.useState(0);
     const limit = Math.floor(Math.random() * 16) + 10;
     const [particles, setParticles] = React.useState(false);
+    const { controllerSocket } = React.useContext(ControllerSocketContext);
+    const { userId } = React.useContext(PlayerContext);
+    const { roomId } = React.useContext(GameContext);
 
     function handleTouch() {
         if (counter <= limit) {
@@ -39,7 +47,11 @@ const Stone: React.FunctionComponent = () => {
     }
 
     function handleThrow() {
-        // TODO
+        controllerSocket.emit({
+            type: 'game1/stunPlayer',
+            userId,
+        });
+        history.push(controllerPlayerDeadRoute(roomId));
     }
 
     return (

@@ -4,7 +4,7 @@ import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { users } from '../mockData';
 
-const TRACK_LENGTH = 500;
+const TRACK_LENGTH = 5000;
 const gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
 const dateNow = 1618665766156;
 

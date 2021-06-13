@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
-import arrow from '../../images/arrow_blue.svg';
+import arrow from '../../images/ui/arrow_blue.svg';
 import FullScreenContainer from '../common/FullScreenContainer';
 import { Instruction, InstructionContainer, InstructionText } from '../common/Instruction.sc';
 import { Label } from '../common/Label.sc';
@@ -30,7 +30,7 @@ export const Lobby: React.FunctionComponent = () => {
                         {!gameChosen ? (
                             <InstructionContainer variant="light">
                                 <Instruction>
-                                    <InstructionText>Player 1 is now choosing a game!</InstructionText>
+                                    <InstructionText>The admin monitor is now choosing a game!</InstructionText>
                                 </Instruction>
                                 <Instruction>
                                     <InstructionText>Watch on your monitor!</InstructionText>
@@ -59,7 +59,7 @@ export const Lobby: React.FunctionComponent = () => {
                                 <PlayerContent>
                                     <PlayerName>{name}</PlayerName>
                                     <CharacterContainer>
-                                        <Character src={character?.src} />
+                                        <Character src={character!} />
                                     </CharacterContainer>
                                     <ReadyButton ready={ready} onClick={() => setReady(true)}>
                                         <span>I am </span>

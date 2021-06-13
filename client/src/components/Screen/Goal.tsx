@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import goal from '../../images/goal.svg';
+import goal from '../../images/ui/goal.svg';
 import { ImageContainer, StyledImage } from './Goal.sc';
 
 const Goal: React.FunctionComponent = () => {

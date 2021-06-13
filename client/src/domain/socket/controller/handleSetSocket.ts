@@ -1,17 +1,26 @@
 import { History } from 'history';
 
 import { IObstacle } from '../../../contexts/PlayerContextProvider';
+import { controllerChooseCharacterRoute } from '../../../utils/routes';
+import { handleConnectedUsersMessage } from '../../gameState/controller/handleConnectedUsersMessage';
+import { handleGameHasFinishedMessage } from '../../gameState/controller/handleGameHasFinishedMessage';
 import { handleGameHasResetMessage } from '../../gameState/controller/handleGameHasResetMessage';
 import { handleGameHasStoppedMessage } from '../../gameState/controller/handleGameHasStoppedMessage';
 import { handleGameHasTimedOutMessage } from '../../gameState/controller/handleGameHasTimedOutMessage';
 import { handleGameStartedMessage } from '../../gameState/controller/handleGameStartedMessage';
 import { handleObstacleMessage } from '../../gameState/controller/handleObstacleMessage';
+import { handlePlayerDied } from '../../gameState/controller/handlePlayerDied';
 import { handlePlayerFinishedMessage } from '../../gameState/controller/handlePlayerFinishedMessage';
+import { handlePlayerStunned } from '../../gameState/controller/handlePlayerStunned';
 import { handleUserInitMessage } from '../../gameState/controller/handleUserInitMessage';
+import { ConnectedUsersMessage, connectedUsersTypeGuard } from '../../typeGuards/connectedUsers';
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
+import { finishedTypeGuard } from '../../typeGuards/finished';
 import { ObstacleMessage, obstacleTypeGuard } from '../../typeGuards/obstacle';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
+import { PlayerDiedMessage, playerDiedTypeGuard } from '../../typeGuards/playerDied';
 import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../typeGuards/playerFinished';
+import { playerStunnedTypeGuard } from '../../typeGuards/playerStunned';
 import { GameHasResetMessage, resetTypeGuard } from '../../typeGuards/reset';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
 import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/started';
@@ -33,6 +42,10 @@ export interface HandleSetSocketDependencies {
     resetPlayer: () => void;
     setGameStarted: (val: boolean) => void;
     setName: (val: string) => void;
+    setAvailableCharacters: (val: number[]) => void;
+    setUserId: (val: string) => void;
+    setPlayerDead: (val: boolean) => void;
+    stoneTimeout: ReturnType<typeof setTimeout> | undefined;
     history: History;
 }
 
@@ -54,6 +67,10 @@ export function handleSetSocket(
         resetPlayer,
         setGameStarted,
         setName,
+        setAvailableCharacters,
+        setUserId,
+        setPlayerDead,
+        stoneTimeout,
         history,
     } = dependencies;
 
@@ -69,6 +86,10 @@ export function handleSetSocket(
     const stoppedSocket = new MessageSocket(stoppedTypeGuard, socket);
     const resetSocket = new MessageSocket(resetTypeGuard, socket);
     const errorSocket = new MessageSocket(errorTypeGuard, socket);
+    const connectedUsersSocket = new MessageSocket(connectedUsersTypeGuard, socket);
+    const playerDiedSocket = new MessageSocket(playerDiedTypeGuard, socket);
+    const playerStunnedSocket = new MessageSocket(playerStunnedTypeGuard, socket);
+    const gameFinishedSocket = new MessageSocket(finishedTypeGuard, socket);
 
     userInitSocket.listen((data: UserInitMessage) => {
         handleUserInitMessage({
@@ -77,6 +98,7 @@ export function handleSetSocket(
                 setPlayerAdmin,
                 setPlayerNumber,
                 setName,
+                setUserId,
             },
         });
     });
@@ -92,6 +114,7 @@ export function handleSetSocket(
     playerFinishedSocket.listen((data: PlayerFinishedMessage) => {
         handlePlayerFinishedMessage({
             data,
+            roomId,
             playerFinished,
             dependencies: {
                 setPlayerFinished,
@@ -103,6 +126,7 @@ export function handleSetSocket(
     timedOutSocket.listen((data: TimedOutMessage) => {
         handleGameHasTimedOutMessage({
             data,
+            roomId,
             dependencies: {
                 setPlayerFinished,
                 setPlayerRank,
@@ -141,7 +165,30 @@ export function handleSetSocket(
         // TODO handle errors
     });
 
+    connectedUsersSocket.listen((data: ConnectedUsersMessage) => {
+        handleConnectedUsersMessage({ data, dependencies: { setAvailableCharacters } });
+    });
+
+    playerDiedSocket.listen((data: PlayerDiedMessage) => {
+        handlePlayerDied({
+            data,
+            roomId,
+            dependencies: {
+                setPlayerDead,
+                setPlayerRank,
+            },
+        });
+    });
+
+    playerStunnedSocket.listen(() => {
+        handlePlayerStunned(roomId);
+    });
+
+    gameFinishedSocket.listen(() => {
+        handleGameHasFinishedMessage(roomId, stoneTimeout);
+    });
+
     if (socket) {
-        history.push(`/controller/${roomId}/choose-character`);
+        history.push(controllerChooseCharacterRoute(roomId));
     }
 }
