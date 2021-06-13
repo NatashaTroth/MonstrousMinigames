@@ -53,3 +53,5 @@ export enum MessageTypes {
 }
 
 export const localDevelopment = false;
+
+export const localBackend = 'http://localhost:5000/';

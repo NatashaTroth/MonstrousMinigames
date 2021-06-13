@@ -6,6 +6,7 @@ import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
 import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
+import { localBackend, localDevelopment } from '../../utils/constants';
 import { Routes } from '../../utils/routes';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
@@ -33,12 +34,15 @@ export const ConnectScreen: React.FunctionComponent = () => {
     } = React.useContext(AudioContext);
 
     async function handleCreateNewRoom() {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}create-room`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+        const response = await fetch(
+            `${localDevelopment ? localBackend : process.env.REACT_APP_BACKEND_URL}create-room`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
 
         const data = await response.json();
         handleSocketConnection(data.roomId, 'lobby');
