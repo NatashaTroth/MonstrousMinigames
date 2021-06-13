@@ -14,8 +14,15 @@ import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import { getUserArray } from './Lobby';
 import {
-    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer,
-    ConnectedUserName, ConnectedUsers, Content, GetReadyBackground, GetReadyContainer
+    Character,
+    CharacterContainer,
+    ConnectedUserCharacter,
+    ConnectedUserContainer,
+    ConnectedUserName,
+    ConnectedUsers,
+    Content,
+    GetReadyBackground,
+    GetReadyContainer,
 } from './PlayersGetReady.sc';
 
 const PlayersGetReady: React.FC = () => {
@@ -68,9 +75,9 @@ const PlayersGetReady: React.FC = () => {
                         {getUserArray(connectedUsers || []).map((user, index) => (
                             <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>
                                 <ConnectedUserCharacter number={user.number} free={user.free}>
-                                    {!user.free && (
+                                    {!user.free && user.characterNumber && (
                                         <CharacterContainer>
-                                            <Character src={characters[index]} />
+                                            <Character src={characters[user.characterNumber]} />
                                         </CharacterContainer>
                                     )}
 

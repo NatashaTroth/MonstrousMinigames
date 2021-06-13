@@ -6,12 +6,17 @@ import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
 import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
+import { Routes } from '../../utils/routes';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import Logo from '../common/Logo';
 import ConnectDialog from './ConnectDialog';
 import {
-    ButtonContainer, ConnectScreenContainer, LeftButtonContainer, LeftContainer, RightContainer
+    ButtonContainer,
+    ConnectScreenContainer,
+    LeftButtonContainer,
+    LeftContainer,
+    RightContainer,
 } from './ConnectScreen.sc';
 
 export const ConnectScreen: React.FunctionComponent = () => {
@@ -89,7 +94,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                         name="credits"
                         onClick={() => {
                             handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-                            history.push('/credits');
+                            history.push(Routes.credits);
                         }}
                     >
                         Credits
@@ -99,7 +104,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                         name="settings"
                         onClick={() => {
                             handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-                            history.push('/settings');
+                            history.push(Routes.settings);
                         }}
                     >
                         Settings

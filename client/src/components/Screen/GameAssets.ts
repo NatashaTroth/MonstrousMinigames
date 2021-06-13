@@ -2,10 +2,14 @@
 import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
 import attention from '../../images/attention.png';
+import stone from '../../images/Felsen.png';
 import forest2 from '../../images/forest2.png';
 // import finishLine from '../../images/finishLine.png';
 import franz from '../../images/franz_spritesheet.png';
 import goal from '../../images/goal.png';
+import cave from '../../images/Hoehle.png';
+import hole from '../../images/Loch.png';
+import chasers from '../../images/Mosquito.png';
 import noah from '../../images/noah_spritesheet.png';
 import spider from '../../images/spider.png';
 // import startLine from '../../images/startLine.png';
@@ -46,5 +50,10 @@ export const images = [
     { name: 'attention', file: attention },
     { name: 'goal', file: goal },
     { name: 'treestump', file: wood },
+    { name: 'stone', file: stone },
+    { name: 'hole', file: hole },
     { name: 'spider', file: spider },
+    { name: 'chasers', file: chasers },
+    { name: 'cave', file: cave },
+    { name: 'stone', file: stone },
 ];

@@ -8,11 +8,19 @@ import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import game1Img from '../../images/instructions1.png';
 import oliverLobby from '../../images/oliverLobby.svg';
+import { screenGameIntroRoute, screenGetReadyRoute } from '../../utils/routes';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import {
-    BackButtonContainer, Content, GamePreviewContainer, GameSelectionContainer, LeftContainer,
-    OliverImage, PreviewImage, RightContainer, SelectGameButtonContainer
+    BackButtonContainer,
+    Content,
+    GamePreviewContainer,
+    GameSelectionContainer,
+    LeftContainer,
+    OliverImage,
+    PreviewImage,
+    RightContainer,
+    SelectGameButtonContainer,
 } from './ChooseGame.sc';
 import { LobbyContainer } from './Lobby.sc';
 import LobbyHeader from './LobbyHeader';
@@ -89,14 +97,14 @@ const ChooseGame: React.FunctionComponent = () => {
                                 variant="secondary"
                                 onClick={() =>
                                     tutorial
-                                        ? history.push(`/screen/${roomId}/game-intro`)
-                                        : history.push(`/screen/${roomId}/get-ready`)
+                                        ? history.push(screenGameIntroRoute(roomId))
+                                        : history.push(screenGetReadyRoute(roomId))
                                 }
                                 fullwidth
                             >{`Start ${games[selectedGame].name}`}</Button>
                         </SelectGameButtonContainer>
                         <BackButtonContainer>
-                            <Button onClick={() => history.push(`/screen/${roomId}/lobby`)}>Back</Button>
+                            <Button onClick={history.goBack}>Back</Button>
                         </BackButtonContainer>
                     </RightContainer>
                 </GameSelectionContainer>

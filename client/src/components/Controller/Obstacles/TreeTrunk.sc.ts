@@ -1,5 +1,4 @@
 import { TouchApp } from '@material-ui/icons';
-import Particles from 'react-particles-js';
 import styled, { keyframes } from 'styled-components';
 
 import { SkipButton } from '../../common/SkipButton.sc';
@@ -72,12 +71,6 @@ export const StyledTouchAppIcon = styled(TouchApp)`
         animation-name: ${slide};
         opacity: 0;
     }
-`;
-
-export const StyledParticles = styled(Particles)`
-    position: absolute;
-    width: 100%;
-    height: 100%;
 `;
 
 export const TreeTrunkContainer = styled(ObstacleContainer)`

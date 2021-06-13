@@ -15,17 +15,14 @@ import ScreenSocket from '../../domain/socket/screenSocket';
 import { Socket } from '../../domain/socket/Socket';
 import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../domain/typeGuards/finished';
-import {
-    GameStateInfoMessage, gameStateInfoTypeGuard
-} from '../../domain/typeGuards/gameStateInfo';
+import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../domain/typeGuards/gameStateInfo';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../domain/typeGuards/paused';
-import {
-    PlayerFinishedMessage, playerFinishedTypeGuard
-} from '../../domain/typeGuards/playerFinished';
+import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../domain/typeGuards/playerFinished';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../domain/typeGuards/resumed';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../domain/typeGuards/stopped';
 import { TimedOutMessage, timedOutTypeGuard } from '../../domain/typeGuards/timedOut';
 import { MessageTypes } from '../../utils/constants';
+import { screenFinishedRoute } from '../../utils/routes';
 import { audioFiles, characters, images } from './GameAssets';
 
 const windowWidth = window.innerWidth;
@@ -60,7 +57,7 @@ class MainScene extends Phaser.Scene {
         this.trackLength = 2000;
         this.gameStarted = false;
         this.paused = false;
-        this.cameraSpeed = 1;
+        this.cameraSpeed = 0.5;
         this.gameEventEmitter = GameEventEmitter.getInstance();
     }
 
@@ -126,7 +123,7 @@ class MainScene extends Phaser.Scene {
         const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
         gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
             this.gameAudio?.stopMusic();
-            history.push(`/screen/${this.roomId}/finished`);
+            history.push(screenFinishedRoute(this.roomId));
         });
 
         const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);
@@ -171,6 +168,10 @@ class MainScene extends Phaser.Scene {
         this.players.forEach((player, i) => {
             player.moveForward(gameStateData.playersState[i].positionX, this.trackLength);
             player.checkAtObstacle(gameStateData.playersState[i].atObstacle);
+            player.checkDead(gameStateData.playersState[i].dead);
+            player.setChasers(gameStateData.chasersPositionX);
+            // eslint-disable-next-line no-console
+            console.log(gameStateData);
             player.checkFinished(gameStateData.playersState[i].finished);
         });
         this.moveCamera();

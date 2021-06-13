@@ -1,6 +1,7 @@
 import { createMemoryHistory } from 'history';
 
 import { GameState, MessageTypes } from '../../../utils/constants';
+import { screenFinishedRoute } from '../../../utils/routes';
 import { GameHasFinishedMessage } from '../../typeGuards/finished';
 import { handleGameHasFinishedMessage } from './handleGameHasFinishedMessage';
 
@@ -26,7 +27,7 @@ describe('handleGameHasFinishedMessage', () => {
 
         handleGameHasFinishedMessage({ data, roomId, dependencies: { history, setFinished, setPlayerRanks } });
 
-        expect(history.location).toHaveProperty('pathname', `/screen/${roomId}/finished`);
+        expect(history.location).toHaveProperty('pathname', screenFinishedRoute(roomId));
     });
 
     it('handed setPlayerRanks should be called with passed data', () => {

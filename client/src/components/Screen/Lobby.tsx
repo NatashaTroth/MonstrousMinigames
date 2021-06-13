@@ -15,12 +15,25 @@ import steffi from '../../images/steffi.png';
 import susi from '../../images/susi.png';
 import { localDevelopment } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';
+import { Routes, screenChooseGameRoute } from '../../utils/routes';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import {
-    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer,
-    ConnectedUserName, ConnectedUsers, Content, ContentContainer, CopyToClipboard, LeftContainer,
-    LobbyContainer, QRCode, QRCodeInstructions, RightButtonContainer, RightContainer
+    Character,
+    CharacterContainer,
+    ConnectedUserCharacter,
+    ConnectedUserContainer,
+    ConnectedUserName,
+    ConnectedUsers,
+    Content,
+    ContentContainer,
+    CopyToClipboard,
+    LeftContainer,
+    LobbyContainer,
+    QRCode,
+    QRCodeInstructions,
+    RightButtonContainer,
+    RightContainer,
 } from './Lobby.sc';
 import LobbyHeader from './LobbyHeader';
 
@@ -67,7 +80,7 @@ export const Lobby: React.FunctionComponent = () => {
     return (
         <LobbyContainer>
             <Content>
-                <IconButton onClick={() => history.push('/settings')} right={80}>
+                <IconButton onClick={() => history.push(Routes.settings)} right={80}>
                     <Settings />
                 </IconButton>
                 <IconButton
@@ -90,9 +103,9 @@ export const Lobby: React.FunctionComponent = () => {
                             {getUserArray(connectedUsers || []).map((user, index) => (
                                 <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>
                                     <ConnectedUserCharacter number={user.number} free={user.free}>
-                                        {!user.free && (
+                                        {!user.free && user.characterNumber && (
                                             <CharacterContainer>
-                                                <Character src={characters[index]} />
+                                                <Character src={characters[user.characterNumber]} />
                                             </CharacterContainer>
                                         )}
 
@@ -119,7 +132,7 @@ export const Lobby: React.FunctionComponent = () => {
                                 <Button
                                     onClick={() => {
                                         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-                                        history.push(`/screen/${roomId}/choose-game`);
+                                        history.push(screenChooseGameRoute(roomId));
                                     }}
                                     disabled={!connectedUsers || connectedUsers?.length === 0}
                                     variant="secondary"
@@ -131,7 +144,7 @@ export const Lobby: React.FunctionComponent = () => {
                             <Button
                                 onClick={() => {
                                     handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-                                    history.push('/screen');
+                                    history.push(Routes.screen);
                                 }}
                             >
                                 Back
@@ -150,6 +163,7 @@ interface ConnectedUsers {
     roomId?: string;
     number: number;
     free?: boolean;
+    characterNumber?: null | number;
 }
 
 export function getUserArray(connectedUsers: ConnectedUsers[]): ConnectedUsers[] {

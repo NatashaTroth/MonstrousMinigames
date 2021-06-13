@@ -1,6 +1,6 @@
-import { MessageData } from '../../contexts/ControllerSocketContextProvider';
 import { GameStateData } from '../../contexts/ScreenSocketContextProvider';
 import { MessageTypes } from '../../utils/constants';
+import { MessageData } from './MessageData';
 
 export interface GameHasFinishedMessage {
     type: MessageTypes.gameHasFinished;

@@ -45,10 +45,8 @@ const Game: React.FunctionComponent = () => {
         pauseLobbyMusicNoMute(audioPermission);
     }, [audioPermission]);
 
-    let game: Phaser.Game;
-
     React.useEffect(() => {
-        game = new Phaser.Game({
+        const game = new Phaser.Game({
             parent: 'game-root',
             type: Phaser.AUTO,
             width: '100%',
@@ -62,7 +60,8 @@ const Game: React.FunctionComponent = () => {
         });
         game.scene.add('MainScene', MainScene);
         game.scene.start('MainScene', { roomId: roomId });
-    }, []); //roomId -> but being called twice
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     async function handleAudio() {
         if (gameAudioPlaying) {

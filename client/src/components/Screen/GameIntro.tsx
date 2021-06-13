@@ -6,11 +6,19 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
+import { screenGetReadyRoute } from '../../utils/routes';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import {
-    BackButtonContainer, ControlInstruction, ControlInstructionsContainer, GameIntroBackground,
-    GameIntroContainer, ImageDescription, IntroText, PaddingContainer, PreviewImageContainer
+    BackButtonContainer,
+    ControlInstruction,
+    ControlInstructionsContainer,
+    GameIntroBackground,
+    GameIntroContainer,
+    ImageDescription,
+    IntroText,
+    PaddingContainer,
+    PreviewImageContainer,
 } from './GameIntro.sc';
 
 const GameIntro: React.FunctionComponent = () => {
@@ -31,7 +39,7 @@ const GameIntro: React.FunctionComponent = () => {
             setShowFirstIntro(false);
         } else {
             localStorage.setItem('tutorial', 'seen');
-            history.push(`/screen/${roomId}/get-ready`);
+            history.push(screenGetReadyRoute(roomId));
         }
     }
 

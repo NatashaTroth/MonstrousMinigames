@@ -8,6 +8,7 @@ describe('game state info TypeGuard', () => {
             data: {
                 roomId: 'xxx',
                 playersState: [],
+                chasersPositionX: 0,
                 gameState: GameState.started,
                 trackLength: 2000,
                 numberOfObstacles: 4,
