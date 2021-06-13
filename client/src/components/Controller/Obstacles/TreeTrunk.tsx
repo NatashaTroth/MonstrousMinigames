@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ControllerSocketContext } from '../../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
-import wood from '../../../images/wood.svg';
+import wood from '../../../images/obstacles/wood/wood.svg';
 import { Obstacles } from '../../../utils/constants';
 import { treeParticlesConfig } from '../../../utils/particlesConfig';
 import Button from '../../common/Button';

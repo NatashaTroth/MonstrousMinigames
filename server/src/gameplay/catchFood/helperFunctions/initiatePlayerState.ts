@@ -7,7 +7,8 @@ import { Obstacle, PlayerState } from '../interfaces';
 export function initiatePlayersState(
     players: Array<User>,
     numberOfObstacles: number,
-    trackLength: number
+    trackLength: number,
+    initialPlayerPositionX: number
 ): HashTable<PlayerState> {
     const obstacleTypes = getObstacleTypes(numberOfObstacles);
     const playersState: HashTable<PlayerState> = {};
@@ -15,8 +16,8 @@ export function initiatePlayersState(
         playersState[player.id] = {
             id: player.id,
             name: player.name,
-            positionX: 0,
-            obstacles: createObstacles(obstacleTypes, numberOfObstacles, trackLength),
+            positionX: initialPlayerPositionX,
+            obstacles: createObstacles(obstacleTypes, numberOfObstacles, trackLength, initialPlayerPositionX),
             atObstacle: false,
             finished: false,
             finishedTimeMs: 0,
@@ -46,22 +47,22 @@ export function getObstacleTypes(numberOfObstacles: number): Array<ObstacleType>
 export function createObstacles(
     obstacleTypes: Array<ObstacleType>,
     numberOfObstacles: number,
-    trackLength: number
+    trackLength: number,
+    initialPlayerPositionX: number
 ): Array<Obstacle> {
     const obstacles: Array<Obstacle> = [];
     const shuffledObstacleTypes: Array<ObstacleType> = shuffleArray(obstacleTypes);
 
-    const quadrantRange = Math.floor(trackLength / (numberOfObstacles + 1)) - 30; //e.g. 500/4 = 125, +10 to avoid obstacle being at the very beginning, - 10 to stop 2 being right next to eachother
+    const quadrantRange = Math.floor((trackLength - initialPlayerPositionX) / (numberOfObstacles + 1)) - 30; //e.g. 500/4 = 125, +10 to avoid obstacle being at the very beginning, - 10 to stop 2 being right next to eachother
 
     for (let i = 0; i < numberOfObstacles; i++) {
         const randomNr = Math.random() * quadrantRange;
 
         let position = randomNr + quadrantRange * (i + 1);
         position = Math.round(position / 10) * 10; //round to nearest 10 (to stop exactly at it)
-
         obstacles.push({
             id: i,
-            positionX: position,
+            positionX: initialPlayerPositionX + position,
             type: shuffledObstacleTypes[i],
         });
     }

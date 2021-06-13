@@ -77,13 +77,16 @@ const GameIntro: React.FunctionComponent = () => {
                         {/* <PreviewImage src={forest} /> */}
 
                         <ImageDescription>
-                            Your goal is to be the first player to arrive at the goal while conquering your obsticles
+                            Your goal is to be the first player to reach safety in the cave while conquering obstacles
                             along the way!
                         </ImageDescription>
                         <ControlInstructionsContainer>
                             <ControlInstruction>Shake your phone in order to run!</ControlInstruction>
-                            <ControlInstruction>Rub your screen in order to slice the tree trunk!</ControlInstruction>
-                            <ControlInstruction>oher obstacle</ControlInstruction>
+                            <ControlInstruction>Swipe your screen in order to slice the tree trunk!</ControlInstruction>
+                            <ControlInstruction>Blow into your phone to blow the spider away!</ControlInstruction>
+                            <ControlInstruction>
+                                Move the stones and leaves into the hole to run over it!
+                            </ControlInstruction>
                         </ControlInstructionsContainer>
                     </div>
                 )}

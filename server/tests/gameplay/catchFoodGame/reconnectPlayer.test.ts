@@ -75,7 +75,7 @@ describe('Reconnect Player tests', () => {
         catchFoodGame.disconnectPlayer('1');
         catchFoodGame.reconnectPlayer('1');
         catchFoodGame.runForward('1', SPEED);
-        expect(catchFoodGame.playersState['1'].positionX).toBe(SPEED);
+        expect(catchFoodGame.playersState['1'].positionX).toBe(catchFoodGame.initialPlayerPositionX + SPEED);
     });
 
     it('can complete an obstacle after being reconnected', async () => {
