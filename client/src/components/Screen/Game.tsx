@@ -18,8 +18,8 @@ const Game: React.FunctionComponent = () => {
     const { roomId } = React.useContext(GameContext);
     const {
         pauseLobbyMusicNoMute,
-        permission,
-        setPermissionGranted,
+        audioPermission,
+        setAudioPermissionGranted,
         musicIsPlaying,
         gameAudioPlaying,
         setGameAudioPlaying,
@@ -34,7 +34,7 @@ const Game: React.FunctionComponent = () => {
     }
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
 
         if (Number(localStorage.getItem('audioVolume')) > 0) {
             setGameAudioPlaying(true);
@@ -42,8 +42,8 @@ const Game: React.FunctionComponent = () => {
     }, []);
 
     React.useEffect(() => {
-        pauseLobbyMusicNoMute(permission);
-    }, [permission]);
+        pauseLobbyMusicNoMute(audioPermission);
+    }, [audioPermission]);
 
     React.useEffect(() => {
         const game = new Phaser.Game({

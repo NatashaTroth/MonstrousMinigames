@@ -30,10 +30,11 @@ const PlayersGetReady: React.FC = () => {
     const {
         playLobbyMusic,
         pauseLobbyMusic,
-        permission,
+        audioPermission,
         playing,
-        setPermissionGranted,
+        setAudioPermissionGranted,
         musicIsPlaying,
+        initialPlayLobbyMusic,
     } = React.useContext(AudioContext);
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
     const characters = [franz, noah, susi, steffi];
@@ -49,7 +50,8 @@ const PlayersGetReady: React.FC = () => {
     }
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        initialPlayLobbyMusic(true);
     }, []);
 
     return (
@@ -58,7 +60,13 @@ const PlayersGetReady: React.FC = () => {
                 <Content>
                     <IconButton
                         onClick={() =>
-                            handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
+                            handleAudio({
+                                playing,
+                                audioPermission,
+                                pauseLobbyMusic,
+                                playLobbyMusic,
+                                setAudioPermissionGranted,
+                            })
                         }
                     >
                         {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}

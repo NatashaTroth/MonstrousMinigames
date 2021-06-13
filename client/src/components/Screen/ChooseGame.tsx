@@ -6,8 +6,8 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
-import game1Img from '../../images/instructions1.png';
-import oliverLobby from '../../images/oliverLobby.svg';
+import oliverLobby from '../../images/characters/oliverLobby.svg';
+import game1Img from '../../images/ui/instructions1.png';
 import { screenGameIntroRoute, screenGetReadyRoute } from '../../utils/routes';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
@@ -32,9 +32,9 @@ const ChooseGame: React.FunctionComponent = () => {
     const {
         playLobbyMusic,
         pauseLobbyMusic,
-        permission,
+        audioPermission,
         playing,
-        setPermissionGranted,
+        setAudioPermissionGranted,
         musicIsPlaying,
     } = React.useContext(AudioContext);
 
@@ -50,7 +50,7 @@ const ChooseGame: React.FunctionComponent = () => {
     ];
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
     }, []);
 
     return (
@@ -59,7 +59,13 @@ const ChooseGame: React.FunctionComponent = () => {
                 <LobbyHeader />
                 <IconButton
                     onClick={() =>
-                        handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
+                        handleAudio({
+                            playing,
+                            audioPermission,
+                            pauseLobbyMusic,
+                            playLobbyMusic,
+                            setAudioPermissionGranted,
+                        })
                     }
                 >
                     {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}

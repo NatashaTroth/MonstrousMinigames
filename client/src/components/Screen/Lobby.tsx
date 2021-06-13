@@ -42,10 +42,11 @@ export const Lobby: React.FunctionComponent = () => {
     const {
         playLobbyMusic,
         pauseLobbyMusic,
-        permission,
+        audioPermission,
         playing,
-        setPermissionGranted,
+        setAudioPermissionGranted,
         musicIsPlaying,
+        initialPlayLobbyMusic,
     } = React.useContext(AudioContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: IRouteParams = useParams();
@@ -72,7 +73,8 @@ export const Lobby: React.FunctionComponent = () => {
     }, [roomId]);
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        initialPlayLobbyMusic(true);
     }, []);
 
     return (
@@ -83,7 +85,13 @@ export const Lobby: React.FunctionComponent = () => {
                 </IconButton>
                 <IconButton
                     onClick={() =>
-                        handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
+                        handleAudio({
+                            playing,
+                            audioPermission,
+                            pauseLobbyMusic,
+                            playLobbyMusic,
+                            setAudioPermissionGranted,
+                        })
                     }
                 >
                     {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
@@ -123,7 +131,7 @@ export const Lobby: React.FunctionComponent = () => {
                             {screenAdmin && (
                                 <Button
                                     onClick={() => {
-                                        handleAudioPermission(permission, { setPermissionGranted });
+                                        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
                                         history.push(screenChooseGameRoute(roomId));
                                     }}
                                     disabled={!connectedUsers || connectedUsers?.length === 0}
@@ -135,7 +143,7 @@ export const Lobby: React.FunctionComponent = () => {
                             <Button disabled>Leaderboard</Button>
                             <Button
                                 onClick={() => {
-                                    handleAudioPermission(permission, { setPermissionGranted });
+                                    handleAudioPermission(audioPermission, { setAudioPermissionGranted });
                                     history.push(Routes.screen);
                                 }}
                             >
