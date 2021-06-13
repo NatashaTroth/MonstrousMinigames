@@ -54,7 +54,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
 
     renderGoal(posX: number, posY: number) {
         posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
-        // posY += 10;
+        posY += 5;
         const scale = 0.13;
         const caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
         caveBehind.setScale(scale, scale);
