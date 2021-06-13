@@ -21,13 +21,13 @@ describe('gameHasTimedOut function', () => {
     };
 
     it('handed setPlayerFinished should be called with true', () => {
-        handleGameHasTimedOutMessage({ data: mockData, dependencies: { setPlayerFinished, setPlayerRank } });
+        handleGameHasTimedOutMessage({ data: mockData, roomId, dependencies: { setPlayerFinished, setPlayerRank } });
 
         expect(setPlayerFinished).toHaveBeenLastCalledWith(true);
     });
 
     it('handed setPlayerRank should be called with handed playerRank', () => {
-        handleGameHasTimedOutMessage({ data: mockData, dependencies: { setPlayerFinished, setPlayerRank } });
+        handleGameHasTimedOutMessage({ data: mockData, roomId, dependencies: { setPlayerFinished, setPlayerRank } });
 
         expect(setPlayerRank).toHaveBeenLastCalledWith(mockData.rank);
     });

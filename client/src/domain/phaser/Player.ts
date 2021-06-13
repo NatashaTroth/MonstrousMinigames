@@ -1,4 +1,4 @@
-import { localDevelopment, Obstacles } from '../../utils/constants';
+import { Obstacles } from '../../utils/constants';
 import { depthDictionary } from '../../utils/depthDictionary';
 import { GameData } from './gameInterfaces';
 import { Coordinates, PlayerRenderer } from './renderer/PlayerRenderer';
@@ -45,36 +45,16 @@ export class Player {
         this.renderPlayer();
         this.setObstacles();
         this.setGoal(gameStateData.trackLength);
-        // eslint-disable-next-line no-console
-        console.log(this.coordinates);
     }
 
     moveForward(x: number, trackLength: number) {
         if (this.finished) return;
         const newXPosition = x;
         if (newXPosition == this.coordinates.x && this.playerRunning) {
-            if (localDevelopment) {
-                // so that running animation works in local development
-                this.playerCountSameDistance++;
-            } else {
-                this.stopRunning();
-            }
+            this.stopRunning();
         } else {
             if (!this.playerRunning) {
                 this.startRunning();
-                if (localDevelopment) {
-                    // so that running animation works in local development
-                    this.playerCountSameDistance = 0;
-                }
-            }
-        }
-
-        //TODO delete
-        if (localDevelopment) {
-            // so that running animation works in local development
-            if (this.playerRunning && this.playerCountSameDistance > 50) {
-                this.stopRunning();
-                this.playerCountSameDistance = 0;
             }
         }
 
