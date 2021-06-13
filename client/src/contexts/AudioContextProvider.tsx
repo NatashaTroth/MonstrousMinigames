@@ -87,7 +87,9 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     const [gameAudioPlaying, setGameAudioPlaying] = React.useState<boolean>(false);
     const [lobbyMusic, setLobbyMusic] = React.useState<HTMLAudioElement>(new Audio(lobbyMusicFile));
     const [finishedMusic, setFinishedMusic] = React.useState<HTMLAudioElement>(new Audio(finishedMusicFile));
-    const [volume, setVolume] = React.useState<number>(0);
+    const [volume, setVolume] = React.useState<number>(
+        localStorage.getItem('audioVolume') ? Number(localStorage.getItem('audioVolume')) : 0.2
+    );
     const [initialAudioSet, setInitialAudioSet] = React.useState<boolean>(false); //to make sure the audio from localstorage is used - even if useEffect is not called until after play is called
 
     React.useEffect(() => {
@@ -128,6 +130,7 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     };
 
     const unMuteVolumeEverywhere = () => {
+        print('un muting volume');
         const newVolume = Number(localStorage.getItem('audioVolumeBefore'));
         changeVolume(newVolume);
         localStorage.setItem('audioVolume', newVolume.toString());
@@ -157,6 +160,7 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
         try {
             await finishedMusic.play();
             setPlaying(true);
+
             if (volume === 0) unMuteVolumeEverywhere();
         } catch (e) {
             setPlaying(false);
@@ -193,6 +197,8 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
             //because audio context too slow updating
             const initialVolume = setInitialAudio();
             if (initialVolume > 0 && p) {
+                print('HERE');
+                print(volume);
                 playLobbyMusic();
             }
         },
