@@ -53,9 +53,18 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     }
 
     renderGoal(posX: number, posY: number) {
-        const cave = this.scene.physics.add.sprite(posX, posY, 'cave'); //TODO change cave to enum
-        cave.setScale(0.13, 0.13);
-        cave.setDepth(depthDictionary.cave);
+        posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
+        // posY += 10;
+        const caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
+        caveBehind.setScale(0.13, 0.13);
+        caveBehind.setDepth(depthDictionary.cave);
+        const caveInFront = this.scene.physics.add.sprite(posX, posY, 'caveInFront'); //TODO change caveInFront to enum
+        caveInFront.setScale(0.13, 0.13);
+        caveInFront.setDepth(depthDictionary.caveInFront);
+
+        // const cave = this.scene.physics.add.sprite(posX, posY, 'cave'); //TODO change cave to enum
+        // cave.setScale(0.13, 0.13);
+        // cave.setDepth(depthDictionary.cave);
     }
 
     // renderText(coordinates: Coordinates, text: string, background?: string): void {

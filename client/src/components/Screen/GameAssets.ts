@@ -7,7 +7,9 @@ import chasers from '../../images/characters/Mosquito.png';
 import noah from '../../images/characters/noah_spritesheet.png';
 import steffi from '../../images/characters/steffi_spritesheet.png';
 import susi from '../../images/characters/susi_spritesheet.png';
-import cave from '../../images/obstacles/cave/cave.png';
+// import cave from '../../images/obstacles/cave/cave.png';
+import caveBehind from '../../images/obstacles/cave/cave_behind.png';
+import caveInFront from '../../images/obstacles/cave/cave_in_front.png';
 import hole from '../../images/obstacles/hole/hole.png';
 import spider from '../../images/obstacles/spider/spider.png';
 import stone from '../../images/obstacles/stone/stone.png';
@@ -60,7 +62,9 @@ export const images = [
     { name: 'hole', file: hole },
     { name: 'spider', file: spider },
     { name: 'chasers', file: chasers },
-    { name: 'cave', file: cave },
+    // { name: 'cave', file: cave },
+    { name: 'caveBehind', file: caveBehind },
+    { name: 'caveInFront', file: caveInFront },
     { name: 'stone', file: stone },
 ];
 

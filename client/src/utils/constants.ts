@@ -52,6 +52,6 @@ export enum MessageTypes {
     playerStunned = 'game1/playerStunned',
 }
 
-export const localDevelopment = false;
+export const localDevelopment = false; //the one in constants.ts on the server
 
 export const localBackend = 'http://localhost:5000/';
