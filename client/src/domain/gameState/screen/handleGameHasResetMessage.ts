@@ -1,5 +1,7 @@
 import { History } from 'history';
 
+import { screenLobbyRoute } from '../../../utils/routes';
+
 interface HandleGameHasResetMessage {
     roomId: string;
     dependencies: {
@@ -9,5 +11,5 @@ interface HandleGameHasResetMessage {
 export function handleGameHasResetMessage(props: HandleGameHasResetMessage) {
     const { roomId, dependencies } = props;
     const { history } = dependencies;
-    history.push(`/screen/${roomId}/lobby`);
+    history.push(screenLobbyRoute(roomId));
 }

@@ -1,8 +1,8 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { leaderboard, roomId } from '../mockData';
 import {
-    finishGame, getGameFinishedDataDifferentTimes, getGameFinishedDataSameRanks,
-    startGameAndAdvanceCountdown
+    clearTimersAndIntervals, finishGame, getGameFinishedDataDifferentTimes,
+    getGameFinishedDataSameRanks, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 // const TRACKLENGTH = 500;
@@ -17,8 +17,7 @@ describe('Game logic tests', () => {
     });
 
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('createPlayerRanks is called when the game is finished', async () => {

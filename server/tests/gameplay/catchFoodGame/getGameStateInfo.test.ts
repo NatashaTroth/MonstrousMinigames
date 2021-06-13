@@ -2,6 +2,7 @@ import { CatchFoodGame } from '../../../src/gameplay';
 import { GameStateInfo } from '../../../src/gameplay/catchFood/interfaces';
 import { GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
+import { clearTimersAndIntervals } from './gameHelperFunctions';
 
 const TRACKLENGTH = 500;
 const NUMBER_OF_OBSTACLES = 4;
@@ -17,8 +18,7 @@ describe('Get Obstacle Positions test', () => {
     });
 
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('should return the game state', async () => {
@@ -45,8 +45,8 @@ describe('Get Obstacle Positions test', () => {
         expect(gameStateInfo.playersState[0].name).toBe(users[0].name);
     });
 
-    it('returns player positionX with 0', async () => {
-        expect(gameStateInfo.playersState[0].positionX).toBe(0);
+    it('returns player positionX with initial position', async () => {
+        expect(gameStateInfo.playersState[0].positionX).toBe(catchFoodGame.initialPlayerPositionX);
     });
 
     it('returns player not at an obstacle', async () => {
@@ -57,11 +57,19 @@ describe('Get Obstacle Positions test', () => {
         expect(gameStateInfo.playersState[0].finished).toBeFalsy();
     });
 
+    it('returns player as not finished', async () => {
+        expect(gameStateInfo.playersState[0].dead).toBeFalsy();
+    });
+
     it('returns player is active', async () => {
         expect(gameStateInfo.playersState[0].isActive).toBeTruthy();
     });
 
     it('returns player with correct number of obstacles (all)', async () => {
         expect(gameStateInfo.playersState[0].obstacles.length).toBe(NUMBER_OF_OBSTACLES);
+    });
+
+    it('returns chaser position', async () => {
+        expect(gameStateInfo.chasersPositionX).toBe(catchFoodGame.chasersPositionX);
     });
 });

@@ -1,6 +1,7 @@
 import { stringify } from 'query-string';
 import io from 'socket.io-client';
 
+import { localBackend, localDevelopment } from '../../utils/constants';
 import { Socket } from './Socket';
 
 interface Params {
@@ -47,12 +48,15 @@ export class SocketIOAdapter implements Socket {
             params.userId = sessionStorage.getItem('userId') || '';
         }
 
-        return io(`${process.env.REACT_APP_BACKEND_URL}${this.device}?${stringify(params)}`, {
-            secure: true,
-            reconnection: true,
-            rejectUnauthorized: false,
-            reconnectionDelayMax: 10000,
-            transports: ['websocket'],
-        });
+        return io(
+            `${localDevelopment ? localBackend : process.env.REACT_APP_BACKEND_URL}${this.device}?${stringify(params)}`,
+            {
+                secure: true,
+                reconnection: true,
+                rejectUnauthorized: false,
+                reconnectionDelayMax: 10000,
+                transports: ['websocket'],
+            }
+        );
     }
 }

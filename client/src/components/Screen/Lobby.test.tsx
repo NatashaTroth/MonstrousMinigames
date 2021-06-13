@@ -47,12 +47,16 @@ describe('Screen Lobby', () => {
                 name: 'User 1'.toUpperCase(),
                 roomId: 'ABCDE',
                 number: 1,
+                characterNumber: 0,
+                active: true,
             },
             {
                 id: '2',
                 name: 'User 2'.toUpperCase(),
                 roomId: 'ABCDE',
                 number: 2,
+                characterNumber: 1,
+                active: true,
             },
         ];
 

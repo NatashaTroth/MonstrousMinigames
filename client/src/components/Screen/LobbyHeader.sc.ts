@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import codeBackground from '../../images/codeBackground.svg';
+import codeBackground from '../../images/ui/codeBackground.svg';
 
 export const HeadContainer = styled.div`
     display: flex;

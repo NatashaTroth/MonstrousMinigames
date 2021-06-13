@@ -6,7 +6,7 @@ import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId } from '../mockData';
 import {
-    completeNextObstacle, finishPlayer, startGameAndAdvanceCountdown
+    clearTimersAndIntervals, completeNextObstacle, finishPlayer, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 // const TRACK_LENGTH = 500;
@@ -26,8 +26,7 @@ describe('Reconnect Player tests', () => {
     });
 
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('reconnectPlayer should set player isActive to true', async () => {
@@ -76,7 +75,7 @@ describe('Reconnect Player tests', () => {
         catchFoodGame.disconnectPlayer('1');
         catchFoodGame.reconnectPlayer('1');
         catchFoodGame.runForward('1', SPEED);
-        expect(catchFoodGame.playersState['1'].positionX).toBe(SPEED);
+        expect(catchFoodGame.playersState['1'].positionX).toBe(catchFoodGame.initialPlayerPositionX + SPEED);
     });
 
     it('can complete an obstacle after being reconnected', async () => {

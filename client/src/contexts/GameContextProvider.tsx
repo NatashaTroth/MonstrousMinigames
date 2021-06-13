@@ -2,7 +2,8 @@ import * as React from 'react';
 
 import { handleSetGameFinished } from '../domain/gameState/controller/handleSetGameFinished';
 import { handleSetGameStarted } from '../domain/gameState/controller/handleSetGameStarted';
-import { IUser } from './ControllerSocketContextProvider';
+import { IUser } from '../domain/typeGuards/connectedUsers';
+import { defaultAvailableCharacters } from '../utils/characters';
 import { PlayerRank } from './ScreenSocketContextProvider';
 
 export const defaultValue = {
@@ -57,6 +58,10 @@ export const defaultValue = {
     setScreenAdmin: () => {
         // do nothing
     },
+    availableCharacters: [],
+    setAvailableCharacters: () => {
+        // do nothing
+    },
 };
 interface IGameContext {
     finished: boolean;
@@ -84,6 +89,8 @@ interface IGameContext {
     setTutorial: (val: boolean) => void;
     screenAdmin: boolean;
     setScreenAdmin: (val: boolean) => void;
+    availableCharacters: number[];
+    setAvailableCharacters: (val: number[]) => void;
 }
 
 export const GameContext = React.createContext<IGameContext>(defaultValue);
@@ -102,6 +109,7 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [gameChosen, setGameChosen] = React.useState(false);
     const [tutorial, setTutorial] = React.useState(true);
     const [screenAdmin, setScreenAdmin] = React.useState<boolean>(false);
+    const [availableCharacters, setAvailableCharacters] = React.useState<number[]>(defaultAvailableCharacters);
 
     const content = {
         finished,
@@ -132,6 +140,8 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setTutorial,
         screenAdmin,
         setScreenAdmin,
+        availableCharacters,
+        setAvailableCharacters,
     };
     return <GameContext.Provider value={content}>{children}</GameContext.Provider>;
 };

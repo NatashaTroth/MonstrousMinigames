@@ -33,6 +33,10 @@
         <br />
         <button onclick="input('stop')">STOP</button>
         <button onclick="input('pause')">PAUSE/RESUME</button>
+        <br />
+        <input name="character" id="character" />
+        <label for="character">character</label>
+        <button onclick="input('selectCharacter')">SELECT CHARACTER</button>
 
         <div id="output"></div>
     </body>
@@ -78,6 +82,13 @@
                 ssocket.emit('message', {
                     type: 'pauseResume',
                 });
+            if (type == 'selectCharacter') {
+                let character = document.getElementById('character').value;
+                socket.emit('message', {
+                    type: 'selectCharacter',
+                    characterNumber: character,
+                });
+            }
             if (type == 'createRoom') {
                 let env = document.getElementById('env').value;
 

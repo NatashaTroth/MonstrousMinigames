@@ -6,4 +6,7 @@ export interface GameData {
     playersState: PlayersState[];
     roomId: string;
     trackLength: number;
+    chasersPositionX: number;
+    chasersAreRunning: boolean;
+    cameraPositionX: number;
 }

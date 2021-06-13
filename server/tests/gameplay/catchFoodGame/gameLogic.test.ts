@@ -2,8 +2,9 @@ import { CatchFoodGame } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId } from '../mockData';
 import {
-    completeNextObstacle, completePlayersObstacles, finishPlayer, getGameFinishedDataDifferentTimes,
-    startAndFinishGameDifferentTimes, startGameAndAdvanceCountdown
+    clearTimersAndIntervals, completeNextObstacle, completePlayersObstacles, finishPlayer,
+    getGameFinishedDataDifferentTimes, startAndFinishGameDifferentTimes,
+    startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 const TRACKLENGTH = 500;
@@ -17,13 +18,12 @@ describe('Start game', () => {
         jest.useFakeTimers();
     });
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
-    it('starts players at positionX 0', async () => {
+    it('starts players at initial positionX', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        expect(catchFoodGame.playersState['1'].positionX).toBe(0);
+        expect(catchFoodGame.playersState['1'].positionX).toBe(catchFoodGame.initialPlayerPositionX);
     });
 
     it('gameStartedTime is now', async () => {
@@ -40,21 +40,21 @@ describe('Run forward', () => {
         jest.useFakeTimers();
     });
     afterEach(() => {
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('moves players forward when runForward is called', async () => {
         const SPEED = 10;
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.runForward('1', SPEED);
-        expect(catchFoodGame.playersState['1'].positionX).toBe(SPEED);
+        expect(catchFoodGame.playersState['1'].positionX).toBe(catchFoodGame.initialPlayerPositionX + SPEED);
     });
 
     it('moves players forward correctly when runForward is called multiple times', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.runForward('1', 10);
         catchFoodGame.runForward('1', 5);
-        expect(catchFoodGame.playersState['1'].positionX).toBe(15);
+        expect(catchFoodGame.playersState['1'].positionX).toBe(catchFoodGame.initialPlayerPositionX + 15);
     });
 });
 
@@ -64,7 +64,7 @@ describe('Obstacles reached', () => {
         jest.useFakeTimers();
     });
     afterEach(() => {
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('playerHasReachedObstacle is called and returns false', async () => {
@@ -179,7 +179,7 @@ describe('Player has finished race', () => {
         jest.useFakeTimers();
     });
     afterEach(() => {
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('should set a player as finished when they have reached the end of the race', async () => {
@@ -246,7 +246,7 @@ describe('Game finished', () => {
         jest.useFakeTimers();
     });
     afterEach(() => {
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('all players should be marked as finished', async () => {

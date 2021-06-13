@@ -7,4 +7,7 @@ export interface GameStateInfo {
     gameState: GameState;
     trackLength: number;
     numberOfObstacles: number;
+    chasersPositionX: number;
+    chasersAreRunning: boolean;
+    cameraPositionX: number;
 }

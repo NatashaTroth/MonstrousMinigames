@@ -15,15 +15,13 @@ export class PhaserGameRenderer implements GameRenderer {
     }
 
     renderBackground(windowWidth: number, windowHeight: number, trackLength: number) {
-        // eslint-disable-next-line no-console
-        console.log(`${trackLength}, ${windowWidth}`);
-        const reps = trackLength / (windowWidth / 4);
+        const reps = Math.ceil(trackLength / (windowWidth / 4)) + 1;
         for (let i = 0; i < reps; i++) {
             for (let j = 0; j < 4; j++) {
                 const lane = this.scene.add.image(
                     (i * windowWidth) / 4,
                     (j * windowHeight) / 4 + windowHeight / 4,
-                    'forest2'
+                    'forest2Smaller'
                 );
                 lane.setDisplaySize(windowWidth / 4, windowHeight / 4);
                 lane.setOrigin(0, 1);
@@ -47,11 +45,4 @@ export class PhaserGameRenderer implements GameRenderer {
     resumeGame() {
         this.pauseButton?.setText('Pause');
     }
-
-    //TODO
-    // setGoal(playerIndex: number) {
-    //     const goal = this.physics.add.sprite(this.trackLength, this.getYPosition(playerIndex), 'goal');
-    //     goal.setScale(0.1, 0.1);
-    //     goals.push(goal);
-    // }
 }

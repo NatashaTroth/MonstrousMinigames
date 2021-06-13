@@ -5,7 +5,7 @@ import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { GameType } from '../../../src/gameplay/leaderboard/enums/GameType';
 import Leaderboard from '../../../src/gameplay/leaderboard/Leaderboard';
 import { roomId } from '../mockData';
-import { startAndFinishGame } from './gameHelperFunctions';
+import { clearTimersAndIntervals, startAndFinishGame } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
 
@@ -24,8 +24,7 @@ describe('Leaderboard tests for Catch Food Game', () => {
     });
 
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('should call addGameToHistory on leaderboard', async () => {

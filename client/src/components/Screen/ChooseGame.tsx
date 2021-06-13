@@ -1,10 +1,16 @@
+import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 
+import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
+import { handleAudio } from '../../domain/audio/handleAudio';
+import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
-import game1Img from '../../images/instructions1.png';
-import oliverLobby from '../../images/oliverLobby.svg';
+import oliverLobby from '../../images/characters/oliverLobby.svg';
+import game1Img from '../../images/ui/instructions1.png';
+import { screenGameIntroRoute, screenGetReadyRoute } from '../../utils/routes';
 import Button from '../common/Button';
+import IconButton from '../common/IconButton';
 import {
     BackButtonContainer,
     Content,
@@ -23,6 +29,14 @@ const ChooseGame: React.FunctionComponent = () => {
     const [selectedGame, setSelectedGame] = React.useState(0);
     const { roomId } = React.useContext(GameContext);
     const tutorial = localStorage.getItem('tutorial') ? false : true;
+    const {
+        playLobbyMusic,
+        pauseLobbyMusic,
+        audioPermission,
+        playing,
+        setAudioPermissionGranted,
+        musicIsPlaying,
+    } = React.useContext(AudioContext);
 
     const games = [
         {
@@ -35,10 +49,27 @@ const ChooseGame: React.FunctionComponent = () => {
         { id: 4, name: 'Game 4' },
     ];
 
+    React.useEffect(() => {
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+    }, []);
+
     return (
         <LobbyContainer>
             <Content>
                 <LobbyHeader />
+                <IconButton
+                    onClick={() =>
+                        handleAudio({
+                            playing,
+                            audioPermission,
+                            pauseLobbyMusic,
+                            playLobbyMusic,
+                            setAudioPermissionGranted,
+                        })
+                    }
+                >
+                    {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
+                </IconButton>
                 <GameSelectionContainer>
                     <LeftContainer>
                         <div>
@@ -64,14 +95,14 @@ const ChooseGame: React.FunctionComponent = () => {
                                 variant="secondary"
                                 onClick={() =>
                                     tutorial
-                                        ? history.push(`/screen/${roomId}/game-intro`)
-                                        : history.push(`/screen/${roomId}/get-ready`)
+                                        ? history.push(screenGameIntroRoute(roomId))
+                                        : history.push(screenGetReadyRoute(roomId))
                                 }
                                 fullwidth
                             >{`Start ${games[selectedGame].name}`}</Button>
                         </SelectGameButtonContainer>
                         <BackButtonContainer>
-                            <Button onClick={() => history.push(`/screen/${roomId}/lobby`)}>Back</Button>
+                            <Button onClick={history.goBack}>Back</Button>
                         </BackButtonContainer>
                     </RightContainer>
                 </GameSelectionContainer>

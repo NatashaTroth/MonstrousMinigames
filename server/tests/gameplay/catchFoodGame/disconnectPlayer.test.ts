@@ -6,7 +6,7 @@ import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
 import {
-    completeNextObstacle, finishPlayer, startAndFinishGameDifferentTimes,
+    clearTimersAndIntervals, completeNextObstacle, finishPlayer, startAndFinishGameDifferentTimes,
     startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
@@ -27,8 +27,7 @@ describe('Disconnect Player tests', () => {
     });
 
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('disconnectPlayer should initialise player isActive as true', async () => {
@@ -73,7 +72,7 @@ describe('Disconnect Player tests', () => {
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.playersState['1'].positionX).toBe(SPEED);
+        expect(catchFoodGame.playersState['1'].positionX).toBe(catchFoodGame.initialPlayerPositionX + SPEED);
     });
 
     it('cannot complete an obstacle when disconnected', async () => {

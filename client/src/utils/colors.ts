@@ -17,5 +17,5 @@ export const disabledShadow = '#9a9a9a';
 export const secondary = '#d2a44f';
 export const secondaryShadow = '#7e5e34';
 
-export const readyButton = '#1b2828';
+export const readyButton = '#1c2a2b';
 export const darkGreen = '#0e1a18';

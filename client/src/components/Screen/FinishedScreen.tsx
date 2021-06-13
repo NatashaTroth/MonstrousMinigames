@@ -1,21 +1,51 @@
+import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 
+import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
-import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handleResetGame } from '../../domain/gameState/screen/handleResetGame';
+import { handleAudio } from '../../domain/audio/handleAudio';
+import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import { formatMs } from '../../utils/formatMs';
-import Button from '../common/Button';
+import IconButton from '../common/IconButton';
 import { Instruction, InstructionContainer, InstructionText } from '../common/Instruction.sc';
 import { Label } from '../common/Label.sc';
 import { FinishedScreenContainer, Headline, LeaderBoardRow, RankTable, UnfinishedUserRow } from './FinishedScreen.sc';
-export const FinishedScreen: React.FunctionComponent = () => {
-    const { playerRanks, hasTimedOut, screenAdmin, resetGame } = React.useContext(GameContext);
-    const { screenSocket } = React.useContext(ScreenSocketContext);
 
-    const unfinishedPlayers = playerRanks?.filter(playerRank => !playerRank.rank) || [];
-    const sortedPlayerRanks = playerRanks?.filter(playerRank => playerRank.rank).sort((a, b) => a.rank! - b.rank!);
+export const FinishedScreen: React.FunctionComponent = () => {
+    const { playerRanks, hasTimedOut } = React.useContext(GameContext);
+    const {
+        playLobbyMusic,
+        pauseLobbyMusic,
+        audioPermission,
+        playing,
+        setAudioPermissionGranted,
+        musicIsPlaying,
+        initialPlayFinishedMusic,
+    } = React.useContext(AudioContext);
+
+    const deadPlayers = playerRanks?.filter(playerRank => playerRank.dead) || [];
+    const sortedPlayerRanks = playerRanks?.filter(playerRank => !playerRank.dead).sort((a, b) => a.rank! - b.rank!);
+
+    React.useEffect(() => {
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        initialPlayFinishedMusic(true);
+    }, []);
+
     return (
         <FinishedScreenContainer>
+            <IconButton
+                onClick={() =>
+                    handleAudio({
+                        playing,
+                        audioPermission,
+                        pauseLobbyMusic,
+                        playLobbyMusic,
+                        setAudioPermissionGranted,
+                    })
+                }
+            >
+                {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
+            </IconButton>
             <RankTable>
                 <Headline>{hasTimedOut ? 'Game has timed out!' : 'Finished!'}</Headline>
                 {sortedPlayerRanks?.map((player, index) => (
@@ -43,10 +73,10 @@ export const FinishedScreen: React.FunctionComponent = () => {
                         )}
                     </LeaderBoardRow>
                 ))}
-                {unfinishedPlayers?.length > 0 && (
+                {deadPlayers?.length > 0 && (
                     <>
-                        <Label>Unfinished Players:</Label>
-                        {unfinishedPlayers.map((player, index) => (
+                        <Label>Dead Players:</Label>
+                        {deadPlayers.map((player, index) => (
                             <UnfinishedUserRow key={`UnfinishedLeaderBoardRow${index}`}>
                                 <InstructionContainer>
                                     <Instruction variant="dark">
@@ -58,10 +88,6 @@ export const FinishedScreen: React.FunctionComponent = () => {
                     </>
                 )}
             </RankTable>
-            {screenSocket && (
-                <Button onClick={() => handleResetGame(screenSocket, { resetGame }, true)}>Back to Lobby</Button>
-            )}
-            {screenAdmin && <Button>Back to Lobby</Button>}
         </FinishedScreenContainer>
     );
 };

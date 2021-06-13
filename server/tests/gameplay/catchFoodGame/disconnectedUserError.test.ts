@@ -1,7 +1,9 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { DisconnectedUserError } from '../../../src/gameplay/customErrors';
 import { leaderboard, roomId } from '../mockData';
-import { completeNextObstacle, startGameAndAdvanceCountdown } from './gameHelperFunctions';
+import {
+    clearTimersAndIntervals, completeNextObstacle, startGameAndAdvanceCountdown
+} from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
 
@@ -12,8 +14,7 @@ describe('DisconnectedUserError handling tests', () => {
     });
 
     afterEach(async () => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
+        clearTimersAndIntervals(catchFoodGame);
     });
 
     it('DisconnectedUserError has userId property of disconnected user', async () => {
