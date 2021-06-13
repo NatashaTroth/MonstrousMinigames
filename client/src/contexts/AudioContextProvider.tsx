@@ -2,7 +2,8 @@ import * as React from 'react';
 
 import lobbyMusicFile from '../assets/audio/LobbySound2_Loop.wav';
 import finishedMusicFile from '../assets/audio/WinnerSound.wav';
-import print from '../domain/phaser/printMethod';
+
+// import print from '../domain/phaser/printMethod';
 
 export const defaultValue = {
     audioPermission: false,
@@ -47,6 +48,9 @@ export const defaultValue = {
     setAudioVolume: () => {
         //do nothing
     },
+    setAudioBeforeVolume: () => {
+        //do nothing
+    },
     mute: () => {
         //do nothing
     },
@@ -73,6 +77,7 @@ interface IAudioContext {
     setGameAudioPlaying: (p: boolean) => void;
     setVolume: (v: number) => void;
     setAudioVolume: (v: number) => void;
+    setAudioBeforeVolume: (v: number) => void;
     pauseLobbyMusicNoMute: (p: boolean) => void;
     mute: () => void;
     unMute: () => void;
@@ -99,8 +104,6 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     const setInitialAudio = () => {
         if (!initialAudioSet) {
             setInitialAudioSet(true);
-            print('set initial audio');
-            print(initialAudioSet);
 
             const initialVolume = localStorage.getItem('audioVolume')
                 ? Number(localStorage.getItem('audioVolume'))
@@ -130,7 +133,6 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     };
 
     const unMuteVolumeEverywhere = () => {
-        print('un muting volume');
         const newVolume = Number(localStorage.getItem('audioVolumeBefore'));
         changeVolume(newVolume);
         localStorage.setItem('audioVolume', newVolume.toString());
@@ -138,14 +140,11 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
 
     const playLobbyMusic = async () => {
         try {
-            print('actually playing');
-            print(volume);
             await lobbyMusic.play();
             lobbyMusic.loop = true;
             setPlaying(true);
             if (volume === 0) unMuteVolumeEverywhere();
         } catch (e) {
-            print('catch');
             setPlaying(false);
         }
     };
@@ -197,8 +196,6 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
             //because audio context too slow updating
             const initialVolume = setInitialAudio();
             if (initialVolume > 0 && p) {
-                print('HERE');
-                print(volume);
                 playLobbyMusic();
             }
         },
@@ -221,6 +218,9 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
             // setVolume(v); //TODO change - laggy when change volume
             // localStorage.setItem('audioVolume', v.toString());
             updateVolumeEverywhere(v);
+        },
+        setAudioBeforeVolume: (v: number) => {
+            localStorage.setItem('audioVolumeBefore', v.toString());
         },
         mute: () => {
             if (volume > 0) muteVolumeEverywhere();

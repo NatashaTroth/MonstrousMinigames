@@ -13,9 +13,7 @@ import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import Button from './Button';
 import IconButton from './IconButton';
-import {
-    BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer
-} from './Settings.sc';
+import { BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer } from './Settings.sc';
 
 const useStyles = makeStyles({
     root: {
@@ -64,9 +62,10 @@ const Settings: React.FunctionComponent = () => {
 
     const updateVolume = async (newValue: number) => {
         if (newValue === 0) await pauseLobbyMusic(true);
-        else if (volumeHasBeenUnmuted(newValue)) await playLobbyMusic(true);
+        else if (volumeHasBeenUnmuted(newValue)) {
+            await playLobbyMusic(true);
+        }
 
-        //called before volume is updated in context - TODO change (bug is that when volume slider is on 0 and you slide it forwards, it takes on the before value from the local storage instead of the value you just set)
         setAudioVolume(newValue);
         setValue(newValue);
     };
@@ -90,7 +89,7 @@ const Settings: React.FunctionComponent = () => {
                             </Grid>
                             <Grid item xs>
                                 <Slider
-                                    value={value}
+                                    value={volume}
                                     onChange={handleChange}
                                     aria-labelledby="continuous-slider"
                                     step={0.05}
