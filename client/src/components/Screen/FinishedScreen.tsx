@@ -92,7 +92,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
                     </>
                 )}
             </RankTable>
-            {screenAdmin && screenSocket && (
+            {screenSocket && screenAdmin && (
                 <Button onClick={() => handleResetGame(screenSocket, { resetGame }, true)}>Back to Lobby</Button>
             )}
         </FinishedScreenContainer>

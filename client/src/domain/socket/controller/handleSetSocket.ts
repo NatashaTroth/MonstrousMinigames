@@ -32,7 +32,6 @@ import { Socket } from '../Socket';
 
 export interface HandleSetSocketDependencies {
     setControllerSocket: (socket: Socket) => void;
-    setPlayerAdmin: (val: boolean) => void;
     setPlayerNumber: (val: number) => void;
     setPlayerFinished: (val: boolean) => void;
     setObstacle: (roomId: string | undefined, obstacle: undefined | IObstacle) => void;
@@ -61,10 +60,7 @@ export function handleSetSocket(
         setPlayerFinished,
         setObstacle,
         setPlayerRank,
-        setPlayerAdmin,
         setHasPaused,
-        resetGame,
-        resetPlayer,
         setGameStarted,
         setName,
         setAvailableCharacters,
@@ -95,7 +91,6 @@ export function handleSetSocket(
         handleUserInitMessage({
             data,
             dependencies: {
-                setPlayerAdmin,
                 setPlayerNumber,
                 setName,
                 setUserId,
@@ -154,7 +149,7 @@ export function handleSetSocket(
     });
 
     stoppedSocket.listen((data: GameHasStoppedMessage) => {
-        handleGameHasStoppedMessage({ socket, roomId, dependencies: { resetGame, resetPlayer, history } });
+        handleGameHasStoppedMessage({ socket, roomId, dependencies: { history } });
     });
 
     resetSocket.listen((data: GameHasResetMessage) => {

@@ -17,10 +17,6 @@ export const defaultValue = {
     setPlayerRank: () => {
         // do nothing
     },
-    isPlayerAdmin: false,
-    setIsPlayerAdmin: () => {
-        // do nothing
-    },
     permission: false,
     setPermissionGranted: () => {
         // do nothing
@@ -68,8 +64,6 @@ interface IPlayerContext {
     setPlayerFinished: (val: boolean) => void;
     playerRank: number | undefined;
     setPlayerRank: (val: number) => void;
-    isPlayerAdmin: boolean;
-    setIsPlayerAdmin: (val: boolean) => void;
     permission: boolean;
     setPermissionGranted: (val: boolean) => void;
     resetPlayer: () => void;
@@ -96,7 +90,6 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [obstacle, setObstacle] = React.useState<undefined | IObstacle>();
     const [playerFinished, setPlayerFinished] = React.useState<boolean>(false);
     const [playerRank, setPlayerRank] = React.useState<undefined | number>();
-    const [isPlayerAdmin, setIsPlayerAdmin] = React.useState<boolean>(false);
     const [playerNumber, setPlayerNumber] = React.useState<number | undefined>();
     const [permission, setPermissionGranted] = React.useState<boolean>(false);
     const history = useHistory();
@@ -125,8 +118,6 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setPlayerFinished,
         playerRank,
         setPlayerRank,
-        isPlayerAdmin,
-        setIsPlayerAdmin,
         permission,
         setPermissionGranted,
         resetPlayer: () => {
