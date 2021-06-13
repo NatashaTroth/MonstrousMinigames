@@ -165,6 +165,7 @@ export function handleSetSocket(
     playerDiedSocket.listen((data: PlayerDiedMessage) => {
         handlePlayerDied({
             data,
+            roomId,
             dependencies: {
                 setPlayerDead,
                 setPlayerRank,
