@@ -104,17 +104,6 @@ class ConnectionHandler {
                 }
                 if (socket.room.isOpen()) {
                     emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
-                    const admin = socket.room.admin;
-                    if (admin) {
-                        controllerNamespace.to(admin.socketId).emit('message', {
-                            type: MessageTypes.USER_INIT,
-                            userId: admin.id,
-                            roomId: socket.room.id,
-                            name: admin.name,
-                            isAdmin: socket.room.isAdmin(admin),
-                            number: admin.number,
-                        });
-                    }
                 }
             });
 
@@ -167,22 +156,6 @@ class ConnectionHandler {
                         }
                         break;
                     }
-                    case MessageTypes.BACK_TO_LOBBY:
-                        {
-                            if (!socket.room.isOpen() && socket.room.isAdmin(socket.user)) {
-                                console.info(socket.room.id + ' | Reset Game');
-                                socket.room.resetGame().then(() => {
-                                    emitter.sendMessage(
-                                        MessageTypes.GAME_HAS_RESET,
-                                        [controllerNamespace, screenNameSpace],
-                                        socket.room.id
-                                    );
-                                    emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
-                                    emitter.sendUserInit(socket, user.number);
-                                });
-                            }
-                        }
-                        break;
                     default: {
                         console.info(message);
                     }
