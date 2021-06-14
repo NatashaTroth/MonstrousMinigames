@@ -3,16 +3,19 @@ import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
+import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
+import { handleResetGame } from '../../domain/gameState/screen/handleResetGame';
 import { formatMs } from '../../utils/formatMs';
+import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import { Instruction, InstructionContainer, InstructionText } from '../common/Instruction.sc';
 import { Label } from '../common/Label.sc';
 import { FinishedScreenContainer, Headline, LeaderBoardRow, RankTable, UnfinishedUserRow } from './FinishedScreen.sc';
 
 export const FinishedScreen: React.FunctionComponent = () => {
-    const { playerRanks, hasTimedOut } = React.useContext(GameContext);
+    const { playerRanks, hasTimedOut, screenAdmin, resetGame } = React.useContext(GameContext);
     const {
         playLobbyMusic,
         pauseLobbyMusic,
@@ -22,6 +25,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
         musicIsPlaying,
         initialPlayFinishedMusic,
     } = React.useContext(AudioContext);
+    const { screenSocket } = React.useContext(ScreenSocketContext);
 
     const deadPlayers = playerRanks?.filter(playerRank => playerRank.dead) || [];
     const sortedPlayerRanks = playerRanks?.filter(playerRank => !playerRank.dead).sort((a, b) => a.rank! - b.rank!);
@@ -88,6 +92,9 @@ export const FinishedScreen: React.FunctionComponent = () => {
                     </>
                 )}
             </RankTable>
+            {screenSocket && screenAdmin && (
+                <Button onClick={() => handleResetGame(screenSocket, { resetGame }, true)}>Back to Lobby</Button>
+            )}
         </FinishedScreenContainer>
     );
 };
