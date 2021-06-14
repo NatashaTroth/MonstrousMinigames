@@ -136,7 +136,7 @@ class ConnectionHandler {
                         {
                             if (message.userId && message.receivingUserId) {
                                 try {
-                                    socket.room.game?.stunPlayer(message.userId);
+                                    socket.room.game?.stunPlayer(message.receivingUserId, message.userId);
                                 } catch (e) {
                                     emitter.sendErrorMessage(socket, e);
                                     console.error(roomId + ' | ' + e.name);
