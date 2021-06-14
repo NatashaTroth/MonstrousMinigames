@@ -3,8 +3,10 @@ import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
+import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
+import { screenGetReadyRoute } from '../../utils/routes';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import {
@@ -25,10 +27,11 @@ const GameIntro: React.FunctionComponent = () => {
     const {
         playLobbyMusic,
         pauseLobbyMusic,
-        permission,
+        audioPermission,
         playing,
-        setPermissionGranted,
+        setAudioPermissionGranted,
         musicIsPlaying,
+        initialPlayLobbyMusic,
     } = React.useContext(AudioContext);
 
     function handleSkip() {
@@ -36,29 +39,30 @@ const GameIntro: React.FunctionComponent = () => {
             setShowFirstIntro(false);
         } else {
             localStorage.setItem('tutorial', 'seen');
-            history.push(`/screen/${roomId}/get-ready`);
+            history.push(screenGetReadyRoute(roomId));
         }
     }
-    const handleAudioPermissionCallback = React.useCallback(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
-    }, [permission, setPermissionGranted]);
 
     React.useEffect(() => {
-        handleAudioPermissionCallback();
-    }, [handleAudioPermissionCallback]);
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        initialPlayLobbyMusic(true);
+    }, []);
 
-    async function handleAudio() {
-        handleAudioPermissionCallback();
-
-        if (playing) {
-            pauseLobbyMusic(permission);
-        } else {
-            playLobbyMusic(permission);
-        }
-    }
     return (
         <GameIntroContainer>
-            <IconButton onClick={handleAudio}>{musicIsPlaying ? <VolumeUp /> : <VolumeOff />}</IconButton>
+            <IconButton
+                onClick={() =>
+                    handleAudio({
+                        playing,
+                        audioPermission,
+                        pauseLobbyMusic,
+                        playLobbyMusic,
+                        setAudioPermissionGranted,
+                    })
+                }
+            >
+                {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
+            </IconButton>
             <GameIntroBackground>
                 {showFirstIntro ? (
                     <IntroText>
@@ -73,13 +77,16 @@ const GameIntro: React.FunctionComponent = () => {
                         {/* <PreviewImage src={forest} /> */}
 
                         <ImageDescription>
-                            Your goal is to be the first player to arrive at the goal while conquering your obsticles
+                            Your goal is to be the first player to reach safety in the cave while conquering obstacles
                             along the way!
                         </ImageDescription>
                         <ControlInstructionsContainer>
                             <ControlInstruction>Shake your phone in order to run!</ControlInstruction>
-                            <ControlInstruction>Rub your screen in order to slice the tree trunk!</ControlInstruction>
-                            <ControlInstruction>oher obstacle</ControlInstruction>
+                            <ControlInstruction>Swipe your screen in order to slice the tree trunk!</ControlInstruction>
+                            <ControlInstruction>Blow into your phone to blow the spider away!</ControlInstruction>
+                            <ControlInstruction>
+                                Move the stones and leaves into the hole to run over it!
+                            </ControlInstruction>
                         </ControlInstructionsContainer>
                     </div>
                 )}

@@ -7,7 +7,6 @@ export const handlePermission = (permission: boolean) => {
         const w = window as WindowProps;
         const AudioContext = window.AudioContext || w.webkitAudioContext || false;
         if (AudioContext) {
-            //TODO fix laggy audio
             new AudioContext().resume();
             return true;
         }
@@ -16,11 +15,11 @@ export const handlePermission = (permission: boolean) => {
 };
 
 interface PermissionDependencies {
-    setPermissionGranted: (permission: boolean) => void;
+    setAudioPermissionGranted: (permission: boolean) => void;
 }
 
 export const handleAudioPermission = (permission: boolean, dependencies: PermissionDependencies) => {
     if (handlePermission(permission)) {
-        dependencies.setPermissionGranted(true);
+        dependencies.setAudioPermissionGranted(true);
     }
 };

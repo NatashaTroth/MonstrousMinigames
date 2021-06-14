@@ -6,10 +6,10 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
-import franz from '../../images/franz.png';
-import noah from '../../images/noah.png';
-import steffi from '../../images/steffi.png';
-import susi from '../../images/susi.png';
+import franz from '../../images/characters/franz.png';
+import noah from '../../images/characters/noah.png';
+import steffi from '../../images/characters/steffi.png';
+import susi from '../../images/characters/susi.png';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import { getUserArray } from './Lobby';
@@ -30,10 +30,11 @@ const PlayersGetReady: React.FC = () => {
     const {
         playLobbyMusic,
         pauseLobbyMusic,
-        permission,
+        audioPermission,
         playing,
-        setPermissionGranted,
+        setAudioPermissionGranted,
         musicIsPlaying,
+        initialPlayLobbyMusic,
     } = React.useContext(AudioContext);
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
     const characters = [franz, noah, susi, steffi];
@@ -49,7 +50,8 @@ const PlayersGetReady: React.FC = () => {
     }
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        initialPlayLobbyMusic(true);
     }, []);
 
     return (
@@ -58,7 +60,13 @@ const PlayersGetReady: React.FC = () => {
                 <Content>
                     <IconButton
                         onClick={() =>
-                            handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
+                            handleAudio({
+                                playing,
+                                audioPermission,
+                                pauseLobbyMusic,
+                                playLobbyMusic,
+                                setAudioPermissionGranted,
+                            })
                         }
                     >
                         {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}

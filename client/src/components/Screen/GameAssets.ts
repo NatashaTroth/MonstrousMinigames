@@ -1,22 +1,23 @@
-// import game1SoundEnd from '../../assets/audio/Game_1_Sound_End.wav';
 import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
-import attention from '../../images/attention.png';
-import stone from '../../images/Felsen.png';
-import forest2 from '../../images/forest2.png';
-// import finishLine from '../../images/finishLine.png';
-import franz from '../../images/franz_spritesheet.png';
-import goal from '../../images/goal.png';
-import cave from '../../images/Hoehle.png'
-import hole from '../../images/Loch.png';
-import chasers from "../../images/Mosquito.png";
-import noah from '../../images/noah_spritesheet.png';
-import spider from '../../images/spider.png';
-// import startLine from '../../images/startLine.png';
-import steffi from '../../images/steffi_spritesheet.png';
-import susi from '../../images/susi_spritesheet.png';
-// import track from '../../images/track.png';
-import wood from '../../images/wood.png';
+import flaresJsonFile from '../../assets/flares/flares.json';
+import flaresPngFile from '../../assets/flares/flares.png';
+import franz from '../../images/characters/franz_spritesheet.png';
+import chasers from '../../images/characters/Mosquito.png';
+import noah from '../../images/characters/noah_spritesheet.png';
+import steffi from '../../images/characters/steffi_spritesheet.png';
+import susi from '../../images/characters/susi_spritesheet.png';
+import caveBehind from '../../images/obstacles/cave/cave_behind.png';
+import caveInFront from '../../images/obstacles/cave/cave_in_front.png';
+import hole from '../../images/obstacles/hole/hole.png';
+import spider from '../../images/obstacles/spider/spider.png';
+import stone from '../../images/obstacles/stone/stone.png';
+import wood from '../../images/obstacles/wood/wood.png';
+import attention from '../../images/ui/attention.png';
+import forest2 from '../../images/ui/forest2.png';
+import forest2Smaller from '../../images/ui/forest2Smaller.png';
+import forestTile from '../../images/ui/forestTile.png';
+import { characterDictionary } from '../../utils/characterDictionary';
 
 //TODO types
 
@@ -31,29 +32,39 @@ const characterSpriteProperties = {
     frameHeight: 1163,
 };
 
-// export interface{
-//     name: string,
-//     file: pending,
-
-// }
-
-export const characters = [
-    { name: 'franz', file: franz, properties: characterSpriteProperties },
-    { name: 'susi', file: susi, properties: characterSpriteProperties },
-    { name: 'noah', file: noah, properties: characterSpriteProperties },
-    { name: 'steffi', file: steffi, properties: characterSpriteProperties },
+export const characterFiles: string[] = [franz, noah, susi, steffi];
+export const defaultAvailableCharacters = [
+    characterDictionary.franz,
+    characterDictionary.noah,
+    characterDictionary.susi,
+    characterDictionary.steffi,
 ];
+
+export const characterSpriteSheetPrefix = 'character_';
+
+export const characters = characterFiles.map((file, idx) => {
+    return {
+        name: `${characterSpriteSheetPrefix}${defaultAvailableCharacters[idx].toString()}`,
+        file: file,
+        properties: characterSpriteProperties,
+    };
+});
 
 // obstacle textures have to have the same name as obstacle type - lowercase
 export const images = [
     { name: 'forest2', file: forest2 },
+    { name: 'forest2Smaller', file: forest2Smaller },
+    { name: 'forestTile', file: forestTile },
     { name: 'attention', file: attention },
-    { name: 'goal', file: goal },
     { name: 'treestump', file: wood },
     { name: 'stone', file: stone },
     { name: 'hole', file: hole },
     { name: 'spider', file: spider },
     { name: 'chasers', file: chasers },
-    { name: 'cave', file: cave },
+    { name: 'caveBehind', file: caveBehind },
+    { name: 'caveInFront', file: caveInFront },
     { name: 'stone', file: stone },
 ];
+
+export const flaresPng = flaresPngFile;
+export const flaresJson = flaresJsonFile;

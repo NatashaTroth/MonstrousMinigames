@@ -9,12 +9,13 @@ import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
 import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
-import franz from '../../images/franz.png';
-import noah from '../../images/noah.png';
-import steffi from '../../images/steffi.png';
-import susi from '../../images/susi.png';
+import franz from '../../images/characters/franz.png';
+import noah from '../../images/characters/noah.png';
+import steffi from '../../images/characters/steffi.png';
+import susi from '../../images/characters/susi.png';
 import { localDevelopment } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';
+import { Routes, screenChooseGameRoute } from '../../utils/routes';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import {
@@ -41,10 +42,11 @@ export const Lobby: React.FunctionComponent = () => {
     const {
         playLobbyMusic,
         pauseLobbyMusic,
-        permission,
+        audioPermission,
         playing,
-        setPermissionGranted,
+        setAudioPermissionGranted,
         musicIsPlaying,
+        initialPlayLobbyMusic,
     } = React.useContext(AudioContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: IRouteParams = useParams();
@@ -71,18 +73,25 @@ export const Lobby: React.FunctionComponent = () => {
     }, [roomId]);
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        initialPlayLobbyMusic(true);
     }, []);
 
     return (
         <LobbyContainer>
             <Content>
-                <IconButton onClick={() => history.push('/settings')} right={80}>
+                <IconButton onClick={() => history.push(Routes.settings)} right={80}>
                     <Settings />
                 </IconButton>
                 <IconButton
                     onClick={() =>
-                        handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
+                        handleAudio({
+                            playing,
+                            audioPermission,
+                            pauseLobbyMusic,
+                            playLobbyMusic,
+                            setAudioPermissionGranted,
+                        })
                     }
                 >
                     {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
@@ -122,8 +131,8 @@ export const Lobby: React.FunctionComponent = () => {
                             {screenAdmin && (
                                 <Button
                                     onClick={() => {
-                                        handleAudioPermission(permission, { setPermissionGranted });
-                                        history.push(`/screen/${roomId}/choose-game`);
+                                        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+                                        history.push(screenChooseGameRoute(roomId));
                                     }}
                                     disabled={!connectedUsers || connectedUsers?.length === 0}
                                     variant="secondary"
@@ -134,8 +143,8 @@ export const Lobby: React.FunctionComponent = () => {
                             <Button disabled>Leaderboard</Button>
                             <Button
                                 onClick={() => {
-                                    handleAudioPermission(permission, { setPermissionGranted });
-                                    history.push('/screen');
+                                    handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+                                    history.push(Routes.screen);
                                 }}
                             >
                                 Back

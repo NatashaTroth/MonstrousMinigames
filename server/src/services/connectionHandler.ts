@@ -169,7 +169,7 @@ class ConnectionHandler {
                     }
                     case CatchFoodMsgType.STUN_PLAYER:
                         {
-                            if (message.userId) {
+                            if (message.userId && message.receivingUserId) {
                                 try {
                                     socket.room.game?.stunPlayer(message.userId);
                                 } catch (e) {

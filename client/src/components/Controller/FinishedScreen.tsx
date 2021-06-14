@@ -10,7 +10,7 @@ import { Instruction, InstructionText } from '../common/Instruction.sc';
 import { FinishedScreenContainer, FinishedScreenText } from './FinishedScreen.sc';
 
 export const FinishedScreen: React.FunctionComponent = () => {
-    const { playerRank, isPlayerAdmin, resetPlayer } = React.useContext(PlayerContext);
+    const { playerRank, isPlayerAdmin, resetPlayer, dead } = React.useContext(PlayerContext);
     const { resetGame, hasTimedOut } = React.useContext(GameContext);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
 
@@ -21,9 +21,11 @@ export const FinishedScreen: React.FunctionComponent = () => {
                     <FinishedScreenText variant="light">
                         {playerRank ? (
                             <>
-                                <Instruction>
-                                    <InstructionText>#{playerRank}</InstructionText>
-                                </Instruction>
+                                {!dead && (
+                                    <Instruction>
+                                        <InstructionText>#{playerRank}</InstructionText>
+                                    </Instruction>
+                                )}
                                 <Instruction>
                                     <InstructionText>Finished!</InstructionText>
                                 </Instruction>

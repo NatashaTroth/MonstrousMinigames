@@ -49,7 +49,7 @@ describe('Room: Users', () => {
             expect(room.isClosed()).toEqual(false);
             room.userDisconnected(user2.id);
             expect(room.isClosed()).toEqual(true);
-        }, 3000);
+        }, room.game.countdownTime);
         clearTimersAndIntervals(room.game);
         jest.runAllTimers();
     });

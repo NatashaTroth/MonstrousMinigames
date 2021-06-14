@@ -3,4 +3,5 @@ export interface IMessage {
     roomId?: string;
     userId?: string;
     characterNumber?: string;
+    receivingUserId?: string;
 }

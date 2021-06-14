@@ -1,5 +1,6 @@
 import { History } from 'history';
 
+import { controllerLobbyRoute } from '../../../utils/routes';
 import { Socket } from '../../socket/Socket';
 import { handleResetGame } from './handleResetGame';
 
@@ -18,5 +19,5 @@ export function handleGameHasStoppedMessage(props: HandleGameHasStoppedMessage) 
     const { resetPlayer, resetGame, history } = dependencies;
 
     handleResetGame(socket, { resetPlayer, resetGame });
-    history.push(`/controller/${roomId}/lobby`);
+    history.push(controllerLobbyRoute(roomId));
 }

@@ -35,6 +35,7 @@ export interface PlayerRank {
     totalTimeInMs?: number;
     positionX: number;
     isActive: boolean;
+    dead: boolean;
 }
 
 export interface PlayerState {

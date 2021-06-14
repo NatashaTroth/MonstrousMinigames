@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router';
 
 import { Obstacles } from '../utils/constants';
-import { GameContext } from './GameContextProvider';
+import { controllerGame1Route, controllerObstacleRoute } from '../utils/routes';
 
 export const defaultValue = {
     obstacle: undefined,
@@ -52,6 +52,10 @@ export const defaultValue = {
     setPlayerDead: () => {
         // do nothing
     },
+    stoneTimeout: undefined,
+    setStoneTimeout: () => {
+        // do nothing
+    },
 };
 export interface IObstacle {
     type: Obstacles;
@@ -81,6 +85,8 @@ interface IPlayerContext {
     setUserId: (val: string) => void;
     dead: boolean;
     setPlayerDead: (val: boolean) => void;
+    stoneTimeout: ReturnType<typeof setTimeout> | undefined;
+    setStoneTimeout: (val: ReturnType<typeof setTimeout>) => void;
 }
 
 export const PlayerContext = React.createContext<IPlayerContext>(defaultValue);
@@ -95,11 +101,11 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [permission, setPermissionGranted] = React.useState<boolean>(false);
     const history = useHistory();
     const [character, setCharacter] = React.useState<undefined | string>(undefined);
-    const { roomId } = React.useContext(GameContext);
     const [name, setName] = React.useState<string>('');
     // TODO use data from socket
     const [ready, setReady] = React.useState(false);
     const [dead, setPlayerDead] = React.useState(false);
+    const [stoneTimeout, setStoneTimeout] = React.useState<undefined | ReturnType<typeof setTimeout>>();
 
     let reroute = true;
 
@@ -109,19 +115,14 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
             setObstacle(val);
             if (val) {
                 reroute = true;
-                history.push(`/controller/${roomId}/${val.type.toLowerCase()}`);
+                history.push(controllerObstacleRoute(roomId, val.type));
             } else if (reroute) {
                 reroute = false;
-                history.push(`/controller/${roomId}/game1`);
+                history.push(controllerGame1Route(roomId));
             }
         },
         playerFinished,
-        setPlayerFinished: (val: boolean) => {
-            setPlayerFinished(val);
-            if (val) {
-                history.push(`/controller/${roomId}/finished`);
-            }
-        },
+        setPlayerFinished,
         playerRank,
         setPlayerRank,
         isPlayerAdmin,
@@ -144,6 +145,8 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setUserId,
         dead,
         setPlayerDead,
+        stoneTimeout,
+        setStoneTimeout,
     };
     return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>;
 };

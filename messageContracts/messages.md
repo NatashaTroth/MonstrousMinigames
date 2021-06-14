@@ -359,14 +359,15 @@ example:
 
 ### game1/stunPlayer
 
--   stuns player with given userId
+-   stuns player with given receivingUserId
   
 example:
 
 ```json
 {
-    "type": "game1/stunPlayer",
-    "userId": "XXxXX"
+    "type": "game1/obstacleSolved",
+    "userId": "XXxXX",
+    "receivingUserId": "XXxXX"
 }
 ```
 * * *
