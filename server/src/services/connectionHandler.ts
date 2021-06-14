@@ -207,6 +207,13 @@ class ConnectionHandler {
                             }
                         }
                         break;
+                    case MessageTypes.USER_READY:
+                            {
+                                if (socket.room.isOpen() && socket.user) {
+                                 // do ready magic   
+                                }
+                            }
+                            break;
                     default: {
                         console.info(message);
                     }
@@ -311,6 +318,7 @@ class ConnectionHandler {
                         }
                         break;
                     }
+                    case 
                     default: {
                         console.info(message);
                     }

@@ -1,5 +1,6 @@
 export enum MessageTypes {
     USER_INIT = 'userInit',
+    USER_READY = 'userReady',
     CONNECTED_USERS = 'connectedUsers',
     BACK_TO_LOBBY = 'backToLobby',
     PAUSE_RESUME = 'pauseResume',

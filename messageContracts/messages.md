@@ -332,6 +332,18 @@ example:
 }
 ```
 
+### userReady
+
+-   player signals that they are ready
+  
+example:
+
+```json
+{
+    "type": "userReady",
+}
+```
+
 ### game1/runForward
 
 -   player on this controller moves forward
