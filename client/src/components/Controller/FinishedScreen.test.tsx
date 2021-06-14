@@ -14,7 +14,7 @@ import { FinishedScreen } from './FinishedScreen';
 
 afterEach(cleanup);
 
-describe('Screen FinishedScreen', () => {
+describe('Controller FinishedScreen', () => {
     const socket = new InMemorySocketFake();
 
     const FinishedScreenComponent = (
@@ -43,37 +43,6 @@ describe('Screen FinishedScreen', () => {
             </GameContext.Provider>
         );
         expect(queryByText(container, givenText)).toBeTruthy();
-    });
-
-    it('if user is admin, a button is rendered', () => {
-        const { container } = render(
-            <PlayerContext.Provider value={{ ...defaultValue, isPlayerAdmin: true }}>
-                {FinishedScreenComponent}
-            </PlayerContext.Provider>
-        );
-
-        expect(container.querySelectorAll('button')).toHaveProperty('length', 1);
-    });
-
-    it('if user is admin, a button is rendered with the given text', () => {
-        const givenText = 'Back to Lobby';
-        const { container } = render(
-            <PlayerContext.Provider value={{ ...defaultValue, isPlayerAdmin: true }}>
-                {FinishedScreenComponent}
-            </PlayerContext.Provider>
-        );
-
-        expect(queryByText(container, givenText)).toBeTruthy();
-    });
-
-    it('if user is not admin, no button is rendered', () => {
-        const { container } = render(
-            <PlayerContext.Provider value={{ ...defaultValue, isPlayerAdmin: false }}>
-                {FinishedScreenComponent}
-            </PlayerContext.Provider>
-        );
-
-        expect(container.querySelectorAll('button')).toHaveProperty('length', 0);
     });
 
     it('user rank is rendered', () => {

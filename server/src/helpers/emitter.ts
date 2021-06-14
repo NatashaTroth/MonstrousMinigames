@@ -12,7 +12,6 @@ function sendUserInit(socket: any, number: number): void {
         userId: socket.user.id,
         roomId: socket.room.id,
         name: socket.user.name,
-        isAdmin: socket.room.isAdmin(socket.user),
         number: number,
         characterNumber: socket.user.characterNumber,
     });

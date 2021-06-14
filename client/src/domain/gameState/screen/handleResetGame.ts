@@ -5,7 +5,6 @@ export function handleResetGame(
     socket: Socket,
     dependencies: {
         resetGame: () => void;
-        resetPlayer: () => void;
     },
     sendMessage?: boolean
 ) {
@@ -14,5 +13,4 @@ export function handleResetGame(
     }
 
     dependencies.resetGame();
-    dependencies.resetPlayer();
 }
