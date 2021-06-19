@@ -16,9 +16,21 @@ import { Routes, screenChooseGameRoute } from '../../utils/routes';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import {
-    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer,
-    ConnectedUserName, ConnectedUsers, Content, ContentContainer, CopyToClipboard, LeftContainer,
-    LobbyContainer, QRCode, QRCodeInstructions, RightButtonContainer, RightContainer
+    Character,
+    CharacterContainer,
+    ConnectedUserCharacter,
+    ConnectedUserContainer,
+    ConnectedUserName,
+    ConnectedUsers,
+    Content,
+    ContentContainer,
+    CopyToClipboard,
+    LeftContainer,
+    LobbyContainer,
+    QRCode,
+    QRCodeInstructions,
+    RightButtonContainer,
+    RightContainer,
 } from './Lobby.sc';
 import LobbyHeader from './LobbyHeader';
 
@@ -87,9 +99,9 @@ export const Lobby: React.FunctionComponent = () => {
                             {getUserArray(connectedUsers || []).map((user, index) => (
                                 <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>
                                     <ConnectedUserCharacter number={user.number} free={user.free}>
-                                        {!user.free && user.characterNumber && (
+                                        {!user.free && user.characterNumber !== -1 && (
                                             <CharacterContainer>
-                                                <Character src={characters[user.characterNumber]} />
+                                                <Character src={characters[Number(user.characterNumber)]} />
                                             </CharacterContainer>
                                         )}
 
