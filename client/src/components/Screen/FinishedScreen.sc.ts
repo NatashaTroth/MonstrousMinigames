@@ -8,6 +8,7 @@ export const RankTable = styled.div`
     width: 50%;
     display: flex;
     flex-direction: column;
+    margin-top: 60px;
 `;
 
 export const FinishedScreenContainer = styled.div`

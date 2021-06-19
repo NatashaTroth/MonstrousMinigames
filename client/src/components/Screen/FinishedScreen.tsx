@@ -1,30 +1,19 @@
-import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import { handleResetGame } from '../../domain/gameState/screen/handleResetGame';
 import { formatMs } from '../../utils/formatMs';
 import Button from '../common/Button';
-import IconButton from '../common/IconButton';
 import { Instruction, InstructionContainer, InstructionText } from '../common/Instruction.sc';
 import { Label } from '../common/Label.sc';
 import { FinishedScreenContainer, Headline, LeaderBoardRow, RankTable, UnfinishedUserRow } from './FinishedScreen.sc';
 
 export const FinishedScreen: React.FunctionComponent = () => {
     const { playerRanks, hasTimedOut, screenAdmin, resetGame } = React.useContext(GameContext);
-    const {
-        playLobbyMusic,
-        pauseLobbyMusic,
-        audioPermission,
-        playing,
-        setAudioPermissionGranted,
-        musicIsPlaying,
-        initialPlayFinishedMusic,
-    } = React.useContext(AudioContext);
+    const { audioPermission, setAudioPermissionGranted, initialPlayFinishedMusic } = React.useContext(AudioContext);
     const { screenSocket } = React.useContext(ScreenSocketContext);
 
     const deadPlayers = playerRanks?.filter(playerRank => playerRank.dead) || [];
@@ -37,19 +26,6 @@ export const FinishedScreen: React.FunctionComponent = () => {
 
     return (
         <FinishedScreenContainer>
-            <IconButton
-                onClick={() =>
-                    handleAudio({
-                        playing,
-                        audioPermission,
-                        pauseLobbyMusic,
-                        playLobbyMusic,
-                        setAudioPermissionGranted,
-                    })
-                }
-            >
-                {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
-            </IconButton>
             <RankTable>
                 <Headline>{hasTimedOut ? 'Game has timed out!' : 'Finished!'}</Headline>
                 {sortedPlayerRanks?.map((player, index) => (

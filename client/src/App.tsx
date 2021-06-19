@@ -4,6 +4,7 @@ import { Route, Router, Switch } from 'react-router-dom';
 
 import { AppContainer } from './App.sc';
 import Credits from './components/common/Credits';
+import MasterHeader from './components/common/MasterHeader';
 import Settings from './components/common/Settings';
 import ChooseCharacter from './components/Controller/ChooseCharacter';
 import { ConnectScreen as ControllerConnectScreen } from './components/Controller/ConnectScreen';
@@ -44,6 +45,8 @@ const App: React.FunctionComponent = () => {
                         <PlayerContextProvider>
                             <ScreenSocketContextProvider>
                                 <ControllerSocketContextProvider>
+                                    {!isMobileOnly && <MasterHeader />}
+
                                     <Switch>
                                         <Route path={Routes.credits} component={Credits} exact />
                                         <Route path={Routes.settings} component={Settings} exact />

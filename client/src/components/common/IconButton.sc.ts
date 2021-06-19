@@ -8,10 +8,6 @@ interface StyledIconButton {
 
 export const StyledIconButton = styled(StyledButtonBase)<StyledIconButton>`
     && {
-        position: absolute;
-        right: ${({ right }) => right}px;
-        top: 10px;
-
         border-radius: 10px;
     }
 `;

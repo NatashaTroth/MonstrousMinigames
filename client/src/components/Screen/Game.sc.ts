@@ -1,6 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 
 import { secondary } from '../../utils/colors';
+import IconButton from '../common/IconButton';
 
 const fadeOut = keyframes`
     0% {
@@ -31,4 +32,12 @@ export const Go = styled.p`
     position: absolute;
     left: calc(50% - 140px);
     top: 18%;
+`;
+
+export const AudioButton = styled(IconButton)`
+    && {
+        position: absolute;
+        right: ${({ right }) => right}px;
+        top: 10px;
+    }
 `;
