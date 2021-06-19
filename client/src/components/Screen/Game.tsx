@@ -80,7 +80,9 @@ const Game: React.FunctionComponent = () => {
 
     return (
         <Container>
-            <AudioButton onClick={handleAudio}>{musicIsPlaying ? <VolumeUp /> : <VolumeOff />}</AudioButton>
+            <AudioButton onClick={handleAudio} variant="primary">
+                {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
+            </AudioButton>
             <Countdown></Countdown>
             <GameContent displayGo />
         </Container>

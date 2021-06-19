@@ -9,14 +9,8 @@ interface IButton {
     right?: number;
 }
 
-const IconButton: React.FunctionComponent<IButton> = ({
-    children,
-    onClick,
-    disabled,
-    variant = 'primary',
-    right = 20,
-}) => (
-    <StyledIconButton disabled={disabled} onClick={onClick} variant={variant} right={right}>
+const IconButton: React.FunctionComponent<IButton> = ({ children, onClick, disabled, variant = 'primary' }) => (
+    <StyledIconButton disabled={disabled} onClick={onClick} variant={variant}>
         {children}
     </StyledIconButton>
 );
