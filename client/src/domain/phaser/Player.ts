@@ -21,7 +21,7 @@ export class Player {
     stunned: boolean;
 
     constructor(
-        private renderer: PlayerRenderer, // TODO MAKE PRIVATE
+        public renderer: PlayerRenderer, // TODO MAKE PRIVATE
         private index: number,
         private coordinates: Coordinates,
         private gameStateData: GameData,
@@ -141,6 +141,7 @@ export class Player {
 
     private renderPlayer() {
         this.renderer.renderPlayer(this.coordinates, this.monsterName, this.animationName);
+        this.renderer.renderText(this.coordinates, this.username);
 
         // TODO render player name
         // this.renderer.renderText(

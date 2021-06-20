@@ -4,8 +4,8 @@ import { ControllerSocketContext } from '../../../contexts/ControllerSocketConte
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import history from '../../../domain/history/history';
-import pebble from '../../../images/pebble.svg';
-import stone from '../../../images/stone.svg';
+import pebble from '../../../images/obstacles/stone/pebble.svg';
+import stone from '../../../images/obstacles/stone/stone.svg';
 import { stoneParticlesConfig } from '../../../utils/particlesConfig';
 import { controllerPlayerDeadRoute } from '../../../utils/routes';
 import Button from '../../common/Button';

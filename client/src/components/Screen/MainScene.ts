@@ -191,8 +191,9 @@ class MainScene extends Phaser.Scene {
     moveCamera(posX: number) {
         if (this.camera) {
             this.camera.scrollX = posX;
-            this.camera.setBounds(0, 0, this.trackLength + 150, windowHeight); //+150 so the cave can be fully seen
+            this.camera.setBounds(0, 0, this.trackLength, windowHeight); //+150 so the cave can be fully seen
         }
+        this.players[0].renderer.updatePlayerNamePosition(posX)
     }
 
     private createPlayer(index: number, gameStateData: GameData) {

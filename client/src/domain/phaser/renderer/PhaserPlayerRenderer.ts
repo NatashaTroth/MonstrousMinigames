@@ -15,12 +15,19 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     private playerObstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private particles: Phaser.GameObjects.Particles.ParticleEmitterManager;
+    private playerNameBg?: Phaser.GameObjects.Rectangle;
+    private playerName?: Phaser.GameObjects.Text;
 
     constructor(private scene: MainScene) {
         this.playerObstacles = [];
         this.particles = this.scene.add.particles('flares');
         this.particles.setDepth(depthDictionary.flares);
     }
+
+    renderText(coordinates: Coordinates, text: string, background?: string){
+        //TODO
+    }
+
     renderChasers(chasersPositionX: number, chasersPositionY: number) {
         if (!this.chaser) {
             this.chaser = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasers');
@@ -45,11 +52,22 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         if (!this.player) {
             this.renderPlayerInitially(coordinates, monsterName);
             this.initiatePlayerAnimation(monsterName, animationName);
+            this.renderPlayerName(coordinates, "test");
         }
         if (this.player) {
             this.player.x = coordinates.x;
             this.player.y = coordinates.y;
         }
+    }
+
+    renderPlayerName(coordinates: Coordinates, name: string){
+        this.playerNameBg = this.scene.add.rectangle(0,coordinates.y, 200, 50, 0x6666ff);
+        this.playerName = this.scene.add.text(0,coordinates.y, name);
+    }
+
+    public updatePlayerNamePosition(newX: number){
+        this.playerNameBg?.setPosition(newX, this.playerNameBg.y)
+        this.playerName?.setPosition(newX, this.playerName.y)
     }
 
     renderGoal(posX: number, posY: number) {
