@@ -41,9 +41,14 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         setPlayerDead,
     } = React.useContext(PlayerContext);
 
-    const { setGameStarted, setRoomId, setHasPaused, resetGame, setAvailableCharacters } = React.useContext(
-        GameContext
-    );
+    const {
+        setGameStarted,
+        setRoomId,
+        setHasPaused,
+        resetGame,
+        setAvailableCharacters,
+        setConnectedUsers,
+    } = React.useContext(GameContext);
 
     const dependencies = {
         setControllerSocket,
@@ -60,6 +65,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         setHasPaused,
         setUserId,
         setPlayerDead,
+        setConnectedUsers,
     };
 
     const content = {

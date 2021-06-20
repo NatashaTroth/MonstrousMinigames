@@ -19,3 +19,5 @@ export const secondaryShadow = '#7e5e34';
 
 export const readyButton = '#1c2a2b';
 export const darkGreen = '#0e1a18';
+
+export const characterColors = ['#1e8fe2', '#69a04e', '#b53cd4', '#b97d35'];

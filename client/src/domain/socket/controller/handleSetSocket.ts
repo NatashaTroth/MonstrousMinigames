@@ -13,7 +13,7 @@ import { handlePlayerDied } from '../../gameState/controller/handlePlayerDied';
 import { handlePlayerFinishedMessage } from '../../gameState/controller/handlePlayerFinishedMessage';
 import { handlePlayerStunned } from '../../gameState/controller/handlePlayerStunned';
 import { handleUserInitMessage } from '../../gameState/controller/handleUserInitMessage';
-import { ConnectedUsersMessage, connectedUsersTypeGuard } from '../../typeGuards/connectedUsers';
+import { ConnectedUsersMessage, connectedUsersTypeGuard, IUser } from '../../typeGuards/connectedUsers';
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
 import { finishedTypeGuard } from '../../typeGuards/finished';
 import { ObstacleMessage, obstacleTypeGuard } from '../../typeGuards/obstacle';
@@ -45,6 +45,7 @@ export interface HandleSetSocketDependencies {
     setUserId: (val: string) => void;
     setPlayerDead: (val: boolean) => void;
     history: History;
+    setConnectedUsers: (val: IUser[]) => void;
 }
 
 export function handleSetSocket(
@@ -66,6 +67,7 @@ export function handleSetSocket(
         setUserId,
         setPlayerDead,
         history,
+        setConnectedUsers,
     } = dependencies;
 
     setControllerSocket(socket);
@@ -159,7 +161,7 @@ export function handleSetSocket(
     });
 
     connectedUsersSocket.listen((data: ConnectedUsersMessage) => {
-        handleConnectedUsersMessage({ data, dependencies: { setAvailableCharacters } });
+        handleConnectedUsersMessage({ data, dependencies: { setAvailableCharacters, setConnectedUsers } });
     });
 
     playerDiedSocket.listen((data: PlayerDiedMessage) => {
