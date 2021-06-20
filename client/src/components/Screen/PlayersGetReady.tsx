@@ -6,10 +6,7 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
-import franz from '../../images/characters/franz.png';
-import noah from '../../images/characters/noah.png';
-import steffi from '../../images/characters/steffi.png';
-import susi from '../../images/characters/susi.png';
+import { characters } from '../../utils/characters';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import { getUserArray } from './Lobby';
@@ -37,7 +34,6 @@ const PlayersGetReady: React.FC = () => {
         initialPlayLobbyMusic,
     } = React.useContext(AudioContext);
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
-    const characters = [franz, noah, susi, steffi];
 
     const emptyGame = !connectedUsers || connectedUsers.length === 0;
 
@@ -75,9 +71,9 @@ const PlayersGetReady: React.FC = () => {
                         {getUserArray(connectedUsers || []).map((user, index) => (
                             <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>
                                 <ConnectedUserCharacter number={user.number} free={user.free}>
-                                    {!user.free && user.characterNumber && (
+                                    {!user.free && user.characterNumber !== -1 && (
                                         <CharacterContainer>
-                                            <Character src={characters[user.characterNumber]} />
+                                            <Character src={characters[Number(user.characterNumber)]} />
                                         </CharacterContainer>
                                     )}
 
