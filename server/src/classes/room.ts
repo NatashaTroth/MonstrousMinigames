@@ -46,7 +46,6 @@ class Room {
             );
         }
 
-        user.setCharacterNumber(this.getAvailableCharacters()[0]);
         this.users.push(user);
         this.updateUserNumbers();
     }

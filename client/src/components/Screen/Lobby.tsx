@@ -9,10 +9,7 @@ import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
 import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
-import franz from '../../images/characters/franz.png';
-import noah from '../../images/characters/noah.png';
-import steffi from '../../images/characters/steffi.png';
-import susi from '../../images/characters/susi.png';
+import { characters } from '../../utils/characters';
 import { localDevelopment } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';
 import { Routes, screenChooseGameRoute } from '../../utils/routes';
@@ -51,7 +48,6 @@ export const Lobby: React.FunctionComponent = () => {
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: IRouteParams = useParams();
     const navigator = window.navigator;
-    const characters = [franz, noah, susi, steffi];
 
     if (id && !screenSocket) {
         handleSocketConnection(id, 'lobby');
@@ -103,9 +99,9 @@ export const Lobby: React.FunctionComponent = () => {
                             {getUserArray(connectedUsers || []).map((user, index) => (
                                 <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>
                                     <ConnectedUserCharacter number={user.number} free={user.free}>
-                                        {!user.free && user.characterNumber && (
+                                        {!user.free && user.characterNumber !== -1 && (
                                             <CharacterContainer>
-                                                <Character src={characters[user.characterNumber]} />
+                                                <Character src={characters[Number(user.characterNumber)]} />
                                             </CharacterContainer>
                                         )}
 

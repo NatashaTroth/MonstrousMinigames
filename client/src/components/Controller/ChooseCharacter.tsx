@@ -15,12 +15,7 @@ import { controllerLobbyRoute } from '../../utils/routes';
 import Button from '../common/Button';
 import { Label } from '../common/Label.sc';
 import {
-    Character,
-    CharacterContainer,
-    ChooseButtonContainer,
-    ChooseCharacterContainer,
-    Left,
-    Right,
+    Character, CharacterContainer, ChooseButtonContainer, ChooseCharacterContainer, Left, Right
 } from './ChooseCharacter.sc';
 
 const ChooseCharacter: React.FunctionComponent = () => {
