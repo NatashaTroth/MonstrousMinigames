@@ -9,8 +9,7 @@ export type Coordinates = { x: number; y: number };
 export interface PlayerRenderer {
     
     renderChasers(chasersPositionX: number, chasersPositionY: number): void;
-    renderText(coordinates: Coordinates, text: string, background?: string): void;
-    renderPlayer(coordinates: Coordinates, username: string, background?: string): void;
+    renderPlayer(coordinates: Coordinates, monsterName: string, username?: string, background?: string): void;
     renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number): void;
     renderGoal(posX: number, posY: number): void;
     renderFireworks(posX: number, posY: number): void;

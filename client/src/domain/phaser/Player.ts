@@ -140,8 +140,9 @@ export class Player {
     }
 
     private renderPlayer() {
-        this.renderer.renderPlayer(this.coordinates, this.monsterName, this.animationName);
-        this.renderer.renderText(this.coordinates, this.username);
+        // eslint-disable-next-line no-console
+        console.log(this.username)
+        this.renderer.renderPlayer(this.coordinates, this.monsterName, this.animationName, this.username);
 
         // TODO render player name
         // this.renderer.renderText(

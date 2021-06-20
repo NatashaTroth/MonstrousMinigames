@@ -24,10 +24,6 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         this.particles.setDepth(depthDictionary.flares);
     }
 
-    renderText(coordinates: Coordinates, text: string, background?: string){
-        //TODO
-    }
-
     renderChasers(chasersPositionX: number, chasersPositionY: number) {
         if (!this.chaser) {
             this.chaser = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasers');
@@ -48,11 +44,18 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         if (this.player) this.player.alpha = 1;
     }
 
-    renderPlayer(coordinates: Coordinates, monsterName: string, animationName: string, background?: string): void {
+    renderPlayer(coordinates: Coordinates, monsterName: string, animationName: string, username?: string, background?: string): void {
+       // eslint-disable-next-line no-console
+       console.log(username)
+        let usernameToDisplay = ""
+        if(username){
+            usernameToDisplay = username
+        }
+
         if (!this.player) {
             this.renderPlayerInitially(coordinates, monsterName);
             this.initiatePlayerAnimation(monsterName, animationName);
-            this.renderPlayerName(coordinates, "test");
+            this.renderPlayerName(coordinates, usernameToDisplay);
         }
         if (this.player) {
             this.player.x = coordinates.x;
@@ -61,13 +64,13 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     }
 
     renderPlayerName(coordinates: Coordinates, name: string){
-        this.playerNameBg = this.scene.add.rectangle(0,coordinates.y, 200, 50, 0x6666ff);
-        this.playerName = this.scene.add.text(0,coordinates.y, name);
+        this.playerNameBg = this.scene.add.rectangle(window.innerWidth,coordinates.y, 200, 50, 0x6666ff);
+        this.playerName = this.scene.add.text(window.innerWidth,coordinates.y, name);
     }
 
     public updatePlayerNamePosition(newX: number){
-        this.playerNameBg?.setPosition(newX, this.playerNameBg.y)
-        this.playerName?.setPosition(newX, this.playerName.y)
+        this.playerNameBg?.setPosition(newX + window.innerWidth, this.playerNameBg.y)
+        this.playerName?.setPosition(newX + window.innerWidth - 100, this.playerName.y)
     }
 
     renderGoal(posX: number, posY: number) {
