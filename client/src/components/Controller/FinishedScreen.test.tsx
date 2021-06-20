@@ -33,18 +33,6 @@ describe('Controller FinishedScreen', () => {
         expect(queryByText(container, givenText)).toBeTruthy();
     });
 
-    it('when game has timed out and the player don`t reaches the goal, it renders text "Game has timed out"', () => {
-        const givenText = 'Game has timed out';
-        const { container } = render(
-            <GameContext.Provider value={{ ...gameContextDefaultValue, hasTimedOut: true }}>
-                <PlayerContext.Provider value={{ ...defaultValue, playerRank: undefined }}>
-                    {FinishedScreenComponent}
-                </PlayerContext.Provider>
-            </GameContext.Provider>
-        );
-        expect(queryByText(container, givenText)).toBeTruthy();
-    });
-
     it('user rank is rendered', () => {
         const givenText = '#1';
         const { container } = render(
