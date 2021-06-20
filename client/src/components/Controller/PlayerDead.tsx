@@ -8,20 +8,24 @@ import { PlayerDeadContainer, StyledMosquito } from './PlayerDead.sc';
 
 const PlayerDead: React.FC = () => {
     const { roomId } = React.useContext(GameContext);
+    const [counter, setCounter] = React.useState(30);
 
     React.useEffect(() => {
-        const stoneTimeoutId = setTimeout(function () {
+        if (counter > 0) {
+            const stoneTimeoutId = setTimeout(() => setCounter(counter - 1), 1000);
+            sessionStorage.setItem('stoneTimeoutId', String(stoneTimeoutId));
+        } else {
             handlePlayerGetsStone(roomId);
-        }, 30000);
-        sessionStorage.setItem('stoneTimeoutId', String(stoneTimeoutId));
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [counter]);
 
     return (
         <FullScreenContainer>
             <PlayerDeadContainer>
                 <StyledMosquito src={mosquito} />
-                Oh no! Unfortunately the mosquitos got you
+                Oh no! Unfortunately the mosquitos got you.
+                <div>You will receive a stone in {counter} seconds</div>
             </PlayerDeadContainer>
         </FullScreenContainer>
     );
