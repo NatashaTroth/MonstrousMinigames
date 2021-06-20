@@ -19,6 +19,15 @@ export function handlePlayerFinishedMessage(props: HandlePlayerFinished) {
     if (!playerFinished) {
         setPlayerFinished(true);
         setPlayerRank(data.rank);
+
+        const stoneTimeoutId = sessionStorage.getItem('stoneTimeoutId');
+        if (stoneTimeoutId) {
+            // eslint-disable-next-line no-console
+            console.log('clear timeout');
+            clearTimeout(Number(stoneTimeoutId));
+            sessionStorage.removeItem(stoneTimeoutId);
+        }
+
         history.push(controllerFinishedRoute(roomId));
     }
 }

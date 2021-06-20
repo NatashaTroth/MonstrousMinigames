@@ -48,10 +48,6 @@ export const defaultValue = {
     setPlayerDead: () => {
         // do nothing
     },
-    stoneTimeout: undefined,
-    setStoneTimeout: () => {
-        // do nothing
-    },
 };
 export interface IObstacle {
     type: Obstacles;
@@ -79,8 +75,6 @@ interface IPlayerContext {
     setUserId: (val: string) => void;
     dead: boolean;
     setPlayerDead: (val: boolean) => void;
-    stoneTimeout: ReturnType<typeof setTimeout> | undefined;
-    setStoneTimeout: (val: ReturnType<typeof setTimeout>) => void;
 }
 
 export const PlayerContext = React.createContext<IPlayerContext>(defaultValue);
@@ -98,7 +92,6 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     // TODO use data from socket
     const [ready, setReady] = React.useState(false);
     const [dead, setPlayerDead] = React.useState(false);
-    const [stoneTimeout, setStoneTimeout] = React.useState<undefined | ReturnType<typeof setTimeout>>();
 
     let reroute = true;
 
@@ -136,8 +129,6 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setUserId,
         dead,
         setPlayerDead,
-        stoneTimeout,
-        setStoneTimeout,
     };
     return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>;
 };
