@@ -44,7 +44,6 @@ export interface HandleSetSocketDependencies {
     setAvailableCharacters: (val: number[]) => void;
     setUserId: (val: string) => void;
     setPlayerDead: (val: boolean) => void;
-    stoneTimeout: ReturnType<typeof setTimeout> | undefined;
     history: History;
     setConnectedUsers: (val: IUser[]) => void;
 }
@@ -67,7 +66,6 @@ export function handleSetSocket(
         setAvailableCharacters,
         setUserId,
         setPlayerDead,
-        stoneTimeout,
         history,
         setConnectedUsers,
     } = dependencies;
@@ -182,7 +180,7 @@ export function handleSetSocket(
     });
 
     gameFinishedSocket.listen(() => {
-        handleGameHasFinishedMessage(roomId, stoneTimeout);
+        handleGameHasFinishedMessage(roomId);
     });
 
     if (socket) {

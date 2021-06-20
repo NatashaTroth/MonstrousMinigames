@@ -145,7 +145,7 @@ class ConnectionHandler {
                         }
                         break;
                     case MessageTypes.SELECT_CHARACTER: {
-                        if (message.characterNumber) {
+                        if (message.characterNumber !== null && message.characterNumber !== undefined) {
                             try {
                                 socket.room.setUserCharacter(socket.user, parseInt(message.characterNumber));
                                 emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
