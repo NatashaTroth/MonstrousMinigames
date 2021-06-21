@@ -16,4 +16,5 @@ export interface PlayerState extends IPlayerState {
     timeWhenStunned: number;
     stunnedTimeout: undefined | ReturnType<typeof setTimeout>;
     characterNumber: number;
+    numberStonesThrown: number;
 }

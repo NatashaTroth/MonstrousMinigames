@@ -28,17 +28,10 @@ describe('Room: Users', () => {
         done();
     });
 
-    it('should have one play after two users join and one leaves', () => {
+    it('should have one player after two users join and one leaves', () => {
         expect(room.users[0]).toEqual(user1);
-        expect(room.isAdmin(user1)).toBeTruthy;
         room.userDisconnected(user1.id);
         expect(room.users.length).toEqual(1);
-    });
-
-    it('should have new admin if admin disconnects', () => {
-        expect(room.isAdmin(user1)).toEqual(true);
-        room.userDisconnected(user1.id);
-        expect(room.isAdmin(user2)).toEqual(true);
     });
 
     it('should close the room if all players leave during a game', () => {

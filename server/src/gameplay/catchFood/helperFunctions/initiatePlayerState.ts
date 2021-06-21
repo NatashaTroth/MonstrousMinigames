@@ -28,6 +28,7 @@ export function initiatePlayersState(
             stunnedTimeout: undefined,
             timeWhenStunned: 0,
             characterNumber: player.characterNumber, //TODO test
+            numberStonesThrown: 0,
         };
     });
 

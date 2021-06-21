@@ -13,7 +13,7 @@ import { handlePlayerDied } from '../../gameState/controller/handlePlayerDied';
 import { handlePlayerFinishedMessage } from '../../gameState/controller/handlePlayerFinishedMessage';
 import { handlePlayerStunned } from '../../gameState/controller/handlePlayerStunned';
 import { handleUserInitMessage } from '../../gameState/controller/handleUserInitMessage';
-import { ConnectedUsersMessage, connectedUsersTypeGuard } from '../../typeGuards/connectedUsers';
+import { ConnectedUsersMessage, connectedUsersTypeGuard, IUser } from '../../typeGuards/connectedUsers';
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
 import { finishedTypeGuard } from '../../typeGuards/finished';
 import { ObstacleMessage, obstacleTypeGuard } from '../../typeGuards/obstacle';
@@ -32,7 +32,6 @@ import { Socket } from '../Socket';
 
 export interface HandleSetSocketDependencies {
     setControllerSocket: (socket: Socket) => void;
-    setPlayerAdmin: (val: boolean) => void;
     setPlayerNumber: (val: number) => void;
     setPlayerFinished: (val: boolean) => void;
     setObstacle: (roomId: string | undefined, obstacle: undefined | IObstacle) => void;
@@ -45,8 +44,8 @@ export interface HandleSetSocketDependencies {
     setAvailableCharacters: (val: number[]) => void;
     setUserId: (val: string) => void;
     setPlayerDead: (val: boolean) => void;
-    stoneTimeout: ReturnType<typeof setTimeout> | undefined;
     history: History;
+    setConnectedUsers: (val: IUser[]) => void;
 }
 
 export function handleSetSocket(
@@ -61,17 +60,14 @@ export function handleSetSocket(
         setPlayerFinished,
         setObstacle,
         setPlayerRank,
-        setPlayerAdmin,
         setHasPaused,
-        resetGame,
-        resetPlayer,
         setGameStarted,
         setName,
         setAvailableCharacters,
         setUserId,
         setPlayerDead,
-        stoneTimeout,
         history,
+        setConnectedUsers,
     } = dependencies;
 
     setControllerSocket(socket);
@@ -95,7 +91,6 @@ export function handleSetSocket(
         handleUserInitMessage({
             data,
             dependencies: {
-                setPlayerAdmin,
                 setPlayerNumber,
                 setName,
                 setUserId,
@@ -154,7 +149,7 @@ export function handleSetSocket(
     });
 
     stoppedSocket.listen((data: GameHasStoppedMessage) => {
-        handleGameHasStoppedMessage({ socket, roomId, dependencies: { resetGame, resetPlayer, history } });
+        handleGameHasStoppedMessage({ socket, roomId, dependencies: { history } });
     });
 
     resetSocket.listen((data: GameHasResetMessage) => {
@@ -166,7 +161,7 @@ export function handleSetSocket(
     });
 
     connectedUsersSocket.listen((data: ConnectedUsersMessage) => {
-        handleConnectedUsersMessage({ data, dependencies: { setAvailableCharacters } });
+        handleConnectedUsersMessage({ data, dependencies: { setAvailableCharacters, setConnectedUsers } });
     });
 
     playerDiedSocket.listen((data: PlayerDiedMessage) => {
@@ -185,7 +180,7 @@ export function handleSetSocket(
     });
 
     gameFinishedSocket.listen(() => {
-        handleGameHasFinishedMessage(roomId, stoneTimeout);
+        handleGameHasFinishedMessage(roomId);
     });
 
     if (socket) {

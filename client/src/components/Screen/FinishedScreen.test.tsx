@@ -3,10 +3,19 @@ import React from 'react';
 
 import { FinishedScreen } from '../../components/Screen/FinishedScreen';
 import { defaultValue, GameContext } from '../../contexts/GameContextProvider';
+import { defaultValue as screenDefaultValue, ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
 import { formatMs } from '../../utils/formatMs';
 
 afterEach(cleanup);
-describe('Controller FinishedScreen', () => {
+describe('Screen FinishedScreen', () => {
+    const socket = new InMemorySocketFake();
+    const FinishedScreenComponent = (
+        <ScreenSocketContext.Provider value={{ ...screenDefaultValue, screenSocket: socket }}>
+            <FinishedScreen />
+        </ScreenSocketContext.Provider>
+    );
+
     it('renders text "Finished!"', () => {
         const givenText = 'Finished!';
         const { container } = render(<FinishedScreen />);
@@ -131,5 +140,28 @@ describe('Controller FinishedScreen', () => {
 
         const givenText = 'Game has timed out!';
         expect(queryByText(container, givenText)).toBeTruthy();
+    });
+
+    it('if screen is admin, a button is rendered with the given text', () => {
+        const givenText = 'Back to Lobby';
+        const { container } = render(
+            <GameContext.Provider value={{ ...defaultValue, screenAdmin: true }}>
+                {FinishedScreenComponent}
+            </GameContext.Provider>
+        );
+
+        expect(queryByText(container, givenText)).toBeTruthy();
+    });
+
+    it('if screen is not admin, no button with given text is rendered', () => {
+        const givenText = 'Back to Lobby';
+
+        const { container } = render(
+            <GameContext.Provider value={{ ...defaultValue, screenAdmin: false }}>
+                {FinishedScreenComponent}
+            </GameContext.Provider>
+        );
+
+        expect(queryByText(container, givenText)).toBeFalsy();
     });
 });

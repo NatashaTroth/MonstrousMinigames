@@ -4,8 +4,6 @@ import { handleResetGame } from './handleResetGame';
 
 describe('handleResetGame', () => {
     const resetGame = jest.fn();
-    const resetPlayer = jest.fn();
-
     it('when message porperty is set, backToLobby should be emitted', () => {
         const socket = new InMemorySocketFake();
 
@@ -13,7 +11,6 @@ describe('handleResetGame', () => {
             socket,
             {
                 resetGame,
-                resetPlayer,
             },
             true
         );
@@ -26,7 +23,6 @@ describe('handleResetGame', () => {
 
         handleResetGame(socket, {
             resetGame,
-            resetPlayer,
         });
 
         expect(socket.emitedVals).toEqual([]);

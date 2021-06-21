@@ -18,27 +18,12 @@ describe('persistUser function', () => {
         number: 1,
     };
 
-    const setPlayerAdmin = jest.fn();
     const setPlayerNumber = jest.fn();
     const setName = jest.fn();
     const setUserId = jest.fn();
 
-    it('handed setPlayerAdmin function should be called with passed isAdmin data', () => {
-        persistUser(mockData, {
-            setPlayerAdmin,
-            setPlayerNumber,
-            localStorage: new LocalStorageFake(),
-            sessionStorage: new LocalStorageFake(),
-            setName,
-            setUserId,
-        });
-
-        expect(setPlayerAdmin).toHaveBeenLastCalledWith(mockData.isAdmin);
-    });
-
     it('handed function should be called with passed data', () => {
         persistUser(mockData, {
-            setPlayerAdmin,
             setPlayerNumber,
             localStorage: new LocalStorageFake(),
             sessionStorage: new LocalStorageFake(),
@@ -52,7 +37,6 @@ describe('persistUser function', () => {
     it('handed userName should be persisted to local storage', () => {
         global.localStorage.clear();
         persistUser(mockData, {
-            setPlayerAdmin,
             setPlayerNumber,
             localStorage: new LocalStorageFake(),
             sessionStorage: new LocalStorageFake(),
@@ -66,7 +50,6 @@ describe('persistUser function', () => {
         global.sessionStorage.clear();
 
         persistUser(mockData, {
-            setPlayerAdmin,
             setPlayerNumber,
             localStorage: new LocalStorageFake(),
             sessionStorage: new LocalStorageFake(),
@@ -80,7 +63,6 @@ describe('persistUser function', () => {
         global.sessionStorage.clear();
 
         persistUser(mockData, {
-            setPlayerAdmin,
             setPlayerNumber,
             localStorage: new LocalStorageFake(),
             sessionStorage: new LocalStorageFake(),

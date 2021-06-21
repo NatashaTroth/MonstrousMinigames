@@ -411,7 +411,6 @@ example:
     "type": "stopGame"
 }
 ```
-
 ### backToLobby
 
 -   resets game (if the screen is admin)

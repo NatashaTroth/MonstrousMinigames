@@ -1,52 +1,26 @@
 import * as React from 'react';
 
-import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
-import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
-import { handleResetGame } from '../../domain/gameState/controller/handleResetGame';
-import Button from '../common/Button';
 import FullScreenContainer from '../common/FullScreenContainer';
 import { Instruction, InstructionText } from '../common/Instruction.sc';
 import { FinishedScreenContainer, FinishedScreenText } from './FinishedScreen.sc';
 
 export const FinishedScreen: React.FunctionComponent = () => {
-    const { playerRank, isPlayerAdmin, resetPlayer, dead } = React.useContext(PlayerContext);
-    const { resetGame, hasTimedOut } = React.useContext(GameContext);
-    const { controllerSocket } = React.useContext(ControllerSocketContext);
+    const { playerRank, dead } = React.useContext(PlayerContext);
 
     return (
         <FullScreenContainer>
             <FinishedScreenContainer>
-                {(playerRank || hasTimedOut) && (
-                    <FinishedScreenText variant="light">
-                        {playerRank ? (
-                            <>
-                                {!dead && (
-                                    <Instruction>
-                                        <InstructionText>#{playerRank}</InstructionText>
-                                    </Instruction>
-                                )}
-                                <Instruction>
-                                    <InstructionText>Finished!</InstructionText>
-                                </Instruction>
-                            </>
-                        ) : (
-                            <Instruction>
-                                <InstructionText>Game has timed out</InstructionText>
-                            </Instruction>
-                        )}
-                    </FinishedScreenText>
-                )}
                 <FinishedScreenText variant="light">
-                    <></>
+                    {!dead && (
+                        <Instruction>
+                            <InstructionText>#{playerRank}</InstructionText>
+                        </Instruction>
+                    )}
+                    <Instruction>
+                        <InstructionText>Finished!</InstructionText>
+                    </Instruction>
                 </FinishedScreenText>
-
-                {/* TODO check if all players are finished */}
-                {isPlayerAdmin && (
-                    <Button onClick={() => handleResetGame(controllerSocket, { resetPlayer, resetGame }, true)}>
-                        Back to Lobby
-                    </Button>
-                )}
             </FinishedScreenContainer>
         </FullScreenContainer>
     );

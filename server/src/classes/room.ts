@@ -13,7 +13,6 @@ class Room {
     public users: Array<User>;
     public timestamp: number;
     public game: CatchFoodGame;
-    public admin: User | null;
     private state: RoomStates;
     private leaderboard: Leaderboard;
     public screens: Array<string>;
@@ -24,7 +23,6 @@ class Room {
         this.timestamp = Date.now();
         this.leaderboard = new Leaderboard(this.id);
         this.game = new CatchFoodGame(this.id, this.leaderboard);
-        this.admin = null;
         this.state = RoomStates.OPEN;
         this.screens = [];
     }
@@ -48,8 +46,6 @@ class Room {
             );
         }
 
-        if (this.users.length === 0) this.admin = user;
-        user.setCharacterNumber(this.getAvailableCharacters()[0]);
         this.users.push(user);
         this.updateUserNumbers();
     }
@@ -60,10 +56,6 @@ class Room {
         });
     }
 
-    public isAdmin(user: User): boolean {
-        return user === this.admin;
-    }
-
     public getUserCount(): number {
         return this.users.length;
     }
@@ -71,7 +63,6 @@ class Room {
     public removeUser(toBeRemoved: User): void {
         const index = this.users.indexOf(toBeRemoved);
         this.users.splice(index, 1);
-        this.resolveAdmin();
         this.updateUserNumbers();
     }
 
@@ -89,15 +80,6 @@ class Room {
                     this.game.stopGameAllUsersDisconnected();
                 }
             }
-        }
-    }
-    private resolveAdmin(): void {
-        if (this.users.length > 0) {
-            if (this.users.filter(u => u === this.admin).length === 0) {
-                this.admin = this.users[0];
-            }
-        } else {
-            this.admin = null;
         }
     }
 
