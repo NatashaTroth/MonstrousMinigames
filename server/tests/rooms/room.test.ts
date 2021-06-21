@@ -36,6 +36,9 @@ describe('Room: Users', () => {
 
     it('should close the room if all players leave during a game', () => {
         jest.useFakeTimers();
+        user1.setReady(true);
+        user2.setReady(true);
+
         room.startGame();
         setTimeout(() => {
             room.userDisconnected(user1.id);
@@ -48,6 +51,8 @@ describe('Room: Users', () => {
     });
     it('should label a player inactive after leaving a running game', () => {
         jest.useFakeTimers();
+        user1.setReady(true);
+        user2.setReady(true);
         room.startGame();
 
         setTimeout(() => {
@@ -59,6 +64,8 @@ describe('Room: Users', () => {
     });
     it('should remove inactive players after room is restarted', () => {
         jest.useFakeTimers();
+        user1.setReady(true);
+        user2.setReady(true);
         room.startGame();
         setTimeout(() => {
             room.userDisconnected(user1.id);
@@ -91,9 +98,12 @@ describe('Room: Users', () => {
     });
 
     it('should throw an GameAlreadyStartedError if a player wants to join game that has already started', () => {
+        user1.setReady(true);
+        user2.setReady(true);
         room.startGame();
         expect(() => {
-            room.addUser(new User(room.id, '999', 'User'));
+            const user3 = new User(room.id, '999', 'User');
+            room.addUser(user3);
         }).toThrow(GameAlreadyStartedError);
     });
     it('should throw an CannotStartEmptyGameError if a game without players is started', () => {
