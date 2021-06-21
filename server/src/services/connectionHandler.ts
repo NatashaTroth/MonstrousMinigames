@@ -157,12 +157,15 @@ class ConnectionHandler {
                         break;
                     }
                     case MessageTypes.USER_READY:
-                            {
-                                if (socket.room.isOpen() && socket.user) {
-                                 // do ready magic   
-                                }
+                        {
+                            if (socket.room.isOpen() && socket.user) {
+                                // toggle ready state
+                                const ready = socket.user.isReady();
+                                socket.user.setReady(!ready);
+                                emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
                             }
-                            break;
+                        }
+                        break;
                     default: {
                         console.info(message);
                     }

@@ -334,7 +334,7 @@ example:
 
 ### userReady
 
--   player signals that they are ready
+-   toggle ready state of player
   
 example:
 
