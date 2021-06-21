@@ -2,6 +2,12 @@ import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
 import flaresJsonFile from '../../assets/flares/flares.json';
 import flaresPngFile from '../../assets/flares/flares.png';
+import floor from "../../images/background/floor.png";
+import hills from "../../images/background/hills.png";
+import moon from "../../images/background/moon.png";
+import mountains from "../../images/background/mountains.png";
+import starsAndSky from "../../images/background/starsAndSky.png";
+import trees from "../../images/background/trees.png";
 import franz from '../../images/characters/franz_spritesheet.png';
 import chasers from '../../images/characters/Mosquito.png';
 import noah from '../../images/characters/noah_spritesheet.png';
@@ -62,6 +68,12 @@ export const images = [
     { name: 'chasers', file: chasers },
     { name: 'cave', file: cave },
     { name: 'stone', file: stone },
+    { name: 'floor', file: floor },
+    { name: 'hills', file: hills },
+    { name: 'mountains', file: mountains },
+    { name: 'starsAndSky', file: starsAndSky },
+    { name: 'trees', file: trees },
+    { name: 'moon', file: moon },
 ];
 
 export const flaresPng = flaresPngFile;
