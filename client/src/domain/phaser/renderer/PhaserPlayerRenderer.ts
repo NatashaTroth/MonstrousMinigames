@@ -59,12 +59,12 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         }
         if (this.player) {
             this.player.x = coordinates.x;
-            this.player.y = coordinates.y;
+            this.player.y = coordinates.y + window.innerHeight/10;
         }
     }
 
     renderPlayerName(coordinates: Coordinates, name: string){
-        this.playerNameBg = this.scene.add.rectangle(window.innerWidth,coordinates.y, 200, 50, 0x6666ff);
+        this.playerNameBg = this.scene.add.rectangle(window.innerWidth,coordinates.y, 200, 50, 0x0, 0.5);
         this.playerName = this.scene.add.text(window.innerWidth,coordinates.y, name);
     }
 
@@ -74,7 +74,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     }
 
     renderGoal(posX: number, posY: number) {
-        const cave = this.scene.physics.add.sprite(posX, posY, 'cave'); //TODO change cave to enum
+        const cave = this.scene.physics.add.sprite(posX, posY + window.innerHeight/9, 'cave'); //TODO change cave to enum
         cave.setScale(0.13, 0.13);
         cave.setDepth(depthDictionary.cave);
     }
@@ -160,7 +160,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
-        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterName);
+        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y + window.innerHeight/8, monsterName);
 
         this.player.setDepth(depthDictionary.player);
         this.player.setBounce(0.2);
