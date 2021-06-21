@@ -18,7 +18,6 @@ class User {
         characterNumber = -1,
         id: string = shortid.generate(),
         number = 0,
-        ready: boolean
     ) {
         this.id = id;
         this.roomId = roomId;
