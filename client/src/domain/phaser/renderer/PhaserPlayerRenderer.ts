@@ -59,7 +59,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         }
         if (this.player) {
             this.player.x = coordinates.x;
-            this.player.y = coordinates.y + window.innerHeight/10;
+            this.player.y = coordinates.y + window.innerHeight/16;
         }
     }
 
@@ -147,7 +147,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     addAttentionIcon() {
         if (!this.playerAttention && this.player) {
             this.playerAttention = this.scene.physics.add
-                .sprite(this.player.x + 75, this.player.y - 150, 'attention')
+                .sprite(this.player.x + 75, this.player.y - 100, 'attention')
                 .setDepth(depthDictionary.attention)
                 .setScale(0.03, 0.03);
         }
@@ -160,8 +160,9 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
-        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y + window.innerHeight/8, monsterName);
-
+        // eslint-disable-next-line no-console
+        console.log(window.devicePixelRatio/3)
+        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y + window.innerHeight/16, monsterName);
         this.player.setDepth(depthDictionary.player);
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);

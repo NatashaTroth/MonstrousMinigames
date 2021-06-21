@@ -162,21 +162,21 @@ export class Player {
 
             switch (obstacle.type) {
                 case Obstacles.treeStump:
-                    obstaclePosY = this.coordinates.y + window.innerHeight/8;
+                    obstaclePosY = this.coordinates.y + window.innerHeight/9;
                     obstacleScale = 0.4;
                     break;
                 case Obstacles.spider:
-                    obstaclePosY = this.coordinates.y + window.innerHeight/9;
+                    obstaclePosY = this.coordinates.y + window.innerHeight/11;
                     obstacleScale = 0.2;
                     break;
                 case Obstacles.hole:
-                    obstaclePosY = this.coordinates.y + window.innerHeight/7;
+                    obstaclePosY = this.coordinates.y + window.innerHeight/8;
                     obstacleScale = 0.1;
                     posX += 40;
 
                     break;
                 case Obstacles.stone:
-                    obstaclePosY = this.coordinates.y;
+                    obstaclePosY = this.coordinates.y + window.innerHeight/8;
                     obstacleScale = 0.2;
                     break;
             }
