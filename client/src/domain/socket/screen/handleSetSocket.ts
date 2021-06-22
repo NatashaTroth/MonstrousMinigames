@@ -5,7 +5,7 @@ import { Routes } from '../../../utils/routes';
 import { handleConnectedUsersMessage } from '../../gameState/screen/handleConnectedUsersMessage';
 import { handleGameHasFinishedMessage } from '../../gameState/screen/handleGameHasFinishedMessage';
 import { handleGameHasResetMessage } from '../../gameState/screen/handleGameHasResetMessage';
-import { handleGameHasStartedMessage } from '../../gameState/screen/handleGameHasStartedMessage';
+import { handleStartGameMessage } from '../../gameState/screen/handleGameHasStartedMessage';
 import { handleGameHasStoppedMessage } from '../../gameState/screen/handleGameHasStoppedMessage';
 import { handleGameHasTimedOutMessage } from '../../gameState/screen/handleGameHasTimedOutMessage';
 import { ConnectedUsersMessage, connectedUsersTypeGuard, IUser } from '../../typeGuards/connectedUsers';
@@ -15,7 +15,8 @@ import { pausedTypeGuard } from '../../typeGuards/paused';
 import { resetTypeGuard } from '../../typeGuards/reset';
 import { resumedTypeGuard } from '../../typeGuards/resumed';
 import { screenAdminTypeGuard } from '../../typeGuards/screenAdmin';
-import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/started';
+import { StartPhaserGameMessage, startPhaserGameTypeGuard } from '../../typeGuards/startPhaserGame';
+// import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/started';
 import { stoppedTypeGuard } from '../../typeGuards/stopped';
 import { TimedOutMessage, timedOutTypeGuard } from '../../typeGuards/timedOut';
 import { MessageSocket } from '../MessageSocket';
@@ -58,7 +59,8 @@ export function handleSetSocket(
     ScreenSocket.getInstance(socket);
 
     const connectedUsersSocket = new MessageSocket(connectedUsersTypeGuard, socket);
-    const startedSocket = new MessageSocket(startedTypeGuard, socket);
+    // const startedSocket = new MessageSocket(startedTypeGuard, socket);
+    const startPhaserGameSocket = new MessageSocket(startPhaserGameTypeGuard, socket);
     const finishedSocket = new MessageSocket(finishedTypeGuard, socket);
     const resetSocket = new MessageSocket(resetTypeGuard, socket);
     const pausedSocket = new MessageSocket(pausedTypeGuard, socket);
@@ -81,9 +83,12 @@ export function handleSetSocket(
         handleGameHasFinishedMessage({ data, roomId, dependencies: { setFinished, setPlayerRanks, history } });
     });
 
-    startedSocket.listen((data: GameHasStartedMessage) =>
-        handleGameHasStartedMessage({ data, roomId, dependencies: { setCountdownTime, setGameStarted, history } })
+    startPhaserGameSocket.listen((data: StartPhaserGameMessage) =>
+        handleStartGameMessage({ data, roomId, dependencies: { setGameStarted, history } })
     );
+    // startedSocket.listen((data: StartGameMessage) =>
+    //     handleStartGameMessage({ data, roomId, dependencies: { setCountdownTime, setGameStarted, history } })
+    // );
 
     pausedSocket.listen(() => setHasPaused(true));
 

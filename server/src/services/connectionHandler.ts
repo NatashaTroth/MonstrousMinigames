@@ -204,6 +204,11 @@ class ConnectionHandler {
             socket.on('message', function (message: IMessage) {
                 const type = message.type;
                 switch (type) {
+                    case CatchFoodMsgType.START_PHASER_GAME: {
+                        // this.consoleInfo(data.roomId, GameEventTypes.GameHasStarted);
+                        emitter.sendStartPhaserGame([screenNameSpace], socket.room); //TODO also to controller?
+                        break;
+                    }
                     case CatchFoodMsgType.START: {
                         if (socket.room.isOpen() && socket.room.isAdminScreen(socket.id)) {
                             try {

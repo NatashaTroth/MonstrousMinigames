@@ -39,7 +39,7 @@ const PlayersGetReady: React.FC = () => {
 
     function startGame() {
         screenSocket?.emit({
-            type: 'game1/start',
+            type: 'game1/startPhaserGame',
             roomId: sessionStorage.getItem('roomId'),
             userId: sessionStorage.getItem('userId'),
         });

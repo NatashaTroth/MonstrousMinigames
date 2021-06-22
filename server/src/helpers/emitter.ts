@@ -37,6 +37,13 @@ function sendErrorMessage(socket: Socket, e: Error): void {
         msg: e.message,
     });
 }
+function sendStartPhaserGame(nsps: Array<Namespace>, room: Room): void {
+    nsps.forEach(function (namespace: Namespace) {
+        namespace.to(room.id).emit('message', {
+            type: CatchFoodMsgType.START_PHASER_GAME,
+        });
+    });
+}
 function sendGameHasStarted(nsps: Array<Namespace>, data: GameEvents.GameHasStarted): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(data.roomId).emit('message', {
@@ -124,6 +131,7 @@ export default {
     sendUserInit,
     sendGameState,
     sendErrorMessage,
+    sendStartPhaserGame,
     sendGameHasStarted,
     sendPlayerFinished,
     sendGameHasFinished,
