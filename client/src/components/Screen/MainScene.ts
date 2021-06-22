@@ -81,7 +81,6 @@ class MainScene extends Phaser.Scene {
 
         //TODO Loading bar: https://www.patchesoft.com/phaser-3-loading-screen
         // this.load.on('progress', this.updateBar);
-        // this.load.on('complete', this.sendStartGame);
     }
 
     create() {
@@ -105,6 +104,7 @@ class MainScene extends Phaser.Scene {
     }
 
     sendStartGame() {
+        //TODO!!!! - do not send when game is already started? - or is it just ignored - appears to work - maybe check if no game state updates?
         this.socket?.emit({
             type: 'game1/start',
             roomId: this.roomId,
@@ -114,12 +114,22 @@ class MainScene extends Phaser.Scene {
 
     initiateSockets() {
         const startedGame = new MessageSocket(startedTypeGuard, this.socket);
+        const decrementCounter = (counter: number) => counter - 1000;
         startedGame.listen((data: GameHasStartedMessage) => {
-            //TODO start game
-            // countdown and set start stuff
-            // setTimeout(() => {
-            //     // this.s
-            // }, data.countdownTime - 1000)
+            let countdownValue = data.countdownTime - 1000; //to keep in track with server (1 sec less to start roughly at the same time as the server)
+            const countdownInterval = setInterval(() => {
+                if (countdownValue > 0) {
+                    this.gameRenderer?.renderCountdown((countdownValue / 1000).toString());
+                    countdownValue = decrementCounter(countdownValue);
+                } else if (countdownValue === 0) {
+                    //only render go for 1 sec
+                    this.gameRenderer?.renderCountdown('Go!');
+                    countdownValue = decrementCounter(countdownValue);
+                } else {
+                    this.gameRenderer?.destroyCountdown();
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
         });
 
         const pausedSocket = new MessageSocket(pausedTypeGuard, this.socket);

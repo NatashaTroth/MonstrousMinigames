@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import { IRouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
-// import { GameContext } from '../../contexts/GameContextProvider';
+import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
@@ -14,8 +14,7 @@ import { Container } from './Game.sc';
 import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
-    const roomId = sessionStorage.getItem('roomId');
-    // const { roomId } = React.useContext(GameContext);
+    const { roomId } = React.useContext(GameContext);
     const {
         pauseLobbyMusicNoMute,
         audioPermission,
@@ -80,7 +79,6 @@ const Game: React.FunctionComponent = () => {
     return (
         <Container>
             <IconButton onClick={handleAudio}>{musicIsPlaying ? <VolumeUp /> : <VolumeOff />}</IconButton>
-            {/* <Countdown></Countdown> */}
             <GameContent />
         </Container>
     );
@@ -93,30 +91,8 @@ interface IGameContentProps {
 }
 
 const GameContent: React.FunctionComponent<IGameContentProps> = () => {
-    // const [countdownNrValue, setCountDownValue] = React.useState('3');
-    // const [counter, setCounter] = React.useState(3);
-    // const [showCountdown, setShowCountdown] = React.useState(true);
-
-    // React.useEffect(() => {
-    //     let timer: ReturnType<typeof setInterval>;
-    //     if (counter === 0) {
-    //         setCountDownValue('Go!');
-    //         setTimeout(() => setShowCountdown(false), 1000);
-    //         // setCounter(counter - 1);
-    //     } else if (counter > 0)
-    //         timer = setInterval(() => {
-    //             setCounter(counter - 1);
-    //             setCountDownValue((counter - 1).toString());
-    //         }, 1000);
-
-    //     return () => clearInterval(timer);
-    // }, [counter]);
-
     return (
         <div>
-            {/* {displayGo && <Go>Go!</Go>} */}
-            {/* <Go>{showCountdown && countdownNrValue}</Go>{' '} */}
-            {/*TODO: do with phaser, otherwise when come to page after game has started, still get countdown. & need to take number for countdown from backend - 1*/}
             <div id="game-root"></div>
         </div>
     );
