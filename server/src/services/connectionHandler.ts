@@ -210,6 +210,7 @@ class ConnectionHandler {
                         break;
                     }
                     case CatchFoodMsgType.START: {
+                        console.log('Received STARTING GAME');
                         if (socket.room.isOpen() && socket.room.isAdminScreen(socket.id)) {
                             try {
                                 room.startGame();
@@ -234,6 +235,7 @@ class ConnectionHandler {
                         break;
                     }
                     case MessageTypes.PAUSE_RESUME: {
+                        console.log('received pause resume message');
                         if (socket.room.isPlaying()) {
                             console.info(socket.room.id + ' | Pause Game');
                             try {

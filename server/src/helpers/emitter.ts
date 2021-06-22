@@ -108,14 +108,14 @@ function sendPlayerStunned(nsp: Namespace, socketId: string): void {
 function sendPlayerHasDisconnected(nsp: Namespace, userId: string): void {
     nsp.emit('message', {
         type: MessageTypes.PLAYER_HAS_DISCONNECTED,
-        userId: userId
+        userId: userId,
     });
 }
 
 function sendPlayerHasReconnected(nsp: Namespace, userId: string): void {
     nsp.emit('message', {
         type: MessageTypes.PLAYER_HAS_RECONNECTED,
-        userId: userId
+        userId: userId,
     });
 }
 
@@ -142,5 +142,5 @@ export default {
     sendPlayerDied,
     sendPlayerStunned,
     sendPlayerHasDisconnected,
-    sendPlayerHasReconnected
+    sendPlayerHasReconnected,
 };

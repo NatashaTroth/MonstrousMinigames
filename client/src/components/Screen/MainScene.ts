@@ -17,6 +17,7 @@ import { finishedTypeGuard, GameHasFinishedMessage } from '../../domain/typeGuar
 import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../domain/typeGuards/gameStateInfo';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../domain/typeGuards/paused';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../domain/typeGuards/resumed';
+import { GameHasStartedMessage, startedTypeGuard } from '../../domain/typeGuards/started';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../domain/typeGuards/stopped';
 import { TimedOutMessage, timedOutTypeGuard } from '../../domain/typeGuards/timedOut';
 import { MessageTypes } from '../../utils/constants';
@@ -60,7 +61,9 @@ class MainScene extends Phaser.Scene {
 
     init(data: { roomId: string }) {
         this.camera = this.cameras.main;
-        if (this.roomId === '' && data.roomId !== undefined) this.roomId = data.roomId;
+        if (this.roomId === '' && data.roomId !== undefined) {
+            this.roomId = data.roomId;
+        }
     }
 
     preload(): void {
@@ -75,6 +78,10 @@ class MainScene extends Phaser.Scene {
         });
 
         this.load.atlas('flares', flaresPng, flaresJson);
+
+        //TODO Loading bar: https://www.patchesoft.com/phaser-3-loading-screen
+        // this.load.on('progress', this.updateBar);
+        // this.load.on('complete', this.sendStartGame);
     }
 
     create() {
@@ -85,6 +92,8 @@ class MainScene extends Phaser.Scene {
         this.gameAudio.initAudio();
         this.initiateSockets();
         this.initiateEventEmitters();
+
+        this.sendStartGame();
     }
 
     handleSocketConnection() {
@@ -95,7 +104,24 @@ class MainScene extends Phaser.Scene {
         return ScreenSocket.getInstance(new SocketIOAdapter(this.roomId, 'screen')).socket;
     }
 
+    sendStartGame() {
+        this.socket?.emit({
+            type: 'game1/start',
+            roomId: this.roomId,
+            // userId: sessionStorage.getItem('userId'), //TODO
+        });
+    }
+
     initiateSockets() {
+        const startedGame = new MessageSocket(startedTypeGuard, this.socket);
+        startedGame.listen((data: GameHasStartedMessage) => {
+            //TODO start game
+            // countdown and set start stuff
+            // setTimeout(() => {
+            //     // this.s
+            // }, data.countdownTime - 1000)
+        });
+
         const pausedSocket = new MessageSocket(pausedTypeGuard, this.socket);
         pausedSocket.listen((data: GameHasPausedMessage) => {
             this.pauseGame();

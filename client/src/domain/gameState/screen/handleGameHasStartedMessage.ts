@@ -16,8 +16,6 @@ interface HandleGameHasStartedMessage {
 export function handleStartGameMessage(props: HandleGameHasStartedMessage) {
     const { data, dependencies, roomId } = props;
     const { setGameStarted, history } = dependencies;
-    // eslint-disable-next-line no-console
-    console.log('handle start PHASER game RECEIVED');
     // setCountdownTime(data.countdownTime);
     setGameStarted(true);
     history.push(screenGame1Route(roomId));
