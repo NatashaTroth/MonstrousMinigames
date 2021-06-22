@@ -46,7 +46,6 @@ export function handleSetSocket(
         setScreenSocket,
         setConnectedUsers,
         setHasPaused,
-        setCountdownTime,
         setGameStarted,
         setHasTimedOut,
         setPlayerRanks,
@@ -84,8 +83,10 @@ export function handleSetSocket(
     });
 
     startPhaserGameSocket.listen((data: StartPhaserGameMessage) =>
-        handleStartGameMessage({ data, roomId, dependencies: { setGameStarted, history } })
+        handleStartGameMessage({ roomId, dependencies: { setGameStarted, history } })
     );
+
+    //TODO do we still need this or can we delete?
     // startedSocket.listen((data: StartGameMessage) =>
     //     handleStartGameMessage({ data, roomId, dependencies: { setCountdownTime, setGameStarted, history } })
     // );

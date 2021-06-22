@@ -14,7 +14,7 @@ describe('handleGameHasStartedMessage', () => {
         const setGameStarted = jest.fn();
         const data: StartPhaserGameMessage = { type: MessageTypes.startPhaserGame };
 
-        handleStartGameMessage({ data, roomId, dependencies: { history, setGameStarted } });
+        handleStartGameMessage({ roomId, dependencies: { history, setGameStarted } });
 
         expect(history.location).toHaveProperty('pathname', screenGame1Route(roomId));
     });
@@ -26,7 +26,6 @@ describe('handleGameHasStartedMessage', () => {
         const data: StartPhaserGameMessage = { type: MessageTypes.startPhaserGame };
 
         handleStartGameMessage({
-            data,
             roomId,
             dependencies: { history, setGameStarted },
         });
