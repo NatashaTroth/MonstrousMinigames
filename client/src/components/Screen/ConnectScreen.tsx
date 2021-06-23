@@ -1,15 +1,12 @@
-import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import { localBackend, localDevelopment } from '../../utils/constants';
 import { Routes } from '../../utils/routes';
 import Button from '../common/Button';
-import IconButton from '../common/IconButton';
 import Logo from '../common/Logo';
 import ConnectDialog from './ConnectDialog';
 import {
@@ -23,15 +20,7 @@ import {
 export const ConnectScreen: React.FunctionComponent = () => {
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const { handleSocketConnection } = React.useContext(ScreenSocketContext);
-    const {
-        playLobbyMusic,
-        pauseLobbyMusic,
-        audioPermission,
-        setAudioPermissionGranted,
-        playing,
-        musicIsPlaying,
-        initialPlayLobbyMusic,
-    } = React.useContext(AudioContext);
+    const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
 
     async function handleCreateNewRoom() {
         const response = await fetch(
@@ -62,19 +51,6 @@ export const ConnectScreen: React.FunctionComponent = () => {
     return (
         <ConnectScreenContainer>
             <ConnectDialog open={dialogOpen} handleClose={() => setDialogOpen(false)} />
-            <IconButton
-                onClick={() =>
-                    handleAudio({
-                        playing,
-                        audioPermission,
-                        pauseLobbyMusic,
-                        playLobbyMusic,
-                        setAudioPermissionGranted,
-                    })
-                }
-            >
-                {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
-            </IconButton>
             <LeftContainer>
                 <LeftButtonContainer>
                     <Button type="button" name="new" onClick={handleCreateNewRoom}>

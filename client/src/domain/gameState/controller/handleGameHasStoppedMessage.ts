@@ -12,7 +12,7 @@ interface HandleGameHasStoppedMessage {
 }
 
 export function handleGameHasStoppedMessage(props: HandleGameHasStoppedMessage) {
-    const { socket, roomId, dependencies } = props;
+    const { roomId, dependencies } = props;
     const { history } = dependencies;
 
     history.push(controllerLobbyRoute(roomId));
