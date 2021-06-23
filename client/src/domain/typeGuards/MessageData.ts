@@ -13,7 +13,6 @@ import { ScreenAdminMessage } from './screenAdmin';
 import { GameHasStartedMessage } from './started';
 import { StartPhaserGameMessage } from './startPhaserGame';
 import { GameHasStoppedMessage } from './stopped';
-import { TimedOutMessage } from './timedOut';
 import { UserInitMessage } from './userInit';
 
 export type MessageData =
@@ -22,7 +21,6 @@ export type MessageData =
     | GameHasFinishedMessage
     | ErrorMessage
     | PlayerFinishedMessage
-    | TimedOutMessage
     | GameHasPausedMessage
     | StartPhaserGameMessage
     | GameHasStartedMessage
