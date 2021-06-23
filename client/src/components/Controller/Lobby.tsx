@@ -3,12 +3,16 @@ import * as React from 'react';
 
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
+import history from '../../domain/history/history';
 import arrow from '../../images/ui/arrow_blue.svg';
+import { controllerChooseCharacterRoute } from '../../utils/routes';
+import Button from '../common/Button';
 import FullScreenContainer from '../common/FullScreenContainer';
 import { Instruction, InstructionContainer, InstructionText } from '../common/Instruction.sc';
 import { Label } from '../common/Label.sc';
 import {
     Arrow,
+    ButtonContainer,
     Character,
     CharacterContainer,
     Content,
@@ -20,7 +24,7 @@ import {
 
 export const Lobby: React.FunctionComponent = () => {
     const { playerNumber, name, character, ready, setReady } = React.useContext(PlayerContext);
-    const { gameChosen, tutorial } = React.useContext(GameContext);
+    const { gameChosen, tutorial, roomId } = React.useContext(GameContext);
 
     return (
         <FullScreenContainer>
@@ -69,6 +73,11 @@ export const Lobby: React.FunctionComponent = () => {
                                 </PlayerContent>
                             </>
                         )}
+                        <ButtonContainer>
+                            <Button onClick={() => history.push(`${controllerChooseCharacterRoute(roomId)}?back=true`)}>
+                                Change Character
+                            </Button>
+                        </ButtonContainer>
                     </Content>
                 ) : (
                     <CircularProgress />
