@@ -15,7 +15,7 @@ import { handlePlayerStunned } from '../../gameState/controller/handlePlayerStun
 import { handleUserInitMessage } from '../../gameState/controller/handleUserInitMessage';
 import { ConnectedUsersMessage, connectedUsersTypeGuard, IUser } from '../../typeGuards/connectedUsers';
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
-import { finishedTypeGuard } from '../../typeGuards/finished';
+import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
 import { ObstacleMessage, obstacleTypeGuard } from '../../typeGuards/obstacle';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
 import { PlayerDiedMessage, playerDiedTypeGuard } from '../../typeGuards/playerDied';
@@ -46,6 +46,7 @@ export interface HandleSetSocketDependencies {
     setPlayerDead: (val: boolean) => void;
     history: History;
     setConnectedUsers: (val: IUser[]) => void;
+    playerRank: undefined | number;
 }
 
 export function handleSetSocket(
@@ -68,6 +69,7 @@ export function handleSetSocket(
         setPlayerDead,
         history,
         setConnectedUsers,
+        playerRank,
     } = dependencies;
 
     setControllerSocket(socket);
@@ -132,6 +134,7 @@ export function handleSetSocket(
     startedSocket.listen((data: GameHasStartedMessage) => {
         handleGameStartedMessage({
             roomId,
+            countdownTime: data.countdownTime,
             dependencies: {
                 setGameStarted,
                 history,
@@ -179,8 +182,15 @@ export function handleSetSocket(
         handlePlayerStunned(roomId);
     });
 
-    gameFinishedSocket.listen(() => {
-        handleGameHasFinishedMessage(roomId);
+    gameFinishedSocket.listen((data: GameHasFinishedMessage) => {
+        handleGameHasFinishedMessage({
+            roomId,
+            playerRank,
+            playerRanks: data.data.playerRanks,
+            dependencies: {
+                setPlayerRank,
+            },
+        });
     });
 
     if (socket) {
