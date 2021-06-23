@@ -77,3 +77,7 @@ export const Arrow = styled.img`
     margin-top: 100px;
     position: absolute;
 `;
+
+export const ButtonContainer = styled.div`
+    margin-top: 20px;
+`;

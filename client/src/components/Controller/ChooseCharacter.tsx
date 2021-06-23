@@ -15,7 +15,12 @@ import { controllerLobbyRoute } from '../../utils/routes';
 import Button from '../common/Button';
 import { Label } from '../common/Label.sc';
 import {
-    Character, CharacterContainer, ChooseButtonContainer, ChooseCharacterContainer, Left, Right
+    Character,
+    CharacterContainer,
+    ChooseButtonContainer,
+    ChooseCharacterContainer,
+    Left,
+    Right,
 } from './ChooseCharacter.sc';
 
 const ChooseCharacter: React.FunctionComponent = () => {
@@ -23,6 +28,7 @@ const ChooseCharacter: React.FunctionComponent = () => {
     const { roomId, availableCharacters } = React.useContext(GameContext);
     const [actualCharacter, setActualCharacter] = React.useState(0);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
+    const searchParams = new URLSearchParams(history.location.search);
 
     function handleRightClick() {
         if (actualCharacter === characters.length - 1) {
@@ -62,7 +68,12 @@ const ChooseCharacter: React.FunctionComponent = () => {
                             characterNumber: actualCharacter,
                         });
                         setCharacter(characters[actualCharacter]);
-                        history.push(controllerLobbyRoute(roomId));
+
+                        if (searchParams.get('back')) {
+                            history.goBack();
+                        } else {
+                            history.push(controllerLobbyRoute(roomId));
+                        }
                     }}
                     disabled={!availableCharacters.includes(actualCharacter)}
                 >

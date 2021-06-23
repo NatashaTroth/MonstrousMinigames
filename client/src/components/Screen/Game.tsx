@@ -9,8 +9,7 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
-import IconButton from '../common/IconButton';
-import { Container } from './Game.sc';
+import { AudioButton, Container } from './Game.sc';
 import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
@@ -38,10 +37,12 @@ const Game: React.FunctionComponent = () => {
         if (Number(localStorage.getItem('audioVolume')) > 0) {
             setGameAudioPlaying(true);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     React.useEffect(() => {
         pauseLobbyMusicNoMute(audioPermission);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [audioPermission]);
 
     React.useEffect(() => {
@@ -78,7 +79,9 @@ const Game: React.FunctionComponent = () => {
 
     return (
         <Container>
-            <IconButton onClick={handleAudio}>{musicIsPlaying ? <VolumeUp /> : <VolumeOff />}</IconButton>
+            <AudioButton onClick={handleAudio} variant="primary">
+                {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
+            </AudioButton>
             <GameContent />
         </Container>
     );

@@ -2,16 +2,8 @@ import styled from 'styled-components';
 
 import { StyledButtonBase } from './Button.sc';
 
-interface StyledIconButton {
-    right: number;
-}
-
-export const StyledIconButton = styled(StyledButtonBase)<StyledIconButton>`
+export const StyledIconButton = styled(StyledButtonBase)`
     && {
-        position: absolute;
-        right: ${({ right }) => right}px;
-        top: 10px;
-
         border-radius: 10px;
     }
 `;
