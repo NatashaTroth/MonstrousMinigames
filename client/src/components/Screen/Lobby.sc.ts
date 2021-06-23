@@ -29,7 +29,7 @@ export const Content = styled.div`
     width: 100%;
     align-content: center;
     display: flex;
-    margin: 30px;
+    margin: 60px 30px 30px 30px;
     flex-direction: column;
 
     @media (min-width: 1200px) {

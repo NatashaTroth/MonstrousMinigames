@@ -45,6 +45,7 @@ export class Player {
         this.renderPlayer();
         this.setObstacles();
         this.setGoal(gameStateData.trackLength);
+        // this.renderer.renderFireworks(500, 100);
     }
 
     moveForward(x: number, trackLength: number) {
