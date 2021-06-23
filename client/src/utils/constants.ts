@@ -34,7 +34,6 @@ export enum MessageTypes {
     gameHasFinished = 'gameHasFinished',
     gameHasReset = 'gameHasReset',
     gameHasStopped = 'gameHasStopped',
-    gameHasTimedOut = 'gameHasTimedOut',
     gameHasPaused = 'gameHasPaused',
     gameHasResumed = 'gameHasResumed',
 

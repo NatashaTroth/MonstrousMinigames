@@ -7,7 +7,6 @@ import { handleGameHasFinishedMessage } from '../../gameState/screen/handleGameH
 import { handleGameHasResetMessage } from '../../gameState/screen/handleGameHasResetMessage';
 import { handleStartGameMessage } from '../../gameState/screen/handleGameHasStartedMessage';
 import { handleGameHasStoppedMessage } from '../../gameState/screen/handleGameHasStoppedMessage';
-import { handleGameHasTimedOutMessage } from '../../gameState/screen/handleGameHasTimedOutMessage';
 import { ConnectedUsersMessage, connectedUsersTypeGuard, IUser } from '../../typeGuards/connectedUsers';
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
@@ -17,7 +16,6 @@ import { resumedTypeGuard } from '../../typeGuards/resumed';
 import { screenAdminTypeGuard } from '../../typeGuards/screenAdmin';
 import { StartPhaserGameMessage, startPhaserGameTypeGuard } from '../../typeGuards/startPhaserGame';
 import { stoppedTypeGuard } from '../../typeGuards/stopped';
-import { TimedOutMessage, timedOutTypeGuard } from '../../typeGuards/timedOut';
 import { MessageSocket } from '../MessageSocket';
 import ScreenSocket from '../screenSocket';
 import { Socket } from '../Socket';
@@ -28,7 +26,6 @@ export interface HandleSetSocketDependencies {
     setHasPaused: (val: boolean) => void;
     setGameStarted: (val: boolean) => void;
     setCountdownTime: (val: number) => void;
-    setHasTimedOut: (val: boolean) => void;
     setFinished: (val: boolean) => void;
     setPlayerRanks: (val: PlayerRank[]) => void;
     setScreenAdmin: (val: boolean) => void;
@@ -46,7 +43,6 @@ export function handleSetSocket(
         setConnectedUsers,
         setHasPaused,
         setGameStarted,
-        setHasTimedOut,
         setPlayerRanks,
         setFinished,
         setScreenAdmin,
@@ -64,7 +60,6 @@ export function handleSetSocket(
     const resumedSocket = new MessageSocket(resumedTypeGuard, socket);
     const stoppedSocket = new MessageSocket(stoppedTypeGuard, socket);
     const errorSocket = new MessageSocket(errorTypeGuard, socket);
-    const timedOutSocket = new MessageSocket(timedOutTypeGuard, socket);
     const screenAdminSocket = new MessageSocket(screenAdminTypeGuard, socket);
 
     connectedUsersSocket.listen((data: ConnectedUsersMessage) =>
@@ -74,11 +69,6 @@ export function handleSetSocket(
     finishedSocket.listen((data: GameHasFinishedMessage) =>
         handleGameHasFinishedMessage({ data, roomId, dependencies: { setFinished, setPlayerRanks, history } })
     );
-
-    timedOutSocket.listen((data: TimedOutMessage) => {
-        handleGameHasTimedOutMessage({ dependencies: { setHasTimedOut } });
-        handleGameHasFinishedMessage({ data, roomId, dependencies: { setFinished, setPlayerRanks, history } });
-    });
 
     startPhaserGameSocket.listen((data: StartPhaserGameMessage) =>
         handleStartGameMessage({ roomId, dependencies: { setGameStarted, history } })

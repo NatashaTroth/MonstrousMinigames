@@ -6,7 +6,6 @@ import { handleConnectedUsersMessage } from '../../gameState/controller/handleCo
 import { handleGameHasFinishedMessage } from '../../gameState/controller/handleGameHasFinishedMessage';
 import { handleGameHasResetMessage } from '../../gameState/controller/handleGameHasResetMessage';
 import { handleGameHasStoppedMessage } from '../../gameState/controller/handleGameHasStoppedMessage';
-import { handleGameHasTimedOutMessage } from '../../gameState/controller/handleGameHasTimedOutMessage';
 import { handleGameStartedMessage } from '../../gameState/controller/handleGameStartedMessage';
 import { handleObstacleMessage } from '../../gameState/controller/handleObstacleMessage';
 import { handlePlayerDied } from '../../gameState/controller/handlePlayerDied';
@@ -25,7 +24,6 @@ import { GameHasResetMessage, resetTypeGuard } from '../../typeGuards/reset';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
 import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/started';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../typeGuards/stopped';
-import { TimedOutMessage, timedOutTypeGuard } from '../../typeGuards/timedOut';
 import { UserInitMessage, userInitTypeGuard } from '../../typeGuards/userInit';
 import { MessageSocket } from '../MessageSocket';
 import { Socket } from '../Socket';
@@ -75,7 +73,6 @@ export function handleSetSocket(
     const userInitSocket = new MessageSocket(userInitTypeGuard, socket);
     const obstacleSocket = new MessageSocket(obstacleTypeGuard, socket);
     const playerFinishedSocket = new MessageSocket(playerFinishedTypeGuard, socket);
-    const timedOutSocket = new MessageSocket(timedOutTypeGuard, socket);
     const startedSocket = new MessageSocket(startedTypeGuard, socket);
     const pausedSocket = new MessageSocket(pausedTypeGuard, socket);
     const resumedSocket = new MessageSocket(resumedTypeGuard, socket);
@@ -111,17 +108,6 @@ export function handleSetSocket(
             data,
             roomId,
             playerFinished,
-            dependencies: {
-                setPlayerFinished,
-                setPlayerRank,
-            },
-        });
-    });
-
-    timedOutSocket.listen((data: TimedOutMessage) => {
-        handleGameHasTimedOutMessage({
-            data,
-            roomId,
             dependencies: {
                 setPlayerFinished,
                 setPlayerRank,

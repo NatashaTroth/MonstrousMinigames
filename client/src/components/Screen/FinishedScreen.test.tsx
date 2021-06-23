@@ -98,50 +98,6 @@ describe('Screen FinishedScreen', () => {
         });
     });
 
-    it('if game has timed out, a section for unfinished users is rendered', () => {
-        const playerRanks = [
-            {
-                id: '1',
-                rank: 1,
-                name: 'User 1',
-                totalTimeInMs: 5000,
-                finished: true,
-                positionX: 0,
-                isActive: true,
-                dead: false,
-            },
-            {
-                id: '2',
-                rank: 2,
-                name: 'User 2',
-                totalTimeInMs: 5600,
-                finished: true,
-                positionX: 0,
-                isActive: true,
-                dead: false,
-            },
-            {
-                id: '3',
-                rank: undefined,
-                name: 'User 3',
-                totalTimeInMs: undefined,
-                finished: false,
-                positionX: 0,
-                isActive: true,
-                dead: true,
-            },
-        ];
-
-        const { container } = render(
-            <GameContext.Provider value={{ ...defaultValue, playerRanks, hasTimedOut: true }}>
-                <FinishedScreen />
-            </GameContext.Provider>
-        );
-
-        const givenText = 'Game has timed out!';
-        expect(queryByText(container, givenText)).toBeTruthy();
-    });
-
     it('if screen is admin, a button is rendered with the given text', () => {
         const givenText = 'Back to Lobby';
         const { container } = render(
