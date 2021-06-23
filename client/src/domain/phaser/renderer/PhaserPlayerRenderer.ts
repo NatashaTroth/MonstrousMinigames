@@ -89,20 +89,23 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     }
 
     renderFireworks(posX: number, posY: number) {
-        const particlesEmitter = this.particles.createEmitter({
-            frame: ['red', 'green', 'blue'],
-            x: posX,
-            y: posY,
-            angle: { min: 200, max: 250 },
-            speed: { min: 0, max: -500 },
-            gravityY: 200,
-            lifespan: 500,
-            scale: 0.1,
-            blendMode: 'ADD',
-        });
+        const flareColors: string[] = ['blue', 'red', 'green'];
+        const scales: Array<number | { min: number; max: number }> = [0.05, 0.1, { min: 0, max: 0.3 }];
+        const lifespans: number[] = [250, 500, 700];
 
-        particlesEmitter.on = true;
-        setTimeout(() => (particlesEmitter.on = false), 900);
+        flareColors.forEach((flareColor, i) => {
+            const particlesEmitter = this.particles.createEmitter({
+                frame: flareColor,
+                x: posX,
+                y: posY,
+                scale: scales[i],
+                speed: 75,
+                blendMode: 'ADD',
+                lifespan: lifespans[i],
+            });
+            particlesEmitter.on = true;
+            setTimeout(() => (particlesEmitter.on = false), 900);
+        });
     }
 
     startRunningAnimation(animationName: string) {
