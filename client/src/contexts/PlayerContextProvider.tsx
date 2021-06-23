@@ -2,8 +2,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router';
 
 import { Obstacles } from '../utils/constants';
-import { controllerFinishedRoute, controllerGame1Route, controllerObstacleRoute } from '../utils/routes';
-import { GameContext } from './GameContextProvider';
+import { controllerGame1Route, controllerObstacleRoute } from '../utils/routes';
 
 export const defaultValue = {
     obstacle: undefined,
@@ -16,10 +15,6 @@ export const defaultValue = {
     },
     playerRank: undefined,
     setPlayerRank: () => {
-        // do nothing
-    },
-    isPlayerAdmin: false,
-    setIsPlayerAdmin: () => {
         // do nothing
     },
     permission: false,
@@ -65,8 +60,6 @@ interface IPlayerContext {
     setPlayerFinished: (val: boolean) => void;
     playerRank: number | undefined;
     setPlayerRank: (val: number) => void;
-    isPlayerAdmin: boolean;
-    setIsPlayerAdmin: (val: boolean) => void;
     permission: boolean;
     setPermissionGranted: (val: boolean) => void;
     resetPlayer: () => void;
@@ -91,12 +84,10 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [obstacle, setObstacle] = React.useState<undefined | IObstacle>();
     const [playerFinished, setPlayerFinished] = React.useState<boolean>(false);
     const [playerRank, setPlayerRank] = React.useState<undefined | number>();
-    const [isPlayerAdmin, setIsPlayerAdmin] = React.useState<boolean>(false);
     const [playerNumber, setPlayerNumber] = React.useState<number | undefined>();
     const [permission, setPermissionGranted] = React.useState<boolean>(false);
     const history = useHistory();
     const [character, setCharacter] = React.useState<undefined | string>(undefined);
-    const { roomId } = React.useContext(GameContext);
     const [name, setName] = React.useState<string>('');
     // TODO use data from socket
     const [ready, setReady] = React.useState(false);
@@ -117,16 +108,9 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
             }
         },
         playerFinished,
-        setPlayerFinished: (val: boolean) => {
-            setPlayerFinished(val);
-            if (val) {
-                history.push(controllerFinishedRoute(roomId));
-            }
-        },
+        setPlayerFinished,
         playerRank,
         setPlayerRank,
-        isPlayerAdmin,
-        setIsPlayerAdmin,
         permission,
         setPermissionGranted,
         resetPlayer: () => {

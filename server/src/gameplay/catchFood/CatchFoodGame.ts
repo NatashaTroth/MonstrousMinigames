@@ -26,7 +26,7 @@ interface CatchFoodGameInterface extends IGameInterface {
     getObstaclePositions(): HashTable<Array<Obstacle>>;
     runForward(userId: string, speed: number): void;
     playerHasCompletedObstacle(userId: string, obstacleId: number): void;
-    stunPlayer(userId: string): void;
+    stunPlayer(userIdStunned: string, userIdThrown: string): void;
 }
 
 export default class CatchFoodGame implements CatchFoodGameInterface {
@@ -59,6 +59,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     chasersAreRunning: boolean;
     cameraPositionX: number;
     cameraSpeed: number;
+    maxNumberStones: number;
 
     constructor(roomId: string, leaderboard: Leaderboard /*, public usingChasers = false*/, public stunnedTime = 3000) {
         // this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
@@ -90,6 +91,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.chasersAreRunning = false;
         this.cameraPositionX = 0;
         this.cameraSpeed = 2;
+        this.maxNumberStones = 5;
     }
 
     createNewGame(
@@ -275,7 +277,11 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             playerInfoArray.push(playerState);
         }
 
-        this.cameraPositionX += this.cameraSpeed;
+        //TODO - change when main loop - don't send any gamestate info until countdown stopped
+        if(this.gameState === GameState.Started){
+
+            this.cameraPositionX += this.cameraSpeed;
+        }
 
         return {
             gameState: this.gameState,
@@ -401,22 +407,23 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     }
 
     //TODO test
-    stunPlayer(userId: string) {
+    stunPlayer(userIdStunned: string, userIdThrown: string) {
         verifyGameState(this.gameState, [GameState.Started]);
-        verifyUserId(this.playersState, userId);
-        verifyUserIsActive(userId, this.playersState[userId].isActive);
-        if (this.userIsNotAllowedToRun(userId)) return;
-        if (this.playersState[userId].stunned || this.playersState[userId].atObstacle) return;
-
-        this.playersState[userId].stunned = true;
-        this.playersState[userId].timeWhenStunned = Date.now();
-        this.playersState[userId].stunnedTimeout = setTimeout(() => {
-            this.unStunPlayer(userId);
+        verifyUserId(this.playersState, userIdStunned);
+        verifyUserIsActive(userIdStunned, this.playersState[userIdStunned].isActive);
+        if (this.userIsNotAllowedToRun(userIdStunned)) return;
+        if (this.playersState[userIdStunned].stunned || this.playersState[userIdStunned].atObstacle) return;
+        if (this.playersState[userIdThrown].numberStonesThrown >= this.maxNumberStones) return;
+        this.playersState[userIdThrown].numberStonesThrown++;
+        this.playersState[userIdStunned].stunned = true;
+        this.playersState[userIdStunned].timeWhenStunned = Date.now();
+        this.playersState[userIdStunned].stunnedTimeout = setTimeout(() => {
+            this.unStunPlayer(userIdStunned);
         }, this.stunnedTime);
 
         CatchFoodGameEventEmitter.emitPlayerIsStunned({
             roomId: this.roomId,
-            userId,
+            userId: userIdStunned,
         });
     }
 

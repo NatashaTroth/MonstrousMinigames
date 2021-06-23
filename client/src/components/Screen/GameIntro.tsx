@@ -1,4 +1,3 @@
-import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
@@ -7,7 +6,6 @@ import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import { screenGetReadyRoute } from '../../utils/routes';
 import Button from '../common/Button';
-import IconButton from '../common/IconButton';
 import {
     BackButtonContainer,
     ControlInstruction,
@@ -23,14 +21,7 @@ import {
 const GameIntro: React.FunctionComponent = () => {
     const [showFirstIntro, setShowFirstIntro] = React.useState(true);
     const { roomId } = React.useContext(GameContext);
-    const {
-        playLobbyMusic,
-        pauseLobbyMusic,
-        permission,
-        playing,
-        setPermissionGranted,
-        musicIsPlaying,
-    } = React.useContext(AudioContext);
+    const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
 
     function handleSkip() {
         if (showFirstIntro) {
@@ -40,26 +31,14 @@ const GameIntro: React.FunctionComponent = () => {
             history.push(screenGetReadyRoute(roomId));
         }
     }
-    const handleAudioPermissionCallback = React.useCallback(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
-    }, [permission, setPermissionGranted]);
 
     React.useEffect(() => {
-        handleAudioPermissionCallback();
-    }, [handleAudioPermissionCallback]);
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        initialPlayLobbyMusic(true);
+    }, []);
 
-    async function handleAudio() {
-        handleAudioPermissionCallback();
-
-        if (playing) {
-            pauseLobbyMusic(permission);
-        } else {
-            playLobbyMusic(permission);
-        }
-    }
     return (
         <GameIntroContainer>
-            <IconButton onClick={handleAudio}>{musicIsPlaying ? <VolumeUp /> : <VolumeOff />}</IconButton>
             <GameIntroBackground>
                 {showFirstIntro ? (
                     <IntroText>

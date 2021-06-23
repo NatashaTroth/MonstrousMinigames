@@ -1,16 +1,13 @@
-import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
-import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import oliverLobby from '../../images/characters/oliverLobby.svg';
 import game1Img from '../../images/ui/instructions1.png';
 import { screenGameIntroRoute, screenGetReadyRoute } from '../../utils/routes';
 import Button from '../common/Button';
-import IconButton from '../common/IconButton';
 import {
     BackButtonContainer,
     Content,
@@ -29,14 +26,7 @@ const ChooseGame: React.FunctionComponent = () => {
     const [selectedGame, setSelectedGame] = React.useState(0);
     const { roomId } = React.useContext(GameContext);
     const tutorial = localStorage.getItem('tutorial') ? false : true;
-    const {
-        playLobbyMusic,
-        pauseLobbyMusic,
-        permission,
-        playing,
-        setPermissionGranted,
-        musicIsPlaying,
-    } = React.useContext(AudioContext);
+    const { audioPermission, setAudioPermissionGranted } = React.useContext(AudioContext);
 
     const games = [
         {
@@ -50,20 +40,13 @@ const ChooseGame: React.FunctionComponent = () => {
     ];
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
     }, []);
 
     return (
         <LobbyContainer>
             <Content>
                 <LobbyHeader />
-                <IconButton
-                    onClick={() =>
-                        handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
-                    }
-                >
-                    {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
-                </IconButton>
                 <GameSelectionContainer>
                     <LeftContainer>
                         <div>

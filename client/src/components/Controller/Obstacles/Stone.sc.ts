@@ -1,5 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
+import { secondary } from '../../../utils/colors';
 import { ObstacleContainer } from './ObstaclStyles.sc';
 
 const ray_anim = keyframes`
@@ -178,4 +179,23 @@ export const PebbleContainer = styled(ObstacleContainer)`
     height: 500px;
     display: block;
     width: 100%;
+`;
+
+interface Props {
+    bgColor: string;
+    selected: boolean;
+}
+
+export const PlayerButtonContainer = styled.div<Props>`
+    && {
+        margin-bottom: 20px;
+        background-color: ${({ bgColor, selected }) => (selected ? secondary : bgColor)};
+        color: black;
+        cursor: pointer;
+        padding: 10px;
+        font-weight: 700;
+        font-size: 22px;
+        border-radius: 10px;
+        min-width: 200px;
+    }
 `;

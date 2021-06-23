@@ -26,17 +26,19 @@ const Settings: React.FunctionComponent = () => {
     const {
         setAudioVolume,
         volume,
-        permission,
-        setPermissionGranted,
+        audioPermission,
+        setAudioPermissionGranted,
         playing,
         pauseLobbyMusic,
         playLobbyMusic,
         musicIsPlaying,
+        initialPlayLobbyMusic,
     } = React.useContext(AudioContext);
     const [value, setValue] = React.useState(volume);
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        initialPlayLobbyMusic(true);
     }, []);
 
     React.useEffect(() => {
@@ -53,15 +55,23 @@ const Settings: React.FunctionComponent = () => {
     // }, [value]);
 
     const handleChange = (event: React.ChangeEvent<unknown>, newValue: number | number[]): void => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        if (typeof newValue == 'number') updateVolume(newValue);
+        else updateVolume(newValue[0]);
+    };
 
-        if (typeof newValue == 'number') {
-            setAudioVolume(newValue);
-            setValue(newValue);
-        } else {
-            setAudioVolume(newValue[0]);
-            setValue(newValue[0]);
+    const updateVolume = async (newValue: number) => {
+        if (newValue === 0) await pauseLobbyMusic(true);
+        else if (volumeHasBeenUnmuted(newValue)) {
+            await playLobbyMusic(true);
         }
+
+        setAudioVolume(newValue);
+        setValue(newValue);
+    };
+
+    const volumeHasBeenUnmuted = (newValue: number) => {
+        return newValue > 0 && volume === 0;
     };
 
     return (
@@ -79,7 +89,7 @@ const Settings: React.FunctionComponent = () => {
                             </Grid>
                             <Grid item xs>
                                 <Slider
-                                    value={value}
+                                    value={volume}
                                     onChange={handleChange}
                                     aria-labelledby="continuous-slider"
                                     step={0.05}
@@ -94,10 +104,10 @@ const Settings: React.FunctionComponent = () => {
                                 onClick={() =>
                                     handleAudio({
                                         playing,
-                                        permission,
+                                        audioPermission,
                                         pauseLobbyMusic,
                                         playLobbyMusic,
-                                        setPermissionGranted,
+                                        setAudioPermissionGranted,
                                     })
                                 }
                             >

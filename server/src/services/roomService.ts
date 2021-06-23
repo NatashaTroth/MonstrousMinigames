@@ -12,7 +12,7 @@ class RoomService {
 
     constructor(roomCount: number) {
         this.rooms = [];
-        this.roomCodes = generator.generateCodes('****', roomCount, { alphanumericChars: 'ABCDEFGHJKLMNPQRSTUVWXYZ' });
+        this.roomCodes = generator.generateCodes('****', roomCount, { alphanumericChars: 'BCDFGHJKLMNPQRSTVWXYZ' });
     }
 
     public createRoom(roomId: string = this.getSingleRoomCode()): Room {

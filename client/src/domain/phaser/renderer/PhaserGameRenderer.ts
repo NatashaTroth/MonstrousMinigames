@@ -9,6 +9,7 @@ import { GameRenderer } from './GameRenderer';
  */
 export class PhaserGameRenderer implements GameRenderer {
     pauseButton?: Phaser.GameObjects.Text;
+    countdownText?: Phaser.GameObjects.Text;
 
     constructor(private scene: MainScene) {
         this.scene = scene;
@@ -75,6 +76,49 @@ export class PhaserGameRenderer implements GameRenderer {
         this.pauseButton.on('pointerdown', () => {
             this.scene.handlePauseResumeButton();
         });
+    }
+
+    renderCountdown(text: string) {
+        const fixedWidth = 800;
+        const fixedHeight = 200;
+        const x = window.innerWidth / 2 - fixedWidth / 2;
+        const y = window.innerHeight / 2 - fixedHeight / 2;
+
+        if (this.countdownText) {
+            this.countdownText.setText(text);
+        } else {
+            this.countdownText = this.scene.make.text({
+                x,
+                y,
+                text,
+                style: {
+                    fontSize: `${fixedHeight}px`,
+                    fontFamily: 'Roboto, Arial',
+                    color: '#d2a44f',
+                    stroke: '#d2a44f',
+                    strokeThickness: 15,
+                    fixedWidth,
+                    fixedHeight,
+                    align: 'center',
+                    shadow: {
+                        offsetX: 10,
+                        offsetY: 10,
+                        color: '#000',
+                        blur: 0,
+                        stroke: false,
+                        fill: false,
+                    },
+                },
+
+                // origin: {x: 0.5, y: 0.5},
+                add: true,
+            });
+            this.countdownText.scrollFactorX = 0;
+        }
+    }
+
+    destroyCountdown() {
+        this.countdownText?.destroy();
     }
 
     pauseGame() {

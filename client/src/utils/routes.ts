@@ -36,10 +36,11 @@ export enum Routes {
     chooseGame = '/choose-game',
     getReady = '/get-ready',
     stunned = '/stunned',
+    chooseCharacter = '/choose-character',
 }
 
 export const controllerChooseCharacterRoute = (roomId: undefined | string) =>
-    `${Routes.controller}/${roomId}${Routes.controllerChooseCharacter}`;
+    `${Routes.controller}/${roomId}${Routes.chooseCharacter}`;
 
 export const controllerLobbyRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.lobby}`;
 

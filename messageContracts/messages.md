@@ -104,6 +104,28 @@ example:
     "type": "screenAdmin"
 }
 ```
+### playerHasDisconnected
+
+-   notifies the screen about player disconnecting
+
+example:
+
+```json
+{
+    "type": "playerHasDisconnected",
+    "userId": "XXXxxXX"
+}
+### playerHasReconnected
+
+-   notifies the screen about player reconnecting
+
+example:
+
+```json
+{
+    "type": "playerHasReconnected",
+    "userId": "XXXxxXX"
+}
 
 
 ### game1/gameState
@@ -359,14 +381,15 @@ example:
 
 ### game1/stunPlayer
 
--   stuns player with given userId
+-   stuns player with given receivingUserId
   
 example:
 
 ```json
 {
-    "type": "game1/stunPlayer",
-    "userId": "XXxXX"
+    "type": "game1/obstacleSolved",
+    "userId": "XXxXX",
+    "receivingUserId": "XXxXX"
 }
 ```
 * * *
@@ -398,7 +421,6 @@ example:
     "type": "stopGame"
 }
 ```
-
 ### backToLobby
 
 -   resets game (if the screen is admin)

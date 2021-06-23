@@ -6,7 +6,6 @@ import { persistUser } from '../../user/persistUser';
 interface HandleUserInit {
     data: UserInitMessage;
     dependencies: {
-        setPlayerAdmin: (val: boolean) => void;
         setPlayerNumber: (val: number) => void;
         setName: (val: string) => void;
         setUserId: (val: string) => void;
@@ -15,10 +14,9 @@ interface HandleUserInit {
 
 export function handleUserInitMessage(props: HandleUserInit) {
     const { data, dependencies } = props;
-    const { setPlayerAdmin, setPlayerNumber, setName, setUserId } = dependencies;
+    const { setPlayerNumber, setName, setUserId } = dependencies;
 
     persistUser(data, {
-        setPlayerAdmin,
         setPlayerNumber,
         sessionStorage,
         localStorage,

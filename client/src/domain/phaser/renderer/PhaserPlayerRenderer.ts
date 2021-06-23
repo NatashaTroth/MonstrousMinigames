@@ -74,9 +74,15 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     }
 
     renderGoal(posX: number, posY: number) {
-        const cave = this.scene.physics.add.sprite(posX, posY + window.innerHeight/9, 'cave'); //TODO change cave to enum
-        cave.setScale(0.13, 0.13);
-        cave.setDepth(depthDictionary.cave);
+        posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
+        posY += 5;
+        const scale = 0.13;
+        const caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
+        caveBehind.setScale(scale, scale);
+        caveBehind.setDepth(depthDictionary.cave);
+        const caveInFront = this.scene.physics.add.sprite(posX, posY, 'caveInFront'); //TODO change caveInFront to enum
+        caveInFront.setScale(scale, scale);
+        caveInFront.setDepth(depthDictionary.caveInFront);
     }
 
     // renderText(coordinates: Coordinates, text: string, background?: string): void {
@@ -104,20 +110,23 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     }
 
     renderFireworks(posX: number, posY: number) {
-        const particlesEmitter = this.particles.createEmitter({
-            frame: ['red', 'green', 'blue'],
-            x: posX,
-            y: posY,
-            angle: { min: 200, max: 250 },
-            speed: { min: 0, max: -500 },
-            gravityY: 200,
-            lifespan: 500,
-            scale: 0.1,
-            blendMode: 'ADD',
-        });
+        const flareColors: string[] = ['blue', 'red', 'green'];
+        const scales: Array<number | { min: number; max: number }> = [0.05, 0.1, { min: 0, max: 0.3 }];
+        const lifespans: number[] = [250, 500, 700];
 
-        particlesEmitter.on = true;
-        setTimeout(() => (particlesEmitter.on = false), 900);
+        flareColors.forEach((flareColor, i) => {
+            const particlesEmitter = this.particles.createEmitter({
+                frame: flareColor,
+                x: posX,
+                y: posY,
+                scale: scales[i],
+                speed: 75,
+                blendMode: 'ADD',
+                lifespan: lifespans[i],
+            });
+            particlesEmitter.on = true;
+            setTimeout(() => (particlesEmitter.on = false), 900);
+        });
     }
 
     startRunningAnimation(animationName: string) {
