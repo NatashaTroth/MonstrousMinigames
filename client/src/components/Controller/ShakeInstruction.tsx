@@ -8,13 +8,14 @@ import { Container, Countdown, DialogContent, ShakeIt, StyledDialog } from './Sh
 const ShakeInstruction: React.FunctionComponent = () => {
     const { hasPaused } = React.useContext(GameContext);
     const [counter, setCounter] = React.useState(
-        sessionStorage.getItem('countdownTime') ? Number(sessionStorage.getItem('countdownTime')) / 1000 - 1 : null
+        sessionStorage.getItem('countdownTime') ? Number(sessionStorage.getItem('countdownTime')) / 1000 : null
     );
 
     React.useEffect(() => {
         if (counter !== null && counter !== undefined) {
             if (counter > 0) {
                 setTimeout(() => setCounter(counter - 1), 1000);
+                // setTimeout(() => setCounter(counter - 1), 1000); //TODO use instead when backend and phaser have been fixed/changed
             } else {
                 sessionStorage.removeItem('countdownTime');
                 setCounter(null);
