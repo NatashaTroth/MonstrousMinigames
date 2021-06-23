@@ -7,6 +7,7 @@ import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
 import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import { characters } from '../../utils/characters';
+import { MessageTypes } from '../../utils/constants';
 import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import { getUserArray } from './Lobby';
@@ -39,7 +40,7 @@ const PlayersGetReady: React.FC = () => {
 
     function startGame() {
         screenSocket?.emit({
-            type: 'game1/startPhaserGame',
+            type: MessageTypes.startPhaserGame,
             roomId: sessionStorage.getItem('roomId'),
             userId: sessionStorage.getItem('userId'),
         });

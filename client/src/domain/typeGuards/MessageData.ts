@@ -6,7 +6,7 @@ import { ObstacleMessage } from './obstacle';
 import { GameHasPausedMessage } from './paused';
 import { PlayerDiedMessage } from './playerDied';
 import { PlayerFinishedMessage } from './playerFinished';
-import { PlayerStunneddMessage as PlayerStunnedMessage } from './playerStunned';
+import { PlayerStunnedMessage } from './playerStunned';
 import { GameHasResetMessage } from './reset';
 import { GameHasResumedMessage } from './resumed';
 import { ScreenAdminMessage } from './screenAdmin';

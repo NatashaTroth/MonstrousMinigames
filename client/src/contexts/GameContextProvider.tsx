@@ -117,9 +117,7 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         gameStarted,
         setGameStarted: (val: boolean) => handleSetGameStarted(val, { setGameStarted }),
         roomId,
-        setRoomId: (roomId?: string) => {
-            setRoomId(roomId);
-        },
+        setRoomId,
         connectedUsers,
         setConnectedUsers,
         resetGame: () => {

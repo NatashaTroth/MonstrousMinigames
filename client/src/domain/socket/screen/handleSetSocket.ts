@@ -16,7 +16,6 @@ import { resetTypeGuard } from '../../typeGuards/reset';
 import { resumedTypeGuard } from '../../typeGuards/resumed';
 import { screenAdminTypeGuard } from '../../typeGuards/screenAdmin';
 import { StartPhaserGameMessage, startPhaserGameTypeGuard } from '../../typeGuards/startPhaserGame';
-// import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/started';
 import { stoppedTypeGuard } from '../../typeGuards/stopped';
 import { TimedOutMessage, timedOutTypeGuard } from '../../typeGuards/timedOut';
 import { MessageSocket } from '../MessageSocket';
@@ -58,7 +57,6 @@ export function handleSetSocket(
     ScreenSocket.getInstance(socket);
 
     const connectedUsersSocket = new MessageSocket(connectedUsersTypeGuard, socket);
-    // const startedSocket = new MessageSocket(startedTypeGuard, socket);
     const startPhaserGameSocket = new MessageSocket(startPhaserGameTypeGuard, socket);
     const finishedSocket = new MessageSocket(finishedTypeGuard, socket);
     const resetSocket = new MessageSocket(resetTypeGuard, socket);
@@ -85,11 +83,6 @@ export function handleSetSocket(
     startPhaserGameSocket.listen((data: StartPhaserGameMessage) =>
         handleStartGameMessage({ roomId, dependencies: { setGameStarted, history } })
     );
-
-    //TODO do we still need this or can we delete?
-    // startedSocket.listen((data: StartGameMessage) =>
-    //     handleStartGameMessage({ data, roomId, dependencies: { setCountdownTime, setGameStarted, history } })
-    // );
 
     pausedSocket.listen(() => setHasPaused(true));
 

@@ -106,7 +106,7 @@ class MainScene extends Phaser.Scene {
     sendStartGame() {
         //TODO!!!! - do not send when game is already started? - or is it just ignored - appears to work - maybe check if no game state updates?
         this.socket?.emit({
-            type: 'game1/start',
+            type: MessageTypes.startGame,
             roomId: this.roomId,
             // userId: sessionStorage.getItem('userId'), //TODO
         });
