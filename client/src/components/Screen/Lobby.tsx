@@ -104,18 +104,24 @@ export const Lobby: React.FunctionComponent = () => {
                             </CopyToClipboard>
                         </QRCode>
                         <RightButtonContainer>
-                            {screenAdmin && (
-                                <Button
-                                    onClick={() => {
-                                        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-                                        history.push(screenChooseGameRoute(roomId));
-                                    }}
-                                    disabled={!connectedUsers || connectedUsers?.length === 0}
-                                    variant="secondary"
-                                >
-                                    Choose Game
-                                </Button>
-                            )}
+                            <Button
+                                onClick={() => {
+                                    handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+                                    history.push(screenChooseGameRoute(roomId));
+                                }}
+                                disabled={!screenAdmin || !connectedUsers || connectedUsers?.length === 0}
+                                variant="secondary"
+                                title={
+                                    screenAdmin
+                                        ? !connectedUsers || connectedUsers?.length === 0
+                                            ? 'Wait for users to join'
+                                            : ''
+                                        : 'Please select the game on the admin screen'
+                                }
+                            >
+                                Choose Game
+                            </Button>
+
                             <Button disabled>Leaderboard</Button>
                             <Button
                                 onClick={() => {
