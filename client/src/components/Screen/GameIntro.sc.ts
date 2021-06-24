@@ -1,3 +1,4 @@
+import { FormGroup } from '@material-ui/core';
 import styled from 'styled-components';
 
 import forest from '../../images/ui/forest.svg';
@@ -39,7 +40,8 @@ export const IntroText = styled.div`
 `;
 
 export const PaddingContainer = styled.div`
-    padding: 20px;
+    display: flex;
+    padding: 30px;
 `;
 
 export const PreviewImageContainer = styled.div`
@@ -79,4 +81,10 @@ export const ControlInstruction = styled.div`
     margin-top: 30px;
     font-size: 20px;
     font-weight: 400;
+`;
+
+export const StyledFormGroup = styled(FormGroup)`
+    && {
+        width: 100%;
+    }
 `;

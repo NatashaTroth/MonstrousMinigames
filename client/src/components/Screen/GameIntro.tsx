@@ -1,3 +1,4 @@
+import { Checkbox, createStyles, FormControlLabel, makeStyles, Theme } from '@material-ui/core';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
@@ -16,21 +17,39 @@ import {
     IntroText,
     PaddingContainer,
     PreviewImageContainer,
+    StyledFormGroup,
 } from './GameIntro.sc';
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            color: theme.status.checked,
+            '&$checked': {
+                color: theme.status.checked,
+            },
+        },
+        checked: {},
+    })
+);
+
 const GameIntro: React.FunctionComponent = () => {
-    const [showFirstIntro, setShowFirstIntro] = React.useState(true);
     const { roomId } = React.useContext(GameContext);
+    const [showFirstIntro, setShowFirstIntro] = React.useState(true);
+    const [doNotShowChecked, setDoNotShowChecked] = React.useState(false);
     const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
 
-    function handleSkip() {
+    function handleNext() {
         if (showFirstIntro) {
             setShowFirstIntro(false);
         } else {
-            localStorage.setItem('tutorial', 'seen');
+            if (doNotShowChecked) {
+                localStorage.setItem('tutorial', 'seen');
+            }
             history.push(screenGetReadyRoute(roomId));
         }
     }
+
+    const classes = useStyles();
 
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
@@ -42,7 +61,7 @@ const GameIntro: React.FunctionComponent = () => {
             <GameIntroBackground>
                 {showFirstIntro ? (
                     <IntroText>
-                        {/* TODO remove and add content */}
+                        {/* TODO remove and add content*/}
                         Animation, die die Geschichte der Monster erklärt mit kurzen Animationen dazu. (entweder
                         Voice-over oder mit Text)
                     </IntroText>
@@ -57,18 +76,32 @@ const GameIntro: React.FunctionComponent = () => {
                             along the way!
                         </ImageDescription>
                         <ControlInstructionsContainer>
-                            <ControlInstruction>Shake your phone in order to run!</ControlInstruction>
-                            <ControlInstruction>Swipe your screen in order to slice the tree trunk!</ControlInstruction>
-                            <ControlInstruction>Blow into your phone to blow the spider away!</ControlInstruction>
-                            <ControlInstruction>
-                                Move the stones and leaves into the hole to run over it!
-                            </ControlInstruction>
+                            <ControlInstruction>Shake your phone to run!</ControlInstruction>
+                            <ControlInstruction>Swipe your screen to slice the tree trunk!</ControlInstruction>
+                            <ControlInstruction>Blow into your phone to scare the spider away!</ControlInstruction>
+                            <ControlInstruction>Move the stones into the hole to run over it!</ControlInstruction>
                         </ControlInstructionsContainer>
                     </div>
                 )}
+
                 <PaddingContainer>
+                    <StyledFormGroup row>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={doNotShowChecked}
+                                    onChange={() => setDoNotShowChecked(!doNotShowChecked)}
+                                    classes={{
+                                        root: classes.root,
+                                        checked: classes.checked,
+                                    }}
+                                />
+                            }
+                            label="Don't show instructions again"
+                        />
+                    </StyledFormGroup>
                     <BackButtonContainer>
-                        <Button onClick={handleSkip}>Skip</Button>
+                        <Button onClick={handleNext}>Next</Button>
                     </BackButtonContainer>
                 </PaddingContainer>
             </GameIntroBackground>
