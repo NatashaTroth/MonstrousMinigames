@@ -22,8 +22,6 @@ export function handlePlayerFinishedMessage(props: HandlePlayerFinished) {
 
         const stoneTimeoutId = sessionStorage.getItem('stoneTimeoutId');
         if (stoneTimeoutId) {
-            // eslint-disable-next-line no-console
-            console.log('clear timeout');
             clearTimeout(Number(stoneTimeoutId));
             sessionStorage.removeItem(stoneTimeoutId);
         }
