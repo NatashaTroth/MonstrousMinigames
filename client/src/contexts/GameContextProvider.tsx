@@ -38,10 +38,6 @@ export const defaultValue = {
     setPlayerRanks: () => {
         // do nothing
     },
-    hasTimedOut: false,
-    setHasTimedOut: () => {
-        // do nothing
-    },
     hasPaused: false,
     setHasPaused: () => {
         // do nothing
@@ -79,8 +75,6 @@ interface IGameContext {
     setCountdownTime: (val: number) => void;
     playerRanks?: PlayerRank[];
     setPlayerRanks: (val: PlayerRank[]) => void;
-    hasTimedOut: boolean;
-    setHasTimedOut: (val: boolean) => void;
     hasPaused: boolean;
     setHasPaused: (val: boolean) => void;
     gameChosen: boolean;
@@ -103,7 +97,6 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [connectedUsers, setConnectedUsers] = React.useState<undefined | IUser[]>();
     const [showInstructions, setShowInstructions] = React.useState<boolean>(true);
     const [countdownTime, setCountdownTime] = React.useState<number>(0);
-    const [hasTimedOut, setHasTimedOut] = React.useState<boolean>(false);
     const [hasPaused, setHasPaused] = React.useState<boolean>(false);
     // TODO use data from socket
     const [gameChosen, setGameChosen] = React.useState(false);
@@ -130,8 +123,6 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setCountdownTime,
         playerRanks,
         setPlayerRanks,
-        hasTimedOut,
-        setHasTimedOut,
         hasPaused,
         setHasPaused,
         gameChosen,

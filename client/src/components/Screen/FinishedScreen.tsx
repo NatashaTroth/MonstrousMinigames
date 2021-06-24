@@ -12,7 +12,7 @@ import { Label } from '../common/Label.sc';
 import { FinishedScreenContainer, Headline, LeaderBoardRow, RankTable, UnfinishedUserRow } from './FinishedScreen.sc';
 
 export const FinishedScreen: React.FunctionComponent = () => {
-    const { playerRanks, hasTimedOut, screenAdmin, resetGame } = React.useContext(GameContext);
+    const { playerRanks, screenAdmin, resetGame } = React.useContext(GameContext);
     const { audioPermission, setAudioPermissionGranted, initialPlayFinishedMusic } = React.useContext(AudioContext);
     const { screenSocket } = React.useContext(ScreenSocketContext);
 
@@ -27,7 +27,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
     return (
         <FinishedScreenContainer>
             <RankTable>
-                <Headline>{hasTimedOut ? 'Game has timed out!' : 'Finished!'}</Headline>
+                <Headline>Finished!</Headline>
                 {sortedPlayerRanks?.map((player, index) => (
                     <LeaderBoardRow key={`LeaderBoardRow${index}`}>
                         <Instruction variant="dark">

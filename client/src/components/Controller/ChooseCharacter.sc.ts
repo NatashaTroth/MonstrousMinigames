@@ -76,3 +76,9 @@ export const Right = styled(CustomButton)`
 export const Left = styled(CustomButton)`
     left: calc(4% + 1px);
 `;
+
+export const ClearContainer = styled.div`
+    position: absolute;
+    top: 20px;
+    right: 20px;
+`;

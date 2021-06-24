@@ -43,6 +43,7 @@ const ConnectDialog: React.FunctionComponent<ConnectDialog> = ({ handleClose, ..
                             name="roomId"
                             value={formState?.roomId}
                             onChange={e => setFormState({ ...formState, roomId: e.target.value })}
+                            autoFocus
                         />
                         <Button type="submit" name="join" disabled={!formState?.roomId}>
                             Enter
