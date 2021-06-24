@@ -97,7 +97,7 @@ const GameIntro: React.FunctionComponent = () => {
                                     }}
                                 />
                             }
-                            label="Don't show instructions again"
+                            label="Don't show these instructions again"
                         />
                     </StyledFormGroup>
                     <BackButtonContainer>

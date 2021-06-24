@@ -81,7 +81,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
                     </Button>
 
                     <Button type="button" name="tutorial" onClick={handleGettingStarted}>
-                        Getting Started
+                        About
                     </Button>
                 </LeftButtonContainer>
             </LeftContainer>
