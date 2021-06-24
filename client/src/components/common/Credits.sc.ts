@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import forest from '../../images/ui/forest.svg';
-import { secondary, secondaryShadow } from '../../utils/colors';
 
 const boxShadowDepth = 7;
 
@@ -33,11 +32,12 @@ export const ContentContainer = styled.div`
     width: 80%;
     height: 80%;
     display: flex;
-    background-color: ${secondary};
+    background-color: ${({ theme }) => theme.palette.secondary.main};
     padding: 20px;
     border-radius: 40px;
     flex-direction: column;
-    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${secondaryShadow};
+    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
+        ${({ theme }) => theme.palette.secondary.dark};
 `;
 
 export const BackButtonContainer = styled.div`
