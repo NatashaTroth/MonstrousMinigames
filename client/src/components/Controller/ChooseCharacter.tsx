@@ -1,6 +1,6 @@
 import 'react-multi-carousel/lib/styles.css';
 
-import { ArrowBackIos, ArrowForwardIos } from '@material-ui/icons';
+import { ArrowBackIos, ArrowForwardIos, Clear } from '@material-ui/icons';
 import * as React from 'react';
 import Carousel from 'react-multi-carousel';
 
@@ -13,12 +13,14 @@ import { characters } from '../../utils/characters';
 import { MessageTypes } from '../../utils/constants';
 import { controllerLobbyRoute } from '../../utils/routes';
 import Button from '../common/Button';
+import IconButton from '../common/IconButton';
 import { Label } from '../common/Label.sc';
 import {
     Character,
     CharacterContainer,
     ChooseButtonContainer,
     ChooseCharacterContainer,
+    ClearContainer,
     Left,
     Right,
 } from './ChooseCharacter.sc';
@@ -48,6 +50,14 @@ const ChooseCharacter: React.FunctionComponent = () => {
 
     return (
         <ChooseCharacterContainer>
+            {searchParams.get('back') && (
+                <ClearContainer>
+                    <IconButton onClick={() => history.goBack()}>
+                        <Clear />
+                    </IconButton>
+                </ClearContainer>
+            )}
+
             <Label>Choose your character:</Label>
             <Carousel
                 {...carouselOptions}
