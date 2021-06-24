@@ -58,7 +58,7 @@ export const ConnectScreen: React.FunctionComponent = () => {
     }
 
     async function handleGettingStarted() {
-        setJoinDialogOpen(true);
+        setGettingStartedDialogOpen(true);
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
     }
 
