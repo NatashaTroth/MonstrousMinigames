@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-import { secondary, secondaryShadow } from '../../utils/colors';
-
 const boxShadowDepth = 8;
 const fontSize = 1;
 
@@ -50,6 +48,7 @@ export const InputLabel = styled.label`
 `;
 
 export const InputContainer = styled.div`
+    text-align: center;
     padding: 0 30px 30px 30px;
     display: flex;
     align-items: center;
@@ -58,7 +57,8 @@ export const InputContainer = styled.div`
 
 export const DialogContent = styled.div`
     padding: 40px 100px;
-    background-color: ${secondary};
+    background-color: ${({ theme }) => theme.palette.secondary.main};
     border-radius: 10px;
-    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${secondaryShadow};
+    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
+        ${({ theme }) => theme.palette.secondary.dark};
 `;

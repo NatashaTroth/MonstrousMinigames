@@ -13,4 +13,6 @@ export enum MessageTypes {
     ERROR = 'error',
     SCREEN_ADMIN = 'screenAdmin',
     SELECT_CHARACTER = 'selectCharacter',
+    PLAYER_HAS_DISCONNECTED = 'playerHasDisconnected',
+    PLAYER_HAS_RECONNECTED = 'playerHasReconnected',
 }

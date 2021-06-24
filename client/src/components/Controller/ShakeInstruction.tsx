@@ -1,27 +1,29 @@
 import * as React from 'react';
 
-import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
-import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import shakeIt from '../../images/ui/shakeIt.svg';
 import FullScreenContainer from '../common/FullScreenContainer';
-import { Container, DialogContent, ShakeIt, StyledDialog } from './ShakeInstruction.sc';
+import { Container, Countdown, DialogContent, ShakeIt, StyledDialog } from './ShakeInstruction.sc';
 
 const ShakeInstruction: React.FunctionComponent = () => {
-    const { controllerSocket } = React.useContext(ControllerSocketContext);
-    const { playerFinished } = React.useContext(PlayerContext);
     const { hasPaused } = React.useContext(GameContext);
+    const [counter, setCounter] = React.useState(
+        sessionStorage.getItem('countdownTime') ? Number(sessionStorage.getItem('countdownTime')) / 1000 : null
+    );
 
-    // React.useEffect(() => {
-    //     if (localDevelopment) {
-    //         if (!playerFinished) {
-    //             // eslint-disable-next-line no-console
-    //             // console.log('send movement');
-    //             setInterval(() => sendMovement(controllerSocket, hasPaused), 16.66667);
-    //         }
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
+    React.useEffect(() => {
+        if (counter !== null && counter !== undefined) {
+            if (counter > 0) {
+                setTimeout(() => setCounter(counter - 1), 1000);
+                // setTimeout(() => setCounter(counter - 1), 1000); //TODO use instead when backend and phaser have been fixed/changed
+            } else {
+                sessionStorage.removeItem('countdownTime');
+                setCounter(null);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [counter]);
+
     return (
         <>
             <StyledDialog open={hasPaused}>
@@ -30,9 +32,7 @@ const ShakeInstruction: React.FunctionComponent = () => {
                 </DialogContent>
             </StyledDialog>
             <FullScreenContainer>
-                <Container>
-                    <ShakeIt src={shakeIt} />
-                </Container>
+                <Container>{counter ? <Countdown>{counter}</Countdown> : <ShakeIt src={shakeIt} />}</Container>
             </FullScreenContainer>
         </>
     );

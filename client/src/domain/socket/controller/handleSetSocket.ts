@@ -6,7 +6,6 @@ import { handleConnectedUsersMessage } from '../../gameState/controller/handleCo
 import { handleGameHasFinishedMessage } from '../../gameState/controller/handleGameHasFinishedMessage';
 import { handleGameHasResetMessage } from '../../gameState/controller/handleGameHasResetMessage';
 import { handleGameHasStoppedMessage } from '../../gameState/controller/handleGameHasStoppedMessage';
-import { handleGameHasTimedOutMessage } from '../../gameState/controller/handleGameHasTimedOutMessage';
 import { handleGameStartedMessage } from '../../gameState/controller/handleGameStartedMessage';
 import { handleObstacleMessage } from '../../gameState/controller/handleObstacleMessage';
 import { handlePlayerDied } from '../../gameState/controller/handlePlayerDied';
@@ -15,7 +14,7 @@ import { handlePlayerStunned } from '../../gameState/controller/handlePlayerStun
 import { handleUserInitMessage } from '../../gameState/controller/handleUserInitMessage';
 import { ConnectedUsersMessage, connectedUsersTypeGuard, IUser } from '../../typeGuards/connectedUsers';
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
-import { finishedTypeGuard } from '../../typeGuards/finished';
+import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
 import { ObstacleMessage, obstacleTypeGuard } from '../../typeGuards/obstacle';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
 import { PlayerDiedMessage, playerDiedTypeGuard } from '../../typeGuards/playerDied';
@@ -25,7 +24,6 @@ import { GameHasResetMessage, resetTypeGuard } from '../../typeGuards/reset';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
 import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/started';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../typeGuards/stopped';
-import { TimedOutMessage, timedOutTypeGuard } from '../../typeGuards/timedOut';
 import { UserInitMessage, userInitTypeGuard } from '../../typeGuards/userInit';
 import { MessageSocket } from '../MessageSocket';
 import { Socket } from '../Socket';
@@ -46,6 +44,7 @@ export interface HandleSetSocketDependencies {
     setPlayerDead: (val: boolean) => void;
     history: History;
     setConnectedUsers: (val: IUser[]) => void;
+    playerRank: undefined | number;
 }
 
 export function handleSetSocket(
@@ -68,6 +67,7 @@ export function handleSetSocket(
         setPlayerDead,
         history,
         setConnectedUsers,
+        playerRank,
     } = dependencies;
 
     setControllerSocket(socket);
@@ -75,7 +75,6 @@ export function handleSetSocket(
     const userInitSocket = new MessageSocket(userInitTypeGuard, socket);
     const obstacleSocket = new MessageSocket(obstacleTypeGuard, socket);
     const playerFinishedSocket = new MessageSocket(playerFinishedTypeGuard, socket);
-    const timedOutSocket = new MessageSocket(timedOutTypeGuard, socket);
     const startedSocket = new MessageSocket(startedTypeGuard, socket);
     const pausedSocket = new MessageSocket(pausedTypeGuard, socket);
     const resumedSocket = new MessageSocket(resumedTypeGuard, socket);
@@ -118,20 +117,10 @@ export function handleSetSocket(
         });
     });
 
-    timedOutSocket.listen((data: TimedOutMessage) => {
-        handleGameHasTimedOutMessage({
-            data,
-            roomId,
-            dependencies: {
-                setPlayerFinished,
-                setPlayerRank,
-            },
-        });
-    });
-
     startedSocket.listen((data: GameHasStartedMessage) => {
         handleGameStartedMessage({
             roomId,
+            countdownTime: data.countdownTime,
             dependencies: {
                 setGameStarted,
                 history,
@@ -179,8 +168,15 @@ export function handleSetSocket(
         handlePlayerStunned(roomId);
     });
 
-    gameFinishedSocket.listen(() => {
-        handleGameHasFinishedMessage(roomId);
+    gameFinishedSocket.listen((data: GameHasFinishedMessage) => {
+        handleGameHasFinishedMessage({
+            roomId,
+            playerRank,
+            playerRanks: data.data.playerRanks,
+            dependencies: {
+                setPlayerRank,
+            },
+        });
     });
 
     if (socket) {

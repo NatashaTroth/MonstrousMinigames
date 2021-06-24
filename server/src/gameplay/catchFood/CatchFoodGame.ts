@@ -277,7 +277,11 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             playerInfoArray.push(playerState);
         }
 
-        this.cameraPositionX += this.cameraSpeed;
+        //TODO - change when main loop - don't send any gamestate info until countdown stopped
+        if(this.gameState === GameState.Started){
+
+            this.cameraPositionX += this.cameraSpeed;
+        }
 
         return {
             gameState: this.gameState,

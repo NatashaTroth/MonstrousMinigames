@@ -13,7 +13,15 @@ import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import Button from './Button';
 import IconButton from './IconButton';
-import { BackButtonContainer, Content, ContentContainer, Headline, SettingsContainer } from './Settings.sc';
+import {
+    BackButtonContainer,
+    Content,
+    ContentContainer,
+    Headline,
+    SettingsContainer,
+    StyledGridContainer,
+    VolumeContainer,
+} from './Settings.sc';
 
 const useStyles = makeStyles({
     root: {
@@ -79,11 +87,9 @@ const Settings: React.FunctionComponent = () => {
             <ContentContainer>
                 <Content>
                     <Headline>Settings</Headline>
-                    <div className={classes.root}>
-                        <Typography id="continuous-slider" gutterBottom>
-                            Volume
-                        </Typography>
-                        <Grid container spacing={2}>
+                    <VolumeContainer>
+                        <Typography gutterBottom>Sound Volume</Typography>
+                        <StyledGridContainer container spacing={2}>
                             <Grid item>
                                 <VolumeDown />
                             </Grid>
@@ -113,8 +119,8 @@ const Settings: React.FunctionComponent = () => {
                             >
                                 {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
                             </IconButton>
-                        </Grid>
-                    </div>
+                        </StyledGridContainer>
+                    </VolumeContainer>
                 </Content>
                 <BackButtonContainer>
                     <Button onClick={history.goBack}>Back</Button>

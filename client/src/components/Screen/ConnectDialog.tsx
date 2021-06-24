@@ -37,12 +37,13 @@ const ConnectDialog: React.FunctionComponent<ConnectDialog> = ({ handleClose, ..
                     }}
                 >
                     <InputContainer>
-                        <InputLabel>Enter the Room Code here:</InputLabel>
+                        <InputLabel>Enter a Room Code to join an already existing room:</InputLabel>
                         <StyledInput
                             type="text"
                             name="roomId"
                             value={formState?.roomId}
                             onChange={e => setFormState({ ...formState, roomId: e.target.value })}
+                            autoFocus
                         />
                         <Button type="submit" name="join" disabled={!formState?.roomId}>
                             Enter

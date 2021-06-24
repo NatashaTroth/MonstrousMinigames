@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 
-import { primary } from '../../utils/colors';
-
 export const Label = styled.div`
-    color: ${primary};
+    color: ${({ theme }) => theme.palette.primary.main};
     font-size: 24px;
     font-weight: 700;
     font-style: italic;

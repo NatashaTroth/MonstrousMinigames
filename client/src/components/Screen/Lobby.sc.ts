@@ -2,7 +2,7 @@ import { Button, Typography } from '@material-ui/core';
 import styled from 'styled-components';
 
 import forest from '../../images/ui/forest.svg';
-import { primary, QRCodeBackground } from '../../utils/colors';
+import { QRCodeBackground } from '../../utils/colors';
 
 export const LobbyContainer = styled.div`
     background-image: url(${forest});
@@ -29,7 +29,7 @@ export const Content = styled.div`
     width: 100%;
     align-content: center;
     display: flex;
-    margin: 30px;
+    margin: 60px 30px 30px 30px;
     flex-direction: column;
 
     @media (min-width: 1200px) {
@@ -52,7 +52,7 @@ interface Props {
 const User = styled.div<Props>`
     border-radius: 10px;
     color: black;
-    background-color: ${primary};
+    background-color: ${({ theme }) => theme.palette.primary.main};
     padding: 10px;
     font-size: 20px;
 `;

@@ -37,6 +37,13 @@ function sendErrorMessage(socket: Socket, e: Error): void {
         msg: e.message,
     });
 }
+function sendStartPhaserGame(nsps: Array<Namespace>, room: Room): void {
+    nsps.forEach(function (namespace: Namespace) {
+        namespace.to(room.id).emit('message', {
+            type: CatchFoodMsgType.START_PHASER_GAME,
+        });
+    });
+}
 function sendGameHasStarted(nsps: Array<Namespace>, data: GameEvents.GameHasStarted): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(data.roomId).emit('message', {
@@ -98,6 +105,20 @@ function sendPlayerStunned(nsp: Namespace, socketId: string): void {
     });
 }
 
+function sendPlayerHasDisconnected(nsp: Namespace, userId: string): void {
+    nsp.emit('message', {
+        type: MessageTypes.PLAYER_HAS_DISCONNECTED,
+        userId: userId,
+    });
+}
+
+function sendPlayerHasReconnected(nsp: Namespace, userId: string): void {
+    nsp.emit('message', {
+        type: MessageTypes.PLAYER_HAS_RECONNECTED,
+        userId: userId,
+    });
+}
+
 function sendMessage(type: MessageTypes | CatchFoodMsgType, nsps: Array<Namespace>, recipient: string): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(recipient).emit('message', {
@@ -110,6 +131,7 @@ export default {
     sendUserInit,
     sendGameState,
     sendErrorMessage,
+    sendStartPhaserGame,
     sendGameHasStarted,
     sendPlayerFinished,
     sendGameHasFinished,
@@ -119,4 +141,6 @@ export default {
     sendScreenAdmin,
     sendPlayerDied,
     sendPlayerStunned,
+    sendPlayerHasDisconnected,
+    sendPlayerHasReconnected,
 };

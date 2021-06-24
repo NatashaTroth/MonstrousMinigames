@@ -1,10 +1,10 @@
 import { MessageTypes } from '../../utils/constants';
 import { MessageData } from './MessageData';
 
-export interface PlayerStunneddMessage {
+export interface PlayerStunnedMessage {
     type: MessageTypes.playerStunned;
     rank: number;
 }
 
-export const playerStunnedTypeGuard = (data: MessageData): data is PlayerStunneddMessage =>
-    (data as PlayerStunneddMessage).type === MessageTypes.playerStunned;
+export const playerStunnedTypeGuard = (data: MessageData): data is PlayerStunnedMessage =>
+    (data as PlayerStunnedMessage).type === MessageTypes.playerStunned;
