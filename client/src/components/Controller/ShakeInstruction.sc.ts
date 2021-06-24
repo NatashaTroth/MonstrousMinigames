@@ -1,8 +1,6 @@
 import { Dialog } from '@material-ui/core';
 import styled from 'styled-components';
 
-import { secondary } from '../../utils/colors';
-
 export const Container = styled.div`
     display: flex;
     flex-direction: column;
@@ -33,7 +31,7 @@ export const ShakeIt = styled.img`
 `;
 
 export const Countdown = styled.div`
-    color: ${secondary};
+    color: ${({ theme }) => theme.palette.secondary.main};
     font-weight: 700;
     font-size: 70px;
 `;
