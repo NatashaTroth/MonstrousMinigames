@@ -1,3 +1,4 @@
+import { Grid } from '@material-ui/core';
 import styled from 'styled-components';
 
 import forest from '../../images/ui/forest.svg';
@@ -26,6 +27,7 @@ export const Content = styled.div`
     width: 100%;
     height: 100%;
     flex-direction: column;
+    align-items: center;
 `;
 
 export const ContentContainer = styled.div`
@@ -43,4 +45,15 @@ export const BackButtonContainer = styled.div`
     display: flex;
     width: 100%;
     justify-content: flex-end;
+`;
+
+export const VolumeContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    margin: 30px 0;
+`;
+
+export const StyledGridContainer = styled(Grid)`
+    align-items: center;
 `;

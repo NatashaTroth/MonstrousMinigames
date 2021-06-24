@@ -50,6 +50,7 @@ export const InputLabel = styled.label`
 `;
 
 export const InputContainer = styled.div`
+    text-align: center;
     padding: 0 30px 30px 30px;
     display: flex;
     align-items: center;

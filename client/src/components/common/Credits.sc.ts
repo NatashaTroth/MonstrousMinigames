@@ -26,6 +26,7 @@ export const Content = styled.div`
     width: 100%;
     height: 100%;
     flex-direction: column;
+    align-items: center;
 `;
 
 export const ContentContainer = styled.div`
@@ -43,4 +44,10 @@ export const BackButtonContainer = styled.div`
     display: flex;
     width: 100%;
     justify-content: flex-end;
+`;
+
+export const TextContainer = styled.div`
+    padding: 40px;
+    line-height: 24px;
+    letter-spacing: 1px;
 `;

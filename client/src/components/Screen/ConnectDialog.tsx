@@ -37,7 +37,7 @@ const ConnectDialog: React.FunctionComponent<ConnectDialog> = ({ handleClose, ..
                     }}
                 >
                     <InputContainer>
-                        <InputLabel>Enter the Room Code here:</InputLabel>
+                        <InputLabel>Enter a Room Code to join an already existing room:</InputLabel>
                         <StyledInput
                             type="text"
                             name="roomId"
