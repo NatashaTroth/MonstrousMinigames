@@ -19,14 +19,53 @@ export class PhaserGameRenderer implements GameRenderer {
         const reps = Math.ceil(trackLength / (windowWidth / 4)) + 1;
         for (let i = 0; i < reps; i++) {
             for (let j = 0; j < 4; j++) {
-                const lane = this.scene.add.image(
+                const sky = this.scene.add.image(
                     (i * windowWidth) / 4,
                     (j * windowHeight) / 4 + windowHeight / 4,
-                    'forest2Smaller'
+                    'starsAndSky'
                 );
-                lane.setDisplaySize(windowWidth / 4, windowHeight / 4);
-                lane.setOrigin(0, 1);
-                lane.setScrollFactor(1);
+
+                const mountains = this.scene.add.image(
+                    (i * windowWidth) / 4,
+                    (j * windowHeight) / 4 + windowHeight / 4,
+                    'mountains'
+
+                );
+                const hills = this.scene.add.image(
+                    (i * windowWidth) / 4,
+                    (j * windowHeight) / 4 + windowHeight / 4,
+                    'hills'
+                );
+
+                const trees = this.scene.add.image(
+                    (i * windowWidth) / 4,
+                    (j * windowHeight) / 4 + windowHeight / 4,
+                    'trees'
+                );
+
+                const floor = this.scene.add.image(
+                    (i * windowWidth) / 4,
+                    (j * windowHeight) / 4 + windowHeight / 4,
+                    'floor'
+                );
+
+                sky.setDisplaySize(windowWidth / 4, windowHeight / 4);
+                mountains.setDisplaySize(windowWidth / 4, windowHeight / 4);
+                hills.setDisplaySize(windowWidth / 4, windowHeight / 4);
+                trees.setDisplaySize(windowWidth / 4, windowHeight / 4);
+                floor.setDisplaySize(windowWidth / 4, windowHeight / 4);
+
+                sky.setOrigin(0, 1);
+                mountains.setOrigin(0,1)
+                hills.setOrigin(0,1)
+                trees.setOrigin(0,1)
+                floor.setOrigin(0,1)
+
+                sky.setScrollFactor(0);
+                mountains.setScrollFactor(0.25)
+                hills.setScrollFactor(0.5)
+                trees.setScrollFactor(0.75)
+                floor.setScrollFactor(1)
             }
         }
     }

@@ -21,7 +21,7 @@ export class Player {
     stunned: boolean;
 
     constructor(
-        private renderer: PlayerRenderer, // TODO MAKE PRIVATE
+        public renderer: PlayerRenderer, // TODO MAKE PRIVATE
         private index: number,
         private coordinates: Coordinates,
         private gameStateData: GameData,
@@ -121,7 +121,9 @@ export class Player {
     }
 
     private renderPlayer() {
-        this.renderer.renderPlayer(this.coordinates, this.monsterName, this.animationName);
+        // eslint-disable-next-line no-console
+        console.log(this.username)
+        this.renderer.renderPlayer(this.coordinates, this.monsterName, this.animationName, this.username);
 
         // TODO render player name
         // this.renderer.renderText(
@@ -141,21 +143,21 @@ export class Player {
 
             switch (obstacle.type) {
                 case Obstacles.treeStump:
-                    obstaclePosY = this.coordinates.y + 35;
+                    obstaclePosY = this.coordinates.y + window.innerHeight/9;
                     obstacleScale = 0.4;
                     break;
                 case Obstacles.spider:
-                    obstaclePosY = this.coordinates.y + 5;
+                    obstaclePosY = this.coordinates.y + window.innerHeight/11;
                     obstacleScale = 0.2;
                     break;
                 case Obstacles.hole:
-                    obstaclePosY = this.coordinates.y + 65;
+                    obstaclePosY = this.coordinates.y + window.innerHeight/8;
                     obstacleScale = 0.1;
                     posX += 40;
 
                     break;
                 case Obstacles.stone:
-                    obstaclePosY = this.coordinates.y + 25;
+                    obstaclePosY = this.coordinates.y + window.innerHeight/8;
                     obstacleScale = 0.2;
                     break;
             }
