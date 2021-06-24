@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 
 import forest from '../../images/ui/forest_mobile.svg';
-import { primary } from '../../utils/colors';
-
-const fontSize = 1;
+import theme from '../../theme';
 
 export const ConnectScreenContainer = styled.div`
     height: 100%;
@@ -28,7 +26,7 @@ export const ConnectScreenContainer = styled.div`
 export const inputStyles = {
     color: 'black',
     border: 'none',
-    background: primary,
+    background: theme.palette.primary.main,
     cursor: 'pointer',
     fontWeight: 700,
     marginBottom: '30px',
@@ -52,7 +50,7 @@ export const inputStyles = {
 };
 
 export const LabelStyles = {
-    color: primary,
+    color: theme.palette.primary.main,
     fontSize: '24px',
     fontWeight: 700,
     fontStyle: 'italic',

@@ -3,8 +3,10 @@ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount } from 'enzyme';
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
 
 import { defaultValue, ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import theme from '../../theme';
 import ConnectDialog from './ConnectDialog';
 
 configure({ adapter: new Adapter() });
@@ -13,18 +15,20 @@ describe('Screen ConnectScreen', () => {
     it('when connect button is clicked, handleSocketConnection function should be called', () => {
         const handleSocketConnectionFunction = jest.fn();
         const wrapper = mount(
-            <Router>
-                <ScreenSocketContext.Provider
-                    value={{ ...defaultValue, handleSocketConnection: handleSocketConnectionFunction }}
-                >
-                    <ConnectDialog
-                        open={true}
-                        handleClose={() => {
-                            //do nothing
-                        }}
-                    />
-                </ScreenSocketContext.Provider>
-            </Router>
+            <ThemeProvider theme={theme}>
+                <Router>
+                    <ScreenSocketContext.Provider
+                        value={{ ...defaultValue, handleSocketConnection: handleSocketConnectionFunction }}
+                    >
+                        <ConnectDialog
+                            open={true}
+                            handleClose={() => {
+                                //do nothing
+                            }}
+                        />
+                    </ScreenSocketContext.Provider>
+                </Router>
+            </ThemeProvider>
         );
         const input = wrapper.find('input');
         const form = wrapper.find('form');

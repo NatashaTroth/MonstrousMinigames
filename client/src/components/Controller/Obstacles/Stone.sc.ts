@@ -1,6 +1,5 @@
 import styled, { keyframes } from 'styled-components';
 
-import { secondary } from '../../../utils/colors';
 import { ObstacleContainer } from './ObstaclStyles.sc';
 
 const ray_anim = keyframes`
@@ -189,7 +188,7 @@ interface Props {
 export const PlayerButtonContainer = styled.div<Props>`
     && {
         margin-bottom: 20px;
-        background-color: ${({ bgColor, selected }) => (selected ? secondary : bgColor)};
+        background-color: ${({ bgColor, selected, theme }) => (selected ? theme.palette.secondary.main : bgColor)};
         color: black;
         cursor: pointer;
         padding: 10px;

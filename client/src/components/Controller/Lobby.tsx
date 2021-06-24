@@ -80,7 +80,7 @@ export const Lobby: React.FunctionComponent = () => {
                         </ButtonContainer>
                     </Content>
                 ) : (
-                    <CircularProgress />
+                    <CircularProgress color="secondary" />
                 )}
             </LobbyContainer>
         </FullScreenContainer>
