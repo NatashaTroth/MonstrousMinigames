@@ -4,7 +4,9 @@ import { configure } from 'enzyme';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
 
+import theme from '../../theme';
 import { ConnectScreen } from './ConnectScreen';
 
 afterEach(cleanup);
@@ -14,9 +16,11 @@ describe('Controller ConnectScreen', () => {
 
     it('renders one iframe html tag', () => {
         const { container } = render(
-            <Router history={history}>
-                <ConnectScreen history={history} />
-            </Router>
+            <ThemeProvider theme={theme}>
+                <Router history={history}>
+                    <ConnectScreen history={history} />
+                </Router>
+            </ThemeProvider>
         );
         expect(container.querySelectorAll('iframe')).toHaveProperty('length', 1);
     });
@@ -24,9 +28,11 @@ describe('Controller ConnectScreen', () => {
     it('should render Enter button', () => {
         const givenText = 'Enter';
         const { container } = render(
-            <Router history={history}>
-                <ConnectScreen history={history} />
-            </Router>
+            <ThemeProvider theme={theme}>
+                <Router history={history}>
+                    <ConnectScreen history={history} />
+                </Router>
+            </ThemeProvider>
         );
         expect(queryByText(container, givenText)).toBeTruthy();
     });

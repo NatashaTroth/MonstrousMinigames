@@ -31,12 +31,12 @@ const ChooseGame: React.FunctionComponent = () => {
     const games = [
         {
             id: 1,
-            name: 'Game 1',
+            name: 'The Great Monster Escape',
             image: game1Img,
         },
-        { id: 2, name: 'Game 2' },
-        { id: 3, name: 'Game 3' },
-        { id: 4, name: 'Game 4' },
+        { id: 2, name: 'Game 2 - coming soon' },
+        { id: 3, name: 'Game 3 - coming soon' },
+        { id: 4, name: 'Game 4 - coming soon' },
     ];
 
     React.useEffect(() => {

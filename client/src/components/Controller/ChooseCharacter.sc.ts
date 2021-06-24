@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import forest from '../../images/ui/forest_mobile.svg';
-import { primary, primaryShadow, secondary, secondaryShadow } from '../../utils/colors';
 
 const boxShadowDepth = 7;
 
@@ -47,8 +46,9 @@ export const CustomButton = styled.button`
     cursor: pointer;
 
     color: black;
-    background: ${primary};
-    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${primaryShadow};
+    background: ${({ theme }) => theme.palette.primary.main};
+    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
+        ${({ theme }) => theme.palette.primary.dark};
 
     padding: 10px;
     border-radius: 10px;
@@ -58,14 +58,16 @@ export const CustomButton = styled.button`
     outline: transparent;
 
     &:hover {
-        box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${secondaryShadow};
-        background: ${secondary};
+        box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
+            ${({ theme }) => theme.palette.secondary.dark};
+        background: ${({ theme }) => theme.palette.secondary.main};
     }
 
     &:active {
         transform: translateY(4px);
-        box-shadow: calc(${boxShadowDepth} * 1px - 4px) calc(${boxShadowDepth} * 1px - 4px) 0 ${secondaryShadow};
-        background: ${secondary};
+        box-shadow: calc(${boxShadowDepth} * 1px - 4px) calc(${boxShadowDepth} * 1px - 4px) 0
+            ${({ theme }) => theme.palette.secondary.dark};
+        background: ${({ theme }) => theme.palette.secondary.main};
     }
 `;
 

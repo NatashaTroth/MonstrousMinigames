@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-import { darkGreen, primary, readyButton, secondary } from '../../utils/colors';
+import { darkGreen, readyButton } from '../../utils/colors';
 import { Label } from './Label.sc';
 
 interface Instruction {
@@ -8,16 +8,16 @@ interface Instruction {
 }
 
 export const Instruction = styled(Label)<Instruction>`
-    background-color: ${({ variant = 'none' }) => {
+    background-color: ${({ variant = 'none', theme }) => {
         switch (variant) {
             case 'light':
                 return readyButton;
             case 'dark':
                 return darkGreen;
             case 'primary':
-                return primary;
+                return theme.palette.primary.main;
             case 'secondary':
-                return secondary;
+                return theme.palette.secondary.main;
             default:
                 return '';
         }
