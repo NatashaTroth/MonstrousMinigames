@@ -364,6 +364,18 @@ class ConnectionHandler {
             const user = room.getUserById(data.userId);
             emitter.sendPlayerStunned(controllerNamespace, user.socketId);
         });
+        this.gameEventEmitter.on(GameEventTypes.PlayerHasDisconnected, (data: GameEvents.PlayerHasDisconnectedInfo) => {
+            this.consoleInfo(data.roomId, GameEventTypes.PlayerHasDisconnected);
+            const room = rs.getRoomById(data.roomId);
+            const user = room.getUserById(data.userId);
+            emitter.sendPlayerHasDisconnected(screenNameSpace, user.id);
+        });
+        this.gameEventEmitter.on(GameEventTypes.PlayerHasReconnected, (data: GameEvents.PlayerHasReconnectedInfo) => {
+            this.consoleInfo(data.roomId, GameEventTypes.PlayerHasReconnected);
+            const room = rs.getRoomById(data.roomId);
+            const user = room.getUserById(data.userId);
+            emitter.sendPlayerHasReconnected(screenNameSpace, user.id);
+        });
     }
     private consoleInfo(roomId: string, msg: string) {
         console.info(`${roomId} | ${msg}`);

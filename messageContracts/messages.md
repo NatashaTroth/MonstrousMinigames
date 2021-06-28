@@ -104,6 +104,28 @@ example:
     "type": "screenAdmin"
 }
 ```
+### playerHasDisconnected
+
+-   notifies the screen about player disconnecting
+
+example:
+
+```json
+{
+    "type": "playerHasDisconnected",
+    "userId": "XXXxxXX"
+}
+### playerHasReconnected
+
+-   notifies the screen about player reconnecting
+
+example:
+
+```json
+{
+    "type": "playerHasReconnected",
+    "userId": "XXXxxXX"
+}
 
 
 ### game1/gameState
