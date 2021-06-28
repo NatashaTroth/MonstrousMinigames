@@ -5,6 +5,7 @@ import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import Button from '../../common/Button';
 import { currentCount, getAudioInput, resetCurrentCount } from './getAudioInput';
+import LinearProgressBar from './LinearProgressBar';
 import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
 import { StyledNet, StyledSkipButton, StyledSpider } from './Spider.sc';
 
@@ -44,6 +45,7 @@ const Spider: React.FunctionComponent = () => {
 
     return (
         <ObstacleContainer>
+            <LinearProgressBar MAX={MAX} progress={progress} />
             <ObstacleContent>
                 <StyledNet />
                 <StyledSpider
