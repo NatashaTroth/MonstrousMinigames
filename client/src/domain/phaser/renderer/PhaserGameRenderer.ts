@@ -19,6 +19,18 @@ export class PhaserGameRenderer implements GameRenderer {
         const reps = Math.ceil(trackLength / (windowWidth / 4)) + 1;
         for (let i = 0; i < reps; i++) {
             for (let j = 0; j < 4; j++) {
+                // Background without parallax
+                const bg = this.scene.add.image(
+                    (i * windowWidth) / 4,
+                    (j * windowHeight) / 4 + windowHeight / 4,
+                    'laneBackground'
+                );
+                bg.setDisplaySize(windowWidth / 4, windowHeight / 4);
+                bg.setOrigin(0, 1);
+                bg.setScrollFactor(1)
+
+
+                /*
                 const sky = this.scene.add.image(
                     (i * windowWidth) / 4,
                     (j * windowHeight) / 4 + windowHeight / 4,
@@ -49,7 +61,7 @@ export class PhaserGameRenderer implements GameRenderer {
                     'floor'
                 );
 
-                sky.setDisplaySize(windowWidth / 4, windowHeight / 4);
+                 sky.setDisplaySize(windowWidth / 4, windowHeight / 4);
                 mountains.setDisplaySize(windowWidth / 4, windowHeight / 4);
                 hills.setDisplaySize(windowWidth / 4, windowHeight / 4);
                 trees.setDisplaySize(windowWidth / 4, windowHeight / 4);
@@ -65,7 +77,7 @@ export class PhaserGameRenderer implements GameRenderer {
                 mountains.setScrollFactor(0.25)
                 hills.setScrollFactor(0.5)
                 trees.setScrollFactor(0.75)
-                floor.setScrollFactor(1)
+                floor.setScrollFactor(1) */
             }
         }
     }
