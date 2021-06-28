@@ -49,6 +49,7 @@ describe('Screen Lobby', () => {
                 number: 1,
                 characterNumber: 0,
                 active: true,
+                ready: true,
             },
             {
                 id: '2',
@@ -57,6 +58,7 @@ describe('Screen Lobby', () => {
                 number: 2,
                 characterNumber: 1,
                 active: true,
+                ready: true,
             },
         ];
 
