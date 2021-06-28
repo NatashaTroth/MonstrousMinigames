@@ -160,6 +160,7 @@ interface ConnectedUsers {
     number: number;
     free?: boolean;
     characterNumber?: null | number;
+    ready?: boolean;
 }
 
 export function getUserArray(connectedUsers: ConnectedUsers[]): ConnectedUsers[] {
@@ -172,7 +173,7 @@ export function getUserArray(connectedUsers: ConnectedUsers[]): ConnectedUsers[]
     while (users.length < 4) {
         users.push({
             number: users.length + 1,
-            name: 'Let`s join',
+            name: `Let's join`,
             free: true,
         });
     }

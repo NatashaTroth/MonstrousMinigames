@@ -64,6 +64,7 @@ export interface IUser {
     name: string;
     roomId: string;
     number: number;
+    ready: boolean;
 }
 
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
