@@ -7,6 +7,7 @@ import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import Button from '../../common/Button';
 import { dragMoveListener, initializeInteractListeners, stoneCounter } from './Draggable';
 import { Container, DraggableLeaf, DraggableStone, DropZone, StyledSkipButton } from './Hole.sc';
+import LinearProgressBar from './LinearProgressBar';
 import { ObstacleContainer } from './ObstaclStyles.sc';
 
 interface WindowProps extends Window {
@@ -19,6 +20,7 @@ const Hole: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { roomId } = React.useContext(GameContext);
     const [stonesAndLeafs, setStonesAndLeafs] = React.useState<string[]>([]);
+    const [progress, setProgress] = React.useState(0);
 
     let handleSkip: ReturnType<typeof setTimeout>;
 
@@ -34,7 +36,7 @@ const Hole: React.FunctionComponent = () => {
         setStonesAndLeafs(['stone', 'stone', 'stone', 'leaf', 'leaf'].sort(() => 0.5 - Math.random()));
         initializeSkip();
 
-        initializeInteractListeners(() => solveObstacle());
+        initializeInteractListeners(() => solveObstacle(), setProgress);
     }, []);
 
     function initializeSkip() {
@@ -47,6 +49,7 @@ const Hole: React.FunctionComponent = () => {
 
     return (
         <ObstacleContainer>
+            <LinearProgressBar MAX={3} progress={progress} />
             <Container>
                 {stonesAndLeafs.map((item, index) =>
                     item === 'stone' ? (
