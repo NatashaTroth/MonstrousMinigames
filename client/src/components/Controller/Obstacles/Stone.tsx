@@ -6,7 +6,6 @@ import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import history from '../../../domain/history/history';
 import pebble from '../../../images/obstacles/stone/pebble.svg';
 import stone from '../../../images/obstacles/stone/stone.svg';
-import { characterColors } from '../../../utils/colors';
 import { stoneParticlesConfig } from '../../../utils/particlesConfig';
 import { controllerPlayerDeadRoute } from '../../../utils/routes';
 import Button from '../../common/Button';
@@ -89,7 +88,7 @@ const Stone: React.FunctionComponent = () => {
                                 <PlayerButtonContainer
                                     key={key}
                                     onClick={() => setChosenPlayer(user.id)}
-                                    bgColor={characterColors[user.characterNumber]}
+                                    characterNumber={user.characterNumber}
                                     selected={user.id === chosenPlayer}
                                 >
                                     {user.name}
