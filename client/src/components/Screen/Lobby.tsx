@@ -99,16 +99,17 @@ export const Lobby: React.FunctionComponent = () => {
                             {getUserArray(connectedUsers || []).map((user, index) => (
                                 <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>
                                     <ConnectedUserCharacter number={user.number} free={user.free}>
-                                        {!user.free && user.characterNumber !== -1 && (
-                                            <CharacterContainer>
+                                        <CharacterContainer>
+                                            {!user.free && user.characterNumber !== -1 && (
                                                 <Character src={characters[Number(user.characterNumber)]} />
-                                            </CharacterContainer>
-                                        )}
+                                            )}
+                                        </CharacterContainer>
 
-                                        {`Player ${user.number}`}
+                                        {user.free ? `Player ${user.number}` : user.name}
                                     </ConnectedUserCharacter>
                                     <ConnectedUserName number={user.number} free={user.free}>
-                                        {user.name.toUpperCase()}
+                                        {!user.free && (user.ready ? 'Ready' : 'Not Ready')}
+                                        {user.free && user.name}
                                     </ConnectedUserName>
                                 </ConnectedUserContainer>
                             ))}
