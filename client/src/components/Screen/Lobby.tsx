@@ -18,8 +18,8 @@ import {
     CharacterContainer,
     ConnectedUserCharacter,
     ConnectedUserContainer,
-    ConnectedUserName,
     ConnectedUsers,
+    ConnectedUserStatus,
     Content,
     ContentContainer,
     CopyToClipboard,
@@ -79,17 +79,18 @@ export const Lobby: React.FunctionComponent = () => {
                             {getUserArray(connectedUsers || []).map((user, index) => (
                                 <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>
                                     <ConnectedUserCharacter number={user.number} free={user.free}>
-                                        {!user.free && user.characterNumber !== -1 && (
-                                            <CharacterContainer>
+                                        <CharacterContainer>
+                                            {!user.free && user.characterNumber !== -1 && (
                                                 <Character src={characters[Number(user.characterNumber)]} />
-                                            </CharacterContainer>
-                                        )}
+                                            )}
+                                        </CharacterContainer>
 
-                                        {`Player ${user.number}`}
+                                        {user.free ? `Player ${user.number}` : user.name}
                                     </ConnectedUserCharacter>
-                                    <ConnectedUserName number={user.number} free={user.free}>
-                                        {user.name.toUpperCase()}
-                                    </ConnectedUserName>
+                                    <ConnectedUserStatus number={user.number} free={user.free}>
+                                        {!user.free && (user.ready ? 'Ready' : 'Not Ready')}
+                                        {user.free && user.name}
+                                    </ConnectedUserStatus>
                                 </ConnectedUserContainer>
                             ))}
                         </ConnectedUsers>
@@ -146,6 +147,7 @@ interface ConnectedUsers {
     number: number;
     free?: boolean;
     characterNumber?: null | number;
+    ready?: boolean;
 }
 
 export function getUserArray(connectedUsers: ConnectedUsers[]): ConnectedUsers[] {
@@ -158,7 +160,7 @@ export function getUserArray(connectedUsers: ConnectedUsers[]): ConnectedUsers[]
     while (users.length < 4) {
         users.push({
             number: users.length + 1,
-            name: 'Let`s join',
+            name: `Let's join`,
             free: true,
         });
     }

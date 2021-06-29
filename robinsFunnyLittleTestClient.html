@@ -25,10 +25,10 @@
 
         <button onclick="input('start')">START</button>
         <button onclick="input('backToLobby')">BACK TO LOBBY</button>
+        <button onclick="input('userReady')">READY</button>
 
         <br />
         <button onclick="input('move')">MOVE</button>
-
         <button onclick="input('obstacleSolved')">SOLVE OBSTACLE</button>
         <br />
         <button onclick="input('stop')">STOP</button>
@@ -65,6 +65,10 @@
             if (type == 'move')
                 socket.emit('message', {
                     type: 'game1/runForward',
+                });
+            if (type == 'userReady')
+                socket.emit('message', {
+                    type: 'userReady',
                 });
             if (type == 'backToLobby')
                 ssocket.emit('message', {

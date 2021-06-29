@@ -8,6 +8,7 @@ export interface IUser {
     number: number;
     characterNumber: number;
     active: boolean;
+    ready: boolean;
 }
 
 export interface ConnectedUsersMessage {

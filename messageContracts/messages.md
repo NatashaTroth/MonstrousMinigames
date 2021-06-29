@@ -354,6 +354,18 @@ example:
 }
 ```
 
+### userReady
+
+-   toggle ready state of player
+  
+example:
+
+```json
+{
+    "type": "userReady",
+}
+```
+
 ### game1/runForward
 
 -   player on this controller moves forward

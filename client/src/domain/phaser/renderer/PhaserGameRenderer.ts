@@ -29,7 +29,6 @@ export class PhaserGameRenderer implements GameRenderer {
                     (i * windowWidth) / 4,
                     (j * windowHeight) / 4 + windowHeight / 4,
                     'mountains'
-
                 );
                 const hills = this.scene.add.image(
                     (i * windowWidth) / 4,
@@ -56,16 +55,16 @@ export class PhaserGameRenderer implements GameRenderer {
                 floor.setDisplaySize(windowWidth / 4, windowHeight / 4);
 
                 sky.setOrigin(0, 1);
-                mountains.setOrigin(0,1)
-                hills.setOrigin(0,1)
-                trees.setOrigin(0,1)
-                floor.setOrigin(0,1)
+                mountains.setOrigin(0, 1);
+                hills.setOrigin(0, 1);
+                trees.setOrigin(0, 1);
+                floor.setOrigin(0, 1);
 
                 sky.setScrollFactor(0);
-                mountains.setScrollFactor(0.25)
-                hills.setScrollFactor(0.5)
-                trees.setScrollFactor(0.75)
-                floor.setScrollFactor(1)
+                mountains.setScrollFactor(0.25);
+                hills.setScrollFactor(0.5);
+                trees.setScrollFactor(0.75);
+                floor.setScrollFactor(1);
             }
         }
     }
