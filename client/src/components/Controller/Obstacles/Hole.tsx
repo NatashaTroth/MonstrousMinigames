@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import interact from 'interactjs';
 import * as React from 'react';
 
 import { ControllerSocketContext } from '../../../contexts/ControllerSocketContextProvider';
@@ -27,16 +28,34 @@ const Hole: React.FunctionComponent = () => {
     const solveObstacle = () => {
         controllerSocket.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle?.id });
         setObstacle(roomId, undefined);
+        interact('.dropzone').unset();
+        interact('.drag-drop').unset();
         clearTimeout(handleSkip);
     };
 
     React.useEffect(() => {
+        let mounted = true;
         const w = window as WindowProps;
         w.dragMoveListener = dragMoveListener;
         setStonesAndLeafs(['stone', 'stone', 'stone', 'leaf', 'leaf'].sort(() => 0.5 - Math.random()));
         initializeSkip();
 
-        initializeInteractListeners(() => solveObstacle(), setProgress);
+        initializeInteractListeners(
+            () => {
+                if (mounted) {
+                    solveObstacle();
+                }
+            },
+            p => {
+                if (mounted) {
+                    setProgress(p);
+                }
+            }
+        );
+
+        return () => {
+            mounted = false;
+        };
     }, []);
 
     function initializeSkip() {
