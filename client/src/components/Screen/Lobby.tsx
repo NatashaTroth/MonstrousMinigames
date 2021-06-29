@@ -20,8 +20,8 @@ import {
     CharacterContainer,
     ConnectedUserCharacter,
     ConnectedUserContainer,
-    ConnectedUserName,
     ConnectedUsers,
+    ConnectedUserStatus,
     Content,
     ContentContainer,
     CopyToClipboard,
@@ -107,10 +107,10 @@ export const Lobby: React.FunctionComponent = () => {
 
                                         {user.free ? `Player ${user.number}` : user.name}
                                     </ConnectedUserCharacter>
-                                    <ConnectedUserName number={user.number} free={user.free}>
+                                    <ConnectedUserStatus number={user.number} free={user.free}>
                                         {!user.free && (user.ready ? 'Ready' : 'Not Ready')}
                                         {user.free && user.name}
-                                    </ConnectedUserName>
+                                    </ConnectedUserStatus>
                                 </ConnectedUserContainer>
                             ))}
                         </ConnectedUsers>

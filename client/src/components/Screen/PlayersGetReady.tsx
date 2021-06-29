@@ -15,8 +15,8 @@ import {
     CharacterContainer,
     ConnectedUserCharacter,
     ConnectedUserContainer,
-    ConnectedUserName,
     ConnectedUsers,
+    ConnectedUserStatus,
     Content,
     GetReadyBackground,
     GetReadyContainer,
@@ -84,10 +84,10 @@ const PlayersGetReady: React.FC = () => {
 
                                     {user.free ? `Player ${user.number}` : user.name}
                                 </ConnectedUserCharacter>
-                                <ConnectedUserName number={user.number} free={user.free}>
+                                <ConnectedUserStatus number={user.number} free={user.free}>
                                     {!user.free && (user.ready ? 'Ready' : 'Not Ready')}
                                     {user.free && user.name}
-                                </ConnectedUserName>
+                                </ConnectedUserStatus>
                             </ConnectedUserContainer>
                         ))}
                     </ConnectedUsers>

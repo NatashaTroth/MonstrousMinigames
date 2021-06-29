@@ -11,6 +11,7 @@ export const playerName = '#ffe199';
 
 export const primary = '#a7bdb1';
 export const primaryShadow = '#8c9d99';
+export const primaryTransparent = '#a7bdb18a';
 export const disabled = '#b9b8b8';
 export const disabledShadow = '#9a9a9a';
 
