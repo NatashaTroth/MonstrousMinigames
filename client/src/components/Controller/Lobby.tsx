@@ -1,8 +1,10 @@
 import { CircularProgress } from '@material-ui/core';
 import * as React from 'react';
 
+import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
+import { sendUserReady } from '../../domain/gameState/controller/sendUserReady';
 import arrow from '../../images/ui/arrow_blue.svg';
 import FullScreenContainer from '../common/FullScreenContainer';
 import { Label } from '../common/Label.sc';
@@ -20,6 +22,7 @@ import {
 export const Lobby: React.FunctionComponent = () => {
     const { playerNumber, name, character, ready, setReady } = React.useContext(PlayerContext);
     const { gameChosen, tutorial } = React.useContext(GameContext);
+    const { controllerSocket } = React.useContext(ControllerSocketContext);
 
     return (
         <FullScreenContainer>
@@ -58,7 +61,13 @@ export const Lobby: React.FunctionComponent = () => {
                                 <CharacterContainer>
                                     <Character src={character!} />
                                 </CharacterContainer>
-                                <ReadyButton ready={ready} onClick={() => setReady(true)}>
+                                <ReadyButton
+                                    ready={ready}
+                                    onClick={() => {
+                                        sendUserReady(controllerSocket);
+                                        setReady(!ready);
+                                    }}
+                                >
                                     <span>I am </span>
                                     <span>ready!</span>
                                 </ReadyButton>
