@@ -2,7 +2,6 @@ import { Button, Typography } from '@material-ui/core';
 import styled from 'styled-components';
 
 import forest from '../../images/ui/forest.svg';
-import { QRCodeBackground } from '../../utils/colors';
 
 export const LobbyContainer = styled.div`
     background-image: url(${forest});
@@ -151,7 +150,7 @@ export const LeftContainer = styled.div`
 
 export const QRCode = styled.div`
     border-radius: 10px;
-    background-color: ${QRCodeBackground};
+    background-color: ${({ theme }) => theme.colors.qRCodeBackground};
     display: flex;
     flex-direction: column;
     padding: 10px;
