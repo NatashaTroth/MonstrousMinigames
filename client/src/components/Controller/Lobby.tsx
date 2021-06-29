@@ -5,7 +5,6 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import arrow from '../../images/ui/arrow_blue.svg';
 import FullScreenContainer from '../common/FullScreenContainer';
-import { Instruction, InstructionContainer, InstructionText } from '../common/Instruction.sc';
 import { Label } from '../common/Label.sc';
 import {
     Arrow,
@@ -27,7 +26,7 @@ export const Lobby: React.FunctionComponent = () => {
             <LobbyContainer>
                 {playerNumber ? (
                     <Content>
-                        {!gameChosen ? (
+                        {/* {!gameChosen ? (
                             <InstructionContainer variant="light">
                                 <Instruction>
                                     <InstructionText>The admin monitor is now choosing a game!</InstructionText>
@@ -49,26 +48,24 @@ export const Lobby: React.FunctionComponent = () => {
                                     </Instruction>
                                 </InstructionContainer>
                             </>
-                        ) : (
-                            <>
-                                <Label>
-                                    {!ready
-                                        ? `Show that you are ready to play!`
-                                        : 'Wait for the admin to start your game!'}
-                                </Label>
-                                <PlayerContent>
-                                    <PlayerName>{name}</PlayerName>
-                                    <CharacterContainer>
-                                        <Character src={character!} />
-                                    </CharacterContainer>
-                                    <ReadyButton ready={ready} onClick={() => setReady(true)}>
-                                        <span>I am </span>
-                                        <span>ready!</span>
-                                    </ReadyButton>
-                                    {!ready && <Arrow src={arrow} />}
-                                </PlayerContent>
-                            </>
-                        )}
+                        ) : ( */}
+                        <>
+                            <Label>
+                                {!ready ? `Show that you are ready to play!` : 'Wait for the admin to start your game!'}
+                            </Label>
+                            <PlayerContent>
+                                <PlayerName>{name}</PlayerName>
+                                <CharacterContainer>
+                                    <Character src={character!} />
+                                </CharacterContainer>
+                                <ReadyButton ready={ready} onClick={() => setReady(true)}>
+                                    <span>I am </span>
+                                    <span>ready!</span>
+                                </ReadyButton>
+                                {!ready && <Arrow src={arrow} />}
+                            </PlayerContent>
+                        </>
+                        {/* )} */}
                     </Content>
                 ) : (
                     <CircularProgress />
