@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { playerName, readyButton, secondary } from '../../utils/colors';
+import { playerName, readyButton } from '../../utils/colors';
 
 export const LobbyContainer = styled.div`
     display: flex;
@@ -10,10 +10,6 @@ export const LobbyContainer = styled.div`
     width: 100%;
     padding: 20px;
     justify-content: center;
-
-    .MuiCircularProgress-colorPrimary {
-        color: ${secondary};
-    }
 `;
 
 export const Content = styled.div`
@@ -76,4 +72,8 @@ export const Arrow = styled.img`
     margin-left: 110px;
     margin-top: 100px;
     position: absolute;
+`;
+
+export const ButtonContainer = styled.div`
+    margin-top: 20px;
 `;

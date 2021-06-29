@@ -215,7 +215,13 @@ class ConnectionHandler {
             socket.on('message', function (message: IMessage) {
                 const type = message.type;
                 switch (type) {
+                    case CatchFoodMsgType.START_PHASER_GAME: {
+                        // this.consoleInfo(data.roomId, GameEventTypes.GameHasStarted);
+                        emitter.sendStartPhaserGame([screenNameSpace], socket.room); //TODO also to controller?
+                        break;
+                    }
                     case CatchFoodMsgType.START: {
+                        console.log('Received STARTING GAME');
                         if (socket.room.isOpen() && socket.room.isAdminScreen(socket.id)) {
                             try {
                                 room.startGame();
@@ -240,6 +246,7 @@ class ConnectionHandler {
                         break;
                     }
                     case MessageTypes.PAUSE_RESUME: {
+                        console.log('received pause resume message');
                         if (socket.room.isPlaying()) {
                             console.info(socket.room.id + ' | Pause Game');
                             try {

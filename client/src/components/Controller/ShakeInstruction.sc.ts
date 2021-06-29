@@ -29,3 +29,9 @@ export const ShakeIt = styled.img`
     display: flex;
     width: 80%;
 `;
+
+export const Countdown = styled.div`
+    color: ${({ theme }) => theme.palette.secondary.main};
+    font-weight: 700;
+    font-size: 70px;
+`;

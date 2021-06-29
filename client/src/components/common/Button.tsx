@@ -1,3 +1,4 @@
+import { Tooltip } from '@material-ui/core';
 import * as React from 'react';
 
 import { Container, StyledButton } from './Button.sc';
@@ -9,6 +10,7 @@ interface IButton {
     name?: string;
     variant?: 'primary' | 'secondary';
     fullwidth?: boolean;
+    title?: string;
 }
 
 const Button: React.FunctionComponent<IButton> = ({
@@ -19,18 +21,23 @@ const Button: React.FunctionComponent<IButton> = ({
     name,
     variant = 'primary',
     fullwidth = false,
+    title,
 }) => (
     <Container>
-        <StyledButton
-            disabled={disabled}
-            onClick={onClick}
-            type={type}
-            name={name}
-            variant={variant}
-            fullwidth={fullwidth}
-        >
-            {children}
-        </StyledButton>
+        <Tooltip title={title || ''}>
+            <span>
+                <StyledButton
+                    disabled={disabled}
+                    onClick={onClick}
+                    type={type}
+                    name={name}
+                    variant={variant}
+                    fullwidth={fullwidth}
+                >
+                    {children}
+                </StyledButton>
+            </span>
+        </Tooltip>
     </Container>
 );
 

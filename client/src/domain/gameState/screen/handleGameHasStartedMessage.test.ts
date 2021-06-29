@@ -2,8 +2,8 @@ import { createMemoryHistory } from 'history';
 
 import { MessageTypes } from '../../../utils/constants';
 import { screenGame1Route } from '../../../utils/routes';
-import { GameHasStartedMessage } from '../../typeGuards/started';
-import { handleGameHasStartedMessage } from './handleGameHasStartedMessage';
+import { StartPhaserGameMessage } from '../../typeGuards/startPhaserGame';
+import { handleStartGameMessage } from './handleGameHasStartedMessage';
 
 describe('handleGameHasStartedMessage', () => {
     const roomId = '1234';
@@ -12,34 +12,22 @@ describe('handleGameHasStartedMessage', () => {
         const history = createMemoryHistory();
         const setCountdownTime = jest.fn();
         const setGameStarted = jest.fn();
-        const data: GameHasStartedMessage = { type: MessageTypes.started, countdownTime: 3000 };
+        const data: StartPhaserGameMessage = { type: MessageTypes.startPhaserGame };
 
-        handleGameHasStartedMessage({ data, roomId, dependencies: { history, setCountdownTime, setGameStarted } });
+        handleStartGameMessage({ roomId, dependencies: { history, setGameStarted } });
 
         expect(history.location).toHaveProperty('pathname', screenGame1Route(roomId));
-    });
-
-    it('handed setCountdownTime should be called with passed data', () => {
-        const history = createMemoryHistory();
-        const setCountdownTime = jest.fn();
-        const setGameStarted = jest.fn();
-        const data: GameHasStartedMessage = { type: MessageTypes.started, countdownTime: 3000 };
-
-        handleGameHasStartedMessage({ data, roomId, dependencies: { history, setCountdownTime, setGameStarted } });
-
-        expect(setCountdownTime).toHaveBeenCalledWith(data.countdownTime);
     });
 
     it('handed setGameStarted should be called with true', () => {
         const history = createMemoryHistory();
         const setCountdownTime = jest.fn();
         const setGameStarted = jest.fn();
-        const data: GameHasStartedMessage = { type: MessageTypes.started, countdownTime: 3000 };
+        const data: StartPhaserGameMessage = { type: MessageTypes.startPhaserGame };
 
-        handleGameHasStartedMessage({
-            data,
+        handleStartGameMessage({
             roomId,
-            dependencies: { history, setCountdownTime, setGameStarted },
+            dependencies: { history, setGameStarted },
         });
 
         expect(setGameStarted).toHaveBeenCalledWith(true);

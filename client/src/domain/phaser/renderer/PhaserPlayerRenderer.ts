@@ -15,12 +15,15 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     private playerObstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private particles: Phaser.GameObjects.Particles.ParticleEmitterManager;
+    private playerNameBg?: Phaser.GameObjects.Rectangle;
+    private playerName?: Phaser.GameObjects.Text;
 
     constructor(private scene: MainScene) {
         this.playerObstacles = [];
         this.particles = this.scene.add.particles('flares');
         this.particles.setDepth(depthDictionary.flares);
     }
+
     renderChasers(chasersPositionX: number, chasersPositionY: number) {
         if (!this.chaser) {
             this.chaser = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasers');
@@ -41,15 +44,39 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         if (this.player) this.player.alpha = 1;
     }
 
-    renderPlayer(coordinates: Coordinates, monsterName: string, animationName: string, background?: string): void {
+    renderPlayer(
+        coordinates: Coordinates,
+        monsterName: string,
+        animationName: string,
+        username?: string,
+        background?: string
+    ): void {
+        // eslint-disable-next-line no-console
+        console.log(username);
+        let usernameToDisplay = '';
+        if (username) {
+            usernameToDisplay = username;
+        }
+
         if (!this.player) {
             this.renderPlayerInitially(coordinates, monsterName);
             this.initiatePlayerAnimation(monsterName, animationName);
+            this.renderPlayerName(coordinates, usernameToDisplay);
         }
         if (this.player) {
             this.player.x = coordinates.x;
-            this.player.y = coordinates.y;
+            this.player.y = coordinates.y + window.innerHeight / 16;
         }
+    }
+
+    renderPlayerName(coordinates: Coordinates, name: string) {
+        this.playerNameBg = this.scene.add.rectangle(window.innerWidth, coordinates.y, 200, 50, 0x0, 0.5);
+        this.playerName = this.scene.add.text(window.innerWidth, coordinates.y, name);
+    }
+
+    public updatePlayerNamePosition(newX: number) {
+        this.playerNameBg?.setPosition(newX + window.innerWidth, this.playerNameBg.y);
+        this.playerName?.setPosition(newX + window.innerWidth - 100, this.playerName.y);
     }
 
     renderGoal(posX: number, posY: number) {
@@ -89,20 +116,23 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     }
 
     renderFireworks(posX: number, posY: number) {
-        const particlesEmitter = this.particles.createEmitter({
-            frame: ['red', 'green', 'blue'],
-            x: posX,
-            y: posY,
-            angle: { min: 200, max: 250 },
-            speed: { min: 0, max: -500 },
-            gravityY: 200,
-            lifespan: 500,
-            scale: 0.1,
-            blendMode: 'ADD',
-        });
+        const flareColors: string[] = ['blue', 'red', 'green'];
+        const scales: Array<number | { min: number; max: number }> = [0.05, 0.1, { min: 0, max: 0.3 }];
+        const lifespans: number[] = [250, 500, 700];
 
-        particlesEmitter.on = true;
-        setTimeout(() => (particlesEmitter.on = false), 900);
+        flareColors.forEach((flareColor, i) => {
+            const particlesEmitter = this.particles.createEmitter({
+                frame: flareColor,
+                x: posX,
+                y: posY,
+                scale: scales[i],
+                speed: 75,
+                blendMode: 'ADD',
+                lifespan: lifespans[i],
+            });
+            particlesEmitter.on = true;
+            setTimeout(() => (particlesEmitter.on = false), 900);
+        });
     }
 
     startRunningAnimation(animationName: string) {
@@ -132,7 +162,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     addAttentionIcon() {
         if (!this.playerAttention && this.player) {
             this.playerAttention = this.scene.physics.add
-                .sprite(this.player.x + 75, this.player.y - 150, 'attention')
+                .sprite(this.player.x + 75, this.player.y - 100, 'attention')
                 .setDepth(depthDictionary.attention)
                 .setScale(0.03, 0.03);
         }
@@ -145,8 +175,13 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
-        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterName);
-
+        // eslint-disable-next-line no-console
+        console.log(window.devicePixelRatio / 3);
+        this.player = this.scene.physics.add.sprite(
+            coordinates.x,
+            coordinates.y + window.innerHeight / 16,
+            monsterName
+        );
         this.player.setDepth(depthDictionary.player);
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);

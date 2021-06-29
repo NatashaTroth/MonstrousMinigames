@@ -1,8 +1,8 @@
+import { FormGroup } from '@material-ui/core';
 import styled from 'styled-components';
 
 import forest from '../../images/ui/forest.svg';
 import introImg from '../../images/ui/forest2.png';
-import { secondary, secondaryShadow } from '../../utils/colors';
 
 const boxShadowDepth = 7;
 
@@ -17,9 +17,10 @@ export const GameIntroContainer = styled.div`
 `;
 
 export const GameIntroBackground = styled.div`
-    background-color: ${secondary};
+    background-color: ${({ theme }) => theme.palette.secondary.main};
     border-radius: 40px;
-    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${secondaryShadow};
+    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
+        ${({ theme }) => theme.palette.secondary.dark};
     display: flex;
     width: 80%;
     height: 80%;
@@ -39,7 +40,8 @@ export const IntroText = styled.div`
 `;
 
 export const PaddingContainer = styled.div`
-    padding: 20px;
+    display: flex;
+    padding: 30px;
 `;
 
 export const PreviewImageContainer = styled.div`
@@ -57,7 +59,7 @@ export const PreviewImage = styled.img`
 `;
 
 export const ImageDescription = styled.div`
-    background: ${secondaryShadow};
+    background: ${({ theme }) => theme.palette.secondary.dark};
     color: white;
     font-size: 24px;
     padding: 10px 0;
@@ -79,4 +81,10 @@ export const ControlInstruction = styled.div`
     margin-top: 30px;
     font-size: 20px;
     font-weight: 400;
+`;
+
+export const StyledFormGroup = styled(FormGroup)`
+    && {
+        width: 100%;
+    }
 `;

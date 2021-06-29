@@ -6,13 +6,13 @@ import { ObstacleMessage } from './obstacle';
 import { GameHasPausedMessage } from './paused';
 import { PlayerDiedMessage } from './playerDied';
 import { PlayerFinishedMessage } from './playerFinished';
-import { PlayerStunneddMessage } from './playerStunned';
+import { PlayerStunnedMessage } from './playerStunned';
 import { GameHasResetMessage } from './reset';
 import { GameHasResumedMessage } from './resumed';
 import { ScreenAdminMessage } from './screenAdmin';
 import { GameHasStartedMessage } from './started';
+import { StartPhaserGameMessage } from './startPhaserGame';
 import { GameHasStoppedMessage } from './stopped';
-import { TimedOutMessage } from './timedOut';
 import { UserInitMessage } from './userInit';
 
 export type MessageData =
@@ -21,8 +21,8 @@ export type MessageData =
     | GameHasFinishedMessage
     | ErrorMessage
     | PlayerFinishedMessage
-    | TimedOutMessage
     | GameHasPausedMessage
+    | StartPhaserGameMessage
     | GameHasStartedMessage
     | GameHasResumedMessage
     | GameHasStoppedMessage
@@ -33,5 +33,5 @@ export type MessageData =
     | ScreenAdminMessage
     | ConnectedUsersMessage
     | PlayerDiedMessage
-    | PlayerStunneddMessage
+    | PlayerStunnedMessage
     | undefined;

@@ -5,9 +5,8 @@ import { Routes } from '../../../utils/routes';
 import { handleConnectedUsersMessage } from '../../gameState/screen/handleConnectedUsersMessage';
 import { handleGameHasFinishedMessage } from '../../gameState/screen/handleGameHasFinishedMessage';
 import { handleGameHasResetMessage } from '../../gameState/screen/handleGameHasResetMessage';
-import { handleGameHasStartedMessage } from '../../gameState/screen/handleGameHasStartedMessage';
+import { handleStartGameMessage } from '../../gameState/screen/handleGameHasStartedMessage';
 import { handleGameHasStoppedMessage } from '../../gameState/screen/handleGameHasStoppedMessage';
-import { handleGameHasTimedOutMessage } from '../../gameState/screen/handleGameHasTimedOutMessage';
 import { ConnectedUsersMessage, connectedUsersTypeGuard, IUser } from '../../typeGuards/connectedUsers';
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
@@ -15,9 +14,8 @@ import { pausedTypeGuard } from '../../typeGuards/paused';
 import { resetTypeGuard } from '../../typeGuards/reset';
 import { resumedTypeGuard } from '../../typeGuards/resumed';
 import { screenAdminTypeGuard } from '../../typeGuards/screenAdmin';
-import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/started';
+import { StartPhaserGameMessage, startPhaserGameTypeGuard } from '../../typeGuards/startPhaserGame';
 import { stoppedTypeGuard } from '../../typeGuards/stopped';
-import { TimedOutMessage, timedOutTypeGuard } from '../../typeGuards/timedOut';
 import { MessageSocket } from '../MessageSocket';
 import ScreenSocket from '../screenSocket';
 import { Socket } from '../Socket';
@@ -28,7 +26,6 @@ export interface HandleSetSocketDependencies {
     setHasPaused: (val: boolean) => void;
     setGameStarted: (val: boolean) => void;
     setCountdownTime: (val: number) => void;
-    setHasTimedOut: (val: boolean) => void;
     setFinished: (val: boolean) => void;
     setPlayerRanks: (val: PlayerRank[]) => void;
     setScreenAdmin: (val: boolean) => void;
@@ -45,9 +42,7 @@ export function handleSetSocket(
         setScreenSocket,
         setConnectedUsers,
         setHasPaused,
-        setCountdownTime,
         setGameStarted,
-        setHasTimedOut,
         setPlayerRanks,
         setFinished,
         setScreenAdmin,
@@ -58,14 +53,13 @@ export function handleSetSocket(
     ScreenSocket.getInstance(socket);
 
     const connectedUsersSocket = new MessageSocket(connectedUsersTypeGuard, socket);
-    const startedSocket = new MessageSocket(startedTypeGuard, socket);
+    const startPhaserGameSocket = new MessageSocket(startPhaserGameTypeGuard, socket);
     const finishedSocket = new MessageSocket(finishedTypeGuard, socket);
     const resetSocket = new MessageSocket(resetTypeGuard, socket);
     const pausedSocket = new MessageSocket(pausedTypeGuard, socket);
     const resumedSocket = new MessageSocket(resumedTypeGuard, socket);
     const stoppedSocket = new MessageSocket(stoppedTypeGuard, socket);
     const errorSocket = new MessageSocket(errorTypeGuard, socket);
-    const timedOutSocket = new MessageSocket(timedOutTypeGuard, socket);
     const screenAdminSocket = new MessageSocket(screenAdminTypeGuard, socket);
 
     connectedUsersSocket.listen((data: ConnectedUsersMessage) =>
@@ -76,13 +70,8 @@ export function handleSetSocket(
         handleGameHasFinishedMessage({ data, roomId, dependencies: { setFinished, setPlayerRanks, history } })
     );
 
-    timedOutSocket.listen((data: TimedOutMessage) => {
-        handleGameHasTimedOutMessage({ dependencies: { setHasTimedOut } });
-        handleGameHasFinishedMessage({ data, roomId, dependencies: { setFinished, setPlayerRanks, history } });
-    });
-
-    startedSocket.listen((data: GameHasStartedMessage) =>
-        handleGameHasStartedMessage({ data, roomId, dependencies: { setCountdownTime, setGameStarted, history } })
+    startPhaserGameSocket.listen((data: StartPhaserGameMessage) =>
+        handleStartGameMessage({ roomId, dependencies: { setGameStarted, history } })
     );
 
     pausedSocket.listen(() => setHasPaused(true));

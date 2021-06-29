@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { disabled, disabledShadow, primary, primaryShadow, secondary, secondaryShadow } from '../../utils/colors';
+import { disabled, disabledShadow } from '../../utils/colors';
 
 const boxShadowDepth = 7;
 
@@ -13,10 +13,11 @@ interface ButtonProps {
 
 export const StyledButtonBase = styled.button<ButtonProps>`
     color: black;
-    background: ${({ variant = 'primary' }) => (variant === 'primary' ? primary : secondary)};
-    box-shadow: ${({ variant = 'primary' }) =>
+    background: ${({ variant = 'primary', theme }) =>
+        variant === 'primary' ? theme.palette.primary.main : theme.palette.secondary.dark};
+    box-shadow: ${({ variant = 'primary', theme }) =>
         `calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${
-            variant === 'primary' ? primaryShadow : secondaryShadow
+            variant === 'primary' ? theme.palette.primary.dark : theme.palette.secondary.dark
         }}`};
     cursor: pointer;
     padding: 10px;
@@ -27,14 +28,16 @@ export const StyledButtonBase = styled.button<ButtonProps>`
 
     &:not([disabled]) {
         &:hover {
-            box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${secondaryShadow};
-            background: ${secondary};
+            box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
+                ${({ theme }) => theme.palette.secondary.dark};
+            background: ${({ theme }) => theme.palette.secondary.main};
         }
 
         &:active {
             transform: translateY(4px);
-            box-shadow: calc(${boxShadowDepth} * 1px - 4px) calc(${boxShadowDepth} * 1px - 4px) 0 ${secondaryShadow};
-            background: ${secondary};
+            box-shadow: calc(${boxShadowDepth} * 1px - 4px) calc(${boxShadowDepth} * 1px - 4px) 0
+                ${({ theme }) => theme.palette.secondary.dark};
+            background: ${({ theme }) => theme.palette.secondary.main};
         }
     }
 

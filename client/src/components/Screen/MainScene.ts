@@ -17,8 +17,8 @@ import { finishedTypeGuard, GameHasFinishedMessage } from '../../domain/typeGuar
 import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../domain/typeGuards/gameStateInfo';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../domain/typeGuards/paused';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../domain/typeGuards/resumed';
+import { GameHasStartedMessage, startedTypeGuard } from '../../domain/typeGuards/started';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../domain/typeGuards/stopped';
-import { TimedOutMessage, timedOutTypeGuard } from '../../domain/typeGuards/timedOut';
 import { MessageTypes } from '../../utils/constants';
 import { screenFinishedRoute } from '../../utils/routes';
 import { audioFiles, characters, flaresJson, flaresPng, images } from './GameAssets';
@@ -60,7 +60,9 @@ class MainScene extends Phaser.Scene {
 
     init(data: { roomId: string }) {
         this.camera = this.cameras.main;
-        if (this.roomId === '' && data.roomId !== undefined) this.roomId = data.roomId;
+        if (this.roomId === '' && data.roomId !== undefined) {
+            this.roomId = data.roomId;
+        }
     }
 
     preload(): void {
@@ -75,6 +77,9 @@ class MainScene extends Phaser.Scene {
         });
 
         this.load.atlas('flares', flaresPng, flaresJson);
+
+        //TODO Loading bar: https://www.patchesoft.com/phaser-3-loading-screen
+        // this.load.on('progress', this.updateBar);
     }
 
     create() {
@@ -85,6 +90,8 @@ class MainScene extends Phaser.Scene {
         this.gameAudio.initAudio();
         this.initiateSockets();
         this.initiateEventEmitters();
+
+        this.sendStartGame();
     }
 
     handleSocketConnection() {
@@ -95,7 +102,35 @@ class MainScene extends Phaser.Scene {
         return ScreenSocket.getInstance(new SocketIOAdapter(this.roomId, 'screen')).socket;
     }
 
+    sendStartGame() {
+        //TODO!!!! - do not send when game is already started? - or is it just ignored - appears to work - maybe check if no game state updates?
+        this.socket?.emit({
+            type: MessageTypes.startGame,
+            roomId: this.roomId,
+            // userId: sessionStorage.getItem('userId'), //TODO
+        });
+    }
+
     initiateSockets() {
+        const startedGame = new MessageSocket(startedTypeGuard, this.socket);
+        const decrementCounter = (counter: number) => counter - 1000;
+        startedGame.listen((data: GameHasStartedMessage) => {
+            let countdownValue = data.countdownTime - 1000; //to keep in track with server (1 sec less to start roughly at the same time as the server)
+            const countdownInterval = setInterval(() => {
+                if (countdownValue > 0) {
+                    this.gameRenderer?.renderCountdown((countdownValue / 1000).toString());
+                    countdownValue = decrementCounter(countdownValue);
+                } else if (countdownValue === 0) {
+                    //only render go for 1 sec
+                    this.gameRenderer?.renderCountdown('Go!');
+                    countdownValue = decrementCounter(countdownValue);
+                } else {
+                    this.gameRenderer?.destroyCountdown();
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+        });
+
         const pausedSocket = new MessageSocket(pausedTypeGuard, this.socket);
         pausedSocket.listen((data: GameHasPausedMessage) => {
             this.pauseGame();
@@ -122,11 +157,6 @@ class MainScene extends Phaser.Scene {
 
         const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);
         stoppedSocket.listen((data: GameHasStoppedMessage) => {
-            this.gameAudio?.stopMusic();
-        });
-
-        const timedOutSocket = new MessageSocket(timedOutTypeGuard, this.socket);
-        timedOutSocket.listen((data: TimedOutMessage) => {
             this.gameAudio?.stopMusic();
         });
 
@@ -191,8 +221,11 @@ class MainScene extends Phaser.Scene {
     moveCamera(posX: number) {
         if (this.camera) {
             this.camera.scrollX = posX;
-            this.camera.setBounds(0, 0, this.trackLength + 150, windowHeight); //+150 so the cave can be fully seen
+            this.camera.setBounds(0, 0, this.trackLength, windowHeight); //+150 so the cave can be fully seen
         }
+        this.players.forEach(player => {
+            player.renderer.updatePlayerNamePosition(posX);
+        });
     }
 
     private createPlayer(index: number, gameStateData: GameData) {

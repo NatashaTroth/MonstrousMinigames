@@ -5,11 +5,15 @@ import { ControllerSocketContext } from '../../contexts/ControllerSocketContextP
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { sendUserReady } from '../../domain/gameState/controller/sendUserReady';
+import history from '../../domain/history/history';
 import arrow from '../../images/ui/arrow_blue.svg';
+import { controllerChooseCharacterRoute } from '../../utils/routes';
+import Button from '../common/Button';
 import FullScreenContainer from '../common/FullScreenContainer';
 import { Label } from '../common/Label.sc';
 import {
     Arrow,
+    ButtonContainer,
     Character,
     CharacterContainer,
     Content,
@@ -21,8 +25,8 @@ import {
 
 export const Lobby: React.FunctionComponent = () => {
     const { playerNumber, name, character, ready, setReady } = React.useContext(PlayerContext);
-    const { gameChosen, tutorial } = React.useContext(GameContext);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
+    const { gameChosen, tutorial, roomId } = React.useContext(GameContext);
 
     return (
         <FullScreenContainer>
@@ -73,11 +77,18 @@ export const Lobby: React.FunctionComponent = () => {
                                 </ReadyButton>
                                 {!ready && <Arrow src={arrow} />}
                             </PlayerContent>
+                            <ButtonContainer>
+                                <Button
+                                    onClick={() => history.push(`${controllerChooseCharacterRoute(roomId)}?back=true`)}
+                                >
+                                    Change Character
+                                </Button>
+                            </ButtonContainer>
                         </>
                         {/* )} */}
                     </Content>
                 ) : (
-                    <CircularProgress />
+                    <CircularProgress color="secondary" />
                 )}
             </LobbyContainer>
         </FullScreenContainer>

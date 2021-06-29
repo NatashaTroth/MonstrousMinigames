@@ -17,7 +17,7 @@ export function dragMoveListener(event: InteractEvent) {
 
 export let stoneCounter = 0;
 
-export function initializeInteractListeners(solveObstacle: () => void) {
+export function initializeInteractListeners(solveObstacle: () => void, setProgress: (val: number) => void) {
     stoneCounter = 0;
 
     interact('.dropzone').dropzone({
@@ -43,10 +43,11 @@ export function initializeInteractListeners(solveObstacle: () => void) {
         },
         ondrop: function (event) {
             stoneCounter += 1;
+            setProgress(stoneCounter);
             event.relatedTarget.classList.remove('drag-drop');
 
             if (stoneCounter === 3) {
-                solveObstacle();
+                setTimeout(() => solveObstacle(), 600);
             }
         },
         ondropdeactivate: function (event) {

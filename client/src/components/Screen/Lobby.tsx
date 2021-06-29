@@ -1,4 +1,4 @@
-import { Assignment, Settings, VolumeOff, VolumeUp } from '@material-ui/icons';
+import { Assignment } from '@material-ui/icons';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -6,7 +6,6 @@ import { IRouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import { characters } from '../../utils/characters';
@@ -14,7 +13,6 @@ import { localDevelopment } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';
 import { Routes, screenChooseGameRoute } from '../../utils/routes';
 import Button from '../common/Button';
-import IconButton from '../common/IconButton';
 import {
     Character,
     CharacterContainer,
@@ -37,12 +35,10 @@ import LobbyHeader from './LobbyHeader';
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
     const {
-        playLobbyMusic,
-        pauseLobbyMusic,
         audioPermission,
-        playing,
+
         setAudioPermissionGranted,
-        musicIsPlaying,
+
         initialPlayLobbyMusic,
     } = React.useContext(AudioContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
@@ -76,22 +72,6 @@ export const Lobby: React.FunctionComponent = () => {
     return (
         <LobbyContainer>
             <Content>
-                <IconButton onClick={() => history.push(Routes.settings)} right={80}>
-                    <Settings />
-                </IconButton>
-                <IconButton
-                    onClick={() =>
-                        handleAudio({
-                            playing,
-                            audioPermission,
-                            pauseLobbyMusic,
-                            playLobbyMusic,
-                            setAudioPermissionGranted,
-                        })
-                    }
-                >
-                    {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
-                </IconButton>
                 <LobbyHeader />
                 <ContentContainer>
                     <LeftContainer>
@@ -125,18 +105,24 @@ export const Lobby: React.FunctionComponent = () => {
                             </CopyToClipboard>
                         </QRCode>
                         <RightButtonContainer>
-                            {screenAdmin && (
-                                <Button
-                                    onClick={() => {
-                                        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-                                        history.push(screenChooseGameRoute(roomId));
-                                    }}
-                                    disabled={!connectedUsers || connectedUsers?.length === 0}
-                                    variant="secondary"
-                                >
-                                    Choose Game
-                                </Button>
-                            )}
+                            <Button
+                                onClick={() => {
+                                    handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+                                    history.push(screenChooseGameRoute(roomId));
+                                }}
+                                disabled={!screenAdmin || !connectedUsers || connectedUsers?.length === 0}
+                                variant="secondary"
+                                title={
+                                    screenAdmin
+                                        ? !connectedUsers || connectedUsers?.length === 0
+                                            ? 'Wait for users to join'
+                                            : ''
+                                        : 'Please select the game on the admin screen'
+                                }
+                            >
+                                Choose Game
+                            </Button>
+
                             <Button disabled>Leaderboard</Button>
                             <Button
                                 onClick={() => {

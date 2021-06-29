@@ -2,7 +2,6 @@ import { TouchApp } from '@material-ui/icons';
 import styled, { keyframes } from 'styled-components';
 
 import { SkipButton } from '../../common/SkipButton.sc';
-import { ObstacleContainer } from './ObstaclStyles.sc';
 
 const slide = keyframes`
     0%, 33% { 
@@ -75,15 +74,17 @@ export const StyledTouchAppIcon = styled(TouchApp)`
     }
 `;
 
-export const TreeTrunkContainer = styled(ObstacleContainer)`
-    && {
-        justify-content: center;
-    }
-`;
-
 export const StyledSkipButton = styled(SkipButton)`
     && {
         position: absolute;
         bottom: -20px;
     }
+`;
+
+export const ProgressBarContainer = styled.div`
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    height: 20%;
 `;
