@@ -44,12 +44,18 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         if (this.player) this.player.alpha = 1;
     }
 
-    renderPlayer(coordinates: Coordinates, monsterName: string, animationName: string, username?: string, background?: string): void {
-       // eslint-disable-next-line no-console
-       console.log(username)
-        let usernameToDisplay = ""
-        if(username){
-            usernameToDisplay = username
+    renderPlayer(
+        coordinates: Coordinates,
+        monsterName: string,
+        animationName: string,
+        username?: string,
+        background?: string
+    ): void {
+        // eslint-disable-next-line no-console
+        console.log(username);
+        let usernameToDisplay = '';
+        if (username) {
+            usernameToDisplay = username;
         }
 
         if (!this.player) {
@@ -59,18 +65,18 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         }
         if (this.player) {
             this.player.x = coordinates.x;
-            this.player.y = coordinates.y + window.innerHeight/16;
+            this.player.y = coordinates.y + window.innerHeight / 16;
         }
     }
 
-    renderPlayerName(coordinates: Coordinates, name: string){
-        this.playerNameBg = this.scene.add.rectangle(window.innerWidth,coordinates.y, 200, 50, 0x0, 0.5);
-        this.playerName = this.scene.add.text(window.innerWidth,coordinates.y, name);
+    renderPlayerName(coordinates: Coordinates, name: string) {
+        this.playerNameBg = this.scene.add.rectangle(window.innerWidth, coordinates.y, 200, 50, 0x0, 0.5);
+        this.playerName = this.scene.add.text(window.innerWidth, coordinates.y, name);
     }
 
-    public updatePlayerNamePosition(newX: number){
-        this.playerNameBg?.setPosition(newX + window.innerWidth, this.playerNameBg.y)
-        this.playerName?.setPosition(newX + window.innerWidth - 100, this.playerName.y)
+    public updatePlayerNamePosition(newX: number) {
+        this.playerNameBg?.setPosition(newX + window.innerWidth, this.playerNameBg.y);
+        this.playerName?.setPosition(newX + window.innerWidth - 100, this.playerName.y);
     }
 
     renderGoal(posX: number, posY: number) {
@@ -170,8 +176,12 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
 
     private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
         // eslint-disable-next-line no-console
-        console.log(window.devicePixelRatio/3)
-        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y + window.innerHeight/16, monsterName);
+        console.log(window.devicePixelRatio / 3);
+        this.player = this.scene.physics.add.sprite(
+            coordinates.x,
+            coordinates.y + window.innerHeight / 16,
+            monsterName
+        );
         this.player.setDepth(depthDictionary.player);
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);

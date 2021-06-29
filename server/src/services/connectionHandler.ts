@@ -156,6 +156,17 @@ class ConnectionHandler {
                         }
                         break;
                     }
+                    case MessageTypes.USER_READY:
+                        {
+                            if (socket.room.isOpen() && socket.user) {
+                                // toggle ready state
+                                const ready = socket.user.isReady();
+                                socket.user.setReady(!ready);
+                                console.info(socket.room.id + ' | userId: ' + socket.user.id + ' | Ready: ' + socket.user.isReady());
+                                emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
+                            }
+                        }
+                        break;
                     default: {
                         console.info(message);
                     }

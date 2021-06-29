@@ -89,8 +89,8 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const history = useHistory();
     const [character, setCharacter] = React.useState<undefined | string>(undefined);
     const [name, setName] = React.useState<string>('');
+    const [ready, setReady] = React.useState<boolean>(false);
     // TODO use data from socket
-    const [ready, setReady] = React.useState(false);
     const [dead, setPlayerDead] = React.useState(false);
 
     let reroute = true;

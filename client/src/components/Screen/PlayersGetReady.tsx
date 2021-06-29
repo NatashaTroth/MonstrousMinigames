@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
-import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { IUser, ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import { characters } from '../../utils/characters';
 import { MessageTypes } from '../../utils/constants';
@@ -13,8 +13,8 @@ import {
     CharacterContainer,
     ConnectedUserCharacter,
     ConnectedUserContainer,
-    ConnectedUserName,
     ConnectedUsers,
+    ConnectedUserStatus,
     Content,
     GetReadyBackground,
     GetReadyContainer,
@@ -26,6 +26,11 @@ const PlayersGetReady: React.FC = () => {
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
 
     const emptyGame = !connectedUsers || connectedUsers.length === 0;
+    const usersReady =
+        !connectedUsers ||
+        connectedUsers.filter((user: IUser) => {
+            return user.ready;
+        }).length === connectedUsers.length;
 
     function startGame() {
         screenSocket?.emit({
@@ -48,23 +53,24 @@ const PlayersGetReady: React.FC = () => {
                         {getUserArray(connectedUsers || []).map((user, index) => (
                             <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>
                                 <ConnectedUserCharacter number={user.number} free={user.free}>
-                                    {!user.free && user.characterNumber !== -1 && (
-                                        <CharacterContainer>
+                                    <CharacterContainer>
+                                        {!user.free && user.characterNumber !== -1 && (
                                             <Character src={characters[Number(user.characterNumber)]} />
-                                        </CharacterContainer>
-                                    )}
+                                        )}
+                                    </CharacterContainer>
 
-                                    {`Player ${user.number}`}
+                                    {user.free ? `Player ${user.number}` : user.name}
                                 </ConnectedUserCharacter>
-                                <ConnectedUserName number={user.number} free={user.free}>
-                                    {user.name.toUpperCase()}
-                                </ConnectedUserName>
+                                <ConnectedUserStatus number={user.number} free={user.free}>
+                                    {!user.free && (user.ready ? 'Ready' : 'Not Ready')}
+                                    {user.free && user.name}
+                                </ConnectedUserStatus>
                             </ConnectedUserContainer>
                         ))}
                     </ConnectedUsers>
                     {screenAdmin && (
                         <Button
-                            disabled={emptyGame}
+                            disabled={emptyGame || !usersReady}
                             onClick={() => {
                                 if (getUserArray(connectedUsers || []).length > 0) {
                                     startGame();
