@@ -37,6 +37,9 @@
         <input name="character" id="character" />
         <label for="character">character</label>
         <button onclick="input('selectCharacter')">SELECT CHARACTER</button>
+        <input name="receivingUserId" id="receivingUserId" />
+        <label for="receivingUserId">receivingUserId</label>
+        <button onclick="input('stunPlayer')">STUN PLAYER</button>
 
         <div id="output"></div>
     </body>
@@ -78,6 +81,15 @@
                 socket.emit('message', {
                     type: 'game1/obstacleSolved',
                 });
+            if (type == 'stunPlayer') {
+                let receivingUserId = document.getElementById('receivingUserId').value;
+                socket.emit('message', {
+                    type: 'game1/stunPlayer',
+                    userId: userId,
+                    receivingUserId: receivingUserId
+                });
+            }
+
             if (type == 'stop')
                 ssocket.emit('message', {
                     type: 'stopGame',
