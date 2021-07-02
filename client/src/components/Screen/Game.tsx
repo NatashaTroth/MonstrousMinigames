@@ -9,11 +9,13 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
+import Button from '../common/Button';
+import IconButton from '../common/IconButton';
 import { AudioButton, Container } from './Game.sc';
 import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
-    const { roomId } = React.useContext(GameContext);
+    const { roomId, hasPaused } = React.useContext(GameContext);
     const {
         pauseLobbyMusicNoMute,
         audioPermission,
@@ -77,12 +79,32 @@ const Game: React.FunctionComponent = () => {
         }
     }
 
+    //TODO click on pause immediately - doesn't work because wrong gamestate, countdown still running - fix
+    async function handlePause() {
+        GameEventEmitter.emitPauseResumeEvent();
+    }
+
+    const myStyle: React.CSSProperties = {
+        // color: 'white',
+        // backgroundColor: 'DodgerBlue',
+        // padding: '10px',
+        // fontFamily: 'Arial',
+
+        position: 'absolute',
+        width: '100%',
+        bottom: '0',
+        left: '0',
+    };
+
     return (
         <Container>
             <AudioButton onClick={handleAudio} variant="primary">
                 {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
             </AudioButton>
             <GameContent />
+            <div style={myStyle}>
+                <Button onClick={handlePause}>{hasPaused ? 'Resume' : 'Pause'}</Button>
+            </div>
         </Container>
     );
 };
