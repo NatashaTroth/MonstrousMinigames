@@ -67,7 +67,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.maxNumberOfPlayers = Globals.MAX_PLAYER_NUMBER;
         this.gameState = GameState.Initialised;
         this.trackLength = 5000; // TODO 5000;
-        this.numberOfObstacles = 5;
+        this.numberOfObstacles = 4;
         this.speed = 0;
         this.currentRank = 1;
         this.currentRankFromTheBack = 4;
@@ -83,14 +83,14 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.gamePausedTime = 0;
         // this.leaderboard = {};
         this.leaderboard = leaderboard;
-        this.timeWhenChasersAppear = 10000; //10 sec
+        this.timeWhenChasersAppear = 25000; //10 sec
         this.initialPlayerPositionX = 500;
-        this.chasersPositionX = 900;
+        this.chasersPositionX = 0;
         this.updateChasersInterval = undefined;
         this.updateChasersIntervalTime = 100;
         this.chasersAreRunning = false;
         this.cameraPositionX = 0;
-        this.cameraSpeed = 2;
+        this.cameraSpeed = 1.7;
         this.maxNumberStones = 5;
     }
 
@@ -125,6 +125,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         if (this.updateChasersInterval) clearInterval(this.updateChasersInterval);
         this.startGame();
         this.speed = speed;
+        this.chasersPositionX = 1300;
+        // this.chasersPositionX = (6 * this.speed * this.timeWhenChasersAppear) / 100; //(6 updates per 100ms)
     }
 
     //put together
@@ -148,7 +150,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
                         console.log('at goal');
                         clearInterval(runInterval);
                     }
-                }, 16.6667);
+                }, 18); //make a bit slower - real players will not have a consistent rate
+                // }, 16.6667);
             }
         }, this.countdownTime);
         this.timer = setTimeout(() => {
@@ -278,8 +281,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         }
 
         //TODO - change when main loop - don't send any gamestate info until countdown stopped
-        if(this.gameState === GameState.Started){
-
+        if (this.gameState === GameState.Started) {
             this.cameraPositionX += this.cameraSpeed;
         }
 
@@ -302,8 +304,9 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
         //10000 to 90000  * timePassed //TODO - make faster over time??
         if (timePassed < this.timeWhenChasersAppear) return;
+        // console.log('PLAYER POS: ', this.playersState);
         if (!this.chasersAreRunning) this.chasersAreRunning = true;
-        this.chasersPositionX += this.speed * 3;
+        this.chasersPositionX += this.cameraSpeed * 3;
 
         // console.log('here---' + this.chasersPositionX);
 
