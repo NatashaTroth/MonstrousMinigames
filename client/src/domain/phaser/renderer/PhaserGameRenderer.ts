@@ -113,6 +113,7 @@ export class PhaserGameRenderer implements GameRenderer {
                 add: true,
             });
             this.countdownText.scrollFactorX = 0;
+            this.countdownText.setDepth(depthDictionary.countdown);
         }
     }
 
