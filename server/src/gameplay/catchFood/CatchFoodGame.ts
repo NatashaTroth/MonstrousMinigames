@@ -140,7 +140,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             }, this.updateChasersIntervalTime);
             //TODO delete
 
-            if (localDevelopment) {
+            if (localDevelopment && this.gameState === GameState.Started) {
                 const keys = Object.keys(this.playersState);
 
                 keys.forEach(key => {
