@@ -14,18 +14,14 @@ import ScreenSocket from '../../domain/socket/screenSocket';
 import { Socket } from '../../domain/socket/Socket';
 import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../domain/typeGuards/finished';
-import {
-    GameStateInfoMessage, gameStateInfoTypeGuard
-} from '../../domain/typeGuards/gameStateInfo';
+import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../domain/typeGuards/gameStateInfo';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../domain/typeGuards/paused';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../domain/typeGuards/resumed';
 import { GameHasStartedMessage, startedTypeGuard } from '../../domain/typeGuards/started';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../domain/typeGuards/stopped';
 import { MessageTypes } from '../../utils/constants';
 import { screenFinishedRoute } from '../../utils/routes';
-import {
-    audioFiles, characters, fireworkFlares, flaresJson, flaresPng, images
-} from './GameAssets';
+import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;
@@ -48,7 +44,7 @@ class MainScene extends Phaser.Scene {
 
     constructor() {
         super('MainScene');
-        this.roomId = '';
+        this.roomId = sessionStorage.getItem('roomId') || '';
         this.socket = this.handleSocketConnection();
         this.posX = 50;
         this.plusX = 40;
