@@ -4,5 +4,10 @@ import CharacterNotAvailableError from './CharacterNotAvailableError';
 import UsersNotReadyError from './UsersNotReadyError';
 import CannotStartEmptyGameError from './CannotStartEmptyGameError';
 
-
-export { InvalidRoomCodeError, GameAlreadyStartedError, CharacterNotAvailableError, UsersNotReadyError, CannotStartEmptyGameError  };
+export {
+    InvalidRoomCodeError,
+    GameAlreadyStartedError,
+    CharacterNotAvailableError,
+    UsersNotReadyError,
+    CannotStartEmptyGameError,
+};

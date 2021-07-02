@@ -162,7 +162,13 @@ class ConnectionHandler {
                                 // toggle ready state
                                 const ready = socket.user.isReady();
                                 socket.user.setReady(!ready);
-                                console.info(socket.room.id + ' | userId: ' + socket.user.id + ' | Ready: ' + socket.user.isReady());
+                                console.info(
+                                    socket.room.id +
+                                        ' | userId: ' +
+                                        socket.user.id +
+                                        ' | Ready: ' +
+                                        socket.user.isReady()
+                                );
                                 emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
                             }
                         }

@@ -9,6 +9,8 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
+import Button from '../common/Button';
+import IconButton from '../common/IconButton';
 import { AudioButton, Container } from './Game.sc';
 import MainScene from './MainScene';
 
@@ -100,6 +102,9 @@ const Game: React.FunctionComponent = () => {
                 {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
             </AudioButton>
             <GameContent />
+            <div style={myStyle}>
+                <Button onClick={handlePause}>{hasPaused ? 'Resume' : 'Pause'}</Button>
+            </div>
         </Container>
     );
 };
