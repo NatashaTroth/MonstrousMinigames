@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components';
 
-import { darkGreen, primary, readyButton, secondary } from '../../utils/colors';
 import { Label } from './Label.sc';
 
 interface Instruction {
@@ -8,16 +7,16 @@ interface Instruction {
 }
 
 export const Instruction = styled(Label)<Instruction>`
-    background-color: ${({ variant = 'none' }) => {
+    background-color: ${({ variant = 'none', theme }) => {
         switch (variant) {
             case 'light':
-                return readyButton;
+                return theme.colors.readyButton;
             case 'dark':
-                return darkGreen;
+                return theme.colors.darkGreen;
             case 'primary':
-                return primary;
+                return theme.palette.primary.main;
             case 'secondary':
-                return secondary;
+                return theme.palette.secondary.main;
             default:
                 return '';
         }
@@ -42,8 +41,8 @@ export const InstructionText = styled.div`
 `;
 
 export const InstructionContainer = styled(Instruction)`
-    background-color: ${({ variant = 'none' }) =>
-        variant === 'light' ? readyButton : variant === 'dark' ? darkGreen : ''};
+    background-color: ${({ variant = 'none', theme }) =>
+        variant === 'light' ? theme.colors.readyButton : variant === 'dark' ? theme.colors.darkGreen : ''};
     max-width: unset;
     width: 80%;
     display: flex;

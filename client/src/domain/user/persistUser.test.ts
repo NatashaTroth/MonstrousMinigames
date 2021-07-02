@@ -18,29 +18,17 @@ describe('persistUser function', () => {
         number: 1,
     };
 
-    const setPlayerAdmin = jest.fn();
     const setPlayerNumber = jest.fn();
     const setName = jest.fn();
-
-    it('handed setPlayerAdmin function should be called with passed isAdmin data', () => {
-        persistUser(mockData, {
-            setPlayerAdmin,
-            setPlayerNumber,
-            localStorage: new LocalStorageFake(),
-            sessionStorage: new LocalStorageFake(),
-            setName,
-        });
-
-        expect(setPlayerAdmin).toHaveBeenLastCalledWith(mockData.isAdmin);
-    });
+    const setUserId = jest.fn();
 
     it('handed function should be called with passed data', () => {
         persistUser(mockData, {
-            setPlayerAdmin,
             setPlayerNumber,
             localStorage: new LocalStorageFake(),
             sessionStorage: new LocalStorageFake(),
             setName,
+            setUserId,
         });
 
         expect(setPlayerNumber).toHaveBeenLastCalledWith(mockData.number);
@@ -49,11 +37,11 @@ describe('persistUser function', () => {
     it('handed userName should be persisted to local storage', () => {
         global.localStorage.clear();
         persistUser(mockData, {
-            setPlayerAdmin,
             setPlayerNumber,
             localStorage: new LocalStorageFake(),
             sessionStorage: new LocalStorageFake(),
             setName,
+            setUserId,
         });
         expect(global.localStorage.getItem('name')).toBe(mockData.name);
     });
@@ -62,11 +50,11 @@ describe('persistUser function', () => {
         global.sessionStorage.clear();
 
         persistUser(mockData, {
-            setPlayerAdmin,
             setPlayerNumber,
             localStorage: new LocalStorageFake(),
             sessionStorage: new LocalStorageFake(),
             setName,
+            setUserId,
         });
         expect(global.sessionStorage.getItem('userId')).toBe(mockData.userId);
     });
@@ -75,11 +63,11 @@ describe('persistUser function', () => {
         global.sessionStorage.clear();
 
         persistUser(mockData, {
-            setPlayerAdmin,
             setPlayerNumber,
             localStorage: new LocalStorageFake(),
             sessionStorage: new LocalStorageFake(),
             setName,
+            setUserId,
         });
         expect(global.sessionStorage.getItem('roomId')).toBe(mockData.roomId);
     });

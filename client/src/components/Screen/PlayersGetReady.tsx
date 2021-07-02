@@ -1,25 +1,20 @@
-import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
-import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handleAudio } from '../../domain/audio/handleAudio';
+import { IUser, ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
-import franz from '../../images/franz.png';
-import noah from '../../images/noah.png';
-import steffi from '../../images/steffi.png';
-import susi from '../../images/susi.png';
+import { characters } from '../../utils/characters';
+import { MessageTypes } from '../../utils/constants';
 import Button from '../common/Button';
-import IconButton from '../common/IconButton';
 import { getUserArray } from './Lobby';
 import {
     Character,
     CharacterContainer,
     ConnectedUserCharacter,
     ConnectedUserContainer,
-    ConnectedUserName,
     ConnectedUsers,
+    ConnectedUserStatus,
     Content,
     GetReadyBackground,
     GetReadyContainer,
@@ -27,63 +22,55 @@ import {
 
 const PlayersGetReady: React.FC = () => {
     const { screenSocket } = React.useContext(ScreenSocketContext);
-    const {
-        playLobbyMusic,
-        pauseLobbyMusic,
-        permission,
-        playing,
-        setPermissionGranted,
-        musicIsPlaying,
-    } = React.useContext(AudioContext);
+    const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
-    const characters = [franz, noah, susi, steffi];
 
     const emptyGame = !connectedUsers || connectedUsers.length === 0;
+    const usersReady =
+        !connectedUsers ||
+        connectedUsers.filter((user: IUser) => {
+            return user.ready;
+        }).length === connectedUsers.length;
 
     function startGame() {
         screenSocket?.emit({
-            type: 'game1/start',
+            type: MessageTypes.startPhaserGame,
             roomId: sessionStorage.getItem('roomId'),
             userId: sessionStorage.getItem('userId'),
         });
     }
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        initialPlayLobbyMusic(true);
     }, []);
 
     return (
         <GetReadyContainer>
             <GetReadyBackground>
                 <Content>
-                    <IconButton
-                        onClick={() =>
-                            handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
-                        }
-                    >
-                        {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
-                    </IconButton>
                     <ConnectedUsers>
                         {getUserArray(connectedUsers || []).map((user, index) => (
                             <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>
                                 <ConnectedUserCharacter number={user.number} free={user.free}>
-                                    {!user.free && (
-                                        <CharacterContainer>
-                                            <Character src={characters[index]} />
-                                        </CharacterContainer>
-                                    )}
+                                    <CharacterContainer>
+                                        {!user.free && user.characterNumber !== -1 && (
+                                            <Character src={characters[Number(user.characterNumber)]} />
+                                        )}
+                                    </CharacterContainer>
 
-                                    {`Player ${user.number}`}
+                                    {user.free ? `Player ${user.number}` : user.name}
                                 </ConnectedUserCharacter>
-                                <ConnectedUserName number={user.number} free={user.free}>
-                                    {user.name.toUpperCase()}
-                                </ConnectedUserName>
+                                <ConnectedUserStatus number={user.number} free={user.free}>
+                                    {!user.free && (user.ready ? 'Ready' : 'Not Ready')}
+                                    {user.free && user.name}
+                                </ConnectedUserStatus>
                             </ConnectedUserContainer>
                         ))}
                     </ConnectedUsers>
                     {screenAdmin && (
                         <Button
-                            disabled={emptyGame}
+                            disabled={emptyGame || !usersReady}
                             onClick={() => {
                                 if (getUserArray(connectedUsers || []).length > 0) {
                                     startGame();

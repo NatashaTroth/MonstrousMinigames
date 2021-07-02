@@ -72,7 +72,7 @@ describe('Disconnect Player tests', () => {
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.playersState['1'].positionX).toBe(SPEED);
+        expect(catchFoodGame.playersState['1'].positionX).toBe(catchFoodGame.initialPlayerPositionX + SPEED);
     });
 
     it('cannot complete an obstacle when disconnected', async () => {

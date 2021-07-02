@@ -3,35 +3,30 @@ import * as React from 'react';
 import history from '../../domain/history/history';
 import Button from './Button';
 import {
-    BackButtonContainer, Content, ContentContainer, CreditsContainer, Headline
+    BackButtonContainer,
+    Content,
+    ContentContainer,
+    CreditsContainer,
+    Headline,
+    TextContainer,
 } from './Credits.sc';
 
 const Credits: React.FunctionComponent = () => {
-    const roomId = sessionStorage.getItem('roomId');
     return (
         <CreditsContainer>
             <ContentContainer>
                 <Content>
                     <Headline>Credits</Headline>
-                    <p>
-                        The graphics for the tree trunks were created by macrovecto and downloaded from freepiks.com.{' '}
-                        <a href="https://de.freepik.com/vektoren-kostenlos/holzwerkstoff-und-fertigprodukte-mit-baumstamm-aeste-planken-kuechenutensilien-transparent-gesetzt_6804311.htm#page=1&query=Baumstamm&position=8">
-                            Link to the source
-                        </a>
-                        <div>
-                            Mute and Unmute icons made by{' '}
-                            <a href="https://www.flaticon.com/authors/google" title="Google">
-                                Google
-                            </a>{' '}
-                            from{' '}
-                            <a href="https://www.flaticon.com/" title="Flaticon">
-                                www.flaticon.com
-                            </a>
-                        </div>
-                    </p>
+                    <TextContainer>
+                        This project was developed as part of the MultiMediaTechnology Master's degree programme at the
+                        University of Applied Sciences Salzburg. The students Natasha Troth, Robin Fellinger, Leon
+                        Spiegelmayr and Magdalena Maislinger are responsible for the technical implementation. All game
+                        elements and the design for the user interface were created by MultiMediaArt student Kerstin
+                        Schaumberger. The music and sound elements were created by the MultiMediaArt artist Tobias Türk.
+                    </TextContainer>
                 </Content>
                 <BackButtonContainer>
-                    <Button onClick={() => history.push(`/${roomId}`)}>Back</Button>
+                    <Button onClick={history.goBack}>Back</Button>
                 </BackButtonContainer>
             </ContentContainer>
         </CreditsContainer>

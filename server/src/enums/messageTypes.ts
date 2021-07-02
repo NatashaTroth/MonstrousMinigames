@@ -1,5 +1,6 @@
 export enum MessageTypes {
     USER_INIT = 'userInit',
+    USER_READY = 'userReady',
     CONNECTED_USERS = 'connectedUsers',
     BACK_TO_LOBBY = 'backToLobby',
     PAUSE_RESUME = 'pauseResume',
@@ -12,4 +13,7 @@ export enum MessageTypes {
     GAME_HAS_RESUMED = 'gameHasResumed',
     ERROR = 'error',
     SCREEN_ADMIN = 'screenAdmin',
+    SELECT_CHARACTER = 'selectCharacter',
+    PLAYER_HAS_DISCONNECTED = 'playerHasDisconnected',
+    PLAYER_HAS_RECONNECTED = 'playerHasReconnected',
 }

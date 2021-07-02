@@ -1,5 +1,6 @@
 // import GameEventEmitter from '../../classes/GameEventEmitter';
 
+import { localDevelopment } from '../../../constants';
 import User from '../../classes/user';
 import { Globals } from '../../enums/globals';
 import { MaxNumberUsersExceededError } from '../customErrors';
@@ -25,7 +26,7 @@ interface CatchFoodGameInterface extends IGameInterface {
     getObstaclePositions(): HashTable<Array<Obstacle>>;
     runForward(userId: string, speed: number): void;
     playerHasCompletedObstacle(userId: string, obstacleId: number): void;
-    stunPlayer(userId: string): void;
+    stunPlayer(userIdStunned: string, userIdThrown: string): void;
 }
 
 export default class CatchFoodGame implements CatchFoodGameInterface {
@@ -51,17 +52,21 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     leaderboard: Leaderboard;
     timeWhenChasersAppear: number;
     // usingChasers: boolean //TODO try and remove (for tests)
+    initialPlayerPositionX: number;
     chasersPositionX: number;
     updateChasersInterval?: ReturnType<typeof setInterval>;
     updateChasersIntervalTime: number;
     chasersAreRunning: boolean;
+    cameraPositionX: number;
+    cameraSpeed: number;
+    maxNumberStones: number;
 
     constructor(roomId: string, leaderboard: Leaderboard /*, public usingChasers = false*/, public stunnedTime = 3000) {
         // this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance()
         this.roomId = roomId;
         this.maxNumberOfPlayers = Globals.MAX_PLAYER_NUMBER;
         this.gameState = GameState.Initialised;
-        this.trackLength = 7500;
+        this.trackLength = 5000; // TODO 5000;
         this.numberOfObstacles = 5;
         this.speed = 0;
         this.currentRank = 1;
@@ -73,16 +78,20 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.gameStartedTime = 0;
         this.timeOutLimit = 300000;
         this.timer = setTimeout(() => ({}), 0);
-        this.countdownTime = 3000;
+        this.countdownTime = 4000; //should be 1 second more than client - TODO make sure it is
         this.timeOutRemainingTime = 0;
         this.gamePausedTime = 0;
         // this.leaderboard = {};
         this.leaderboard = leaderboard;
         this.timeWhenChasersAppear = 10000; //10 sec
-        this.chasersPositionX = 800;
+        this.initialPlayerPositionX = 500;
+        this.chasersPositionX = 900;
         this.updateChasersInterval = undefined;
         this.updateChasersIntervalTime = 100;
         this.chasersAreRunning = false;
+        this.cameraPositionX = 0;
+        this.cameraSpeed = 2;
+        this.maxNumberStones = 5;
     }
 
     createNewGame(
@@ -106,7 +115,12 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.gameStartedTime = 0;
         this.chasersAreRunning = false;
         this.numberOfObstacles = numberOfObstacles;
-        this.playersState = initiatePlayersState(players, this.numberOfObstacles, this.trackLength);
+        this.playersState = initiatePlayersState(
+            players,
+            this.numberOfObstacles,
+            this.trackLength,
+            this.initialPlayerPositionX
+        );
         clearTimeout(this.timer);
         if (this.updateChasersInterval) clearInterval(this.updateChasersInterval);
         this.startGame();
@@ -122,6 +136,20 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             this.updateChasersInterval = setInterval(() => {
                 this.updateChasersPosition();
             }, this.updateChasersIntervalTime);
+            //TODO delete
+
+            if (localDevelopment) {
+                const key = Object.keys(this.playersState)[0];
+                const runInterval = setInterval(() => {
+                    // console.log(this.playersState[key].positionX);
+                    // this.playersState[key].positionX += this.speed;
+                    this.runForward(key, this.speed);
+                    if (this.playersState[key].positionX >= this.trackLength) {
+                        console.log('at goal');
+                        clearInterval(runInterval);
+                    }
+                }, 16.6667);
+            }
         }, this.countdownTime);
         this.timer = setTimeout(() => {
             this.stopGameTimeout();
@@ -249,6 +277,12 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             playerInfoArray.push(playerState);
         }
 
+        //TODO - change when main loop - don't send any gamestate info until countdown stopped
+        if(this.gameState === GameState.Started){
+
+            this.cameraPositionX += this.cameraSpeed;
+        }
+
         return {
             gameState: this.gameState,
             roomId: this.roomId,
@@ -256,6 +290,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             trackLength: this.trackLength,
             numberOfObstacles: this.numberOfObstacles,
             chasersPositionX: this.chasersPositionX,
+            chasersAreRunning: this.chasersAreRunning,
+            cameraPositionX: this.cameraPositionX,
         };
     }
 
@@ -266,7 +302,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
         //10000 to 90000  * timePassed //TODO - make faster over time??
         if (timePassed < this.timeWhenChasersAppear) return;
-        this.chasersPositionX += this.speed;
+        if (!this.chasersAreRunning) this.chasersAreRunning = true;
+        this.chasersPositionX += this.speed * 3;
 
         // console.log('here---' + this.chasersPositionX);
 
@@ -282,19 +319,16 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         playerState.dead = true;
         this.updatePlayerStateFinished(playerState.id);
         playerState.rank = this.getRankFromTheBack(playerState.finishedTimeMs);
-
         CatchFoodGameEventEmitter.emitPlayerIsDead({
             roomId: this.roomId,
             userId: playerState.id,
             rank: playerState.rank,
         });
-
         //todo duplicate
         const userIds = Object.keys(this.playersState);
         const activeUnfinishedPlayers = userIds.filter(userId => {
             if (this.playersState[userId].isActive && !this.playersState[userId].dead) return userId;
         });
-
         if (activeUnfinishedPlayers.length <= 1 || this.gameHasFinished()) {
             this.handleGameFinished();
         }
@@ -359,6 +393,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
     private handlePlayerReachedObstacle(userId: string): void {
         // block player from running when obstacle is reached
+        // console.log('at obstacle');
         this.playersState[userId].atObstacle = true;
 
         //set position x to obstacle position (in case ran past)
@@ -372,22 +407,23 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     }
 
     //TODO test
-    stunPlayer(userId: string) {
+    stunPlayer(userIdStunned: string, userIdThrown: string) {
         verifyGameState(this.gameState, [GameState.Started]);
-        verifyUserId(this.playersState, userId);
-        verifyUserIsActive(userId, this.playersState[userId].isActive);
-        if (this.userIsNotAllowedToRun(userId)) return;
-        if (this.playersState[userId].stunned || this.playersState[userId].atObstacle) return;
-
-        this.playersState[userId].stunned = true;
-        this.playersState[userId].timeWhenStunned = Date.now();
-        this.playersState[userId].stunnedTimeout = setTimeout(() => {
-            this.unStunPlayer(userId);
+        verifyUserId(this.playersState, userIdStunned);
+        verifyUserIsActive(userIdStunned, this.playersState[userIdStunned].isActive);
+        if (this.userIsNotAllowedToRun(userIdStunned)) return;
+        if (this.playersState[userIdStunned].stunned || this.playersState[userIdStunned].atObstacle) return;
+        if (this.playersState[userIdThrown].numberStonesThrown >= this.maxNumberStones) return;
+        this.playersState[userIdThrown].numberStonesThrown++;
+        this.playersState[userIdStunned].stunned = true;
+        this.playersState[userIdStunned].timeWhenStunned = Date.now();
+        this.playersState[userIdStunned].stunnedTimeout = setTimeout(() => {
+            this.unStunPlayer(userIdStunned);
         }, this.stunnedTime);
 
         CatchFoodGameEventEmitter.emitPlayerIsStunned({
             roomId: this.roomId,
-            userId,
+            userId: userIdStunned,
         });
     }
 

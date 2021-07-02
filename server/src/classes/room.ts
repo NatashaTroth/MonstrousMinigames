@@ -1,5 +1,4 @@
-import { GameAlreadyStartedError } from '../customErrors';
-import CannotStartEmptyGameError from '../customErrors/CannotStartEmptyGameError';
+import { GameAlreadyStartedError, CannotStartEmptyGameError, CharacterNotAvailableError, UsersNotReadyError } from '../customErrors';
 import { Globals } from '../enums/globals';
 import { CatchFoodGame } from '../gameplay';
 import { GameStateInfo } from '../gameplay/catchFood/interfaces';
@@ -12,7 +11,6 @@ class Room {
     public users: Array<User>;
     public timestamp: number;
     public game: CatchFoodGame;
-    public admin: User | null;
     private state: RoomStates;
     private leaderboard: Leaderboard;
     public screens: Array<string>;
@@ -23,7 +21,6 @@ class Room {
         this.timestamp = Date.now();
         this.leaderboard = new Leaderboard(this.id);
         this.game = new CatchFoodGame(this.id, this.leaderboard);
-        this.admin = null;
         this.state = RoomStates.OPEN;
         this.screens = [];
     }
@@ -47,7 +44,6 @@ class Room {
             );
         }
 
-        if (this.users.length === 0) this.admin = user;
         this.users.push(user);
         this.updateUserNumbers();
     }
@@ -58,10 +54,6 @@ class Room {
         });
     }
 
-    public isAdmin(user: User): boolean {
-        return user === this.admin;
-    }
-
     public getUserCount(): number {
         return this.users.length;
     }
@@ -69,7 +61,6 @@ class Room {
     public removeUser(toBeRemoved: User): void {
         const index = this.users.indexOf(toBeRemoved);
         this.users.splice(index, 1);
-        this.resolveAdmin();
         this.updateUserNumbers();
     }
 
@@ -89,15 +80,6 @@ class Room {
             }
         }
     }
-    private resolveAdmin(): void {
-        if (this.users.length > 0) {
-            if (this.users.filter(u => u === this.admin).length === 0) {
-                this.admin = this.users[0];
-            }
-        } else {
-            this.admin = null;
-        }
-    }
 
     private getActiveUsers(): Array<User> {
         const activeUsers = this.users.filter((user: User) => {
@@ -110,6 +92,17 @@ class Room {
         return this.getActiveUsers().length !== 0;
     }
 
+    private getNotReadyUsers(): Array<User> {
+        const readyUsers = this.users.filter((user: User) => {
+            return !user.isReady();
+        });
+        return readyUsers;
+    }
+
+    private hasNotReadyUsers(): boolean {
+        return this.getNotReadyUsers().length !== 0;
+    }
+
     public updateTimestamp(): void {
         this.timestamp = Date.now();
     }
@@ -117,6 +110,9 @@ class Room {
     public startGame(): GameStateInfo {
         if (this.users.length === 0) {
             throw new CannotStartEmptyGameError();
+        }
+        if (this.hasNotReadyUsers()){
+            throw new UsersNotReadyError();
         }
         this.setState(RoomStates.PLAYING);
         this.game.createNewGame(this.users);
@@ -205,6 +201,27 @@ class Room {
     }
     public getAdminScreenId(): string {
         return this.screens[0];
+    }
+    public getAvailableCharacters(): Array<number> {
+        const characters: Array<number> = [];
+        for (let i = 0; i < Globals.CHARACTER_COUNT; i++) {
+            characters.push(i);
+        }
+        return characters.filter(x => !this.getChosenCharacters().includes(x));
+    }
+    public getChosenCharacters(): Array<number> {
+        const chosenCharacters: Array<number> = [];
+        this.users.forEach(user => {
+            chosenCharacters.push(user.characterNumber);
+        });
+        return chosenCharacters;
+    }
+    public setUserCharacter(user: User, character: number): void {
+        if (this.getAvailableCharacters().includes(character)) {
+            user.setCharacterNumber(character);
+        } else {
+            throw new CharacterNotAvailableError();
+        }
     }
 }
 

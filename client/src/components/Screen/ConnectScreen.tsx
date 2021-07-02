@@ -1,13 +1,13 @@
-import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
+import { localBackend, localDevelopment } from '../../utils/constants';
+import { Routes } from '../../utils/routes';
 import Button from '../common/Button';
-import IconButton from '../common/IconButton';
+import LoadingComponent from '../common/LoadingComponent';
 import Logo from '../common/Logo';
 import ConnectDialog from './ConnectDialog';
 import {
@@ -17,62 +17,71 @@ import {
     LeftContainer,
     RightContainer,
 } from './ConnectScreen.sc';
+import GettingStartedDialog from './GettingStarted';
 
 export const ConnectScreen: React.FunctionComponent = () => {
-    const [dialogOpen, setDialogOpen] = React.useState(false);
+    const [joinDialogOpen, setJoinDialogOpen] = React.useState(false);
+    const [gettingStartedDialogOpen, setGettingStartedDialogOpen] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
     const { handleSocketConnection } = React.useContext(ScreenSocketContext);
-    const {
-        playLobbyMusic,
-        pauseLobbyMusic,
-        permission,
-        setPermissionGranted,
-        playing,
-        musicIsPlaying,
-    } = React.useContext(AudioContext);
+    const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
 
     async function handleCreateNewRoom() {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}create-room`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+        setLoading(true);
+        const response = await fetch(
+            `${localDevelopment ? localBackend : process.env.REACT_APP_BACKEND_URL}create-room`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+
+        if (response) {
+            setLoading(false);
+        }
 
         const data = await response.json();
         handleSocketConnection(data.roomId, 'lobby');
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
     }
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        initialPlayLobbyMusic(true);
     }, []);
 
     async function handleJoinRoom() {
-        setDialogOpen(true);
-        handleAudioPermission(permission, { setPermissionGranted });
+        setJoinDialogOpen(true);
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+    }
+
+    async function handleGettingStarted() {
+        setGettingStartedDialogOpen(true);
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
     }
 
     return (
         <ConnectScreenContainer>
-            <ConnectDialog open={dialogOpen} handleClose={() => setDialogOpen(false)} />
-            <IconButton
-                onClick={() =>
-                    handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
-                }
-            >
-                {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
-            </IconButton>
+            {loading && <LoadingComponent />}
+            <ConnectDialog open={joinDialogOpen} handleClose={() => setJoinDialogOpen(false)} />
+            <GettingStartedDialog
+                open={gettingStartedDialogOpen}
+                handleClose={() => setGettingStartedDialogOpen(false)}
+            />
             <LeftContainer>
                 <LeftButtonContainer>
-                    <Button type="button" name="new" onClick={handleCreateNewRoom}>
+                    <Button type="button" name="new" onClick={handleCreateNewRoom} title="Create new room">
                         Create New Room
                     </Button>
-                    <Button type="button" name="join" onClick={handleJoinRoom}>
+
+                    <Button type="button" name="join" onClick={handleJoinRoom} title="Join an already existing room">
                         Join Room
                     </Button>
-                    <Button type="button" name="tutorial" disabled>
-                        Getting Started
-                        {/*TODO add  handleAudioPermission(permission, setPermissionGranted) to onClick event*/}
+
+                    <Button type="button" name="tutorial" onClick={handleGettingStarted}>
+                        About
                     </Button>
                 </LeftButtonContainer>
             </LeftContainer>
@@ -84,8 +93,8 @@ export const ConnectScreen: React.FunctionComponent = () => {
                         type="button"
                         name="credits"
                         onClick={() => {
-                            handleAudioPermission(permission, { setPermissionGranted });
-                            history.push('/credits');
+                            handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+                            history.push(Routes.credits);
                         }}
                     >
                         Credits
@@ -94,8 +103,8 @@ export const ConnectScreen: React.FunctionComponent = () => {
                         type="button"
                         name="settings"
                         onClick={() => {
-                            handleAudioPermission(permission, { setPermissionGranted });
-                            history.push('/settings');
+                            handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+                            history.push(Routes.settings);
                         }}
                     >
                         Settings

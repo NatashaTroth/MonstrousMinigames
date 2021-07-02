@@ -2,7 +2,8 @@ import * as React from 'react';
 
 import { handleSetGameFinished } from '../domain/gameState/controller/handleSetGameFinished';
 import { handleSetGameStarted } from '../domain/gameState/controller/handleSetGameStarted';
-import { IUser } from './ControllerSocketContextProvider';
+import { IUser } from '../domain/typeGuards/connectedUsers';
+import { defaultAvailableCharacters } from '../utils/characters';
 import { PlayerRank } from './ScreenSocketContextProvider';
 
 export const defaultValue = {
@@ -37,10 +38,6 @@ export const defaultValue = {
     setPlayerRanks: () => {
         // do nothing
     },
-    hasTimedOut: false,
-    setHasTimedOut: () => {
-        // do nothing
-    },
     hasPaused: false,
     setHasPaused: () => {
         // do nothing
@@ -55,6 +52,10 @@ export const defaultValue = {
     },
     screenAdmin: false,
     setScreenAdmin: () => {
+        // do nothing
+    },
+    availableCharacters: [],
+    setAvailableCharacters: () => {
         // do nothing
     },
 };
@@ -74,8 +75,6 @@ interface IGameContext {
     setCountdownTime: (val: number) => void;
     playerRanks?: PlayerRank[];
     setPlayerRanks: (val: PlayerRank[]) => void;
-    hasTimedOut: boolean;
-    setHasTimedOut: (val: boolean) => void;
     hasPaused: boolean;
     setHasPaused: (val: boolean) => void;
     gameChosen: boolean;
@@ -84,6 +83,8 @@ interface IGameContext {
     setTutorial: (val: boolean) => void;
     screenAdmin: boolean;
     setScreenAdmin: (val: boolean) => void;
+    availableCharacters: number[];
+    setAvailableCharacters: (val: number[]) => void;
 }
 
 export const GameContext = React.createContext<IGameContext>(defaultValue);
@@ -96,12 +97,12 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [connectedUsers, setConnectedUsers] = React.useState<undefined | IUser[]>();
     const [showInstructions, setShowInstructions] = React.useState<boolean>(true);
     const [countdownTime, setCountdownTime] = React.useState<number>(0);
-    const [hasTimedOut, setHasTimedOut] = React.useState<boolean>(false);
     const [hasPaused, setHasPaused] = React.useState<boolean>(false);
     // TODO use data from socket
     const [gameChosen, setGameChosen] = React.useState(false);
     const [tutorial, setTutorial] = React.useState(true);
     const [screenAdmin, setScreenAdmin] = React.useState<boolean>(false);
+    const [availableCharacters, setAvailableCharacters] = React.useState<number[]>(defaultAvailableCharacters);
 
     const content = {
         finished,
@@ -122,8 +123,6 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setCountdownTime,
         playerRanks,
         setPlayerRanks,
-        hasTimedOut,
-        setHasTimedOut,
         hasPaused,
         setHasPaused,
         gameChosen,
@@ -132,6 +131,8 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setTutorial,
         screenAdmin,
         setScreenAdmin,
+        availableCharacters,
+        setAvailableCharacters,
     };
     return <GameContext.Provider value={content}>{children}</GameContext.Provider>;
 };

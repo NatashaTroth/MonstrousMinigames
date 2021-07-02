@@ -1,12 +1,12 @@
-import { VolumeOff, VolumeUp } from '@material-ui/icons';
+import { Checkbox, createStyles, FormControlLabel, makeStyles, Theme } from '@material-ui/core';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
+import { screenGetReadyRoute } from '../../utils/routes';
 import Button from '../common/Button';
-import IconButton from '../common/IconButton';
 import {
     BackButtonContainer,
     ControlInstruction,
@@ -17,52 +17,51 @@ import {
     IntroText,
     PaddingContainer,
     PreviewImageContainer,
+    StyledFormGroup,
 } from './GameIntro.sc';
 
-const GameIntro: React.FunctionComponent = () => {
-    const [showFirstIntro, setShowFirstIntro] = React.useState(true);
-    const { roomId } = React.useContext(GameContext);
-    const {
-        playLobbyMusic,
-        pauseLobbyMusic,
-        permission,
-        playing,
-        setPermissionGranted,
-        musicIsPlaying,
-    } = React.useContext(AudioContext);
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            color: theme.status.checked,
+            '&$checked': {
+                color: theme.status.checked,
+            },
+        },
+        checked: {},
+    })
+);
 
-    function handleSkip() {
+const GameIntro: React.FunctionComponent = () => {
+    const { roomId } = React.useContext(GameContext);
+    const [showFirstIntro, setShowFirstIntro] = React.useState(true);
+    const [doNotShowChecked, setDoNotShowChecked] = React.useState(false);
+    const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
+
+    function handleNext() {
         if (showFirstIntro) {
             setShowFirstIntro(false);
         } else {
-            localStorage.setItem('tutorial', 'seen');
-            history.push(`/screen/${roomId}/get-ready`);
+            if (doNotShowChecked) {
+                localStorage.setItem('tutorial', 'seen');
+            }
+            history.push(screenGetReadyRoute(roomId));
         }
     }
-    const handleAudioPermissionCallback = React.useCallback(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
-    }, [permission, setPermissionGranted]);
+
+    const classes = useStyles();
 
     React.useEffect(() => {
-        handleAudioPermissionCallback();
-    }, [handleAudioPermissionCallback]);
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        initialPlayLobbyMusic(true);
+    }, []);
 
-    async function handleAudio() {
-        handleAudioPermissionCallback();
-
-        if (playing) {
-            pauseLobbyMusic(permission);
-        } else {
-            playLobbyMusic(permission);
-        }
-    }
     return (
         <GameIntroContainer>
-            <IconButton onClick={handleAudio}>{musicIsPlaying ? <VolumeUp /> : <VolumeOff />}</IconButton>
             <GameIntroBackground>
                 {showFirstIntro ? (
                     <IntroText>
-                        {/* TODO remove and add content */}
+                        {/* TODO remove and add content*/}
                         Animation, die die Geschichte der Monster erklärt mit kurzen Animationen dazu. (entweder
                         Voice-over oder mit Text)
                     </IntroText>
@@ -73,19 +72,36 @@ const GameIntro: React.FunctionComponent = () => {
                         {/* <PreviewImage src={forest} /> */}
 
                         <ImageDescription>
-                            Your goal is to be the first player to arrive at the goal while conquering your obsticles
+                            Your goal is to be the first player to reach safety in the cave while conquering obstacles
                             along the way!
                         </ImageDescription>
                         <ControlInstructionsContainer>
-                            <ControlInstruction>Shake your phone in order to run!</ControlInstruction>
-                            <ControlInstruction>Rub your screen in order to slice the tree trunk!</ControlInstruction>
-                            <ControlInstruction>oher obstacle</ControlInstruction>
+                            <ControlInstruction>Shake your phone to run!</ControlInstruction>
+                            <ControlInstruction>Swipe your screen to slice the tree trunk!</ControlInstruction>
+                            <ControlInstruction>Blow into your phone to scare the spider away!</ControlInstruction>
+                            <ControlInstruction>Move the stones into the hole to run over it!</ControlInstruction>
                         </ControlInstructionsContainer>
                     </div>
                 )}
+
                 <PaddingContainer>
+                    <StyledFormGroup row>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={doNotShowChecked}
+                                    onChange={() => setDoNotShowChecked(!doNotShowChecked)}
+                                    classes={{
+                                        root: classes.root,
+                                        checked: classes.checked,
+                                    }}
+                                />
+                            }
+                            label="Don't show these instructions again"
+                        />
+                    </StyledFormGroup>
                     <BackButtonContainer>
-                        <Button onClick={handleSkip}>Skip</Button>
+                        <Button onClick={handleNext}>Next</Button>
                     </BackButtonContainer>
                 </PaddingContainer>
             </GameIntroBackground>

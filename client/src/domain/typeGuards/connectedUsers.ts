@@ -1,11 +1,14 @@
-import { MessageData } from '../../contexts/ControllerSocketContextProvider';
 import { MessageTypes } from '../../utils/constants';
+import { MessageData } from './MessageData';
 
 export interface IUser {
     id: string;
     name: string;
     roomId: string;
     number: number;
+    characterNumber: number;
+    active: boolean;
+    ready: boolean;
 }
 
 export interface ConnectedUsersMessage {

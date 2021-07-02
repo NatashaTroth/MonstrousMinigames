@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
-import forest from '../../images/forest.svg';
-import { secondary, secondaryShadow } from '../../utils/colors';
+import forest from '../../images/ui/forest.svg';
 
 const boxShadowDepth = 7;
 
@@ -26,21 +25,29 @@ export const Content = styled.div`
     width: 100%;
     height: 100%;
     flex-direction: column;
+    align-items: center;
 `;
 
 export const ContentContainer = styled.div`
     width: 80%;
     height: 80%;
     display: flex;
-    background-color: ${secondary};
+    background-color: ${({ theme }) => theme.palette.secondary.main};
     padding: 20px;
     border-radius: 40px;
     flex-direction: column;
-    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${secondaryShadow};
+    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
+        ${({ theme }) => theme.palette.secondary.dark};
 `;
 
 export const BackButtonContainer = styled.div`
     display: flex;
     width: 100%;
     justify-content: flex-end;
+`;
+
+export const TextContainer = styled.div`
+    padding: 40px;
+    line-height: 24px;
+    letter-spacing: 1px;
 `;

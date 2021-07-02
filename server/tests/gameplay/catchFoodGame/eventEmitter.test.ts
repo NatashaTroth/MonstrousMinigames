@@ -605,7 +605,7 @@ describe('Chaser event', () => {
         afterEachFunction();
     });
 
-    it('should emit a PlayerIsDead event when a chaser catches a player', async () => {
+    it.skip('should emit a PlayerIsDead event when a chaser catches a player', async () => {
         let playerIsDeadEvent = false;
         gameEventEmitter.on(GameEventTypes.PlayerIsDead, () => {
             playerIsDeadEvent = true;
@@ -616,7 +616,7 @@ describe('Chaser event', () => {
         expect(playerIsDeadEvent).toBeTruthy();
     });
 
-    it('should emit a PlayerIsDead data when a chaser catches a player', async () => {
+    it.skip('should emit a PlayerIsDead data when a chaser catches a player', async () => {
         let eventData: GameEvents.PlayerIsDead = {
             roomId: '',
             userId: '',

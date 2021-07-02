@@ -11,11 +11,12 @@ describe('handleUserInitMessage', () => {
         userId: '1',
         roomId: '1',
     };
-
+    /*
     it('when message type is user init, handed setPlayerAdmin should be called', () => {
         const setPlayerAdmin = jest.fn();
         const setPlayerNumber = jest.fn();
         const setName = jest.fn();
+        const setUserId = jest.fn();
 
         handleUserInitMessage({
             data: mockData,
@@ -23,23 +24,25 @@ describe('handleUserInitMessage', () => {
                 setPlayerAdmin,
                 setPlayerNumber,
                 setName,
+                setUserId,
             },
         });
 
         expect(setPlayerAdmin).toHaveBeenCalledTimes(1);
     });
+    */
 
     it('when message type is user init, handed setPlayerNumber should be called', () => {
-        const setPlayerAdmin = jest.fn();
         const setPlayerNumber = jest.fn();
         const setName = jest.fn();
+        const setUserId = jest.fn();
 
         handleUserInitMessage({
             data: mockData,
             dependencies: {
-                setPlayerAdmin,
                 setPlayerNumber,
                 setName,
+                setUserId,
             },
         });
 

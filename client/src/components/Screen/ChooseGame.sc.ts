@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-import { secondary, secondaryShadow } from '../../utils/colors';
-
 const boxShadowDepth = 7;
 
 export const CloseButtonContainer = styled.div`
@@ -62,9 +60,10 @@ export const RightContainer = styled.div`
 export const GamePreviewContainer = styled.div`
     height: 100%;
     padding: 20px;
-    background-color: ${secondary};
+    background-color: ${({ theme }) => theme.palette.secondary.main};
     border-radius: 10px;
-    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${secondaryShadow};
+    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
+        ${({ theme }) => theme.palette.secondary.dark};
 `;
 
 export const SelectGameButtonContainer = styled.div`

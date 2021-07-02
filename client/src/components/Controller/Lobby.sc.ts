@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-import { playerName, readyButton, secondary } from '../../utils/colors';
-
 export const LobbyContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -10,10 +8,6 @@ export const LobbyContainer = styled.div`
     width: 100%;
     padding: 20px;
     justify-content: center;
-
-    .MuiCircularProgress-colorPrimary {
-        color: ${secondary};
-    }
 `;
 
 export const Content = styled.div`
@@ -26,7 +20,7 @@ export const Content = styled.div`
 `;
 
 export const PlayerName = styled.div`
-    color: ${playerName};
+    color: ${({ theme }) => theme.colors.playerName};
     font-size: 45px;
     letter-spacing: 0.1em;
     font-style: italic;
@@ -58,7 +52,7 @@ interface Props {
 }
 
 export const ReadyButton = styled.div<Props>`
-    background-color: ${({ ready }) => (ready ? playerName : readyButton)};
+    background-color: ${({ ready, theme }) => (ready ? theme.colors.playerName : theme.colors.readyButton)};
     color: white;
     font-style: italic;
     text-transform: uppercase;
@@ -76,4 +70,8 @@ export const Arrow = styled.img`
     margin-left: 110px;
     margin-top: 100px;
     position: absolute;
+`;
+
+export const ButtonContainer = styled.div`
+    margin-top: 20px;
 `;

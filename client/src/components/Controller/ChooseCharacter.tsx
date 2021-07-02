@@ -1,29 +1,36 @@
 import 'react-multi-carousel/lib/styles.css';
 
-import { ArrowBackIos, ArrowForwardIos } from '@material-ui/icons';
+import { ArrowBackIos, ArrowForwardIos, Clear } from '@material-ui/icons';
 import * as React from 'react';
 import Carousel from 'react-multi-carousel';
 
+import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import history from '../../domain/history/history';
 import { carouselOptions } from '../../utils/carouselOptions';
 import { characters } from '../../utils/characters';
+import { MessageTypes } from '../../utils/constants';
+import { controllerLobbyRoute } from '../../utils/routes';
 import Button from '../common/Button';
+import IconButton from '../common/IconButton';
 import { Label } from '../common/Label.sc';
 import {
     Character,
     CharacterContainer,
     ChooseButtonContainer,
     ChooseCharacterContainer,
+    ClearContainer,
     Left,
     Right,
 } from './ChooseCharacter.sc';
 
 const ChooseCharacter: React.FunctionComponent = () => {
     const { setCharacter } = React.useContext(PlayerContext);
-    const { roomId } = React.useContext(GameContext);
+    const { roomId, availableCharacters } = React.useContext(GameContext);
     const [actualCharacter, setActualCharacter] = React.useState(0);
+    const { controllerSocket } = React.useContext(ControllerSocketContext);
+    const searchParams = new URLSearchParams(history.location.search);
 
     function handleRightClick() {
         if (actualCharacter === characters.length - 1) {
@@ -43,6 +50,14 @@ const ChooseCharacter: React.FunctionComponent = () => {
 
     return (
         <ChooseCharacterContainer>
+            {searchParams.get('back') && (
+                <ClearContainer>
+                    <IconButton onClick={() => history.goBack()}>
+                        <Clear />
+                    </IconButton>
+                </ClearContainer>
+            )}
+
             <Label>Choose your character:</Label>
             <Carousel
                 {...carouselOptions}
@@ -50,17 +65,27 @@ const ChooseCharacter: React.FunctionComponent = () => {
                 customLeftArrow={<CustomLeftArrow handleOnClick={handleLeftClick} />}
             >
                 {characters.map((character, index) => (
-                    <CharacterContainer key={`character${index}`}>
-                        <Character src={character.src} />
+                    <CharacterContainer key={`character${character}`}>
+                        <Character src={character} available={availableCharacters.includes(index)} />
                     </CharacterContainer>
                 ))}
             </Carousel>
             <ChooseButtonContainer>
                 <Button
                     onClick={() => {
+                        controllerSocket.emit({
+                            type: MessageTypes.selectCharacter,
+                            characterNumber: actualCharacter,
+                        });
                         setCharacter(characters[actualCharacter]);
-                        history.push(`/controller/${roomId}/lobby`);
+
+                        if (searchParams.get('back')) {
+                            history.goBack();
+                        } else {
+                            history.push(controllerLobbyRoute(roomId));
+                        }
                     }}
+                    disabled={!availableCharacters.includes(actualCharacter)}
                 >
                     Choose Character
                 </Button>

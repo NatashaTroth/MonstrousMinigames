@@ -53,3 +53,9 @@ howFarCanRun = 0.12\*timeLeftForRunning
 6 \* 2speed per 100ms
 
 12 \* 100 (to get to 10 sec) = 1200 -> chasers should appear at around 800, to give runners a head start
+
+
+## Refactor Game Class according to:
+https://gameprogrammingpatterns.com/command.html
+https://gameprogrammingpatterns.com/component.html
+https://gameprogrammingpatterns.com

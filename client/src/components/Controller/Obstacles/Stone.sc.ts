@@ -179,3 +179,23 @@ export const PebbleContainer = styled(ObstacleContainer)`
     display: block;
     width: 100%;
 `;
+
+interface Props {
+    characterNumber: number;
+    selected: boolean;
+}
+
+export const PlayerButtonContainer = styled.div<Props>`
+    && {
+        margin-bottom: 20px;
+        background-color: ${({ characterNumber, selected, theme }) =>
+            selected ? theme.palette.secondary.main : theme.colors.characterColors[characterNumber]};
+        color: black;
+        cursor: pointer;
+        padding: 10px;
+        font-weight: 700;
+        font-size: 22px;
+        border-radius: 10px;
+        min-width: 200px;
+    }
+`;

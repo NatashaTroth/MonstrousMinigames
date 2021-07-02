@@ -29,11 +29,12 @@ export enum MessageTypes {
     connectedUsers = 'connectedUsers',
     backToLobby = 'backToLobby',
     screenAdmin = 'screenAdmin',
+    selectCharacter = 'selectCharacter',
+    userReady = 'userReady',
 
     gameHasFinished = 'gameHasFinished',
     gameHasReset = 'gameHasReset',
     gameHasStopped = 'gameHasStopped',
-    gameHasTimedOut = 'gameHasTimedOut',
     gameHasPaused = 'gameHasPaused',
     gameHasResumed = 'gameHasResumed',
 
@@ -46,7 +47,14 @@ export enum MessageTypes {
     obstacle = 'game1/obstacle', //obstacle reached
     playerFinished = 'game1/playerFinished',
     started = 'game1/hasStarted',
+    startPhaserGame = 'game1/startPhaserGame',
     gameState = 'game1/gameState',
+    playerDied = 'game1/playerDied',
+    playerStunned = 'game1/playerStunned',
+
+    startGame = 'game1/start',
 }
 
-export const localDevelopment = false;
+export const localDevelopment = false; //the one in constants.ts on the server
+
+export const localBackend = 'http://localhost:5000/';

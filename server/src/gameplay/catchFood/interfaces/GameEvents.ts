@@ -6,6 +6,9 @@ interface GameEventInterface {
     roomId: string;
 }
 
+export interface StartPhaserGame extends GameEventInterface {
+    roomId: string;
+}
 export interface GameHasStarted extends GameEventInterface {
     roomId: string;
     countdownTime: number;

@@ -1,7 +1,6 @@
 import { VolumeOff, VolumeUp } from '@material-ui/icons';
 import Phaser from 'phaser';
 import * as React from 'react';
-import Countdown from 'react-countdown';
 import { useParams } from 'react-router-dom';
 
 import { IRouteParams } from '../../App';
@@ -10,17 +9,15 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
-import Button from '../common/Button';
-import IconButton from '../common/IconButton';
-import { Container, Go } from './Game.sc';
+import { AudioButton, Container } from './Game.sc';
 import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
     const { roomId, hasPaused } = React.useContext(GameContext);
     const {
         pauseLobbyMusicNoMute,
-        permission,
-        setPermissionGranted,
+        audioPermission,
+        setAudioPermissionGranted,
         musicIsPlaying,
         gameAudioPlaying,
         setGameAudioPlaying,
@@ -35,21 +32,21 @@ const Game: React.FunctionComponent = () => {
     }
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
 
         if (Number(localStorage.getItem('audioVolume')) > 0) {
             setGameAudioPlaying(true);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     React.useEffect(() => {
-        pauseLobbyMusicNoMute(permission);
-    }, [permission]);
-
-    let game: Phaser.Game;
+        pauseLobbyMusicNoMute(audioPermission);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [audioPermission]);
 
     React.useEffect(() => {
-        game = new Phaser.Game({
+        const game = new Phaser.Game({
             parent: 'game-root',
             type: Phaser.AUTO,
             width: '100%',
@@ -61,9 +58,12 @@ const Game: React.FunctionComponent = () => {
                 },
             },
         });
-        game.scene.add('MainScene', MainScene);
+        game.scene.add('MainScene', MainScene, false, { roomId });
         game.scene.start('MainScene', { roomId: roomId });
-    }, []); //roomId -> but being called twice
+
+        // game.world.setBounds(0,0,7500, window.innerHeight)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     async function handleAudio() {
         if (gameAudioPlaying) {
@@ -96,12 +96,10 @@ const Game: React.FunctionComponent = () => {
 
     return (
         <Container>
-            <IconButton onClick={handleAudio}>{musicIsPlaying ? <VolumeUp /> : <VolumeOff />}</IconButton>
-            <Countdown></Countdown>
-            <GameContent displayGo />
-            <div style={myStyle}>
-                <Button onClick={handlePause}>{hasPaused ? 'Resume' : 'Pause'}</Button>
-            </div>
+            <AudioButton onClick={handleAudio} variant="primary">
+                {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
+            </AudioButton>
+            <GameContent />
         </Container>
     );
 };
@@ -112,10 +110,9 @@ interface IGameContentProps {
     displayGo?: boolean;
 }
 
-const GameContent: React.FunctionComponent<IGameContentProps> = ({ displayGo }) => {
+const GameContent: React.FunctionComponent<IGameContentProps> = () => {
     return (
         <div>
-            {displayGo && <Go>Go!</Go>}
             <div id="game-root"></div>
         </div>
     );

@@ -1,11 +1,11 @@
 import { History } from 'history';
 
 import { PlayerRank } from '../../../contexts/ScreenSocketContextProvider';
+import { screenFinishedRoute } from '../../../utils/routes';
 import { GameHasFinishedMessage } from '../../typeGuards/finished';
-import { TimedOutMessage } from '../../typeGuards/timedOut';
 
 interface HandleGameHasFinishedMessage {
-    data: GameHasFinishedMessage | TimedOutMessage;
+    data: GameHasFinishedMessage;
     roomId: string;
     dependencies: {
         setFinished: (val: boolean) => void;
@@ -19,5 +19,5 @@ export function handleGameHasFinishedMessage(props: HandleGameHasFinishedMessage
     const { setFinished, setPlayerRanks, history } = dependencies;
     setFinished(true);
     setPlayerRanks(data.data.playerRanks);
-    history.push(`/screen/${roomId}/finished`);
+    history.push(screenFinishedRoute(roomId));
 }

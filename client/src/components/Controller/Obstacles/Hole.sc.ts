@@ -1,9 +1,9 @@
 import styled, { css } from 'styled-components';
 
-import hole from '../../../images/hole.svg';
-import leaf from '../../../images/leaf.svg';
-import pebble from '../../../images/pebble.svg';
-import { secondary } from '../../../utils/colors';
+import hole from '../../../images/obstacles/hole/hole.svg';
+import leaf from '../../../images/obstacles/hole/leaf.svg';
+import pebble from '../../../images/obstacles/stone/pebble.svg';
+import { SkipButton } from '../../common/SkipButton.sc';
 
 export const Container = styled.div`
     display: flex;
@@ -18,7 +18,7 @@ export const Container = styled.div`
     }
 
     .drop-target {
-        background-color: ${secondary};
+        background-color: ${({ theme }) => theme.palette.secondary.main};
         border-color: #fff;
         border-style: solid;
     }
@@ -90,7 +90,7 @@ function getDraggableLeftPosition(index: number) {
 }
 
 function getDraggableTopPosition(index: number) {
-    const topMargin = 20;
+    const topMargin = 100;
     switch (index) {
         case 0:
         case 1:
@@ -108,3 +108,10 @@ function getDraggableTopPosition(index: number) {
             `;
     }
 }
+
+export const StyledSkipButton = styled(SkipButton)`
+    && {
+        position: absolute;
+        top: 45%;
+    }
+`;

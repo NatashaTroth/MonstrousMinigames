@@ -1,14 +1,19 @@
 import { CircularProgress } from '@material-ui/core';
 import * as React from 'react';
 
+import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
-import arrow from '../../images/arrow_blue.svg';
+import { sendUserReady } from '../../domain/gameState/controller/sendUserReady';
+import history from '../../domain/history/history';
+import arrow from '../../images/ui/arrow_blue.svg';
+import { controllerChooseCharacterRoute } from '../../utils/routes';
+import Button from '../common/Button';
 import FullScreenContainer from '../common/FullScreenContainer';
-import { Instruction, InstructionContainer, InstructionText } from '../common/Instruction.sc';
 import { Label } from '../common/Label.sc';
 import {
     Arrow,
+    ButtonContainer,
     Character,
     CharacterContainer,
     Content,
@@ -20,17 +25,18 @@ import {
 
 export const Lobby: React.FunctionComponent = () => {
     const { playerNumber, name, character, ready, setReady } = React.useContext(PlayerContext);
-    const { gameChosen, tutorial } = React.useContext(GameContext);
+    const { controllerSocket } = React.useContext(ControllerSocketContext);
+    const { gameChosen, tutorial, roomId } = React.useContext(GameContext);
 
     return (
         <FullScreenContainer>
             <LobbyContainer>
                 {playerNumber ? (
                     <Content>
-                        {!gameChosen ? (
+                        {/* {!gameChosen ? (
                             <InstructionContainer variant="light">
                                 <Instruction>
-                                    <InstructionText>Player 1 is now choosing a game!</InstructionText>
+                                    <InstructionText>The admin monitor is now choosing a game!</InstructionText>
                                 </Instruction>
                                 <Instruction>
                                     <InstructionText>Watch on your monitor!</InstructionText>
@@ -49,29 +55,40 @@ export const Lobby: React.FunctionComponent = () => {
                                     </Instruction>
                                 </InstructionContainer>
                             </>
-                        ) : (
-                            <>
-                                <Label>
-                                    {!ready
-                                        ? `Show that you are ready to play!`
-                                        : 'Wait for the admin to start your game!'}
-                                </Label>
-                                <PlayerContent>
-                                    <PlayerName>{name}</PlayerName>
-                                    <CharacterContainer>
-                                        <Character src={character?.src} />
-                                    </CharacterContainer>
-                                    <ReadyButton ready={ready} onClick={() => setReady(true)}>
-                                        <span>I am </span>
-                                        <span>ready!</span>
-                                    </ReadyButton>
-                                    {!ready && <Arrow src={arrow} />}
-                                </PlayerContent>
-                            </>
-                        )}
+                        ) : ( */}
+                        <>
+                            <Label>
+                                {!ready ? `Show that you are ready to play!` : 'Wait for the admin to start your game!'}
+                            </Label>
+                            <PlayerContent>
+                                <PlayerName>{name}</PlayerName>
+                                <CharacterContainer>
+                                    <Character src={character!} />
+                                </CharacterContainer>
+                                <ReadyButton
+                                    ready={ready}
+                                    onClick={() => {
+                                        sendUserReady(controllerSocket);
+                                        setReady(!ready);
+                                    }}
+                                >
+                                    <span>I am </span>
+                                    <span>ready!</span>
+                                </ReadyButton>
+                                {!ready && <Arrow src={arrow} />}
+                            </PlayerContent>
+                            <ButtonContainer>
+                                <Button
+                                    onClick={() => history.push(`${controllerChooseCharacterRoute(roomId)}?back=true`)}
+                                >
+                                    Change Character
+                                </Button>
+                            </ButtonContainer>
+                        </>
+                        {/* )} */}
                     </Content>
                 ) : (
-                    <CircularProgress />
+                    <CircularProgress color="secondary" />
                 )}
             </LobbyContainer>
         </FullScreenContainer>

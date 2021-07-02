@@ -1,9 +1,7 @@
 import { TouchApp } from '@material-ui/icons';
-import Particles from 'react-particles-js';
 import styled, { keyframes } from 'styled-components';
 
 import { SkipButton } from '../../common/SkipButton.sc';
-import { ObstacleContainer } from './ObstaclStyles.sc';
 
 const slide = keyframes`
     0%, 33% { 
@@ -38,6 +36,8 @@ const slide = keyframes`
 
 export const ObstacleItem = styled.div`
     transform: rotate(325deg);
+    display: flex;
+    width: 80%;
 `;
 
 export const StyledObstacleImage = styled.img`
@@ -74,21 +74,17 @@ export const StyledTouchAppIcon = styled(TouchApp)`
     }
 `;
 
-export const StyledParticles = styled(Particles)`
-    position: absolute;
-    width: 100%;
-    height: 100%;
-`;
-
-export const TreeTrunkContainer = styled(ObstacleContainer)`
-    && {
-        justify-content: center;
-    }
-`;
-
 export const StyledSkipButton = styled(SkipButton)`
     && {
         position: absolute;
         bottom: -20px;
     }
+`;
+
+export const ProgressBarContainer = styled.div`
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    height: 20%;
 `;

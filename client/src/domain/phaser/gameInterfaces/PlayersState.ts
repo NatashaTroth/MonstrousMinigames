@@ -1,6 +1,7 @@
 import { ObstacleDetails } from './';
 
 export interface PlayersState {
+    dead: boolean;
     atObstacle: boolean;
     finished: boolean;
     finishedTimeMs: number;
@@ -10,4 +11,6 @@ export interface PlayersState {
     obstacles: ObstacleDetails[];
     positionX: number;
     rank: number;
+    characterNumber: number;
+    stunned: boolean;
 }

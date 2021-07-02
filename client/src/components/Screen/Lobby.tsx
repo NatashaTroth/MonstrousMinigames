@@ -1,4 +1,4 @@
-import { Assignment, Settings, VolumeOff, VolumeUp } from '@material-ui/icons';
+import { Assignment } from '@material-ui/icons';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -6,24 +6,20 @@ import { IRouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
-import franz from '../../images/franz.png';
-import noah from '../../images/noah.png';
-import steffi from '../../images/steffi.png';
-import susi from '../../images/susi.png';
+import { characters } from '../../utils/characters';
 import { localDevelopment } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';
+import { Routes, screenChooseGameRoute } from '../../utils/routes';
 import Button from '../common/Button';
-import IconButton from '../common/IconButton';
 import {
     Character,
     CharacterContainer,
     ConnectedUserCharacter,
     ConnectedUserContainer,
-    ConnectedUserName,
     ConnectedUsers,
+    ConnectedUserStatus,
     Content,
     ContentContainer,
     CopyToClipboard,
@@ -39,17 +35,15 @@ import LobbyHeader from './LobbyHeader';
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
     const {
-        playLobbyMusic,
-        pauseLobbyMusic,
-        permission,
-        playing,
-        setPermissionGranted,
-        musicIsPlaying,
+        audioPermission,
+
+        setAudioPermissionGranted,
+
+        initialPlayLobbyMusic,
     } = React.useContext(AudioContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: IRouteParams = useParams();
     const navigator = window.navigator;
-    const characters = [franz, noah, susi, steffi];
 
     if (id && !screenSocket) {
         handleSocketConnection(id, 'lobby');
@@ -71,22 +65,13 @@ export const Lobby: React.FunctionComponent = () => {
     }, [roomId]);
 
     React.useEffect(() => {
-        handleAudioPermission(permission, { setPermissionGranted });
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        initialPlayLobbyMusic(true);
     }, []);
 
     return (
         <LobbyContainer>
             <Content>
-                <IconButton onClick={() => history.push('/settings')} right={80}>
-                    <Settings />
-                </IconButton>
-                <IconButton
-                    onClick={() =>
-                        handleAudio({ playing, permission, pauseLobbyMusic, playLobbyMusic, setPermissionGranted })
-                    }
-                >
-                    {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
-                </IconButton>
                 <LobbyHeader />
                 <ContentContainer>
                     <LeftContainer>
@@ -94,17 +79,18 @@ export const Lobby: React.FunctionComponent = () => {
                             {getUserArray(connectedUsers || []).map((user, index) => (
                                 <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>
                                     <ConnectedUserCharacter number={user.number} free={user.free}>
-                                        {!user.free && (
-                                            <CharacterContainer>
-                                                <Character src={characters[index]} />
-                                            </CharacterContainer>
-                                        )}
+                                        <CharacterContainer>
+                                            {!user.free && user.characterNumber !== -1 && (
+                                                <Character src={characters[Number(user.characterNumber)]} />
+                                            )}
+                                        </CharacterContainer>
 
-                                        {`Player ${user.number}`}
+                                        {user.free ? `Player ${user.number}` : user.name}
                                     </ConnectedUserCharacter>
-                                    <ConnectedUserName number={user.number} free={user.free}>
-                                        {user.name.toUpperCase()}
-                                    </ConnectedUserName>
+                                    <ConnectedUserStatus number={user.number} free={user.free}>
+                                        {!user.free && (user.ready ? 'Ready' : 'Not Ready')}
+                                        {user.free && user.name}
+                                    </ConnectedUserStatus>
                                 </ConnectedUserContainer>
                             ))}
                         </ConnectedUsers>
@@ -119,23 +105,29 @@ export const Lobby: React.FunctionComponent = () => {
                             </CopyToClipboard>
                         </QRCode>
                         <RightButtonContainer>
-                            {screenAdmin && (
-                                <Button
-                                    onClick={() => {
-                                        handleAudioPermission(permission, { setPermissionGranted });
-                                        history.push(`/screen/${roomId}/choose-game`);
-                                    }}
-                                    disabled={!connectedUsers || connectedUsers?.length === 0}
-                                    variant="secondary"
-                                >
-                                    Choose Game
-                                </Button>
-                            )}
+                            <Button
+                                onClick={() => {
+                                    handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+                                    history.push(screenChooseGameRoute(roomId));
+                                }}
+                                disabled={!screenAdmin || !connectedUsers || connectedUsers?.length === 0}
+                                variant="secondary"
+                                title={
+                                    screenAdmin
+                                        ? !connectedUsers || connectedUsers?.length === 0
+                                            ? 'Wait for users to join'
+                                            : ''
+                                        : 'Please select the game on the admin screen'
+                                }
+                            >
+                                Choose Game
+                            </Button>
+
                             <Button disabled>Leaderboard</Button>
                             <Button
                                 onClick={() => {
-                                    handleAudioPermission(permission, { setPermissionGranted });
-                                    history.push('/screen');
+                                    handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+                                    history.push(Routes.screen);
                                 }}
                             >
                                 Back
@@ -154,6 +146,8 @@ interface ConnectedUsers {
     roomId?: string;
     number: number;
     free?: boolean;
+    characterNumber?: null | number;
+    ready?: boolean;
 }
 
 export function getUserArray(connectedUsers: ConnectedUsers[]): ConnectedUsers[] {
@@ -166,7 +160,7 @@ export function getUserArray(connectedUsers: ConnectedUsers[]): ConnectedUsers[]
     while (users.length < 4) {
         users.push({
             number: users.length + 1,
-            name: 'Let`s join',
+            name: `Let's join`,
             free: true,
         });
     }

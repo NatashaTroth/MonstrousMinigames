@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import camp from './images/background.png';
+import camp from './images/ui/background.png';
 
 export const AppContainer = styled.div`
     text-align: center;

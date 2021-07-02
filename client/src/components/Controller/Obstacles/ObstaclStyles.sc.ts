@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
-import forest from '../../../images/forest_mobile.svg';
+import forest from '../../../images/ui/forest_mobile.svg';
 
 export const swing = keyframes`
     0% {
@@ -69,6 +69,7 @@ export const ObstacleContent = styled.div`
     justify-content: center;
     align-items: center;
     z-index: 2;
+    height: 60%;
 
     .swing {
         animation-duration: 3s;

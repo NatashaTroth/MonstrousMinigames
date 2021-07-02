@@ -5,6 +5,7 @@ import { handlePlayerFinishedMessage } from './handlePlayerFinishedMessage';
 describe('playerHasFinished function', () => {
     let setPlayerFinished: jest.Mock<any, any>;
     let setPlayerRank: jest.Mock<any, any>;
+    const roomId = 'ABCDE';
 
     const mockData: PlayerFinishedMessage = {
         type: MessageTypes.playerFinished,
@@ -21,6 +22,7 @@ describe('playerHasFinished function', () => {
         const playerFinished = false;
         handlePlayerFinishedMessage({
             data: mockData,
+            roomId,
             playerFinished,
             dependencies: { setPlayerFinished, setPlayerRank },
         });
@@ -32,6 +34,7 @@ describe('playerHasFinished function', () => {
         const playerFinished = false;
         handlePlayerFinishedMessage({
             data: mockData,
+            roomId,
             playerFinished,
             dependencies: { setPlayerFinished, setPlayerRank },
         });
@@ -43,6 +46,7 @@ describe('playerHasFinished function', () => {
         const playerFinished = true;
         handlePlayerFinishedMessage({
             data: mockData,
+            roomId,
             playerFinished,
             dependencies: { setPlayerFinished, setPlayerRank },
         });
@@ -54,6 +58,7 @@ describe('playerHasFinished function', () => {
         const playerFinished = true;
         handlePlayerFinishedMessage({
             data: mockData,
+            roomId,
             playerFinished,
             dependencies: { setPlayerFinished, setPlayerRank },
         });

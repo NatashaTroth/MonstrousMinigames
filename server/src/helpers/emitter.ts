@@ -12,8 +12,8 @@ function sendUserInit(socket: any, number: number): void {
         userId: socket.user.id,
         roomId: socket.room.id,
         name: socket.user.name,
-        isAdmin: socket.room.isAdmin(socket.user),
         number: number,
+        characterNumber: socket.user.characterNumber,
     });
 }
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
@@ -35,6 +35,13 @@ function sendErrorMessage(socket: Socket, e: Error): void {
         type: MessageTypes.ERROR,
         name: e.name,
         msg: e.message,
+    });
+}
+function sendStartPhaserGame(nsps: Array<Namespace>, room: Room): void {
+    nsps.forEach(function (namespace: Namespace) {
+        namespace.to(room.id).emit('message', {
+            type: CatchFoodMsgType.START_PHASER_GAME,
+        });
     });
 }
 function sendGameHasStarted(nsps: Array<Namespace>, data: GameEvents.GameHasStarted): void {
@@ -85,9 +92,36 @@ function sendScreenAdmin(nsp: Namespace, socketId: string): void {
     });
 }
 
-function sendMessage(type: MessageTypes, nsps: Array<Namespace>, roomId: string): void {
+function sendPlayerDied(nsp: Namespace, socketId: string, rank: number): void {
+    nsp.to(socketId).emit('message', {
+        type: CatchFoodMsgType.PLAYER_DIED,
+        rank: rank,
+    });
+}
+
+function sendPlayerStunned(nsp: Namespace, socketId: string): void {
+    nsp.to(socketId).emit('message', {
+        type: CatchFoodMsgType.PLAYER_STUNNED,
+    });
+}
+
+function sendPlayerHasDisconnected(nsp: Namespace, userId: string): void {
+    nsp.emit('message', {
+        type: MessageTypes.PLAYER_HAS_DISCONNECTED,
+        userId: userId,
+    });
+}
+
+function sendPlayerHasReconnected(nsp: Namespace, userId: string): void {
+    nsp.emit('message', {
+        type: MessageTypes.PLAYER_HAS_RECONNECTED,
+        userId: userId,
+    });
+}
+
+function sendMessage(type: MessageTypes | CatchFoodMsgType, nsps: Array<Namespace>, recipient: string): void {
     nsps.forEach(function (namespace: Namespace) {
-        namespace.to(roomId).emit('message', {
+        namespace.to(recipient).emit('message', {
             type: type,
         });
     });
@@ -97,6 +131,7 @@ export default {
     sendUserInit,
     sendGameState,
     sendErrorMessage,
+    sendStartPhaserGame,
     sendGameHasStarted,
     sendPlayerFinished,
     sendGameHasFinished,
@@ -104,4 +139,8 @@ export default {
     sendConnectedUsers,
     sendMessage,
     sendScreenAdmin,
+    sendPlayerDied,
+    sendPlayerStunned,
+    sendPlayerHasDisconnected,
+    sendPlayerHasReconnected,
 };

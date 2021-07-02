@@ -35,6 +35,7 @@ export interface PlayerRank {
     totalTimeInMs?: number;
     positionX: number;
     isActive: boolean;
+    dead: boolean;
 }
 
 export interface PlayerState {
@@ -63,6 +64,7 @@ export interface IUser {
     name: string;
     roomId: string;
     number: number;
+    ready: boolean;
 }
 
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
@@ -74,7 +76,6 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setRoomId,
         setConnectedUsers,
         setCountdownTime,
-        setHasTimedOut,
         setHasPaused,
         setFinished,
         setPlayerRanks,
@@ -93,7 +94,6 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     setHasPaused,
                     setGameStarted,
                     setCountdownTime,
-                    setHasTimedOut,
                     setFinished,
                     setPlayerRanks,
                     setScreenAdmin,
@@ -110,7 +110,6 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 setHasPaused,
                 setGameStarted,
                 setCountdownTime,
-                setHasTimedOut,
                 setFinished,
                 setPlayerRanks,
                 setScreenAdmin,

@@ -8,15 +8,16 @@ class User {
     public timestamp: number;
     public active: boolean;
     public number: number;
-    public characterNumber: number; //TODO robin
+    public characterNumber: number;
+    public ready: boolean;
 
     constructor(
         roomId: string,
         socketId: string,
         name: string,
-        characterNumber = 1,
+        characterNumber = -1,
         id: string = shortid.generate(),
-        number = 0
+        number = 0,
     ) {
         this.id = id;
         this.roomId = roomId;
@@ -26,6 +27,7 @@ class User {
         this.active = true;
         this.number = number;
         this.characterNumber = characterNumber;
+        this.ready = false;
     }
 
     public setRoomId(id: string): void {
@@ -48,12 +50,20 @@ class User {
         this.active = active;
     }
 
-    public setNumber(number: number) {
+    public setNumber(number: number): void {
         this.number = number;
     }
 
-    public setCharacterNumber(number: number) {
+    public setCharacterNumber(number: number): void {
         this.characterNumber = number;
+    }
+
+    public setReady(ready: boolean): void {
+        this.ready = ready;
+    }
+
+    public isReady(): boolean {
+        return this.ready;
     }
 
     public clear() {

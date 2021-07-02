@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
-import { secondary } from '../../utils/colors';
+import { StyledButtonBase } from '../common/Button.sc';
 
 const fadeOut = keyframes`
     0% {
@@ -24,11 +24,20 @@ export const Container = styled.div`
 export const Go = styled.p`
     font-size: 200px;
     font-weight: 900;
-    color: ${secondary};
+    color: ${({ theme }) => theme.palette.secondary.main};
     -webkit-animation: fadeInOut 6s;
     animation: ${fadeOut} 2s;
-    opacity: 0;
+    // opacity: 0;
     position: absolute;
     left: calc(50% - 140px);
     top: 18%;
+`;
+
+export const AudioButton = styled(StyledButtonBase)`
+    && {
+        border-radius: 10px;
+        position: absolute;
+        right: 20px;
+        top: 10px;
+    }
 `;
