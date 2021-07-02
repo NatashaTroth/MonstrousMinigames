@@ -232,7 +232,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
                 //TODO extract setting timeouts
                 playerState.stunnedTimeout = setTimeout(() => {
-                    this.unStunPlayer(playerState.id);
+                    this.unstunPlayer(playerState.id);
                 }, this.stunnedTime - stunnedTimeAlreadyPassed);
             }
         }
@@ -421,7 +421,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.playersState[userIdStunned].stunned = true;
         this.playersState[userIdStunned].timeWhenStunned = Date.now();
         this.playersState[userIdStunned].stunnedTimeout = setTimeout(() => {
-            this.unStunPlayer(userIdStunned);
+            this.unstunPlayer(userIdStunned);
         }, this.stunnedTime);
 
         CatchFoodGameEventEmitter.emitPlayerIsStunned({
@@ -430,9 +430,15 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         });
     }
 
-    private unStunPlayer(userId: string) {
+    //TODO test
+    private unstunPlayer(userId: string) {
         this.playersState[userId].stunned = false;
         this.playersState[userId].stunnedTimeout = undefined;
+
+        CatchFoodGameEventEmitter.emitPlayerIsUnstunned({
+            roomId: this.roomId,
+            userId: userId,
+        });
     }
 
     playerHasCompletedObstacle(userId: string, obstacleId: number): void {
