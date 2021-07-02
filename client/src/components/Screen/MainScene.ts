@@ -23,7 +23,9 @@ import { GameHasStartedMessage, startedTypeGuard } from '../../domain/typeGuards
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../domain/typeGuards/stopped';
 import { MessageTypes } from '../../utils/constants';
 import { screenFinishedRoute } from '../../utils/routes';
-import { audioFiles, characters, flaresJson, flaresPng, images } from './GameAssets';
+import {
+    audioFiles, characters, fireworkFlares, flaresJson, flaresPng, images
+} from './GameAssets';
 
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;
@@ -78,7 +80,11 @@ class MainScene extends Phaser.Scene {
             this.load.image(image.name, image.file);
         });
 
-        this.load.atlas('flares', flaresPng, flaresJson);
+        fireworkFlares.forEach((flare, i) => {
+            this.load.image(`flare${i}`, flare);
+        });
+
+        // this.load.atlas('flares', flaresPng, flaresJson);
 
         //TODO Loading bar: https://www.patchesoft.com/phaser-3-loading-screen
         // this.load.on('progress', this.updateBar);
