@@ -1,14 +1,17 @@
 import * as React from 'react';
 
 import { GameContext } from '../../contexts/GameContextProvider';
+import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { handlePlayerGetsStone } from '../../domain/gameState/controller/handlePlayerGetsStone';
-import mosquito from '../../images/mosquito.svg';
+import { characterDictionary } from '../../utils/characterDictionary';
+import { charactersGhosts } from '../../utils/characters';
 import FullScreenContainer from '../common/FullScreenContainer';
-import { PlayerDeadContainer, StyledMosquito } from './PlayerDead.sc';
+import { PlayerDeadContainer, StyledCharacter, TextWrapper } from './PlayerDead.sc';
 
 const PlayerDead: React.FC = () => {
     const { roomId } = React.useContext(GameContext);
     const [counter, setCounter] = React.useState(30);
+    const { character } = React.useContext(PlayerContext);
 
     React.useEffect(() => {
         if (counter > 0) {
@@ -23,9 +26,11 @@ const PlayerDead: React.FC = () => {
     return (
         <FullScreenContainer>
             <PlayerDeadContainer>
-                <StyledMosquito src={mosquito} />
-                Oh no! Unfortunately the mosquitos got you.
-                <div>You will receive a stone in {counter} seconds</div>
+                {character && <StyledCharacter src={charactersGhosts[characterDictionary[character]]} />}
+                <TextWrapper>
+                    Oh no! Unfortunately the mosquitos got you.
+                    <div>You will receive a stone in {counter} seconds</div>
+                </TextWrapper>
             </PlayerDeadContainer>
         </FullScreenContainer>
     );
