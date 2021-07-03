@@ -46,6 +46,7 @@ export class Player {
         this.setObstacles();
         this.setGoal(gameStateData.trackLength);
         // this.renderer.renderFireworks(500, 100);
+        // this.renderer.renderFireworks(this.coordinates.x + 500, this.coordinates.y - window.innerHeight / 8 + 50);
     }
 
     moveForward(x: number, trackLength: number) {
@@ -122,7 +123,7 @@ export class Player {
 
     private renderPlayer() {
         // eslint-disable-next-line no-console
-        console.log(this.username)
+        // console.log(this.username);
         this.renderer.renderPlayer(this.coordinates, this.monsterName, this.animationName, this.username);
 
         // TODO render player name
@@ -143,21 +144,21 @@ export class Player {
 
             switch (obstacle.type) {
                 case Obstacles.treeStump:
-                    obstaclePosY = this.coordinates.y + window.innerHeight/9;
+                    obstaclePosY = this.coordinates.y + window.innerHeight / 9;
                     obstacleScale = 0.4;
                     break;
                 case Obstacles.spider:
-                    obstaclePosY = this.coordinates.y + window.innerHeight/11;
+                    obstaclePosY = this.coordinates.y + window.innerHeight / 11;
                     obstacleScale = 0.2;
                     break;
                 case Obstacles.hole:
-                    obstaclePosY = this.coordinates.y + window.innerHeight/8;
+                    obstaclePosY = this.coordinates.y + window.innerHeight / 8;
                     obstacleScale = 0.1;
                     posX += 40;
 
                     break;
                 case Obstacles.stone:
-                    obstaclePosY = this.coordinates.y + window.innerHeight/8;
+                    obstaclePosY = this.coordinates.y + window.innerHeight / 8;
                     obstacleScale = 0.2;
                     break;
             }

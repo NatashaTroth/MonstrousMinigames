@@ -1,5 +1,6 @@
 import { History } from 'history';
 import * as React from 'react';
+import Frame from 'react-frame-component';
 
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
@@ -7,7 +8,6 @@ import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { sendMovement } from '../../domain/gameState/controller/sendMovement';
 import Button from '../common/Button';
 import { ConnectScreenContainer, FormContainer, inputStyles, LabelStyles, wrapperStyles } from './ConnectScreen.sc';
-import FunctionalIFrameComponent from './FunctionalIFrameComponent';
 
 interface IFormState {
     name: string;
@@ -69,77 +69,40 @@ export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history 
                     handleSocketConnection(formState.roomId.toUpperCase(), formState?.name);
                 }}
             >
-                {roomId ? (
-                    <FunctionalIFrameComponent title="functional-iframe">
-                        <div
-                            style={{
-                                ...wrapperStyles,
-                            }}
-                        >
-                            <label style={{ ...LabelStyles }}>Enter your name:</label>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formState?.name}
-                                onChange={e => setFormState({ ...formState, name: e.target.value })}
-                                placeholder="James P."
-                                required
-                                maxLength={10}
-                                style={{ ...inputStyles }}
-                            />
-                            {!roomId && (
-                                <>
-                                    <label style={{ ...LabelStyles }}>Enter the roomCode:</label>
-                                    <input
-                                        type="text"
-                                        name="roomId"
-                                        value={formState?.roomId}
-                                        onChange={e => setFormState({ ...formState, roomId: e.target.value })}
-                                        placeholder="ABCD"
-                                        required
-                                        maxLength={4}
-                                        style={{ ...inputStyles }}
-                                    />
-                                </>
-                            )}
-                        </div>
-                    </FunctionalIFrameComponent>
-                ) : (
-                    <FunctionalIFrameComponent title="functional-iframe">
-                        <div
-                            style={{
-                                ...wrapperStyles,
-                            }}
-                        >
-                            <label style={{ ...LabelStyles }}>Enter your name:</label>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formState?.name}
-                                onChange={e => setFormState({ ...formState, name: e.target.value })}
-                                placeholder="James P."
-                                required
-                                maxLength={10}
-                                style={{ ...inputStyles }}
-                            />
-                            {!roomId && (
-                                <>
-                                    <label style={{ ...LabelStyles }}>Enter the roomCode:</label>
-                                    <input
-                                        type="text"
-                                        name="roomId"
-                                        value={formState?.roomId}
-                                        onChange={e => setFormState({ ...formState, roomId: e.target.value })}
-                                        placeholder="ABCD"
-                                        required
-                                        maxLength={4}
-                                        style={{ ...inputStyles }}
-                                    />
-                                </>
-                            )}
-                        </div>
-                    </FunctionalIFrameComponent>
-                )}
+                <Frame>
+                    <div
+                        style={{
+                            ...wrapperStyles,
+                        }}
+                    >
+                        <label style={{ ...LabelStyles }}>Enter your name:</label>
+                        <input
+                            type="text"
+                            name="name"
+                            value={formState?.name}
+                            onChange={e => setFormState({ ...formState, name: e.target.value })}
+                            placeholder="James P."
+                            required
+                            maxLength={10}
+                            style={{ ...inputStyles }}
+                        />
+                        {!roomId && (
+                            <>
+                                <label style={{ ...LabelStyles }}>Enter the roomCode:</label>
+                                <input
+                                    type="text"
+                                    name="roomId"
+                                    value={formState?.roomId}
+                                    onChange={e => setFormState({ ...formState, roomId: e.target.value })}
+                                    placeholder="ABCD"
+                                    required
+                                    maxLength={4}
+                                    style={{ ...inputStyles }}
+                                />
+                            </>
+                        )}
+                    </div>
+                </Frame>
 
                 <Button type="submit" disabled={!formState?.name}>
                     Enter

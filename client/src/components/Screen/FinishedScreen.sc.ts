@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import forest from '../../images/ui/forest.svg';
-import { progressBarGreen } from '../../utils/colors';
 import { Label } from '../common/Label.sc';
 
 export const RankTable = styled.div`
@@ -32,28 +31,6 @@ export const LeaderBoardRow = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
-`;
-
-interface IPlayerDifferenceProps {
-    winner: boolean;
-}
-
-export const PlayerDifference = styled.div<IPlayerDifferenceProps>`
-    border: 5px solid ${({ winner }) => (winner ? progressBarGreen : 'red')};
-    color: ${({ winner }) => (winner ? progressBarGreen : 'red')};
-    background: white;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
-    font-weight: 700;
-    display: flex;
-    width: 28%;
-    font-size: 25px;
-    flex-direction: column;
-    text-align: center;
-    box-shadow: 8px 8px 0 #888;
-    border-radius: 4px;
-    padding: 5px;
-    text-align: right;
 `;
 
 export const PlayerTime = styled.div`

@@ -9,6 +9,7 @@ class User {
     public active: boolean;
     public number: number;
     public characterNumber: number;
+    public ready: boolean;
 
     constructor(
         roomId: string,
@@ -26,6 +27,7 @@ class User {
         this.active = true;
         this.number = number;
         this.characterNumber = characterNumber;
+        this.ready = false;
     }
 
     public setRoomId(id: string): void {
@@ -48,12 +50,20 @@ class User {
         this.active = active;
     }
 
-    public setNumber(number: number) {
+    public setNumber(number: number): void {
         this.number = number;
     }
 
-    public setCharacterNumber(number: number) {
+    public setCharacterNumber(number: number): void {
         this.characterNumber = number;
+    }
+
+    public setReady(ready: boolean): void {
+        this.ready = ready;
+    }
+
+    public isReady(): boolean {
+        return this.ready;
     }
 
     public clear() {

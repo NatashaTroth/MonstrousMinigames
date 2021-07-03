@@ -1,9 +1,9 @@
 import { GameState } from '../../enums';
-import { PlayerState } from './';
+import { PlayerStateForClient } from './';
 
 export interface GameStateInfo {
     roomId: string;
-    playersState: Array<PlayerState>;
+    playersState: Array<PlayerStateForClient>;
     gameState: GameState;
     trackLength: number;
     numberOfObstacles: number;

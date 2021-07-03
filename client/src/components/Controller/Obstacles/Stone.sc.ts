@@ -181,14 +181,15 @@ export const PebbleContainer = styled(ObstacleContainer)`
 `;
 
 interface Props {
-    bgColor: string;
+    characterNumber: number;
     selected: boolean;
 }
 
 export const PlayerButtonContainer = styled.div<Props>`
     && {
         margin-bottom: 20px;
-        background-color: ${({ bgColor, selected, theme }) => (selected ? theme.palette.secondary.main : bgColor)};
+        background-color: ${({ characterNumber, selected, theme }) =>
+            selected ? theme.palette.secondary.main : theme.colors.characterColors[characterNumber]};
         color: black;
         cursor: pointer;
         padding: 10px;

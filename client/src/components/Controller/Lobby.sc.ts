@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-import { playerName, readyButton } from '../../utils/colors';
-
 export const LobbyContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -22,7 +20,7 @@ export const Content = styled.div`
 `;
 
 export const PlayerName = styled.div`
-    color: ${playerName};
+    color: ${({ theme }) => theme.colors.playerName};
     font-size: 45px;
     letter-spacing: 0.1em;
     font-style: italic;
@@ -54,8 +52,8 @@ interface Props {
 }
 
 export const ReadyButton = styled.div<Props>`
-    background-color: ${({ ready }) => (ready ? playerName : readyButton)};
-    color: white;
+    background-color: ${({ ready, theme }) => (ready ? theme.colors.playerName : theme.colors.readyButton)};
+    color: ${({ ready }) => (ready ? 'black' : 'white')};
     font-style: italic;
     text-transform: uppercase;
     font-size: 26px;

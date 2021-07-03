@@ -1,6 +1,5 @@
 import Grid from '@material-ui/core/Grid';
 import Slider from '@material-ui/core/Slider';
-import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { VolumeOff } from '@material-ui/icons';
 import VolumeDown from '@material-ui/icons/VolumeDown';
@@ -23,14 +22,7 @@ import {
     VolumeContainer,
 } from './Settings.sc';
 
-const useStyles = makeStyles({
-    root: {
-        width: 200,
-    },
-});
-
 const Settings: React.FunctionComponent = () => {
-    const classes = useStyles();
     const {
         setAudioVolume,
         volume,
@@ -42,16 +34,11 @@ const Settings: React.FunctionComponent = () => {
         musicIsPlaying,
         initialPlayLobbyMusic,
     } = React.useContext(AudioContext);
-    const [value, setValue] = React.useState(volume);
 
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
         initialPlayLobbyMusic(true);
     }, []);
-
-    React.useEffect(() => {
-        setValue(volume);
-    }, [volume]);
 
     //TODO natasha
     // React.useEffect(() => {
@@ -75,7 +62,6 @@ const Settings: React.FunctionComponent = () => {
         }
 
         setAudioVolume(newValue);
-        setValue(newValue);
     };
 
     const volumeHasBeenUnmuted = (newValue: number) => {

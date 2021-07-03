@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 import MainScene from '../../../components/Screen/MainScene';
+import { depthDictionary } from '../../../utils/depthDictionary';
 import { GameRenderer } from './GameRenderer';
 
 /**
@@ -27,8 +28,7 @@ export class PhaserGameRenderer implements GameRenderer {
                 );
                 bg.setDisplaySize(windowWidth / 4, windowHeight / 4);
                 bg.setOrigin(0, 1);
-                bg.setScrollFactor(1)
-
+                bg.setScrollFactor(1);
 
                 /*
                 const sky = this.scene.add.image(
@@ -41,7 +41,6 @@ export class PhaserGameRenderer implements GameRenderer {
                     (i * windowWidth) / 4,
                     (j * windowHeight) / 4 + windowHeight / 4,
                     'mountains'
-
                 );
                 const hills = this.scene.add.image(
                     (i * windowWidth) / 4,
@@ -68,10 +67,10 @@ export class PhaserGameRenderer implements GameRenderer {
                 floor.setDisplaySize(windowWidth / 4, windowHeight / 4);
 
                 sky.setOrigin(0, 1);
-                mountains.setOrigin(0,1)
-                hills.setOrigin(0,1)
-                trees.setOrigin(0,1)
-                floor.setOrigin(0,1)
+                mountains.setOrigin(0, 1);
+                hills.setOrigin(0, 1);
+                trees.setOrigin(0, 1);
+                floor.setOrigin(0, 1);
 
                 sky.setScrollFactor(0);
                 mountains.setScrollFactor(0.25)
@@ -126,6 +125,7 @@ export class PhaserGameRenderer implements GameRenderer {
                 add: true,
             });
             this.countdownText.scrollFactorX = 0;
+            this.countdownText.setDepth(depthDictionary.countdown);
         }
     }
 

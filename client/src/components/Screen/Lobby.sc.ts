@@ -2,7 +2,6 @@ import { Button, Typography } from '@material-ui/core';
 import styled from 'styled-components';
 
 import forest from '../../images/ui/forest.svg';
-import { QRCodeBackground } from '../../utils/colors';
 
 export const LobbyContainer = styled.div`
     background-image: url(${forest});
@@ -57,10 +56,11 @@ const User = styled.div<Props>`
     font-size: 20px;
 `;
 
-export const ConnectedUserName = styled(User)`
+export const ConnectedUserStatus = styled(User)`
     max-width: 200px;
     display: flex;
     flex-direction: column;
+    background-color: ${({ free }) => (free ? '#a7bdb18a' : '${primary}')};
 
     @media (min-width: 1200px) {
         font-size: 25px;
@@ -74,6 +74,7 @@ export const ConnectedUserCharacter = styled(User)`
     flex-direction: column;
     margin-bottom: 20px;
     justify-content: ${({ free }) => (free ? 'flex-end' : 'center')};
+    background-color: ${({ free }) => (free ? '#a7bdb18a' : '${primary}')};
 
     @media (min-width: 875px) {
         justify-content: ${({ free }) => (free ? 'flex-end' : 'space-between')};
@@ -149,7 +150,7 @@ export const LeftContainer = styled.div`
 
 export const QRCode = styled.div`
     border-radius: 10px;
-    background-color: ${QRCodeBackground};
+    background-color: ${({ theme }) => theme.colors.qRCodeBackground};
     display: flex;
     flex-direction: column;
     padding: 10px;

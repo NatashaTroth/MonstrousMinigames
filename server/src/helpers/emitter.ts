@@ -105,6 +105,12 @@ function sendPlayerStunned(nsp: Namespace, socketId: string): void {
     });
 }
 
+function sendPlayerUnstunned(nsp: Namespace, socketId: string): void {
+    nsp.to(socketId).emit('message', {
+        type: CatchFoodMsgType.PLAYER_UNSTUNNED,
+    });
+}
+
 function sendPlayerHasDisconnected(nsp: Namespace, userId: string): void {
     nsp.emit('message', {
         type: MessageTypes.PLAYER_HAS_DISCONNECTED,
@@ -141,6 +147,7 @@ export default {
     sendScreenAdmin,
     sendPlayerDied,
     sendPlayerStunned,
+    sendPlayerUnstunned,
     sendPlayerHasDisconnected,
     sendPlayerHasReconnected,
 };

@@ -156,6 +156,23 @@ class ConnectionHandler {
                         }
                         break;
                     }
+                    case MessageTypes.USER_READY:
+                        {
+                            if (socket.room.isOpen() && socket.user) {
+                                // toggle ready state
+                                const ready = socket.user.isReady();
+                                socket.user.setReady(!ready);
+                                console.info(
+                                    socket.room.id +
+                                        ' | userId: ' +
+                                        socket.user.id +
+                                        ' | Ready: ' +
+                                        socket.user.isReady()
+                                );
+                                emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
+                            }
+                        }
+                        break;
                     default: {
                         console.info(message);
                     }
@@ -354,11 +371,17 @@ class ConnectionHandler {
             const user = room.getUserById(data.userId);
             emitter.sendPlayerDied(controllerNamespace, user.socketId, data.rank);
         });
-        this.gameEventEmitter.on(GameEventTypes.PlayerIsStunned, (data: GameEvents.PlayerIsStunned) => {
-            this.consoleInfo(data.roomId, GameEventTypes.GameHasResumed);
+        this.gameEventEmitter.on(GameEventTypes.PlayerIsStunned, (data: GameEvents.PlayerStunnedState) => {
+            // this.consoleInfo(data.roomId, GameEventTypes.GameHasResumed);
             const room = rs.getRoomById(data.roomId);
             const user = room.getUserById(data.userId);
             emitter.sendPlayerStunned(controllerNamespace, user.socketId);
+        });
+        this.gameEventEmitter.on(GameEventTypes.PlayerIsUnstunned, (data: GameEvents.PlayerStunnedState) => {
+            // this.consoleInfo(data.roomId, GameEventTypes.GameHasResumed);
+            const room = rs.getRoomById(data.roomId);
+            const user = room.getUserById(data.userId);
+            emitter.sendPlayerUnstunned(controllerNamespace, user.socketId);
         });
         this.gameEventEmitter.on(GameEventTypes.PlayerHasDisconnected, (data: GameEvents.PlayerHasDisconnectedInfo) => {
             this.consoleInfo(data.roomId, GameEventTypes.PlayerHasDisconnected);

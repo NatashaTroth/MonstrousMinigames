@@ -56,10 +56,11 @@ const User = styled.div<Props>`
     font-size: 20px;
 `;
 
-export const ConnectedUserName = styled(User)`
+export const ConnectedUserStatus = styled(User)`
     max-width: 200px;
     display: flex;
     flex-direction: column;
+    background-color: ${({ free }) => (free ? '#8c9d99' : '${primary}')};
 
     @media (min-width: 1200px) {
         font-size: 25px;
@@ -73,6 +74,7 @@ export const ConnectedUserCharacter = styled(User)`
     flex-direction: column;
     margin-bottom: 20px;
     justify-content: ${({ free }) => (free ? 'flex-end' : 'center')};
+    background-color: ${({ free }) => (free ? '#8c9d99' : '${primary}')};
 
     @media (min-width: 875px) {
         justify-content: ${({ free }) => (free ? 'flex-end' : 'space-between')};

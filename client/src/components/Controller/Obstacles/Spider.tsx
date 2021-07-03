@@ -5,6 +5,7 @@ import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import Button from '../../common/Button';
 import { currentCount, getAudioInput, resetCurrentCount } from './getAudioInput';
+import LinearProgressBar from './LinearProgressBar';
 import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
 import { StyledNet, StyledSkipButton, StyledSpider } from './Spider.sc';
 
@@ -35,15 +36,29 @@ const Spider: React.FunctionComponent = () => {
     };
 
     React.useEffect(() => {
+        let mounted = true;
         resetCurrentCount();
         initializeSkip();
 
-        getAudioInput(MAX, { solveObstacle, setProgress });
+        getAudioInput(MAX, {
+            solveObstacle: () => {
+                if (mounted) {
+                    solveObstacle();
+                }
+            },
+            setProgress,
+        });
+
+        return () => {
+            mounted = false;
+            clearTimeout(handleSkip);
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <ObstacleContainer>
+            <LinearProgressBar MAX={MAX} progress={progress} />
             <ObstacleContent>
                 <StyledNet />
                 <StyledSpider
