@@ -139,16 +139,19 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             //TODO delete
 
             if (localDevelopment) {
-                const key = Object.keys(this.playersState)[0];
-                const runInterval = setInterval(() => {
-                    // console.log(this.playersState[key].positionX);
-                    // this.playersState[key].positionX += this.speed;
-                    this.runForward(key, this.speed);
-                    if (this.playersState[key].positionX >= this.trackLength) {
-                        console.log('at goal');
-                        clearInterval(runInterval);
-                    }
-                }, 16.6667);
+                const keys = Object.keys(this.playersState);
+
+                keys.forEach(key => {
+                    const runInterval = setInterval(() => {
+                        // console.log(this.playersState[key].positionX);
+                        // this.playersState[key].positionX += this.speed;
+                        this.runForward(key, this.speed);
+                        if (this.playersState[key].positionX >= this.trackLength) {
+                            console.log('at goal');
+                            clearInterval(runInterval);
+                        }
+                    }, 16.6667);
+                });
             }
         }, this.countdownTime);
         this.timer = setTimeout(() => {
@@ -278,8 +281,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         }
 
         //TODO - change when main loop - don't send any gamestate info until countdown stopped
-        if(this.gameState === GameState.Started){
-
+        if (this.gameState === GameState.Started) {
             this.cameraPositionX += this.cameraSpeed;
         }
 
@@ -325,12 +327,14 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             rank: playerState.rank,
         });
         //todo duplicate
-        const userIds = Object.keys(this.playersState);
-        const activeUnfinishedPlayers = userIds.filter(userId => {
-            if (this.playersState[userId].isActive && !this.playersState[userId].dead) return userId;
-        });
-        if (activeUnfinishedPlayers.length <= 1 || this.gameHasFinished()) {
-            this.handleGameFinished();
+        if (!localDevelopment) {
+            const userIds = Object.keys(this.playersState);
+            const activeUnfinishedPlayers = userIds.filter(userId => {
+                if (this.playersState[userId].isActive && !this.playersState[userId].dead) return userId;
+            });
+            if (activeUnfinishedPlayers.length <= 1 || this.gameHasFinished()) {
+                this.handleGameFinished();
+            }
         }
     }
 

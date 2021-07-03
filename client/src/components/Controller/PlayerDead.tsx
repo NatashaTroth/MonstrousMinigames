@@ -8,7 +8,7 @@ import { PlayerDeadContainer, StyledMosquito } from './PlayerDead.sc';
 
 const PlayerDead: React.FC = () => {
     const { roomId } = React.useContext(GameContext);
-    const [counter, setCounter] = React.useState(30);
+    const [counter, setCounter] = React.useState(10);
 
     React.useEffect(() => {
         if (counter > 0) {

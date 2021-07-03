@@ -33,8 +33,8 @@ import {
 } from './Stone.sc';
 
 const Stone: React.FunctionComponent = () => {
-    const [counter, setCounter] = React.useState(20);
-    const limit = Math.floor(Math.random() * 16) + 10;
+    const [counter, setCounter] = React.useState(0);
+    const limit = 10;
     const [particles, setParticles] = React.useState(false);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { userId } = React.useContext(PlayerContext);
@@ -51,7 +51,8 @@ const Stone: React.FunctionComponent = () => {
     function handleThrow() {
         controllerSocket.emit({
             type: 'game1/stunPlayer',
-            userId: chosenPlayer,
+            userId,
+            receivingUserId: chosenPlayer,
         });
         history.push(controllerPlayerDeadRoute(roomId));
     }
