@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router';
 
+import { ICharacter } from '../utils/characters';
 import { Obstacles } from '../utils/constants';
 import { controllerGame1Route, controllerObstacleRoute } from '../utils/routes';
 
@@ -65,8 +66,8 @@ interface IPlayerContext {
     resetPlayer: () => void;
     playerNumber: number | undefined;
     setPlayerNumber: (val: number) => void;
-    character: undefined | string;
-    setCharacter: (val: string) => void;
+    character: undefined | ICharacter;
+    setCharacter: (val: ICharacter) => void;
     name: string;
     setName: (val: string) => void;
     ready: boolean;
@@ -87,7 +88,7 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [playerNumber, setPlayerNumber] = React.useState<number | undefined>();
     const [permission, setPermissionGranted] = React.useState<boolean>(false);
     const history = useHistory();
-    const [character, setCharacter] = React.useState<undefined | string>(undefined);
+    const [character, setCharacter] = React.useState<undefined | ICharacter>(undefined);
     const [name, setName] = React.useState<string>('');
     const [ready, setReady] = React.useState<boolean>(false);
     const [dead, setPlayerDead] = React.useState(false);
