@@ -6,7 +6,7 @@ import owlSoundsFile from '../assets/audio/Owl_Loop.wav';
 import finishedMusicFile from '../assets/audio/WinnerSound.wav';
 import woodSoundsFile from '../assets/audio/WoodSounds_Loop.wav';
 
-// import print from '../domain/phaser/printMethod';
+
 
 export const defaultValue = {
     audioPermission: false,
@@ -100,6 +100,11 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     const [finishedMusic, setFinishedMusic] = React.useState<HTMLAudioElement>(new Audio(finishedMusicFile));
     const [campfireSounds, setCampfireSounds] = React.useState<HTMLAudioElement>(new Audio(campfireSoundsFile));
     const [owlSounds, setOwlSounds] = React.useState<HTMLAudioElement>(new Audio(owlSoundsFile));
+    const [owlSoundsTimeout, setOwlSoundsTimeout] = React.useState<ReturnType<typeof setTimeout>>(
+        setTimeout(() => {
+            /*do nothing*/
+        }, 0)
+    );
     const [woodSounds, setWoodSounds] = React.useState<HTMLAudioElement>(new Audio(woodSoundsFile));
     const [lobbyMusicAndSfx, setLobbyMusicAndSfx] = React.useState<HTMLAudioElement[]>([
         lobbyMusic,
@@ -137,8 +142,9 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
         allAudio.forEach(audio => {
             audio.volume = value;
         });
-        woodSounds.volume = Math.min(woodSounds.volume + 0.4, 1); //TODO improve
+        woodSounds.volume = Math.min(woodSounds.volume + 0.3, 1); //TODO improve
         campfireSounds.volume = Math.min(woodSounds.volume + 0.15, 1);
+        owlSounds.volume = Math.min(woodSounds.volume + 0.15, 1);
         setVolume(value);
     };
 
@@ -162,15 +168,6 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     const playLobbyMusic = async () => {
         try {
             await playLobbyMusicAndSfx();
-            // await lobbyMusic.play();
-            // lobbyMusic.loop = true;
-            // await campfireSounds.play();
-            // campfireSounds.loop = true;
-            // await owlSounds.play();
-            // owlSounds.loop = true;
-            // await woodSounds.play();
-            // woodSounds.loop = true;
-            // setPlaying(true);
             if (volume === 0) unMuteVolumeEverywhere();
         } catch (e) {
             setPlaying(false);
@@ -182,7 +179,21 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
             await audio.play();
             audio.loop = true;
         });
+        clearTimeout(owlSoundsTimeout);
+        const timeout = setTimeout(playOwlSounds, getTimeForNextOwlSound());
+        setOwlSoundsTimeout(timeout);
+
         setPlaying(true);
+    };
+    const playOwlSounds = async () => {
+        await owlSounds.play();
+        clearTimeout(owlSoundsTimeout);
+        const timeout = setTimeout(playOwlSounds, getTimeForNextOwlSound());
+        setOwlSoundsTimeout(timeout);
+    };
+
+    const getTimeForNextOwlSound = () => {
+        return Math.random() * 30000;
     };
 
     const pauseLobbyMusic = async () => {
@@ -198,6 +209,7 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
             // audio.loop = true;
         });
         owlSounds.pause();
+        clearTimeout(owlSoundsTimeout);
         setPlaying(false);
     };
 
@@ -253,7 +265,8 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
 
         pauseLobbyMusicNoMute: (p: boolean) => {
             if (p) {
-                lobbyMusic.pause();
+                // lobbyMusic.pause();
+                pauseLobbyMusicAndSfx();
                 setPlaying(false);
             }
         },
