@@ -19,6 +19,7 @@ export class PhaserGameRenderer implements GameRenderer {
     }
 
     renderBackground(windowWidth: number, windowHeight: number, trackLength: number) {
+        //TODO move lanes to player renderer
         this.scene.cameras.main.backgroundColor.setTo(255, 255, 255);
         const reps = Math.ceil(trackLength / (windowWidth / 4)) + 1;
 
@@ -103,13 +104,13 @@ export class PhaserGameRenderer implements GameRenderer {
             y: yPos - height / 2,
             text: 'The mosquito caught you. Look at your phone!',
             style: {
-                fontSize: `${50}px`,
+                fontSize: `${35}px`,
                 fontFamily: 'Roboto, Arial',
                 // color: '#d2a44f',
                 // stroke: '#d2a44f',
                 color: '#d2a44f',
                 stroke: '#d2a44f',
-                strokeThickness: 3,
+                strokeThickness: 1,
                 fixedWidth,
                 // fixedHeight,
                 align: 'center',
