@@ -199,3 +199,9 @@ export const PlayerButtonContainer = styled.div<Props>`
         min-width: 200px;
     }
 `;
+
+export const UserButtons = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 75%;
+`;

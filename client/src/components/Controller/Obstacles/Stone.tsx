@@ -29,6 +29,7 @@ import {
     StyledStoneImage,
     StyledTypography,
     Sun,
+    UserButtons,
 } from './Stone.sc';
 
 const Stone: React.FunctionComponent = () => {
@@ -37,7 +38,7 @@ const Stone: React.FunctionComponent = () => {
     const [particles, setParticles] = React.useState(false);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { userId } = React.useContext(PlayerContext);
-    const { roomId, connectedUsers } = React.useContext(GameContext);
+    const { connectedUsers, roomId } = React.useContext(GameContext);
 
     function handleTouch() {
         if (counter <= limit) {
@@ -88,18 +89,20 @@ const Stone: React.FunctionComponent = () => {
                                 </RayBox>
                             </Sun>
                         </PebbleContainer>
-                        {connectedUsers?.map(
-                            (user, key) =>
-                                user.id !== userId && (
-                                    <PlayerButtonContainer
-                                        key={key}
-                                        characterNumber={user.characterNumber}
-                                        onClick={() => handleThrow(user.id)}
-                                    >
-                                        {user.name}
-                                    </PlayerButtonContainer>
-                                )
-                        )}
+                        <UserButtons>
+                            {connectedUsers?.map(
+                                (user, key) =>
+                                    user.id !== userId && (
+                                        <PlayerButtonContainer
+                                            key={key}
+                                            characterNumber={user.characterNumber}
+                                            onClick={() => handleThrow(user.id)}
+                                        >
+                                            {user.name}
+                                        </PlayerButtonContainer>
+                                    )
+                            )}
+                        </UserButtons>
                     </>
                 )}
             </StoneContainer>
