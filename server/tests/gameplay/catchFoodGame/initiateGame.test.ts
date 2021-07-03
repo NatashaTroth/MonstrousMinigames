@@ -91,7 +91,7 @@ describe('Initiate CatchFoodGame correctly', () => {
             Math.floor(
                 (catchFoodGame.trackLength - catchFoodGame.initialPlayerPositionX) /
                     (catchFoodGame.numberOfObstacles + 1)
-            ) - 30
+            ) - 100
         );
     }
 
