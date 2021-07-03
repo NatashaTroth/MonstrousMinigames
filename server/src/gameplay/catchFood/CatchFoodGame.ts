@@ -14,7 +14,9 @@ import Leaderboard from '../leaderboard/Leaderboard';
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
 import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
 import { initiatePlayersState } from './helperFunctions/initiatePlayerState';
-import { GameEvents, GameStateInfo, Obstacle, PlayerRank, PlayerState } from './interfaces';
+import {
+    GameEvents, GameStateInfo, Obstacle, PlayerRank, PlayerState, PlayerStateForClient
+} from './interfaces';
 
 interface CatchFoodGameInterface extends IGameInterface {
     playersState: HashTable<PlayerState>;
@@ -140,7 +142,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
             }, this.updateChasersIntervalTime);
             //TODO delete
 
-            if (localDevelopment) {
+            if (localDevelopment && this.gameState === GameState.Started) {
                 const keys = Object.keys(this.playersState);
 
                 keys.forEach(key => {
@@ -277,10 +279,25 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
     }
 
     getGameStateInfo(): GameStateInfo {
-        const playerInfoArray = [];
+        const playerInfoArray: PlayerStateForClient[] = [];
 
+        //TODO reduce down to PlayerStateForClient some prettier way & make sure that PlayerState type is not accepted!!
         for (const [, playerState] of Object.entries(this.playersState)) {
-            playerInfoArray.push(playerState);
+            playerInfoArray.push({
+                id: playerState.id,
+                name: playerState.name,
+                positionX: playerState.positionX,
+                obstacles: playerState.obstacles,
+                atObstacle: playerState.atObstacle,
+                finished: playerState.finished,
+                finishedTimeMs: playerState.finishedTimeMs,
+                dead: playerState.dead,
+                rank: playerState.rank,
+                isActive: playerState.isActive,
+                stunned: playerState.stunned,
+                characterNumber: playerState.characterNumber,
+                numberStonesThrown: playerState.numberStonesThrown,
+            });
         }
 
         //TODO - change when main loop - don't send any gamestate info until countdown stopped
