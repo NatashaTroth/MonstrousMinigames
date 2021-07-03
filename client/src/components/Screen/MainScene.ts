@@ -6,6 +6,7 @@ import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
 import { GameEventTypes } from '../../domain/phaser/GameEventTypes';
 import { GameData } from '../../domain/phaser/gameInterfaces';
 import { Player } from '../../domain/phaser/Player';
+import printMethod from '../../domain/phaser/printMethod';
 import { GameRenderer } from '../../domain/phaser/renderer/GameRenderer';
 import { PhaserGameRenderer } from '../../domain/phaser/renderer/PhaserGameRenderer';
 import { PhaserPlayerRenderer } from '../../domain/phaser/renderer/PhaserPlayerRenderer';
@@ -106,6 +107,7 @@ class MainScene extends Phaser.Scene {
     }
 
     sendStartGame() {
+        printMethod('SEND START GAME');
         //TODO!!!! - do not send when game is already started? - or is it just ignored - appears to work - maybe check if no game state updates?
         this.socket?.emit({
             type: MessageTypes.startGame,
@@ -118,6 +120,8 @@ class MainScene extends Phaser.Scene {
         const startedGame = new MessageSocket(startedTypeGuard, this.socket);
         const decrementCounter = (counter: number) => counter - 1000;
         startedGame.listen((data: GameHasStartedMessage) => {
+            printMethod('RECEIVED START GAME');
+
             let countdownValue = data.countdownTime - 1000; //to keep in track with server (1 sec less to start roughly at the same time as the server)
             const countdownInterval = setInterval(() => {
                 if (countdownValue > 0) {
@@ -147,6 +151,8 @@ class MainScene extends Phaser.Scene {
         const gameStateInfoSocket = new MessageSocket(gameStateInfoTypeGuard, this.socket);
         gameStateInfoSocket.listen((data: GameStateInfoMessage) => {
             if (!this.gameStarted) {
+                printMethod('RECEIVED FIRST GAME STATE:');
+                printMethod(data.data);
                 this.gameStarted = true;
                 this.handleStartGame(data.data);
             } else this.updateGameState(data.data);
