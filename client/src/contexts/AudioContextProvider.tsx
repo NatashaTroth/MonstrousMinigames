@@ -1,7 +1,10 @@
 import * as React from 'react';
 
+import campfireSoundsFile from '../assets/audio/Campfire_Loop.wav';
 import lobbyMusicFile from '../assets/audio/LobbySound2_Loop.wav';
+import owlSoundsFile from '../assets/audio/Owl_Loop.wav';
 import finishedMusicFile from '../assets/audio/WinnerSound.wav';
+import woodSoundsFile from '../assets/audio/WoodSounds_Loop.wav';
 
 // import print from '../domain/phaser/printMethod';
 
@@ -28,6 +31,9 @@ export const defaultValue = {
     pauseLobbyMusic: () => {
         //do nothing
     },
+    campfireSounds: new Audio(campfireSoundsFile),
+    owlSounds: new Audio(owlSoundsFile),
+    woodSounds: new Audio(woodSoundsFile),
     finishedMusic: new Audio(finishedMusicFile),
     playFinishedMusic: () => {
         //do nothing
@@ -92,6 +98,16 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     const [gameAudioPlaying, setGameAudioPlaying] = React.useState<boolean>(false);
     const [lobbyMusic, setLobbyMusic] = React.useState<HTMLAudioElement>(new Audio(lobbyMusicFile));
     const [finishedMusic, setFinishedMusic] = React.useState<HTMLAudioElement>(new Audio(finishedMusicFile));
+    const [campfireSounds, setCampfireSounds] = React.useState<HTMLAudioElement>(new Audio(campfireSoundsFile));
+    const [owlSounds, setOwlSounds] = React.useState<HTMLAudioElement>(new Audio(owlSoundsFile));
+    const [woodSounds, setWoodSounds] = React.useState<HTMLAudioElement>(new Audio(woodSoundsFile));
+    const [lobbyMusicAndSfx, setLobbyMusicAndSfx] = React.useState<HTMLAudioElement[]>([
+        lobbyMusic,
+        campfireSounds,
+        woodSounds,
+    ]);
+    const [allAudio, setAllAudio] = React.useState<HTMLAudioElement[]>([...lobbyMusicAndSfx, finishedMusic, owlSounds]);
+
     const [volume, setVolume] = React.useState<number>(
         localStorage.getItem('audioVolume') ? Number(localStorage.getItem('audioVolume')) : 0.2
     );
@@ -116,8 +132,13 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     };
 
     const changeVolume = (value: number) => {
-        lobbyMusic.volume = value;
-        finishedMusic.volume = value;
+        // lobbyMusic.volume = value;
+        // finishedMusic.volume = value;
+        allAudio.forEach(audio => {
+            audio.volume = value;
+        });
+        woodSounds.volume = Math.min(woodSounds.volume + 0.4, 1); //TODO improve
+        campfireSounds.volume = Math.min(woodSounds.volume + 0.15, 1);
         setVolume(value);
     };
 
@@ -140,19 +161,44 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
 
     const playLobbyMusic = async () => {
         try {
-            await lobbyMusic.play();
-            lobbyMusic.loop = true;
-            setPlaying(true);
+            await playLobbyMusicAndSfx();
+            // await lobbyMusic.play();
+            // lobbyMusic.loop = true;
+            // await campfireSounds.play();
+            // campfireSounds.loop = true;
+            // await owlSounds.play();
+            // owlSounds.loop = true;
+            // await woodSounds.play();
+            // woodSounds.loop = true;
+            // setPlaying(true);
             if (volume === 0) unMuteVolumeEverywhere();
         } catch (e) {
             setPlaying(false);
         }
     };
 
-    const pauseLobbyMusic = () => {
-        lobbyMusic.pause();
-        setPlaying(false);
+    const playLobbyMusicAndSfx = async () => {
+        lobbyMusicAndSfx.forEach(async audio => {
+            await audio.play();
+            audio.loop = true;
+        });
+        setPlaying(true);
+    };
+
+    const pauseLobbyMusic = async () => {
+        // lobbyMusic.pause();
+        // setPlaying(false);
+        pauseLobbyMusicAndSfx();
         if (volume > 0) muteVolumeEverywhere();
+    };
+
+    const pauseLobbyMusicAndSfx = () => {
+        lobbyMusicAndSfx.forEach(audio => {
+            audio.pause();
+            // audio.loop = true;
+        });
+        owlSounds.pause();
+        setPlaying(false);
     };
 
     const playFinishedMusic = async () => {
