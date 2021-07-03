@@ -3,8 +3,6 @@ import * as React from 'react';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { handlePlayerGetsStone } from '../../domain/gameState/controller/handlePlayerGetsStone';
-import { characterDictionary } from '../../utils/characterDictionary';
-import { charactersGhosts } from '../../utils/characters';
 import FullScreenContainer from '../common/FullScreenContainer';
 import { PlayerDeadContainer, StyledCharacter, TextWrapper } from './PlayerDead.sc';
 
@@ -27,7 +25,7 @@ const PlayerDead: React.FC = () => {
     return (
         <FullScreenContainer>
             <PlayerDeadContainer>
-                {character && <StyledCharacter src={charactersGhosts[characterDictionary[character]]} />}
+                {character && <StyledCharacter src={character.ghost} />}
                 <TextWrapper>
                     Oh no! Unfortunately the mosquitos got you.
                     <div>A magic rock will appear in {counter} seconds</div>. Tap on the rock several times to get a
