@@ -6,6 +6,7 @@ import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
 import { GameEventTypes } from '../../domain/phaser/GameEventTypes';
 import { GameData } from '../../domain/phaser/gameInterfaces';
 import { Player } from '../../domain/phaser/Player';
+import printMethod from '../../domain/phaser/printMethod';
 import { GameRenderer } from '../../domain/phaser/renderer/GameRenderer';
 import { PhaserGameRenderer } from '../../domain/phaser/renderer/PhaserGameRenderer';
 import { PhaserPlayerRenderer } from '../../domain/phaser/renderer/PhaserPlayerRenderer';
@@ -107,6 +108,7 @@ class MainScene extends Phaser.Scene {
 
     sendStartGame() {
         //TODO!!!! - do not send when game is already started? - or is it just ignored - appears to work - maybe check if no game state updates?
+        printMethod('SEND START GAME');
         this.socket?.emit({
             type: MessageTypes.startGame,
             roomId: this.roomId,
@@ -118,6 +120,8 @@ class MainScene extends Phaser.Scene {
         const startedGame = new MessageSocket(startedTypeGuard, this.socket);
         const decrementCounter = (counter: number) => counter - 1000;
         startedGame.listen((data: GameHasStartedMessage) => {
+            printMethod('RECEIVED START GAME');
+
             let countdownValue = data.countdownTime - 1000; //to keep in track with server (1 sec less to start roughly at the same time as the server)
             const countdownInterval = setInterval(() => {
                 if (countdownValue > 0) {
@@ -231,7 +235,7 @@ class MainScene extends Phaser.Scene {
             this.camera.setBounds(0, 0, this.trackLength, windowHeight); //+150 so the cave can be fully seen
         }
         this.players.forEach(player => {
-            player.renderer.updatePlayerNamePosition(posX-window.innerWidth)
+            player.renderer.updatePlayerNamePosition(posX - window.innerWidth);
         });
     }
 

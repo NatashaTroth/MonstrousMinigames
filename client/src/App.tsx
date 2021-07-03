@@ -27,7 +27,8 @@ import Game from './components/Screen/Game';
 import GameIntro from './components/Screen/GameIntro';
 import { Lobby as ScreenLobbyScreen } from './components/Screen/Lobby';
 import PlayersGetReady from './components/Screen/PlayersGetReady';
-import AudioContextProvider from './contexts/AudioContextProvider';
+import ScreenWrapper from './components/Screen/ScreenWrapper';
+// import AudioContextProvider from './contexts/AudioContextProvider';
 import ControllerSocketContextProvider from './contexts/ControllerSocketContextProvider';
 import GameContextProvider from './contexts/GameContextProvider';
 import PlayerContextProvider from './contexts/PlayerContextProvider';
@@ -47,7 +48,7 @@ const App: React.FunctionComponent = () => {
                 <MuiThemeProvider theme={theme}>
                     <ThemeProvider theme={theme}>
                         <AppContainer className="App">
-                            <AudioContextProvider>
+                            <ScreenWrapper>
                                 <GameContextProvider>
                                     <PlayerContextProvider>
                                         <ScreenSocketContextProvider>
@@ -143,7 +144,7 @@ const App: React.FunctionComponent = () => {
                                         </ScreenSocketContextProvider>
                                     </PlayerContextProvider>
                                 </GameContextProvider>
-                            </AudioContextProvider>
+                            </ScreenWrapper>
                         </AppContainer>
                     </ThemeProvider>
                 </MuiThemeProvider>
