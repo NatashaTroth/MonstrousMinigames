@@ -1,3 +1,4 @@
+import { Typography } from '@material-ui/core';
 import styled, { keyframes } from 'styled-components';
 
 import { ObstacleContainer } from './ObstaclStyles.sc';
@@ -9,6 +10,12 @@ const ray_anim = keyframes`
 
     100% {
          transform: rotate(360deg);
+    }
+`;
+
+export const StyledTypography = styled(Typography)`
+    && {
+        color: white;
     }
 `;
 
@@ -169,11 +176,6 @@ export const StyledPebbleImage = styled.img`
     right: 0;
 `;
 
-export const ButtonContainer = styled.div`
-    display: flex;
-    height: 30%;
-`;
-
 export const PebbleContainer = styled(ObstacleContainer)`
     height: 500px;
     display: block;
@@ -182,14 +184,12 @@ export const PebbleContainer = styled(ObstacleContainer)`
 
 interface Props {
     characterNumber: number;
-    selected: boolean;
 }
 
 export const PlayerButtonContainer = styled.div<Props>`
     && {
         margin-bottom: 20px;
-        background-color: ${({ characterNumber, selected, theme }) =>
-            selected ? theme.palette.secondary.main : theme.colors.characterColors[characterNumber]};
+        background-color: ${({ characterNumber, theme }) => theme.colors.characterColors[characterNumber]};
         color: black;
         cursor: pointer;
         padding: 10px;
