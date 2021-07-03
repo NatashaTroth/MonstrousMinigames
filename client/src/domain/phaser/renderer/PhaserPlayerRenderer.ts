@@ -71,18 +71,20 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         }
         if (this.player) {
             this.player.x = coordinates.x;
-            this.player.y = coordinates.y + window.innerHeight / 16;
+            this.player.y = coordinates.y + window.innerHeight/18;
         }
     }
 
-    renderPlayerName(coordinates: Coordinates, name: string) {
-        this.playerNameBg = this.scene.add.rectangle(window.innerWidth, coordinates.y, 200, 50, 0x0, 0.5);
-        this.playerName = this.scene.add.text(window.innerWidth, coordinates.y, name);
+    renderPlayerName(coordinates: Coordinates, name: string){
+        this.playerNameBg = this.scene.add.rectangle(0,coordinates.y, 200, 50, 0x0, 0.5);
+        this.playerName = this.scene.add.text(10,coordinates.y, name);
+        this.playerNameBg.setDepth(depthDictionary.nameTag)
+        this.playerName.setDepth(depthDictionary.nameTag)
     }
 
-    public updatePlayerNamePosition(newX: number) {
-        this.playerNameBg?.setPosition(newX + window.innerWidth, this.playerNameBg.y);
-        this.playerName?.setPosition(newX + window.innerWidth - 100, this.playerName.y);
+    public updatePlayerNamePosition(newX: number){
+        this.playerNameBg?.setPosition(newX + window.innerWidth, this.playerNameBg.y)
+        this.playerName?.setPosition(newX + window.innerWidth, this.playerName.y)
     }
 
     renderGoal(posX: number, posY: number) {

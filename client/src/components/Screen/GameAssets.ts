@@ -7,6 +7,7 @@ import flaresJsonFile from '../../assets/flares/flares.json';
 import flaresPngFile from '../../assets/flares/flares.png';
 import floor from '../../images/background/floor.png';
 import hills from '../../images/background/hills.png';
+import laneBackground from '../../images/background/laneBackground.png';
 import moon from '../../images/background/moon.png';
 import mountains from '../../images/background/mountains.png';
 import starsAndSky from '../../images/background/starsAndSky.png';
@@ -79,6 +80,7 @@ export const images = [
     { name: 'starsAndSky', file: starsAndSky },
     { name: 'trees', file: trees },
     { name: 'moon', file: moon },
+    { name: 'laneBackground', file: laneBackground },
 ];
 
 export const flaresPng = flaresPngFile;
