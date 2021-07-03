@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 
+import { fireworkFlares } from '../../../components/Screen/GameAssets';
 import MainScene from '../../../components/Screen/MainScene';
 import { depthDictionary } from '../../../utils/depthDictionary';
 import { Coordinates, PlayerRenderer } from './PlayerRenderer';
@@ -14,14 +15,19 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     private chaser?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private playerObstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-    private particles: Phaser.GameObjects.Particles.ParticleEmitterManager;
+    private particles: Phaser.GameObjects.Particles.ParticleEmitterManager[];
     private playerNameBg?: Phaser.GameObjects.Rectangle;
     private playerName?: Phaser.GameObjects.Text;
 
     constructor(private scene: MainScene) {
         this.playerObstacles = [];
-        this.particles = this.scene.add.particles('flares');
-        this.particles.setDepth(depthDictionary.flares);
+        this.particles = [];
+
+        fireworkFlares.forEach((flare, i) => {
+            const particle = this.scene.add.particles(`flare${i}`);
+            particle.setDepth(depthDictionary.flares);
+            this.particles.push(particle);
+        });
     }
 
     renderChasers(chasersPositionX: number, chasersPositionY: number) {
@@ -52,7 +58,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         background?: string
     ): void {
         // eslint-disable-next-line no-console
-        console.log(username);
+        // console.log(username);
         let usernameToDisplay = '';
         if (username) {
             usernameToDisplay = username;
@@ -116,13 +122,13 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     }
 
     renderFireworks(posX: number, posY: number) {
-        const flareColors: string[] = ['blue', 'red', 'green'];
-        const scales: Array<number | { min: number; max: number }> = [0.05, 0.1, { min: 0, max: 0.3 }];
+        // const flareColors: string[] = ['blue', 'red', 'green'];
+        const scales: Array<number | { min: number; max: number }> = [0.1, 0.01, { min: 0, max: 0.1 }];
         const lifespans: number[] = [250, 500, 700];
-
-        flareColors.forEach((flareColor, i) => {
-            const particlesEmitter = this.particles.createEmitter({
-                frame: flareColor,
+        // const flareColo
+        this.particles.forEach((particle, i) => {
+            const particlesEmitter = particle.createEmitter({
+                // key: flare,
                 x: posX,
                 y: posY,
                 scale: scales[i],
@@ -176,7 +182,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
 
     private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
         // eslint-disable-next-line no-console
-        console.log(window.devicePixelRatio / 3);
+        // console.log(window.devicePixelRatio / 3);
         this.player = this.scene.physics.add.sprite(
             coordinates.x,
             coordinates.y + window.innerHeight / 16,

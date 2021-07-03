@@ -29,7 +29,7 @@ describe('Chasers', () => {
         clearTimersAndIntervals(catchFoodGame);
     });
 
-    it('starts chasers at initial positionX', async () => {
+    it.skip('starts chasers at initial positionX', async () => {
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         catchFoodGame.chasersPositionX = 50;
         getToCreatedGameState(catchFoodGame);

@@ -11,7 +11,12 @@ const dateNow = 1618665766156;
 export function clearTimersAndIntervals(catchFoodGame: CatchFoodGame) {
     //to clear intervals
     jest.advanceTimersByTime(catchFoodGame.countdownTime);
-    jest.advanceTimersByTime(catchFoodGame.timeOutLimit);
+    // jest.advanceTimersByTime(catchFoodGame.timeOutLimit);
+    try {
+        catchFoodGame.stopGameUserClosed();
+    } catch (e) {
+        //no need to handle, game is already finished
+    }
     jest.runAllTimers();
     jest.clearAllMocks();
 }

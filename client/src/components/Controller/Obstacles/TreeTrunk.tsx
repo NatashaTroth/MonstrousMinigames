@@ -95,10 +95,6 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
                 setTimeout(() => timerCycle(), 100);
             }
         }
-
-        document.body.style.overflow = 'hidden';
-        document.body.style.position = 'fixed';
-        document.body.style.userSelect = 'none';
     }, []);
 
     const solveObstacle = () => {

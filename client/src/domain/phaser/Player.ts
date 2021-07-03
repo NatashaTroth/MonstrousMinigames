@@ -46,6 +46,7 @@ export class Player {
         this.setObstacles();
         this.setGoal(gameStateData.trackLength);
         // this.renderer.renderFireworks(500, 100);
+        // this.renderer.renderFireworks(this.coordinates.x + 500, this.coordinates.y - window.innerHeight / 8 + 50);
     }
 
     moveForward(x: number, trackLength: number) {
@@ -122,7 +123,7 @@ export class Player {
 
     private renderPlayer() {
         // eslint-disable-next-line no-console
-        console.log(this.username);
+        // console.log(this.username);
         this.renderer.renderPlayer(this.coordinates, this.monsterName, this.animationName, this.username);
 
         // TODO render player name

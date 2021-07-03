@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 import MainScene from '../../../components/Screen/MainScene';
+import { depthDictionary } from '../../../utils/depthDictionary';
 import { GameRenderer } from './GameRenderer';
 
 /**
@@ -113,6 +114,7 @@ export class PhaserGameRenderer implements GameRenderer {
                 add: true,
             });
             this.countdownText.scrollFactorX = 0;
+            this.countdownText.setDepth(depthDictionary.countdown);
         }
     }
 

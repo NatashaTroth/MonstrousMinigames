@@ -1,5 +1,8 @@
 import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
 import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
+import flare1 from '../../assets/flares/flare_01.png';
+import flare2 from '../../assets/flares/flare_02.png';
+import flare3 from '../../assets/flares/flare_03.png';
 import flaresJsonFile from '../../assets/flares/flares.json';
 import flaresPngFile from '../../assets/flares/flares.png';
 import floor from '../../images/background/floor.png';
@@ -80,3 +83,10 @@ export const images = [
 
 export const flaresPng = flaresPngFile;
 export const flaresJson = flaresJsonFile;
+
+export const fireworkFlares = [
+    flare1,
+    flare2,
+    flare3,
+    // {name: "fireworkFlare1", file:flare1}
+];

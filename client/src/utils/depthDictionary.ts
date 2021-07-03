@@ -7,4 +7,5 @@ export const depthDictionary = {
     chaser: 30,
     attention: 35,
     flares: 40,
+    countdown: 50,
 };

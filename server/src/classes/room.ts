@@ -1,4 +1,9 @@
-import { GameAlreadyStartedError, CannotStartEmptyGameError, CharacterNotAvailableError, UsersNotReadyError } from '../customErrors';
+import {
+    GameAlreadyStartedError,
+    CannotStartEmptyGameError,
+    CharacterNotAvailableError,
+    UsersNotReadyError,
+} from '../customErrors';
 import { Globals } from '../enums/globals';
 import { CatchFoodGame } from '../gameplay';
 import { GameStateInfo } from '../gameplay/catchFood/interfaces';
@@ -111,7 +116,7 @@ class Room {
         if (this.users.length === 0) {
             throw new CannotStartEmptyGameError();
         }
-        if (this.hasNotReadyUsers()){
+        if (this.hasNotReadyUsers()) {
             throw new UsersNotReadyError();
         }
         this.setState(RoomStates.PLAYING);

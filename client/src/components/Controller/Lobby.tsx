@@ -26,7 +26,7 @@ import {
 export const Lobby: React.FunctionComponent = () => {
     const { playerNumber, name, character, ready, setReady } = React.useContext(PlayerContext);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
-    const { gameChosen, tutorial, roomId } = React.useContext(GameContext);
+    const { roomId } = React.useContext(GameContext);
 
     return (
         <FullScreenContainer>

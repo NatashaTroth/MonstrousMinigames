@@ -9,5 +9,6 @@ export enum CatchFoodMsgType {
     PLAYER_FINISHED = 'game1/playerFinished',
     PLAYER_DIED = 'game1/playerDied',
     PLAYER_STUNNED = 'game1/playerStunned',
+    PLAYER_UNSTUNNED = 'game1/playerUnstunned',
     STUN_PLAYER = 'game1/stunPlayer',
 }
