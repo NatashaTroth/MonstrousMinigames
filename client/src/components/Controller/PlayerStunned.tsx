@@ -4,8 +4,6 @@ import * as React from 'react';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import history from '../../domain/history/history';
-import { characterDictionary } from '../../utils/characterDictionary';
-import { charactersStunned } from '../../utils/characters';
 import { controllerGame1Route } from '../../utils/routes';
 import FullScreenContainer from '../common/FullScreenContainer';
 import { PlayerStunnedContainer, StyledCharacter } from './PlayerStunned.sc';
@@ -22,7 +20,7 @@ const PlayerStunned: React.FC = () => {
     return (
         <FullScreenContainer>
             <PlayerStunnedContainer>
-                {character && <StyledCharacter src={charactersStunned[characterDictionary[character]]} />}
+                {character && <StyledCharacter src={character.stunned} />}
                 <Typography>Oh no! Someone threw a stone at you</Typography>
             </PlayerStunnedContainer>
         </FullScreenContainer>

@@ -14,9 +14,21 @@ import { generateQRCode } from '../../utils/generateQRCode';
 import { Routes, screenChooseGameRoute } from '../../utils/routes';
 import Button from '../common/Button';
 import {
-    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer, ConnectedUsers,
-    ConnectedUserStatus, Content, ContentContainer, CopyToClipboard, LeftContainer, LobbyContainer,
-    QRCode, QRCodeInstructions, RightButtonContainer, RightContainer
+    Character,
+    CharacterContainer,
+    ConnectedUserCharacter,
+    ConnectedUserContainer,
+    ConnectedUsers,
+    ConnectedUserStatus,
+    Content,
+    ContentContainer,
+    CopyToClipboard,
+    LeftContainer,
+    LobbyContainer,
+    QRCode,
+    QRCodeInstructions,
+    RightButtonContainer,
+    RightContainer,
 } from './Lobby.sc';
 import LobbyHeader from './LobbyHeader';
 
@@ -63,7 +75,7 @@ export const Lobby: React.FunctionComponent = () => {
                                     <ConnectedUserCharacter number={user.number} free={user.free}>
                                         <CharacterContainer>
                                             {!user.free && user.characterNumber !== -1 && (
-                                                <Character src={characters[Number(user.characterNumber)]} />
+                                                <Character src={characters[Number(user.characterNumber)].src} />
                                             )}
                                         </CharacterContainer>
 
