@@ -260,6 +260,7 @@ class MainScene extends Phaser.Scene {
             player.stopRunning();
         });
         this.scene.pause();
+        this.gameAudio?.pause();
     }
 
     private resumeGame() {
@@ -268,6 +269,7 @@ class MainScene extends Phaser.Scene {
             player.startRunning();
         });
         this.scene.resume();
+        this.gameAudio?.resume();
     }
 
     handlePauseResumeButton() {
