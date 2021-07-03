@@ -30,6 +30,7 @@ export enum MessageTypes {
     backToLobby = 'backToLobby',
     screenAdmin = 'screenAdmin',
     selectCharacter = 'selectCharacter',
+    userReady = 'userReady',
 
     gameHasFinished = 'gameHasFinished',
     gameHasReset = 'gameHasReset',
@@ -50,6 +51,7 @@ export enum MessageTypes {
     gameState = 'game1/gameState',
     playerDied = 'game1/playerDied',
     playerStunned = 'game1/playerStunned',
+    playerUnstunned = 'game1/playerUnstunned',
 
     startGame = 'game1/start',
 }

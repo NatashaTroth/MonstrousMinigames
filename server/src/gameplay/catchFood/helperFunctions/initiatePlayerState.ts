@@ -54,7 +54,7 @@ export function createObstacles(
     const obstacles: Array<Obstacle> = [];
     const shuffledObstacleTypes: Array<ObstacleType> = shuffleArray(obstacleTypes);
 
-    const quadrantRange = Math.floor((trackLength - initialPlayerPositionX) / (numberOfObstacles + 1)) - 30; //e.g. 500/4 = 125, +10 to avoid obstacle being at the very beginning, - 10 to stop 2 being right next to eachother
+    const quadrantRange = Math.floor((trackLength - initialPlayerPositionX) / (numberOfObstacles + 1)) - 100; //e.g. 500/4 = 125, +10 to avoid obstacle being at the very beginning, - 10 to stop 2 being right next to eachother
 
     for (let i = 0; i < numberOfObstacles; i++) {
         const randomNr = Math.random() * quadrantRange;

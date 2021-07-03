@@ -29,7 +29,7 @@ export interface PlayerIsDead extends GameEventInterface {
     userId: string;
     rank: number;
 }
-export interface PlayerIsStunned extends GameEventInterface {
+export interface PlayerStunnedState extends GameEventInterface {
     roomId: string;
     userId: string;
 }

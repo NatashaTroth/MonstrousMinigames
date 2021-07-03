@@ -19,4 +19,7 @@ export default class GameEventEmitter extends EventEmitter {
     public static emitPlayAudioEvent() {
         this.GameEventEmitter.emit(GameEventTypes.PlayAudio);
     }
+    public static emitPauseResumeEvent() {
+        this.GameEventEmitter.emit(GameEventTypes.PauseResume);
+    }
 }

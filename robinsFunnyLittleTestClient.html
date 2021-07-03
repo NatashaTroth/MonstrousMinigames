@@ -25,10 +25,10 @@
 
         <button onclick="input('start')">START</button>
         <button onclick="input('backToLobby')">BACK TO LOBBY</button>
+        <button onclick="input('userReady')">READY</button>
 
         <br />
         <button onclick="input('move')">MOVE</button>
-
         <button onclick="input('obstacleSolved')">SOLVE OBSTACLE</button>
         <br />
         <button onclick="input('stop')">STOP</button>
@@ -37,6 +37,9 @@
         <input name="character" id="character" />
         <label for="character">character</label>
         <button onclick="input('selectCharacter')">SELECT CHARACTER</button>
+        <input name="receivingUserId" id="receivingUserId" />
+        <label for="receivingUserId">receivingUserId</label>
+        <button onclick="input('stunPlayer')">STUN PLAYER</button>
 
         <div id="output"></div>
     </body>
@@ -66,6 +69,10 @@
                 socket.emit('message', {
                     type: 'game1/runForward',
                 });
+            if (type == 'userReady')
+                socket.emit('message', {
+                    type: 'userReady',
+                });
             if (type == 'backToLobby')
                 ssocket.emit('message', {
                     type: 'backToLobby',
@@ -74,6 +81,15 @@
                 socket.emit('message', {
                     type: 'game1/obstacleSolved',
                 });
+            if (type == 'stunPlayer') {
+                let receivingUserId = document.getElementById('receivingUserId').value;
+                socket.emit('message', {
+                    type: 'game1/stunPlayer',
+                    userId: userId,
+                    receivingUserId: receivingUserId
+                });
+            }
+
             if (type == 'stop')
                 ssocket.emit('message', {
                     type: 'stopGame',

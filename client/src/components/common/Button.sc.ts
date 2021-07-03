@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-import { disabled, disabledShadow } from '../../utils/colors';
-
 const boxShadowDepth = 7;
 
 export const Container = styled.div``;
@@ -14,7 +12,7 @@ interface ButtonProps {
 export const StyledButtonBase = styled.button<ButtonProps>`
     color: black;
     background: ${({ variant = 'primary', theme }) =>
-        variant === 'primary' ? theme.palette.primary.main : theme.palette.secondary.dark};
+        variant === 'primary' ? theme.palette.primary.main : theme.palette.secondary.main};
     box-shadow: ${({ variant = 'primary', theme }) =>
         `calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${
             variant === 'primary' ? theme.palette.primary.dark : theme.palette.secondary.dark
@@ -43,8 +41,9 @@ export const StyledButtonBase = styled.button<ButtonProps>`
 
     &:disabled {
         color: lightgray;
-        box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${disabledShadow};
-        background: ${disabled};
+        box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
+            ${({ theme }) => theme.colors.disabledShadow};
+        background: ${({ theme }) => theme.colors.disabled};
     }
 `;
 

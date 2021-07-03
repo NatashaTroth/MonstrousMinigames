@@ -1,6 +1,9 @@
-import { GameAlreadyStartedError } from '../customErrors';
-import CannotStartEmptyGameError from '../customErrors/CannotStartEmptyGameError';
-import CharacterNotAvailableError from '../customErrors/CharacterNotAvailableError';
+import {
+    GameAlreadyStartedError,
+    CannotStartEmptyGameError,
+    CharacterNotAvailableError,
+    UsersNotReadyError,
+} from '../customErrors';
 import { Globals } from '../enums/globals';
 import { CatchFoodGame } from '../gameplay';
 import { GameStateInfo } from '../gameplay/catchFood/interfaces';
@@ -94,6 +97,17 @@ class Room {
         return this.getActiveUsers().length !== 0;
     }
 
+    private getNotReadyUsers(): Array<User> {
+        const readyUsers = this.users.filter((user: User) => {
+            return !user.isReady();
+        });
+        return readyUsers;
+    }
+
+    private hasNotReadyUsers(): boolean {
+        return this.getNotReadyUsers().length !== 0;
+    }
+
     public updateTimestamp(): void {
         this.timestamp = Date.now();
     }
@@ -101,6 +115,9 @@ class Room {
     public startGame(): GameStateInfo {
         if (this.users.length === 0) {
             throw new CannotStartEmptyGameError();
+        }
+        if (this.hasNotReadyUsers()) {
+            throw new UsersNotReadyError();
         }
         this.setState(RoomStates.PLAYING);
         this.game.createNewGame(this.users);

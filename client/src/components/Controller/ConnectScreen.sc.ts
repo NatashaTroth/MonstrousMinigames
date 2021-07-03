@@ -32,7 +32,6 @@ export const inputStyles = {
     marginBottom: '30px',
     marginTop: '10px',
     display: 'flex',
-    width: '100%',
     height: '50px',
     padding: '5px 20px',
     borderRadius: '10px',

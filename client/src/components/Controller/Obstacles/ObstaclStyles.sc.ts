@@ -69,6 +69,7 @@ export const ObstacleContent = styled.div`
     justify-content: center;
     align-items: center;
     z-index: 2;
+    height: 60%;
 
     .swing {
         animation-duration: 3s;
