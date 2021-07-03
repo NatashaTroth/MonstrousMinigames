@@ -7,7 +7,11 @@ import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { sendUserReady } from '../../domain/gameState/controller/sendUserReady';
 import history from '../../domain/history/history';
 import arrow from '../../images/ui/arrow_blue.svg';
-import { controllerChooseCharacterRoute } from '../../utils/routes';
+import {
+    controllerChooseCharacterRoute,
+    controllerPlayerDeadRoute,
+    controllerPlayerStunnedRoute,
+} from '../../utils/routes';
 import Button from '../common/Button';
 import FullScreenContainer from '../common/FullScreenContainer';
 import { Label } from '../common/Label.sc';
@@ -60,10 +64,12 @@ export const Lobby: React.FunctionComponent = () => {
                             <Label>
                                 {!ready ? `Show that you are ready to play!` : 'Wait for the admin to start your game!'}
                             </Label>
+                            <Button onClick={() => history.push(controllerPlayerDeadRoute(roomId))}>Dead</Button>
+                            <Button onClick={() => history.push(controllerPlayerStunnedRoute(roomId))}>Stunned</Button>
                             <PlayerContent>
                                 <PlayerName>{name}</PlayerName>
                                 <CharacterContainer>
-                                    <Character src={character!} />
+                                    <Character src={character?.src} />
                                 </CharacterContainer>
                                 <ReadyButton
                                     ready={ready}

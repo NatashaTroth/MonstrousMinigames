@@ -65,8 +65,8 @@ const ChooseCharacter: React.FunctionComponent = () => {
                 customLeftArrow={<CustomLeftArrow handleOnClick={handleLeftClick} />}
             >
                 {characters.map((character, index) => (
-                    <CharacterContainer key={`character${character}`}>
-                        <Character src={character} available={availableCharacters.includes(index)} />
+                    <CharacterContainer key={`character${character.id}`}>
+                        <Character src={character.src} available={availableCharacters.includes(index)} />
                     </CharacterContainer>
                 ))}
             </Carousel>

@@ -55,7 +55,7 @@ const PlayersGetReady: React.FC = () => {
                                 <ConnectedUserCharacter number={user.number} free={user.free}>
                                     <CharacterContainer>
                                         {!user.free && user.characterNumber !== -1 && (
-                                            <Character src={characters[Number(user.characterNumber)]} />
+                                            <Character src={characters[Number(user.characterNumber)].src} />
                                         )}
                                     </CharacterContainer>
 
