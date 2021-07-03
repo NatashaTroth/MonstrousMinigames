@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 import MainScene from '../../../components/Screen/MainScene';
+import { depthDictionary } from '../../../utils/depthDictionary';
 import { GameRenderer } from './GameRenderer';
 
 /**

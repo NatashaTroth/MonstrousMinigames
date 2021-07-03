@@ -58,7 +58,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         background?: string
     ): void {
         // eslint-disable-next-line no-console
-        console.log(username);
+        // console.log(username);
         let usernameToDisplay = '';
         if (username) {
             usernameToDisplay = username;
@@ -182,7 +182,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
 
     private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
         // eslint-disable-next-line no-console
-        console.log(window.devicePixelRatio / 3);
+        // console.log(window.devicePixelRatio / 3);
         this.player = this.scene.physics.add.sprite(
             coordinates.x,
             coordinates.y + window.innerHeight / 16,

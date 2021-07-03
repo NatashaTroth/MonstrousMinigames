@@ -123,7 +123,7 @@ export class Player {
 
     private renderPlayer() {
         // eslint-disable-next-line no-console
-        console.log(this.username);
+        // console.log(this.username);
         this.renderer.renderPlayer(this.coordinates, this.monsterName, this.animationName, this.username);
 
         // TODO render player name
