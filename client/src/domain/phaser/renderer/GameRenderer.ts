@@ -5,4 +5,5 @@ export interface GameRenderer {
     destroyCountdown(): void;
     pauseGame(): void;
     resumeGame(): void;
+    handleLanePlayerDead(idx: number): void;
 }

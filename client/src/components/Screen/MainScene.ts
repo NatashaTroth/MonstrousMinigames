@@ -204,6 +204,7 @@ class MainScene extends Phaser.Scene {
             if (gameStateData.playersState[i].dead) {
                 if (!this.players[i].finished) {
                     this.players[i].handlePlayerDead();
+                    this.gameRenderer?.handleLanePlayerDead(i);
                 }
             } else if (gameStateData.playersState[i].finished) {
                 if (!this.players[i].finished) {
@@ -231,7 +232,7 @@ class MainScene extends Phaser.Scene {
             this.camera.setBounds(0, 0, this.trackLength, windowHeight); //+150 so the cave can be fully seen
         }
         this.players.forEach(player => {
-            player.renderer.updatePlayerNamePosition(posX-window.innerWidth)
+            player.renderer.updatePlayerNamePosition(posX - window.innerWidth);
         });
     }
 

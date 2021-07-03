@@ -11,13 +11,18 @@ import { GameRenderer } from './GameRenderer';
 export class PhaserGameRenderer implements GameRenderer {
     pauseButton?: Phaser.GameObjects.Text;
     countdownText?: Phaser.GameObjects.Text;
+    backgroundLanes: Phaser.GameObjects.Image[][];
 
     constructor(private scene: MainScene) {
         this.scene = scene;
+        this.backgroundLanes = [[], [], [], []]; //TODO change
     }
 
     renderBackground(windowWidth: number, windowHeight: number, trackLength: number) {
+        //TODO move lanes to player renderer
+        this.scene.cameras.main.backgroundColor.setTo(255, 255, 255);
         const reps = Math.ceil(trackLength / (windowWidth / 4)) + 1;
+
         for (let i = 0; i < reps; i++) {
             for (let j = 0; j < 4; j++) {
                 // Background without parallax
@@ -77,8 +82,52 @@ export class PhaserGameRenderer implements GameRenderer {
                 hills.setScrollFactor(0.5)
                 trees.setScrollFactor(0.75)
                 floor.setScrollFactor(1) */
+
+                this.backgroundLanes[j].push(bg);
             }
         }
+    }
+
+    handleLanePlayerDead(idx: number) {
+        //TODO change later - no need to color images that have already gone past
+        this.backgroundLanes[idx].forEach(img => {
+            // img.setAlpha(0.3);
+            img.setTint(0x123a3a); //081919);
+        });
+        const yPos = this.backgroundLanes[idx][0].y;
+        const height = window.innerHeight / 4; //TODO change for variable number of lanes
+        const fixedWidth = 1200;
+
+        const text = this.scene.make.text({
+            x: window.innerWidth / 2 - fixedWidth / 2,
+            // x: this.scene.camera?.scrollX,
+            y: yPos - height / 2,
+            text: 'The mosquito caught you. Look at your phone!',
+            style: {
+                fontSize: `${35}px`,
+                fontFamily: 'Roboto, Arial',
+                // color: '#d2a44f',
+                // stroke: '#d2a44f',
+                color: '#d2a44f',
+                stroke: '#d2a44f',
+                strokeThickness: 1,
+                fixedWidth,
+                // fixedHeight,
+                align: 'center',
+                shadow: {
+                    offsetX: 10,
+                    offsetY: 10,
+                    color: '#000',
+                    blur: 0,
+                    stroke: false,
+                    fill: false,
+                },
+            },
+
+            // origin: {x: 0.5, y: 0.5},
+            add: true,
+        });
+        text.scrollFactorX = 0;
     }
 
     renderPauseButton() {

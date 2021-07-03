@@ -18,6 +18,8 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     private particles: Phaser.GameObjects.Particles.ParticleEmitterManager[];
     private playerNameBg?: Phaser.GameObjects.Rectangle;
     private playerName?: Phaser.GameObjects.Text;
+    private caveBehind?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    private caveInFront?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
     constructor(private scene: MainScene) {
         this.playerObstacles = [];
@@ -38,6 +40,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         }
         this.chaser.setX(chasersPositionX - 50); // - 50 so that not quite on top of player when caught
     }
+
     destroyPlayer() {
         this.player?.destroy();
     }
@@ -71,32 +74,32 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         }
         if (this.player) {
             this.player.x = coordinates.x;
-            this.player.y = coordinates.y + window.innerHeight/18;
+            this.player.y = coordinates.y + window.innerHeight / 18;
         }
     }
 
-    renderPlayerName(coordinates: Coordinates, name: string){
-        this.playerNameBg = this.scene.add.rectangle(0,coordinates.y, 200, 50, 0x0, 0.5);
-        this.playerName = this.scene.add.text(10,coordinates.y, name);
-        this.playerNameBg.setDepth(depthDictionary.nameTag)
-        this.playerName.setDepth(depthDictionary.nameTag)
+    renderPlayerName(coordinates: Coordinates, name: string) {
+        this.playerNameBg = this.scene.add.rectangle(0, coordinates.y, 200, 50, 0x0, 0.5);
+        this.playerName = this.scene.add.text(10, coordinates.y, name);
+        this.playerNameBg.setDepth(depthDictionary.nameTag);
+        this.playerName.setDepth(depthDictionary.nameTag);
     }
 
-    public updatePlayerNamePosition(newX: number){
-        this.playerNameBg?.setPosition(newX + window.innerWidth, this.playerNameBg.y)
-        this.playerName?.setPosition(newX + window.innerWidth, this.playerName.y)
+    public updatePlayerNamePosition(newX: number) {
+        this.playerNameBg?.setPosition(newX + window.innerWidth, this.playerNameBg.y);
+        this.playerName?.setPosition(newX + window.innerWidth, this.playerName.y);
     }
 
-    renderGoal(posX: number, posY: number) {
+    renderCave(posX: number, posY: number) {
         posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
         posY += 5;
         const scale = 0.13;
-        const caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
-        caveBehind.setScale(scale, scale);
-        caveBehind.setDepth(depthDictionary.cave);
-        const caveInFront = this.scene.physics.add.sprite(posX, posY, 'caveInFront'); //TODO change caveInFront to enum
-        caveInFront.setScale(scale, scale);
-        caveInFront.setDepth(depthDictionary.caveInFront);
+        this.caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
+        this.caveBehind.setScale(scale, scale);
+        this.caveBehind.setDepth(depthDictionary.cave);
+        this.caveInFront = this.scene.physics.add.sprite(posX, posY, 'caveInFront'); //TODO change caveInFront to enum
+        this.caveInFront.setScale(scale, scale);
+        this.caveInFront.setDepth(depthDictionary.caveInFront);
     }
 
     // renderText(coordinates: Coordinates, text: string, background?: string): void {
@@ -161,6 +164,16 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
             this.playerObstacles[0].destroy();
             this.playerObstacles.shift();
         }
+    }
+    destroyObstacles() {
+        this.playerObstacles.forEach(obstacle => {
+            obstacle.destroy();
+        });
+    }
+
+    destroyCave() {
+        this.caveBehind?.destroy();
+        this.caveInFront?.destroy();
     }
 
     destroyChaser() {
