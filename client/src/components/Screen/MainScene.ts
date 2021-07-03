@@ -21,7 +21,7 @@ import { GameHasStartedMessage, startedTypeGuard } from '../../domain/typeGuards
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../domain/typeGuards/stopped';
 import { MessageTypes } from '../../utils/constants';
 import { screenFinishedRoute } from '../../utils/routes';
-import { audioFiles, characters, flaresJson, flaresPng, images } from './GameAssets';
+import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;
@@ -44,7 +44,7 @@ class MainScene extends Phaser.Scene {
 
     constructor() {
         super('MainScene');
-        this.roomId = '';
+        this.roomId = sessionStorage.getItem('roomId') || '';
         this.socket = this.handleSocketConnection();
         this.posX = 50;
         this.plusX = 40;
@@ -76,7 +76,11 @@ class MainScene extends Phaser.Scene {
             this.load.image(image.name, image.file);
         });
 
-        this.load.atlas('flares', flaresPng, flaresJson);
+        fireworkFlares.forEach((flare, i) => {
+            this.load.image(`flare${i}`, flare);
+        });
+
+        // this.load.atlas('flares', flaresPng, flaresJson);
 
         //TODO Loading bar: https://www.patchesoft.com/phaser-3-loading-screen
         // this.load.on('progress', this.updateBar);
@@ -84,7 +88,6 @@ class MainScene extends Phaser.Scene {
 
     create() {
         this.gameRenderer = new PhaserGameRenderer(this);
-        this.gameRenderer?.renderPauseButton();
         this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
@@ -177,6 +180,10 @@ class MainScene extends Phaser.Scene {
         this.gameEventEmitter.on(GameEventTypes.PlayAudio, () => {
             this.gameAudio?.resume();
         });
+
+        this.gameEventEmitter.on(GameEventTypes.PauseResume, () => {
+            this.handlePauseResumeButton();
+        });
     }
 
     handleStartGame(gameStateData: GameData) {
@@ -243,24 +250,24 @@ class MainScene extends Phaser.Scene {
         this.players.push(player);
     }
 
-    handlePauseResumeButton() {
-        this.socket?.emit({ type: MessageTypes.pauseResume });
-    }
-
     private pauseGame() {
         this.paused = true;
-        this.gameRenderer?.pauseGame();
         this.players.forEach(player => {
             player.stopRunning();
         });
+        this.scene.pause();
     }
 
     private resumeGame() {
         this.paused = false;
-        this.gameRenderer?.resumeGame();
         this.players.forEach(player => {
             player.startRunning();
         });
+        this.scene.resume();
+    }
+
+    handlePauseResumeButton() {
+        this.socket?.emit({ type: MessageTypes.pauseResume });
     }
 
     handleError(msg = 'Something went wrong.') {

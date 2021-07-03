@@ -17,7 +17,7 @@ class User {
         name: string,
         characterNumber = -1,
         id: string = shortid.generate(),
-        number = 0,
+        number = 0
     ) {
         this.id = id;
         this.roomId = roomId;

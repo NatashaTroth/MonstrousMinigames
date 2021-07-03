@@ -14,33 +14,15 @@ import { generateQRCode } from '../../utils/generateQRCode';
 import { Routes, screenChooseGameRoute } from '../../utils/routes';
 import Button from '../common/Button';
 import {
-    Character,
-    CharacterContainer,
-    ConnectedUserCharacter,
-    ConnectedUserContainer,
-    ConnectedUsers,
-    ConnectedUserStatus,
-    Content,
-    ContentContainer,
-    CopyToClipboard,
-    LeftContainer,
-    LobbyContainer,
-    QRCode,
-    QRCodeInstructions,
-    RightButtonContainer,
-    RightContainer,
+    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer, ConnectedUsers,
+    ConnectedUserStatus, Content, ContentContainer, CopyToClipboard, LeftContainer, LobbyContainer,
+    QRCode, QRCodeInstructions, RightButtonContainer, RightContainer
 } from './Lobby.sc';
 import LobbyHeader from './LobbyHeader';
 
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
-    const {
-        audioPermission,
-
-        setAudioPermissionGranted,
-
-        initialPlayLobbyMusic,
-    } = React.useContext(AudioContext);
+    const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: IRouteParams = useParams();
     const navigator = window.navigator;
