@@ -67,25 +67,27 @@ const Hole: React.FunctionComponent = () => {
     }
 
     return (
-        <ObstacleContainer>
-            <LinearProgressBar MAX={3} progress={progress} />
-            <Container>
-                {stonesAndLeafs.map((item, index) =>
-                    item === 'stone' ? (
-                        <DraggableStone index={index} key={`draggable${index}`} id="stone" className="drag-drop" />
-                    ) : (
-                        <DraggableLeaf index={index} key={`draggable${index}`} id="leaf" className="drag-drop" />
-                    )
-                )}
+        <>
+            <ObstacleContainer>
+                <LinearProgressBar MAX={3} progress={progress} />
+                <Container>
+                    {stonesAndLeafs.map((item, index) =>
+                        item === 'stone' ? (
+                            <DraggableStone index={index} key={`draggable${index}`} id="stone" className="drag-drop" />
+                        ) : (
+                            <DraggableLeaf index={index} key={`draggable${index}`} id="leaf" className="drag-drop" />
+                        )
+                    )}
 
-                <DropZone className="dropzone" />
-            </Container>
-            {skip && (
-                <StyledSkipButton>
-                    <Button onClick={solveObstacle}>Skip</Button>
-                </StyledSkipButton>
-            )}
-        </ObstacleContainer>
+                    <DropZone className="dropzone" />
+                </Container>
+                {skip && (
+                    <StyledSkipButton>
+                        <Button onClick={solveObstacle}>Skip</Button>
+                    </StyledSkipButton>
+                )}
+            </ObstacleContainer>
+        </>
     );
 };
 

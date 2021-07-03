@@ -57,25 +57,27 @@ const Spider: React.FunctionComponent = () => {
     }, []);
 
     return (
-        <ObstacleContainer>
-            <LinearProgressBar MAX={MAX} progress={progress} />
-            <ObstacleContent>
-                <StyledNet />
-                <StyledSpider
-                    className={[
-                        (progress > 0 && progress < 14 && 'swing') || '',
-                        'eyeRoll',
-                        ((progress >= 14 || skip) && 'fallOff') || '',
-                    ].join(' ')}
-                    strokeWidth={skip ? 0 : (MAX - progress) / 2}
-                />
-            </ObstacleContent>
-            {skip && (
-                <StyledSkipButton>
-                    <Button onClick={solveObstacle}>Skip</Button>
-                </StyledSkipButton>
-            )}
-        </ObstacleContainer>
+        <>
+            <ObstacleContainer>
+                <LinearProgressBar MAX={MAX} progress={progress} />
+                <ObstacleContent>
+                    <StyledNet />
+                    <StyledSpider
+                        className={[
+                            (progress > 0 && progress < 14 && 'swing') || '',
+                            'eyeRoll',
+                            ((progress >= 14 || skip) && 'fallOff') || '',
+                        ].join(' ')}
+                        strokeWidth={skip ? 0 : (MAX - progress) / 2}
+                    />
+                </ObstacleContent>
+                {skip && (
+                    <StyledSkipButton>
+                        <Button onClick={solveObstacle}>Skip</Button>
+                    </StyledSkipButton>
+                )}
+            </ObstacleContainer>
+        </>
     );
 };
 

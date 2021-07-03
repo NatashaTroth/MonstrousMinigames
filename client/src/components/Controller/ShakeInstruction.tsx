@@ -1,12 +1,10 @@
 import * as React from 'react';
 
-import { GameContext } from '../../contexts/GameContextProvider';
 import shakeIt from '../../images/ui/shakeIt.svg';
 import FullScreenContainer from '../common/FullScreenContainer';
-import { Container, Countdown, DialogContent, ShakeIt, StyledDialog } from './ShakeInstruction.sc';
+import { Container, Countdown, ShakeIt } from './ShakeInstruction.sc';
 
 const ShakeInstruction: React.FunctionComponent = () => {
-    const { hasPaused, roomId } = React.useContext(GameContext);
     const [counter, setCounter] = React.useState(
         sessionStorage.getItem('countdownTime') ? Number(sessionStorage.getItem('countdownTime')) / 1000 : null
     );
@@ -26,11 +24,6 @@ const ShakeInstruction: React.FunctionComponent = () => {
 
     return (
         <>
-            <StyledDialog open={hasPaused}>
-                <DialogContent>
-                    <h3>Game has paused</h3>
-                </DialogContent>
-            </StyledDialog>
             <FullScreenContainer>
                 <Container>{counter ? <Countdown>{counter}</Countdown> : <ShakeIt src={shakeIt} />}</Container>
             </FullScreenContainer>
