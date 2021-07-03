@@ -41,3 +41,12 @@ export const AudioButton = styled(StyledButtonBase)`
         top: 10px;
     }
 `;
+
+export const PauseButton = styled(StyledButtonBase)`
+    && {
+        border-radius: 10px;
+        position: absolute;
+        right: 80px;
+        top: 10px;
+    }
+`;

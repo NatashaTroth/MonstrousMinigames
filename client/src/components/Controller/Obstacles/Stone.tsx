@@ -58,55 +58,57 @@ const Stone: React.FunctionComponent = () => {
     }
 
     return (
-        <StoneContainer pebble={counter > limit}>
-            {counter <= limit ? (
-                <StyledStone onTouchStart={handleTouch}>
-                    <StyledStoneImage src={stone} />
-                    {particles && <StyledParticles params={stoneParticlesConfig} />}
-                </StyledStone>
-            ) : (
-                <>
-                    <PebbleContainer>
-                        <StyledPebbleImage src={pebble} />
-                        <Sun>
-                            <RayBox>
-                                <Ray1 />
-                                <Ray2 />
-                                <Ray3 />
-                                <Ray4 />
-                                <Ray5 />
-                                <Ray6 />
-                                <Ray7 />
-                                <Ray8 />
-                                <Ray9 />
-                                <Ray10 />
-                            </RayBox>
-                        </Sun>
-                    </PebbleContainer>
-                    {connectedUsers?.map(
-                        (user, key) =>
-                            user.id !== userId && (
-                                <PlayerButtonContainer
-                                    key={key}
-                                    onClick={() => setChosenPlayer(user.id)}
-                                    characterNumber={user.characterNumber}
-                                    selected={user.id === chosenPlayer}
-                                >
-                                    {user.name}
-                                </PlayerButtonContainer>
-                            )
-                    )}
-                </>
-            )}
+        <>
+            <StoneContainer pebble={counter > limit}>
+                {counter <= limit ? (
+                    <StyledStone onTouchStart={handleTouch}>
+                        <StyledStoneImage src={stone} />
+                        {particles && <StyledParticles params={stoneParticlesConfig} />}
+                    </StyledStone>
+                ) : (
+                    <>
+                        <PebbleContainer>
+                            <StyledPebbleImage src={pebble} />
+                            <Sun>
+                                <RayBox>
+                                    <Ray1 />
+                                    <Ray2 />
+                                    <Ray3 />
+                                    <Ray4 />
+                                    <Ray5 />
+                                    <Ray6 />
+                                    <Ray7 />
+                                    <Ray8 />
+                                    <Ray9 />
+                                    <Ray10 />
+                                </RayBox>
+                            </Sun>
+                        </PebbleContainer>
+                        {connectedUsers?.map(
+                            (user, key) =>
+                                user.id !== userId && (
+                                    <PlayerButtonContainer
+                                        key={key}
+                                        onClick={() => setChosenPlayer(user.id)}
+                                        characterNumber={user.characterNumber}
+                                        selected={user.id === chosenPlayer}
+                                    >
+                                        {user.name}
+                                    </PlayerButtonContainer>
+                                )
+                        )}
+                    </>
+                )}
 
-            {counter > limit && (
-                <ButtonContainer>
-                    <Button onClick={handleThrow} disabled={!chosenPlayer}>
-                        Throw
-                    </Button>
-                </ButtonContainer>
-            )}
-        </StoneContainer>
+                {counter > limit && (
+                    <ButtonContainer>
+                        <Button onClick={handleThrow} disabled={!chosenPlayer}>
+                            Throw
+                        </Button>
+                    </ButtonContainer>
+                )}
+            </StoneContainer>
+        </>
     );
 };
 
