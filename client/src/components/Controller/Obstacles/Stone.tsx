@@ -62,7 +62,7 @@ const Stone: React.FunctionComponent = () => {
                 {counter <= limit ? (
                     <>
                         <StyledTypography>
-                            Tap on the rock several times to get a stone. Throw it at a fellow player to freeze the
+                            Tap on this rock several times to get a stone. Throw it at a fellow player to freeze their
                             movement for a few seconds.
                         </StyledTypography>
                         <StyledStone onTouchStart={handleTouch}>

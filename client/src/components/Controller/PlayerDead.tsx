@@ -27,9 +27,9 @@ const PlayerDead: React.FC = () => {
             <PlayerDeadContainer>
                 {character && <StyledCharacter src={character.ghost} />}
                 <TextWrapper>
-                    Oh no! Unfortunately the mosquitos got you.
-                    <div>A magic rock will appear in {counter} seconds</div>. Tap on the rock several times to get a
-                    stone. Throw it at a fellow player to freeze the movement for a few seconds.
+                    Oh no! Unfortunately the mosquitoes got you.
+                    <div>A magic rock will appear in {counter} seconds</div>. Tap on this rock several times to get a
+                    stone. Throw the stone at a fellow player to freeze their movement for a few seconds.
                 </TextWrapper>
             </PlayerDeadContainer>
         </FullScreenContainer>
