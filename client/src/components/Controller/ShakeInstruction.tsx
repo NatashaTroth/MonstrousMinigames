@@ -6,7 +6,7 @@ import FullScreenContainer from '../common/FullScreenContainer';
 import { Container, Countdown, DialogContent, ShakeIt, StyledDialog } from './ShakeInstruction.sc';
 
 const ShakeInstruction: React.FunctionComponent = () => {
-    const { hasPaused } = React.useContext(GameContext);
+    const { hasPaused, roomId } = React.useContext(GameContext);
     const [counter, setCounter] = React.useState(
         sessionStorage.getItem('countdownTime') ? Number(sessionStorage.getItem('countdownTime')) / 1000 : null
     );

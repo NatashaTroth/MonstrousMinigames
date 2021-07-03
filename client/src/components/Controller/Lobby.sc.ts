@@ -53,7 +53,7 @@ interface Props {
 
 export const ReadyButton = styled.div<Props>`
     background-color: ${({ ready, theme }) => (ready ? theme.colors.playerName : theme.colors.readyButton)};
-    color: white;
+    color: ${({ ready }) => (ready ? 'black' : 'white')};
     font-style: italic;
     text-transform: uppercase;
     font-size: 26px;
