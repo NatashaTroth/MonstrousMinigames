@@ -231,7 +231,7 @@ class MainScene extends Phaser.Scene {
             this.camera.setBounds(0, 0, this.trackLength, windowHeight); //+150 so the cave can be fully seen
         }
         this.players.forEach(player => {
-            player.renderer.updatePlayerNamePosition(posX);
+            player.renderer.updatePlayerNamePosition(posX-window.innerWidth)
         });
     }
 
