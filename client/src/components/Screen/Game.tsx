@@ -48,7 +48,7 @@ const Game: React.FunctionComponent = () => {
     React.useEffect(() => {
         const game = new Phaser.Game({
             parent: 'game-root',
-            type: Phaser.AUTO,
+            type: Phaser.WEBGL,
             width: '100%',
             height: '100%',
             physics: {

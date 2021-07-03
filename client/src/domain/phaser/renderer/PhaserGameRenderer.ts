@@ -90,7 +90,8 @@ export class PhaserGameRenderer implements GameRenderer {
     handleLanePlayerDead(idx: number) {
         //TODO change later - no need to color images that have already gone past
         this.backgroundLanes[idx].forEach(img => {
-            img.setAlpha(0.3);
+            // img.setAlpha(0.3);
+            img.setTint(0x123a3a); //081919);
         });
         const yPos = this.backgroundLanes[idx][0].y;
         const height = window.innerHeight / 4; //TODO change for variable number of lanes
