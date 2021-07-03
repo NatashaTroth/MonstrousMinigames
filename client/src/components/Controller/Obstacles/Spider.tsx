@@ -36,10 +36,23 @@ const Spider: React.FunctionComponent = () => {
     };
 
     React.useEffect(() => {
+        let mounted = true;
         resetCurrentCount();
         initializeSkip();
 
-        getAudioInput(MAX, { solveObstacle, setProgress });
+        getAudioInput(MAX, {
+            solveObstacle: () => {
+                if (mounted) {
+                    solveObstacle();
+                }
+            },
+            setProgress,
+        });
+
+        return () => {
+            mounted = false;
+            clearTimeout(handleSkip);
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
