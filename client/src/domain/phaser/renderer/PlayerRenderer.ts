@@ -9,6 +9,7 @@ export type Coordinates = { x: number; y: number };
 export interface PlayerRenderer {
     renderChasers(chasersPositionX: number, chasersPositionY: number): void;
     renderPlayer(
+        idx: number,
         coordinates: Coordinates,
         monsterName: string,
         animationName: string,

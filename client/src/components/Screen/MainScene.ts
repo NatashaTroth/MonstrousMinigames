@@ -236,18 +236,17 @@ class MainScene extends Phaser.Scene {
     moveCamera(posX: number) {
         if (this.camera) {
             this.camera.scrollX = posX;
-            this.camera.setBounds(0, 0, this.trackLength, windowHeight); //+150 so the cave can be fully seen
-            this.players.forEach(player => {
-                player.renderer.updatePlayerNamePosition(posX, this.trackLength)
-            });
+            this.camera.setBounds(0, 0, this.trackLength + 150, windowHeight); //+150 so the cave can be fully seen
+            // this.players.forEach(player => {
+            //     player.renderer.updatePlayerNamePosition(posX, this.trackLength);
+            // });
         }
-            
     }
 
     private createPlayer(index: number, gameStateData: GameData) {
         const character = characters[gameStateData.playersState[index].characterNumber];
         const posX = this.posX + this.plusX;
-        const posY = index * (window.innerHeight / 4) + this.plusY - 50;
+        const posY = index * (window.innerHeight / 4) + this.plusY - 60;
 
         const player = new Player(
             new PhaserPlayerRenderer(this),
