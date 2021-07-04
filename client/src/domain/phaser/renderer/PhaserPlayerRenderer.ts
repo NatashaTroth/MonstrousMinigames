@@ -241,16 +241,16 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
 
     private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
         // eslint-disable-next-line no-console
-        // console.log(window.devicePixelRatio / 3);
+        console.log(' coordinates.y + window.innerHeight / 15');
         this.player = this.scene.physics.add.sprite(
             coordinates.x,
-            coordinates.y + window.innerHeight / 16,
+            coordinates.y + window.innerHeight / 15,
             monsterName
         );
         this.player.setDepth(depthDictionary.player);
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
-        this.player.setScale(0.15, 0.15);
+        this.player.setScale(0.13, 0.13);
     }
 
     private initiatePlayerAnimation(monsterName: string, animationName: string) {
