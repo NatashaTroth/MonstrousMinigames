@@ -109,6 +109,7 @@ class MainScene extends Phaser.Scene {
     sendStartGame() {
         printMethod('SEND START GAME');
         //TODO!!!! - do not send when game is already started? - or is it just ignored - appears to work - maybe check if no game state updates?
+        printMethod('SEND START GAME');
         this.socket?.emit({
             type: MessageTypes.startGame,
             roomId: this.roomId,
@@ -263,6 +264,7 @@ class MainScene extends Phaser.Scene {
             player.stopRunning();
         });
         this.scene.pause();
+        this.gameAudio?.pause();
     }
 
     private resumeGame() {
@@ -271,6 +273,7 @@ class MainScene extends Phaser.Scene {
             player.startRunning();
         });
         this.scene.resume();
+        this.gameAudio?.resume();
     }
 
     handlePauseResumeButton() {
