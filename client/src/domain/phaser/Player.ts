@@ -78,6 +78,7 @@ export class Player {
         this.renderer.destroyChaser();
         this.renderer.destroyObstacles();
         this.renderer.destroyCave();
+        this.renderer.destroyAttentionIcon();
         this.dead = true;
     }
 
