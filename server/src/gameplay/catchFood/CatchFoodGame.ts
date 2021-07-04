@@ -127,7 +127,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         if (this.updateChasersInterval) clearInterval(this.updateChasersInterval);
         this.startGame();
         this.speed = speed;
-        this.chasersPositionX = 1300;
+        this.chasersPositionX = 1350;
         // this.chasersPositionX = (6 * this.speed * this.timeWhenChasersAppear) / 100; //(6 updates per 100ms)
     }
 
