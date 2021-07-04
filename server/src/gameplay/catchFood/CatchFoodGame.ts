@@ -68,8 +68,8 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
         this.roomId = roomId;
         this.maxNumberOfPlayers = Globals.MAX_PLAYER_NUMBER;
         this.gameState = GameState.Initialised;
-        this.trackLength = 5000; // TODO 5000;
-        this.numberOfObstacles = 4;
+        this.trackLength = 1000; // TODO 5000;
+        this.numberOfObstacles = 0;
         this.speed = 0;
         this.currentRank = 1;
         this.currentRankFromTheBack = 4;
@@ -144,18 +144,21 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
             if (localDevelopment && this.gameState === GameState.Started) {
                 const keys = Object.keys(this.playersState);
-
+                let done = false;
                 keys.forEach(key => {
-                    const runInterval = setInterval(() => {
-                        // console.log(this.playersState[key].positionX);
-                        // this.playersState[key].positionX += this.speed;
-                        this.runForward(key, this.speed);
-                        if (this.playersState[key].positionX >= this.trackLength) {
-                            console.log('at goal');
-                            clearInterval(runInterval);
-                        }
-                    }, 18); //make a bit slower - real players will not have a consistent rate
-                    // }, 16.6667);
+                    if (!done) {
+                        done = true;
+                        const runInterval = setInterval(() => {
+                            // console.log(this.playersState[key].positionX);
+                            // this.playersState[key].positionX += this.speed;
+                            this.runForward(key, this.speed);
+                            if (this.playersState[key].positionX >= this.trackLength) {
+                                console.log('at goal');
+                                clearInterval(runInterval);
+                            }
+                        }, 18); //make a bit slower - real players will not have a consistent rate
+                        // }, 16.6667);
+                    }
                 });
             }
         }, this.countdownTime);

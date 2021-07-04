@@ -1,2 +1,2 @@
-export const localDevelopment = false;
-// export const localDevelopment = true;
+// export const localDevelopment = false;
+export const localDevelopment = true;

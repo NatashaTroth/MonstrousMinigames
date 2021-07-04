@@ -21,7 +21,7 @@ export class PhaserGameRenderer implements GameRenderer {
     renderBackground(windowWidth: number, windowHeight: number, trackLength: number) {
         //TODO move lanes to player renderer
         this.scene.cameras.main.backgroundColor.setTo(255, 255, 255);
-        const reps = Math.ceil(trackLength / (windowWidth / 4)) + 1;
+        const reps = Math.ceil(trackLength / (windowWidth / 4)) + 2;
 
         for (let i = 0; i < reps; i++) {
             for (let j = 0; j < 4; j++) {
@@ -86,6 +86,43 @@ export class PhaserGameRenderer implements GameRenderer {
                 this.backgroundLanes[j].push(bg);
             }
         }
+
+        // const playerNameBg = this.scene.add.rectangle(50, window.innerHeight / 4 - 25, 250, 50, 0xb63bd4, 0.7);
+        // // this.playerName = this.scene.add.text(100, window.innerHeight / 4 - 20, 'lsjhdf');
+
+        // const playerName = this.scene.make.text({
+        //     x: 50,
+        //     // x: this.scene.camera?.scrollX,
+        //     y: window.innerHeight / 4 - 30,
+        //     text: ' skjhdf',
+        //     style: {
+        //         fontSize: `${16}px`,
+        //         fontFamily: 'Roboto, Arial',
+        //         // color: '#d2a44f',
+        //         // stroke: '#d2a44f',
+        //         color: '#fff',
+        //         // stroke: '#d2a44f',
+        //         // strokeThickness: 1,
+        //         // fixedWidth,
+        //         // fixedHeight,
+        //         // align: 'left',
+        //         // shadow: {
+        //         //     offsetX: 10,
+        //         //     offsetY: 10,
+        //         //     color: '#000',
+        //         //     blur: 0,
+        //         //     stroke: false,
+        //         //     fill: false,
+        //         // },
+        //     },
+
+        //     // origin: {x: 0.5, y: 0.5},
+        //     add: true,
+        // });
+        // playerName.setPadding(0, 0, 0, 40);
+
+        // playerNameBg.setDepth(depthDictionary.nameTag);
+        // playerName.setDepth(depthDictionary.nameTag);
     }
 
     handleLanePlayerDead(idx: number) {
