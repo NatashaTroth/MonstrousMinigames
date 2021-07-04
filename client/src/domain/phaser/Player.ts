@@ -76,6 +76,8 @@ export class Player {
     handlePlayerDead() {
         this.destroyPlayer();
         this.renderer.destroyChaser();
+        this.renderer.destroyObstacles();
+        this.renderer.destroyCave();
         this.dead = true;
     }
 
@@ -181,7 +183,7 @@ export class Player {
     }
 
     setGoal(posX: number) {
-        this.renderer.renderGoal(posX, this.coordinates.y);
+        this.renderer.renderCave(posX, this.coordinates.y);
     }
 
     startRunning() {

@@ -1,4 +1,4 @@
-import { VolumeOff, VolumeUp } from '@material-ui/icons';
+import { Pause, PlayArrow, VolumeOff, VolumeUp } from '@material-ui/icons';
 import Phaser from 'phaser';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -9,9 +9,7 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
-import Button from '../common/Button';
-import IconButton from '../common/IconButton';
-import { AudioButton, Container } from './Game.sc';
+import { AudioButton, Container, PauseButton } from './Game.sc';
 import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
@@ -50,7 +48,7 @@ const Game: React.FunctionComponent = () => {
     React.useEffect(() => {
         const game = new Phaser.Game({
             parent: 'game-root',
-            type: Phaser.AUTO,
+            type: Phaser.WEBGL,
             width: '100%',
             height: '100%',
             physics: {
@@ -84,27 +82,15 @@ const Game: React.FunctionComponent = () => {
         GameEventEmitter.emitPauseResumeEvent();
     }
 
-    const myStyle: React.CSSProperties = {
-        // color: 'white',
-        // backgroundColor: 'DodgerBlue',
-        // padding: '10px',
-        // fontFamily: 'Arial',
-
-        position: 'absolute',
-        width: '100%',
-        bottom: '0',
-        left: '0',
-    };
-
     return (
         <Container>
+            <PauseButton onClick={handlePause} variant="primary">
+                {hasPaused ? <PlayArrow /> : <Pause />}
+            </PauseButton>
             <AudioButton onClick={handleAudio} variant="primary">
                 {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
             </AudioButton>
             <GameContent />
-            <div style={myStyle}>
-                <Button onClick={handlePause}>{hasPaused ? 'Resume' : 'Pause'}</Button>
-            </div>
         </Container>
     );
 };

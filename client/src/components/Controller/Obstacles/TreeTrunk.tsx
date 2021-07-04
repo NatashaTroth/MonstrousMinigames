@@ -105,26 +105,28 @@ const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
     };
 
     return (
-        <ObstacleContainer>
-            <ProgressBarContainer>
-                <LinearProgressBar MAX={MAX} progress={progress} />
-            </ProgressBarContainer>
-            <ObstacleContent>
-                <ObstacleItem>
-                    <StyledObstacleImage src={wood} />
-                </ObstacleItem>
-                <TouchContainer id="touchContainer">
-                    {skip && (
-                        <StyledSkipButton>
-                            <Button onClick={solveObstacle}>Skip</Button>
-                        </StyledSkipButton>
-                    )}
-                    <Line />
-                    {showInstructions && <StyledTouchAppIcon />}
-                </TouchContainer>
-                {particles && <StyledParticles params={treeParticlesConfig} />}
-            </ObstacleContent>
-        </ObstacleContainer>
+        <>
+            <ObstacleContainer>
+                <ProgressBarContainer>
+                    <LinearProgressBar MAX={MAX} progress={progress} />
+                </ProgressBarContainer>
+                <ObstacleContent>
+                    <ObstacleItem>
+                        <StyledObstacleImage src={wood} />
+                    </ObstacleItem>
+                    <TouchContainer id="touchContainer">
+                        {skip && (
+                            <StyledSkipButton>
+                                <Button onClick={solveObstacle}>Skip</Button>
+                            </StyledSkipButton>
+                        )}
+                        <Line />
+                        {showInstructions && <StyledTouchAppIcon />}
+                    </TouchContainer>
+                    {particles && <StyledParticles params={treeParticlesConfig} />}
+                </ObstacleContent>
+            </ObstacleContainer>
+        </>
     );
 };
 

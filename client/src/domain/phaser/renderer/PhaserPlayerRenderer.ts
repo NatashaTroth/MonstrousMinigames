@@ -18,6 +18,8 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     private particles: Phaser.GameObjects.Particles.ParticleEmitterManager[];
     private playerNameBg?: Phaser.GameObjects.Rectangle;
     private playerName?: Phaser.GameObjects.Text;
+    private caveBehind?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    private caveInFront?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
     constructor(private scene: MainScene) {
         this.playerObstacles = [];
@@ -38,6 +40,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         }
         this.chaser.setX(chasersPositionX - 50); // - 50 so that not quite on top of player when caught
     }
+
     destroyPlayer() {
         this.player?.destroy();
     }
@@ -89,7 +92,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         }
     }
 
-    renderGoal(posX: number, posY: number) {
+    renderCave(posX: number, posY: number) {
         posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
         posY += 5;
         const scale = 0.13;
@@ -163,6 +166,16 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
             this.playerObstacles[0].destroy();
             this.playerObstacles.shift();
         }
+    }
+    destroyObstacles() {
+        this.playerObstacles.forEach(obstacle => {
+            obstacle.destroy();
+        });
+    }
+
+    destroyCave() {
+        this.caveBehind?.destroy();
+        this.caveInFront?.destroy();
     }
 
     destroyChaser() {

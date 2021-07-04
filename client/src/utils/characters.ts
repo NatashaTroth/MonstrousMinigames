@@ -12,13 +12,23 @@ import susi_stunned from '../images/characters/stunned_pink.png';
 import susi from '../images/characters/susi.png';
 import { characterDictionary } from './characterDictionary';
 
-export const characters: string[] = [franz, noah, susi, steffi];
+export interface ICharacter {
+    id: string;
+    src: string;
+    stunned: string;
+    ghost: string;
+}
+
+export const characters: ICharacter[] = [
+    { id: 'franz', src: franz, stunned: franz_stunned, ghost: franz_ghost },
+    { id: 'noah', src: noah, stunned: noah_stunned, ghost: noah_ghost },
+    { id: 'susi', src: susi, stunned: susi_stunned, ghost: susi_ghost },
+    { id: 'steffi', src: steffi, stunned: steffi_stunned, ghost: steffi_ghost },
+];
+
 export const defaultAvailableCharacters = [
     characterDictionary.franz,
     characterDictionary.noah,
     characterDictionary.susi,
     characterDictionary.steffi,
 ];
-
-export const charactersStunned = [franz_stunned, noah_stunned, susi_stunned, steffi_stunned];
-export const charactersGhosts = [franz_ghost, noah_ghost, susi_ghost, steffi_ghost];

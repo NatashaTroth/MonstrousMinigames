@@ -287,7 +287,7 @@ class ConnectionHandler {
                     }
                     case MessageTypes.BACK_TO_LOBBY:
                         {
-                            if (!socket.room.isOpen() && socket.room.isAdminScreen(socket.id)) {
+                            if (socket.room.isAdminScreen(socket.id)) {
                                 console.info(socket.room.id + ' | Reset Game');
                                 socket.room.resetGame().then(() => {
                                     emitter.sendMessage(

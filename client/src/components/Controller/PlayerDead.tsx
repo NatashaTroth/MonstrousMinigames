@@ -3,8 +3,6 @@ import * as React from 'react';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { handlePlayerGetsStone } from '../../domain/gameState/controller/handlePlayerGetsStone';
-import { characterDictionary } from '../../utils/characterDictionary';
-import { charactersGhosts } from '../../utils/characters';
 import FullScreenContainer from '../common/FullScreenContainer';
 import { PlayerDeadContainer, StyledCharacter, TextWrapper } from './PlayerDead.sc';
 
@@ -27,10 +25,11 @@ const PlayerDead: React.FC = () => {
     return (
         <FullScreenContainer>
             <PlayerDeadContainer>
-                {character && <StyledCharacter src={charactersGhosts[characterDictionary[character]]} />}
+                {character && <StyledCharacter src={character.ghost} />}
                 <TextWrapper>
-                    Oh no! Unfortunately the mosquitos got you.
-                    <div>You will receive a stone in {counter} seconds</div>
+                    Oh no! Unfortunately the mosquitoes got you.
+                    <div>A magic rock will appear in {counter} seconds</div>. Tap on this rock several times to get a
+                    stone. Throw the stone at a fellow player to freeze their movement for a few seconds.
                 </TextWrapper>
             </PlayerDeadContainer>
         </FullScreenContainer>

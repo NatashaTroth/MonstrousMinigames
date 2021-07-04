@@ -1,9 +1,12 @@
 import * as React from 'react';
 
+import campfireSoundsFile from '../assets/audio/Campfire_Loop.wav';
 import lobbyMusicFile from '../assets/audio/LobbySound2_Loop.wav';
+import owlSoundsFile from '../assets/audio/Owl_Loop.wav';
 import finishedMusicFile from '../assets/audio/WinnerSound.wav';
+import woodSoundsFile from '../assets/audio/WoodSounds_Loop.wav';
 
-// import print from '../domain/phaser/printMethod';
+
 
 export const defaultValue = {
     audioPermission: false,
@@ -28,6 +31,9 @@ export const defaultValue = {
     pauseLobbyMusic: () => {
         //do nothing
     },
+    campfireSounds: new Audio(campfireSoundsFile),
+    owlSounds: new Audio(owlSoundsFile),
+    woodSounds: new Audio(woodSoundsFile),
     finishedMusic: new Audio(finishedMusicFile),
     playFinishedMusic: () => {
         //do nothing
@@ -92,6 +98,21 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     const [gameAudioPlaying, setGameAudioPlaying] = React.useState<boolean>(false);
     const [lobbyMusic, setLobbyMusic] = React.useState<HTMLAudioElement>(new Audio(lobbyMusicFile));
     const [finishedMusic, setFinishedMusic] = React.useState<HTMLAudioElement>(new Audio(finishedMusicFile));
+    const [campfireSounds, setCampfireSounds] = React.useState<HTMLAudioElement>(new Audio(campfireSoundsFile));
+    const [owlSounds, setOwlSounds] = React.useState<HTMLAudioElement>(new Audio(owlSoundsFile));
+    const [owlSoundsTimeout, setOwlSoundsTimeout] = React.useState<ReturnType<typeof setTimeout>>(
+        setTimeout(() => {
+            /*do nothing*/
+        }, 0)
+    );
+    const [woodSounds, setWoodSounds] = React.useState<HTMLAudioElement>(new Audio(woodSoundsFile));
+    const [lobbyMusicAndSfx, setLobbyMusicAndSfx] = React.useState<HTMLAudioElement[]>([
+        lobbyMusic,
+        campfireSounds,
+        woodSounds,
+    ]);
+    const [allAudio, setAllAudio] = React.useState<HTMLAudioElement[]>([...lobbyMusicAndSfx, finishedMusic, owlSounds]);
+
     const [volume, setVolume] = React.useState<number>(
         localStorage.getItem('audioVolume') ? Number(localStorage.getItem('audioVolume')) : 0.2
     );
@@ -116,8 +137,14 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     };
 
     const changeVolume = (value: number) => {
-        lobbyMusic.volume = value;
-        finishedMusic.volume = value;
+        // lobbyMusic.volume = value;
+        // finishedMusic.volume = value;
+        allAudio.forEach(audio => {
+            audio.volume = value;
+        });
+        woodSounds.volume = Math.min(woodSounds.volume + 0.3, 1); //TODO improve
+        campfireSounds.volume = Math.min(woodSounds.volume + 0.15, 1);
+        owlSounds.volume = Math.min(woodSounds.volume + 0.15, 1);
         setVolume(value);
     };
 
@@ -140,19 +167,50 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
 
     const playLobbyMusic = async () => {
         try {
-            await lobbyMusic.play();
-            lobbyMusic.loop = true;
-            setPlaying(true);
+            await playLobbyMusicAndSfx();
             if (volume === 0) unMuteVolumeEverywhere();
         } catch (e) {
             setPlaying(false);
         }
     };
 
-    const pauseLobbyMusic = () => {
-        lobbyMusic.pause();
-        setPlaying(false);
+    const playLobbyMusicAndSfx = async () => {
+        lobbyMusicAndSfx.forEach(async audio => {
+            await audio.play();
+            audio.loop = true;
+        });
+        clearTimeout(owlSoundsTimeout);
+        const timeout = setTimeout(playOwlSounds, getTimeForNextOwlSound());
+        setOwlSoundsTimeout(timeout);
+
+        setPlaying(true);
+    };
+    const playOwlSounds = async () => {
+        await owlSounds.play();
+        clearTimeout(owlSoundsTimeout);
+        const timeout = setTimeout(playOwlSounds, getTimeForNextOwlSound());
+        setOwlSoundsTimeout(timeout);
+    };
+
+    const getTimeForNextOwlSound = () => {
+        return Math.random() * 30000;
+    };
+
+    const pauseLobbyMusic = async () => {
+        // lobbyMusic.pause();
+        // setPlaying(false);
+        pauseLobbyMusicAndSfx();
         if (volume > 0) muteVolumeEverywhere();
+    };
+
+    const pauseLobbyMusicAndSfx = () => {
+        lobbyMusicAndSfx.forEach(audio => {
+            audio.pause();
+            // audio.loop = true;
+        });
+        owlSounds.pause();
+        clearTimeout(owlSoundsTimeout);
+        setPlaying(false);
     };
 
     const playFinishedMusic = async () => {
@@ -207,7 +265,8 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
 
         pauseLobbyMusicNoMute: (p: boolean) => {
             if (p) {
-                lobbyMusic.pause();
+                // lobbyMusic.pause();
+                pauseLobbyMusicAndSfx();
                 setPlaying(false);
             }
         },
