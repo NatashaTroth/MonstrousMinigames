@@ -28,5 +28,5 @@ export interface PlayerRenderer {
     destroyPlayer(): void;
     stunPlayer(): void;
     unStunPlayer(): void;
-    updatePlayerNamePosition(newX: number): void;
+    updatePlayerNamePosition(newX: number, trackLength: number): void;
 }

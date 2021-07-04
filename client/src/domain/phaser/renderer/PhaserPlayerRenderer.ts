@@ -71,30 +71,32 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         }
         if (this.player) {
             this.player.x = coordinates.x;
-            this.player.y = coordinates.y + window.innerHeight/18;
+            this.player.y = coordinates.y + window.innerHeight/20;
         }
     }
 
     renderPlayerName(coordinates: Coordinates, name: string){
-        this.playerNameBg = this.scene.add.rectangle(0,coordinates.y, 200, 50, 0x0, 0.5);
-        this.playerName = this.scene.add.text(10,coordinates.y, name);
+        this.playerNameBg = this.scene.add.rectangle(0,window.innerHeight/4 - 25, 200, 50, 0x0, 0.5);
+        this.playerName = this.scene.add.text(10,window.innerHeight/4 - 30, name);
         this.playerNameBg.setDepth(depthDictionary.nameTag)
         this.playerName.setDepth(depthDictionary.nameTag)
     }
 
-    public updatePlayerNamePosition(newX: number){
-        this.playerNameBg?.setPosition(newX + window.innerWidth, this.playerNameBg.y)
-        this.playerName?.setPosition(newX + window.innerWidth, this.playerName.y)
+    public updatePlayerNamePosition(newX: number, trackLength: number){
+        if(this.playerNameBg && this.playerNameBg.x < trackLength - window.innerWidth){
+            this.playerNameBg?.setPosition(newX, this.playerNameBg.y)
+            this.playerName?.setPosition(newX, this.playerName.y)
+        }
     }
 
     renderGoal(posX: number, posY: number) {
         posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
         posY += 5;
         const scale = 0.13;
-        const caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
+        const caveBehind = this.scene.physics.add.sprite(posX, posY + window.innerHeight/16, 'caveBehind'); //TODO change caveBehind to enum
         caveBehind.setScale(scale, scale);
         caveBehind.setDepth(depthDictionary.cave);
-        const caveInFront = this.scene.physics.add.sprite(posX, posY, 'caveInFront'); //TODO change caveInFront to enum
+        const caveInFront = this.scene.physics.add.sprite(posX, posY + window.innerHeight/16, 'caveInFront'); //TODO change caveInFront to enum
         caveInFront.setScale(scale, scale);
         caveInFront.setDepth(depthDictionary.caveInFront);
     }
