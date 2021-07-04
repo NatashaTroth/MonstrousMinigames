@@ -144,8 +144,10 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
 
             if (localDevelopment && this.gameState === GameState.Started) {
                 const keys = Object.keys(this.playersState);
-
+                // let done = false;
                 keys.forEach(key => {
+                    // if (!done) {
+                    // done = true;
                     const runInterval = setInterval(() => {
                         // console.log(this.playersState[key].positionX);
                         // this.playersState[key].positionX += this.speed;
@@ -156,6 +158,7 @@ export default class CatchFoodGame implements CatchFoodGameInterface {
                         }
                     }, 18); //make a bit slower - real players will not have a consistent rate
                     // }, 16.6667);
+                    // }
                 });
             }
         }, this.countdownTime);

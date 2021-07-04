@@ -9,6 +9,7 @@ export type Coordinates = { x: number; y: number };
 export interface PlayerRenderer {
     renderChasers(chasersPositionX: number, chasersPositionY: number): void;
     renderPlayer(
+        idx: number,
         coordinates: Coordinates,
         monsterName: string,
         animationName: string,
@@ -16,7 +17,7 @@ export interface PlayerRenderer {
         background?: string
     ): void;
     renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number): void;
-    renderGoal(posX: number, posY: number): void;
+    renderCave(posX: number, posY: number): void;
     renderFireworks(posX: number, posY: number): void;
     movePlayerForward(newXPosition: number): void;
     destroyObstacle(): void;
@@ -26,7 +27,9 @@ export interface PlayerRenderer {
     startRunningAnimation(animationName: string): void;
     stopRunningAnimation(): void;
     destroyPlayer(): void;
+    destroyObstacles(): void;
+    destroyCave(): void;
     stunPlayer(): void;
     unStunPlayer(): void;
-    updatePlayerNamePosition(newX: number): void;
+    updatePlayerNamePosition(newX: number, trackLength: number): void;
 }

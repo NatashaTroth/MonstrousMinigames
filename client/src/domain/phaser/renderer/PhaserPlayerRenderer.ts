@@ -18,6 +18,8 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     private particles: Phaser.GameObjects.Particles.ParticleEmitterManager[];
     private playerNameBg?: Phaser.GameObjects.Rectangle;
     private playerName?: Phaser.GameObjects.Text;
+    private caveBehind?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    private caveInFront?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
     constructor(private scene: MainScene) {
         this.playerObstacles = [];
@@ -38,6 +40,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         }
         this.chaser.setX(chasersPositionX - 50); // - 50 so that not quite on top of player when caught
     }
+
     destroyPlayer() {
         this.player?.destroy();
     }
@@ -51,6 +54,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     }
 
     renderPlayer(
+        idx: number,
         coordinates: Coordinates,
         monsterName: string,
         animationName: string,
@@ -67,34 +71,77 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         if (!this.player) {
             this.renderPlayerInitially(coordinates, monsterName);
             this.initiatePlayerAnimation(monsterName, animationName);
-            this.renderPlayerName(coordinates, usernameToDisplay);
+            this.renderPlayerName(idx, usernameToDisplay);
         }
         if (this.player) {
             this.player.x = coordinates.x;
-            this.player.y = coordinates.y + window.innerHeight/18;
+            this.player.y = coordinates.y + window.innerHeight / 20;
         }
     }
 
-    renderPlayerName(coordinates: Coordinates, name: string){
-        this.playerNameBg = this.scene.add.rectangle(0,coordinates.y, 200, 50, 0x0, 0.5);
-        this.playerName = this.scene.add.text(10,coordinates.y, name);
-        this.playerNameBg.setDepth(depthDictionary.nameTag)
-        this.playerName.setDepth(depthDictionary.nameTag)
+    renderPlayerName(idx: number, name: string) {
+        this.playerNameBg = this.scene.add.rectangle(
+            50,
+            (window.innerHeight / 4) * (idx + 1) - 25,
+            250,
+            50,
+            0xb63bd4,
+            0.7
+        );
+        // this.playerName = this.scene.add.text(100, window.innerHeight / 4 - 20, 'lsjhdf');
+
+        this.playerName = this.scene.make.text({
+            x: 20,
+            // x: this.scene.camera?.scrollX,
+            y: (window.innerHeight / 4) * (idx + 1) - 30,
+            text: `${name}`, //TODO QUICKFIX - GET PADDING TO WORK INSTEAD OF SPACE
+            style: {
+                fontSize: `${16}px`,
+                fontFamily: 'Roboto, Arial',
+                // color: '#d2a44f',
+                // stroke: '#d2a44f',
+                color: '#fff',
+                // stroke: '#d2a44f',
+                // strokeThickness: 1,
+                // fixedWidth,
+                // fixedHeight,
+                // align: 'left',
+                // shadow: {
+                //     offsetX: 10,
+                //     offsetY: 10,
+                //     color: '#000',
+                //     blur: 0,
+                //     stroke: false,
+                //     fill: false,
+                // },
+            },
+
+            // origin: {x: 0.5, y: 0.5},
+            add: true,
+        });
+        // this.playerName.setPadding(0, 0, 0, 50);
+
+        this.playerNameBg.setDepth(depthDictionary.nameTag);
+        this.playerName.setDepth(depthDictionary.nameTag);
+        this.playerNameBg.setScrollFactor(0);
+        this.playerName.setScrollFactor(0);
     }
 
-    public updatePlayerNamePosition(newX: number){
-        this.playerNameBg?.setPosition(newX + window.innerWidth, this.playerNameBg.y)
-        this.playerName?.setPosition(newX + window.innerWidth, this.playerName.y)
+    public updatePlayerNamePosition(newX: number, trackLength: number) {
+        if (this.playerNameBg && this.playerNameBg.x < trackLength - window.innerWidth) {
+            this.playerNameBg?.setPosition(newX, this.playerNameBg.y);
+            this.playerName?.setPosition(newX, this.playerName.y);
+        }
     }
 
-    renderGoal(posX: number, posY: number) {
+    renderCave(posX: number, posY: number) {
         posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
         posY += 5;
         const scale = 0.13;
-        const caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
+        const caveBehind = this.scene.physics.add.sprite(posX, posY + window.innerHeight / 16, 'caveBehind'); //TODO change caveBehind to enum
         caveBehind.setScale(scale, scale);
         caveBehind.setDepth(depthDictionary.cave);
-        const caveInFront = this.scene.physics.add.sprite(posX, posY, 'caveInFront'); //TODO change caveInFront to enum
+        const caveInFront = this.scene.physics.add.sprite(posX, posY + window.innerHeight / 16, 'caveInFront'); //TODO change caveInFront to enum
         caveInFront.setScale(scale, scale);
         caveInFront.setDepth(depthDictionary.caveInFront);
     }
@@ -162,6 +209,16 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
             this.playerObstacles.shift();
         }
     }
+    destroyObstacles() {
+        this.playerObstacles.forEach(obstacle => {
+            obstacle.destroy();
+        });
+    }
+
+    destroyCave() {
+        this.caveBehind?.destroy();
+        this.caveInFront?.destroy();
+    }
 
     destroyChaser() {
         this.chaser?.destroy();
@@ -170,7 +227,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     addAttentionIcon() {
         if (!this.playerAttention && this.player) {
             this.playerAttention = this.scene.physics.add
-                .sprite(this.player.x + 75, this.player.y - 100, 'attention')
+                .sprite(this.player.x + 75, this.player.y - 50, 'attention')
                 .setDepth(depthDictionary.attention)
                 .setScale(0.03, 0.03);
         }

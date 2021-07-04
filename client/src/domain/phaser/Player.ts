@@ -76,6 +76,8 @@ export class Player {
     handlePlayerDead() {
         this.destroyPlayer();
         this.renderer.destroyChaser();
+        this.renderer.destroyObstacles();
+        this.renderer.destroyCave();
         this.dead = true;
     }
 
@@ -124,7 +126,7 @@ export class Player {
     private renderPlayer() {
         // eslint-disable-next-line no-console
         // console.log(this.username);
-        this.renderer.renderPlayer(this.coordinates, this.monsterName, this.animationName, this.username);
+        this.renderer.renderPlayer(this.index, this.coordinates, this.monsterName, this.animationName, this.username);
 
         // TODO render player name
         // this.renderer.renderText(
@@ -148,17 +150,17 @@ export class Player {
                     obstacleScale = 0.4;
                     break;
                 case Obstacles.spider:
-                    obstaclePosY = this.coordinates.y + window.innerHeight / 11;
+                    obstaclePosY = this.coordinates.y + window.innerHeight / 15;
                     obstacleScale = 0.2;
                     break;
                 case Obstacles.hole:
-                    obstaclePosY = this.coordinates.y + window.innerHeight / 8;
+                    obstaclePosY = this.coordinates.y + window.innerHeight / 7;
                     obstacleScale = 0.1;
                     posX += 40;
 
                     break;
                 case Obstacles.stone:
-                    obstaclePosY = this.coordinates.y + window.innerHeight / 8;
+                    obstaclePosY = this.coordinates.y + window.innerHeight / 10;
                     obstacleScale = 0.2;
                     break;
             }
@@ -175,13 +177,13 @@ export class Player {
 
     setChasers(chasersPositionX: number) {
         if (!this.dead) {
-            const chasersPositionY = this.coordinates.y + 30;
+            const chasersPositionY = this.coordinates.y + 50;
             this.renderer.renderChasers(chasersPositionX, chasersPositionY);
         }
     }
 
     setGoal(posX: number) {
-        this.renderer.renderGoal(posX, this.coordinates.y);
+        this.renderer.renderCave(posX, this.coordinates.y);
     }
 
     startRunning() {
