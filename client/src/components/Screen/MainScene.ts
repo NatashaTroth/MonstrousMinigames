@@ -241,13 +241,7 @@ class MainScene extends Phaser.Scene {
                 player.renderer.updatePlayerNamePosition(posX, this.trackLength)
             });
         }
-<<<<<<< HEAD
             
-=======
-        this.players.forEach(player => {
-            player.renderer.updatePlayerNamePosition(posX - window.innerWidth);
-        });
->>>>>>> origin/dev
     }
 
     private createPlayer(index: number, gameStateData: GameData) {
