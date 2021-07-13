@@ -6,7 +6,8 @@ import { GameEvents } from '../../../src/gameplay/catchFood/interfaces/';
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
 import {
-    clearTimersAndIntervals, finishGame, finishPlayer, skipTimeToStartChasers,
+    advanceCountdown,
+    clearTimersAndIntervals, finishGame, finishPlayer, releaseThreadN, skipTimeToStartChasers,
     startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
@@ -120,7 +121,7 @@ describe('Obstacle reached events', () => {
         });
 
         const distanceToObstacle =
-            catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX;
+            catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
         catchFoodGame.runForward('1', distanceToObstacle);
         expect(obstacleEventReceived).toBeTruthy();
     });
@@ -139,14 +140,14 @@ describe('Obstacle reached events', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
 
         const distanceToObstacle =
-            catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX;
+            catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
         catchFoodGame.runForward('1', distanceToObstacle);
 
         expect(eventData).toMatchObject({
             roomId: catchFoodGame.roomId,
             userId: '1',
-            obstacleId: catchFoodGame.playersState['1'].obstacles[0].id,
-            obstacleType: catchFoodGame.playersState['1'].obstacles[0].type,
+            obstacleId: catchFoodGame.players.get('1')!.obstacles[0].id,
+            obstacleType: catchFoodGame.players.get('1')!.obstacles[0].type,
         });
     });
 });
@@ -419,7 +420,7 @@ describe('Player has finished events', () => {
         expect(eventData).toMatchObject({
             roomId: catchFoodGame.roomId,
             userId: '1',
-            rank: catchFoodGame.playersState['1'].rank,
+            rank: catchFoodGame.players.get('1')?.rank,
         });
     });
 });
@@ -473,15 +474,15 @@ describe('Game has finished events', () => {
             numberOfObstacles: catchFoodGame.numberOfObstacles,
         });
 
-        const playerOneTotalTime = dateNow + 10000 - catchFoodGame.gameStartedTime;
+        const playerOneTotalTime = dateNow + 10000 - catchFoodGame['gameStartedAt'];
 
         expect(eventData.playerRanks[0]).toMatchObject({
             id: '1',
-            name: catchFoodGame.playersState['1'].name,
-            rank: catchFoodGame.playersState['1'].rank,
+            name: catchFoodGame.players.get('1')?.name,
+            rank: catchFoodGame.players.get('1')?.rank,
             finished: true,
             totalTimeInMs: playerOneTotalTime,
-            positionX: catchFoodGame.playersState['1'].positionX,
+            positionX: catchFoodGame.players.get('1')?.positionX,
             isActive: true,
         });
     });
@@ -501,17 +502,22 @@ describe('Game has timed out events', () => {
     });
 
     it('should emit a GameHasTimedOut event when the game has timed out', async () => {
-        let gameTimedOutEvent = false;
-        gameEventEmitter.on(GameEventTypes.GameHasTimedOut, () => {
-            gameTimedOutEvent = true;
-        });
+        // disable chasers
+        jest.spyOn(catchFoodGame as any, 'updateChasersPosition').mockImplementation(() => 0);
+        const timedOutEvent = jest.fn();
+        jest.spyOn(catchFoodGame as any, 'update');
+        gameEventEmitter.on(GameEventTypes.GameHasTimedOut, timedOutEvent);
         startGameAndAdvanceCountdown(catchFoodGame);
-        jest.advanceTimersByTime(catchFoodGame.timeOutLimit);
+        await releaseThreadN(3);
+        advanceCountdown(catchFoodGame.timeOutLimit + 50);
+        await releaseThreadN(3);
 
-        expect(gameTimedOutEvent).toBeTruthy();
+        expect(timedOutEvent).toHaveBeenCalled();
     });
 
     it('should emit correct GameHasFinished data when the game has timed out', async () => {
+        // disable chasers
+        jest.spyOn(catchFoodGame as any, 'updateChasersPosition').mockImplementation(() => 0);
         const dateNow = 1618665766156;
         Date.now = jest.fn(() => dateNow);
         let eventData: GameEvents.GameHasFinished = {
@@ -526,20 +532,25 @@ describe('Game has timed out events', () => {
             eventData = data;
         });
         startGameAndAdvanceCountdown(catchFoodGame);
+        await releaseThreadN(3);
 
         // player 1 has finished
         const player1FinishedTime = 500;
-        Date.now = jest.fn(() => dateNow + player1FinishedTime);
+        advanceCountdown(player1FinishedTime);
+        await releaseThreadN(3);
         finishPlayer(catchFoodGame, '1');
-
+        await releaseThreadN(3);
+        
         // player 2 has run forward - but should get the same rank as player 1
         catchFoodGame.runForward('2', 50);
+        await releaseThreadN(3);
 
         //avoid being caught (for this test)
         catchFoodGame.chasersPositionX = catchFoodGame.trackLength * -100;
 
-        Date.now = jest.fn(() => dateNow + catchFoodGame.timeOutLimit + 50000);
-        jest.advanceTimersByTime(catchFoodGame.timeOutLimit + 50000);
+        advanceCountdown(catchFoodGame.timeOutLimit + 50000 - player1FinishedTime);
+        await releaseThreadN(3);
+
         expect(eventData).toMatchObject({
             roomId: catchFoodGame.roomId,
             gameState: catchFoodGame.gameState,
@@ -551,36 +562,36 @@ describe('Game has timed out events', () => {
         // const userId1 = '1';
         // expect(eventData.playerRanks[0]).toMatchObject({
         //     id: userId1,
-        //     name: catchFoodGame.playersState[userId1].name,
+        //     name: catchFoodGame.players.get(userId1)?.name,
         //     rank: 1,
         //     finished: true,
         //     dead: false,
         //     totalTimeInMs: player1FinishedTime,
-        //     positionX: catchFoodGame.playersState[userId1].positionX,
+        //     positionX: catchFoodGame.players.get(userId1)?.positionX,
         //     isActive: true,
         // });
 
         // const userId2 = '2';
         // expect(eventData.playerRanks[1]).toMatchObject({
         //     id: userId2,
-        //     name: catchFoodGame.playersState[userId2].name,
+        //     name: catchFoodGame.players.get(userId2)?.name,
         //     rank: 2,
         //     finished: true,
         //     dead: true, //because didn't run
         //     totalTimeInMs: catchFoodGame.timeOutLimit,
-        //     positionX: catchFoodGame.playersState[userId2].positionX,
+        //     positionX: catchFoodGame.players.get(userId2)?.positionX,
         //     isActive: true,
         // });
 
         // const userId3 = '3';
         // expect(eventData.playerRanks[2]).toMatchObject({
         //     id: userId3,
-        //     name: catchFoodGame.playersState[userId3].name,
+        //     name: catchFoodGame.players.get(userId3)?.name,
         //     rank: 2,
         //     finished: true,
         //     dead: true,
         //     totalTimeInMs: catchFoodGame.timeOutLimit,
-        //     positionX: catchFoodGame.playersState[userId3].positionX,
+        //     positionX: catchFoodGame.players.get(userId3)?.positionX,
         //     isActive: true,
         // });
     });
@@ -628,9 +639,9 @@ describe('Chaser event', () => {
         });
 
         catchFoodGame.runForward(userId, chasersStartPosX + 20);
-        catchFoodGame.playersState['2'].positionX = chasersStartPosX + 2000;
-        catchFoodGame.playersState['3'].positionX = chasersStartPosX + 2000;
-        catchFoodGame.playersState['4'].positionX = chasersStartPosX + 2000;
+        catchFoodGame.players.get('2')!.positionX = chasersStartPosX + 2000;
+        catchFoodGame.players.get('3')!.positionX = chasersStartPosX + 2000;
+        catchFoodGame.players.get('4')!.positionX = chasersStartPosX + 2000;
 
         // should catch the other three players
         skipTimeToStartChasers(catchFoodGame);

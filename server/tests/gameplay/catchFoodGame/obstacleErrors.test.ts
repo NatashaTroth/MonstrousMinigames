@@ -43,7 +43,7 @@ describe('WrongObstacleIdError handling tests', () => {
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         startGameAndAdvanceCountdown(catchFoodGame);
         const distanceToObstacle =
-            catchFoodGame.playersState['1'].obstacles[0].positionX - catchFoodGame.playersState['1'].positionX;
+            catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
         catchFoodGame.runForward('1', distanceToObstacle); //atObstacle = true
     });
 

@@ -32,13 +32,13 @@ describe('Disconnect Player tests', () => {
 
     it('disconnectPlayer should initialise player isActive as true', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        expect(catchFoodGame.playersState['1'].isActive).toBeTruthy();
+        expect(catchFoodGame.players.get('1')?.isActive).toBeTruthy();
     });
 
     it('disconnectPlayer should set player isActive to false', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.disconnectPlayer('1');
-        expect(catchFoodGame.playersState['1'].isActive).toBeFalsy();
+        expect(catchFoodGame.players.get('1')?.isActive).toBeFalsy();
     });
 
     it('cannot disconnect player when game has stopped', async () => {
@@ -49,17 +49,17 @@ describe('Disconnect Player tests', () => {
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.playersState['1'].isActive).toBeTruthy();
+        expect(catchFoodGame.players.get('1')?.isActive).toBeTruthy();
     });
 
     it('cannot disconnect player when game has finished', async () => {
-        startAndFinishGameDifferentTimes(catchFoodGame);
+        await startAndFinishGameDifferentTimes(catchFoodGame);
         try {
             catchFoodGame.disconnectPlayer('1');
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.playersState['1'].isActive).toBeTruthy();
+        expect(catchFoodGame.players.get('1')?.isActive).toBeTruthy();
     });
 
     it('cannot run forward when disconnected', async () => {
@@ -72,21 +72,21 @@ describe('Disconnect Player tests', () => {
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.playersState['1'].positionX).toBe(catchFoodGame.initialPlayerPositionX + SPEED);
+        expect(catchFoodGame.players.get('1')?.positionX).toBe(catchFoodGame.initialPlayerPositionX + SPEED);
     });
 
     it('cannot complete an obstacle when disconnected', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const obstaclesLength = catchFoodGame.playersState['1'].obstacles.length;
+        const obstaclesLength = catchFoodGame.players.get('1')!.obstacles.length;
         completeNextObstacle(catchFoodGame, '1');
         catchFoodGame.disconnectPlayer('1');
 
         try {
-            catchFoodGame.playerHasCompletedObstacle('1', catchFoodGame.playersState['1'].obstacles[0].id);
+            catchFoodGame.playerHasCompletedObstacle('1', catchFoodGame.players.get('1')!.obstacles[0].id);
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstaclesLength - 1);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(obstaclesLength - 1);
     });
 
     it('should emit isActive is false when a player was disconnected and the game has finished', async () => {

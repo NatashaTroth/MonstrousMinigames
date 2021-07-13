@@ -4,7 +4,8 @@ import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId } from '../mockData';
 import {
-    clearTimersAndIntervals, getToCreatedGameState, skipTimeToStartChasers,
+    advanceCountdown,
+    clearTimersAndIntervals, getToCreatedGameState, releaseThreadN, skipTimeToStartChasers,
     startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
@@ -50,7 +51,8 @@ describe('Chasers', () => {
 
     it('moves the chasers after timeWhenChasersAppear', async () => {
         skipTimeToStartChasers(catchFoodGame);
-        jest.advanceTimersByTime(500);
+        advanceCountdown(500);
+        await releaseThreadN(3);
         expect(catchFoodGame.chasersPositionX).toBeGreaterThan(chasersStartPosX);
     });
 
@@ -58,14 +60,14 @@ describe('Chasers', () => {
         skipTimeToStartChasers(catchFoodGame);
         catchFoodGame.runForward('1', chasersStartPosX);
         jest.advanceTimersByTime(1000);
-        expect(catchFoodGame.playersState['1'].dead).toBeTruthy();
+        expect(catchFoodGame.players.get('1')?.dead).toBeTruthy();
     });
 
     it.skip('sets player to dead when the chaser has passed the player', async () => {
         skipTimeToStartChasers(catchFoodGame);
         catchFoodGame.runForward('1', chasersStartPosX - 1);
         jest.advanceTimersByTime(1000);
-        expect(catchFoodGame.playersState['1'].dead).toBeTruthy();
+        expect(catchFoodGame.players.get('1')?.dead).toBeTruthy();
     });
 
     it.skip('have the last rank when first to be caught', async () => {
@@ -82,9 +84,9 @@ describe('Chasers', () => {
         catchFoodGame.runForward(userId, chasersStartPosX + 20);
 
         //make sure the other players do not get caught
-        catchFoodGame.playersState['2'].positionX = chasersStartPosX + 2000;
-        catchFoodGame.playersState['3'].positionX = chasersStartPosX + 2000;
-        catchFoodGame.playersState['4'].positionX = chasersStartPosX + 2000;
+        catchFoodGame.players.get('2')!.positionX = chasersStartPosX + 2000;
+        catchFoodGame.players.get('3')!.positionX = chasersStartPosX + 2000;
+        catchFoodGame.players.get('4')!.positionX = chasersStartPosX + 2000;
 
         // should catch the other three players
         skipTimeToStartChasers(catchFoodGame);
@@ -110,8 +112,8 @@ describe('Chasers', () => {
         });
 
         //finish game
-        for (let i = 1; i <= Object.keys(catchFoodGame.playersState).length; i++) {
-            catchFoodGame.playersState[i.toString()].obstacles = [];
+        for (let i = 1; i <= catchFoodGame.players.size; i++) {
+            catchFoodGame.players.get(i.toString())!.obstacles = [];
         }
         // should catch the other three players
         skipTimeToStartChasers(catchFoodGame);
@@ -143,8 +145,8 @@ describe('Chasers', () => {
         });
 
         //finish game
-        for (let i = 1; i <= Object.keys(catchFoodGame.playersState).length; i++) {
-            catchFoodGame.playersState[i.toString()].obstacles = [];
+        for (let i = 1; i <= catchFoodGame.players.size; i++) {
+            catchFoodGame.players.get(i.toString())!.obstacles = [];
         }
         // should catch the other three players
         skipTimeToStartChasers(catchFoodGame);
@@ -154,8 +156,8 @@ describe('Chasers', () => {
         catchFoodGame.runForward('2', chasersStartPosX + 30); //should be 3rd (caught second)
 
         //should not be caught
-        catchFoodGame.playersState['3'].positionX = chasersStartPosX + 2000;
-        catchFoodGame.playersState['4'].positionX = chasersStartPosX + 2000;
+        catchFoodGame.players.get('3')!.positionX = chasersStartPosX + 2000;
+        catchFoodGame.players.get('4')!.positionX = chasersStartPosX + 2000;
 
         Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear + 2000);
         jest.advanceTimersByTime(2000); //to catch the first 2 players
@@ -189,8 +191,8 @@ describe('Chasers', () => {
         });
 
         //finish game
-        for (let i = 1; i <= Object.keys(catchFoodGame.playersState).length; i++) {
-            catchFoodGame.playersState[i.toString()].obstacles = [];
+        for (let i = 1; i <= catchFoodGame.players.size; i++) {
+            catchFoodGame.players.get(i.toString())!.obstacles = [];
         }
         // should catch the other three players
         skipTimeToStartChasers(catchFoodGame);
@@ -200,8 +202,8 @@ describe('Chasers', () => {
         catchFoodGame.runForward('2', chasersStartPosX + 30); //should be 3rd (caught second)
 
         //should not be caught
-        catchFoodGame.playersState['3'].positionX = chasersStartPosX + 2000;
-        catchFoodGame.playersState['4'].positionX = chasersStartPosX + 2000;
+        catchFoodGame.players.get('3')!.positionX = chasersStartPosX + 2000;
+        catchFoodGame.players.get('4')!.positionX = chasersStartPosX + 2000;
 
         // should finish naturally
         Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear + 2000);
@@ -229,8 +231,8 @@ describe('Chasers', () => {
         });
 
         //finish game
-        for (let i = 1; i <= Object.keys(catchFoodGame.playersState).length; i++) {
-            catchFoodGame.playersState[i.toString()].obstacles = [];
+        for (let i = 1; i <= catchFoodGame.players.size; i++) {
+            catchFoodGame.players.get(i.toString())!.obstacles = [];
         }
         // should catch the other three players
         skipTimeToStartChasers(catchFoodGame);
@@ -239,7 +241,7 @@ describe('Chasers', () => {
         catchFoodGame.runForward('3', chasersStartPosX + 20);
 
         // one last player - should automatically finish when the others are caught
-        catchFoodGame.playersState['4'].positionX = chasersStartPosX + 2000;
+        catchFoodGame.players.get('4')!.positionX = chasersStartPosX + 2000;
 
         //are caught
         Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear + 4000);

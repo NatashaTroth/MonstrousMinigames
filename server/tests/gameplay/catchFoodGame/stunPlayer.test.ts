@@ -4,7 +4,8 @@ import { CatchFoodGame } from '../../../src/gameplay';
 // import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId } from '../mockData';
 import {
-    clearTimersAndIntervals, finishPlayer, startGameAndAdvanceCountdown
+    advanceCountdown,
+    clearTimersAndIntervals, finishPlayer, releaseThread, releaseThreadN, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
@@ -28,89 +29,102 @@ describe('Stun player tests', () => {
 
     it('stunPlayer should set a player as stunned', async () => {
         catchFoodGame.stunPlayer('1', '2');
-        expect(catchFoodGame.playersState['1'].stunned).toBeTruthy();
+        expect(catchFoodGame.players.get('1')!.stunned).toBeTruthy();
     });
 
     it('stunPlayer should stay stunned until stun time', async () => {
         catchFoodGame.stunPlayer('1', '2');
-        jest.advanceTimersByTime(catchFoodGame.stunnedTime - 1);
-        expect(catchFoodGame.playersState['1'].stunned).toBeTruthy();
+        advanceCountdown(catchFoodGame.stunnedTime - 1);
+        expect(catchFoodGame.players.get('1')!.stunned).toBeTruthy();
     });
 
     it('stunPlayer should be over after stun time', async () => {
         catchFoodGame.stunPlayer('1', '2');
-        jest.advanceTimersByTime(catchFoodGame.stunnedTime);
-        expect(catchFoodGame.playersState['1'].stunned).toBeFalsy();
+        advanceCountdown(catchFoodGame.stunnedTime);
+        await releaseThread();
+        expect(catchFoodGame.players.get('1')!.stunned).toBeFalsy();
     });
 
     it('stun time should be paused during pause', async () => {
         catchFoodGame.stunPlayer('1', '2');
         catchFoodGame.pauseGame();
-        jest.advanceTimersByTime(catchFoodGame.stunnedTime * 2);
-        expect(catchFoodGame.playersState['1'].stunned).toBeTruthy();
+        advanceCountdown(catchFoodGame.stunnedTime * 2);
+        await releaseThread();
+        expect(catchFoodGame.players.get('1')!.stunned).toBeTruthy();
     });
 
     it('stun time should resume after pause and not finish early', async () => {
         catchFoodGame.stunPlayer('1', '2');
         catchFoodGame.pauseGame();
-        jest.advanceTimersByTime(catchFoodGame.stunnedTime * 2);
+        advanceCountdown(catchFoodGame.stunnedTime * 2);
+        await releaseThread();
         catchFoodGame.resumeGame();
-        jest.advanceTimersByTime(catchFoodGame.stunnedTime - 1);
-        expect(catchFoodGame.playersState['1'].stunned).toBeTruthy();
+        advanceCountdown(catchFoodGame.stunnedTime - 1);
+        await releaseThread();
+        expect(catchFoodGame.players.get('1')!.stunned).toBeTruthy();
     });
 
     it('stun time should resume after pause and finish on time', async () => {
         catchFoodGame.stunPlayer('1', '2');
         catchFoodGame.pauseGame();
-        jest.advanceTimersByTime(catchFoodGame.stunnedTime * 2);
+        advanceCountdown(catchFoodGame.stunnedTime * 2);
+        await releaseThread();
         catchFoodGame.resumeGame();
-        jest.advanceTimersByTime(catchFoodGame.stunnedTime);
-        expect(catchFoodGame.playersState['1'].stunned).toBeFalsy();
+        await releaseThreadN(3);
+        advanceCountdown(catchFoodGame.stunnedTime);
+        await releaseThread();
+        expect(catchFoodGame.players.get('1')!.stunned).toBeFalsy();
     });
 
     it('stunPlayer should not set a finished player as stunned', async () => {
         finishPlayer(catchFoodGame, '1');
         catchFoodGame.stunPlayer('1', '2');
-        expect(catchFoodGame.playersState['1'].stunned).toBeFalsy();
+        expect(catchFoodGame.players.get('1')!.stunned).toBeFalsy();
     });
 
     it('stunPlayer should not set a finished player as stunned', async () => {
         finishPlayer(catchFoodGame, '1');
         catchFoodGame.stunPlayer('1', '2');
-        expect(catchFoodGame.playersState['1'].stunned).toBeFalsy();
+        expect(catchFoodGame.players.get('1')!.stunned).toBeFalsy();
     });
 
     it('should not stun a player who is already stunned', async () => {
         finishPlayer(catchFoodGame, '1');
         catchFoodGame.stunPlayer('1', '2');
-        jest.advanceTimersByTime(2000);
+        advanceCountdown(2000);
+        await releaseThread();
         catchFoodGame.stunPlayer('1', '2');
-        jest.advanceTimersByTime(1000);
-        expect(catchFoodGame.playersState['1'].stunned).toBeFalsy();
+        advanceCountdown(1000);
+        await releaseThread();
+        expect(catchFoodGame.players.get('1')!.stunned).toBeFalsy();
     });
 
     it('should not stun a player who is at an obstacle', async () => {
         finishPlayer(catchFoodGame, '1');
         catchFoodGame.runForward('1', catchFoodGame.trackLength);
         catchFoodGame.stunPlayer('1', '2');
-        expect(catchFoodGame.playersState['1'].stunned).toBeFalsy();
+        expect(catchFoodGame.players.get('1')!.stunned).toBeFalsy();
     });
 
-    it('should  stun a player if thrower has not exceeded max number of stones', async () => {
+    it('should stun a player if thrower has not exceeded max number of stones', async () => {
         for (let i = 0; i < catchFoodGame.maxNumberStones - 1; i++) {
             catchFoodGame.stunPlayer('1', '2');
-            jest.advanceTimersByTime(catchFoodGame.stunnedTime);
+            advanceCountdown(catchFoodGame.stunnedTime);
+            await releaseThread();
         }
         catchFoodGame.stunPlayer('1', '2');
-        expect(catchFoodGame.playersState['1'].stunned).toBeTruthy();
+        await releaseThread();
+        expect(catchFoodGame.players.get('1')!.stunned).toBeTruthy();
     });
 
     it('should not stun a player if thrower has thrown max number of stones', async () => {
         for (let i = 0; i < catchFoodGame.maxNumberStones; i++) {
             catchFoodGame.stunPlayer('1', '2');
-            jest.advanceTimersByTime(catchFoodGame.stunnedTime);
+            advanceCountdown(catchFoodGame.stunnedTime);
+            await releaseThreadN(3);
         }
         catchFoodGame.stunPlayer('1', '2');
-        expect(catchFoodGame.playersState['1'].stunned).toBeFalsy();
+        await releaseThread();
+        expect(catchFoodGame.players.get('1')!.stunned).toBeFalsy();
     });
 });

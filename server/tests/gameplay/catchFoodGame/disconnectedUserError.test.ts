@@ -44,7 +44,7 @@ describe('DisconnectedUserError handling tests', () => {
         completeNextObstacle(catchFoodGame, '1');
         catchFoodGame.disconnectPlayer('1');
         expect(() =>
-            catchFoodGame.playerHasCompletedObstacle('1', catchFoodGame.playersState['1'].obstacles[0].id)
+            catchFoodGame.playerHasCompletedObstacle('1', catchFoodGame.players.get('1')!.obstacles[0].id)
         ).toThrow(DisconnectedUserError);
     });
 });
