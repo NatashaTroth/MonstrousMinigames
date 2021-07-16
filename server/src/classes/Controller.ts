@@ -53,15 +53,17 @@ class Controller {
                     break;
                 case MessageTypes.USER_READY:
                     if (this.room?.isOpen() && this.user) {
-                        this.user.setReady(!this.user.isReady);
+                        this.user.setReady(!this.user.isReady());
                         console.info(this.room.id + ' | userId: ' + this.user.id + ' | Ready: ' + this.user.isReady());
                         this.emitter.sendConnectedUsers([this.controllerNamespace, this.screenNamespace], this.room);
                     }
                     break;
                 default:
-                    if (this.user?.id == message.userId) {
-                        await this.room?.game.receiveInput(message);
+                    if (this.user?.id && this.user?.id !== message.userId) {
+                        message.userId = this.user?.id;
                     }
+
+                    await this.room?.game.receiveInput(message);
             }
         } catch (e) {
             this.emitter.sendErrorMessage(this.socket, e);
