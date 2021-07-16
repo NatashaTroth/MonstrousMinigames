@@ -10,11 +10,11 @@ import Room from './room';
 import User from './user';
 
 class Controller {
-    private name: string | null = null;
-    private roomId: string | null = null;
-    private room: Room | null = null;
-    private user: User | null = null;
-    private game: Game | null = null;
+    protected name: string | null = null;
+    protected roomId: string | null = null;
+    protected room: Room | null = null;
+    protected user: User | null = null;
+    protected game: Game | null = null;
 
     constructor(
         protected socket: Socket,
