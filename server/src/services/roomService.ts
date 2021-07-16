@@ -1,5 +1,7 @@
+import { inject, singleton } from 'tsyringe';
 import Room from '../classes/room';
 import { InvalidRoomCodeError } from '../customErrors';
+import { DI_ROOM_NUMBER } from '../di';
 import { Globals } from '../enums/globals';
 import Game from '../gameplay/Game';
 import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
@@ -7,11 +9,12 @@ import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
 const CodeGenerator = require('node-code-generator');
 const generator = new CodeGenerator();
 
+@singleton()
 class RoomService {
     private rooms: Array<Room>;
     public roomCodes: Array<string>;
 
-    constructor(roomCount: number) {
+    constructor(@inject(DI_ROOM_NUMBER) roomCount: number) {
         this.rooms = [];
         this.roomCodes = generator.generateCodes('****', roomCount, { alphanumericChars: 'BCDFGHJKLMNPQRSTVWXYZ' });
     }

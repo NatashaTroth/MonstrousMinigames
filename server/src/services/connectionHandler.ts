@@ -1,4 +1,5 @@
-import { Namespace, Server, Socket } from 'socket.io';
+import { Namespace, Socket } from 'socket.io';
+import { singleton } from 'tsyringe';
 import Controller from '../classes/Controller';
 
 import Screen from '../classes/Screen';
@@ -9,21 +10,19 @@ import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
 import { GameEvents } from '../gameplay/catchFood/interfaces';
 import { GameEventTypes } from '../gameplay/enums';
 import emitter from '../helpers/emitter';
+import SocketIOServer from '../classes/SocketIOServer';
 import RoomService from './roomService';
 
+@singleton()
 class ConnectionHandler {
-    private io: Server;
     private gameEventEmitter: CatchFoodGameEventEmitter;
-    private rs: RoomService;
     private controllerNamespace: Namespace;
     private screenNameSpace: Namespace;
 
-    constructor(io: Server, rs: RoomService) {
-        this.io = io;
+    constructor(private readonly socketIOServer: SocketIOServer, private readonly roomService: RoomService) {
         this.gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
-        this.rs = rs;
-        this.controllerNamespace = this.io.of(Namespaces.CONTROLLER);
-        this.screenNameSpace = this.io.of(Namespaces.SCREEN);
+        this.controllerNamespace = this.socketIOServer.socketIo.of(Namespaces.CONTROLLER);
+        this.screenNameSpace = this.socketIOServer.socketIo.of(Namespaces.SCREEN);
     }
 
     public handle(): void {
@@ -35,23 +34,35 @@ class ConnectionHandler {
     public shutdown(): void {
         this.controllerNamespace.removeAllListeners();
         this.screenNameSpace.removeAllListeners();
-        this.io.removeAllListeners();
+        this.socketIOServer.socketIo.removeAllListeners();
         this.gameEventEmitter.removeAllListeners();
     }
     private handleControllers() {
         this.controllerNamespace.on('connection', (socket: Socket) => {
-            const controller = new Controller(socket, this.rs, emitter, this.controllerNamespace, this.screenNameSpace);
+            const controller = new Controller(
+                socket,
+                this.roomService,
+                emitter,
+                this.controllerNamespace,
+                this.screenNameSpace
+            );
             controller.init();
         });
     }
     private handleScreens() {
         this.screenNameSpace.on('connection', (socket: Socket) => {
-            const screen = new Screen(socket, this.rs, emitter, this.screenNameSpace, this.controllerNamespace);
+            const screen = new Screen(
+                socket,
+                this.roomService,
+                emitter,
+                this.screenNameSpace,
+                this.controllerNamespace
+            );
             screen.init();
         });
     }
     private handleGameEvents() {
-        const rs = this.rs;
+        const rs = this.roomService;
         const controllerNamespace = this.controllerNamespace;
         const screenNameSpace = this.screenNameSpace;
         this.gameEventEmitter.on(GameEventTypes.ObstacleReached, (data: GameEvents.ObstacleReachedInfo) => {

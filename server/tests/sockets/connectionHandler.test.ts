@@ -1,13 +1,16 @@
+import 'reflect-metadata';
 import dotenv from 'dotenv';
 import express from 'express';
-import { Server } from 'socket.io';
 import client from 'socket.io-client';
+import { Server as HttpServer } from 'http';
 
+import SocketIOServer from '../../src/classes/SocketIOServer';
 import { GameAlreadyStartedError, InvalidRoomCodeError } from '../../src/customErrors/';
 import { MessageTypes } from '../../src/enums/messageTypes';
 import emitter from '../../src/helpers/emitter';
 import ConnectionHandler from '../../src/services/connectionHandler';
 import RoomService from '../../src/services/roomService';
+import Server from '../../src/classes/Server';
 
 dotenv.config({
     path: '.env',
@@ -16,7 +19,6 @@ dotenv.config({
 const PORT = process.env.TEST_PORT || 5050;
 
 describe('connectionHandler', () => {
-    let io: Server;
     let rs: RoomService;
     let ch: ConnectionHandler;
     const url = `localhost:${PORT}`;
@@ -24,12 +26,12 @@ describe('connectionHandler', () => {
     let controller: SocketIOClient.Socket;
     let screen: SocketIOClient.Socket;
 
-    let server: any;
+    let server: HttpServer;
 
     const app = express();
 
     beforeEach(done => {
-        server = require('http').Server(app);
+        server = new HttpServer(app);
         console.error = jest.fn();
         console.info = jest.fn();
 
@@ -37,13 +39,10 @@ describe('connectionHandler', () => {
             rs = new RoomService(100);
             roomCode = rs.createRoom()?.id;
 
-            io = require('socket.io')(server, {
-                cors: {
-                    origin: '*',
-                    methods: ['GET', 'POST'],
-                },
-            });
-            ch = new ConnectionHandler(io, rs);
+            ch = new ConnectionHandler(new SocketIOServer({
+                httpServer: server,
+                app: app,
+            } as Server), rs);
             ch.handle();
             done();
         });
