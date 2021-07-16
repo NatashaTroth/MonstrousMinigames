@@ -1,5 +1,7 @@
 import { localDevelopment } from '../../../constants';
 import User from '../../classes/user';
+import { IMessageObstacle } from '../../interfaces/messageObstacle';
+import { IMessage } from '../../interfaces/messages';
 import { GameState } from '../enums';
 import Game from '../Game';
 import { verifyGameState } from '../helperFunctions/verifyGameState';
@@ -11,6 +13,7 @@ import Leaderboard from '../leaderboard/Leaderboard';
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
 import CatchFoodPlayer from './CatchFoodPlayer';
 import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
+import { CatchFoodMsgType } from './enums';
 import { createObstacles, getObstacleTypes } from './helperFunctions/initiatePlayerState';
 import {
     GameEvents, GameStateInfo, Obstacle, PlayerRank
@@ -23,9 +26,6 @@ interface CatchFoodGameInterface extends IGameInterface<CatchFoodPlayer, GameSta
     createNewGame(players: Array<User>, trackLength?: number, numberOfObstacles?: number): void;
     getGameStateInfo(): GameStateInfo;
     getObstaclePositions(): HashTable<Array<Obstacle>>;
-    runForward(userId: string, speed: number): void;
-    playerHasCompletedObstacle(userId: string, obstacleId: number): void;
-    stunPlayer(userIdStunned: string, userIdThrown: string): void;
 }
 
 export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> implements CatchFoodGameInterface {
@@ -96,6 +96,24 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
         if (timeElapsed >= this.timeOutLimit && this.gameState === GameState.Started) {
             this.stopGameTimeout();
+        }
+    }
+    protected handleInput(message: IMessage) {
+        switch (message.type) {
+            case CatchFoodMsgType.MOVE:
+                this.runForward(message.userId!, parseInt(`${process.env.SPEED}`, 10) || 2);
+                break;
+            case CatchFoodMsgType.OBSTACLE_SOLVED:
+                this.playerHasCompletedObstacle(message.userId!, (message as IMessageObstacle).obstacleId);
+                break;
+            case CatchFoodMsgType.STUN_PLAYER:
+                if (!message.receivingUserId) {
+                    break;
+                }
+                this.stunPlayer(message.receivingUserId, message.userId!);
+                break;
+            default:
+                console.info(message);
         }
     }
     startGame(): void {
@@ -212,7 +230,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
         return obstaclePositions;
     }
-    runForward(userId: string, speed = 1): void {
+    private runForward(userId: string, speed = 1): void {
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.players, userId);
         verifyUserIsActive(userId, this.players.get(userId)!.isActive);
@@ -262,7 +280,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         });
     }
     //TODO test
-    stunPlayer(userIdStunned: string, userIdThrown: string) {
+    private stunPlayer(userIdStunned: string, userIdThrown: string) {
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.players, userIdStunned);
         verifyUserIsActive(userIdStunned, this.players.get(userIdStunned)!.isActive);
@@ -287,7 +305,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             userId: userId,
         });
     }
-    playerHasCompletedObstacle(userId: string, obstacleId: number): void {
+    private playerHasCompletedObstacle(userId: string, obstacleId: number): void {
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.players, userId);
         verifyUserIsActive(userId, this.players.get(userId)!.isActive);

@@ -66,19 +66,19 @@ export function finishGame(catchFoodGame: CatchFoodGame): CatchFoodGame {
 
 export function finishPlayer(catchFoodGame: CatchFoodGame, userId: string) {
     completePlayersObstacles(catchFoodGame, userId);
-    catchFoodGame.runForward(userId, catchFoodGame.trackLength - catchFoodGame.players.get(userId)!.positionX);
+    catchFoodGame['runForward'](userId, catchFoodGame.trackLength - catchFoodGame.players.get(userId)!.positionX);
 }
 
 export function completePlayersObstacles(catchFoodGame: CatchFoodGame, userId: string) {
     for (let i = 0; i < catchFoodGame.numberOfObstacles; i++) {
-        catchFoodGame.runForward(userId, distanceToNextObstacle(catchFoodGame, userId));
-        catchFoodGame.playerHasCompletedObstacle(userId, i);
+        catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
+        catchFoodGame['playerHasCompletedObstacle'](userId, i);
     }
 }
 
 export function completeNextObstacle(catchFoodGame: CatchFoodGame, userId: string) {
-    catchFoodGame.runForward(userId, distanceToNextObstacle(catchFoodGame, userId));
-    catchFoodGame.playerHasCompletedObstacle(userId, catchFoodGame.players.get(userId)!.obstacles[0].id);
+    catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
+    catchFoodGame['playerHasCompletedObstacle'](userId, catchFoodGame.players.get(userId)!.obstacles[0].id);
 }
 
 export function distanceToNextObstacle(catchFoodGame: CatchFoodGame, userId: string) {
@@ -86,7 +86,7 @@ export function distanceToNextObstacle(catchFoodGame: CatchFoodGame, userId: str
 }
 
 export function runToNextObstacle(catchFoodGame: CatchFoodGame, userId: string) {
-    catchFoodGame.runForward('1', distanceToNextObstacle(catchFoodGame, userId));
+    catchFoodGame['runForward']('1', distanceToNextObstacle(catchFoodGame, userId));
 }
 
 export async function startAndFinishGameDifferentTimes(catchFoodGame: CatchFoodGame) {
@@ -100,19 +100,19 @@ export async function startAndFinishGameDifferentTimes(catchFoodGame: CatchFoodG
 
     advanceCountdown(1000);
     await releaseThreadN(3);
-    catchFoodGame.runForward('1', TRACK_LENGTH);
+    catchFoodGame['runForward']('1', TRACK_LENGTH);
     await releaseThreadN(3);
     advanceCountdown(4000);
     await releaseThreadN(3);
-    catchFoodGame.runForward('2', TRACK_LENGTH);
+    catchFoodGame['runForward']('2', TRACK_LENGTH);
     await releaseThreadN(3);
     advanceCountdown(5000);
     await releaseThreadN(3);
-    catchFoodGame.runForward('3', TRACK_LENGTH);
+    catchFoodGame['runForward']('3', TRACK_LENGTH);
     await releaseThreadN(3);
     advanceCountdown(5000);
     await releaseThreadN(3);
-    catchFoodGame.runForward('4', TRACK_LENGTH);
+    catchFoodGame['runForward']('4', TRACK_LENGTH);
     await releaseThreadN(3);
     return catchFoodGame;
 }
@@ -151,11 +151,11 @@ export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
         completePlayersObstacles(catchFoodGame, i.toString());
     }
 
-    catchFoodGame.runForward('1', TRACK_LENGTH);
-    catchFoodGame.runForward('2', TRACK_LENGTH);
-    catchFoodGame.runForward('3', TRACK_LENGTH);
+    catchFoodGame['runForward']('1', TRACK_LENGTH);
+    catchFoodGame['runForward']('2', TRACK_LENGTH);
+    catchFoodGame['runForward']('3', TRACK_LENGTH);
     Date.now = jest.fn(() => dateNow + 15000);
-    catchFoodGame.runForward('4', TRACK_LENGTH);
+    catchFoodGame['runForward']('4', TRACK_LENGTH);
 
     return eventData;
 }

@@ -1,9 +1,6 @@
 import { Namespace, Socket } from 'socket.io';
 import { MessageTypes } from '../enums/messageTypes';
-import { CatchFoodGame } from '../gameplay';
-import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
 import Game from '../gameplay/Game';
-import { IMessageObstacle } from '../interfaces/messageObstacle';
 import { IMessage } from '../interfaces/messages';
 import RoomService from '../services/roomService';
 import Room from './room';
@@ -45,24 +42,9 @@ class Controller {
             console.error(this.roomId + ' | ' + e.name);
         }
     }
-    private onMessage(message: IMessage) {
+    private async onMessage(message: IMessage) {
         try {
             switch (message.type) {
-                case CatchFoodMsgType.MOVE:
-                    if (this.room?.isPlaying() && this.game instanceof CatchFoodGame) {
-                        this.game.runForward(this.user!.id, parseInt(`${process.env.SPEED}`, 10) || 2);
-                    }
-                    break;
-                case CatchFoodMsgType.OBSTACLE_SOLVED:
-                    if (this.game instanceof CatchFoodGame) {
-                        this.game.playerHasCompletedObstacle(this.user!.id, (message as IMessageObstacle).obstacleId);
-                    }
-                    break;
-                case CatchFoodMsgType.STUN_PLAYER:
-                    if (this.game instanceof CatchFoodGame && message.userId && message.receivingUserId) {
-                        this.game.stunPlayer(message.receivingUserId, message.userId);
-                    }
-                    break;
                 case MessageTypes.SELECT_CHARACTER:
                     if (message.characterNumber !== null && message.characterNumber !== undefined) {
                         this.room?.setUserCharacter(this.user!, parseInt(message.characterNumber, 10));
@@ -77,7 +59,9 @@ class Controller {
                     }
                     break;
                 default:
-                    console.info(message);
+                    if (this.user?.id == message.userId) {
+                        await this.room?.game.receiveInput(message);
+                    }
             }
         } catch (e) {
             this.emitter.sendErrorMessage(this.socket, e);

@@ -1,4 +1,5 @@
 import User from '../../classes/user';
+import { IMessage } from '../../interfaces/messages';
 import { GameState } from '../enums/GameState';
 import Player from '../Player';
 // import GameEventEmitter from '../../classes/GameEventEmitter';
@@ -10,11 +11,10 @@ export interface IGameInterface<TPlayer extends Player, TGameState extends IGame
     gameState: GameState;
 
     createNewGame(players: Array<User>): void;
-    // private startGame()
-    // stopGameTimeout(): void;
     stopGameUserClosed(): void;
     stopGameAllUsersDisconnected(): void;
     pauseGame(): void;
     getGameStateInfo(): TGameState;
     disconnectPlayer(userId: string): void;
+    receiveInput(message: IMessage): Promise<void> | void;
 }

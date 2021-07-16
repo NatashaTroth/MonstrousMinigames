@@ -183,7 +183,7 @@ describe('Run forward', () => {
     it('throws an error with requiredGameStates property on runForward when wrong game state', () => {
         let errorThrown = false;
         try {
-            catchFoodGame.runForward('1');
+            catchFoodGame['runForward']('1');
         } catch (e) {
             errorThrown = true;
             expect([GameState.Started].sort()).toEqual(e.requiredGameStates.sort());
@@ -192,27 +192,27 @@ describe('Run forward', () => {
     });
     it('should throw a WrongGameStateError on runForward when game state is Initialised', async () => {
         expect(catchFoodGame.gameState).toBe(GameState.Initialised);
-        expect(() => catchFoodGame.runForward('1')).toThrow(WrongGameStateError);
+        expect(() => catchFoodGame['runForward']('1')).toThrow(WrongGameStateError);
     });
 
     it('should throw a WrongGameStateError on runForward when game state is Created', async () => {
         getToCreatedGameState(catchFoodGame);
-        expect(() => catchFoodGame.runForward('1')).toThrow(WrongGameStateError);
+        expect(() => catchFoodGame['runForward']('1')).toThrow(WrongGameStateError);
     });
 
     it('should throw a WrongGameStateError on runForward when game state is Paused', async () => {
         getToPausedGameState(catchFoodGame);
-        expect(() => catchFoodGame.runForward('1')).toThrow(WrongGameStateError);
+        expect(() => catchFoodGame['runForward']('1')).toThrow(WrongGameStateError);
     });
 
     it('should throw a WrongGameStateError on runForward when game state is Stopped', async () => {
         getToStoppedGameState(catchFoodGame);
-        expect(() => catchFoodGame.runForward('1')).toThrow(WrongGameStateError);
+        expect(() => catchFoodGame['runForward']('1')).toThrow(WrongGameStateError);
     });
 
     it('should throw a WrongGameStateError on runForward when game state is Finished', async () => {
         getToFinishedGameState(catchFoodGame);
-        expect(() => catchFoodGame.runForward('1')).toThrow(WrongGameStateError);
+        expect(() => catchFoodGame['runForward']('1')).toThrow(WrongGameStateError);
     });
 });
 
@@ -225,7 +225,7 @@ describe('Player has completed obstacle', () => {
     it('throws an error with requiredGameStates property on playerHasCompletedObstacle when wrong game state', () => {
         let errorThrown = false;
         try {
-            catchFoodGame.playerHasCompletedObstacle('1', 1);
+            catchFoodGame['playerHasCompletedObstacle']('1', 1);
         } catch (e) {
             errorThrown = true;
             expect([GameState.Started].sort()).toEqual(e.requiredGameStates.sort());
@@ -234,27 +234,27 @@ describe('Player has completed obstacle', () => {
     });
     it('should throw a WrongGameStateError on playerHasCompletedObstacle when game state is Initialised', async () => {
         expect(catchFoodGame.gameState).toBe(GameState.Initialised);
-        expect(() => catchFoodGame.playerHasCompletedObstacle('1', 1)).toThrow(WrongGameStateError);
+        expect(() => catchFoodGame['playerHasCompletedObstacle']('1', 1)).toThrow(WrongGameStateError);
     });
 
     it('should throw a WrongGameStateError on playerHasCompletedObstacle when game state is Created', async () => {
         getToCreatedGameState(catchFoodGame);
-        expect(() => catchFoodGame.playerHasCompletedObstacle('1', 1)).toThrow(WrongGameStateError);
+        expect(() => catchFoodGame['playerHasCompletedObstacle']('1', 1)).toThrow(WrongGameStateError);
     });
 
     it('should throw a WrongGameStateError on playerHasCompletedObstacle when game state is Paused', async () => {
         getToPausedGameState(catchFoodGame);
-        expect(() => catchFoodGame.playerHasCompletedObstacle('1', 1)).toThrow(WrongGameStateError);
+        expect(() => catchFoodGame['playerHasCompletedObstacle']('1', 1)).toThrow(WrongGameStateError);
     });
 
     it('should throw a WrongGameStateError on playerHasCompletedObstacle when game state is Stopped', async () => {
         getToStoppedGameState(catchFoodGame);
-        expect(() => catchFoodGame.playerHasCompletedObstacle('1', 1)).toThrow(WrongGameStateError);
+        expect(() => catchFoodGame['playerHasCompletedObstacle']('1', 1)).toThrow(WrongGameStateError);
     });
 
     it('should throw a WrongGameStateError on playerHasCompletedObstacle when game state is Finished', async () => {
         getToFinishedGameState(catchFoodGame);
-        expect(() => catchFoodGame.playerHasCompletedObstacle('1', 1)).toThrow(WrongGameStateError);
+        expect(() => catchFoodGame['playerHasCompletedObstacle']('1', 1)).toThrow(WrongGameStateError);
     });
 });
 

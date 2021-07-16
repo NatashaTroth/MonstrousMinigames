@@ -19,18 +19,18 @@ describe('WrongUserIdError handling tests', () => {
 
     it('the WrongUserIdError has a userId property', async () => {
         try {
-            catchFoodGame.runForward(USER_ID_THAT_DOES_NOT_EXIST);
+            catchFoodGame['runForward'](USER_ID_THAT_DOES_NOT_EXIST);
         } catch (e) {
             expect(e.userId).toBe(USER_ID_THAT_DOES_NOT_EXIST);
         }
     });
 
     it('throws a WrongUserIdError when trying to move a user forward who does not exist', async () => {
-        expect(() => catchFoodGame.runForward(USER_ID_THAT_DOES_NOT_EXIST)).toThrow(WrongUserIdError);
+        expect(() => catchFoodGame['runForward'](USER_ID_THAT_DOES_NOT_EXIST)).toThrow(WrongUserIdError);
     });
 
     it('throws a WrongUserIdError when trying to complete an obstacle for a user who does not exist', async () => {
-        expect(() => catchFoodGame.playerHasCompletedObstacle(USER_ID_THAT_DOES_NOT_EXIST, 1)).toThrow(
+        expect(() => catchFoodGame['playerHasCompletedObstacle'](USER_ID_THAT_DOES_NOT_EXIST, 1)).toThrow(
             WrongUserIdError
         );
     });

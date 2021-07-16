@@ -48,14 +48,14 @@ describe('Run forward', () => {
     it('moves players forward when runForward is called', async () => {
         const SPEED = 10;
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.runForward('1', SPEED);
+        catchFoodGame['runForward']('1', SPEED);
         expect(catchFoodGame.players.get('1')?.positionX).toBe(catchFoodGame.initialPlayerPositionX + SPEED);
     });
 
     it('moves players forward correctly when runForward is called multiple times', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.runForward('1', 10);
-        catchFoodGame.runForward('1', 5);
+        catchFoodGame['runForward']('1', 10);
+        catchFoodGame['runForward']('1', 5);
         expect(catchFoodGame.players.get('1')?.positionX).toBe(catchFoodGame.initialPlayerPositionX + 15);
     });
 });
@@ -72,7 +72,7 @@ describe('Obstacles reached', () => {
     it('playerHasReachedObstacle is called and returns false', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const playerHasReachedObstacleSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasReachedObstacle');
-        catchFoodGame.runForward('1', 5);
+        catchFoodGame['runForward']('1', 5);
         expect(playerHasReachedObstacleSpy).toHaveBeenCalled();
         expect(playerHasReachedObstacleSpy).toHaveReturnedWith(false);
     });
@@ -81,7 +81,7 @@ describe('Obstacles reached', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const distanceToObstacle =
             catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame.runForward('1', distanceToObstacle);
+        catchFoodGame['runForward']('1', distanceToObstacle);
         expect(catchFoodGame.players.get('1')!.atObstacle).toBeTruthy();
     });
 
@@ -90,7 +90,7 @@ describe('Obstacles reached', () => {
         const distanceToObstacle =
             catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
         const playerHasReachedObstacleSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasReachedObstacle');
-        catchFoodGame.runForward('1', distanceToObstacle);
+        catchFoodGame['runForward']('1', distanceToObstacle);
         expect(playerHasReachedObstacleSpy).toHaveBeenCalled();
         expect(playerHasReachedObstacleSpy).toHaveReturnedWith(true);
     });
@@ -103,7 +103,7 @@ describe('Obstacles reached', () => {
             CatchFoodGame.prototype as any,
             'handlePlayerReachedObstacle'
         );
-        catchFoodGame.runForward('1', distanceToObstacle);
+        catchFoodGame['runForward']('1', distanceToObstacle);
         expect(handlePlayerReachedObstacleSpy).toHaveBeenCalled();
     });
 
@@ -111,7 +111,7 @@ describe('Obstacles reached', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const distanceToObstacle =
             catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame.runForward('1', distanceToObstacle);
+        catchFoodGame['runForward']('1', distanceToObstacle);
         expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(4);
     });
 
@@ -119,10 +119,10 @@ describe('Obstacles reached', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const distanceToObstacle =
             catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame.runForward('1', distanceToObstacle);
+        catchFoodGame['runForward']('1', distanceToObstacle);
 
         const tmpPlayerPositionX = catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame.runForward('1', 50);
+        catchFoodGame['runForward']('1', 50);
         expect(catchFoodGame.players.get('1')!.positionX).toBe(tmpPlayerPositionX);
     });
 
@@ -130,11 +130,11 @@ describe('Obstacles reached', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const distanceToObstacle =
             catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame.runForward('1', distanceToObstacle);
+        catchFoodGame['runForward']('1', distanceToObstacle);
 
         const tmpPlayerPositionX = catchFoodGame.players.get('1')!.positionX;
         for (let i = 0; i < 10; i++) {
-            catchFoodGame.runForward('1', 50);
+            catchFoodGame['runForward']('1', 50);
         }
         completeNextObstacle(catchFoodGame, '1');
         expect(catchFoodGame.players.get('1')!.positionX).toBe(tmpPlayerPositionX);
@@ -150,7 +150,7 @@ describe('Obstacles reached', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const obstaclePosition = catchFoodGame.players.get('1')!.obstacles[0].positionX;
         const distanceToObstacle = obstaclePosition - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame.runForward('1', distanceToObstacle + 500);
+        catchFoodGame['runForward']('1', distanceToObstacle + 500);
         expect(catchFoodGame.players.get('1')!.positionX).toBe(obstaclePosition);
     });
 
@@ -164,7 +164,7 @@ describe('Obstacles reached', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         completeNextObstacle(catchFoodGame, '1');
         const tmpPlayerPositionX = catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame.runForward('1', 5);
+        catchFoodGame['runForward']('1', 5);
         expect(catchFoodGame.players.get('1')!.positionX).toBe(tmpPlayerPositionX + 5);
     });
 
@@ -192,7 +192,7 @@ describe('Player has finished race', () => {
 
     it('should not set a player as finished if they have not completed all their obstacles but reached the goal', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.runForward('1', TRACKLENGTH);
+        catchFoodGame['runForward']('1', TRACKLENGTH);
         expect(catchFoodGame.players.get('1')!.finished).toBeFalsy();
     });
 
@@ -207,14 +207,14 @@ describe('Player has finished race', () => {
         // finish player 1
         finishPlayer(catchFoodGame, '1');
         const lengthRun = catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame.runForward('1', 10);
+        catchFoodGame['runForward']('1', 10);
         expect(catchFoodGame.players.get('1')!.positionX).toBe(lengthRun);
     });
 
     it('playerHasPassedGoal is called and returns false', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const playerHasPassedGoalSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasPassedGoal');
-        catchFoodGame.runForward('1', 5);
+        catchFoodGame['runForward']('1', 5);
         expect(playerHasPassedGoalSpy).toHaveBeenCalled();
         expect(playerHasPassedGoalSpy).toHaveReturnedWith(false);
     });

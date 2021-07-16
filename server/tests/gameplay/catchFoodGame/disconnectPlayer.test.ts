@@ -65,10 +65,10 @@ describe('Disconnect Player tests', () => {
     it('cannot run forward when disconnected', async () => {
         const SPEED = 50;
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.runForward('1', SPEED);
+        catchFoodGame['runForward']('1', SPEED);
         catchFoodGame.disconnectPlayer('1');
         try {
-            catchFoodGame.runForward('1');
+            catchFoodGame['runForward']('1');
         } catch (e) {
             //ignore for this test
         }
@@ -82,7 +82,7 @@ describe('Disconnect Player tests', () => {
         catchFoodGame.disconnectPlayer('1');
 
         try {
-            catchFoodGame.playerHasCompletedObstacle('1', catchFoodGame.players.get('1')!.obstacles[0].id);
+            catchFoodGame['playerHasCompletedObstacle']('1', catchFoodGame.players.get('1')!.obstacles[0].id);
         } catch (e) {
             //ignore for this test
         }

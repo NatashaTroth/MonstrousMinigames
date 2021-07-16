@@ -1,6 +1,7 @@
 import EventEmitter from 'events';
 import User from '../classes/user';
 import { Globals } from '../enums/globals';
+import { IMessage } from '../interfaces/messages';
 import { MaxNumberUsersExceededError } from './customErrors';
 import { GameState } from './enums';
 import { verifyGameState } from './helperFunctions/verifyGameState';
@@ -81,7 +82,6 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
         verifyGameState(this.gameState, [GameState.Started, GameState.Paused]);
         this.gameState = GameState.Stopped;
     }
-    abstract getGameStateInfo(): TGameState;
     disconnectPlayer(userId: string) {
         verifyGameState(this.gameState, [
             GameState.Initialised,
@@ -120,6 +120,14 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
 
         return true;
     }
+    async receiveInput(message: IMessage) {
+        if (this.gameState !== GameState.Started) {
+            return;
+        }
+
+        await this.handleInput(message);
+    }
+    abstract getGameStateInfo(): TGameState;
 
     // ********** Protected **************************
     protected users: User[] = [];
@@ -127,6 +135,7 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
 
     protected abstract mapUserToPlayer(user: User): TPlayer;
     protected abstract update(timeElapsed: number, timeElapsedSinceLastFrame: number): Promise<void> | void;
+    protected abstract handleInput(message: IMessage): Promise<void> | void;
     protected rankSuccessfulUser(rankingMetric: number) {
         const currentRank = this.currentRank++;
 

@@ -122,7 +122,7 @@ describe('Obstacle reached events', () => {
 
         const distanceToObstacle =
             catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame.runForward('1', distanceToObstacle);
+        catchFoodGame['runForward']('1', distanceToObstacle);
         expect(obstacleEventReceived).toBeTruthy();
     });
 
@@ -141,7 +141,7 @@ describe('Obstacle reached events', () => {
 
         const distanceToObstacle =
             catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame.runForward('1', distanceToObstacle);
+        catchFoodGame['runForward']('1', distanceToObstacle);
 
         expect(eventData).toMatchObject({
             roomId: catchFoodGame.roomId,
@@ -542,7 +542,7 @@ describe('Game has timed out events', () => {
         await releaseThreadN(3);
         
         // player 2 has run forward - but should get the same rank as player 1
-        catchFoodGame.runForward('2', 50);
+        catchFoodGame['runForward']('2', 50);
         await releaseThreadN(3);
 
         //avoid being caught (for this test)
@@ -622,7 +622,7 @@ describe('Chaser event', () => {
             playerIsDeadEvent = true;
         });
         skipTimeToStartChasers(catchFoodGame);
-        // catchFoodGame.runForward('1', chasersStartPosX);
+        // catchFoodGame['runForward']('1', chasersStartPosX);
         jest.advanceTimersByTime(1000);
         expect(playerIsDeadEvent).toBeTruthy();
     });
@@ -638,7 +638,7 @@ describe('Chaser event', () => {
             eventData = data;
         });
 
-        catchFoodGame.runForward(userId, chasersStartPosX + 20);
+        catchFoodGame['runForward'](userId, chasersStartPosX + 20);
         catchFoodGame.players.get('2')!.positionX = chasersStartPosX + 2000;
         catchFoodGame.players.get('3')!.positionX = chasersStartPosX + 2000;
         catchFoodGame.players.get('4')!.positionX = chasersStartPosX + 2000;

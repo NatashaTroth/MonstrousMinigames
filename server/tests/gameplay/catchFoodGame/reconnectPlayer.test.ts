@@ -74,7 +74,7 @@ describe('Reconnect Player tests', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.disconnectPlayer('1');
         catchFoodGame.reconnectPlayer('1');
-        catchFoodGame.runForward('1', SPEED);
+        catchFoodGame['runForward']('1', SPEED);
         expect(catchFoodGame.players.get('1')!.positionX).toBe(catchFoodGame.initialPlayerPositionX + SPEED);
     });
 
