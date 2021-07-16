@@ -8,6 +8,7 @@ import { verifyGameState } from './helperFunctions/verifyGameState';
 import { verifyUserId } from './helperFunctions/verifyUserId';
 import { IGameInterface } from './interfaces';
 import { IGameStateBase } from './interfaces/IGameStateBase';
+import Leaderboard from './leaderboard/Leaderboard';
 import Player from './Player';
 
 abstract class Game<TPlayer extends Player = Player, TGameState extends IGameStateBase = IGameStateBase>
@@ -22,6 +23,7 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     constructor(
         public roomId: string,
         public fps_ms: number = Globals.GAME_STATE_UPDATE_MS,
+        public leaderboard?: Leaderboard,
         protected maxNumberOfPlayers: number = Globals.MAX_PLAYER_NUMBER
     ) {
         super();

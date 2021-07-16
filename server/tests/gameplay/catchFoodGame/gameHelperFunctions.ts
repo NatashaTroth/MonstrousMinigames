@@ -2,6 +2,7 @@ import { CatchFoodGame } from '../../../src/gameplay';
 import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
+import Game from '../../../src/gameplay/Game';
 import { users } from '../mockData';
 
 const TRACK_LENGTH = 5000;
@@ -15,12 +16,12 @@ export const releaseThreadN = async (n: number) => {
     }
 };
 
-export function clearTimersAndIntervals(catchFoodGame: CatchFoodGame) {
+export function clearTimersAndIntervals(game: Game) {
     //to clear intervals
-    jest.advanceTimersByTime(catchFoodGame.countdownTime);
+    jest.advanceTimersByTime((game as CatchFoodGame).countdownTime || 0);
     // jest.advanceTimersByTime(catchFoodGame.timeOutLimit);
     try {
-        catchFoodGame.stopGameUserClosed();
+        game.stopGameUserClosed();
     } catch (e) {
         //no need to handle, game is already finished
     }

@@ -1,7 +1,8 @@
 import Room from '../classes/room';
 import { InvalidRoomCodeError } from '../customErrors';
 import { Globals } from '../enums/globals';
-import { GameStateInfo } from '../gameplay/catchFood/interfaces';
+import Game from '../gameplay/Game';
+import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
 
 const CodeGenerator = require('node-code-generator');
 const generator = new CodeGenerator();
@@ -15,8 +16,8 @@ class RoomService {
         this.roomCodes = generator.generateCodes('****', roomCount, { alphanumericChars: 'BCDFGHJKLMNPQRSTVWXYZ' });
     }
 
-    public createRoom(roomId: string = this.getSingleRoomCode()): Room {
-        const room = new Room(roomId);
+    public createRoom(roomId: string = this.getSingleRoomCode(), game?: Game): Room {
+        const room = new Room(roomId, game);
         this.rooms.push(room);
         return room;
     }
@@ -32,7 +33,7 @@ class RoomService {
         return room;
     }
     /** starts the game in the room and returns the initial game state */
-    public startGame(room: Room): GameStateInfo | undefined {
+    public startGame(room: Room): IGameStateBase | undefined {
         room.startGame();
         return room.game?.getGameStateInfo();
     }
