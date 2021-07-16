@@ -1,7 +1,7 @@
 import { Namespace, Socket } from 'socket.io';
-import { Globals } from '../enums/globals';
 import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
+import Game from '../gameplay/Game';
 import { IMessage } from '../interfaces/messages';
 import RoomService from '../services/roomService';
 import Room from './room';
@@ -51,16 +51,11 @@ class Screen {
 
                         this.emitter.sendGameState(this.screenNamespace, this.room);
 
-                        // TODO: move to push instead of pull
-                        const gameStateInterval = setInterval(() => {
-                            if (!this.room?.isPlaying() && !this.room?.isPaused()) {
-                                clearInterval(gameStateInterval);
-                            }
-                            // send gamestate volatile
+                        this.room.game.addListener(Game.EVT_FRAME_READY, (game: Game) => {
                             if (this.room?.isPlaying()) {
                                 this.emitter.sendGameState(this.screenNamespace, this.room, true);
                             }
-                        }, Globals.GAME_STATE_UPDATE_MS);
+                        });
                     }
                     break;
                 case MessageTypes.PAUSE_RESUME:
