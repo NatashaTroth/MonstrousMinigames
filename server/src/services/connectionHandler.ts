@@ -1,7 +1,7 @@
-import { Namespace, Server } from 'socket.io';
+import { Namespace, Server, Socket } from 'socket.io';
+import Controller from '../classes/Controller';
 
 import Room from '../classes/room';
-import User from '../classes/user';
 import { Globals } from '../enums/globals';
 import { MessageTypes } from '../enums/messageTypes';
 import { Namespaces } from '../enums/nameSpaces';
@@ -10,7 +10,6 @@ import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
 import { GameEvents } from '../gameplay/catchFood/interfaces';
 import { GameEventTypes } from '../gameplay/enums';
 import emitter from '../helpers/emitter';
-import { IMessageObstacle } from '../interfaces/messageObstacle';
 import { IMessage } from '../interfaces/messages';
 import RoomService from './roomService';
 
@@ -42,142 +41,9 @@ class ConnectionHandler {
         this.gameEventEmitter.removeAllListeners();
     }
     private handleControllers() {
-        const rs = this.rs;
-        const controllerNamespace = this.controllerNamespace;
-        const screenNameSpace = this.screenNameSpace;
-
-        this.controllerNamespace.on('connection', function (socket) {
-            const name = socket.handshake.query.name;
-            const roomId = socket.handshake.query.roomId;
-
-            let room: Room;
-
-            try {
-                room = rs.getRoomById(roomId);
-            } catch (e) {
-                emitter.sendErrorMessage(socket, e);
-                console.error(roomId + ' | ' + e.name);
-                return;
-            }
-
-            socket.room = room;
-
-            socket.join(socket.room.id);
-
-            /* User join logic */
-            let user: User;
-            let userId = socket.handshake.query.userId;
-            user = socket.room.getUserById(userId);
-            if (user) {
-                // user is in room
-                user.setRoomId(roomId);
-                user.setSocketId(socket.id);
-                user.setActive(true);
-            } else {
-                // assign user id
-                user = new User(socket.room.id, socket.id, name);
-                userId = user.id;
-
-                try {
-                    socket.room.addUser(user);
-                } catch (e) {
-                    emitter.sendErrorMessage(socket, e);
-                    console.error(roomId + ' | ' + e.name);
-                    return;
-                }
-            }
-            socket.user = user;
-
-            emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
-            console.info(socket.room.id + ' | Controller connected: ' + socket.user.id);
-
-            emitter.sendUserInit(socket, user.number);
-
-            socket.on('disconnect', () => {
-                console.info(socket.room.id + ' | Controller disconnected: ' + socket.user.id);
-                try {
-                    socket.room.userDisconnected(socket.user.id);
-                } catch (e) {
-                    emitter.sendErrorMessage(socket, e);
-                    console.error(roomId + ' | ' + e.name + ' | ' + userId);
-                    return;
-                }
-                if (socket.room.isOpen()) {
-                    emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
-                }
-            });
-
-            socket.on('message', function (message: IMessage) {
-                const type = message.type;
-                switch (type) {
-                    case CatchFoodMsgType.MOVE: {
-                        if (socket.room.isPlaying()) {
-                            try {
-                                socket.room.game?.runForward(socket.user.id, parseInt(`${process.env.SPEED}`, 10) || 2);
-                            } catch (e) {
-                                emitter.sendErrorMessage(socket, e);
-                                console.error(roomId + ' | ' + e.name);
-                            }
-                        }
-                        break;
-                    }
-                    case CatchFoodMsgType.OBSTACLE_SOLVED: {
-                        const obstacleMessage = message as IMessageObstacle;
-                        const obstacleId = obstacleMessage.obstacleId;
-                        try {
-                            socket.room.game?.playerHasCompletedObstacle(socket.user.id, obstacleId);
-                        } catch (e) {
-                            emitter.sendErrorMessage(socket, e);
-                            console.error(roomId + ' | ' + e.name);
-                        }
-                        break;
-                    }
-                    case CatchFoodMsgType.STUN_PLAYER:
-                        {
-                            if (message.userId && message.receivingUserId) {
-                                try {
-                                    socket.room.game?.stunPlayer(message.receivingUserId, message.userId);
-                                } catch (e) {
-                                    emitter.sendErrorMessage(socket, e);
-                                    console.error(roomId + ' | ' + e.name);
-                                }
-                            }
-                        }
-                        break;
-                    case MessageTypes.SELECT_CHARACTER: {
-                        if (message.characterNumber !== null && message.characterNumber !== undefined) {
-                            try {
-                                socket.room.setUserCharacter(socket.user, parseInt(message.characterNumber));
-                                emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
-                            } catch (e) {
-                                emitter.sendErrorMessage(socket, e);
-                                console.error(roomId + ' | ' + e.name);
-                            }
-                        }
-                        break;
-                    }
-                    case MessageTypes.USER_READY:
-                        {
-                            if (socket.room.isOpen() && socket.user) {
-                                // toggle ready state
-                                const ready = socket.user.isReady();
-                                socket.user.setReady(!ready);
-                                console.info(
-                                    socket.room.id +
-                                        ' | userId: ' +
-                                        socket.user.id +
-                                        ' | Ready: ' +
-                                        socket.user.isReady()
-                                );
-                                emitter.sendConnectedUsers([controllerNamespace, screenNameSpace], socket.room);
-                            }
-                        }
-                        break;
-                    default: {
-                        console.info(message);
-                    }
-                }
-            });
+        this.controllerNamespace.on('connection', (socket: Socket) => {
+            const controller = new Controller(socket, this.rs, emitter, this.controllerNamespace, this.screenNameSpace);
+            controller.init();
         });
     }
     private handleScreens() {

@@ -5,17 +5,16 @@ import { MaxNumberUsersExceededError } from './customErrors';
 import { GameState } from './enums';
 import { verifyGameState } from './helperFunctions/verifyGameState';
 import { verifyUserId } from './helperFunctions/verifyUserId';
-import { HashTable, IGameInterface, IPlayerState } from './interfaces';
+import { IGameInterface } from './interfaces';
 import { IGameStateBase } from './interfaces/IGameStateBase';
 import Player from './Player';
 
-abstract class Game<TPlayer extends Player, TGameState extends IGameStateBase>
+abstract class Game<TPlayer extends Player = Player, TGameState extends IGameStateBase = IGameStateBase>
     extends EventEmitter
     implements IGameInterface<TPlayer, TGameState> {
     public static readonly EVT_FRAME_READY = 'frame-ready';
 
     // ********** Public *****************************
-    public playersState: HashTable<IPlayerState> = {};
     public gameState = GameState.Initialised;
     public players = new Map<string, TPlayer>();
 
@@ -203,6 +202,7 @@ abstract class Game<TPlayer extends Player, TGameState extends IGameStateBase>
     private async _gameLoop() {
         if (this._gameLoopActive) return;
         this._gameLoopActive = true;
+        // TODO: lag catch up see https://gameprogrammingpatterns.com/game-loop.html#play-catch-up
         while (this.gameState === GameState.Started) {
             await this._update();
             await new Promise(resolve => setTimeout(resolve, this.fps_ms));
