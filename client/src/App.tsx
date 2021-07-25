@@ -9,35 +9,34 @@ import Credits from './components/common/Credits';
 import MasterHeader from './components/common/MasterHeader';
 import PausedDialog from './components/common/PausedDialog';
 import Settings from './components/common/Settings';
-import ChooseCharacter from './components/Controller/ChooseCharacter';
-import { ConnectScreen as ControllerConnectScreen } from './components/Controller/ConnectScreen';
-import { FinishedScreen as ControllerFinishedScreen } from './components/Controller/FinishedScreen';
-import { Lobby as ControllerLobbyScreen } from './components/Controller/Lobby';
-import Hole from './components/Controller/Obstacles/Hole';
-import Spider from './components/Controller/Obstacles/Spider';
-import Stone from './components/Controller/Obstacles/Stone';
-import TreeTrunk from './components/Controller/Obstacles/TreeTrunk';
-import PlayerDead from './components/Controller/PlayerDead';
-import PlayerStunned from './components/Controller/PlayerStunned';
-import ShakeInstruction from './components/Controller/ShakeInstruction';
-import ChooseGame from './components/Screen/ChooseGame';
-import { ConnectScreen as ScreenConnectScreen } from './components/Screen/ConnectScreen';
-import { FinishedScreen as ScreenFinishedScreen } from './components/Screen/FinishedScreen';
-import Game from './components/Screen/Game';
-import GameIntro from './components/Screen/GameIntro';
-import { Lobby as ScreenLobbyScreen } from './components/Screen/Lobby';
-import PlayersGetReady from './components/Screen/PlayersGetReady';
-import ScreenWrapper from './components/Screen/ScreenWrapper';
-// import AudioContextProvider from './contexts/AudioContextProvider';
 import ControllerSocketContextProvider from './contexts/ControllerSocketContextProvider';
 import GameContextProvider from './contexts/GameContextProvider';
 import PlayerContextProvider from './contexts/PlayerContextProvider';
 import ScreenSocketContextProvider from './contexts/ScreenSocketContextProvider';
+import ChooseCharacter from './domain/controller/components/ChooseCharacter';
+import { ConnectScreen as ControllerConnectScreen } from './domain/controller/components/ConnectScreen';
+import { FinishedScreen as ControllerFinishedScreen } from './domain/controller/components/FinishedScreen';
+import { Lobby as ControllerLobbyScreen } from './domain/controller/components/Lobby';
+import Hole from './domain/controller/components/obstacles/Hole';
+import Spider from './domain/controller/components/obstacles/Spider';
+import Stone from './domain/controller/components/obstacles/Stone';
+import TreeTrunk from './domain/controller/components/obstacles/TreeTrunk';
+import PlayerDead from './domain/controller/components/PlayerDead';
+import PlayerStunned from './domain/controller/components/PlayerStunned';
+import ShakeInstruction from './domain/controller/components/ShakeInstruction';
 import history from './domain/history/history';
-import theme from './theme';
+import ChooseGame from './domain/screen/components/ChooseGame';
+import { ConnectScreen as ScreenConnectScreen } from './domain/screen/components/ConnectScreen';
+import { FinishedScreen as ScreenFinishedScreen } from './domain/screen/components/FinishedScreen';
+import Game from './domain/screen/components/Game';
+import GameIntro from './domain/screen/components/GameIntro';
+import { Lobby as ScreenLobbyScreen } from './domain/screen/components/Lobby';
+import PlayersGetReady from './domain/screen/components/PlayersGetReady';
+import ScreenWrapper from './domain/screen/components/ScreenWrapper';
+import theme from './styles/theme';
 import { Routes } from './utils/routes';
 
-export interface IRouteParams {
+export interface RouteParams {
     id?: string;
 }
 

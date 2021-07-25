@@ -1,8 +1,8 @@
 import * as React from 'react';
 
+import { handleSetSocket } from '../domain/controller/socket/handleSetSocket';
+import { handleSocketConnection } from '../domain/controller/socket/handleSocketConnection';
 import history from '../domain/history/history';
-import { handleSetSocket } from '../domain/socket/controller/handleSetSocket';
-import { handleSocketConnection } from '../domain/socket/controller/handleSocketConnection';
 import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
 import { Socket } from '../domain/socket/Socket';
 import { GameContext } from './GameContextProvider';
@@ -18,13 +18,13 @@ export const defaultValue = {
     },
 };
 
-interface IControllerSocketContext {
+interface ControllerSocketContextProps {
     controllerSocket: Socket;
     setControllerSocket: (val: Socket, roomId: string) => void;
     handleSocketConnection: (roomId: string, name: string) => void;
 }
 
-export const ControllerSocketContext = React.createContext<IControllerSocketContext>(defaultValue);
+export const ControllerSocketContext = React.createContext<ControllerSocketContextProps>(defaultValue);
 
 const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [controllerSocket, setControllerSocket] = React.useState<Socket>(new InMemorySocketFake());

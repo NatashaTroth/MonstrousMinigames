@@ -4,7 +4,7 @@ import { cleanup, fireEvent, queryByText, render } from '@testing-library/react'
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 
-import theme from '../../theme';
+import theme from '../../styles/theme';
 import Button from './Button';
 
 afterEach(cleanup);

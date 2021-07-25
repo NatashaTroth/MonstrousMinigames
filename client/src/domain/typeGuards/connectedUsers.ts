@@ -1,7 +1,7 @@
 import { MessageTypes } from '../../utils/constants';
 import { MessageData } from './MessageData';
 
-export interface IUser {
+export interface User {
     id: string;
     name: string;
     roomId: string;
@@ -13,7 +13,7 @@ export interface IUser {
 
 export interface ConnectedUsersMessage {
     type: MessageTypes.connectedUsers;
-    users?: IUser[];
+    users?: User[];
 }
 
 export const connectedUsersTypeGuard = (data: MessageData): data is ConnectedUsersMessage =>

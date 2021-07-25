@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router';
 
-import { ICharacter } from '../utils/characters';
+import { Character } from '../utils/characters';
 import { Obstacles } from '../utils/constants';
 import { controllerGame1Route, controllerObstacleRoute } from '../utils/routes';
 
@@ -50,13 +50,13 @@ export const defaultValue = {
         // do nothing
     },
 };
-export interface IObstacle {
+export interface Obstacle {
     type: Obstacles;
     id: number;
 }
-interface IPlayerContext {
-    obstacle: undefined | IObstacle;
-    setObstacle: (roomId: string | undefined, val: IObstacle | undefined) => void;
+interface PlayerContextProps {
+    obstacle: undefined | Obstacle;
+    setObstacle: (roomId: string | undefined, val: Obstacle | undefined) => void;
     playerFinished: boolean;
     setPlayerFinished: (val: boolean) => void;
     playerRank: number | undefined;
@@ -66,8 +66,8 @@ interface IPlayerContext {
     resetPlayer: () => void;
     playerNumber: number | undefined;
     setPlayerNumber: (val: number) => void;
-    character: undefined | ICharacter;
-    setCharacter: (val: ICharacter) => void;
+    character: undefined | Character;
+    setCharacter: (val: Character) => void;
     name: string;
     setName: (val: string) => void;
     ready: boolean;
@@ -78,17 +78,17 @@ interface IPlayerContext {
     setPlayerDead: (val: boolean) => void;
 }
 
-export const PlayerContext = React.createContext<IPlayerContext>(defaultValue);
+export const PlayerContext = React.createContext<PlayerContextProps>(defaultValue);
 
 const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [userId, setUserId] = React.useState<string>('');
-    const [obstacle, setObstacle] = React.useState<undefined | IObstacle>();
+    const [obstacle, setObstacle] = React.useState<undefined | Obstacle>();
     const [playerFinished, setPlayerFinished] = React.useState<boolean>(false);
     const [playerRank, setPlayerRank] = React.useState<undefined | number>();
     const [playerNumber, setPlayerNumber] = React.useState<number | undefined>();
     const [permission, setPermissionGranted] = React.useState<boolean>(false);
     const history = useHistory();
-    const [character, setCharacter] = React.useState<undefined | ICharacter>(undefined);
+    const [character, setCharacter] = React.useState<undefined | Character>(undefined);
     const [name, setName] = React.useState<string>('');
     const [ready, setReady] = React.useState<boolean>(false);
     const [dead, setPlayerDead] = React.useState(false);
@@ -97,7 +97,7 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
 
     const content = {
         obstacle,
-        setObstacle: (roomId: string | undefined, val: undefined | IObstacle) => {
+        setObstacle: (roomId: string | undefined, val: undefined | Obstacle) => {
             setObstacle(val);
             if (val) {
                 reroute = true;
