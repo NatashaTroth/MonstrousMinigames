@@ -1,7 +1,13 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
-import { StyledIconButton } from './IconButton.sc';
+import { StyledButtonBase } from './Button.sc';
 
+const StyledIconButton = styled(StyledButtonBase)`
+    && {
+        border-radius: 10px;
+    }
+`;
 interface ButtonProps {
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
     disabled?: boolean;
