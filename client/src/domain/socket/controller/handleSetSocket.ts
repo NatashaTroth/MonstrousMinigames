@@ -1,6 +1,6 @@
 import { History } from 'history';
 
-import { IObstacle } from '../../../contexts/PlayerContextProvider';
+import { Obstacle } from '../../../contexts/PlayerContextProvider';
 import { controllerChooseCharacterRoute } from '../../../utils/routes';
 import { handleConnectedUsersMessage } from '../../gameState/controller/handleConnectedUsersMessage';
 import { handleGameHasFinishedMessage } from '../../gameState/controller/handleGameHasFinishedMessage';
@@ -13,7 +13,7 @@ import { handlePlayerFinishedMessage } from '../../gameState/controller/handlePl
 import { handlePlayerStunned } from '../../gameState/controller/handlePlayerStunned';
 import { handlePlayerUnstunned } from '../../gameState/controller/handlePlayerUnstunned';
 import { handleUserInitMessage } from '../../gameState/controller/handleUserInitMessage';
-import { ConnectedUsersMessage, connectedUsersTypeGuard, IUser } from '../../typeGuards/connectedUsers';
+import { ConnectedUsersMessage, connectedUsersTypeGuard, User } from '../../typeGuards/connectedUsers';
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
 import { ObstacleMessage, obstacleTypeGuard } from '../../typeGuards/obstacle';
@@ -34,7 +34,7 @@ export interface HandleSetSocketDependencies {
     setControllerSocket: (socket: Socket) => void;
     setPlayerNumber: (val: number) => void;
     setPlayerFinished: (val: boolean) => void;
-    setObstacle: (roomId: string | undefined, obstacle: undefined | IObstacle) => void;
+    setObstacle: (roomId: string | undefined, obstacle: undefined | Obstacle) => void;
     setPlayerRank: (val: number) => void;
     setHasPaused: (val: boolean) => void;
     resetGame: () => void;
@@ -45,7 +45,7 @@ export interface HandleSetSocketDependencies {
     setUserId: (val: string) => void;
     setPlayerDead: (val: boolean) => void;
     history: History;
-    setConnectedUsers: (val: IUser[]) => void;
+    setConnectedUsers: (val: User[]) => void;
     playerRank: undefined | number;
 }
 

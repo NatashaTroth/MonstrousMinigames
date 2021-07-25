@@ -5,7 +5,7 @@ import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
 import Button from '../common/Button';
 import { DialogContent, InputContainer, InputLabel, StyledForm, StyledInput } from './ConnectDialog.sc';
 
-interface IFormState {
+interface FormStateProps {
     roomId: string;
 }
 
@@ -14,7 +14,7 @@ interface ConnectDialog {
     handleClose: () => void;
 }
 const ConnectDialog: React.FunctionComponent<ConnectDialog> = ({ handleClose, ...props }) => {
-    const [formState, setFormState] = React.useState<undefined | IFormState>({ roomId: '' });
+    const [formState, setFormState] = React.useState<undefined | FormStateProps>({ roomId: '' });
     const { handleSocketConnection } = React.useContext(ScreenSocketContext);
 
     return (

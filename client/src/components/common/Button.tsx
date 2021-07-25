@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { Container, StyledButton } from './Button.sc';
 
-interface IButton {
+interface ButtonProps {
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
     type?: 'button' | 'submit' | 'reset' | undefined;
     disabled?: boolean;
@@ -13,7 +13,7 @@ interface IButton {
     title?: string;
 }
 
-const Button: React.FunctionComponent<IButton> = ({
+const Button: React.FunctionComponent<ButtonProps> = ({
     children,
     onClick,
     type = 'button',

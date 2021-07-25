@@ -37,7 +37,7 @@ import history from './domain/history/history';
 import theme from './theme';
 import { Routes } from './utils/routes';
 
-export interface IRouteParams {
+export interface RouteParams {
     id?: string;
 }
 

@@ -18,13 +18,13 @@ export const defaultValue = {
     },
 };
 
-interface IControllerSocketContext {
+interface ControllerSocketContextProps {
     controllerSocket: Socket;
     setControllerSocket: (val: Socket, roomId: string) => void;
     handleSocketConnection: (roomId: string, name: string) => void;
 }
 
-export const ControllerSocketContext = React.createContext<IControllerSocketContext>(defaultValue);
+export const ControllerSocketContext = React.createContext<ControllerSocketContextProps>(defaultValue);
 
 const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [controllerSocket, setControllerSocket] = React.useState<Socket>(new InMemorySocketFake());

@@ -24,7 +24,7 @@ import {
 const MAX = 30;
 let sec = 0;
 let stoptime = true;
-interface IClickObstacle {
+interface ClickObstacleProps {
     setObstacle: (value: undefined | Obstacles) => void;
 }
 
@@ -33,7 +33,7 @@ function resetObstacle() {
     stoptime = true;
 }
 
-const TreeTrunk: React.FunctionComponent<IClickObstacle> = () => {
+const TreeTrunk: React.FunctionComponent<ClickObstacleProps> = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { obstacle, setObstacle } = React.useContext(PlayerContext);
     const [skip, setSkip] = React.useState(false);

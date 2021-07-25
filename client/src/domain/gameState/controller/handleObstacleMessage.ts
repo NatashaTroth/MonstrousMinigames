@@ -1,10 +1,10 @@
-import { IObstacle } from '../../../contexts/PlayerContextProvider';
+import { Obstacle } from '../../../contexts/PlayerContextProvider';
 import { ObstacleMessage } from '../../typeGuards/obstacle';
 
 interface HandleMessageDataProps {
     data: ObstacleMessage;
     roomId: string;
-    setObstacle: (roomId: string | undefined, obstacle: undefined | IObstacle) => void;
+    setObstacle: (roomId: string | undefined, obstacle: undefined | Obstacle) => void;
 }
 
 export function handleObstacleMessage(props: HandleMessageDataProps) {

@@ -2,7 +2,7 @@ import { Assignment } from '@material-ui/icons';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { IRouteParams } from '../../App';
+import { RouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
@@ -36,7 +36,7 @@ export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
     const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
-    const { id }: IRouteParams = useParams();
+    const { id }: RouteParams = useParams();
     const navigator = window.navigator;
 
     if (id && !screenSocket) {

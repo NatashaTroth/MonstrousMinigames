@@ -7,7 +7,7 @@ import { handleGameHasFinishedMessage } from '../../gameState/screen/handleGameH
 import { handleGameHasResetMessage } from '../../gameState/screen/handleGameHasResetMessage';
 import { handleStartGameMessage } from '../../gameState/screen/handleGameHasStartedMessage';
 import { handleGameHasStoppedMessage } from '../../gameState/screen/handleGameHasStoppedMessage';
-import { ConnectedUsersMessage, connectedUsersTypeGuard, IUser } from '../../typeGuards/connectedUsers';
+import { ConnectedUsersMessage, connectedUsersTypeGuard, User } from '../../typeGuards/connectedUsers';
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
 import { pausedTypeGuard } from '../../typeGuards/paused';
@@ -22,7 +22,7 @@ import { Socket } from '../Socket';
 
 export interface HandleSetSocketDependencies {
     setScreenSocket: (socket: Socket) => void;
-    setConnectedUsers: (users: IUser[]) => void;
+    setConnectedUsers: (users: User[]) => void;
     setHasPaused: (val: boolean) => void;
     setGameStarted: (val: boolean) => void;
     setCountdownTime: (val: number) => void;

@@ -9,7 +9,7 @@ import { sendMovement } from '../../domain/gameState/controller/sendMovement';
 import Button from '../common/Button';
 import { ConnectScreenContainer, FormContainer, inputStyles, LabelStyles, wrapperStyles } from './ConnectScreen.sc';
 
-interface IFormState {
+interface FormStateProps {
     name: string;
     roomId: string;
 }
@@ -20,7 +20,7 @@ interface ConnectScreen {
 export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history }) => {
     const { location } = history;
     const roomId = checkRoomCode(location.pathname.slice(1));
-    const [formState, setFormState] = React.useState<IFormState>({
+    const [formState, setFormState] = React.useState<FormStateProps>({
         name: localStorage.getItem('name') || '',
         roomId: roomId || '',
     });

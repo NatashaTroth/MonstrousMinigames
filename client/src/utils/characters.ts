@@ -12,14 +12,14 @@ import susi_stunned from '../images/characters/stunned_pink.png';
 import susi from '../images/characters/susi.png';
 import { characterDictionary } from './characterDictionary';
 
-export interface ICharacter {
+export interface Character {
     id: string;
     src: string;
     stunned: string;
     ghost: string;
 }
 
-export const characters: ICharacter[] = [
+export const characters: Character[] = [
     { id: 'franz', src: franz, stunned: franz_stunned, ghost: franz_ghost },
     { id: 'noah', src: noah, stunned: noah_stunned, ghost: noah_ghost },
     { id: 'susi', src: susi, stunned: susi_stunned, ghost: susi_ghost },

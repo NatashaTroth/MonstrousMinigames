@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { handleSetGameFinished } from '../domain/gameState/controller/handleSetGameFinished';
 import { handleSetGameStarted } from '../domain/gameState/controller/handleSetGameStarted';
-import { IUser } from '../domain/typeGuards/connectedUsers';
+import { User } from '../domain/typeGuards/connectedUsers';
 import { defaultAvailableCharacters } from '../utils/characters';
 import { PlayerRank } from './ScreenSocketContextProvider';
 
@@ -59,15 +59,15 @@ export const defaultValue = {
         // do nothing
     },
 };
-interface IGameContext {
+interface GameContextProps {
     finished: boolean;
     setFinished: (val: boolean) => void;
     gameStarted: boolean;
     setGameStarted: (val: boolean) => void;
     roomId?: string;
     setRoomId: (val?: string) => void;
-    connectedUsers?: IUser[];
-    setConnectedUsers: (val: IUser[]) => void;
+    connectedUsers?: User[];
+    setConnectedUsers: (val: User[]) => void;
     resetGame: () => void;
     showInstructions: boolean;
     setShowInstructions: (val: boolean) => void;
@@ -87,14 +87,14 @@ interface IGameContext {
     setAvailableCharacters: (val: number[]) => void;
 }
 
-export const GameContext = React.createContext<IGameContext>(defaultValue);
+export const GameContext = React.createContext<GameContextProps>(defaultValue);
 
 const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [playerRanks, setPlayerRanks] = React.useState<undefined | PlayerRank[]>();
     const [finished, setFinished] = React.useState<boolean>(false);
     const [gameStarted, setGameStarted] = React.useState<boolean>(false);
     const [roomId, setRoomId] = React.useState<undefined | string>();
-    const [connectedUsers, setConnectedUsers] = React.useState<undefined | IUser[]>();
+    const [connectedUsers, setConnectedUsers] = React.useState<undefined | User[]>();
     const [showInstructions, setShowInstructions] = React.useState<boolean>(true);
     const [countdownTime, setCountdownTime] = React.useState<number>(0);
     const [hasPaused, setHasPaused] = React.useState<boolean>(false);

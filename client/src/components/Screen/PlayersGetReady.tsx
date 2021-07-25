@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
-import { IUser, ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { ScreenSocketContext, User } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import { characters } from '../../utils/characters';
 import { MessageTypes } from '../../utils/constants';
@@ -28,7 +28,7 @@ const PlayersGetReady: React.FC = () => {
     const emptyGame = !connectedUsers || connectedUsers.length === 0;
     const usersReady =
         !connectedUsers ||
-        connectedUsers.filter((user: IUser) => {
+        connectedUsers.filter((user: User) => {
             return user.ready;
         }).length === connectedUsers.length;
 

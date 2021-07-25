@@ -3,7 +3,7 @@ import Phaser from 'phaser';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { IRouteParams } from '../../App';
+import { RouteParams } from '../../App';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
@@ -24,7 +24,7 @@ const Game: React.FunctionComponent = () => {
         mute,
         unMute,
     } = React.useContext(AudioContext);
-    const { id }: IRouteParams = useParams();
+    const { id }: RouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
 
     if (id && !screenSocket) {
@@ -97,14 +97,8 @@ const Game: React.FunctionComponent = () => {
 
 export default Game;
 
-interface IGameContentProps {
-    displayGo?: boolean;
-}
-
-const GameContent: React.FunctionComponent<IGameContentProps> = () => {
-    return (
-        <div>
-            <div id="game-root"></div>
-        </div>
-    );
-};
+const GameContent: React.FunctionComponent = () => (
+    <div>
+        <div id="game-root"></div>
+    </div>
+);

@@ -1,9 +1,9 @@
-import { ConnectedUsersMessage, IUser } from '../../typeGuards/connectedUsers';
+import { ConnectedUsersMessage, User } from '../../typeGuards/connectedUsers';
 
 interface HandleConnectedUsers {
     data: ConnectedUsersMessage;
     dependencies: {
-        setConnectedUsers: (users: IUser[]) => void;
+        setConnectedUsers: (users: User[]) => void;
     };
 }
 

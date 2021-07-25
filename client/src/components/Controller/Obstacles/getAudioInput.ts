@@ -1,4 +1,4 @@
-import { IObstacle } from '../../../contexts/PlayerContextProvider';
+import { Obstacle } from '../../../contexts/PlayerContextProvider';
 
 export let currentCount = 0;
 interface WindowProps extends Window {
@@ -12,7 +12,7 @@ export function resetCurrentCount() {
 export async function getAudioInput(
     MAX: number,
     dependencies: {
-        solveObstacle: (obstacle?: IObstacle) => void;
+        solveObstacle: (obstacle?: Obstacle) => void;
         setProgress: (val: number) => void;
     }
 ) {

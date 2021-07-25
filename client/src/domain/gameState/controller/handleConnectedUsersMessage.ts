@@ -1,11 +1,11 @@
 import { defaultAvailableCharacters } from '../../../utils/characters';
-import { ConnectedUsersMessage, IUser } from '../../typeGuards/connectedUsers';
+import { ConnectedUsersMessage, User } from '../../typeGuards/connectedUsers';
 
 interface HandleConnectedUsersMessage {
     data: ConnectedUsersMessage;
     dependencies: {
         setAvailableCharacters: (val: number[]) => void;
-        setConnectedUsers: (val: IUser[]) => void;
+        setConnectedUsers: (val: User[]) => void;
     };
 }
 

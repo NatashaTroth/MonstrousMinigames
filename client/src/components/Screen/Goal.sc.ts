@@ -5,10 +5,10 @@ export const StyledImage = styled.img`
     height: 100px;
 `;
 
-interface IImageContainerProps {
+interface ImageContainerProps {
     x: number;
 }
-export const ImageContainer = styled.div<IImageContainerProps>`
+export const ImageContainer = styled.div<ImageContainerProps>`
     position: absolute;
     left: ${({ x }) => x}px;
 `;
