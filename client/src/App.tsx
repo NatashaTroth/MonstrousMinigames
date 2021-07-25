@@ -28,13 +28,12 @@ import GameIntro from './components/Screen/GameIntro';
 import { Lobby as ScreenLobbyScreen } from './components/Screen/Lobby';
 import PlayersGetReady from './components/Screen/PlayersGetReady';
 import ScreenWrapper from './components/Screen/ScreenWrapper';
-// import AudioContextProvider from './contexts/AudioContextProvider';
 import ControllerSocketContextProvider from './contexts/ControllerSocketContextProvider';
 import GameContextProvider from './contexts/GameContextProvider';
 import PlayerContextProvider from './contexts/PlayerContextProvider';
 import ScreenSocketContextProvider from './contexts/ScreenSocketContextProvider';
 import history from './domain/history/history';
-import theme from './theme';
+import theme from './styles/theme';
 import { Routes } from './utils/routes';
 
 export interface RouteParams {

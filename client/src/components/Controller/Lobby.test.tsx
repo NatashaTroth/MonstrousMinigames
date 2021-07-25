@@ -5,7 +5,7 @@ import { ThemeProvider } from 'styled-components';
 import { Lobby } from '../../components/Controller/Lobby';
 import { defaultValue as defaultGameValue, GameContext } from '../../contexts/GameContextProvider';
 import { defaultValue, PlayerContext } from '../../contexts/PlayerContextProvider';
-import theme from '../../theme';
+import theme from '../../styles/theme';
 
 afterEach(cleanup);
 

@@ -6,7 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
 import { defaultValue, ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import theme from '../../theme';
+import theme from '../../styles/theme';
 import ConnectDialog from './ConnectDialog';
 
 configure({ adapter: new Adapter() });

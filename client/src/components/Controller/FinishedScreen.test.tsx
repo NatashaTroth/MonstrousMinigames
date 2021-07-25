@@ -11,7 +11,7 @@ import { defaultValue as gameContextDefaultValue, GameContext } from '../../cont
 import { defaultValue, PlayerContext } from '../../contexts/PlayerContextProvider';
 import history from '../../domain/history/history';
 import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
-import theme from '../../theme';
+import theme from '../../styles/theme';
 import { FinishedScreen } from './FinishedScreen';
 
 afterEach(cleanup);

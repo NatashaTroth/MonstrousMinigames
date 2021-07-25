@@ -6,7 +6,7 @@ import { ThemeProvider } from 'styled-components';
 import { Lobby } from '../../components/Screen/Lobby';
 import { defaultValue, GameContext } from '../../contexts/GameContextProvider';
 import history from '../../domain/history/history';
-import theme from '../../theme';
+import theme from '../../styles/theme';
 
 // window.HTMLMediaElement.prototype.load = () => { /* do nothing */ };
 // window.HTMLMediaElement.prototype.play = () => { /* do nothing */ };
