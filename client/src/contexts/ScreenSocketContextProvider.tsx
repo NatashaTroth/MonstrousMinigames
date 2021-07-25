@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { handleSetSocket } from '../domain/socket/screen/handleSetSocket';
-import { handleSocketConnection } from '../domain/socket/screen/handleSocketConnection';
+import { handleSetSocket } from '../domain/screen/socket/handleSetSocket';
+import { handleSocketConnection } from '../domain/screen/socket/handleSocketConnection';
 import { Socket } from '../domain/socket/Socket';
 import { GameState, Obstacles } from '../utils/constants';
 import { GameContext } from './GameContextProvider';

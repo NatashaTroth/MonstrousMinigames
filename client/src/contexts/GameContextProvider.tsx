@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { handleSetGameFinished } from '../domain/gameState/controller/handleSetGameFinished';
-import { handleSetGameStarted } from '../domain/gameState/controller/handleSetGameStarted';
+import { handleSetGameFinished } from '../domain/controller/gameState/handleSetGameFinished';
+import { handleSetGameStarted } from '../domain/controller/gameState/handleSetGameStarted';
 import { User } from '../domain/typeGuards/connectedUsers';
 import { defaultAvailableCharacters } from '../utils/characters';
 import { PlayerRank } from './ScreenSocketContextProvider';
