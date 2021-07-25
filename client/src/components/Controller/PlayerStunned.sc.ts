@@ -10,8 +10,3 @@ export const PlayerStunnedContainer = styled.div`
     padding: 20px;
     justify-content: center;
 `;
-
-export const StyledCharacter = styled.img`
-    display: flex;
-    width: 80%;
-`;

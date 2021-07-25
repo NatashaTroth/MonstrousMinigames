@@ -13,7 +13,6 @@ const ShakeInstruction: React.FunctionComponent = () => {
         if (counter !== null && counter !== undefined) {
             if (counter > 0) {
                 setTimeout(() => setCounter(counter - 1), 1000);
-                // setTimeout(() => setCounter(counter - 1), 1000); //TODO use instead when backend and phaser have been fixed/changed
             } else {
                 sessionStorage.removeItem('countdownTime');
                 setCounter(null);

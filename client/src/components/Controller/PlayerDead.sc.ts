@@ -11,11 +11,6 @@ export const PlayerDeadContainer = styled.div`
     justify-content: center;
 `;
 
-export const StyledCharacter = styled.img`
-    display: flex;
-    width: 80%;
-`;
-
 export const TextWrapper = styled.div`
     margin-top: 20px;
 `;
