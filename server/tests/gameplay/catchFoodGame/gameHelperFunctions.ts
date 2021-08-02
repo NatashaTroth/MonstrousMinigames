@@ -2,18 +2,26 @@ import { CatchFoodGame } from '../../../src/gameplay';
 import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
+import Game from '../../../src/gameplay/Game';
 import { users } from '../mockData';
 
 const TRACK_LENGTH = 5000;
 const gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
 const dateNow = 1618665766156;
 
-export function clearTimersAndIntervals(catchFoodGame: CatchFoodGame) {
+export const releaseThread = () => new Promise<void>(resolve => resolve());
+export const releaseThreadN = async (n: number) => {
+    for (let i = 0; i < n; i++) {
+        await releaseThread();
+    }
+};
+
+export function clearTimersAndIntervals(game: Game) {
     //to clear intervals
-    jest.advanceTimersByTime(catchFoodGame.countdownTime);
+    jest.advanceTimersByTime((game as CatchFoodGame).countdownTime || 0);
     // jest.advanceTimersByTime(catchFoodGame.timeOutLimit);
     try {
-        catchFoodGame.stopGameUserClosed();
+        game.stopGameUserClosed();
     } catch (e) {
         //no need to handle, game is already finished
     }
@@ -22,16 +30,19 @@ export function clearTimersAndIntervals(catchFoodGame: CatchFoodGame) {
 }
 
 export function startGameAndAdvanceCountdown(catchFoodGame: CatchFoodGame) {
+    Date.now = () => dateNow;
     catchFoodGame.createNewGame(users, TRACK_LENGTH, 4, 1);
     advanceCountdown(catchFoodGame.countdownTime);
 }
 export function advanceCountdown(time: number) {
     //run countdown
+    const previousNow = Date.now;
+    Date.now = () => previousNow() + time;
     jest.advanceTimersByTime(time);
 }
 
 export function skipTimeToStartChasers(catchFoodGame: CatchFoodGame) {
-    Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear);
+    advanceCountdown(catchFoodGame.timeWhenChasersAppear);
 }
 
 export function finishCreatedGame(catchFoodGame: CatchFoodGame) {
@@ -47,7 +58,7 @@ export function startAndFinishGame(catchFoodGame: CatchFoodGame): CatchFoodGame 
 }
 
 export function finishGame(catchFoodGame: CatchFoodGame): CatchFoodGame {
-    const numberOfUsers = Object.keys(catchFoodGame.playersState).length;
+    const numberOfUsers = catchFoodGame.players.size;
     for (let i = 1; i <= numberOfUsers; i++) {
         finishPlayer(catchFoodGame, i.toString());
     }
@@ -56,30 +67,30 @@ export function finishGame(catchFoodGame: CatchFoodGame): CatchFoodGame {
 
 export function finishPlayer(catchFoodGame: CatchFoodGame, userId: string) {
     completePlayersObstacles(catchFoodGame, userId);
-    catchFoodGame.runForward(userId, catchFoodGame.trackLength - catchFoodGame.playersState[userId].positionX);
+    catchFoodGame['runForward'](userId, catchFoodGame.trackLength - catchFoodGame.players.get(userId)!.positionX);
 }
 
 export function completePlayersObstacles(catchFoodGame: CatchFoodGame, userId: string) {
     for (let i = 0; i < catchFoodGame.numberOfObstacles; i++) {
-        catchFoodGame.runForward(userId, distanceToNextObstacle(catchFoodGame, userId));
-        catchFoodGame.playerHasCompletedObstacle(userId, i);
+        catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
+        catchFoodGame['playerHasCompletedObstacle'](userId, i);
     }
 }
 
 export function completeNextObstacle(catchFoodGame: CatchFoodGame, userId: string) {
-    catchFoodGame.runForward(userId, distanceToNextObstacle(catchFoodGame, userId));
-    catchFoodGame.playerHasCompletedObstacle(userId, catchFoodGame.playersState[userId].obstacles[0].id);
+    catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
+    catchFoodGame['playerHasCompletedObstacle'](userId, catchFoodGame.players.get(userId)!.obstacles[0].id);
 }
 
 export function distanceToNextObstacle(catchFoodGame: CatchFoodGame, userId: string) {
-    return catchFoodGame.playersState[userId].obstacles[0].positionX - catchFoodGame.playersState[userId].positionX;
+    return catchFoodGame.players.get(userId)!.obstacles[0].positionX - catchFoodGame.players.get(userId)!.positionX;
 }
 
 export function runToNextObstacle(catchFoodGame: CatchFoodGame, userId: string) {
-    catchFoodGame.runForward('1', distanceToNextObstacle(catchFoodGame, userId));
+    catchFoodGame['runForward']('1', distanceToNextObstacle(catchFoodGame, userId));
 }
 
-export function startAndFinishGameDifferentTimes(catchFoodGame: CatchFoodGame) {
+export async function startAndFinishGameDifferentTimes(catchFoodGame: CatchFoodGame) {
     const dateNow = 1618665766156;
     Date.now = jest.fn(() => dateNow);
     startGameAndAdvanceCountdown(catchFoodGame);
@@ -88,18 +99,26 @@ export function startAndFinishGameDifferentTimes(catchFoodGame: CatchFoodGame) {
         completePlayersObstacles(catchFoodGame, i.toString());
     }
 
-    Date.now = jest.fn(() => dateNow + 1000);
-    catchFoodGame.runForward('1', TRACK_LENGTH);
-    Date.now = jest.fn(() => dateNow + 5000);
-    catchFoodGame.runForward('2', TRACK_LENGTH);
-    Date.now = jest.fn(() => dateNow + 10000);
-    catchFoodGame.runForward('3', TRACK_LENGTH);
-    Date.now = jest.fn(() => dateNow + 15000);
-    catchFoodGame.runForward('4', TRACK_LENGTH);
+    advanceCountdown(1000);
+    await releaseThreadN(3);
+    catchFoodGame['runForward']('1', TRACK_LENGTH);
+    await releaseThreadN(3);
+    advanceCountdown(4000);
+    await releaseThreadN(3);
+    catchFoodGame['runForward']('2', TRACK_LENGTH);
+    await releaseThreadN(3);
+    advanceCountdown(5000);
+    await releaseThreadN(3);
+    catchFoodGame['runForward']('3', TRACK_LENGTH);
+    await releaseThreadN(3);
+    advanceCountdown(5000);
+    await releaseThreadN(3);
+    catchFoodGame['runForward']('4', TRACK_LENGTH);
+    await releaseThreadN(3);
     return catchFoodGame;
 }
 
-export function getGameFinishedDataDifferentTimes(catchFoodGame: CatchFoodGame): GameEvents.GameHasFinished {
+export async function getGameFinishedDataDifferentTimes(catchFoodGame: CatchFoodGame): Promise<GameEvents.GameHasFinished> {
     let eventData: GameEvents.GameHasFinished = {
         roomId: '',
         gameState: GameState.Started,
@@ -110,7 +129,7 @@ export function getGameFinishedDataDifferentTimes(catchFoodGame: CatchFoodGame):
     gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
         eventData = data;
     });
-    catchFoodGame = startAndFinishGameDifferentTimes(catchFoodGame);
+    catchFoodGame = await startAndFinishGameDifferentTimes(catchFoodGame);
     return eventData;
 }
 
@@ -133,16 +152,16 @@ export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
         completePlayersObstacles(catchFoodGame, i.toString());
     }
 
-    catchFoodGame.runForward('1', TRACK_LENGTH);
-    catchFoodGame.runForward('2', TRACK_LENGTH);
-    catchFoodGame.runForward('3', TRACK_LENGTH);
+    catchFoodGame['runForward']('1', TRACK_LENGTH);
+    catchFoodGame['runForward']('2', TRACK_LENGTH);
+    catchFoodGame['runForward']('3', TRACK_LENGTH);
     Date.now = jest.fn(() => dateNow + 15000);
-    catchFoodGame.runForward('4', TRACK_LENGTH);
+    catchFoodGame['runForward']('4', TRACK_LENGTH);
 
     return eventData;
 }
 
-export function getGameFinishedDataWithSomeDead(catchFoodGame: CatchFoodGame): GameEvents.GameHasFinished {
+export async function getGameFinishedDataWithSomeDead(catchFoodGame: CatchFoodGame): Promise<GameEvents.GameHasFinished> {
     let eventData: GameEvents.GameHasFinished = {
         roomId: '',
         gameState: GameState.Started,
@@ -153,7 +172,7 @@ export function getGameFinishedDataWithSomeDead(catchFoodGame: CatchFoodGame): G
     gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
         eventData = data;
     });
-    catchFoodGame = startAndFinishGameDifferentTimes(catchFoodGame);
+    catchFoodGame = await startAndFinishGameDifferentTimes(catchFoodGame);
     return eventData;
 }
 

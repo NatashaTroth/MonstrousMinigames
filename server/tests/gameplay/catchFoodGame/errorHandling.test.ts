@@ -25,7 +25,7 @@ describe('Error handling tests', () => {
         try {
             catchFoodGame.createNewGame(longerUsers);
         } catch (e) {
-            expect(e.maxNumberOfUsers).toBe(catchFoodGame.maxNumberOfPlayers);
+            expect(e.maxNumberOfUsers).toBe((catchFoodGame as any).maxNumberOfPlayers);
         }
     });
 });

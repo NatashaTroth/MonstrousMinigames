@@ -1,8 +1,9 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { leaderboard, roomId } from '../mockData';
 import {
+    advanceCountdown,
     clearTimersAndIntervals, finishGame, getGameFinishedDataDifferentTimes,
-    getGameFinishedDataSameRanks, startGameAndAdvanceCountdown
+    getGameFinishedDataSameRanks, releaseThreadN, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 // const TRACKLENGTH = 500;
@@ -22,27 +23,29 @@ describe('Game logic tests', () => {
 
     it('createPlayerRanks is called when the game is finished', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const createPlayerRanksSpy = jest.spyOn(CatchFoodGame.prototype as any, 'createPlayerRanks');
+        const createPlayerRanksSpy = jest.spyOn(catchFoodGame, 'createPlayerRanks');
         finishGame(catchFoodGame);
-        expect(createPlayerRanksSpy).toHaveBeenCalledTimes(1);
+        expect(createPlayerRanksSpy).toHaveBeenCalled();
     });
 
     it('createPlayerRanks is called when the game times out', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const createPlayerRanksSpy = jest.spyOn(CatchFoodGame.prototype as any, 'createPlayerRanks');
-        jest.advanceTimersByTime(catchFoodGame.timeOutLimit + 1);
-        expect(createPlayerRanksSpy).toHaveBeenCalledTimes(1);
+        await releaseThreadN(3);
+        const createPlayerRanksSpy = jest.spyOn(catchFoodGame, 'createPlayerRanks');
+        advanceCountdown(catchFoodGame.timeOutLimit);
+        await releaseThreadN(3);
+        expect(createPlayerRanksSpy).toHaveBeenCalled();
     });
 
     it('creates game finished event with the correct playerRanks properties', async () => {
-        const eventData = getGameFinishedDataDifferentTimes(catchFoodGame);
-        expect(eventData.playerRanks[0].name).toBe(catchFoodGame.playersState['1'].name);
+        const eventData = await getGameFinishedDataDifferentTimes(catchFoodGame);
+        expect(eventData.playerRanks[0].name).toBe(catchFoodGame.players.get('1')?.name);
         expect(eventData.playerRanks[0].finished).toBeTruthy();
-        expect(eventData.playerRanks[0].positionX).toBe(catchFoodGame.playersState['1'].positionX);
+        expect(eventData.playerRanks[0].positionX).toBe(catchFoodGame.players.get('1')?.positionX);
     });
 
     it('creates game finished event with the correct playerRanks totalTimeInMs properties', async () => {
-        const eventData = getGameFinishedDataDifferentTimes(catchFoodGame);
+        const eventData = await getGameFinishedDataDifferentTimes(catchFoodGame);
         expect(eventData.playerRanks[0].totalTimeInMs).toBe(1000);
         expect(eventData.playerRanks[1].totalTimeInMs).toBe(5000);
         expect(eventData.playerRanks[2].totalTimeInMs).toBe(10000);
@@ -50,7 +53,7 @@ describe('Game logic tests', () => {
     });
 
     it('creates game finished event with the correct playerRanks', async () => {
-        const eventData = getGameFinishedDataDifferentTimes(catchFoodGame);
+        const eventData = await getGameFinishedDataDifferentTimes(catchFoodGame);
         expect(eventData.playerRanks[0].rank).toBe(1);
         expect(eventData.playerRanks[1].rank).toBe(2);
         expect(eventData.playerRanks[2].rank).toBe(3);

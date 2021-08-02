@@ -6,14 +6,14 @@ import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
 import { GameEvents } from '../gameplay/catchFood/interfaces';
 
-function sendUserInit(socket: any, number: number): void {
+function sendUserInit(socket: Socket, user: User, room: Room): void {
     socket.emit('message', {
         type: MessageTypes.USER_INIT,
-        userId: socket.user.id,
-        roomId: socket.room.id,
-        name: socket.user.name,
-        number: number,
-        characterNumber: socket.user.characterNumber,
+        userId: user.id,
+        roomId: room.id,
+        name: user.name,
+        number: user.number,
+        characterNumber: user.characterNumber,
     });
 }
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {

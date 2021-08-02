@@ -1,39 +1,6 @@
-import User from '../../../classes/user';
 import { shuffleArray } from '../../../helpers/shuffleArray';
-import { HashTable } from '../../interfaces';
 import { ObstacleType } from '../enums';
-import { Obstacle, PlayerState } from '../interfaces';
-
-export function initiatePlayersState(
-    players: Array<User>,
-    numberOfObstacles: number,
-    trackLength: number,
-    initialPlayerPositionX: number
-): HashTable<PlayerState> {
-    const obstacleTypes = getObstacleTypes(numberOfObstacles);
-    const playersState: HashTable<PlayerState> = {};
-    players.forEach(player => {
-        playersState[player.id] = {
-            id: player.id,
-            name: player.name,
-            positionX: initialPlayerPositionX,
-            obstacles: createObstacles(obstacleTypes, numberOfObstacles, trackLength, initialPlayerPositionX),
-            atObstacle: false,
-            finished: false,
-            finishedTimeMs: 0,
-            dead: false,
-            rank: 0,
-            isActive: true,
-            stunned: false,
-            stunnedTimeout: undefined,
-            timeWhenStunned: 0,
-            characterNumber: player.characterNumber, //TODO test
-            numberStonesThrown: 0,
-        };
-    });
-
-    return playersState;
-}
+import { Obstacle } from '../interfaces';
 
 export function getObstacleTypes(numberOfObstacles: number): Array<ObstacleType> {
     const obstacleTypeKeys: Array<string> = Object.keys(ObstacleType);
@@ -67,5 +34,5 @@ export function createObstacles(
             type: shuffledObstacleTypes[i],
         });
     }
-    return [...obstacles];
+    return obstacles;
 }

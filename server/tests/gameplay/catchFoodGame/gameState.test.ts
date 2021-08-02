@@ -36,64 +36,64 @@ describe('Change and verify game state', () => {
 
     it("shouldn't be able to move player until game has started and the countdown has run", async () => {
         catchFoodGame.createNewGame(users, 500, 4);
-        const initialPositionX = catchFoodGame.playersState['1'].positionX;
+        const initialPositionX = catchFoodGame.players.get('1')!.positionX;
         try {
-            catchFoodGame.runForward('50');
+            catchFoodGame['runForward']('50');
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.playersState['1'].positionX).toBe(initialPositionX);
+        expect(catchFoodGame.players.get('1')!.positionX).toBe(initialPositionX);
     });
 
     it('should be able to move player once game has started and the countdown has run', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const initialPositionX = catchFoodGame.playersState['1'].positionX;
-        catchFoodGame.runForward('1', 10);
-        expect(catchFoodGame.playersState['1'].positionX).toBe(initialPositionX + 10);
+        const initialPositionX = catchFoodGame.players.get('1')!.positionX;
+        catchFoodGame['runForward']('1', 10);
+        expect(catchFoodGame.players.get('1')!.positionX).toBe(initialPositionX + 10);
     });
 
     it("shouldn't be able to move player when game is paused", async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const initialPositionX = catchFoodGame.playersState['1'].positionX;
+        const initialPositionX = catchFoodGame.players.get('1')!.positionX;
         catchFoodGame.pauseGame();
         try {
-            catchFoodGame.runForward('50');
+            catchFoodGame['runForward']('50');
         } catch (e) {
             //ignore in this test
         }
 
-        expect(catchFoodGame.playersState['1'].positionX).toBe(initialPositionX);
+        expect(catchFoodGame.players.get('1')!.positionX).toBe(initialPositionX);
     });
 
     it("shouldn't be able to complete obstacle until game has started", async () => {
         catchFoodGame.createNewGame(users, 500, 4);
         // Countdown still has to run
-        const obstaclesCompletedLength = catchFoodGame.playersState['1'].obstacles.length;
+        const obstaclesCompletedLength = catchFoodGame.players.get('1')!.obstacles.length;
         try {
-            catchFoodGame.playerHasCompletedObstacle('1', 0);
+            catchFoodGame['playerHasCompletedObstacle']('1', 0);
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstaclesCompletedLength);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(obstaclesCompletedLength);
     });
 
     it('should be able to complete obstacle when game has started', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const obstaclesCompletedLength = catchFoodGame.playersState['1'].obstacles.length;
+        const obstaclesCompletedLength = catchFoodGame.players.get('1')!.obstacles.length;
         completeNextObstacle(catchFoodGame, '1');
-        expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstaclesCompletedLength - 1);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(obstaclesCompletedLength - 1);
     });
 
     it("shouldn't be able to complete obstacle when game is paused", async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const obstaclesCompletedLength = catchFoodGame.playersState['1'].obstacles.length;
+        const obstaclesCompletedLength = catchFoodGame.players.get('1')!.obstacles.length;
         catchFoodGame.pauseGame();
         try {
-            catchFoodGame.playerHasCompletedObstacle('1', 0);
+            catchFoodGame['playerHasCompletedObstacle']('1', 0);
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstaclesCompletedLength);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(obstaclesCompletedLength);
     });
 
     it("shouldn't be able to stop game unless game has started", async () => {
