@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import User from '../../src/classes/user';
 import { Globals } from '../../src/enums/globals';
 import RoomService from '../../src/services/roomService';
