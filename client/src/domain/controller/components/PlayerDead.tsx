@@ -4,6 +4,7 @@ import Character from '../../../components/common/Character';
 import FullScreenContainer from '../../../components/common/FullScreenContainer';
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
+import history from '../../history/history';
 import { handlePlayerGetsStone } from '../gameState/handlePlayerGetsStone';
 import { PlayerDeadContainer, TextWrapper } from './PlayerDead.sc';
 
@@ -18,7 +19,7 @@ const PlayerDead: React.FC = () => {
             const stoneTimeoutId = setTimeout(() => setCounter(counter - 1), 1000);
             sessionStorage.setItem('stoneTimeoutId', String(stoneTimeoutId));
         } else {
-            handlePlayerGetsStone(roomId);
+            handlePlayerGetsStone(history, roomId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [counter]);
