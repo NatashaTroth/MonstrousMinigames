@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import fire from '../../images/ui/fire.svg';
+import fire from '../../../images/ui/fire.svg';
 
 export const ConnectScreenContainer = styled.div`
     height: 100%;

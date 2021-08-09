@@ -1,9 +1,9 @@
 import styled, { css } from 'styled-components';
 
 import { SkipButton } from '../../../../components/common/SkipButton.sc';
-import hole from '../../../images/obstacles/hole/hole.svg';
-import leaf from '../../../images/obstacles/hole/leaf.svg';
-import pebble from '../../../images/obstacles/stone/pebble.svg';
+import hole from '../../../../images/obstacles/hole/hole.svg';
+import leaf from '../../../../images/obstacles/hole/leaf.svg';
+import pebble from '../../../../images/obstacles/stone/pebble.svg';
 
 export const Container = styled.div`
     display: flex;
