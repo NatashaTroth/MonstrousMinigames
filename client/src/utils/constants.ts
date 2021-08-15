@@ -19,11 +19,6 @@ export enum GameState {
     finished = 'FINISHED',
 }
 
-export enum TouchEvent {
-    panLeft = 'panleft',
-    panRight = 'panright',
-}
-
 export enum MessageTypes {
     userInit = 'userInit',
     connectedUsers = 'connectedUsers',

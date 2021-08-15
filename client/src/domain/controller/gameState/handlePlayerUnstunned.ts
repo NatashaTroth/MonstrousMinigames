@@ -1,6 +1,7 @@
-import { controllerGame1Route } from '../../../utils/routes';
-import history from '../../history/history';
+import { History } from 'history';
 
-export function handlePlayerUnstunned(roomId: string) {
+import { controllerGame1Route } from '../../../utils/routes';
+
+export function handlePlayerUnstunned(history: History, roomId: string) {
     history.push(controllerGame1Route(roomId));
 }
