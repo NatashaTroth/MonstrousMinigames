@@ -64,8 +64,6 @@ export const controllerObstacleRoute = (roomId: undefined | string, obstacle: Ob
             return `${Routes.controller}/${roomId}${Routes.spider}`;
         case Obstacles.trash:
             return `${Routes.controller}/${roomId}${Routes.trash}`;
-        default:
-            return '';
     }
 };
 

@@ -101,7 +101,7 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
             setObstacle(val);
             if (val) {
                 reroute = true;
-                history.push(controllerObstacleRoute(roomId, val.type));
+                history.push(controllerObstacleRoute(roomId, val.type)!);
             } else if (reroute) {
                 reroute = false;
                 history.push(controllerGame1Route(roomId));

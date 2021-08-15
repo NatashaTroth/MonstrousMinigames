@@ -1,4 +1,4 @@
-import { GameState, localDevelopment, Obstacles, TouchEvent } from './constants';
+import { GameState, localDevelopment, Obstacles } from './constants';
 
 describe('test GAMESTATE enum', () => {
     it('GAMESTATE.created should return CREATED', () => {
@@ -41,20 +41,6 @@ describe('test OBSTACLES enum', () => {
 
     it('OBSTACLES should have length of 4', () => {
         expect(Object.keys(Obstacles).length).toBe(4);
-    });
-});
-
-describe('test TOUCHEVENT enum', () => {
-    it('TOUCHEVENT.panLeft should return panLeft', () => {
-        expect(TouchEvent.panLeft).toBe('panleft');
-    });
-
-    it('TOUCHEVENT.panRight should return panRight', () => {
-        expect(TouchEvent.panRight).toBe('panright');
-    });
-
-    it('OBSTACLES should have length of 2', () => {
-        expect(Object.keys(TouchEvent).length).toBe(2);
     });
 });
 
