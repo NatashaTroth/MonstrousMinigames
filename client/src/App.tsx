@@ -17,9 +17,9 @@ import ChooseCharacter from './domain/controller/components/ChooseCharacter';
 import { ConnectScreen as ControllerConnectScreen } from './domain/controller/components/ConnectScreen';
 import { FinishedScreen as ControllerFinishedScreen } from './domain/controller/components/FinishedScreen';
 import { Lobby as ControllerLobbyScreen } from './domain/controller/components/Lobby';
-import Hole from './domain/controller/components/obstacles/Hole';
 import Spider from './domain/controller/components/obstacles/Spider';
 import Stone from './domain/controller/components/obstacles/Stone';
+import Trash from './domain/controller/components/obstacles/Trash';
 import TreeTrunk from './domain/controller/components/obstacles/TreeTrunk';
 import PlayerDead from './domain/controller/components/PlayerDead';
 import PlayerStunned from './domain/controller/components/PlayerStunned';
@@ -82,7 +82,7 @@ const App: React.FunctionComponent = () => {
                                                             component={Spider}
                                                             exact
                                                         />
-                                                        <Route path={Routes.controllerHole} component={Hole} exact />
+                                                        <Route path={Routes.controllerTrash} component={Trash} exact />
                                                         <Route path={Routes.controllerStone} component={Stone} exact />
                                                         <Route
                                                             path={Routes.controllerPlayerDead}

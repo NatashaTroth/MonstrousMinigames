@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import FullScreenContainer from '../../../components/common/FullScreenContainer';
-import shakeIt from '../../images/ui/shakeIt.svg';
+import shakeIt from '../../../images/ui/shakeIt.svg';
 import { Container, Countdown, ShakeIt } from './ShakeInstruction.sc';
 
 const ShakeInstruction: React.FunctionComponent = () => {

@@ -15,13 +15,18 @@ export function dragMoveListener(event: InteractEvent) {
     target.setAttribute('data-y', String(y));
 }
 
-export let stoneCounter = 0;
+export let itemCounter = 0;
 
-export function initializeInteractListeners(solveObstacle: () => void, setProgress: (val: number) => void) {
-    stoneCounter = 0;
+export function initializeInteractListeners(
+    actualItem: string,
+    counter: number,
+    solveObstacle: () => void,
+    setProgress: (val: number) => void
+) {
+    itemCounter = 0;
 
     interact('.dropzone').dropzone({
-        accept: '#stone',
+        accept: `#${actualItem}`,
         overlap: 1,
 
         ondropactivate: function (event) {
@@ -42,11 +47,12 @@ export function initializeInteractListeners(solveObstacle: () => void, setProgre
             event.relatedTarget.classList.remove('can-drop');
         },
         ondrop: function (event) {
-            stoneCounter += 1;
-            setProgress(stoneCounter);
+            itemCounter += 1;
+            setProgress(itemCounter);
             event.relatedTarget.classList.remove('drag-drop');
+            event.relatedTarget.classList.add('invisible');
 
-            if (stoneCounter === 3) {
+            if (itemCounter === counter) {
                 setTimeout(() => solveObstacle(), 600);
             }
         },

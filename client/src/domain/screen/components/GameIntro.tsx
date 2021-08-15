@@ -79,7 +79,7 @@ const GameIntro: React.FunctionComponent = () => {
                             <ControlInstruction>Shake your phone to run!</ControlInstruction>
                             <ControlInstruction>Swipe your screen to slice the tree trunk!</ControlInstruction>
                             <ControlInstruction>Blow into your phone to scare the spider away!</ControlInstruction>
-                            <ControlInstruction>Move the stones into the hole to run over it!</ControlInstruction>
+                            <ControlInstruction>Move the trash in the right trash container!</ControlInstruction>
                         </ControlInstructionsContainer>
                     </div>
                 )}

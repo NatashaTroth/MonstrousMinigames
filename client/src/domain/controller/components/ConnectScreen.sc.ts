@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
+import forest from '../../../images/ui/forest_mobile.svg';
 import theme from '../../../styles/theme';
-import forest from '../../images/ui/forest_mobile.svg';
 
 export const ConnectScreenContainer = styled.div`
     height: 100%;

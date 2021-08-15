@@ -6,9 +6,9 @@ import { StyledParticles } from '../../../../components/common/Particles.sc';
 import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
+import wood from '../../../../images/obstacles/wood/wood.svg';
 import { Obstacles } from '../../../../utils/constants';
 import { treeParticlesConfig } from '../../../../utils/particlesConfig';
-import wood from '../../../images/obstacles/wood/wood.svg';
 import LinearProgressBar from './LinearProgressBar';
 import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
 import {

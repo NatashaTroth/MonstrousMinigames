@@ -1,9 +1,8 @@
+import { BatteryChargingFull, Fastfood, Receipt } from '@material-ui/icons';
 import styled, { css } from 'styled-components';
 
 import { SkipButton } from '../../../../components/common/SkipButton.sc';
-import hole from '../../../images/obstacles/hole/hole.svg';
-import leaf from '../../../images/obstacles/hole/leaf.svg';
-import pebble from '../../../images/obstacles/stone/pebble.svg';
+import trash from '../../../../images/obstacles/trash/trashcan.svg';
 
 export const Container = styled.div`
     display: flex;
@@ -21,6 +20,10 @@ export const Container = styled.div`
         background-color: ${({ theme }) => theme.palette.secondary.main};
         border-color: #fff;
         border-style: solid;
+    }
+
+    .invisible {
+        display: none;
     }
 `;
 
@@ -40,33 +43,73 @@ export const Draggable = styled.div<Draggable>`
     ${({ index }) => getDraggableLeftPosition(index)};
 `;
 
-export const DraggableStone = styled(Draggable)`
-    background-repeat: no-repeat;
-    background-position: bottom;
-    background-image: url(${pebble});
+export const StyledPaper = styled(Receipt)`
+    && {
+        width: 100%;
+        height: 100%;
+        fill: white;
+    }
 `;
 
-export const DraggableLeaf = styled(Draggable)`
-    background-repeat: no-repeat;
-    background-position: bottom;
-    background-image: url(${leaf});
+export const StyledFood = styled(Fastfood)`
+    && {
+        width: 100%;
+        height: 100%;
+        fill: white;
+    }
+`;
+
+export const StyledBattery = styled(BatteryChargingFull)`
+    && {
+        width: 100%;
+        height: 100%;
+        fill: white;
+    }
+`;
+
+export const TrashPaper = styled(Receipt)`
+    && {
+        width: 70%;
+        height: 70%;
+        fill: black;
+    }
+`;
+
+export const TrashFood = styled(Fastfood)`
+    && {
+        width: 70%;
+        height: 70%;
+        fill: black;
+    }
+`;
+
+export const TrashBattery = styled(BatteryChargingFull)`
+    && {
+        width: 70%;
+        height: 70%;
+        fill: black;
+    }
 `;
 
 export const DropZone = styled.div`
     border: dashed 4px transparent;
     border-radius: 4px;
-    margin-bottom: 200px;
+    margin-bottom: 50px;
     padding: 10px;
     width: 80%;
     transition: background-color 0.3s;
-    height: 80px;
+    height: 100px;
 
     background-repeat: no-repeat;
     background-position: bottom;
-    background-image: url(${hole});
+    background-image: url(${trash});
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
 `;
 
-export const StyledHoleImage = styled.img`
+export const StyledTrashImage = styled.img`
     width: 80%;
 `;
 

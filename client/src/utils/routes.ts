@@ -9,7 +9,7 @@ export enum Routes {
     controllerGame1 = '/controller/:id/game1',
     controllerTreeStump = `/controller/:id/treestump`,
     controllerSpider = `/controller/:id/spider`,
-    controllerHole = `/controller/:id/hole`,
+    controllerTrash = `/controller/:id/trash`,
     controllerStone = `/controller/:id/stone`,
     controllerPlayerDead = '/controller/:id/dead',
     controllerPlayerStunned = '/controller/:id/stunned',
@@ -27,7 +27,7 @@ export enum Routes {
     lobby = '/lobby',
     treeStump = '/treestump',
     spider = '/spider',
-    hole = '/hole',
+    trash = '/trash',
     stone = '/stone',
     game1 = '/game1',
     dead = '/dead',
@@ -62,8 +62,8 @@ export const controllerObstacleRoute = (roomId: undefined | string, obstacle: Ob
             return `${Routes.controller}/${roomId}${Routes.treeStump}`;
         case Obstacles.spider:
             return `${Routes.controller}/${roomId}${Routes.spider}`;
-        case Obstacles.hole:
-            return `${Routes.controller}/${roomId}${Routes.hole}`;
+        case Obstacles.trash:
+            return `${Routes.controller}/${roomId}${Routes.trash}`;
         default:
             return '';
     }

@@ -3,11 +3,11 @@ import * as React from 'react';
 import Button from '../../../components/common/Button';
 import { AudioContext } from '../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
+import oliverLobby from '../../../images/characters/oliverLobby.svg';
+import game1Img from '../../../images/ui/instructions1.png';
 import { screenGameIntroRoute, screenGetReadyRoute } from '../../../utils/routes';
 import { handleAudioPermission } from '../../audio/handlePermission';
 import history from '../../history/history';
-import oliverLobby from '../../images/characters/oliverLobby.svg';
-import game1Img from '../../images/ui/instructions1.png';
 import {
     BackButtonContainer,
     Content,

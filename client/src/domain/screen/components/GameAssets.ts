@@ -1,33 +1,33 @@
+import game1SoundLoop from '../../../assets/audio/Game_1_Sound_Loop.wav';
+import game1SoundStart from '../../../assets/audio/Game_1_Sound_Start.wav';
+import flare1 from '../../../assets/flares/flare_01.png';
+import flare2 from '../../../assets/flares/flare_02.png';
+import flare3 from '../../../assets/flares/flare_03.png';
 import flaresJsonFile from '../../../assets/flares/flares.json';
+import flaresPngFile from '../../../assets/flares/flares.png';
+import floor from '../../../images/background/floor.png';
+import hills from '../../../images/background/hills.png';
+import laneBackground from '../../../images/background/laneBackground.png';
+import moon from '../../../images/background/moon.png';
+import mountains from '../../../images/background/mountains.png';
+import starsAndSky from '../../../images/background/starsAndSky.png';
+import trees from '../../../images/background/trees.png';
+import franz from '../../../images/characters/franz_spritesheet.png';
+import chasers from '../../../images/characters/Mosquito.png';
+import noah from '../../../images/characters/noah_spritesheet.png';
+import steffi from '../../../images/characters/steffi_spritesheet.png';
+import susi from '../../../images/characters/susi_spritesheet.png';
+import caveBehind from '../../../images/obstacles/cave/cave_behind.png';
+import caveInFront from '../../../images/obstacles/cave/cave_in_front.png';
+// import hole from '../../../images/obstacles/hole/hole.png';
+import spider from '../../../images/obstacles/spider/spider.png';
+import stone from '../../../images/obstacles/stone/stone.png';
+import wood from '../../../images/obstacles/wood/wood.png';
+import attention from '../../../images/ui/attention.png';
+import forest2 from '../../../images/ui/forest2.png';
+import forest2Smaller from '../../../images/ui/forest2Smaller.png';
+import forestTile from '../../../images/ui/forestTile.png';
 import { characterDictionary } from '../../../utils/characterDictionary';
-import game1SoundLoop from '../../assets/audio/Game_1_Sound_Loop.wav';
-import game1SoundStart from '../../assets/audio/Game_1_Sound_Start.wav';
-import flare1 from '../../assets/flares/flare_01.png';
-import flare2 from '../../assets/flares/flare_02.png';
-import flare3 from '../../assets/flares/flare_03.png';
-import flaresPngFile from '../../assets/flares/flares.png';
-import floor from '../../images/background/floor.png';
-import hills from '../../images/background/hills.png';
-import laneBackground from '../../images/background/laneBackground.png';
-import moon from '../../images/background/moon.png';
-import mountains from '../../images/background/mountains.png';
-import starsAndSky from '../../images/background/starsAndSky.png';
-import trees from '../../images/background/trees.png';
-import franz from '../../images/characters/franz_spritesheet.png';
-import chasers from '../../images/characters/Mosquito.png';
-import noah from '../../images/characters/noah_spritesheet.png';
-import steffi from '../../images/characters/steffi_spritesheet.png';
-import susi from '../../images/characters/susi_spritesheet.png';
-import caveBehind from '../../images/obstacles/cave/cave_behind.png';
-import caveInFront from '../../images/obstacles/cave/cave_in_front.png';
-import hole from '../../images/obstacles/hole/hole.png';
-import spider from '../../images/obstacles/spider/spider.png';
-import stone from '../../images/obstacles/stone/stone.png';
-import wood from '../../images/obstacles/wood/wood.png';
-import attention from '../../images/ui/attention.png';
-import forest2 from '../../images/ui/forest2.png';
-import forest2Smaller from '../../images/ui/forest2Smaller.png';
-import forestTile from '../../images/ui/forestTile.png';
 
 //TODO types
 
@@ -68,7 +68,7 @@ export const images = [
     { name: 'attention', file: attention },
     { name: 'treestump', file: wood },
     { name: 'stone', file: stone },
-    { name: 'hole', file: hole },
+    // { name: 'trash', file: trash },
     { name: 'spider', file: spider },
     { name: 'chasers', file: chasers },
     { name: 'caveBehind', file: caveBehind },

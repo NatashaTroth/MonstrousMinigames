@@ -154,7 +154,7 @@ export class Player {
                     obstaclePosY = this.coordinates.y + window.innerHeight / 15;
                     obstacleScale = 0.2;
                     break;
-                case Obstacles.hole:
+                case Obstacles.trash:
                     obstaclePosY = this.coordinates.y + window.innerHeight / 7;
                     obstacleScale = 0.1;
                     posX += 40;
