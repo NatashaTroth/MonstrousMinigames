@@ -38,6 +38,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         resetPlayer,
         setName,
         setUserId,
+        setReady,
         setPlayerDead,
         playerRank,
     } = React.useContext(PlayerContext);
@@ -65,6 +66,7 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         resetPlayer,
         setHasPaused,
         setUserId,
+        setReady,
         setPlayerDead,
         setConnectedUsers,
         playerRank,
