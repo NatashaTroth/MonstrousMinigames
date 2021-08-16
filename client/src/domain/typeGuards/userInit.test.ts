@@ -10,6 +10,7 @@ describe('userInit TypeGuard', () => {
             userId: '1',
             isAdmin: true,
             number: 1,
+            ready: false,
         };
 
         expect(userInitTypeGuard(data)).toEqual(true);
