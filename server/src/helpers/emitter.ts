@@ -14,6 +14,7 @@ function sendUserInit(socket: Socket, user: User, room: Room): void {
         name: user.name,
         number: user.number,
         characterNumber: user.characterNumber,
+        ready: user.ready
     });
 }
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {

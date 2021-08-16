@@ -20,7 +20,8 @@ example:
     "roomId": "XXXX",
     "name": "John",
     "isAdmin": true,
-    "number": 1
+    "number": 1,
+    "ready": false
 }
 ```
 
