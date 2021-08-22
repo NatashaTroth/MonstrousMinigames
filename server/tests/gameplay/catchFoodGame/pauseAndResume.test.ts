@@ -2,7 +2,7 @@ import { CatchFoodGame } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/enums/GameState';
 import { leaderboard, roomId } from '../mockData';
 import {
-    advanceCountdown, clearTimersAndIntervals, releaseThreadN, startGameAndAdvanceCountdown
+    clearTimersAndIntervals, releaseThreadN, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;

@@ -1,8 +1,8 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { leaderboard, roomId } from '../mockData';
 import {
-    advanceCountdown, clearTimersAndIntervals, finishGame, getGameFinishedDataDifferentTimes,
-    getGameFinishedDataSameRanks, releaseThreadN, startGameAndAdvanceCountdown
+    clearTimersAndIntervals, finishGame, getGameFinishedDataDifferentTimes,
+    getGameFinishedDataSameRanks, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 // const TRACKLENGTH = 500;

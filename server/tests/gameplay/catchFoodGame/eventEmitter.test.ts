@@ -6,8 +6,8 @@ import { GameEvents } from '../../../src/gameplay/catchFood/interfaces/';
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
 import {
-    advanceCountdown, clearTimersAndIntervals, finishGame, finishPlayer, releaseThreadN,
-    skipTimeToStartChasers, startGameAndAdvanceCountdown
+    clearTimersAndIntervals, finishGame, finishPlayer, skipTimeToStartChasers,
+    startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;

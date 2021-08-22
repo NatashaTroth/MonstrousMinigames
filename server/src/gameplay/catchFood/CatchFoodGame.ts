@@ -15,7 +15,7 @@ import CatchFoodPlayer from './CatchFoodPlayer';
 import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
 import { CatchFoodMsgType } from './enums';
 import { createObstacles, getObstacleTypes } from './helperFunctions/initiatePlayerState';
-import { GameEvents, GameStateInfo, Obstacle, PlayerRank } from './interfaces';
+import { GameStateInfo, Obstacle, PlayerRank } from './interfaces';
 
 interface CatchFoodGameInterface extends IGameInterface<CatchFoodPlayer, GameStateInfo> {
     trackLength: number;
