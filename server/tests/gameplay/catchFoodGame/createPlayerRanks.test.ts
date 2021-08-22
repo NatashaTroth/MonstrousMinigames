@@ -1,8 +1,7 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { leaderboard, roomId } from '../mockData';
 import {
-    advanceCountdown,
-    clearTimersAndIntervals, finishGame, getGameFinishedDataDifferentTimes,
+    advanceCountdown, clearTimersAndIntervals, finishGame, getGameFinishedDataDifferentTimes,
     getGameFinishedDataSameRanks, releaseThreadN, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
@@ -25,15 +24,6 @@ describe('Game logic tests', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const createPlayerRanksSpy = jest.spyOn(catchFoodGame, 'createPlayerRanks');
         finishGame(catchFoodGame);
-        expect(createPlayerRanksSpy).toHaveBeenCalled();
-    });
-
-    it('createPlayerRanks is called when the game times out', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
-        await releaseThreadN(3);
-        const createPlayerRanksSpy = jest.spyOn(catchFoodGame, 'createPlayerRanks');
-        advanceCountdown(catchFoodGame.timeOutLimit);
-        await releaseThreadN(3);
         expect(createPlayerRanksSpy).toHaveBeenCalled();
     });
 
