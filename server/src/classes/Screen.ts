@@ -98,12 +98,8 @@ class Screen {
                         this.room.resetGame().then(() => {
                             this.emitter.sendScreenState(
                                 this.screenNamespace,
-                                message.state,
+                                this.room?.getScreenState(),
                                 message.game
-                            );
-                            this.emitter.sendConnectedUsers(
-                                [this.controllerNamespace, this.screenNamespace],
-                                this.room!
                             );
                         });
                     }
