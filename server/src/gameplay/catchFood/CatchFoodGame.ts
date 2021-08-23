@@ -119,7 +119,12 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
         super.createNewGame(users);
 
-        this.startGame();
+        CatchFoodGameEventEmitter.emitInitialGameStateInfoUpdate({
+            roomId: this.roomId,
+            gameStateInfo: this.getGameStateInfo(),
+        });
+
+        // this.startGame();
     }
 
     startGame(): void {

@@ -1,4 +1,5 @@
 import { Namespace, Socket } from 'socket.io';
+
 import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
 import Game from '../gameplay/Game';
@@ -44,15 +45,20 @@ class Screen {
                 case CatchFoodMsgType.START_PHASER_GAME:
                     this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!);
                     break;
-                case CatchFoodMsgType.START:
-                    console.log('Received STARTING GAME');
+                case CatchFoodMsgType.CREATE:
                     if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
+                        this.room.createNewGame();
+                    }
+                    break;
+                case CatchFoodMsgType.START:
+                    if (this.room?.isCreated() && this.room.isAdminScreen(this.socket.id)) {
+                        // this.room.createNewGame();
                         this.room.startGame();
-
-                        this.emitter.sendGameState(this.screenNamespace, this.room);
+                        // this.emitter.sendGameState(this.screenNamespace, this.room);
 
                         this.room.game.addListener(Game.EVT_FRAME_READY, (game: Game) => {
                             if (this.room?.isPlaying()) {
+                                //TODO natasha SENDING GAME STATE - send from game class
                                 this.emitter.sendGameState(this.screenNamespace, this.room, true);
                             }
                         });

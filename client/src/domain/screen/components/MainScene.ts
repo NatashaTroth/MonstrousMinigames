@@ -9,6 +9,9 @@ import { Socket } from '../../socket/Socket';
 import { SocketIOAdapter } from '../../socket/SocketIOAdapter';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
 import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../typeGuards/gameStateInfo';
+import {
+    InitialGameStateInfoMessage, initialGameStateInfoTypeGuard
+} from '../../typeGuards/initialGameStateInfo';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
 import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/started';
@@ -95,7 +98,12 @@ class MainScene extends Phaser.Scene {
         this.initiateSockets();
         this.initiateEventEmitters();
 
-        this.sendStartGame();
+        this.sendCreateNewGame();
+
+        //TODO change
+        setTimeout(() => {
+            this.sendStartGame();
+        }, 5000);
     }
 
     handleSocketConnection() {
@@ -106,10 +114,17 @@ class MainScene extends Phaser.Scene {
         return ScreenSocket.getInstance(new SocketIOAdapter(this.roomId, 'screen')).socket;
     }
 
+    sendCreateNewGame() {
+        printMethod('SEND CREATE GAME');
+        this.socket?.emit({
+            type: MessageTypes.createGame,
+            roomId: this.roomId,
+        });
+    }
+
     sendStartGame() {
         printMethod('SEND START GAME');
         //TODO!!!! - do not send when game is already started? - or is it just ignored - appears to work - maybe check if no game state updates?
-        printMethod('SEND START GAME');
         this.socket?.emit({
             type: MessageTypes.startGame,
             roomId: this.roomId,
@@ -118,25 +133,19 @@ class MainScene extends Phaser.Scene {
     }
 
     initiateSockets() {
+        const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
+        initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
+            printMethod('RECEIVED FIRST GAME STATE:');
+            printMethod(data.data);
+            this.gameStarted = true;
+            this.handleStartGame(data.data);
+        });
+
         const startedGame = new MessageSocket(startedTypeGuard, this.socket);
-        const decrementCounter = (counter: number) => counter - 1000;
+
         startedGame.listen((data: GameHasStartedMessage) => {
             printMethod('RECEIVED START GAME');
-
-            let countdownValue = data.countdownTime - 1000; //to keep in track with server (1 sec less to start roughly at the same time as the server)
-            const countdownInterval = setInterval(() => {
-                if (countdownValue > 0) {
-                    this.gameRenderer?.renderCountdown((countdownValue / 1000).toString());
-                    countdownValue = decrementCounter(countdownValue);
-                } else if (countdownValue === 0) {
-                    //only render go for 1 sec
-                    this.gameRenderer?.renderCountdown('Go!');
-                    countdownValue = decrementCounter(countdownValue);
-                } else {
-                    this.gameRenderer?.destroyCountdown();
-                    clearInterval(countdownInterval);
-                }
-            }, 1000);
+            this.createGameCountdown(data.countdownTime);
         });
 
         const pausedSocket = new MessageSocket(pausedTypeGuard, this.socket);
@@ -151,12 +160,7 @@ class MainScene extends Phaser.Scene {
 
         const gameStateInfoSocket = new MessageSocket(gameStateInfoTypeGuard, this.socket);
         gameStateInfoSocket.listen((data: GameStateInfoMessage) => {
-            if (!this.gameStarted) {
-                printMethod('RECEIVED FIRST GAME STATE:');
-                printMethod(data.data);
-                this.gameStarted = true;
-                this.handleStartGame(data.data);
-            } else this.updateGameState(data.data);
+            this.updateGameState(data.data);
         });
 
         const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
@@ -256,6 +260,24 @@ class MainScene extends Phaser.Scene {
             character.name
         );
         this.players.push(player);
+    }
+
+    private createGameCountdown(countdownTime: number) {
+        const decrementCounter = (counter: number) => counter - 1000;
+        let countdownValue = countdownTime - 1000; //to keep in track with server (1 sec less to start roughly at the same time as the server)
+        const countdownInterval = setInterval(() => {
+            if (countdownValue > 0) {
+                this.gameRenderer?.renderCountdown((countdownValue / 1000).toString());
+                countdownValue = decrementCounter(countdownValue);
+            } else if (countdownValue === 0) {
+                //only render go for 1 sec
+                this.gameRenderer?.renderCountdown('Go!');
+                countdownValue = decrementCounter(countdownValue);
+            } else {
+                this.gameRenderer?.destroyCountdown();
+                clearInterval(countdownInterval);
+            }
+        }, 1000);
     }
 
     private pauseGame() {

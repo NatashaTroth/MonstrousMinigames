@@ -1,14 +1,12 @@
 import {
-    GameAlreadyStartedError,
-    CannotStartEmptyGameError,
-    CharacterNotAvailableError,
-    UsersNotReadyError,
+    CannotStartEmptyGameError, CharacterNotAvailableError, GameAlreadyStartedError,
+    UsersNotReadyError
 } from '../customErrors';
 import { Globals } from '../enums/globals';
 import { CatchFoodGame } from '../gameplay';
 import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
 import Game from '../gameplay/Game';
-import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
+// import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
 import Leaderboard from '../gameplay/leaderboard/Leaderboard';
 import User from './user';
 
@@ -114,7 +112,7 @@ class Room {
         this.timestamp = Date.now();
     }
 
-    public startGame(game?: Game): IGameStateBase {
+    public createNewGame(game?: Game) {
         if (this.users.length === 0) {
             throw new CannotStartEmptyGameError();
         }
@@ -125,10 +123,15 @@ class Room {
             this.game = game;
             this.game.leaderboard = this.leaderboard;
         }
-        this.setState(RoomStates.PLAYING);
+        this.setState(RoomStates.CREATED);
         this.game.createNewGame(this.users);
         this.updateTimestamp();
-        return this.game.getGameStateInfo();
+        // return this.game.getGameStateInfo();
+    }
+
+    public startGame() {
+        this.setState(RoomStates.PLAYING);
+        this.game.startGame();
     }
 
     public stopGame() {
@@ -163,6 +166,9 @@ class Room {
 
     public isOpen(): boolean {
         return this.state === RoomStates.OPEN;
+    }
+    public isCreated(): boolean {
+        return this.state === RoomStates.CREATED;
     }
     public isPlaying(): boolean {
         return this.state === RoomStates.PLAYING;
@@ -240,6 +246,7 @@ export default Room;
 
 export enum RoomStates {
     OPEN,
+    CREATED,
     PLAYING,
     FINISHED,
     PAUSED,

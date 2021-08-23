@@ -40,6 +40,7 @@ describe('Room: Users', () => {
         user1.setReady(true);
         user2.setReady(true);
 
+        room.createNewGame();
         room.startGame();
         setTimeout(() => {
             room.userDisconnected(user1.id);
@@ -54,6 +55,7 @@ describe('Room: Users', () => {
         jest.useFakeTimers();
         user1.setReady(true);
         user2.setReady(true);
+        room.createNewGame();
         room.startGame();
 
         setTimeout(() => {
@@ -67,6 +69,7 @@ describe('Room: Users', () => {
         jest.useFakeTimers();
         user1.setReady(true);
         user2.setReady(true);
+        room.createNewGame();
         room.startGame();
         setTimeout(() => {
             room.userDisconnected(user1.id);
@@ -101,7 +104,7 @@ describe('Room: Users', () => {
     it('should throw an GameAlreadyStartedError if a player wants to join game that has already started', () => {
         user1.setReady(true);
         user2.setReady(true);
-        room.startGame();
+        room.createNewGame();
         expect(() => {
             const user3 = new User(room.id, '999', 'User');
             room.addUser(user3);
@@ -111,7 +114,7 @@ describe('Room: Users', () => {
         room.removeUser(user1);
         room.removeUser(user2);
         expect(() => {
-            room.startGame();
+            room.createNewGame();
         }).toThrow(CannotStartEmptyGameError);
     });
 });

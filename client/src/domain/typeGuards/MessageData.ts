@@ -2,6 +2,7 @@ import { ConnectedUsersMessage } from './connectedUsers';
 import { ErrorMessage } from './error';
 import { GameHasFinishedMessage } from './finished';
 import { GameStateInfoMessage } from './gameStateInfo';
+import { InitialGameStateInfoMessage } from './initialGameStateInfo';
 import { ObstacleMessage } from './obstacle';
 import { GameHasPausedMessage } from './paused';
 import { PlayerDiedMessage } from './playerDied';
@@ -30,6 +31,7 @@ export type MessageData =
     | GameHasResetMessage
     | ConnectedUsersMessage
     | GameHasFinishedMessage
+    | InitialGameStateInfoMessage
     | GameStateInfoMessage
     | ScreenAdminMessage
     | ConnectedUsersMessage

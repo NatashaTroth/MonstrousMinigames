@@ -32,6 +32,7 @@ export function clearTimersAndIntervals(game: Game) {
 export function startGameAndAdvanceCountdown(catchFoodGame: CatchFoodGame) {
     Date.now = () => dateNow;
     catchFoodGame.createNewGame(users, TRACK_LENGTH, 4, 1);
+    catchFoodGame.startGame();
     advanceCountdown(catchFoodGame.countdownTime);
 }
 export function advanceCountdown(time: number) {
@@ -118,7 +119,9 @@ export async function startAndFinishGameDifferentTimes(catchFoodGame: CatchFoodG
     return catchFoodGame;
 }
 
-export async function getGameFinishedDataDifferentTimes(catchFoodGame: CatchFoodGame): Promise<GameEvents.GameHasFinished> {
+export async function getGameFinishedDataDifferentTimes(
+    catchFoodGame: CatchFoodGame
+): Promise<GameEvents.GameHasFinished> {
     let eventData: GameEvents.GameHasFinished = {
         roomId: '',
         gameState: GameState.Started,
@@ -161,7 +164,9 @@ export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
     return eventData;
 }
 
-export async function getGameFinishedDataWithSomeDead(catchFoodGame: CatchFoodGame): Promise<GameEvents.GameHasFinished> {
+export async function getGameFinishedDataWithSomeDead(
+    catchFoodGame: CatchFoodGame
+): Promise<GameEvents.GameHasFinished> {
     let eventData: GameEvents.GameHasFinished = {
         roomId: '',
         gameState: GameState.Started,

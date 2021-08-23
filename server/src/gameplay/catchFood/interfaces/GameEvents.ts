@@ -1,11 +1,15 @@
 import { GameState } from '../../enums';
 import { ObstacleType } from '../enums';
-import { PlayerRank } from './';
+import { GameStateInfo, PlayerRank } from './';
 
 interface GameEventInterface {
     roomId: string;
 }
 
+export interface GameStateInfoUpdate extends GameEventInterface {
+    roomId: string;
+    gameStateInfo: GameStateInfo;
+}
 export interface StartPhaserGame extends GameEventInterface {
     roomId: string;
 }

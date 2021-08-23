@@ -32,6 +32,10 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
         return this.CatchFoodGameEventEmitter;
     }
 
+    public static emitInitialGameStateInfoUpdate(data: GameEvents.GameStateInfoUpdate) {
+        this.CatchFoodGameEventEmitter.emit(GameEventTypes.InitialGameStateInfoUpdate, data);
+    }
+
     public static emitGameHasStartedEvent(data: GameEvents.GameHasStarted) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasStarted, data);
     }
