@@ -6,6 +6,7 @@ import { GameContext } from '../../../contexts/GameContextProvider';
 import { ScreenSocketContext, User } from '../../../contexts/ScreenSocketContextProvider';
 import { characters } from '../../../utils/characters';
 import { MessageTypes } from '../../../utils/constants';
+import { ScreenStates } from '../../../utils/screenStates';
 import { handleAudioPermission } from '../../audio/handlePermission';
 import { getUserArray } from './Lobby';
 import {
@@ -46,7 +47,7 @@ const PlayersGetReady: React.FC = () => {
         if (screenAdmin) {
             screenSocket?.emit({
                 type: MessageTypes.sendScreenState,
-                state: 'ready',
+                state: ScreenStates.getReady,
             });
         }
     }, []);

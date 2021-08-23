@@ -11,6 +11,7 @@ import { characters } from '../../../utils/characters';
 import { localDevelopment, MessageTypes } from '../../../utils/constants';
 import { generateQRCode } from '../../../utils/generateQRCode';
 import { Routes, screenChooseGameRoute } from '../../../utils/routes';
+import { ScreenStates } from '../../../utils/screenStates';
 import { handleAudioPermission } from '../../audio/handlePermission';
 import history from '../../history/history';
 import {
@@ -64,7 +65,7 @@ export const Lobby: React.FunctionComponent = () => {
         if (screenAdmin) {
             screenSocket?.emit({
                 type: MessageTypes.sendScreenState,
-                state: 'lobby',
+                state: ScreenStates.lobby,
             });
         }
     }, []);

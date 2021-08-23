@@ -8,6 +8,7 @@ import oliverLobby from '../../../images/characters/oliverLobby.svg';
 import game1Img from '../../../images/ui/instructions1.png';
 import { MessageTypes } from '../../../utils/constants';
 import { screenGameIntroRoute, screenGetReadyRoute } from '../../../utils/routes';
+import { ScreenStates } from '../../../utils/screenStates';
 import { handleAudioPermission } from '../../audio/handlePermission';
 import history from '../../history/history';
 import {
@@ -51,7 +52,7 @@ const ChooseGame: React.FunctionComponent = () => {
         if (screenAdmin) {
             screenSocket?.emit({
                 type: MessageTypes.sendScreenState,
-                state: 'choose-game',
+                state: ScreenStates.chooseGame,
                 game: selectedGame,
             });
         }
