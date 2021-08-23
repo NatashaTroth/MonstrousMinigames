@@ -44,7 +44,7 @@ class Screen {
                 case CatchFoodMsgType.START_PHASER_GAME:
                     this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!);
                     break;
-                case CatchFoodMsgType.START:
+                case MessageTypes.START:
                     console.log('Received STARTING GAME');
                     if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
                         this.room.startGame();

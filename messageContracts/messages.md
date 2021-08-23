@@ -447,7 +447,7 @@ example:
 }
 ```
 
-### game1/start
+### startGame
 
 -   starts the game (if the screen is admin)
   
@@ -455,6 +455,6 @@ example:
 
 ```json
 {
-    "type": "game1/start"
+    "type": "startGame"
 }
 ```

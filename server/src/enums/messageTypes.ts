@@ -4,6 +4,7 @@ export enum MessageTypes {
     CONNECTED_USERS = 'connectedUsers',
     BACK_TO_LOBBY = 'backToLobby',
     PAUSE_RESUME = 'pauseResume',
+    START = 'startGame',
     STOP_GAME = 'stopGame',
     GAME_HAS_RESET = 'gameHasReset',
     GAME_HAS_STOPPED = 'gameHasStopped',

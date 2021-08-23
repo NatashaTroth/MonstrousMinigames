@@ -39,6 +39,7 @@ export enum MessageTypes {
     gameHasResumed = 'gameHasResumed',
 
     pauseResume = 'pauseResume',
+    startGame = 'startGame',
     stopGame = 'stopGame',
 
     error = 'error',
@@ -52,8 +53,6 @@ export enum MessageTypes {
     playerDied = 'game1/playerDied',
     playerStunned = 'game1/playerStunned',
     playerUnstunned = 'game1/playerUnstunned',
-
-    startGame = 'game1/start',
 }
 
 export const localDevelopment = false; //the one in constants.ts on the server
