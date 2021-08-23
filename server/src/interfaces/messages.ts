@@ -5,6 +5,4 @@ export interface IMessage {
     characterNumber?: string;
     receivingUserId?: string;
     state?: string;
-    game?: string;
-
 }

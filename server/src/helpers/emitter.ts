@@ -126,11 +126,10 @@ function sendPlayerHasReconnected(nsp: Namespace, userId: string): void {
     });
 }
 
-function sendScreenState(nsp: Namespace, state: string|undefined, game: string|undefined): void {
+function sendScreenState(nsp: Namespace | Socket, state: string|undefined): void {
     nsp.emit('message', {
         type: MessageTypes.SCREEN_STATE,
-        state: state,
-        game: game
+        state: state
     });
 }
 
