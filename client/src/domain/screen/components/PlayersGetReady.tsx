@@ -43,6 +43,12 @@ const PlayersGetReady: React.FC = () => {
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
         initialPlayLobbyMusic(true);
+        if (screenAdmin) {
+            screenSocket?.emit({
+                type: MessageTypes.sendScreenState,
+                state: 'ready',
+            });
+        }
     }, []);
 
     return (

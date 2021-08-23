@@ -31,6 +31,7 @@ export enum MessageTypes {
     screenAdmin = 'screenAdmin',
     selectCharacter = 'selectCharacter',
     userReady = 'userReady',
+    sendScreenState = 'sendScreenState',
 
     gameHasFinished = 'gameHasFinished',
     gameHasReset = 'gameHasReset',
@@ -55,6 +56,6 @@ export enum MessageTypes {
     playerUnstunned = 'game1/playerUnstunned',
 }
 
-export const localDevelopment = false; //the one in constants.ts on the server
+export const localDevelopment = true; //the one in constants.ts on the server
 
 export const localBackend = 'http://localhost:5000/';

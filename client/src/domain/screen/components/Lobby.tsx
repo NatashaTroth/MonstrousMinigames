@@ -8,7 +8,7 @@ import { AudioContext } from '../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../../contexts/ScreenSocketContextProvider';
 import { characters } from '../../../utils/characters';
-import { localDevelopment } from '../../../utils/constants';
+import { localDevelopment, MessageTypes } from '../../../utils/constants';
 import { generateQRCode } from '../../../utils/generateQRCode';
 import { Routes, screenChooseGameRoute } from '../../../utils/routes';
 import { handleAudioPermission } from '../../audio/handlePermission';
@@ -61,6 +61,12 @@ export const Lobby: React.FunctionComponent = () => {
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
         initialPlayLobbyMusic(true);
+        if (screenAdmin) {
+            screenSocket?.emit({
+                type: MessageTypes.sendScreenState,
+                state: 'lobby',
+            });
+        }
     }, []);
 
     return (

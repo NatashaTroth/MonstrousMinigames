@@ -3,8 +3,10 @@ import * as React from 'react';
 import Button from '../../../components/common/Button';
 import { AudioContext } from '../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
+import { ScreenSocketContext } from '../../../contexts/ScreenSocketContextProvider';
 import oliverLobby from '../../../images/characters/oliverLobby.svg';
 import game1Img from '../../../images/ui/instructions1.png';
+import { MessageTypes } from '../../../utils/constants';
 import { screenGameIntroRoute, screenGetReadyRoute } from '../../../utils/routes';
 import { handleAudioPermission } from '../../audio/handlePermission';
 import history from '../../history/history';
@@ -24,9 +26,10 @@ import LobbyHeader from './LobbyHeader';
 
 const ChooseGame: React.FunctionComponent = () => {
     const [selectedGame, setSelectedGame] = React.useState(0);
-    const { roomId } = React.useContext(GameContext);
+    const { roomId, screenAdmin } = React.useContext(GameContext);
     const tutorial = localStorage.getItem('tutorial') ? false : true;
     const { audioPermission, setAudioPermissionGranted } = React.useContext(AudioContext);
+    const { screenSocket } = React.useContext(ScreenSocketContext);
 
     const games = [
         {
@@ -42,6 +45,17 @@ const ChooseGame: React.FunctionComponent = () => {
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
     }, []);
+
+    React.useEffect(() => {
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        if (screenAdmin) {
+            screenSocket?.emit({
+                type: MessageTypes.sendScreenState,
+                state: 'choose-game',
+                game: selectedGame,
+            });
+        }
+    }, [selectedGame]);
 
     return (
         <LobbyContainer>

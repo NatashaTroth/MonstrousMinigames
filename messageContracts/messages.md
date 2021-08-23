@@ -458,3 +458,17 @@ example:
     "type": "startGame"
 }
 ```
+
+### sendScreenState
+
+-   sends the current state of the admin screen
+  
+example:
+
+```json
+{
+    "type": "sendScreenState",
+    "state": "choose-game"
+}
+```
+
