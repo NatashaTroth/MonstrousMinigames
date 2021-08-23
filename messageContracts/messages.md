@@ -160,6 +160,21 @@ example:
     "trackLength": 3000,
     "numberOfObstacles": 3
 ```
+### screenState
+
+-   sends the current state of the admin screen
+  
+example:
+
+```json
+{
+    "type": "screenState",
+    "state": "choose-game",
+    .
+    .
+    .
+}
+```
 
 
 * * *

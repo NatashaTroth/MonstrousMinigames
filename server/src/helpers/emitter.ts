@@ -126,6 +126,14 @@ function sendPlayerHasReconnected(nsp: Namespace, userId: string): void {
     });
 }
 
+function sendScreenState(nsp: Namespace, state: string|undefined, game: string|undefined): void {
+    nsp.emit('message', {
+        type: MessageTypes.SCREEN_STATE,
+        state: state,
+        game: game
+    });
+}
+
 function sendMessage(type: MessageTypes | CatchFoodMsgType, nsps: Array<Namespace>, recipient: string): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(recipient).emit('message', {
@@ -151,4 +159,5 @@ export default {
     sendPlayerUnstunned,
     sendPlayerHasDisconnected,
     sendPlayerHasReconnected,
+    sendScreenState,
 };

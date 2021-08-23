@@ -16,7 +16,7 @@ class Screen {
         protected emitter: typeof import('../helpers/emitter').default,
         protected screenNamespace: Namespace,
         protected controllerNamespace: Namespace
-    ) {}
+    ) { }
 
     init() {
         try {
@@ -84,6 +84,22 @@ class Screen {
                                 MessageTypes.GAME_HAS_RESET,
                                 [this.controllerNamespace, this.screenNamespace],
                                 this.room!.id
+                            );
+                            this.emitter.sendConnectedUsers(
+                                [this.controllerNamespace, this.screenNamespace],
+                                this.room!
+                            );
+                        });
+                    }
+                    break;
+                case MessageTypes.SEND_SCREEN_STATE:
+                    if (this.room?.isAdminScreen(this.socket.id)) {
+                        console.info(this.room.id + ' | Send Screen State' + ' | ' + message.state);
+                        this.room.resetGame().then(() => {
+                            this.emitter.sendScreenState(
+                                this.screenNamespace,
+                                message.state,
+                                message.game
                             );
                             this.emitter.sendConnectedUsers(
                                 [this.controllerNamespace, this.screenNamespace],
