@@ -13,17 +13,16 @@ export async function ClickRequestDeviceMotion(window: Window) {
 
 export async function getMicrophoneStream() {
     try {
-        if (navigator.mediaDevices) {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        // https://github.com/microsoft/TypeScript/issues/33232
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const mediaDevices = navigator.mediaDevices as any;
+        const stream = await mediaDevices.getUserMedia({ audio: true });
 
-            if (stream) {
-                stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
-            }
-
-            return !!stream;
+        if (stream) {
+            stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
         }
 
-        return false;
+        return !!stream;
     } catch (e) {
         return false;
     }
