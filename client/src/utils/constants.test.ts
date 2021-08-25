@@ -35,8 +35,8 @@ describe('test OBSTACLES enum', () => {
         expect(Obstacles.stone).toBe('Stone');
     });
 
-    it('OBSTACLES.hole should return Hole', () => {
-        expect(Obstacles.hole).toBe('Hole');
+    it('OBSTACLES.trash should return Trash', () => {
+        expect(Obstacles.trash).toBe('Trash');
     });
 
     it('OBSTACLES should have length of 4', () => {

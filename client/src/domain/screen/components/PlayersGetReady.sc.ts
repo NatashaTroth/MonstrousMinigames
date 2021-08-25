@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import forest from '../../images/ui/forest.svg';
+import forest from '../../../images/ui/forest.svg';
 
 const boxShadowDepth = 7;
 

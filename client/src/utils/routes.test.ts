@@ -56,8 +56,8 @@ describe('test routing functions', () => {
         expect(controllerObstacleRoute(roomId, Obstacles.spider)).toBe(`/controller/${roomId}/spider`);
     });
 
-    it('controllerObstacleRoute should return /controller/${roomId}/hole', () => {
-        expect(controllerObstacleRoute(roomId, Obstacles.hole)).toBe(`/controller/${roomId}/hole`);
+    it('controllerObstacleRoute should return /controller/${roomId}/trash', () => {
+        expect(controllerObstacleRoute(roomId, Obstacles.trash)).toBe(`/controller/${roomId}/trash`);
     });
 
     it('screenGameIntroRoute should return /screen/${roomId}/game-intro', () => {
@@ -114,8 +114,8 @@ describe('test Routes enum', () => {
         expect(Routes.controllerSpider).toBe('/controller/:id/spider');
     });
 
-    it('Routes.controllerHole should return /controller/:id/hole', () => {
-        expect(Routes.controllerHole).toBe('/controller/:id/hole');
+    it('Routes.controllerTrash should return /controller/:id/trash', () => {
+        expect(Routes.controllerTrash).toBe('/controller/:id/trash');
     });
 
     it('Routes.controllerStone should return /controller/:id/stone', () => {
@@ -182,8 +182,8 @@ describe('test Routes enum', () => {
         expect(Routes.spider).toBe('/spider');
     });
 
-    it('Routes.hole should return /hole', () => {
-        expect(Routes.hole).toBe('/hole');
+    it('Routes.trash should return /trash', () => {
+        expect(Routes.trash).toBe('/trash');
     });
 
     it('Routes.stone should return /stone', () => {

@@ -1,8 +1,8 @@
 import { FormGroup } from '@material-ui/core';
 import styled from 'styled-components';
 
-import forest from '../../images/ui/forest.svg';
-import introImg from '../../images/ui/forest2.png';
+import forest from '../../../images/ui/forest.svg';
+import introImg from '../../../images/ui/forest2.png';
 
 const boxShadowDepth = 7;
 
