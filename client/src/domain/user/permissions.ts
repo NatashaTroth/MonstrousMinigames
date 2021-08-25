@@ -10,3 +10,11 @@ export async function ClickRequestDeviceMotion(window: Window) {
         return true;
     }
 }
+
+export async function getMicrophoneStream() {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+    }
+}

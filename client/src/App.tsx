@@ -33,6 +33,7 @@ import GameIntro from './domain/screen/components/GameIntro';
 import { Lobby as ScreenLobbyScreen } from './domain/screen/components/Lobby';
 import PlayersGetReady from './domain/screen/components/PlayersGetReady';
 import ScreenWrapper from './domain/screen/components/ScreenWrapper';
+import { getMicrophoneStream } from './domain/user/permissions';
 import theme from './styles/theme';
 import { Routes } from './utils/routes';
 
@@ -41,6 +42,12 @@ export interface RouteParams {
 }
 
 const App: React.FunctionComponent = () => {
+    React.useEffect(() => {
+        if (isMobileOnly) {
+            getMicrophoneStream();
+        }
+    }, []);
+
     return (
         <Router history={history}>
             <StylesProvider injectFirst>
