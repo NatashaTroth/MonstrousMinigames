@@ -13,13 +13,17 @@ export async function ClickRequestDeviceMotion(window: Window) {
 
 export async function getMicrophoneStream() {
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        if (navigator.mediaDevices) {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-        if (stream) {
-            stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+            if (stream) {
+                stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+            }
+
+            return !!stream;
         }
 
-        return !!stream;
+        return false;
     } catch (e) {
         return false;
     }
