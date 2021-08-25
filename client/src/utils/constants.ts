@@ -1,14 +1,14 @@
 export enum Obstacles {
     treeStump = 'TreeStump',
     spider = 'Spider',
-    hole = 'Hole',
+    trash = 'Trash',
     stone = 'Stone',
 }
 
 export enum ObstacleRoutes {
     treeStump = 'treestump',
     spider = 'spider',
-    hole = 'hole',
+    trash = 'trash',
     stone = 'stone',
 }
 
@@ -17,11 +17,6 @@ export enum GameState {
     started = 'STARTED',
     stopped = 'STOPPED',
     finished = 'FINISHED',
-}
-
-export enum TouchEvent {
-    panLeft = 'panleft',
-    panRight = 'panright',
 }
 
 export enum MessageTypes {

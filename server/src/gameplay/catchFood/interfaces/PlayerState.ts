@@ -13,8 +13,7 @@ export interface PlayerState extends IPlayerState {
     rank: number;
     isActive: boolean;
     stunned: boolean;
-    timeWhenStunned: number;
-    stunnedTimeout: undefined | ReturnType<typeof setTimeout>;
+    stunnedSeconds: number;
     characterNumber: number;
     numberStonesThrown: number;
 }

@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
-import theme from '../../theme';
+import theme from '../../styles/theme';
 import Credits from './Credits';
 
 describe('Credits', () => {

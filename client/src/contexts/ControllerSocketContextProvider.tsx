@@ -1,10 +1,11 @@
 import * as React from 'react';
 
+import { handleSetSocket } from '../domain/controller/socket/handleSetSocket';
+import { handleSocketConnection } from '../domain/controller/socket/handleSocketConnection';
 import history from '../domain/history/history';
-import { handleSetSocket } from '../domain/socket/controller/handleSetSocket';
-import { handleSocketConnection } from '../domain/socket/controller/handleSocketConnection';
 import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
 import { Socket } from '../domain/socket/Socket';
+import addMovementListener from '../domain/user/addMovementListener';
 import { GameContext } from './GameContextProvider';
 import { PlayerContext } from './PlayerContextProvider';
 
@@ -18,22 +19,28 @@ export const defaultValue = {
     },
 };
 
-interface IControllerSocketContext {
+interface ControllerSocketContextProps {
     controllerSocket: Socket;
     setControllerSocket: (val: Socket, roomId: string) => void;
     handleSocketConnection: (roomId: string, name: string) => void;
 }
 
-export const ControllerSocketContext = React.createContext<IControllerSocketContext>(defaultValue);
+export const ControllerSocketContext = React.createContext<ControllerSocketContextProps>(defaultValue);
 
-const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) => {
+interface ControllerSocketContextProviderProps {
+    permission: boolean;
+}
+
+const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketContextProviderProps> = ({
+    children,
+    permission,
+}) => {
     const [controllerSocket, setControllerSocket] = React.useState<Socket>(new InMemorySocketFake());
     const {
         setObstacle,
         setPlayerFinished,
         setPlayerRank,
         setPlayerNumber,
-        setPermissionGranted,
         playerFinished,
         resetPlayer,
         setName,
@@ -49,7 +56,14 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         resetGame,
         setAvailableCharacters,
         setConnectedUsers,
+        hasPaused,
     } = React.useContext(GameContext);
+
+    React.useEffect(() => {
+        if (permission) {
+            addMovementListener(controllerSocket, hasPaused, playerFinished);
+        }
+    }, [permission, hasPaused, playerFinished, controllerSocket]);
 
     const dependencies = {
         setControllerSocket,
@@ -79,7 +93,6 @@ const ControllerSocketContextProvider: React.FunctionComponent = ({ children }) 
         handleSocketConnection: (roomId: string, name: string) => {
             handleSocketConnection(roomId, name, playerFinished, {
                 ...dependencies,
-                setPermissionGranted,
                 setRoomId,
             });
         },

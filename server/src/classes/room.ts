@@ -6,8 +6,9 @@ import {
 } from '../customErrors';
 import { Globals } from '../enums/globals';
 import { CatchFoodGame } from '../gameplay';
-import { GameStateInfo } from '../gameplay/catchFood/interfaces';
 import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
+import Game from '../gameplay/Game';
+import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
 import Leaderboard from '../gameplay/leaderboard/Leaderboard';
 import User from './user';
 
@@ -15,17 +16,18 @@ class Room {
     public id: string;
     public users: Array<User>;
     public timestamp: number;
-    public game: CatchFoodGame;
+    public game: Game;
     private state: RoomStates;
     private leaderboard: Leaderboard;
     public screens: Array<string>;
 
-    constructor(id: string) {
+    constructor(id: string, game?: Game) {
         this.id = id;
         this.users = [];
         this.timestamp = Date.now();
         this.leaderboard = new Leaderboard(this.id);
-        this.game = new CatchFoodGame(this.id, this.leaderboard);
+        this.game = game || new CatchFoodGame(this.id, this.leaderboard);
+        this.game.leaderboard = this.leaderboard;
         this.state = RoomStates.OPEN;
         this.screens = [];
     }
@@ -112,12 +114,16 @@ class Room {
         this.timestamp = Date.now();
     }
 
-    public startGame(): GameStateInfo {
+    public startGame(game?: Game): IGameStateBase {
         if (this.users.length === 0) {
             throw new CannotStartEmptyGameError();
         }
         if (this.hasNotReadyUsers()) {
             throw new UsersNotReadyError();
+        }
+        if (game) {
+            this.game = game;
+            this.game.leaderboard = this.leaderboard;
         }
         this.setState(RoomStates.PLAYING);
         this.game.createNewGame(this.users);

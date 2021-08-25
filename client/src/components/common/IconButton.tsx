@@ -1,15 +1,21 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
-import { StyledIconButton } from './IconButton.sc';
+import { StyledButtonBase } from './Button.sc';
 
-interface IButton {
+const StyledIconButton = styled(StyledButtonBase)`
+    && {
+        border-radius: 10px;
+    }
+`;
+interface ButtonProps {
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
     disabled?: boolean;
     variant?: 'primary' | 'secondary';
     right?: number;
 }
 
-const IconButton: React.FunctionComponent<IButton> = ({ children, onClick, disabled, variant = 'primary' }) => (
+const IconButton: React.FunctionComponent<ButtonProps> = ({ children, onClick, disabled, variant = 'primary' }) => (
     <StyledIconButton disabled={disabled} onClick={onClick} variant={variant}>
         {children}
     </StyledIconButton>

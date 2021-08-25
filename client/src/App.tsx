@@ -9,39 +9,53 @@ import Credits from './components/common/Credits';
 import MasterHeader from './components/common/MasterHeader';
 import PausedDialog from './components/common/PausedDialog';
 import Settings from './components/common/Settings';
-import ChooseCharacter from './components/Controller/ChooseCharacter';
-import { ConnectScreen as ControllerConnectScreen } from './components/Controller/ConnectScreen';
-import { FinishedScreen as ControllerFinishedScreen } from './components/Controller/FinishedScreen';
-import { Lobby as ControllerLobbyScreen } from './components/Controller/Lobby';
-import Hole from './components/Controller/Obstacles/Hole';
-import Spider from './components/Controller/Obstacles/Spider';
-import Stone from './components/Controller/Obstacles/Stone';
-import TreeTrunk from './components/Controller/Obstacles/TreeTrunk';
-import PlayerDead from './components/Controller/PlayerDead';
-import PlayerStunned from './components/Controller/PlayerStunned';
-import ShakeInstruction from './components/Controller/ShakeInstruction';
-import ChooseGame from './components/Screen/ChooseGame';
-import { ConnectScreen as ScreenConnectScreen } from './components/Screen/ConnectScreen';
-import { FinishedScreen as ScreenFinishedScreen } from './components/Screen/FinishedScreen';
-import Game from './components/Screen/Game';
-import GameIntro from './components/Screen/GameIntro';
-import { Lobby as ScreenLobbyScreen } from './components/Screen/Lobby';
-import PlayersGetReady from './components/Screen/PlayersGetReady';
-import ScreenWrapper from './components/Screen/ScreenWrapper';
-// import AudioContextProvider from './contexts/AudioContextProvider';
 import ControllerSocketContextProvider from './contexts/ControllerSocketContextProvider';
 import GameContextProvider from './contexts/GameContextProvider';
 import PlayerContextProvider from './contexts/PlayerContextProvider';
 import ScreenSocketContextProvider from './contexts/ScreenSocketContextProvider';
+import ChooseCharacter from './domain/controller/components/ChooseCharacter';
+import { ConnectScreen as ControllerConnectScreen } from './domain/controller/components/ConnectScreen';
+import { FinishedScreen as ControllerFinishedScreen } from './domain/controller/components/FinishedScreen';
+import { Lobby as ControllerLobbyScreen } from './domain/controller/components/Lobby';
+import { NoPermissions } from './domain/controller/components/NoPermissions';
+import Spider from './domain/controller/components/obstacles/Spider';
+import Stone from './domain/controller/components/obstacles/Stone';
+import Trash from './domain/controller/components/obstacles/Trash';
+import TreeTrunk from './domain/controller/components/obstacles/TreeTrunk';
+import PlayerDead from './domain/controller/components/PlayerDead';
+import PlayerStunned from './domain/controller/components/PlayerStunned';
+import ShakeInstruction from './domain/controller/components/ShakeInstruction';
 import history from './domain/history/history';
-import theme from './theme';
+import ChooseGame from './domain/screen/components/ChooseGame';
+import { ConnectScreen as ScreenConnectScreen } from './domain/screen/components/ConnectScreen';
+import { FinishedScreen as ScreenFinishedScreen } from './domain/screen/components/FinishedScreen';
+import Game from './domain/screen/components/Game';
+import GameIntro from './domain/screen/components/GameIntro';
+import { Lobby as ScreenLobbyScreen } from './domain/screen/components/Lobby';
+import PlayersGetReady from './domain/screen/components/PlayersGetReady';
+import ScreenWrapper from './domain/screen/components/ScreenWrapper';
+import { ClickRequestDeviceMotion, getMicrophoneStream } from './domain/user/permissions';
+import theme from './styles/theme';
 import { Routes } from './utils/routes';
 
-export interface IRouteParams {
+export interface RouteParams {
     id?: string;
 }
 
 const App: React.FunctionComponent = () => {
+    const [micPermission, setMicPermissions] = React.useState(false);
+    const [motionPermission, setMotionPermissions] = React.useState(false);
+
+    async function getMicrophonePermission() {
+        const permission = await getMicrophoneStream();
+        setMicPermissions(permission);
+    }
+
+    async function getMotionPermission() {
+        const permission = await ClickRequestDeviceMotion(window);
+        setMotionPermissions(permission);
+    }
+
     return (
         <Router history={history}>
             <StylesProvider injectFirst>
@@ -52,7 +66,9 @@ const App: React.FunctionComponent = () => {
                                 <GameContextProvider>
                                     <PlayerContextProvider>
                                         <ScreenSocketContextProvider>
-                                            <ControllerSocketContextProvider>
+                                            <ControllerSocketContextProvider
+                                                permission={!(!micPermission || !motionPermission)}
+                                            >
                                                 {!isMobileOnly && <MasterHeader />}
                                                 <PausedDialog>
                                                     <Switch>
@@ -83,7 +99,7 @@ const App: React.FunctionComponent = () => {
                                                             component={Spider}
                                                             exact
                                                         />
-                                                        <Route path={Routes.controllerHole} component={Hole} exact />
+                                                        <Route path={Routes.controllerTrash} component={Trash} exact />
                                                         <Route path={Routes.controllerStone} component={Stone} exact />
                                                         <Route
                                                             path={Routes.controllerPlayerDead}
@@ -132,7 +148,16 @@ const App: React.FunctionComponent = () => {
                                                             path={Routes.home}
                                                             component={() =>
                                                                 isMobileOnly ? (
-                                                                    <ControllerConnectScreen history={history} />
+                                                                    !micPermission || !motionPermission ? (
+                                                                        <NoPermissions
+                                                                            getMotionPermission={getMotionPermission}
+                                                                            getMicrophonePermission={
+                                                                                getMicrophonePermission
+                                                                            }
+                                                                        />
+                                                                    ) : (
+                                                                        <ControllerConnectScreen history={history} />
+                                                                    )
                                                                 ) : (
                                                                     <ScreenConnectScreen />
                                                                 )

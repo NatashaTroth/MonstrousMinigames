@@ -33,13 +33,13 @@ describe('Reconnect Player tests', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.disconnectPlayer('1');
         catchFoodGame.reconnectPlayer('1');
-        expect(catchFoodGame.playersState['1'].isActive).toBeTruthy();
+        expect(catchFoodGame.players.get('1')!.isActive).toBeTruthy();
     });
 
     it('reconnectPlayer should not change anything if player was not disconnected (no error should be thrown)', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.reconnectPlayer('1');
-        expect(catchFoodGame.playersState['1'].isActive).toBeTruthy();
+        expect(catchFoodGame.players.get('1')!.isActive).toBeTruthy();
     });
 
     it('cannot reconnect player when game has stopped', async () => {
@@ -51,7 +51,7 @@ describe('Reconnect Player tests', () => {
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.playersState['1'].isActive).toBeFalsy();
+        expect(catchFoodGame.players.get('1')!.isActive).toBeFalsy();
     });
 
     it('cannot reconnect player when game has finished', async () => {
@@ -66,7 +66,7 @@ describe('Reconnect Player tests', () => {
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.playersState['1'].isActive).toBeFalsy();
+        expect(catchFoodGame.players.get('1')!.isActive).toBeFalsy();
     });
 
     it('can run forward after being reconnected', async () => {
@@ -74,17 +74,17 @@ describe('Reconnect Player tests', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         catchFoodGame.disconnectPlayer('1');
         catchFoodGame.reconnectPlayer('1');
-        catchFoodGame.runForward('1', SPEED);
-        expect(catchFoodGame.playersState['1'].positionX).toBe(catchFoodGame.initialPlayerPositionX + SPEED);
+        catchFoodGame['runForward']('1', SPEED);
+        expect(catchFoodGame.players.get('1')!.positionX).toBe(catchFoodGame.initialPlayerPositionX + SPEED);
     });
 
     it('can complete an obstacle after being reconnected', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const obstaclesLength = catchFoodGame.playersState['1'].obstacles.length;
+        const obstaclesLength = catchFoodGame.players.get('1')!.obstacles.length;
         catchFoodGame.disconnectPlayer('1');
         catchFoodGame.reconnectPlayer('1');
         completeNextObstacle(catchFoodGame, '1');
-        expect(catchFoodGame.playersState['1'].obstacles.length).toBe(obstaclesLength - 1);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(obstaclesLength - 1);
     });
 
     it('should not finish game until reconnected player is finished', async () => {

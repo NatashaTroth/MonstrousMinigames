@@ -6,8 +6,6 @@ import owlSoundsFile from '../assets/audio/Owl_Loop.wav';
 import finishedMusicFile from '../assets/audio/WinnerSound.wav';
 import woodSoundsFile from '../assets/audio/WoodSounds_Loop.wav';
 
-
-
 export const defaultValue = {
     audioPermission: false,
     playing: false,
@@ -65,7 +63,7 @@ export const defaultValue = {
     },
     musicIsPlaying: false,
 };
-interface IAudioContext {
+interface AudioContextProps {
     audioPermission: boolean;
     playing: boolean;
     gameAudioPlaying: boolean;
@@ -90,7 +88,7 @@ interface IAudioContext {
     musicIsPlaying: boolean;
 }
 
-export const AudioContext = React.createContext<IAudioContext>(defaultValue);
+export const AudioContext = React.createContext<AudioContextProps>(defaultValue);
 
 const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     const [audioPermission, setAudioPermissionGranted] = React.useState<boolean>(false);

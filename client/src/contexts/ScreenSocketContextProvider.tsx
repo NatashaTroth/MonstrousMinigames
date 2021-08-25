@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { handleSetSocket } from '../domain/socket/screen/handleSetSocket';
-import { handleSocketConnection } from '../domain/socket/screen/handleSocketConnection';
+import { handleSetSocket } from '../domain/screen/socket/handleSetSocket';
+import { handleSocketConnection } from '../domain/screen/socket/handleSocketConnection';
 import { Socket } from '../domain/socket/Socket';
 import { GameState, Obstacles } from '../utils/constants';
 import { GameContext } from './GameContextProvider';
-import { IObstacle } from './PlayerContextProvider';
+import { Obstacle } from './PlayerContextProvider';
 
-export interface IObstacleMessage {
+export interface ObstacleMessage {
     type: string;
     obstacleType?: Obstacles;
 }
 
-interface IScreenSocketContext {
+interface ScreenSocketContextProps {
     screenSocket: Socket | undefined;
     handleSocketConnection: (val: string, route: string) => void;
 }
@@ -25,7 +25,7 @@ export const defaultValue = {
     },
 };
 
-export const ScreenSocketContext = React.createContext<IScreenSocketContext>(defaultValue);
+export const ScreenSocketContext = React.createContext<ScreenSocketContextProps>(defaultValue);
 
 export interface PlayerRank {
     id: string;
@@ -42,7 +42,7 @@ export interface PlayerState {
     id: string;
     name: string;
     positionX: number;
-    obstacles: IObstacle[];
+    obstacles: Obstacle[];
     atObstacle: boolean;
     finished: boolean;
     finishedTimeMs: number;
@@ -59,7 +59,7 @@ export interface GameStateData {
     playerRanks: PlayerRank[];
 }
 
-export interface IUser {
+export interface User {
     id: string;
     name: string;
     roomId: string;
