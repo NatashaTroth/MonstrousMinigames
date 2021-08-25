@@ -15,8 +15,8 @@ export async function getMicrophoneStream() {
     try {
         // https://github.com/microsoft/TypeScript/issues/33232
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const mediaDevices = navigator.mediaDevices as any;
-        const stream = await mediaDevices.getUserMedia({ audio: true });
+        const mediaDevices = navigator as any;
+        const stream = await mediaDevices.mediaDevices.getUserMedia({ audio: true });
 
         if (stream) {
             stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
