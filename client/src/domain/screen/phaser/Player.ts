@@ -25,7 +25,8 @@ export class Player {
         private index: number,
         private coordinates: Coordinates,
         private gameStateData: GameData,
-        private monsterName: string
+        private monsterName: string,
+        private numberPlayers: number
     ) {
         this.coordinates = {
             x: this.coordinates.x,
@@ -45,6 +46,7 @@ export class Player {
         this.renderPlayer();
         this.setObstacles();
         this.setGoal(gameStateData.trackLength);
+        this.renderBackground(gameStateData.trackLength);
         // this.renderer.renderFireworks(500, 100);
         // this.renderer.renderFireworks(this.coordinates.x + 500, this.coordinates.y - window.innerHeight / 8 + 50);
     }
@@ -127,7 +129,14 @@ export class Player {
     private renderPlayer() {
         // eslint-disable-next-line no-console
         // console.log(this.username);
-        this.renderer.renderPlayer(this.index, this.coordinates, this.monsterName, this.animationName, this.username);
+        this.renderer.renderPlayer(
+            this.index,
+            this.coordinates,
+            this.monsterName,
+            this.animationName,
+            this.numberPlayers,
+            this.username
+        );
 
         // TODO render player name
         // this.renderer.renderText(
@@ -137,32 +146,43 @@ export class Player {
         // );
     }
 
+    private renderBackground(trackLength: number) {
+        this.renderer.renderBackground(
+            window.innerWidth,
+            window.innerHeight,
+            trackLength,
+            this.numberPlayers,
+            this.index
+        );
+    }
+
     private setObstacles() {
         const obstaclesArray = this.gameStateData.playersState[this.index].obstacles;
 
         obstaclesArray.forEach((obstacle, index) => {
-            let posX = obstacle.positionX + 75;
-            let obstaclePosY = this.coordinates.y + 30;
-            let obstacleScale = 0.3;
+            const posX = obstacle.positionX + 75;
+            let obstaclePosY = this.coordinates.y; //+ 30;
+            let obstacleScale = 0.5 / this.numberPlayers;
 
             switch (obstacle.type) {
                 case Obstacles.treeStump:
-                    obstaclePosY = this.coordinates.y + window.innerHeight / 9;
-                    obstacleScale = 0.4;
+                    // obstaclePosY = this.coordinates.y + window.innerHeight / 9;
+                    obstacleScale = 0.9 / this.numberPlayers;
                     break;
                 case Obstacles.spider:
-                    obstaclePosY = this.coordinates.y + window.innerHeight / 15;
-                    obstacleScale = 0.2;
+                    // obstaclePosY = this.coordinates.y + window.innerHeight / 15;
+                    obstacleScale = 0.6 / this.numberPlayers;
                     break;
                 case Obstacles.trash:
-                    obstaclePosY = this.coordinates.y + window.innerHeight / 7;
-                    obstacleScale = 0.1;
-                    posX += 40;
+                    // obstaclePosY = this.coordinates.y + window.innerHeight / 7;
+                    obstacleScale = 0.6 / this.numberPlayers;
+                    // posX += 40;
+                    obstaclePosY += 10;
 
                     break;
                 case Obstacles.stone:
-                    obstaclePosY = this.coordinates.y + window.innerHeight / 10;
-                    obstacleScale = 0.2;
+                    // obstaclePosY = this.coordinates.y + window.innerHeight / 10;
+                    obstacleScale = 0.6 / this.numberPlayers;
                     break;
             }
 
@@ -171,7 +191,8 @@ export class Player {
                 obstaclePosY,
                 obstacleScale,
                 obstacle.type.toLowerCase(),
-                depthDictionary.obstacle - index
+                depthDictionary.obstacle - index,
+                this.numberPlayers
             );
         });
     }
@@ -184,7 +205,7 @@ export class Player {
     }
 
     setGoal(posX: number) {
-        this.renderer.renderCave(posX, this.coordinates.y);
+        this.renderer.renderCave(posX, this.coordinates.y, this.numberPlayers);
     }
 
     startRunning() {

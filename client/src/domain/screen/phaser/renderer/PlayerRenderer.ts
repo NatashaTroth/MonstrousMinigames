@@ -7,17 +7,32 @@ export type Coordinates = { x: number; y: number };
  */
 
 export interface PlayerRenderer {
+    renderBackground(
+        windowWidth: number,
+        windowHeight: number,
+        trackLength: number,
+        numberPlayers: number,
+        index: number
+    ): void;
     renderChasers(chasersPositionX: number, chasersPositionY: number): void;
     renderPlayer(
         idx: number,
         coordinates: Coordinates,
         monsterName: string,
         animationName: string,
+        numberPlayers: number,
         username?: string,
         background?: string
     ): void;
-    renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number): void;
-    renderCave(posX: number, posY: number): void;
+    renderObstacles(
+        posX: number,
+        posY: number,
+        obstacleScale: number,
+        obstacleType: string,
+        depth: number,
+        numberPlayers: number
+    ): void;
+    renderCave(posX: number, posY: number, numberPlayers: number): void;
     renderFireworks(posX: number, posY: number): void;
     movePlayerForward(newXPosition: number): void;
     destroyObstacle(): void;
