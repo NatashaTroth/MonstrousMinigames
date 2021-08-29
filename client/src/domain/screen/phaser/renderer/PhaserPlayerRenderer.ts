@@ -3,7 +3,6 @@ import Phaser from 'phaser';
 import { depthDictionary } from '../../../../utils/depthDictionary';
 import { fireworkFlares } from '../../components/GameAssets';
 import MainScene from '../../components/MainScene';
-import printMethod from '../printMethod';
 import { Coordinates, PlayerRenderer } from './PlayerRenderer';
 
 /**
@@ -23,7 +22,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     private caveInFront?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private backgroundLane?: Phaser.GameObjects.Image[];
 
-    constructor(private scene: MainScene) {
+    constructor(private scene: MainScene, private numberPlayers: number) {
         this.playerObstacles = [];
         this.particles = [];
         this.backgroundLane = []; //TODO change
@@ -35,28 +34,22 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         });
     }
 
-    renderBackground(
-        windowWidth: number,
-        windowHeight: number,
-        trackLength: number,
-        numberPlayers: number,
-        index: number
-    ) {
+    renderBackground(windowWidth: number, windowHeight: number, trackLength: number, index: number) {
         //TODO move lanes to player renderer
         this.scene.cameras.main.backgroundColor.setTo(255, 255, 255);
-        const reps = Math.ceil(trackLength / (windowWidth / numberPlayers)) + 2;
+        const reps = Math.ceil(trackLength / (windowWidth / this.numberPlayers)) + 2;
 
         for (let i = 0; i < reps; i++) {
-            // for (let j = 0; j < numberPlayers; j++) {
+            // for (let j = 0; j < this.numberPlayers; j++) {
             // Background without parallax
             const bg = this.scene.add.image(
-                (i * windowWidth) / numberPlayers,
-                (index * windowHeight) / numberPlayers + windowHeight / numberPlayers,
+                (i * windowWidth) / this.numberPlayers,
+                (index * windowHeight) / this.numberPlayers + windowHeight / this.numberPlayers,
                 'laneBackground'
             );
-            // bg.setDisplaySize(windowWidth / numberPlayers, windowHeight / numberPlayers);
+            // bg.setDisplaySize(windowWidth / this.numberPlayers, windowHeight / this.numberPlayers);
             const oldHeight = bg.displayHeight;
-            const newHeight = windowHeight / numberPlayers;
+            const newHeight = windowHeight / this.numberPlayers;
 
             // oldHeight .... 100%
             // newHeight ... x -> 100 / oldHeight * newHeight
@@ -116,7 +109,6 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         coordinates: Coordinates,
         monsterName: string,
         animationName: string,
-        numberPlayers: number,
         username?: string
     ): void {
         // eslint-disable-next-line no-console
@@ -127,9 +119,9 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         }
 
         if (!this.player) {
-            this.renderPlayerInitially(coordinates, monsterName, numberPlayers);
+            this.renderPlayerInitially(coordinates, monsterName);
             this.initiatePlayerAnimation(monsterName, animationName);
-            this.renderPlayerName(idx, usernameToDisplay, numberPlayers);
+            this.renderPlayerName(idx, usernameToDisplay);
         } else if (this.player) {
             //move player
             this.player.x = coordinates.x;
@@ -137,10 +129,13 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         }
     }
 
-    private renderPlayerName(idx: number, name: string, numberPlayers: number) {
+    getPlayerYPosition(): number | undefined {
+        return this.player?.y;
+    }
+    private renderPlayerName(idx: number, name: string) {
         this.playerNameBg = this.scene.add.rectangle(
             50,
-            (window.innerHeight / numberPlayers) * (idx + 1) - 25,
+            (window.innerHeight / this.numberPlayers) * (idx + 1) - 25,
             250,
             50,
             0xb63bd4,
@@ -151,7 +146,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         this.playerName = this.scene.make.text({
             x: 20,
             // x: this.scene.camera?.scrollX,
-            y: (window.innerHeight / numberPlayers) * (idx + 1) - 30,
+            y: (window.innerHeight / this.numberPlayers) * (idx + 1) - 30,
             text: `${name}`, //TODO QUICKFIX - GET PADDING TO WORK INSTEAD OF SPACE
             style: {
                 fontSize: `${16}px`,
@@ -195,8 +190,9 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     renderChasers(chasersPositionX: number, chasersPositionY: number) {
         if (!this.chaser) {
             this.chaser = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasers');
-            this.chaser.setScale(0.4, 0.4);
+            this.chaser.setScale(1.25 / this.numberPlayers);
             this.chaser.setDepth(depthDictionary.chaser);
+            this.chaser.y = this.chaser.y - this.chaser.displayHeight / 8; //set correct y pos according to player height
         }
         this.chaser.setX(chasersPositionX - 50); // - 50 so that not quite on top of player when caught
     }
@@ -213,11 +209,10 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         if (this.player) this.player.alpha = 1;
     }
 
-    renderCave(posX: number, posY: number, numberPlayers: number) {
-        printMethod(numberPlayers);
+    renderCave(posX: number, posY: number) {
         posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
         // posY += 5;
-        const scale = 0.52 / numberPlayers;
+        const scale = 0.52 / this.numberPlayers;
         const caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
         caveBehind.setScale(scale);
         caveBehind.setDepth(depthDictionary.cave);
@@ -271,17 +266,10 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     //     text.scrollFactorX = 0;
     // }
 
-    renderObstacles(
-        posX: number,
-        posY: number,
-        obstacleScale: number,
-        obstacleType: string,
-        depth: number,
-        numberPlayers: number
-    ) {
+    renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number) {
         const obstacle = this.scene.physics.add.sprite(posX, posY, obstacleType);
         // obstacle.y -= obstacle.displayHeight / 6;
-        obstacle.y -= obstacle.displayHeight / (2 * numberPlayers);
+        obstacle.y -= obstacle.displayHeight / (2 * this.numberPlayers);
         obstacle.setScale(obstacleScale);
         obstacle.setDepth(depth);
 
@@ -297,7 +285,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
             const particlesEmitter = particle.createEmitter({
                 // key: flare,
                 x: posX,
-                y: posY,
+                y: posY - window.innerHeight / (3 * this.numberPlayers),
                 scale: scales[i],
                 speed: 75,
                 blendMode: 'ADD',
@@ -357,14 +345,14 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         this.playerAttention = undefined;
     }
 
-    private renderPlayerInitially(coordinates: Coordinates, monsterName: string, numberPlayers: number) {
+    private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
         // eslint-disable-next-line no-console
         // console.log(' coordinates.y + window.innerHeight / 15');
         this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterName);
         this.player.setDepth(depthDictionary.player);
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
-        this.player.setScale(0.5 / numberPlayers);
+        this.player.setScale(0.5 / this.numberPlayers);
         this.player.y = this.player.y - this.player.displayHeight / 2; //set correct y pos according to player height
     }
 

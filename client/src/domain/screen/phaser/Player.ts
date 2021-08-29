@@ -1,4 +1,4 @@
-import { Obstacles } from '../../../utils/constants';
+import { designDevelopment, Obstacles } from '../../../utils/constants';
 import { depthDictionary } from '../../../utils/depthDictionary';
 import { GameData } from './gameInterfaces';
 import { Coordinates, PlayerRenderer } from './renderer/PlayerRenderer';
@@ -47,6 +47,16 @@ export class Player {
         this.setObstacles();
         this.setGoal(gameStateData.trackLength);
         this.renderBackground(gameStateData.trackLength);
+
+        const newPlayerPos = this.renderer.getPlayerYPosition();
+        if (newPlayerPos !== undefined) {
+            this.coordinates.y = newPlayerPos;
+        }
+
+        if (designDevelopment) {
+            this.setChasers(100);
+            this.renderer.renderFireworks(500, this.coordinates.y);
+        }
         // this.renderer.renderFireworks(500, 100);
         // this.renderer.renderFireworks(this.coordinates.x + 500, this.coordinates.y - window.innerHeight / 8 + 50);
     }
@@ -129,14 +139,7 @@ export class Player {
     private renderPlayer() {
         // eslint-disable-next-line no-console
         // console.log(this.username);
-        this.renderer.renderPlayer(
-            this.index,
-            this.coordinates,
-            this.monsterName,
-            this.animationName,
-            this.numberPlayers,
-            this.username
-        );
+        this.renderer.renderPlayer(this.index, this.coordinates, this.monsterName, this.animationName, this.username);
 
         // TODO render player name
         // this.renderer.renderText(
@@ -147,13 +150,7 @@ export class Player {
     }
 
     private renderBackground(trackLength: number) {
-        this.renderer.renderBackground(
-            window.innerWidth,
-            window.innerHeight,
-            trackLength,
-            this.numberPlayers,
-            this.index
-        );
+        this.renderer.renderBackground(window.innerWidth, window.innerHeight, trackLength, this.index);
     }
 
     private setObstacles() {
@@ -191,21 +188,20 @@ export class Player {
                 obstaclePosY,
                 obstacleScale,
                 obstacle.type.toLowerCase(),
-                depthDictionary.obstacle - index,
-                this.numberPlayers
+                depthDictionary.obstacle - index
             );
         });
     }
 
     setChasers(chasersPositionX: number) {
         if (!this.dead) {
-            const chasersPositionY = this.coordinates.y + 50;
+            const chasersPositionY = this.coordinates.y;
             this.renderer.renderChasers(chasersPositionX, chasersPositionY);
         }
     }
 
     setGoal(posX: number) {
-        this.renderer.renderCave(posX, this.coordinates.y, this.numberPlayers);
+        this.renderer.renderCave(posX, this.coordinates.y);
     }
 
     startRunning() {

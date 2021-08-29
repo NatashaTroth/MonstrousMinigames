@@ -109,9 +109,11 @@ class MainScene extends Phaser.Scene {
         }
 
         //TODO change
-        // setTimeout(() => {
-        //     this.sendStartGame();
-        // }, 5000);
+        if (!designDevelopment) {
+            setTimeout(() => {
+                this.sendStartGame();
+            }, 5000);
+        }
     }
 
     handleSocketConnection() {
@@ -141,7 +143,7 @@ class MainScene extends Phaser.Scene {
     }
 
     initiateSockets() {
-        if (!localDevelopment && !designDevelopment) {
+        if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
                 printMethod('RECEIVED FIRST GAME STATE:');
@@ -271,7 +273,7 @@ class MainScene extends Phaser.Scene {
         // printMethod('----');
 
         const player = new Player(
-            new PhaserPlayerRenderer(this),
+            new PhaserPlayerRenderer(this, numberPlayers),
             index,
             { x: posX, y: posY },
             gameStateData,
