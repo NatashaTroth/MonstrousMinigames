@@ -61,14 +61,14 @@ function sendGameHasFinished(nsps: Array<Namespace>, data: GameEvents.GameHasFin
     });
 }
 
-function sendGameHasTimedOut(nsps: Array<Namespace>, data: GameEvents.GameHasFinished): void {
-    nsps.forEach(function (namespace: Namespace) {
-        namespace.to(data.roomId).emit('message', {
-            type: MessageTypes.GAME_HAS_TIMED_OUT,
-            data: data,
-        });
-    });
-}
+// function sendGameHasTimedOut(nsps: Array<Namespace>, data: GameEvents.GameHasFinished): void {
+//     nsps.forEach(function (namespace: Namespace) {
+//         namespace.to(data.roomId).emit('message', {
+//             type: MessageTypes.GAME_HAS_TIMED_OUT,
+//             data: data,
+//         });
+//     });
+// }
 
 function sendPlayerFinished(nsp: Namespace, user: User, data: GameEvents.PlayerHasFinished): void {
     nsp.to(user.socketId).emit('message', {
@@ -141,7 +141,7 @@ export default {
     sendGameHasStarted,
     sendPlayerFinished,
     sendGameHasFinished,
-    sendGameHasTimedOut,
+    // sendGameHasTimedOut,
     sendConnectedUsers,
     sendMessage,
     sendScreenAdmin,

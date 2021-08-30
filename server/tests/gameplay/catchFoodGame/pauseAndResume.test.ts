@@ -1,7 +1,9 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/enums/GameState';
 import { leaderboard, roomId } from '../mockData';
-import { advanceCountdown, clearTimersAndIntervals, releaseThreadN, startGameAndAdvanceCountdown } from './gameHelperFunctions';
+import {
+    clearTimersAndIntervals, releaseThreadN, startGameAndAdvanceCountdown
+} from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
 const dateNow = 1618665766156;
@@ -100,28 +102,5 @@ describe('Resume tests', () => {
 
         expect(catchFoodGame['gameTime']).toBe(gameTimePassed);
         expect(catchFoodGame['gameStartedAt']).toBe(newGameStartedTime);
-    });
-
-    it('updates time correctly after pause, so that timeout happens after the defined time out time', async () => {
-        // disable chasers
-        jest.spyOn(catchFoodGame as any, 'updateChasersPosition').mockImplementation(() => 0);
-
-        startGameAndAdvanceCountdown(catchFoodGame);
-        await releaseThreadN(3);
-
-        const gameStartTime = Date.now();
-        const gamePauseTime = gameStartTime + 5000;
-        const gameResumeTime = gamePauseTime + 10000;
-
-        Date.now = jest.fn(() => gamePauseTime);
-        catchFoodGame.pauseGame();
-        Date.now = jest.fn(() => gameResumeTime);
-        catchFoodGame.resumeGame();
-        advanceCountdown(catchFoodGame.timeOutLimit - 5000 - 1);
-        await releaseThreadN(3);
-        expect(catchFoodGame.gameState).toBe(GameState.Started);
-        advanceCountdown(50);
-        await releaseThreadN(3);
-        expect(catchFoodGame.gameState).toBe(GameState.Stopped);
     });
 });

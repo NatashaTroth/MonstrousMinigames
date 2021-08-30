@@ -15,9 +15,7 @@ import CatchFoodPlayer from './CatchFoodPlayer';
 import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
 import { CatchFoodMsgType } from './enums';
 import { createObstacles, getObstacleTypes } from './helperFunctions/initiatePlayerState';
-import {
-    GameEvents, GameStateInfo, Obstacle, PlayerRank
-} from './interfaces';
+import { GameStateInfo, Obstacle, PlayerRank } from './interfaces';
 
 interface CatchFoodGameInterface extends IGameInterface<CatchFoodPlayer, GameStateInfo> {
     trackLength: number;
@@ -32,7 +30,6 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     trackLength = 5000;
     numberOfObstacles = 4;
     speed = 0;
-    timeOutLimit = 300000;
     countdownTime = 4000; //should be 1 second more than client - TODO: make sure it is
     timeWhenChasersAppear = 25000; //10 sec
     // usingChasers: boolean //TODO try and remove (for tests)
@@ -44,33 +41,26 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     cameraSpeed = 1.7;
     maxNumberStones = 5;
 
-    constructor(roomId: string, public leaderboard: Leaderboard /*, public usingChasers = false*/, public stunnedTime = 3000) {
+    constructor(
+        roomId: string,
+        public leaderboard: Leaderboard /*, public usingChasers = false*/,
+        public stunnedTime = 3000
+    ) {
         super(roomId);
     }
 
-    createNewGame(
-        users: Array<User>,
-        trackLength = this.trackLength,
-        numberOfObstacles = this.numberOfObstacles,
-        speed = 2
-    ): void {
-        this.trackLength = trackLength;
-        this.numberOfObstacles = numberOfObstacles;
-        this.speed = speed;
-        this.chasersPositionX = 1350;
-        // this.chasersPositionX = (6 * this.speed * this.timeWhenChasersAppear) / 100; //(6 updates per 100ms)
-
-        super.createNewGame(users);
-
-        this.startGame();
-    }
     protected mapUserToPlayer(user: User) {
         const player = new CatchFoodPlayer(
             user.id,
             user.name,
             this.initialPlayerPositionX,
-            createObstacles(getObstacleTypes(this.numberOfObstacles), this.numberOfObstacles, this.trackLength, this.initialPlayerPositionX),
-            user.characterNumber,
+            createObstacles(
+                getObstacleTypes(this.numberOfObstacles),
+                this.numberOfObstacles,
+                this.trackLength,
+                this.initialPlayerPositionX
+            ),
+            user.characterNumber
         );
 
         player.on(CatchFoodPlayer.EVT_UNSTUNNED, () => {
@@ -79,9 +69,10 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
         return player;
     }
+
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
         if (this.cameraPositionX < this.trackLength)
-            this.cameraPositionX += timeElapsedSinceLastFrame / 33 * this.cameraSpeed;
+            this.cameraPositionX += (timeElapsedSinceLastFrame / 33) * this.cameraSpeed;
         this.updateChasersPosition(timeElapsed, timeElapsedSinceLastFrame);
 
         if (localDevelopment) {
@@ -90,14 +81,11 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
                     continue;
                 }
 
-                this.runForward(player.id, this.speed / 18 * timeElapsedSinceLastFrame);
+                this.runForward(player.id, (this.speed / 18) * timeElapsedSinceLastFrame);
             }
         }
-
-        if (timeElapsed >= this.timeOutLimit && this.gameState === GameState.Started) {
-            this.stopGameTimeout();
-        }
     }
+
     protected handleInput(message: IMessage) {
         switch (message.type) {
             case CatchFoodMsgType.MOVE:
@@ -116,6 +104,24 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
                 console.info(message);
         }
     }
+
+    createNewGame(
+        users: Array<User>,
+        trackLength = this.trackLength,
+        numberOfObstacles = this.numberOfObstacles,
+        speed = 2
+    ): void {
+        this.trackLength = trackLength;
+        this.numberOfObstacles = numberOfObstacles;
+        this.speed = speed;
+        this.chasersPositionX = 1350;
+        // this.chasersPositionX = (6 * this.speed * this.timeWhenChasersAppear) / 100; //(6 updates per 100ms)
+
+        super.createNewGame(users);
+
+        this.startGame();
+    }
+
     startGame(): void {
         setTimeout(() => {
             super.startGame();
@@ -126,40 +132,31 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             countdownTime: this.countdownTime,
         });
     }
+
     pauseGame(): void {
         super.pauseGame();
 
         CatchFoodGameEventEmitter.emitGameHasPausedEvent({ roomId: this.roomId });
     }
+
     resumeGame(): void {
         super.resumeGame();
 
         CatchFoodGameEventEmitter.emitGameHasResumedEvent({ roomId: this.roomId });
     }
-    private stopGameTimeout() {
-        this.stopGame();
 
-        const currentGameStateInfo = this.getGameStateInfo();
-        const messageInfo: GameEvents.GameHasFinished = {
-            roomId: currentGameStateInfo.roomId,
-            gameState: currentGameStateInfo.gameState,
-            trackLength: currentGameStateInfo.trackLength,
-            numberOfObstacles: currentGameStateInfo.numberOfObstacles,
-            playerRanks: [...this.createPlayerRanks()],
-        };
-
-        CatchFoodGameEventEmitter.emitGameHasTimedOutEvent(messageInfo);
-    }
     stopGameUserClosed() {
         super.stopGameUserClosed();
 
         CatchFoodGameEventEmitter.emitGameHasStoppedEvent({ roomId: this.roomId });
     }
+
     stopGameAllUsersDisconnected() {
         super.stopGameAllUsersDisconnected();
 
         CatchFoodGameEventEmitter.emitAllPlayersHaveDisconnected({ roomId: this.roomId });
     }
+
     getGameStateInfo(): GameStateInfo {
         return {
             gameState: this.gameState,
@@ -186,6 +183,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             cameraPositionX: this.cameraPositionX,
         };
     }
+
     //TODO test
     private updateChasersPosition(timeElapsed: number, timeElapsedSinceLastFrame: number) {
         //10000 to 90000  * timePassed //TODO - make faster over time??
@@ -201,6 +199,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             }
         }
     }
+
     private handlePlayerCaught(playerState: CatchFoodPlayer) {
         playerState.dead = true;
         this.updatePlayerStateFinished(playerState.id);
@@ -219,9 +218,11 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             }
         }
     }
+
     private chaserCaughtPlayer(player: CatchFoodPlayer) {
         return player.positionX <= this.chasersPositionX;
     }
+
     getObstaclePositions(): HashTable<Array<Obstacle>> {
         const obstaclePositions: HashTable<Array<Obstacle>> = {};
         for (const player of this.players.values()) {
@@ -230,6 +231,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
         return obstaclePositions;
     }
+
     private runForward(userId: string, speed = 1): void {
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.players, userId);
@@ -243,28 +245,27 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         if (this.playerHasReachedObstacle(userId)) this.handlePlayerReachedObstacle(userId);
         if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId);
     }
+
     private playerIsNotAllowedToRun(userId: string) {
         const player = this.players.get(userId)!;
 
-        return (
-            player.finished || player.dead || player.atObstacle
-        );
+        return player.finished || player.dead || player.atObstacle;
     }
+
     private playerHasReachedObstacle(userId: string): boolean {
         const player = this.players.get(userId);
 
         return (
-            (player?.obstacles?.length || 0) > 0 &&
-            (player?.positionX || 0) >= (player?.obstacles?.[0]?.positionX || 0)
+            (player?.obstacles?.length || 0) > 0 && (player?.positionX || 0) >= (player?.obstacles?.[0]?.positionX || 0)
         );
     }
+
     private playerHasPassedGoal(userId: string): boolean {
         const player = this.players.get(userId)!;
 
-        return (
-           player.positionX >= this.trackLength && player.obstacles.length === 0
-        );
+        return player.positionX >= this.trackLength && player.obstacles.length === 0;
     }
+
     private handlePlayerReachedObstacle(userId: string): void {
         const player = this.players.get(userId)!;
         // block player from running when obstacle is reached
@@ -280,6 +281,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         });
     }
     //TODO test
+
     private stunPlayer(userIdStunned: string, userIdThrown: string) {
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.players, userIdStunned);
@@ -299,19 +301,21 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         });
     }
     //TODO test
+
     private onPlayerUnstunned(userId: string) {
         CatchFoodGameEventEmitter.emitPlayerIsUnstunned({
             roomId: this.roomId,
             userId: userId,
         });
     }
+
     private playerHasCompletedObstacle(userId: string, obstacleId: number): void {
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.players, userId);
         verifyUserIsActive(userId, this.players.get(userId)!.isActive);
 
         this.verifyUserIsAtObstacle(userId);
-        
+
         const player = this.players.get(userId)!;
         player.atObstacle = false;
         if (player.obstacles[0].id === obstacleId) {
@@ -320,6 +324,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             throw new WrongObstacleIdError(`${obstacleId} is not the id for the next obstacle.`, userId, obstacleId);
         }
     }
+
     private verifyUserIsAtObstacle(userId: string) {
         const player = this.players.get(userId);
         if (
@@ -330,6 +335,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             throw new NotAtObstacleError(`User ${userId} is not at an obstacle`, userId);
         }
     }
+
     private playerHasFinishedGame(userId: string): void {
         //only if player hasn't already been marked as finished
         // if (this.playersState[userId].finished) return; //don't think I need
@@ -349,17 +355,20 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             this.handleGameFinished();
         }
     }
+
     private updatePlayerStateFinished(userId: string) {
         const player = this.players.get(userId)!;
         player.finished = true;
         player.finishedTimeMs = Date.now();
     }
+
     private gameHasFinished(): boolean {
         const players = Array.from(this.players.values());
         const activeUnfinishedPlayers = players.filter(player => player.isActive && !player.finished);
 
         return activeUnfinishedPlayers.length === 0;
     }
+
     private handleGameFinished(): void {
         this.gameState = GameState.Finished;
 
@@ -376,6 +385,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         });
         //Broadcast, stop game, return ranks
     }
+
     createPlayerRanks(): Array<PlayerRank> {
         return Array.from(this.players.values()).map(player => ({
             id: player.id,
@@ -388,6 +398,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             isActive: player.isActive,
         }));
     }
+
     disconnectPlayer(userId: string) {
         if (super.disconnectPlayer(userId)) {
             CatchFoodGameEventEmitter.emitPlayerHasDisconnected({
@@ -399,6 +410,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
         return false;
     }
+
     reconnectPlayer(userId: string) {
         if (super.reconnectPlayer(userId)) {
             CatchFoodGameEventEmitter.emitPlayerHasReconnected({
