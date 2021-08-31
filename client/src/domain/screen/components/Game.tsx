@@ -58,8 +58,8 @@ const Game: React.FunctionComponent = () => {
                 },
             },
         });
-        game.scene.add('MainScene', MainScene, false, { roomId });
-        game.scene.start('MainScene', { roomId: roomId });
+        game.scene.add('MainScene', MainScene, false); //socket: ScreenSocket.getInstance(socket)
+        game.scene.start('MainScene', { roomId, socket: screenSocket });
 
         // game.world.setBounds(0,0,7500, window.innerHeight)
         // eslint-disable-next-line react-hooks/exhaustive-deps

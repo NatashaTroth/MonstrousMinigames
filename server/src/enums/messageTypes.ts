@@ -5,6 +5,7 @@ export enum MessageTypes {
     BACK_TO_LOBBY = 'backToLobby',
     PAUSE_RESUME = 'pauseResume',
     STOP_GAME = 'stopGame',
+    // PHASER_LOADED = 'phaserLoaded',
     GAME_HAS_RESET = 'gameHasReset',
     GAME_HAS_STOPPED = 'gameHasStopped',
     GAME_HAS_FINISHED = 'gameHasFinished',

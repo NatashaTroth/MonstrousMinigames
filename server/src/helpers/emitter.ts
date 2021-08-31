@@ -50,6 +50,14 @@ function sendErrorMessage(socket: Socket, e: Error): void {
         msg: e.message,
     });
 }
+
+function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room): void {
+    nsps.forEach(function (namespace: Namespace) {
+        namespace.to(room.id).emit('message', {
+            type: CatchFoodMsgType.ALL_SCREENS_PHASER_GAME_LOADED,
+        });
+    });
+}
 function sendStartPhaserGame(nsps: Array<Namespace>, room: Room): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(room.id).emit('message', {
@@ -152,6 +160,7 @@ export default {
     sendInitialGameStateInfo,
     sendGameState,
     sendErrorMessage,
+    sendAllScreensPhaserGameLoaded,
     sendStartPhaserGame,
     sendGameHasStarted,
     sendPlayerFinished,

@@ -42,6 +42,8 @@ export enum MessageTypes {
     obstacle = 'game1/obstacle', //obstacle reached
     playerFinished = 'game1/playerFinished',
     started = 'game1/hasStarted',
+    phaserLoaded = 'game1/phaserGameLoaded',
+    allScreensPhaserGameLoaded = 'game1/allScreensPhaserGameLoaded',
     startPhaserGame = 'game1/startPhaserGame',
     initialGameState = 'game1/initialGameState',
     gameState = 'game1/gameState',

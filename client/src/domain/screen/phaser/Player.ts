@@ -164,7 +164,7 @@ export class Player {
             switch (obstacle.type) {
                 case Obstacles.treeStump:
                     // obstaclePosY = this.coordinates.y + window.innerHeight / 9;
-                    obstacleScale = 0.9 / this.numberPlayers;
+                    obstacleScale = 0.7 / this.numberPlayers;
                     break;
                 case Obstacles.spider:
                     // obstaclePosY = this.coordinates.y + window.innerHeight / 15;
@@ -175,7 +175,6 @@ export class Player {
                     obstacleScale = 0.6 / this.numberPlayers;
                     // posX += 40;
                     obstaclePosY += 10;
-
                     break;
                 case Obstacles.stone:
                     // obstaclePosY = this.coordinates.y + window.innerHeight / 10;

@@ -10,6 +10,7 @@ import Room from './room';
 class Screen {
     protected roomId?: string;
     protected room?: Room;
+    public phaserGameReady: boolean;
 
     constructor(
         protected socket: Socket,
@@ -17,7 +18,9 @@ class Screen {
         protected emitter: typeof import('../helpers/emitter').default,
         protected screenNamespace: Namespace,
         protected controllerNamespace: Namespace
-    ) {}
+    ) {
+        this.phaserGameReady = false;
+    }
 
     init() {
         try {
@@ -42,6 +45,14 @@ class Screen {
     private onMessage(message: IMessage) {
         try {
             switch (message.type) {
+                case CatchFoodMsgType.PHASER_GAME_LOADED:
+                    this.room?.setScreenPhaserGameReady(this.socket.id, true);
+
+                    if (this.room?.allPhaserGamesReady()) {
+                        this.room?.setAllScreensPhaserGameReady(false); //reset for next game
+                        this.emitter.sendAllScreensPhaserGameLoaded([this.screenNamespace], this.room!);
+                    }
+                    break;
                 case CatchFoodMsgType.START_PHASER_GAME:
                     this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!);
                     break;

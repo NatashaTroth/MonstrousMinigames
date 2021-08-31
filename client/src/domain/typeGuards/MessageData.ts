@@ -1,3 +1,4 @@
+import { AllScreensPhaserGameLoadedMessage } from './allScreensPhaserGameLoaded';
 import { ConnectedUsersMessage } from './connectedUsers';
 import { ErrorMessage } from './error';
 import { GameHasFinishedMessage } from './finished';
@@ -25,6 +26,7 @@ export type MessageData =
     | PlayerFinishedMessage
     | GameHasPausedMessage
     | StartPhaserGameMessage
+    | AllScreensPhaserGameLoadedMessage
     | GameHasStartedMessage
     | GameHasResumedMessage
     | GameHasStoppedMessage

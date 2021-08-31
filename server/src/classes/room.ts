@@ -8,6 +8,7 @@ import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
 import Game from '../gameplay/Game';
 // import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
 import Leaderboard from '../gameplay/leaderboard/Leaderboard';
+import { ScreenInfo } from '../interfaces/interfaces';
 import User from './user';
 
 class Room {
@@ -17,7 +18,7 @@ class Room {
     public game: Game;
     private state: RoomStates;
     private leaderboard: Leaderboard;
-    public screens: Array<string>;
+    public screens: Array<ScreenInfo>;
 
     constructor(id: string, game?: Game) {
         this.id = id;
@@ -129,6 +130,24 @@ class Room {
         // return this.game.getGameStateInfo();
     }
 
+    public allPhaserGamesReady() {
+        console.log(this.screens);
+
+        return this.screens.every(screen => {
+            if (screen.phaserGameReady) return true;
+            return false;
+        });
+    }
+
+    public setScreenPhaserGameReady(screenId: string, value: boolean) {
+        const index = this.screens.findIndex(element => element.id === screenId);
+        this.screens[index].phaserGameReady = value;
+    }
+
+    public setAllScreensPhaserGameReady(value: boolean) {
+        this.screens.forEach(screen => (screen.phaserGameReady = value));
+    }
+
     public startGame() {
         this.setState(RoomStates.PLAYING);
         this.game.startGame();
@@ -207,17 +226,20 @@ class Room {
     }
 
     public addScreen(screenId: string): void {
-        this.screens.push(screenId);
+        this.screens.push({ id: screenId });
     }
     public removeScreen(screenId: string): void {
-        const index = this.screens.indexOf(screenId);
+        const index = this.screens.findIndex(element => element.id === screenId);
+        // const index = this.screens.indexOf({ id: screenId });
         this.screens.splice(index, 1);
     }
     public isAdminScreen(screenId: string): boolean {
-        return this.screens.indexOf(screenId) === 0;
+        //TODO test
+        return this.screens.findIndex(element => element.id === screenId) === 0;
+        // return this.screens.indexOf({ id: screenId }) === 0;
     }
     public getAdminScreenId(): string {
-        return this.screens[0];
+        return this.screens[0]?.id;
     }
     public getAvailableCharacters(): Array<number> {
         const characters: Array<number> = [];

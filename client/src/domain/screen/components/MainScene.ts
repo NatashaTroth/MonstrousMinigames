@@ -5,9 +5,11 @@ import { screenFinishedRoute } from '../../../utils/routes';
 import history from '../../history/history';
 import initialGameInput from '../../phaser/initialGameInput.json';
 import { MessageSocket } from '../../socket/MessageSocket';
-import ScreenSocket from '../../socket/screenSocket';
 import { Socket } from '../../socket/Socket';
-import { SocketIOAdapter } from '../../socket/SocketIOAdapter';
+import {
+    AllScreensPhaserGameLoadedMessage,
+    allScreensPhaserGameLoadedTypeGuard,
+} from '../../typeGuards/allScreensPhaserGameLoaded';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
 import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../typeGuards/gameStateInfo';
 import { InitialGameStateInfoMessage, initialGameStateInfoTypeGuard } from '../../typeGuards/initialGameStateInfo';
@@ -30,7 +32,7 @@ const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;
 class MainScene extends Phaser.Scene {
     roomId: string;
-    socket: Socket;
+    socket?: Socket;
     posX: number;
     plusX: number;
     posY: number;
@@ -48,7 +50,6 @@ class MainScene extends Phaser.Scene {
     constructor() {
         super('MainScene');
         this.roomId = sessionStorage.getItem('roomId') || '';
-        this.socket = this.handleSocketConnection();
         this.posX = 50;
         this.plusX = 40;
         this.posY = window.innerHeight / 2 - 50;
@@ -61,16 +62,21 @@ class MainScene extends Phaser.Scene {
         this.gameEventEmitter = GameEventEmitter.getInstance();
     }
 
-    init(data: { roomId: string }) {
+    init(data: { roomId: string; socket: Socket }) {
         this.camera = this.cameras.main;
+        this.socket = data.socket;
         if (this.roomId === '' && data.roomId !== undefined) {
             this.roomId = data.roomId;
         }
 
         // TODO: send to backend and start game when all loaded
-        // this.load.on('complete', () => {
-        //     printMethod('LOADED CO,PLETED');
-        // });
+        this.load.on('complete', () => {
+            printMethod('LOADED COMPLETED');
+            this.socket?.emit({
+                type: MessageTypes.phaserLoaded,
+                roomId: this.roomId,
+            });
+        });
     }
 
     preload(): void {
@@ -109,20 +115,20 @@ class MainScene extends Phaser.Scene {
         }
 
         //TODO change
-        if (!designDevelopment) {
-            setTimeout(() => {
-                this.sendStartGame();
-            }, 5000);
-        }
+        // if (!designDevelopment) {
+        //     // setTimeout(() => {
+        //     //     this.sendStartGame();
+        //     // }, 5000);
+        // }
     }
 
-    handleSocketConnection() {
-        if (this.roomId == '' || this.roomId == undefined) {
-            this.handleError('No room code');
-        }
+    // handleSocketConnection() {
+    //     if (this.roomId == '' || this.roomId == undefined) {
+    //         this.handleError('No room code');
+    //     }
 
-        return ScreenSocket.getInstance(new SocketIOAdapter(this.roomId, 'screen')).socket;
-    }
+    //     return ScreenSocket.getInstance(new SocketIOAdapter(this.roomId, 'screen')).socket;
+    // }
 
     sendCreateNewGame() {
         printMethod('SEND CREATE GAME');
@@ -143,6 +149,7 @@ class MainScene extends Phaser.Scene {
     }
 
     initiateSockets() {
+        if (!this.socket) return; //TODO - handle error - although think ok
         if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
@@ -153,8 +160,14 @@ class MainScene extends Phaser.Scene {
             });
         }
 
-        const startedGame = new MessageSocket(startedTypeGuard, this.socket);
+        const allScreensPhaserGameLoaded = new MessageSocket(allScreensPhaserGameLoadedTypeGuard, this.socket);
+        allScreensPhaserGameLoaded.listen((data: AllScreensPhaserGameLoadedMessage) => {
+            printMethod('RECEIVED All screens loaded');
 
+            if (!designDevelopment) this.sendStartGame();
+        });
+
+        const startedGame = new MessageSocket(startedTypeGuard, this.socket);
         startedGame.listen((data: GameHasStartedMessage) => {
             printMethod('RECEIVED START GAME');
             this.createGameCountdown(data.countdownTime);
