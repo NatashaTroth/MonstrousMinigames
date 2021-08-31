@@ -1,8 +1,10 @@
-import { BatteryChargingFull, Fastfood, Receipt } from '@material-ui/icons';
 import styled, { css } from 'styled-components';
 
 import { SkipButton } from '../../../../components/common/SkipButton.sc';
-import trash from '../../../../images/obstacles/trash/trashcan.svg';
+import foodCan from '../../../../images/obstacles/trash/foodCan.svg';
+import paperCan from '../../../../images/obstacles/trash/paperCan.svg';
+import plasticCan from '../../../../images/obstacles/trash/plasticCan.svg';
+import { TrashType } from './Trash';
 
 export const Container = styled.div`
     display: flex;
@@ -43,55 +45,19 @@ export const Draggable = styled.div<Draggable>`
     ${({ index }) => getDraggableLeftPosition(index)};
 `;
 
-export const StyledPaper = styled(Receipt)`
-    && {
-        width: 100%;
-        height: 100%;
-        fill: white;
-    }
+export const StyledCan = styled.img`
+    width: 80%;
 `;
 
-export const StyledFood = styled(Fastfood)`
-    && {
-        width: 100%;
-        height: 100%;
-        fill: white;
-    }
+export const StyledImage = styled.img`
+    width: 100%;
+    height: 100%;
 `;
 
-export const StyledBattery = styled(BatteryChargingFull)`
-    && {
-        width: 100%;
-        height: 100%;
-        fill: white;
-    }
-`;
-
-export const TrashPaper = styled(Receipt)`
-    && {
-        width: 70%;
-        height: 70%;
-        fill: black;
-    }
-`;
-
-export const TrashFood = styled(Fastfood)`
-    && {
-        width: 70%;
-        height: 70%;
-        fill: black;
-    }
-`;
-
-export const TrashBattery = styled(BatteryChargingFull)`
-    && {
-        width: 70%;
-        height: 70%;
-        fill: black;
-    }
-`;
-
-export const DropZone = styled.div`
+interface DropZoneProps {
+    variant: TrashType;
+}
+export const DropZone = styled.div<DropZoneProps>`
     border: dashed 4px transparent;
     border-radius: 4px;
     margin-bottom: 50px;
@@ -102,7 +68,16 @@ export const DropZone = styled.div`
 
     background-repeat: no-repeat;
     background-position: bottom;
-    background-image: url(${trash});
+    background-image: url(${({ variant }) => {
+        switch (variant) {
+            case 'paper':
+                return paperCan;
+            case 'food':
+                return foodCan;
+            case 'plastic':
+                return plasticCan;
+        }
+    }});
 
     display: flex;
     align-items: flex-end;

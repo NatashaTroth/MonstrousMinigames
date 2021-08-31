@@ -17,6 +17,7 @@ import ChooseCharacter from './domain/controller/components/ChooseCharacter';
 import { ConnectScreen as ControllerConnectScreen } from './domain/controller/components/ConnectScreen';
 import { FinishedScreen as ControllerFinishedScreen } from './domain/controller/components/FinishedScreen';
 import { Lobby as ControllerLobbyScreen } from './domain/controller/components/Lobby';
+import { NoPermissions } from './domain/controller/components/NoPermissions';
 import Spider from './domain/controller/components/obstacles/Spider';
 import Stone from './domain/controller/components/obstacles/Stone';
 import Trash from './domain/controller/components/obstacles/Trash';
@@ -33,6 +34,7 @@ import GameIntro from './domain/screen/components/GameIntro';
 import { Lobby as ScreenLobbyScreen } from './domain/screen/components/Lobby';
 import PlayersGetReady from './domain/screen/components/PlayersGetReady';
 import ScreenWrapper from './domain/screen/components/ScreenWrapper';
+import { ClickRequestDeviceMotion, getMicrophoneStream } from './domain/user/permissions';
 import theme from './styles/theme';
 import { Routes } from './utils/routes';
 
@@ -41,6 +43,19 @@ export interface RouteParams {
 }
 
 const App: React.FunctionComponent = () => {
+    const [micPermission, setMicPermissions] = React.useState(false);
+    const [motionPermission, setMotionPermissions] = React.useState(false);
+
+    async function getMicrophonePermission() {
+        const permission = await getMicrophoneStream();
+        setMicPermissions(permission);
+    }
+
+    async function getMotionPermission() {
+        const permission = await ClickRequestDeviceMotion(window);
+        setMotionPermissions(permission);
+    }
+
     return (
         <Router history={history}>
             <StylesProvider injectFirst>
@@ -51,7 +66,9 @@ const App: React.FunctionComponent = () => {
                                 <GameContextProvider>
                                     <PlayerContextProvider>
                                         <ScreenSocketContextProvider>
-                                            <ControllerSocketContextProvider>
+                                            <ControllerSocketContextProvider
+                                                permission={!(!micPermission || !motionPermission)}
+                                            >
                                                 {!isMobileOnly && <MasterHeader />}
                                                 <PausedDialog>
                                                     <Switch>
@@ -131,7 +148,16 @@ const App: React.FunctionComponent = () => {
                                                             path={Routes.home}
                                                             component={() =>
                                                                 isMobileOnly ? (
-                                                                    <ControllerConnectScreen history={history} />
+                                                                    !micPermission || !motionPermission ? (
+                                                                        <NoPermissions
+                                                                            getMotionPermission={getMotionPermission}
+                                                                            getMicrophonePermission={
+                                                                                getMicrophonePermission
+                                                                            }
+                                                                        />
+                                                                    ) : (
+                                                                        <ControllerConnectScreen history={history} />
+                                                                    )
                                                                 ) : (
                                                                     <ScreenConnectScreen />
                                                                 )

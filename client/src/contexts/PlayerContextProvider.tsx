@@ -18,10 +18,6 @@ export const defaultValue = {
     setPlayerRank: () => {
         // do nothing
     },
-    permission: false,
-    setPermissionGranted: () => {
-        // do nothing
-    },
     resetPlayer: () => {
         // do nothing
     },
@@ -61,8 +57,6 @@ interface PlayerContextProps {
     setPlayerFinished: (val: boolean) => void;
     playerRank: number | undefined;
     setPlayerRank: (val: number) => void;
-    permission: boolean;
-    setPermissionGranted: (val: boolean) => void;
     resetPlayer: () => void;
     playerNumber: number | undefined;
     setPlayerNumber: (val: number) => void;
@@ -86,7 +80,6 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [playerFinished, setPlayerFinished] = React.useState<boolean>(false);
     const [playerRank, setPlayerRank] = React.useState<undefined | number>();
     const [playerNumber, setPlayerNumber] = React.useState<number | undefined>();
-    const [permission, setPermissionGranted] = React.useState<boolean>(false);
     const history = useHistory();
     const [character, setCharacter] = React.useState<undefined | Character>(undefined);
     const [name, setName] = React.useState<string>('');
@@ -111,8 +104,6 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setPlayerFinished,
         playerRank,
         setPlayerRank,
-        permission,
-        setPermissionGranted,
         resetPlayer: () => {
             setPlayerFinished(false);
             setPlayerRank(undefined);
