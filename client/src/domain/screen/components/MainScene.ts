@@ -110,7 +110,7 @@ class MainScene extends Phaser.Scene {
         // this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
-        this.initiateSockets();
+        this.initSockets();
         this.initiateEventEmitters();
 
         this.sendCreateNewGame();
@@ -153,13 +153,13 @@ class MainScene extends Phaser.Scene {
         });
     }
 
-    initiateSockets() {
+    initSockets() {
         if (!this.socket) return; //TODO - handle error - although think ok
         if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
                 printMethod('RECEIVED FIRST GAME STATE:');
-                // printMethod(JSON.stringify(data.data));
+                printMethod(JSON.stringify(data.data));
                 this.gameStarted = true;
                 this.handleInitiateGame(data.data);
             });
@@ -168,14 +168,22 @@ class MainScene extends Phaser.Scene {
         const allScreensPhaserGameLoaded = new MessageSocket(allScreensPhaserGameLoadedTypeGuard, this.socket);
         allScreensPhaserGameLoaded.listen((data: AllScreensPhaserGameLoadedMessage) => {
             printMethod('RECEIVED All screens loaded');
-
             if (this.screenAdmin && !designDevelopment) this.sendStartGame();
         });
 
         const startedGame = new MessageSocket(startedTypeGuard, this.socket);
         startedGame.listen((data: GameHasStartedMessage) => {
             printMethod('RECEIVED START GAME');
+            printMethod(JSON.stringify(data));
+
             this.createGameCountdown(data.countdownTime);
+        });
+
+        const gameStateInfoSocket = new MessageSocket(gameStateInfoTypeGuard, this.socket);
+        gameStateInfoSocket.listen((data: GameStateInfoMessage) => {
+            this.updateGameState(data.data);
+
+            printMethod(data.data.chasersPositionX);
         });
 
         const pausedSocket = new MessageSocket(pausedTypeGuard, this.socket);
@@ -186,11 +194,6 @@ class MainScene extends Phaser.Scene {
         const resumedSocket = new MessageSocket(resumedTypeGuard, this.socket);
         resumedSocket.listen((data: GameHasResumedMessage) => {
             this.resumeGame();
-        });
-
-        const gameStateInfoSocket = new MessageSocket(gameStateInfoTypeGuard, this.socket);
-        gameStateInfoSocket.listen((data: GameStateInfoMessage) => {
-            this.updateGameState(data.data);
         });
 
         const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
@@ -261,7 +264,7 @@ class MainScene extends Phaser.Scene {
                 this.players[i].moveForward(gameStateData.playersState[i].positionX, this.trackLength);
                 this.players[i].checkAtObstacle(gameStateData.playersState[i].atObstacle);
             }
-            if (gameStateData.chasersAreRunning) this.players[i].setChasers(gameStateData.chasersPositionX);
+            this.players[i].setChasers(gameStateData.chasersPositionX);
         }
 
         this.moveCamera(gameStateData.cameraPositionX);

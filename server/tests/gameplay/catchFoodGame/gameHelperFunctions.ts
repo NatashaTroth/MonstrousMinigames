@@ -25,13 +25,13 @@ export function clearTimersAndIntervals(game: Game) {
     } catch (e) {
         //no need to handle, game is already finished
     }
-    jest.runAllTimers();
+    // jest.runAllTimers();
     jest.clearAllMocks();
 }
 
 export function startGameAndAdvanceCountdown(catchFoodGame: CatchFoodGame) {
     Date.now = () => dateNow;
-    catchFoodGame.createNewGame(users, TRACK_LENGTH, 4, 1);
+    catchFoodGame.createNewGame(users, TRACK_LENGTH, 4);
     catchFoodGame.startGame();
     advanceCountdown(catchFoodGame.countdownTime);
 }
@@ -40,10 +40,6 @@ export function advanceCountdown(time: number) {
     const previousNow = Date.now;
     Date.now = () => previousNow() + time;
     jest.advanceTimersByTime(time);
-}
-
-export function skipTimeToStartChasers(catchFoodGame: CatchFoodGame) {
-    advanceCountdown(catchFoodGame.timeWhenChasersAppear);
 }
 
 export function finishCreatedGame(catchFoodGame: CatchFoodGame) {

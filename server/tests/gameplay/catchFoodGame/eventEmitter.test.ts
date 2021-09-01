@@ -6,8 +6,7 @@ import { GameEvents } from '../../../src/gameplay/catchFood/interfaces/';
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
 import {
-    clearTimersAndIntervals, finishGame, finishPlayer, skipTimeToStartChasers,
-    startGameAndAdvanceCountdown
+    clearTimersAndIntervals, finishGame, finishPlayer, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
@@ -496,7 +495,6 @@ describe('Chaser event', () => {
         gameEventEmitter.on(GameEventTypes.PlayerIsDead, () => {
             playerIsDeadEvent = true;
         });
-        skipTimeToStartChasers(catchFoodGame);
         // catchFoodGame['runForward']('1', chasersStartPosX);
         jest.advanceTimersByTime(1000);
         expect(playerIsDeadEvent).toBeTruthy();
@@ -519,7 +517,6 @@ describe('Chaser event', () => {
         catchFoodGame.players.get('4')!.positionX = chasersStartPosX + 2000;
 
         // should catch the other three players
-        skipTimeToStartChasers(catchFoodGame);
         jest.advanceTimersByTime(2000); //move 1 every 100ms -> 2000/100 = 20. move 20 to get to player
 
         expect(eventData).toMatchObject({

@@ -7,6 +7,5 @@ export interface GameData {
     roomId: string;
     trackLength: number;
     chasersPositionX: number;
-    chasersAreRunning: boolean;
     cameraPositionX: number;
 }

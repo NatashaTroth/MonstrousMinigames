@@ -1,6 +1,8 @@
 import {
-    CannotStartEmptyGameError, CharacterNotAvailableError, GameAlreadyStartedError,
-    UsersNotReadyError
+    CannotStartEmptyGameError,
+    CharacterNotAvailableError,
+    GameAlreadyStartedError,
+    UsersNotReadyError,
 } from '../customErrors';
 import { Globals } from '../enums/globals';
 import { CatchFoodGame } from '../gameplay';

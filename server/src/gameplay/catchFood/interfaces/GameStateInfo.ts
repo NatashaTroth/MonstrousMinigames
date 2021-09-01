@@ -9,6 +9,5 @@ export interface GameStateInfo extends IGameStateBase {
     trackLength: number;
     numberOfObstacles: number;
     chasersPositionX: number;
-    chasersAreRunning: boolean;
     cameraPositionX: number;
 }
