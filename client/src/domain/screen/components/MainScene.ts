@@ -69,14 +69,14 @@ class MainScene extends Phaser.Scene {
         this.socket = data.socket;
         this.screenAdmin = data.screenAdmin;
 
-        printMethod(this.screenAdmin);
+        // printMethod(this.screenAdmin);
         if (this.roomId === '' && data.roomId !== undefined) {
             this.roomId = data.roomId;
         }
 
         // TODO: send to backend and start game when all loaded
         this.load.on('complete', () => {
-            printMethod('LOADED COMPLETED');
+            // printMethod('LOADED COMPLETED');
             this.socket?.emit({
                 type: MessageTypes.phaserLoaded,
                 roomId: this.roomId,
@@ -159,7 +159,7 @@ class MainScene extends Phaser.Scene {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
                 printMethod('RECEIVED FIRST GAME STATE:');
-                printMethod(JSON.stringify(data.data));
+                // printMethod(JSON.stringify(data.data));
                 this.gameStarted = true;
                 this.handleInitiateGame(data.data);
             });
@@ -174,7 +174,6 @@ class MainScene extends Phaser.Scene {
         const startedGame = new MessageSocket(startedTypeGuard, this.socket);
         startedGame.listen((data: GameHasStartedMessage) => {
             printMethod('RECEIVED START GAME');
-            printMethod(JSON.stringify(data));
 
             this.createGameCountdown(data.countdownTime);
         });
@@ -182,8 +181,6 @@ class MainScene extends Phaser.Scene {
         const gameStateInfoSocket = new MessageSocket(gameStateInfoTypeGuard, this.socket);
         gameStateInfoSocket.listen((data: GameStateInfoMessage) => {
             this.updateGameState(data.data);
-
-            printMethod(data.data.chasersPositionX);
         });
 
         const pausedSocket = new MessageSocket(pausedTypeGuard, this.socket);

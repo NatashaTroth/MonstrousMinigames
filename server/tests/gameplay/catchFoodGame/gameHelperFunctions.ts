@@ -121,8 +121,6 @@ export async function getGameFinishedDataDifferentTimes(
     let eventData: GameEvents.GameHasFinished = {
         roomId: '',
         gameState: GameState.Started,
-        trackLength: 0,
-        numberOfObstacles: 0,
         playerRanks: [],
     };
     gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
@@ -136,8 +134,6 @@ export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
     let eventData: GameEvents.GameHasFinished = {
         roomId: '',
         gameState: GameState.Started,
-        trackLength: 0,
-        numberOfObstacles: 0,
         playerRanks: [],
     };
 
@@ -166,8 +162,6 @@ export async function getGameFinishedDataWithSomeDead(
     let eventData: GameEvents.GameHasFinished = {
         roomId: '',
         gameState: GameState.Started,
-        trackLength: 0,
-        numberOfObstacles: 0,
         playerRanks: [],
     };
     gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {

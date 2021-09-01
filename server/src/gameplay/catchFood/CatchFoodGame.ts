@@ -111,9 +111,18 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
         super.createNewGame(users);
 
+        const firstGameStateInfo = this.getGameStateInfo();
         CatchFoodGameEventEmitter.emitInitialGameStateInfoUpdate({
             roomId: this.roomId,
-            gameStateInfo: this.getGameStateInfo(),
+            gameStateInfo: {
+                roomId: firstGameStateInfo.roomId,
+                trackLength: this.trackLength,
+                numberOfObstacles: this.numberOfObstacles,
+                playersState: firstGameStateInfo.playersState,
+                gameState: firstGameStateInfo.gameState,
+                chasersPositionX: firstGameStateInfo.chasersPositionX,
+                cameraPositionX: firstGameStateInfo.cameraPositionX,
+            },
         });
     }
 
@@ -171,8 +180,6 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
                 characterNumber: player.characterNumber,
                 numberStonesThrown: player.numberStonesThrown,
             })),
-            trackLength: this.trackLength,
-            numberOfObstacles: this.numberOfObstacles,
             chasersPositionX: this.chasersPositionX,
             cameraPositionX: this.cameraPositionX,
         };
@@ -377,8 +384,6 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         CatchFoodGameEventEmitter.emitGameHasFinishedEvent({
             roomId: currentGameStateInfo.roomId,
             gameState: currentGameStateInfo.gameState,
-            trackLength: currentGameStateInfo.trackLength,
-            numberOfObstacles: currentGameStateInfo.numberOfObstacles,
             playerRanks: [...playerRanks],
         });
         //Broadcast, stop game, return ranks

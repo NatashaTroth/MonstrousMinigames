@@ -439,8 +439,6 @@ describe('Game has finished events', () => {
         let eventData: GameEvents.GameHasFinished = {
             roomId: '',
             gameState: GameState.Started,
-            trackLength: 0,
-            numberOfObstacles: 0,
             playerRanks: [],
         };
         gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
@@ -453,8 +451,6 @@ describe('Game has finished events', () => {
         expect(eventData).toMatchObject({
             roomId: catchFoodGame.roomId,
             gameState: catchFoodGame.gameState,
-            trackLength: catchFoodGame.trackLength,
-            numberOfObstacles: catchFoodGame.numberOfObstacles,
         });
 
         const playerOneTotalTime = dateNow + 10000 - catchFoodGame['gameStartedAt'];
