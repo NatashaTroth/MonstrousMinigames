@@ -131,8 +131,6 @@ class Room {
     }
 
     public allPhaserGamesReady() {
-        console.log(this.screens);
-
         return this.screens.every(screen => {
             if (screen.phaserGameReady) return true;
             return false;

@@ -13,7 +13,7 @@ import { AudioButton, Container, PauseButton } from './Game.sc';
 import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
-    const { roomId, hasPaused } = React.useContext(GameContext);
+    const { roomId, hasPaused, screenAdmin } = React.useContext(GameContext);
     const {
         pauseLobbyMusicNoMute,
         audioPermission,
@@ -59,7 +59,7 @@ const Game: React.FunctionComponent = () => {
             },
         });
         game.scene.add('MainScene', MainScene, false); //socket: ScreenSocket.getInstance(socket)
-        game.scene.start('MainScene', { roomId, socket: screenSocket });
+        game.scene.start('MainScene', { roomId, socket: screenSocket, screenAdmin });
 
         // game.world.setBounds(0,0,7500, window.innerHeight)
         // eslint-disable-next-line react-hooks/exhaustive-deps

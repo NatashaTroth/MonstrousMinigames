@@ -46,6 +46,7 @@ class MainScene extends Phaser.Scene {
     camera?: Phaser.Cameras.Scene2D.Camera;
     cameraSpeed: number;
     gameEventEmitter: GameEventEmitter;
+    screenAdmin: boolean;
 
     constructor() {
         super('MainScene');
@@ -60,11 +61,15 @@ class MainScene extends Phaser.Scene {
         this.paused = false;
         this.cameraSpeed = 2;
         this.gameEventEmitter = GameEventEmitter.getInstance();
+        this.screenAdmin = false;
     }
 
-    init(data: { roomId: string; socket: Socket }) {
+    init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
         this.camera = this.cameras.main;
         this.socket = data.socket;
+        this.screenAdmin = data.screenAdmin;
+
+        printMethod(this.screenAdmin);
         if (this.roomId === '' && data.roomId !== undefined) {
             this.roomId = data.roomId;
         }
@@ -164,7 +169,7 @@ class MainScene extends Phaser.Scene {
         allScreensPhaserGameLoaded.listen((data: AllScreensPhaserGameLoadedMessage) => {
             printMethod('RECEIVED All screens loaded');
 
-            if (!designDevelopment) this.sendStartGame();
+            if (this.screenAdmin && !designDevelopment) this.sendStartGame();
         });
 
         const startedGame = new MessageSocket(startedTypeGuard, this.socket);
