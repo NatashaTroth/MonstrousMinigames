@@ -72,7 +72,7 @@ describe('Obstacles reached', () => {
     it('playerHasReachedObstacle is called and returns false', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const playerHasReachedObstacleSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasReachedObstacle');
-        catchFoodGame['runForward']('1', 5);
+        catchFoodGame['runForward']('1', catchFoodGame.players.get('1')!.obstacles[0].positionX / 2);
         expect(playerHasReachedObstacleSpy).toHaveBeenCalled();
         expect(playerHasReachedObstacleSpy).toHaveReturnedWith(false);
     });
@@ -112,7 +112,7 @@ describe('Obstacles reached', () => {
         const distanceToObstacle =
             catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
         catchFoodGame['runForward']('1', distanceToObstacle);
-        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(4);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(catchFoodGame.numberOfObstacles + catchFoodGame.numberOfStones);
     });
 
     it("doesn't allow players to move when they reach an obstacle", async () => {
@@ -157,7 +157,7 @@ describe('Obstacles reached', () => {
     it('should remove a completed obstacle', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         completeNextObstacle(catchFoodGame, '1');
-        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(3);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(catchFoodGame.numberOfObstacles + catchFoodGame.numberOfStones - 1);
     });
 
     it('can move a player again when obstacle is completed', async () => {

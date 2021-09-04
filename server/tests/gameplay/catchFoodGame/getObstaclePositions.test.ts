@@ -6,6 +6,7 @@ import { clearTimersAndIntervals } from './gameHelperFunctions';
 
 const TRACKLENGTH = 500;
 const NUMBER_OF_OBSTACLES = 4;
+const NUMBER_OF_STONES = 2;
 let catchFoodGame: CatchFoodGame;
 let obstacles: HashTable<Array<Obstacle>>;
 
@@ -13,7 +14,7 @@ describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES);
+        catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES, undefined, NUMBER_OF_STONES);
         obstacles = catchFoodGame.getObstaclePositions();
     });
     afterEach(async () => {
@@ -26,7 +27,7 @@ describe('Get Obstacle Positions test', () => {
     });
 
     it('should return the correct number of obstacles', async () => {
-        expect(obstacles['1'].length).toBe(NUMBER_OF_OBSTACLES);
+        expect(obstacles['1'].length).toBe(NUMBER_OF_OBSTACLES + NUMBER_OF_STONES);
     });
 
     it('should contain the key obstacle positionX', async () => {

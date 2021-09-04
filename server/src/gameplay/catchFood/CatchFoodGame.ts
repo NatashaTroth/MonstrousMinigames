@@ -13,7 +13,9 @@ import Leaderboard from '../leaderboard/Leaderboard';
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
 import CatchFoodPlayer from './CatchFoodPlayer';
 import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
-import { CatchFoodMsgType } from './enums';
+import ObstacleNotSkippable from './customErrors/ObstacleNotSkippable';
+import UserHasNoStones from './customErrors/UserHasNoStones';
+import { CatchFoodMsgType, ObstacleType } from './enums';
 import { createObstacles, getObstacleTypes } from './helperFunctions/initiatePlayerState';
 import { GameStateInfo, Obstacle, PlayerRank } from './interfaces';
 
@@ -40,6 +42,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     cameraPositionX = 0;
     cameraSpeed = 1.7;
     maxNumberStones = 5;
+    numberOfStones = 4;
 
     constructor(
         roomId: string,
@@ -58,7 +61,8 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
                 getObstacleTypes(this.numberOfObstacles),
                 this.numberOfObstacles,
                 this.trackLength,
-                this.initialPlayerPositionX
+                this.initialPlayerPositionX,
+                this.numberOfStones,
             ),
             user.characterNumber
         );
@@ -94,11 +98,14 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             case CatchFoodMsgType.OBSTACLE_SOLVED:
                 this.playerHasCompletedObstacle(message.userId!, (message as IMessageObstacle).obstacleId);
                 break;
+            case CatchFoodMsgType.OBSTACLE_SKIPPED:
+                this.playerHasSkippedObstacle(message.userId!, (message as IMessageObstacle).obstacleId);
+                break;
             case CatchFoodMsgType.STUN_PLAYER:
                 if (!message.receivingUserId) {
                     break;
                 }
-                this.stunPlayer(message.receivingUserId, message.userId!);
+                this.stunPlayer(message.receivingUserId, message.userId!, message.usingCollectedStone || false);
                 break;
             default:
                 console.info(message);
@@ -109,10 +116,12 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         users: Array<User>,
         trackLength = this.trackLength,
         numberOfObstacles = this.numberOfObstacles,
-        speed = 2
+        speed = 2,
+        numberOfStones = this.numberOfStones,
     ): void {
         this.trackLength = trackLength;
         this.numberOfObstacles = numberOfObstacles;
+        this.numberOfStones = numberOfStones;
         this.speed = speed;
         this.chasersPositionX = 1350;
         // this.chasersPositionX = (6 * this.speed * this.timeWhenChasersAppear) / 100; //(6 updates per 100ms)
@@ -167,6 +176,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
                 positionX: player.positionX,
                 obstacles: player.obstacles,
                 atObstacle: player.atObstacle,
+                canSkipObstacle: player.canSkipObstacle,
                 finished: player.finished,
                 finishedTimeMs: player.finishedTimeMs,
                 dead: player.dead,
@@ -268,8 +278,16 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
     private handlePlayerReachedObstacle(userId: string): void {
         const player = this.players.get(userId)!;
+
+        // when already carrying a stone automatically skip the stone obstacle
+        if (player.obstacles[0].type === ObstacleType.Stone && player.stonesCarrying > 0) {
+            player.obstacles.shift();
+            return;
+        }
+
         // block player from running when obstacle is reached
         player.atObstacle = true;
+        player.canSkipObstacle = player.obstacles[0].skippable;
 
         //set position x to obstacle position (in case ran past)
         player.positionX = player.obstacles[0].positionX;
@@ -282,16 +300,26 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     }
     //TODO test
 
-    private stunPlayer(userIdStunned: string, userIdThrown: string) {
+    private stunPlayer(userIdStunned: string, userIdThrown: string, usingCollectedStone = false) {
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.players, userIdStunned);
         verifyUserIsActive(userIdStunned, this.players.get(userIdStunned)!.isActive);
-        const playerStunned = this.players.get(userIdStunned)!;
+
         const playerThrown = this.players.get(userIdThrown)!;
+
+        if (usingCollectedStone) {
+            this.verifyUserCanThrowCollectedStone(playerThrown);
+        }
+
+        const playerStunned = this.players.get(userIdStunned)!;
         if (this.playerIsNotAllowedToRun(userIdStunned)) return;
         if (playerStunned.stunned || playerStunned.atObstacle) return;
-        if (playerThrown.numberStonesThrown >= this.maxNumberStones) return;
-        playerThrown.numberStonesThrown++;
+        if (!usingCollectedStone && playerThrown.numberStonesThrown >= this.maxNumberStones) return;
+        if (usingCollectedStone) {
+            playerThrown.stonesCarrying--;
+        } else {
+            playerThrown.numberStonesThrown++;
+        }
         playerStunned.stunned = true;
         playerStunned.stunnedSeconds = this.stunnedTime;
 
@@ -309,6 +337,25 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         });
     }
 
+    private playerHasSkippedObstacle(userId: string, obstacleId: number): void {
+        verifyGameState(this.gameState, [GameState.Started]);
+        verifyUserId(this.players, userId);
+        verifyUserIsActive(userId, this.players.get(userId)!.isActive);
+
+        this.verifyUserCanSkipObstacle(userId);
+
+        const player = this.players.get(userId)!;
+        
+        if (player.obstacles[0].id === obstacleId) {
+            player.atObstacle = false;
+            player.canSkipObstacle = false;
+
+            player.obstacles.shift();
+        } else {
+            throw new WrongObstacleIdError(`${obstacleId} is not the id for the next obstacle.`, userId, obstacleId);
+        }
+    }
+
     private playerHasCompletedObstacle(userId: string, obstacleId: number): void {
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.players, userId);
@@ -317,8 +364,15 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         this.verifyUserIsAtObstacle(userId);
 
         const player = this.players.get(userId)!;
-        player.atObstacle = false;
+        
         if (player.obstacles[0].id === obstacleId) {
+            player.atObstacle = false;
+            player.canSkipObstacle = false;
+
+            if (player.obstacles[0].type === ObstacleType.Stone) {
+                player.stonesCarrying++;
+            }
+
             player.obstacles.shift();
         } else {
             throw new WrongObstacleIdError(`${obstacleId} is not the id for the next obstacle.`, userId, obstacleId);
@@ -333,6 +387,24 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             // player?.positionX !== player?.obstacles?.[0]?.positionX
         ) {
             throw new NotAtObstacleError(`User ${userId} is not at an obstacle`, userId);
+        }
+    }
+
+    private verifyUserCanSkipObstacle(userId: string) {
+        this.verifyUserIsAtObstacle(userId);
+
+        const player = this.players.get(userId)!;
+
+        if (!player.canSkipObstacle) {
+            throw new ObstacleNotSkippable(undefined, userId, player.obstacles[0].id);
+        }
+    }
+
+    private verifyUserCanThrowCollectedStone(userId: string | CatchFoodPlayer) {
+        const player = typeof userId === 'string' ? this.players.get(userId)! : userId;
+
+        if (player.stonesCarrying < 1) {
+            throw new UserHasNoStones(undefined, player.id);
         }
     }
 

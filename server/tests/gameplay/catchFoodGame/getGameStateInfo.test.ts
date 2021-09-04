@@ -6,6 +6,7 @@ import { clearTimersAndIntervals } from './gameHelperFunctions';
 
 const TRACKLENGTH = 500;
 const NUMBER_OF_OBSTACLES = 4;
+const NUMBER_OF_STONES = 2;
 let catchFoodGame: CatchFoodGame;
 let gameStateInfo: GameStateInfo;
 
@@ -13,7 +14,7 @@ describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES);
+        catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES, undefined, NUMBER_OF_STONES);
         gameStateInfo = catchFoodGame.getGameStateInfo();
     });
 
@@ -66,7 +67,7 @@ describe('Get Obstacle Positions test', () => {
     });
 
     it('returns player with correct number of obstacles (all)', async () => {
-        expect(gameStateInfo.playersState[0].obstacles.length).toBe(NUMBER_OF_OBSTACLES);
+        expect(gameStateInfo.playersState[0].obstacles.length).toBe(NUMBER_OF_OBSTACLES + NUMBER_OF_STONES);
     });
 
     it('returns chaser position', async () => {
