@@ -19,7 +19,7 @@ export const ConnectScreenContainer = styled.div`
         border: 0;
         display: flex;
         width: 80%;
-        height: 400px;
+        height: 300px;
     }
 `;
 
