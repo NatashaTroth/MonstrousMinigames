@@ -99,6 +99,6 @@ export default Game;
 
 const GameContent: React.FunctionComponent = () => (
     <div>
-        <div id="game-root"></div>
+        <div id="game-root" data-testid="game-container"></div>
     </div>
 );
