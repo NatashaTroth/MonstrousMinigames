@@ -9,4 +9,6 @@ module.exports = {
         '^.+\\.js$': 'babel-jest',
         '^.+\\.(bmp|gif|jpg|jpeg|png|psd|svg|webp|wav|mp3)$': '<rootDir>/jest/mediaFileTransformer.js',
     },
+    collectCoverage: true,
+    collectCoverageFrom: ['src/**/*.{ts,tsx}'],
 };

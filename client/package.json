@@ -33,7 +33,7 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "jest --coverage",
-        "test:watch": "jest --watch --coverage",
+        "test:watch": "jest --watchAll --coverage --collectCoverageFrom=src/**/*.{ts,tsx}",
         "eject": "react-scripts eject",
         "lint": "eslint . --ext .ts",
         "lint-fix": "eslint . --ext .ts --fix",

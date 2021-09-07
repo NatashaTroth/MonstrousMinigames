@@ -69,7 +69,7 @@ const App: React.FunctionComponent = () => {
                                             <ControllerSocketContextProvider
                                                 permission={!(!micPermission || !motionPermission)}
                                             >
-                                                {!isMobileOnly && <MasterHeader />}
+                                                {!isMobileOnly && <MasterHeader history={history} />}
                                                 <PausedDialog>
                                                     <Switch>
                                                         <Route path={Routes.credits} component={Credits} exact />
