@@ -1,8 +1,9 @@
 import { Namespace, Socket } from 'socket.io';
 import { singleton } from 'tsyringe';
-import Controller from '../classes/Controller';
 
+import Controller from '../classes/Controller';
 import Screen from '../classes/Screen';
+import SocketIOServer from '../classes/SocketIOServer';
 import { MessageTypes } from '../enums/messageTypes';
 import { Namespaces } from '../enums/nameSpaces';
 import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventEmitter';
@@ -10,7 +11,6 @@ import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
 import { GameEvents } from '../gameplay/catchFood/interfaces';
 import { GameEventTypes } from '../gameplay/enums';
 import emitter from '../helpers/emitter';
-import SocketIOServer from '../classes/SocketIOServer';
 import RoomService from './roomService';
 
 @singleton()
@@ -94,12 +94,6 @@ class ConnectionHandler {
             const room = rs.getRoomById(data.roomId);
             room.setFinished();
             emitter.sendGameHasFinished([controllerNamespace, screenNameSpace], data);
-        });
-        this.gameEventEmitter.on(GameEventTypes.GameHasTimedOut, (data: GameEvents.GameHasFinished) => {
-            this.consoleInfo(data.roomId, GameEventTypes.GameHasTimedOut);
-            const room = rs.getRoomById(data.roomId);
-            room.setFinished();
-            emitter.sendGameHasTimedOut([controllerNamespace, screenNameSpace], data);
         });
         this.gameEventEmitter.on(GameEventTypes.GameHasStopped, (data: GameEvents.GameStateHasChanged) => {
             this.consoleInfo(data.roomId, GameEventTypes.GameHasStopped);
