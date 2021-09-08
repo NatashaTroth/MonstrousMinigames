@@ -1,6 +1,8 @@
 import { designDevelopment, Obstacles } from '../../../utils/constants';
 import { depthDictionary } from '../../../utils/depthDictionary';
 import { GameData } from './gameInterfaces';
+import { GameToScreenMapper } from './GameToScreenMapper';
+import printMethod from './printMethod';
 import { Coordinates, PlayerRenderer } from './renderer/PlayerRenderer';
 
 /**
@@ -19,6 +21,7 @@ export class Player {
     dead: boolean;
     finished: boolean;
     stunned: boolean;
+    // private gameToScreenMapper?: GameToScreenMapper;
 
     constructor(
         public renderer: PlayerRenderer, // TODO MAKE PRIVATE
@@ -26,7 +29,8 @@ export class Player {
         private coordinates: Coordinates,
         private gameStateData: GameData,
         private monsterName: string,
-        private numberPlayers: number
+        private numberPlayers: number,
+        private gameToScreenMapper: GameToScreenMapper
     ) {
         this.coordinates = {
             x: this.coordinates.x,
@@ -53,17 +57,22 @@ export class Player {
             this.coordinates.y = newPlayerPos;
         }
 
+        this.setChasers(gameStateData.chasersPositionX);
+
         if (designDevelopment) {
-            this.setChasers(100);
             this.renderer.renderFireworks(500, this.coordinates.y);
         }
         // this.renderer.renderFireworks(500, 100);
         // this.renderer.renderFireworks(this.coordinates.x + 500, this.coordinates.y - window.innerHeight / 8 + 50);
     }
 
-    moveForward(x: number, trackLength: number) {
+    // setGameToScreenMapper(mapper: GameToScreenMapper) {
+    //     this.gameToScreenMapper = mapper;
+    // }
+
+    moveForward(newXPosition: number, trackLength: number) {
         if (this.finished) return;
-        const newXPosition = x;
+
         if (newXPosition == this.coordinates.x && this.playerRunning) {
             this.stopRunning();
         } else {
@@ -73,7 +82,7 @@ export class Player {
         }
 
         this.coordinates.x = newXPosition;
-        this.renderer.movePlayerForward(newXPosition);
+        this.renderer.movePlayerForward(this.gameToScreenMapper.mapGameMeasurementToScreen(newXPosition));
     }
 
     checkAtObstacle(isAtObstacle: boolean) {
@@ -95,7 +104,10 @@ export class Player {
     }
 
     handlePlayerFinished() {
-        this.renderer.renderFireworks(this.coordinates.x, this.coordinates.y - window.innerHeight / 8 + 50);
+        this.renderer.renderFireworks(
+            this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
+            this.coordinates.y - window.innerHeight / 8 + 50
+        );
         this.destroyPlayer();
     }
 
@@ -139,7 +151,15 @@ export class Player {
     private renderPlayer() {
         // eslint-disable-next-line no-console
         // console.log(this.username);
-        this.renderer.renderPlayer(this.index, this.coordinates, this.monsterName, this.animationName, this.username);
+        const screenCoordinates = {
+            x: this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
+            y: this.coordinates.y,
+        };
+        printMethod(this.monsterName);
+        printMethod(screenCoordinates);
+        printMethod(this.coordinates);
+
+        this.renderer.renderPlayer(this.index, screenCoordinates, this.monsterName, this.animationName, this.username);
 
         // TODO render player name
         // this.renderer.renderText(
@@ -157,7 +177,7 @@ export class Player {
         const obstaclesArray = this.gameStateData.playersState[this.index].obstacles;
 
         obstaclesArray.forEach((obstacle, index) => {
-            const posX = obstacle.positionX + 75;
+            const posX = this.gameToScreenMapper.mapGameMeasurementToScreen(obstacle.positionX) + 75;
             let obstaclePosY = this.coordinates.y; //+ 30;
             let obstacleScale = 0.5 / this.numberPlayers;
 
@@ -195,12 +215,15 @@ export class Player {
     setChasers(chasersPositionX: number) {
         if (!this.dead) {
             const chasersPositionY = this.coordinates.y;
-            this.renderer.renderChasers(chasersPositionX, chasersPositionY);
+            this.renderer.renderChasers(
+                this.gameToScreenMapper.mapGameMeasurementToScreen(chasersPositionX),
+                chasersPositionY
+            );
         }
     }
 
     setGoal(posX: number) {
-        this.renderer.renderCave(posX, this.coordinates.y);
+        this.renderer.renderCave(this.gameToScreenMapper.mapGameMeasurementToScreen(posX), this.coordinates.y);
     }
 
     startRunning() {

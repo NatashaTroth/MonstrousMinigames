@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 import { depthDictionary } from '../../../../utils/depthDictionary';
 import { fireworkFlares } from '../../components/GameAssets';
 import MainScene from '../../components/MainScene';
+import { GameToScreenMapper } from '../GameToScreenMapper';
 import { Coordinates, PlayerRenderer } from './PlayerRenderer';
 
 /**
@@ -21,6 +22,7 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     private caveBehind?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private caveInFront?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private backgroundLane?: Phaser.GameObjects.Image[];
+    private gameToScreenMapper?: GameToScreenMapper;
 
     constructor(private scene: MainScene, private numberPlayers: number) {
         this.playerObstacles = [];
@@ -32,6 +34,10 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
             particle.setDepth(depthDictionary.flares);
             this.particles.push(particle);
         });
+    }
+
+    setGameToScreenMapper(mapper: GameToScreenMapper) {
+        this.gameToScreenMapper = mapper;
     }
 
     renderBackground(windowWidth: number, windowHeight: number, trackLength: number, index: number) {

@@ -21,6 +21,7 @@ import { GameAudio } from '../phaser/GameAudio';
 import GameEventEmitter from '../phaser/GameEventEmitter';
 import { GameEventTypes } from '../phaser/GameEventTypes';
 import { GameData } from '../phaser/gameInterfaces';
+import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
 import { Player } from '../phaser/Player';
 import printMethod from '../phaser/printMethod';
 import { GameRenderer } from '../phaser/renderer/GameRenderer';
@@ -47,6 +48,7 @@ class MainScene extends Phaser.Scene {
     cameraSpeed: number;
     gameEventEmitter: GameEventEmitter;
     screenAdmin: boolean;
+    gameToScreenMapper?: GameToScreenMapper;
 
     constructor() {
         super('MainScene');
@@ -68,6 +70,8 @@ class MainScene extends Phaser.Scene {
         this.camera = this.cameras.main;
         this.socket = data.socket;
         this.screenAdmin = data.screenAdmin;
+        // printMethod('ADMIN:');
+        // printMethod(this.screenAdmin);
 
         // printMethod(this.screenAdmin);
         if (this.roomId === '' && data.roomId !== undefined) {
@@ -113,10 +117,10 @@ class MainScene extends Phaser.Scene {
         this.initSockets();
         this.initiateEventEmitters();
 
-        this.sendCreateNewGame();
+        if (this.screenAdmin) this.sendCreateNewGame();
 
         if (localDevelopment && designDevelopment) {
-            this.handleInitiateGame(initialGameInput);
+            this.initiateGame(initialGameInput);
         }
 
         //TODO change
@@ -161,7 +165,7 @@ class MainScene extends Phaser.Scene {
                 printMethod('RECEIVED FIRST GAME STATE:');
                 // printMethod(JSON.stringify(data.data));
                 this.gameStarted = true;
-                this.handleInitiateGame(data.data);
+                this.initiateGame(data.data);
             });
         }
 
@@ -227,8 +231,15 @@ class MainScene extends Phaser.Scene {
         });
     }
 
-    handleInitiateGame(gameStateData: GameData) {
+    initiateGame(gameStateData: GameData) {
+        this.gameToScreenMapper = new GameToScreenMapper(
+            gameStateData.playersState[0].positionX,
+            gameStateData.chasersPositionX
+        );
+        // const otherTrackLength = this.mapGameMeasurementToScene(gameStateData.trackLength)
+
         this.trackLength = gameStateData.trackLength;
+
         // this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
 
         this.physics.world.setBounds(0, 0, 7500, windowHeight);
@@ -237,7 +248,8 @@ class MainScene extends Phaser.Scene {
             this.createPlayer(i, gameStateData);
         }
 
-        if (this.camera) this.camera.scrollX = gameStateData.cameraPositionX;
+        if (this.camera)
+            this.camera.scrollX = this.gameToScreenMapper.mapGameMeasurementToScreen(gameStateData.cameraPositionX);
     }
 
     updateGameState(gameStateData: GameData) {
@@ -269,7 +281,7 @@ class MainScene extends Phaser.Scene {
 
     moveCamera(posX: number) {
         if (this.camera) {
-            this.camera.scrollX = posX;
+            this.camera.scrollX = this.gameToScreenMapper!.mapGameMeasurementToScreen(posX);
             this.camera.setBounds(0, 0, this.trackLength + 150, windowHeight); //+150 so the cave can be fully seen
             // this.players.forEach(player => {
             //     player.renderer.updatePlayerNamePosition(posX, this.trackLength);
@@ -280,7 +292,7 @@ class MainScene extends Phaser.Scene {
     private createPlayer(index: number, gameStateData: GameData) {
         const character = characters[gameStateData.playersState[index].characterNumber];
         const numberPlayers = gameStateData.playersState.length;
-        const posX = this.posX + this.plusX;
+        // const posX = this.posX; //+ this.plusX;
         const posY = (index + 1) * (window.innerHeight / numberPlayers);
         // const posY = index * (window.innerHeight / numberPlayers) + this.plusY - 60;
 
@@ -293,10 +305,11 @@ class MainScene extends Phaser.Scene {
         const player = new Player(
             new PhaserPlayerRenderer(this, numberPlayers),
             index,
-            { x: posX, y: posY },
+            { x: gameStateData.playersState[index].positionX, y: posY },
             gameStateData,
             character.name,
-            numberPlayers
+            numberPlayers,
+            this.gameToScreenMapper!
         );
         this.players.push(player);
     }

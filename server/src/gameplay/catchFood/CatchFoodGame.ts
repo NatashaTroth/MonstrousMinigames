@@ -68,7 +68,11 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
         if (this.cameraPositionX < this.trackLength)
             this.cameraPositionX += (timeElapsedSinceLastFrame / 33) * this.cameraSpeed;
+
+        // console.log(this.cameraPositionX);
         this.updateChasersPosition(timeElapsed, timeElapsedSinceLastFrame);
+        // console.log(this.chasersPositionX);
+        // console.log('------------------------------------');
 
         if (localDevelopment) {
             for (const player of this.players.values()) {
@@ -190,6 +194,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         //10000 to 90000  * timePassed //TODO - make faster over time??
         // if (timeElapsed < this.timeWhenChasersAppear) return;
         if (this.chasersPositionX > this.trackLength) return;
+        // this.chasersPositionX += (timeElapsedSinceLastFrame / 33) * this.cameraSpeed;
         this.chasersPositionX += (timeElapsedSinceLastFrame / 33) * this.cameraSpeed;
 
         //TODO test
