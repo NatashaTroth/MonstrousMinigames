@@ -7,13 +7,15 @@ module.exports = {
     moduleDirectories: ['node_modules', '<rootDir>/src'],
     transform: {
         '^.+\\.js$': 'babel-jest',
-        '^.+\\.(bmp|gif|jpg|jpeg|png|psd|svg|webp|wav|mp3)$': '<rootDir>/jest/mediaFileTransformer.js',
+        '^.+\\.svg$': 'jest-svg-transformer',
+        '^.+\\.(bmp|gif|jpg|jpeg|png|psd|webp|wav|mp3)$': '<rootDir>/jest/mediaFileTransformer.js',
     },
     moduleNameMapper: {
-      '\\.(css|less)$': 'identity-obj-proxy'
+        '\\.(css|less)$': 'identity-obj-proxy',
+        '\\.svg': '<rootDir>/jest/svgrMock.js',
     },
     collectCoverage: true,
     collectCoverageFrom: ['src/**/*.{ts,tsx}'],
     watchPathIgnorePatterns: ['src/config'],
-    coveragePathIgnorePatterns: ['src/config']
+    coveragePathIgnorePatterns: ['src/config'],
 };

@@ -4,12 +4,17 @@ import Button from '../../../../components/common/Button';
 import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
+import { Navigator } from '../../../navigator/Navigator';
 import { currentCount, getAudioInput, resetCurrentCount } from './getAudioInput';
 import LinearProgressBar from './LinearProgressBar';
 import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
 import { StyledNet, StyledSkipButton, StyledSpider } from './Spider.sc';
 
-const Spider: React.FunctionComponent = () => {
+interface SpiderProps {
+    navigator: Navigator;
+}
+
+const Spider: React.FunctionComponent<SpiderProps> = ({ navigator }) => {
     const [progress, setProgress] = React.useState(0);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { roomId } = React.useContext(GameContext);
@@ -40,14 +45,18 @@ const Spider: React.FunctionComponent = () => {
         resetCurrentCount();
         initializeSkip();
 
-        getAudioInput(MAX, {
-            solveObstacle: () => {
-                if (mounted) {
-                    solveObstacle();
-                }
+        getAudioInput(
+            MAX,
+            {
+                solveObstacle: () => {
+                    if (mounted) {
+                        solveObstacle();
+                    }
+                },
+                setProgress,
             },
-            setProgress,
-        });
+            navigator
+        );
 
         return () => {
             mounted = false;

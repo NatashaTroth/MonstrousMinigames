@@ -1,4 +1,5 @@
 import { Obstacle } from '../../../../contexts/PlayerContextProvider';
+import { Navigator } from '../../../navigator/Navigator';
 
 export let currentCount = 0;
 interface WindowProps extends Window {
@@ -14,7 +15,8 @@ export async function getAudioInput(
     dependencies: {
         solveObstacle: (obstacle?: Obstacle) => void;
         setProgress: (val: number) => void;
-    }
+    },
+    navigator: Navigator
 ) {
     let stream: MediaStream | null = null;
     const w = window as WindowProps;
@@ -23,7 +25,7 @@ export async function getAudioInput(
     let send = false;
 
     try {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream = (await navigator?.mediaDevices?.getUserMedia?.({ audio: true })) || null;
 
         const AudioContext = window.AudioContext || w.webkitAudioContext;
 
@@ -54,7 +56,7 @@ export async function getAudioInput(
         }
     } catch (error) {
         // eslint-disable-next-line no-console
-        console.log('getUserMedia not supported');
+        console.log(error);
     }
 }
 
