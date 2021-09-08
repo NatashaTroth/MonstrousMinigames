@@ -4,8 +4,8 @@ import { cleanup, render } from '@testing-library/react';
 import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 
+import { characters } from '../../config/characters';
 import theme from '../../styles/theme';
-import { characters } from '../../utils/characters';
 import Character from './Character';
 
 afterEach(cleanup);

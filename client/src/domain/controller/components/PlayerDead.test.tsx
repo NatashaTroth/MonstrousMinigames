@@ -6,9 +6,9 @@ import { ThemeProvider } from 'styled-components';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount } from 'enzyme';
 
+import { characters } from '../../../config/characters';
 import { defaultValue, PlayerContext } from '../../../contexts/PlayerContextProvider';
 import theme from '../../../styles/theme';
-import { characters } from '../../../utils/characters';
 import PlayerDead from './PlayerDead';
 
 configure({ adapter: new Adapter() });

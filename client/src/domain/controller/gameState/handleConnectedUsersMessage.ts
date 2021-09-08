@@ -1,4 +1,4 @@
-import { defaultAvailableCharacters } from '../../../utils/characters';
+import { defaultAvailableCharacters } from '../../../config/characters';
 import { ConnectedUsersMessage, User } from '../../typeGuards/connectedUsers';
 
 interface HandleConnectedUsersMessage {
