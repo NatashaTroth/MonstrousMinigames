@@ -1,5 +1,5 @@
 import { Window } from '../window/Window';
-import { ClickRequestDeviceMotion } from './permissions';
+import { ClickRequestDeviceMotion, getMicrophoneStream } from './permissions';
 
 describe('test ClickRequestDeviceMotion function', () => {
     it('ClickRequestDeviceMotion should return true, when access is granted on ios', async () => {
@@ -12,6 +12,12 @@ describe('test ClickRequestDeviceMotion function', () => {
 
     it('ClickRequestDeviceMotion should return true, when device is not ios', async () => {
         expect(await ClickRequestDeviceMotion(new WindowFake('denied', 'android'))).toBe(true);
+    });
+});
+
+describe('test getMicrophoneStream function', () => {
+    it('getMicrophoneStream should return default false', async () => {
+        expect(await getMicrophoneStream()).toBe(false);
     });
 });
 

@@ -183,6 +183,7 @@ export function handleSetSocket(
             dependencies: {
                 setPlayerRank,
             },
+            history,
         });
     });
 

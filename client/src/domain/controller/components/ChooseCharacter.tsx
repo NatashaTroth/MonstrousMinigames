@@ -101,7 +101,7 @@ interface CustomArrow {
     onClick?: () => void;
 }
 
-const CustomRightArrow: React.FunctionComponent<CustomArrow> = ({ handleOnClick, ...rest }) => {
+export const CustomRightArrow: React.FunctionComponent<CustomArrow> = ({ handleOnClick, ...rest }) => {
     function handleClick() {
         handleOnClick();
         if (rest.onClick) {
@@ -116,7 +116,7 @@ const CustomRightArrow: React.FunctionComponent<CustomArrow> = ({ handleOnClick,
     );
 };
 
-const CustomLeftArrow: React.FunctionComponent<CustomArrow> = ({ handleOnClick, ...rest }) => {
+export const CustomLeftArrow: React.FunctionComponent<CustomArrow> = ({ handleOnClick, ...rest }) => {
     function handleClick() {
         handleOnClick();
         if (rest.onClick) {

@@ -82,7 +82,9 @@ const App: React.FunctionComponent = () => {
                                                         />
                                                         <Route
                                                             path={Routes.controllerLobby}
-                                                            component={ControllerLobbyScreen}
+                                                            component={() => (
+                                                                <ControllerLobbyScreen history={history} />
+                                                            )}
                                                             exact
                                                         />
                                                         <Route

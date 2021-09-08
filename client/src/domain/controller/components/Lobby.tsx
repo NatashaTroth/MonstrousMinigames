@@ -1,4 +1,5 @@
 import { CircularProgress } from '@material-ui/core';
+import { History } from 'history';
 import * as React from 'react';
 
 import Button from '../../../components/common/Button';
@@ -9,7 +10,6 @@ import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import arrow from '../../../images/ui/arrow_blue.svg';
 import { controllerChooseCharacterRoute } from '../../../utils/routes';
-import history from '../../history/history';
 import { sendUserReady } from '../gameState/sendUserReady';
 import {
     Arrow,
@@ -23,7 +23,11 @@ import {
     ReadyButton,
 } from './Lobby.sc';
 
-export const Lobby: React.FunctionComponent = () => {
+interface LobbyProps {
+    history: History;
+}
+
+export const Lobby: React.FunctionComponent<LobbyProps> = ({ history }) => {
     const { playerNumber, name, character, ready, setReady } = React.useContext(PlayerContext);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { roomId } = React.useContext(GameContext);

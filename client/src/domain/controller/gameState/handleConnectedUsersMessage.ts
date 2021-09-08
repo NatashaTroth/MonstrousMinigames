@@ -15,7 +15,6 @@ export const handleConnectedUsersMessage = (props: HandleConnectedUsersMessage) 
     const usedCharacters = data.users?.map(user => user.characterNumber) || [];
     const availableCharacters = defaultAvailableCharacters.filter(character => !usedCharacters.includes(character));
     dependencies.setAvailableCharacters(availableCharacters);
-    if (data) {
-        dependencies.setConnectedUsers(data.users || []);
-    }
+
+    dependencies.setConnectedUsers(data.users || []);
 };
