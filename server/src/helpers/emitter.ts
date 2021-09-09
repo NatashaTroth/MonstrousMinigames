@@ -4,7 +4,7 @@ import Room from '../classes/room';
 import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
-import { GameEvents } from '../gameplay/catchFood/interfaces';
+import { GameEvents, GameStateInfo } from '../gameplay/catchFood/interfaces';
 
 function sendUserInit(socket: Socket, user: User, room: Room): void {
     socket.emit('message', {
@@ -29,12 +29,33 @@ function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
         });
     }
 }
+function sendInitialGameStateInfo(nsp: Namespace, room: Room, data: GameStateInfo, volatile = false): void {
+    if (volatile) {
+        nsp.to(room.id).volatile.emit('message', {
+            type: CatchFoodMsgType.INITIAL_GAME_STATE_INFO,
+            data,
+        });
+    } else {
+        nsp.to(room.id).emit('message', {
+            type: CatchFoodMsgType.INITIAL_GAME_STATE_INFO,
+            data,
+        });
+    }
+}
 
 function sendErrorMessage(socket: Socket, e: Error): void {
     socket.emit('message', {
         type: MessageTypes.ERROR,
         name: e.name,
         msg: e.message,
+    });
+}
+
+function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room): void {
+    nsps.forEach(function (namespace: Namespace) {
+        namespace.to(room.id).emit('message', {
+            type: CatchFoodMsgType.ALL_SCREENS_PHASER_GAME_LOADED,
+        });
     });
 }
 function sendStartPhaserGame(nsps: Array<Namespace>, room: Room): void {
@@ -44,6 +65,7 @@ function sendStartPhaserGame(nsps: Array<Namespace>, room: Room): void {
         });
     });
 }
+
 function sendGameHasStarted(nsps: Array<Namespace>, data: GameEvents.GameHasStarted): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(data.roomId).emit('message', {
@@ -135,8 +157,10 @@ function sendMessage(type: MessageTypes | CatchFoodMsgType, nsps: Array<Namespac
 
 export default {
     sendUserInit,
+    sendInitialGameStateInfo,
     sendGameState,
     sendErrorMessage,
+    sendAllScreensPhaserGameLoaded,
     sendStartPhaserGame,
     sendGameHasStarted,
     sendPlayerFinished,

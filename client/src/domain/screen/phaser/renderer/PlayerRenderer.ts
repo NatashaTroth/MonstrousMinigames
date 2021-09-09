@@ -7,6 +7,7 @@ export type Coordinates = { x: number; y: number };
  */
 
 export interface PlayerRenderer {
+    renderBackground(windowWidth: number, windowHeight: number, trackLength: number, index: number): void;
     renderChasers(chasersPositionX: number, chasersPositionY: number): void;
     renderPlayer(
         idx: number,
@@ -16,6 +17,7 @@ export interface PlayerRenderer {
         username?: string,
         background?: string
     ): void;
+    getPlayerYPosition(): number | undefined;
     renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number): void;
     renderCave(posX: number, posY: number): void;
     renderFireworks(posX: number, posY: number): void;

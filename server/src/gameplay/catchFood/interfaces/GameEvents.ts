@@ -1,11 +1,20 @@
 import { GameState } from '../../enums';
 import { ObstacleType } from '../enums';
-import { PlayerRank } from './';
+import { GameStateInfo, PlayerRank } from './';
+import { InitialGameStateInfo } from './InitialGameStateInfo';
 
 interface GameEventInterface {
     roomId: string;
 }
 
+export interface GameStateInfoUpdate extends GameEventInterface {
+    roomId: string;
+    gameStateInfo: GameStateInfo;
+}
+export interface InitialGameStateInfoUpdate extends GameEventInterface {
+    roomId: string;
+    gameStateInfo: InitialGameStateInfo;
+}
 export interface StartPhaserGame extends GameEventInterface {
     roomId: string;
 }
@@ -37,8 +46,6 @@ export interface PlayerStunnedState extends GameEventInterface {
 export interface GameHasFinished extends GameEventInterface {
     roomId: string;
     gameState: GameState;
-    trackLength: number;
-    numberOfObstacles: number;
     playerRanks: Array<PlayerRank>;
 }
 export interface ObstacleReachedInfo extends GameEventInterface {
