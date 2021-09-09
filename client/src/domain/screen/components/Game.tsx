@@ -51,6 +51,8 @@ const Game: React.FunctionComponent = () => {
             type: Phaser.WEBGL,
             width: '100%',
             height: '100%',
+            // backgroundColor: '#081919',
+            backgroundColor: '#000b18',
             physics: {
                 default: 'arcade',
                 arcade: {

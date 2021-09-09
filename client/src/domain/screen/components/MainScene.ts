@@ -26,7 +26,6 @@ import { Player } from '../phaser/Player';
 import printMethod from '../phaser/printMethod';
 import { GameRenderer } from '../phaser/renderer/GameRenderer';
 import { PhaserGameRenderer } from '../phaser/renderer/PhaserGameRenderer';
-import { PhaserPlayerRenderer } from '../phaser/renderer/PhaserPlayerRenderer';
 import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
 const windowWidth = window.innerWidth;
@@ -110,8 +109,10 @@ class MainScene extends Phaser.Scene {
     }
 
     create() {
+        // const div = document.getElementById('game-root');
+        // div!.style.backgroundColor = '#000fff';
         this.gameRenderer = new PhaserGameRenderer(this);
-        // this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
+        // // this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
         this.initSockets();
@@ -166,6 +167,7 @@ class MainScene extends Phaser.Scene {
                 // printMethod(JSON.stringify(data.data));
                 this.gameStarted = true;
                 this.initiateGame(data.data);
+                this.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');
             });
         }
 
@@ -292,18 +294,14 @@ class MainScene extends Phaser.Scene {
     private createPlayer(index: number, gameStateData: GameData) {
         const character = characters[gameStateData.playersState[index].characterNumber];
         const numberPlayers = gameStateData.playersState.length;
-        // const posX = this.posX; //+ this.plusX;
-        const posY = (index + 1) * (window.innerHeight / numberPlayers);
-        // const posY = index * (window.innerHeight / numberPlayers) + this.plusY - 60;
-
-        // printMethod('----');
-        // printMethod(window.innerHeight);
-        // printMethod(posY);
-        // printMethod(this.plusY);
-        // printMethod('----');
+        const laneHeightsPerNumberPlayers = [1 / 3, 2 / 3, 1, 1];
+        const laneHeight = (windowHeight / numberPlayers) * laneHeightsPerNumberPlayers[numberPlayers - 1];
+        const posY = this.moveLanesToCenter(windowHeight, laneHeight, index, numberPlayers);
 
         const player = new Player(
-            new PhaserPlayerRenderer(this, numberPlayers),
+            this,
+            laneHeightsPerNumberPlayers,
+            laneHeight,
             index,
             { x: gameStateData.playersState[index].positionX, y: posY },
             gameStateData,
@@ -312,6 +310,11 @@ class MainScene extends Phaser.Scene {
             this.gameToScreenMapper!
         );
         this.players.push(player);
+    }
+
+    //TODO duplicate, also in phaserPlayerRenderer.ts
+    private moveLanesToCenter(windowHeight: number, newHeight: number, index: number, numberPlayers: number) {
+        return (windowHeight - newHeight * numberPlayers) / 2 + newHeight * (index + 1);
     }
 
     private createGameCountdown(countdownTime: number) {

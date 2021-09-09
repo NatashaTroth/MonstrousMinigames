@@ -1,9 +1,10 @@
 import { designDevelopment, Obstacles } from '../../../utils/constants';
 import { depthDictionary } from '../../../utils/depthDictionary';
+import MainScene from '../components/MainScene';
 import { GameData } from './gameInterfaces';
 import { GameToScreenMapper } from './GameToScreenMapper';
-import printMethod from './printMethod';
-import { Coordinates, PlayerRenderer } from './renderer/PlayerRenderer';
+import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
+import { Coordinates } from './renderer/PlayerRenderer';
 
 /**
  * This is the main player class where all the business functionality should be implemented (eg. what happens when a
@@ -21,10 +22,15 @@ export class Player {
     dead: boolean;
     finished: boolean;
     stunned: boolean;
+    renderer: PhaserPlayerRenderer;
+
     // private gameToScreenMapper?: GameToScreenMapper;
 
     constructor(
-        public renderer: PlayerRenderer, // TODO MAKE PRIVATE
+        // public renderer: PlayerRenderer, // TODO MAKE PRIVATE
+        scene: MainScene,
+        private laneHeightsPerNumberPlayers: number[],
+        private laneHeight: number,
         private index: number,
         private coordinates: Coordinates,
         private gameStateData: GameData,
@@ -32,10 +38,10 @@ export class Player {
         private numberPlayers: number,
         private gameToScreenMapper: GameToScreenMapper
     ) {
-        this.coordinates = {
-            x: this.coordinates.x,
-            y: this.coordinates.y,
-        };
+        // this.coordinates = {
+        //     x: this.coordinates.x,
+        //     y: this.coordinates.y,
+        // };
 
         this.animationName = `${monsterName}Walk`;
         this.username = gameStateData.playersState[index].name;
@@ -47,20 +53,29 @@ export class Player {
         this.finished = false;
         this.stunned = false;
 
+        // if (this.numberPlayers <= 2) this.numberPlayers = 3;
+
+        this.renderer = new PhaserPlayerRenderer(scene, this.numberPlayers, this.laneHeightsPerNumberPlayers);
+
+        this.renderer.renderBackground(
+            window.innerWidth,
+            window.innerHeight,
+            gameStateData.trackLength,
+            this.index,
+            this.laneHeight,
+            this.coordinates.y
+        );
         this.renderPlayer();
         this.setObstacles();
-        this.setGoal(gameStateData.trackLength);
-        this.renderBackground(gameStateData.trackLength);
-
-        const newPlayerPos = this.renderer.getPlayerYPosition();
-        if (newPlayerPos !== undefined) {
-            this.coordinates.y = newPlayerPos;
-        }
-
+        this.setCave(gameStateData.trackLength - 100);
         this.setChasers(gameStateData.chasersPositionX);
 
         if (designDevelopment) {
-            this.renderer.renderFireworks(500, this.coordinates.y);
+            this.renderer.renderFireworks(
+                this.gameToScreenMapper.mapGameMeasurementToScreen(gameStateData.trackLength),
+                this.coordinates.y,
+                this.laneHeight
+            );
         }
         // this.renderer.renderFireworks(500, 100);
         // this.renderer.renderFireworks(this.coordinates.x + 500, this.coordinates.y - window.innerHeight / 8 + 50);
@@ -106,7 +121,8 @@ export class Player {
     handlePlayerFinished() {
         this.renderer.renderFireworks(
             this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
-            this.coordinates.y - window.innerHeight / 8 + 50
+            this.coordinates.y - window.innerHeight / 8 + 50,
+            this.laneHeight
         );
         this.destroyPlayer();
     }
@@ -155,9 +171,9 @@ export class Player {
             x: this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
             y: this.coordinates.y,
         };
-        printMethod(this.monsterName);
-        printMethod(screenCoordinates);
-        printMethod(this.coordinates);
+        // printMethod(this.monsterName);
+        // printMethod(screenCoordinates);
+        // printMethod(this.coordinates);
 
         this.renderer.renderPlayer(this.index, screenCoordinates, this.monsterName, this.animationName, this.username);
 
@@ -167,10 +183,6 @@ export class Player {
         //     'TODO', // data.data.playersState[i].name, // TODO,
         //     '#000000'
         // );
-    }
-
-    private renderBackground(trackLength: number) {
-        this.renderer.renderBackground(window.innerWidth, window.innerHeight, trackLength, this.index);
     }
 
     private setObstacles() {
@@ -214,15 +226,14 @@ export class Player {
 
     setChasers(chasersPositionX: number) {
         if (!this.dead) {
-            const chasersPositionY = this.coordinates.y;
             this.renderer.renderChasers(
                 this.gameToScreenMapper.mapGameMeasurementToScreen(chasersPositionX),
-                chasersPositionY
+                this.coordinates.y
             );
         }
     }
 
-    setGoal(posX: number) {
+    setCave(posX: number) {
         this.renderer.renderCave(this.gameToScreenMapper.mapGameMeasurementToScreen(posX), this.coordinates.y);
     }
 
