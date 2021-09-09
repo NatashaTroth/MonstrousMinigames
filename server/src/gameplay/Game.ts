@@ -58,7 +58,6 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
                 newUser.id = i.toString();
                 this.players.set(newUser.id, this.mapUserToPlayer(newUser));
             }
-            console.log(this.players.values());
         }
 
         this.gameState = GameState.Created;
