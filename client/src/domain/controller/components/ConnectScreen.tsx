@@ -30,11 +30,6 @@ export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history 
         }
     }, [roomId]);
 
-    React.useEffect(() => {
-        document.body.style.position = 'fixed';
-        document.body.style.overflow = 'hidden';
-    }, []);
-
     return (
         <ConnectScreenContainer>
             <FormContainer
