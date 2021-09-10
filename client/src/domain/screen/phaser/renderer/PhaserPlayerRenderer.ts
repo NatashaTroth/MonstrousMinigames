@@ -3,7 +3,6 @@ import Phaser from 'phaser';
 import { depthDictionary } from '../../../../utils/depthDictionary';
 import { fireworkFlares } from '../../components/GameAssets';
 import MainScene from '../../components/MainScene';
-import { GameToScreenMapper } from '../GameToScreenMapper';
 import { Coordinates } from '../gameTypes';
 
 /**
@@ -12,7 +11,6 @@ import { Coordinates } from '../gameTypes';
  */
 export class PhaserPlayerRenderer {
     private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-    // private playerText?: Phaser.GameObjects.Text;
     private chaser?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private playerObstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -22,7 +20,6 @@ export class PhaserPlayerRenderer {
     private caveBehind?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private caveInFront?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private backgroundLane?: Phaser.GameObjects.Image[];
-    private gameToScreenMapper?: GameToScreenMapper;
 
     constructor(
         private scene: MainScene,
@@ -41,10 +38,6 @@ export class PhaserPlayerRenderer {
         });
     }
 
-    setGameToScreenMapper(mapper: GameToScreenMapper) {
-        this.gameToScreenMapper = mapper;
-    }
-
     renderBackground(
         windowWidth: number,
         windowHeight: number,
@@ -53,7 +46,6 @@ export class PhaserPlayerRenderer {
         laneHeight: number,
         posY: number
     ) {
-        // this.scene.cameras.main.backgroundColor.setTo(255, 255, 255);
         const repeats = Math.ceil(trackLength / (windowWidth / this.numberPlayers)) + 2;
 
         for (let i = 0; i < repeats; i++) {
@@ -109,7 +101,6 @@ export class PhaserPlayerRenderer {
         } else if (this.player) {
             //only move player
             this.player.x = coordinates.x;
-            // this.player.y = coordinates.y; //+ window.innerHeight / 20;
         }
     }
 
@@ -175,65 +166,64 @@ export class PhaserPlayerRenderer {
         // posY += 5;
         const scale = (0.47 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1];
         const yOffset = 2.2;
-        const caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
-        caveBehind.setScale(scale);
-        caveBehind.setDepth(depthDictionary.cave);
-        caveBehind.y -= caveBehind.displayHeight / yOffset; /// (0.01 * numberPlayers);
+        this.caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
+        this.caveBehind.setScale(scale);
+        this.caveBehind.setDepth(depthDictionary.cave);
+        this.caveBehind.y -= this.caveBehind.displayHeight / yOffset; /// (0.01 * numberPlayers);
 
-        const caveInFront = this.scene.physics.add.sprite(posX, posY, 'caveInFront'); //TODO change caveInFront to enum
-        caveInFront.setScale(scale);
-        caveInFront.setDepth(depthDictionary.caveInFront);
-        caveInFront.y -= caveInFront.displayHeight / yOffset; //(0.01 * numberPlayers);
+        this.caveInFront = this.scene.physics.add.sprite(posX, posY, 'caveInFront'); //TODO change caveInFront to enum
+        this.caveInFront.setScale(scale);
+        this.caveInFront.setDepth(depthDictionary.caveInFront);
+        this.caveInFront.y -= this.caveInFront.displayHeight / yOffset; //(0.01 * numberPlayers);
     }
 
-    // handleLanePlayerDead(idx: number) {
-    //     //TODO change later - no need to color images that have already gone past
-    //     this.backgroundLane[idx].forEach(img => {
-    //         // img.setAlpha(0.3);
-    //         img.setTint(0x123a3a); //081919);
-    //     });
-    //     const yPos = this.backgroundLane[idx][0].y;
-    //     const height = window.innerHeight / 4; //TODO change for variable number of lanes
-    //     const fixedWidth = 1200;
+    handlePlayerDead() {
+        //TODO change later - no need to color images that have already gone past
+        if (this.backgroundLane && this.backgroundLane.length > 0) {
+            this.backgroundLane.forEach(img => {
+                // img.setAlpha(0.3);
+                img.setTint(0x123a3a); //081919);
+                // img.setDepth(depthDictionary.deadTextBackground);
+            });
+            const yPos = this.backgroundLane[0].y;
+            const height = this.backgroundLane[0].displayHeight;
+            const fixedWidth = 1200;
 
-    //     const text = this.scene.make.text({
-    //         x: window.innerWidth / 2 - fixedWidth / 2,
-    //         // x: this.scene.camera?.scrollX,
-    //         y: yPos - height / 2,
-    //         text: 'The mosquito caught you. Look at your phone!',
-    //         style: {
-    //             fontSize: `${35}px`,
-    //             fontFamily: 'Roboto, Arial',
-    //             // color: '#d2a44f',
-    //             // stroke: '#d2a44f',
-    //             color: '#d2a44f',
-    //             stroke: '#d2a44f',
-    //             strokeThickness: 1,
-    //             fixedWidth,
-    //             // fixedHeight,
-    //             align: 'center',
-    //             shadow: {
-    //                 offsetX: 10,
-    //                 offsetY: 10,
-    //                 color: '#000',
-    //                 blur: 0,
-    //                 stroke: false,
-    //                 fill: false,
-    //             },
-    //         },
+            const text = this.scene.make.text({
+                x: window.innerWidth / 2 - fixedWidth / 2,
+                // x: this.scene.camera?.scrollX,
+                y: yPos - height / 2,
+                text: 'The mosquito caught you. Look at your phone!',
+                style: {
+                    fontSize: `${35}px`,
+                    fontFamily: 'Roboto, Arial',
+                    // color: '#d2a44f',
+                    // stroke: '#d2a44f',
+                    color: '#d2a44f',
+                    stroke: '#d2a44f',
+                    strokeThickness: 1,
+                    fixedWidth,
+                    align: 'center',
+                    shadow: {
+                        offsetX: 10,
+                        offsetY: 10,
+                        color: '#000',
+                        blur: 0,
+                        stroke: false,
+                        fill: false,
+                    },
+                },
 
-    //         // origin: {x: 0.5, y: 0.5},
-    //         add: true,
-    //     });
-    //     text.scrollFactorX = 0;
-    // }
+                // origin: {x: 0.5, y: 0.5},
+                add: true,
+            });
+            text.scrollFactorX = 0;
+            text.setDepth(depthDictionary.deadText);
+        }
+    }
 
     renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number) {
         const obstacle = this.scene.physics.add.sprite(posX, posY, obstacleType);
-        // obstacle.y -= obstacle.displayHeight / 6;
-        // obstacle.y -= obstacle.displayHeight / 2;
-        // obstacle.y -= obstacle.displayHeight;
-
         obstacle.setScale(obstacleScale * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
         obstacle.y -= obstacle.displayHeight / 1.3;
         obstacle.setDepth(depth);
@@ -295,7 +285,7 @@ export class PhaserPlayerRenderer {
         this.chaser?.destroy();
     }
 
-    addAttentionIcon() {
+    renderAttentionIcon() {
         if (!this.playerAttention && this.player) {
             this.playerAttention = this.scene.physics.add
                 .sprite(this.player.x + 75, this.player.y - 50, 'attention')
@@ -305,9 +295,7 @@ export class PhaserPlayerRenderer {
     }
 
     destroyAttentionIcon() {
-        //TODO reuse
         this.playerAttention?.destroy();
-        this.playerAttention = undefined;
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
