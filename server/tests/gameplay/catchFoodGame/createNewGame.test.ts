@@ -15,7 +15,7 @@ describe('Create new game tests', () => {
 
         startAndFinishGame(catchFoodGame);
         await releaseThreadN(3);
-        catchFoodGame.createNewGame(users, NEW_TRACKLENGTH, NEW_NUMBER_OF_OBSTACLES, undefined, NEW_STONE_COUNT);
+        catchFoodGame.createNewGame(users, NEW_TRACKLENGTH, NEW_NUMBER_OF_OBSTACLES, NEW_STONE_COUNT);
     });
     afterEach(async () => {
         clearTimersAndIntervals(catchFoodGame);

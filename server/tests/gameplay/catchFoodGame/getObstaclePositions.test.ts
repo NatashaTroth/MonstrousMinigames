@@ -14,7 +14,7 @@ describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        catchFoodGame.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, undefined, NUMBER_OF_STONES);
+        catchFoodGame.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, NUMBER_OF_STONES);
         obstacles = catchFoodGame.getObstaclePositions();
     });
     afterEach(async () => {

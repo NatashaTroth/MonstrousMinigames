@@ -112,8 +112,8 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     createNewGame(
         users: Array<User>,
         trackLength = this.trackLength,
-        numberOfStones = this.numberOfStones,
-        numberOfObstacles = this.numberOfObstacles
+        numberOfObstacles = this.numberOfObstacles,
+        numberOfStones = this.numberOfStones
     ): void {
         this.trackLength = trackLength;
         this.numberOfObstacles = numberOfObstacles;
