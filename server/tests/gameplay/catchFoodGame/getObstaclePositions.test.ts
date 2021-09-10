@@ -4,9 +4,9 @@ import { HashTable } from '../../../src/gameplay/interfaces';
 import { leaderboard, roomId, users } from '../mockData';
 import { clearTimersAndIntervals } from './gameHelperFunctions';
 
-const TRACKLENGTH = 500;
+const TRACK_LENGTH = 5000; // has to be bigger than initial player position
 const NUMBER_OF_OBSTACLES = 4;
-const NUMBER_OF_STONES = 2;
+const NUMBER_OF_STONES = 3;
 let catchFoodGame: CatchFoodGame;
 let obstacles: HashTable<Array<Obstacle>>;
 
@@ -14,7 +14,7 @@ describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES, undefined, NUMBER_OF_STONES);
+        catchFoodGame.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, undefined, NUMBER_OF_STONES);
         obstacles = catchFoodGame.getObstaclePositions();
     });
     afterEach(async () => {

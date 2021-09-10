@@ -7,7 +7,7 @@ import {
     startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
-const TRACKLENGTH = 500;
+const TRACK_LENGTH = 5000; // has to be bigger than initial player position
 const NUMBER_OF_OBSTACLES = 4;
 let catchFoodGame: CatchFoodGame;
 
@@ -26,7 +26,7 @@ describe('Change and verify game state', () => {
     });
 
     it('sets state to created when new game is created ', async () => {
-        catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES);
+        catchFoodGame.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES);
         expect(catchFoodGame.gameState).toBe(GameState.Created);
     });
 
@@ -35,7 +35,7 @@ describe('Change and verify game state', () => {
     });
 
     it("shouldn't be able to move player until game has started and the countdown has run", async () => {
-        catchFoodGame.createNewGame(users, 500, 4);
+        catchFoodGame.createNewGame(users, 550, 4);
         const initialPositionX = catchFoodGame.players.get('1')!.positionX;
         try {
             catchFoodGame['runForward']('50');
@@ -66,7 +66,7 @@ describe('Change and verify game state', () => {
     });
 
     it("shouldn't be able to complete obstacle until game has started", async () => {
-        catchFoodGame.createNewGame(users, 500, 4);
+        catchFoodGame.createNewGame(users, 550, 4);
         // Countdown still has to run
         const obstaclesCompletedLength = catchFoodGame.players.get('1')!.obstacles.length;
         try {

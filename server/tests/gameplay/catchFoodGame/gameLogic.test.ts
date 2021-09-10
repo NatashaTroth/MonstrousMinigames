@@ -7,7 +7,7 @@ import {
     startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
-const TRACKLENGTH = 500;
+const TRACK_LENGTH = 5000; // has to be bigger than initial player position
 
 let catchFoodGame: CatchFoodGame;
 const dateNow = 1618665766156;
@@ -192,7 +192,7 @@ describe('Player has finished race', () => {
 
     it('should not set a player as finished if they have not completed all their obstacles but reached the goal', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame['runForward']('1', TRACKLENGTH);
+        catchFoodGame['runForward']('1', TRACK_LENGTH);
         expect(catchFoodGame.players.get('1')!.finished).toBeFalsy();
     });
 
