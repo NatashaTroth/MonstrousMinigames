@@ -24,7 +24,6 @@ import { GameData } from '../phaser/gameInterfaces';
 import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
 import { Player } from '../phaser/Player';
 import printMethod from '../phaser/printMethod';
-import { GameRenderer } from '../phaser/renderer/GameRenderer';
 import { PhaserGameRenderer } from '../phaser/renderer/PhaserGameRenderer';
 import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
@@ -41,7 +40,7 @@ class MainScene extends Phaser.Scene {
     trackLength: number;
     gameStarted: boolean;
     paused: boolean;
-    gameRenderer?: GameRenderer;
+    gameRenderer?: PhaserGameRenderer;
     gameAudio?: GameAudio;
     camera?: Phaser.Cameras.Scene2D.Camera;
     cameraSpeed: number;

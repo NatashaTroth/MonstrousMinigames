@@ -4,7 +4,7 @@ import { depthDictionary } from '../../../../utils/depthDictionary';
 import { fireworkFlares } from '../../components/GameAssets';
 import MainScene from '../../components/MainScene';
 import { GameToScreenMapper } from '../GameToScreenMapper';
-import { Coordinates } from './PlayerRenderer';
+import { Coordinates } from '../gameTypes';
 
 /**
  * this is an incomplete PlayerRenderer adapter which contains all the phaser logic. This class might only be tested via

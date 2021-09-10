@@ -3,8 +3,8 @@ import { depthDictionary } from '../../../utils/depthDictionary';
 import MainScene from '../components/MainScene';
 import { GameData } from './gameInterfaces';
 import { GameToScreenMapper } from './GameToScreenMapper';
+import { Coordinates } from './gameTypes';
 import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
-import { Coordinates } from './renderer/PlayerRenderer';
 
 /**
  * This is the main player class where all the business functionality should be implemented (eg. what happens when a
