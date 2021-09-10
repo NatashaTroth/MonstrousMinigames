@@ -3,8 +3,8 @@ import { depthDictionary } from '../../../utils/depthDictionary';
 import MainScene from '../components/MainScene';
 import { GameData } from './gameInterfaces';
 import { GameToScreenMapper } from './GameToScreenMapper';
+import { Coordinates } from './gameTypes';
 import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
-import { Coordinates } from './renderer/PlayerRenderer';
 
 /**
  * This is the main player class where all the business functionality should be implemented (eg. what happens when a
@@ -17,17 +17,13 @@ export class Player {
     animationName: string;
     playerRunning: boolean;
     playerAtObstacle: boolean;
-    playerAttention: null | Phaser.Types.Physics.Arcade.SpriteWithDynamicBody; //TODO change
     playerCountSameDistance: number;
     dead: boolean;
     finished: boolean;
     stunned: boolean;
     renderer: PhaserPlayerRenderer;
 
-    // private gameToScreenMapper?: GameToScreenMapper;
-
     constructor(
-        // public renderer: PlayerRenderer, // TODO MAKE PRIVATE
         scene: MainScene,
         private laneHeightsPerNumberPlayers: number[],
         private laneHeight: number,
@@ -38,22 +34,14 @@ export class Player {
         private numberPlayers: number,
         private gameToScreenMapper: GameToScreenMapper
     ) {
-        // this.coordinates = {
-        //     x: this.coordinates.x,
-        //     y: this.coordinates.y,
-        // };
-
         this.animationName = `${monsterName}Walk`;
         this.username = gameStateData.playersState[index].name;
         this.playerRunning = false;
         this.playerAtObstacle = false;
         this.playerCountSameDistance = 0;
-        this.playerAttention = null;
         this.dead = false;
         this.finished = false;
         this.stunned = false;
-
-        // if (this.numberPlayers <= 2) this.numberPlayers = 3;
 
         this.renderer = new PhaserPlayerRenderer(scene, this.numberPlayers, this.laneHeightsPerNumberPlayers);
 
@@ -65,7 +53,7 @@ export class Player {
             this.laneHeight,
             this.coordinates.y
         );
-        this.renderPlayer();
+        this.setPlayer();
         this.setObstacles();
         this.setCave(gameStateData.trackLength);
         this.setChasers(gameStateData.chasersPositionX);
@@ -76,14 +64,9 @@ export class Player {
                 this.coordinates.y,
                 this.laneHeight
             );
+            // setTimeout(() => this.handlePlayerDead(), 500);
         }
-        // this.renderer.renderFireworks(500, 100);
-        // this.renderer.renderFireworks(this.coordinates.x + 500, this.coordinates.y - window.innerHeight / 8 + 50);
     }
-
-    // setGameToScreenMapper(mapper: GameToScreenMapper) {
-    //     this.gameToScreenMapper = mapper;
-    // }
 
     moveForward(newXPosition: number, trackLength: number) {
         if (this.finished) return;
@@ -115,6 +98,7 @@ export class Player {
         this.renderer.destroyObstacles();
         this.renderer.destroyCave();
         this.renderer.destroyAttentionIcon();
+        this.renderer.handlePlayerDead();
         this.dead = true;
     }
 
@@ -154,7 +138,7 @@ export class Player {
     private arrivedAtObstacle(): void {
         this.stopRunning();
         this.playerAtObstacle = true;
-        this.renderer.addAttentionIcon();
+        this.renderer.renderAttentionIcon();
     }
 
     private finishObstacle(): void {
@@ -164,25 +148,13 @@ export class Player {
         this.renderer.destroyAttentionIcon();
     }
 
-    private renderPlayer() {
-        // eslint-disable-next-line no-console
-        // console.log(this.username);
+    private setPlayer() {
         const screenCoordinates = {
             x: this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
             y: this.coordinates.y,
         };
-        // printMethod(this.monsterName);
-        // printMethod(screenCoordinates);
-        // printMethod(this.coordinates);
 
         this.renderer.renderPlayer(this.index, screenCoordinates, this.monsterName, this.animationName, this.username);
-
-        // TODO render player name
-        // this.renderer.renderText(
-        //     { x: this.coordinates.x, y: this.coordinates.y - 100 },
-        //     'TODO', // data.data.playersState[i].name, // TODO,
-        //     '#000000'
-        // );
     }
 
     private setObstacles() {
@@ -195,21 +167,16 @@ export class Player {
 
             switch (obstacle.type) {
                 case Obstacles.treeStump:
-                    // obstaclePosY = this.coordinates.y + window.innerHeight / 9;
                     obstacleScale = 0.7 / this.numberPlayers;
                     break;
                 case Obstacles.spider:
-                    // obstaclePosY = this.coordinates.y + window.innerHeight / 15;
                     obstacleScale = 0.6 / this.numberPlayers;
                     break;
                 case Obstacles.trash:
-                    // obstaclePosY = this.coordinates.y + window.innerHeight / 7;
                     obstacleScale = 0.6 / this.numberPlayers;
-                    // posX += 40;
                     obstaclePosY += 10;
                     break;
                 case Obstacles.stone:
-                    // obstaclePosY = this.coordinates.y + window.innerHeight / 10;
                     obstacleScale = 0.6 / this.numberPlayers;
                     break;
             }

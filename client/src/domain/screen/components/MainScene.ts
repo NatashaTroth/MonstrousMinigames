@@ -24,7 +24,6 @@ import { GameData } from '../phaser/gameInterfaces';
 import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
 import { Player } from '../phaser/Player';
 import printMethod from '../phaser/printMethod';
-import { GameRenderer } from '../phaser/renderer/GameRenderer';
 import { PhaserGameRenderer } from '../phaser/renderer/PhaserGameRenderer';
 import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
@@ -41,7 +40,7 @@ class MainScene extends Phaser.Scene {
     trackLength: number;
     gameStarted: boolean;
     paused: boolean;
-    gameRenderer?: GameRenderer;
+    gameRenderer?: PhaserGameRenderer;
     gameAudio?: GameAudio;
     camera?: Phaser.Cameras.Scene2D.Camera;
     cameraSpeed: number;
@@ -69,17 +68,13 @@ class MainScene extends Phaser.Scene {
         this.camera = this.cameras.main;
         this.socket = data.socket;
         this.screenAdmin = data.screenAdmin;
-        // printMethod('ADMIN:');
-        // printMethod(this.screenAdmin);
 
-        // printMethod(this.screenAdmin);
         if (this.roomId === '' && data.roomId !== undefined) {
             this.roomId = data.roomId;
         }
 
         // TODO: send to backend and start game when all loaded
         this.load.on('complete', () => {
-            // printMethod('LOADED COMPLETED');
             this.socket?.emit({
                 type: MessageTypes.phaserLoaded,
                 roomId: this.roomId,
@@ -164,7 +159,6 @@ class MainScene extends Phaser.Scene {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
                 printMethod('RECEIVED FIRST GAME STATE:');
-                // printMethod(JSON.stringify(data.data));
                 this.gameStarted = true;
                 this.initiateGame(data.data);
                 this.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');
