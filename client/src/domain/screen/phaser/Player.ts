@@ -67,7 +67,7 @@ export class Player {
         );
         this.renderPlayer();
         this.setObstacles();
-        this.setCave(gameStateData.trackLength - 100);
+        this.setCave(gameStateData.trackLength);
         this.setChasers(gameStateData.chasersPositionX);
 
         if (designDevelopment) {
