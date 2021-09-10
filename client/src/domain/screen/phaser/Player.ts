@@ -1,7 +1,10 @@
-import { Obstacles } from '../../../utils/constants';
+import { designDevelopment, Obstacles } from '../../../utils/constants';
 import { depthDictionary } from '../../../utils/depthDictionary';
+import MainScene from '../components/MainScene';
 import { GameData } from './gameInterfaces';
-import { Coordinates, PlayerRenderer } from './renderer/PlayerRenderer';
+import { GameToScreenMapper } from './GameToScreenMapper';
+import { Coordinates } from './gameTypes';
+import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
 
 /**
  * This is the main player class where all the business functionality should be implemented (eg. what happens when a
@@ -14,44 +17,60 @@ export class Player {
     animationName: string;
     playerRunning: boolean;
     playerAtObstacle: boolean;
-    playerAttention: null | Phaser.Types.Physics.Arcade.SpriteWithDynamicBody; //TODO change
     playerCountSameDistance: number;
     dead: boolean;
     finished: boolean;
     stunned: boolean;
+    renderer: PhaserPlayerRenderer;
 
     constructor(
-        public renderer: PlayerRenderer, // TODO MAKE PRIVATE
+        scene: MainScene,
+        private laneHeightsPerNumberPlayers: number[],
+        private laneHeight: number,
         private index: number,
         private coordinates: Coordinates,
         private gameStateData: GameData,
-        private monsterName: string
+        private monsterName: string,
+        private numberPlayers: number,
+        private gameToScreenMapper: GameToScreenMapper
     ) {
-        this.coordinates = {
-            x: this.coordinates.x,
-            y: this.coordinates.y,
-        };
-
         this.animationName = `${monsterName}Walk`;
         this.username = gameStateData.playersState[index].name;
         this.playerRunning = false;
         this.playerAtObstacle = false;
         this.playerCountSameDistance = 0;
-        this.playerAttention = null;
         this.dead = false;
         this.finished = false;
         this.stunned = false;
 
-        this.renderPlayer();
+        this.renderer = new PhaserPlayerRenderer(scene, this.numberPlayers, this.laneHeightsPerNumberPlayers);
+
+        this.renderer.renderBackground(
+            window.innerWidth,
+            window.innerHeight,
+            gameStateData.trackLength,
+            this.index,
+            this.laneHeight,
+            this.coordinates.y
+        );
+        this.setPlayer();
         this.setObstacles();
-        this.setGoal(gameStateData.trackLength);
-        // this.renderer.renderFireworks(500, 100);
-        // this.renderer.renderFireworks(this.coordinates.x + 500, this.coordinates.y - window.innerHeight / 8 + 50);
+        this.setCave(gameStateData.trackLength);
+        this.setChasers(gameStateData.chasersPositionX);
+
+        if (designDevelopment) {
+            this.renderer.renderFireworks(
+                this.gameToScreenMapper.mapGameMeasurementToScreen(gameStateData.trackLength),
+                this.coordinates.y,
+                this.laneHeight
+            );
+            // setTimeout(() => this.handlePlayerDead(), 500);
+        }
     }
 
-    moveForward(x: number, trackLength: number) {
+    moveForward(newXPosition: number, trackLength: number) {
         if (this.finished) return;
-        const newXPosition = x;
+
         if (newXPosition == this.coordinates.x && this.playerRunning) {
             this.stopRunning();
         } else {
@@ -61,7 +80,7 @@ export class Player {
         }
 
         this.coordinates.x = newXPosition;
-        this.renderer.movePlayerForward(newXPosition);
+        this.renderer.movePlayerForward(this.gameToScreenMapper.mapGameMeasurementToScreen(newXPosition));
     }
 
     checkAtObstacle(isAtObstacle: boolean) {
@@ -79,11 +98,16 @@ export class Player {
         this.renderer.destroyObstacles();
         this.renderer.destroyCave();
         this.renderer.destroyAttentionIcon();
+        this.renderer.handlePlayerDead();
         this.dead = true;
     }
 
     handlePlayerFinished() {
-        this.renderer.renderFireworks(this.coordinates.x, this.coordinates.y - window.innerHeight / 8 + 50);
+        this.renderer.renderFireworks(
+            this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
+            this.coordinates.y - window.innerHeight / 8 + 50,
+            this.laneHeight
+        );
         this.destroyPlayer();
     }
 
@@ -114,7 +138,7 @@ export class Player {
     private arrivedAtObstacle(): void {
         this.stopRunning();
         this.playerAtObstacle = true;
-        this.renderer.addAttentionIcon();
+        this.renderer.renderAttentionIcon();
     }
 
     private finishObstacle(): void {
@@ -124,45 +148,36 @@ export class Player {
         this.renderer.destroyAttentionIcon();
     }
 
-    private renderPlayer() {
-        // eslint-disable-next-line no-console
-        // console.log(this.username);
-        this.renderer.renderPlayer(this.index, this.coordinates, this.monsterName, this.animationName, this.username);
+    private setPlayer() {
+        const screenCoordinates = {
+            x: this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
+            y: this.coordinates.y,
+        };
 
-        // TODO render player name
-        // this.renderer.renderText(
-        //     { x: this.coordinates.x, y: this.coordinates.y - 100 },
-        //     'TODO', // data.data.playersState[i].name, // TODO,
-        //     '#000000'
-        // );
+        this.renderer.renderPlayer(this.index, screenCoordinates, this.monsterName, this.animationName, this.username);
     }
 
     private setObstacles() {
         const obstaclesArray = this.gameStateData.playersState[this.index].obstacles;
 
         obstaclesArray.forEach((obstacle, index) => {
-            let posX = obstacle.positionX + 75;
-            let obstaclePosY = this.coordinates.y + 30;
-            let obstacleScale = 0.3;
+            const posX = this.gameToScreenMapper.mapGameMeasurementToScreen(obstacle.positionX) + 75;
+            let obstaclePosY = this.coordinates.y; //+ 30;
+            let obstacleScale = 0.5 / this.numberPlayers;
 
             switch (obstacle.type) {
                 case Obstacles.treeStump:
-                    obstaclePosY = this.coordinates.y + window.innerHeight / 9;
-                    obstacleScale = 0.4;
+                    obstacleScale = 0.7 / this.numberPlayers;
                     break;
                 case Obstacles.spider:
-                    obstaclePosY = this.coordinates.y + window.innerHeight / 15;
-                    obstacleScale = 0.2;
+                    obstacleScale = 0.6 / this.numberPlayers;
                     break;
                 case Obstacles.trash:
-                    obstaclePosY = this.coordinates.y + window.innerHeight / 7;
-                    obstacleScale = 0.1;
-                    posX += 40;
-
+                    obstacleScale = 0.6 / this.numberPlayers;
+                    obstaclePosY += 10;
                     break;
                 case Obstacles.stone:
-                    obstaclePosY = this.coordinates.y + window.innerHeight / 10;
-                    obstacleScale = 0.2;
+                    obstacleScale = 0.6 / this.numberPlayers;
                     break;
             }
 
@@ -178,13 +193,15 @@ export class Player {
 
     setChasers(chasersPositionX: number) {
         if (!this.dead) {
-            const chasersPositionY = this.coordinates.y + 50;
-            this.renderer.renderChasers(chasersPositionX, chasersPositionY);
+            this.renderer.renderChasers(
+                this.gameToScreenMapper.mapGameMeasurementToScreen(chasersPositionX),
+                this.coordinates.y
+            );
         }
     }
 
-    setGoal(posX: number) {
-        this.renderer.renderCave(posX, this.coordinates.y);
+    setCave(posX: number) {
+        this.renderer.renderCave(this.gameToScreenMapper.mapGameMeasurementToScreen(posX), this.coordinates.y);
     }
 
     startRunning() {

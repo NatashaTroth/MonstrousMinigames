@@ -3,8 +3,11 @@ import { GameState } from '../../../src/gameplay/enums';
 import { verifyGameState } from '../../../src/gameplay/helperFunctions/verifyGameState';
 import { leaderboard, roomId, users } from '../mockData';
 import {
-    clearTimersAndIntervals, completeNextObstacle, finishGame, finishPlayer,
-    startGameAndAdvanceCountdown
+    clearTimersAndIntervals,
+    completeNextObstacle,
+    finishGame,
+    finishPlayer,
+    startGameAndAdvanceCountdown,
 } from './gameHelperFunctions';
 
 const TRACK_LENGTH = 5000; // has to be bigger than initial player position
@@ -35,7 +38,7 @@ describe('Change and verify game state', () => {
     });
 
     it("shouldn't be able to move player until game has started and the countdown has run", async () => {
-        catchFoodGame.createNewGame(users, 550, 4);
+        catchFoodGame.createNewGame(users, 1550, 4);
         const initialPositionX = catchFoodGame.players.get('1')!.positionX;
         try {
             catchFoodGame['runForward']('50');
@@ -66,7 +69,7 @@ describe('Change and verify game state', () => {
     });
 
     it("shouldn't be able to complete obstacle until game has started", async () => {
-        catchFoodGame.createNewGame(users, 550, 4);
+        catchFoodGame.createNewGame(users, 1550, 4);
         // Countdown still has to run
         const obstaclesCompletedLength = catchFoodGame.players.get('1')!.obstacles.length;
         try {

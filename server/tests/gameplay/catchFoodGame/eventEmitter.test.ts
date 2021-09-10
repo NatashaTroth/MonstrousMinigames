@@ -6,8 +6,7 @@ import { GameEvents } from '../../../src/gameplay/catchFood/interfaces/';
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
 import {
-    clearTimersAndIntervals, finishGame, finishPlayer, skipTimeToStartChasers,
-    startGameAndAdvanceCountdown
+    clearTimersAndIntervals, finishGame, finishPlayer, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
@@ -440,8 +439,6 @@ describe('Game has finished events', () => {
         let eventData: GameEvents.GameHasFinished = {
             roomId: '',
             gameState: GameState.Started,
-            trackLength: 0,
-            numberOfObstacles: 0,
             playerRanks: [],
         };
         gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
@@ -454,8 +451,6 @@ describe('Game has finished events', () => {
         expect(eventData).toMatchObject({
             roomId: catchFoodGame.roomId,
             gameState: catchFoodGame.gameState,
-            trackLength: catchFoodGame.trackLength,
-            numberOfObstacles: catchFoodGame.numberOfObstacles,
         });
 
         const playerOneTotalTime = dateNow + 10000 - catchFoodGame['gameStartedAt'];
@@ -496,7 +491,6 @@ describe('Chaser event', () => {
         gameEventEmitter.on(GameEventTypes.PlayerIsDead, () => {
             playerIsDeadEvent = true;
         });
-        skipTimeToStartChasers(catchFoodGame);
         // catchFoodGame['runForward']('1', chasersStartPosX);
         jest.advanceTimersByTime(1000);
         expect(playerIsDeadEvent).toBeTruthy();
@@ -519,7 +513,6 @@ describe('Chaser event', () => {
         catchFoodGame.players.get('4')!.positionX = chasersStartPosX + 2000;
 
         // should catch the other three players
-        skipTimeToStartChasers(catchFoodGame);
         jest.advanceTimersByTime(2000); //move 1 every 100ms -> 2000/100 = 20. move 20 to get to player
 
         expect(eventData).toMatchObject({

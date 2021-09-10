@@ -279,8 +279,6 @@ describe('Game finished', () => {
         const expectedEventObj = {
             roomId: catchFoodGame.roomId,
             gameState: GameState.Finished,
-            trackLength: catchFoodGame.trackLength,
-            numberOfObstacles: catchFoodGame.numberOfObstacles,
         };
 
         expect(eventData).toMatchObject(expectedEventObj);

@@ -4,8 +4,7 @@ import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId } from '../mockData';
 import {
-    advanceCountdown,
-    clearTimersAndIntervals, getToCreatedGameState, releaseThreadN, skipTimeToStartChasers,
+    advanceCountdown, clearTimersAndIntervals, getToCreatedGameState, releaseThreadN,
     startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
@@ -37,34 +36,19 @@ describe('Chasers', () => {
         expect(catchFoodGame.chasersPositionX).toBe(chasersStartPosX);
     });
 
-    it('does not move chasers before timeWhenChasersAppear', async () => {
-        jest.advanceTimersByTime(catchFoodGame.timeWhenChasersAppear);
-        expect(catchFoodGame.chasersPositionX).toBe(chasersStartPosX);
-    });
-
-    it('does not move chasers right before timeWhenChasersAppear', async () => {
-        jest.advanceTimersByTime(catchFoodGame.timeWhenChasersAppear);
-        Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear - 1);
-        jest.advanceTimersByTime(500);
-        expect(catchFoodGame.chasersPositionX).toBe(chasersStartPosX);
-    });
-
-    it('moves the chasers after timeWhenChasersAppear', async () => {
-        skipTimeToStartChasers(catchFoodGame);
+    it.skip('moves the chasers after timeWhenChasersAppear', async () => {
         advanceCountdown(500);
         await releaseThreadN(3);
         expect(catchFoodGame.chasersPositionX).toBeGreaterThan(chasersStartPosX);
     });
 
     it.skip('sets player to dead when on the same pos as a chaser', async () => {
-        skipTimeToStartChasers(catchFoodGame);
         catchFoodGame['runForward']('1', chasersStartPosX);
         jest.advanceTimersByTime(1000);
         expect(catchFoodGame.players.get('1')?.dead).toBeTruthy();
     });
 
     it.skip('sets player to dead when the chaser has passed the player', async () => {
-        skipTimeToStartChasers(catchFoodGame);
         catchFoodGame['runForward']('1', chasersStartPosX - 1);
         jest.advanceTimersByTime(1000);
         expect(catchFoodGame.players.get('1')?.dead).toBeTruthy();
@@ -89,7 +73,7 @@ describe('Chasers', () => {
         catchFoodGame.players.get('4')!.positionX = chasersStartPosX + 2000;
 
         // should catch the other three players
-        skipTimeToStartChasers(catchFoodGame);
+
         jest.advanceTimersByTime(2000); //move 1 every 100ms -> 2000/100 = 20. move 20 to get to player
         expect(eventData).toMatchObject({
             roomId: catchFoodGame.roomId,
@@ -102,8 +86,6 @@ describe('Chasers', () => {
         let eventData: GameEvents.GameHasFinished = {
             roomId: '',
             gameState: GameState.Started,
-            trackLength: 0,
-            numberOfObstacles: 0,
             playerRanks: [],
         };
         const userId = '1';
@@ -116,7 +98,7 @@ describe('Chasers', () => {
             catchFoodGame.players.get(i.toString())!.obstacles = [];
         }
         // should catch the other three players
-        skipTimeToStartChasers(catchFoodGame);
+
         catchFoodGame['runForward'](userId, chasersStartPosX + 20);
 
         //make sure the other players do not get caught
@@ -135,8 +117,6 @@ describe('Chasers', () => {
         let eventData: GameEvents.GameHasFinished = {
             roomId: '',
             gameState: GameState.Started,
-            trackLength: 0,
-            numberOfObstacles: 0,
             playerRanks: [],
         };
         const userId = '1';
@@ -149,7 +129,7 @@ describe('Chasers', () => {
             catchFoodGame.players.get(i.toString())!.obstacles = [];
         }
         // should catch the other three players
-        skipTimeToStartChasers(catchFoodGame);
+
         catchFoodGame['runForward'](userId, chasersStartPosX + 20); //should be 4th (caught first)
 
         //make sure the other players do not get caught
@@ -159,16 +139,16 @@ describe('Chasers', () => {
         catchFoodGame.players.get('3')!.positionX = chasersStartPosX + 2000;
         catchFoodGame.players.get('4')!.positionX = chasersStartPosX + 2000;
 
-        Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear + 2000);
+        Date.now = jest.fn(() => dateNow + 2000);
         jest.advanceTimersByTime(2000); //to catch the first 2 players
 
-        Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear + 3000);
+        Date.now = jest.fn(() => dateNow + 3000);
         jest.advanceTimersByTime(1000); //to catch the first 2 players
 
         //last 2 players should finish naturally
-        Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear + 4000);
+        Date.now = jest.fn(() => dateNow + 4000);
         catchFoodGame['runForward']('3', catchFoodGame.trackLength); // should be 1st
-        Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear + 5000);
+        Date.now = jest.fn(() => dateNow + 5000);
         catchFoodGame['runForward']('4', catchFoodGame.trackLength); //should be 2nd
 
         expect(eventData.playerRanks[0].rank).toBe(4);
@@ -181,8 +161,6 @@ describe('Chasers', () => {
         let eventData: GameEvents.GameHasFinished = {
             roomId: '',
             gameState: GameState.Started,
-            trackLength: 0,
-            numberOfObstacles: 0,
             playerRanks: [],
         };
         const userId = '1';
@@ -195,7 +173,7 @@ describe('Chasers', () => {
             catchFoodGame.players.get(i.toString())!.obstacles = [];
         }
         // should catch the other three players
-        skipTimeToStartChasers(catchFoodGame);
+
         catchFoodGame['runForward'](userId, chasersStartPosX + 20); //should be 4th (caught first)
 
         //make sure the other players do not get caught
@@ -206,15 +184,15 @@ describe('Chasers', () => {
         catchFoodGame.players.get('4')!.positionX = chasersStartPosX + 2000;
 
         // should finish naturally
-        Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear + 2000);
+        Date.now = jest.fn(() => dateNow + 2000);
         catchFoodGame['runForward']('3', catchFoodGame.trackLength); // should be 1st
-        Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear + 3000);
+        Date.now = jest.fn(() => dateNow + 3000);
         catchFoodGame['runForward']('4', catchFoodGame.trackLength); //should be 2nd
 
         //are caught
-        Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear + 4000);
+        Date.now = jest.fn(() => dateNow + 4000);
         jest.advanceTimersByTime(2000); //to catch the first 2 players
-        Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear + 5000);
+        Date.now = jest.fn(() => dateNow + 5000);
         jest.advanceTimersByTime(1000); //to catch the first 2 players
 
         expect(eventData.playerRanks[0].rank).toBe(4);
@@ -235,7 +213,7 @@ describe('Chasers', () => {
             catchFoodGame.players.get(i.toString())!.obstacles = [];
         }
         // should catch the other three players
-        skipTimeToStartChasers(catchFoodGame);
+
         catchFoodGame['runForward'](userId, chasersStartPosX + 20);
         catchFoodGame['runForward']('2', chasersStartPosX + 20);
         catchFoodGame['runForward']('3', chasersStartPosX + 20);
@@ -244,7 +222,7 @@ describe('Chasers', () => {
         catchFoodGame.players.get('4')!.positionX = chasersStartPosX + 2000;
 
         //are caught
-        Date.now = jest.fn(() => dateNow + catchFoodGame.timeWhenChasersAppear + 4000);
+        Date.now = jest.fn(() => dateNow + 4000);
         jest.advanceTimersByTime(2000); //to catch the first 3 players
 
         expect(catchFoodGame.gameState).toBe(GameState.Finished);
