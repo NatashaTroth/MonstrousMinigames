@@ -16,7 +16,7 @@ import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
 import ObstacleNotSkippable from './customErrors/ObstacleNotSkippable';
 import UserHasNoStones from './customErrors/UserHasNoStones';
 import { CatchFoodMsgType, ObstacleType } from './enums';
-import { createObstacles, getObstacleTypes } from './helperFunctions/initiatePlayerState';
+import { createObstacles, getObstacleTypes, getStonesForObstacles, sortBy } from './helperFunctions/initiatePlayerState';
 import { GameStateInfo, Obstacle, PlayerRank } from './interfaces';
 
 interface CatchFoodGameInterface extends IGameInterface<CatchFoodPlayer, GameStateInfo> {
@@ -62,7 +62,6 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
                 this.numberOfObstacles,
                 this.trackLength,
                 this.initialPlayerPositionX,
-                this.numberOfStones,
             ),
             user.characterNumber
         );
@@ -72,6 +71,16 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         });
 
         return player;
+    }
+    protected postProcessPlayers(playersIterable: IterableIterator<CatchFoodPlayer>) {
+        const players = Array.from(playersIterable);
+        const obstacles: Obstacle[] = [];
+        players.forEach(player => obstacles.push(...player.obstacles));
+        const stones = getStonesForObstacles(obstacles, this.trackLength, this.initialPlayerPositionX, 100, this.numberOfStones);
+        
+        for (const player of players) {
+            player.obstacles = sortBy([...player.obstacles, ...stones], 'positionX');
+        }
     }
 
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {

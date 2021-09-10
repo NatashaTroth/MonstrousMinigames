@@ -49,6 +49,8 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
             this.players.set(user.id, this.mapUserToPlayer(user));
         }
 
+        this.postProcessPlayers(this.players.values());
+
         this.gameState = GameState.Created;
     }
     stopGameUserClosed() {
@@ -138,6 +140,7 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     protected abstract mapUserToPlayer(user: User): TPlayer;
     protected abstract update(timeElapsed: number, timeElapsedSinceLastFrame: number): Promise<void> | void;
     protected abstract handleInput(message: IMessage): Promise<void> | void;
+    protected abstract postProcessPlayers(playersIterable: IterableIterator<TPlayer>): void;
     protected rankSuccessfulUser(rankingMetric: number) {
         const currentRank = this.currentRank++;
 
