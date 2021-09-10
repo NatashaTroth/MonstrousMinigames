@@ -1,5 +1,5 @@
-export const TRACK_LENGTH = 1500;
-export const NUMBER_OBSTACLES = 0;
+export const TRACK_LENGTH = 5000;
+export const NUMBER_OBSTACLES = 4;
 export const COUNTDOWN_TIME = 4000; //TODO CHANGE TO 3000
 export const STUNNED_TIME = 3000;
 export const MAX_NUMBER_STONES = 5;
