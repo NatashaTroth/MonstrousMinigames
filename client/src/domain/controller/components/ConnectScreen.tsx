@@ -86,7 +86,7 @@ export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history 
     );
 };
 
-function checkRoomCode(roomId: string) {
+export function checkRoomCode(roomId: string) {
     if (roomId.length !== 4) {
         return null;
     } else if (!roomId.match('[a-zA-Z]')) {

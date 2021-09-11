@@ -7,11 +7,11 @@ import Carousel from 'react-multi-carousel';
 import Button from '../../../components/common/Button';
 import IconButton from '../../../components/common/IconButton';
 import { Label } from '../../../components/common/Label.sc';
+import { carouselOptions } from '../../../config/carouselOptions';
+import { characters } from '../../../config/characters';
 import { ControllerSocketContext } from '../../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
-import { carouselOptions } from '../../../utils/carouselOptions';
-import { characters } from '../../../utils/characters';
 import { MessageTypes } from '../../../utils/constants';
 import { controllerLobbyRoute } from '../../../utils/routes';
 import history from '../../history/history';
@@ -101,7 +101,7 @@ interface CustomArrow {
     onClick?: () => void;
 }
 
-const CustomRightArrow: React.FunctionComponent<CustomArrow> = ({ handleOnClick, ...rest }) => {
+export const CustomRightArrow: React.FunctionComponent<CustomArrow> = ({ handleOnClick, ...rest }) => {
     function handleClick() {
         handleOnClick();
         if (rest.onClick) {
@@ -116,7 +116,7 @@ const CustomRightArrow: React.FunctionComponent<CustomArrow> = ({ handleOnClick,
     );
 };
 
-const CustomLeftArrow: React.FunctionComponent<CustomArrow> = ({ handleOnClick, ...rest }) => {
+export const CustomLeftArrow: React.FunctionComponent<CustomArrow> = ({ handleOnClick, ...rest }) => {
     function handleClick() {
         handleOnClick();
         if (rest.onClick) {
