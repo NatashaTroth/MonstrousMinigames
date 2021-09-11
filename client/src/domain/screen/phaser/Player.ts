@@ -4,7 +4,6 @@ import MainScene from '../components/MainScene';
 import { GameData } from './gameInterfaces';
 import { GameToScreenMapper } from './GameToScreenMapper';
 import { Coordinates } from './gameTypes';
-import printMethod from './printMethod';
 import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
 
 /**
@@ -167,8 +166,6 @@ export class Player {
             let obstacleScale = 0.5 / this.numberPlayers;
             let obstacleDepth = depthDictionary.obstacle - index;
 
-            printMethod('HEERE');
-            printMethod(obstacle.type);
             switch (obstacle.type) {
                 case ObstacleTypes.treeStump:
                     obstacleScale = 0.7 / this.numberPlayers;

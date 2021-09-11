@@ -4,7 +4,6 @@ import { depthDictionary } from '../../../../utils/depthDictionary';
 import { fireworkFlares } from '../../components/GameAssets';
 import MainScene from '../../components/MainScene';
 import { Coordinates } from '../gameTypes';
-import printMethod from '../printMethod';
 
 /**
  * this is an incomplete PlayerRenderer adapter which contains all the phaser logic. This class might only be tested via
@@ -224,13 +223,10 @@ export class PhaserPlayerRenderer {
     }
 
     renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number) {
-        printMethod(obstacleType);
         const obstacle = this.scene.physics.add.sprite(posX, posY, obstacleType);
         obstacle.setScale(obstacleScale * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
-        printMethod(posY);
-        // obstacle.y -= obstacle.displayHeight / 2;
+
         obstacle.y -= obstacle.displayHeight / 1.3;
-        printMethod(obstacle.y);
         obstacle.setDepth(depth);
 
         this.playerObstacles.push(obstacle);

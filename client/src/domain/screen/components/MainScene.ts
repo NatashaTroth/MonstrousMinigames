@@ -159,7 +159,7 @@ class MainScene extends Phaser.Scene {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
                 printMethod('RECEIVED FIRST GAME STATE:');
-                printMethod(JSON.stringify(data.data));
+                // printMethod(JSON.stringify(data.data));
                 this.gameStarted = true;
                 this.initiateGame(data.data);
                 this.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');
