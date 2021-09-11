@@ -38,34 +38,18 @@ const Settings: React.FunctionComponent = () => {
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
         initialPlayLobbyMusic(true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    //TODO natasha
-    // React.useEffect(() => {
-    //     // setValue(volume);
-
-    //     return () => {
-    //         setVolume(value);
-    //     };
-    // }, [value]);
 
     const handleChange = (event: React.ChangeEvent<unknown>, newValue: number | number[]): void => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-        if (typeof newValue == 'number') updateVolume(newValue);
-        else updateVolume(newValue[0]);
-    };
-
-    const updateVolume = async (newValue: number) => {
-        if (newValue === 0) await pauseLobbyMusic(true);
-        else if (volumeHasBeenUnmuted(newValue)) {
-            await playLobbyMusic(true);
-        }
-
-        setAudioVolume(newValue);
-    };
-
-    const volumeHasBeenUnmuted = (newValue: number) => {
-        return newValue > 0 && volume === 0;
+        updateVolume(
+            typeof newValue == 'number' ? newValue : newValue[0],
+            volume,
+            pauseLobbyMusic,
+            playLobbyMusic,
+            setAudioVolume
+        );
     };
 
     return (
@@ -117,3 +101,22 @@ const Settings: React.FunctionComponent = () => {
 };
 
 export default Settings;
+
+export const volumeHasBeenUnmuted = (newValue: number, volume: number) => {
+    return newValue > 0 && volume === 0;
+};
+
+export const updateVolume = async (
+    newValue: number,
+    volume: number,
+    pauseLobbyMusic: (val: boolean) => void,
+    playLobbyMusic: (val: boolean) => void,
+    setAudioVolume: (val: number) => void
+) => {
+    if (newValue === 0) await pauseLobbyMusic(true);
+    else if (volumeHasBeenUnmuted(newValue, volume)) {
+        await playLobbyMusic(true);
+    }
+
+    setAudioVolume(newValue);
+};

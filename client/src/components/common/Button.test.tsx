@@ -1,13 +1,19 @@
 import 'jest-styled-components';
 
 import { cleanup, fireEvent, queryByText, render } from '@testing-library/react';
-import React from 'react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure, mount } from 'enzyme';
+import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 
 import theme from '../../styles/theme';
 import Button from './Button';
+import { StyledButtonBase } from './Button.sc';
+
+configure({ adapter: new Adapter() });
 
 afterEach(cleanup);
+
 describe('Button', () => {
     it('renders given text', () => {
         const givenText = 'A Button';
@@ -53,5 +59,34 @@ describe('Button', () => {
             </ThemeProvider>
         );
         expect(getByText(/A Button/i).closest('button')?.type).toBe('submit');
+    });
+
+    it('button with variant primary uses primary color', () => {
+        const container = mount(
+            <ThemeProvider theme={theme}>
+                <StyledButtonBase variant="primary" />
+            </ThemeProvider>
+        );
+        expect(container.find('button')).toHaveStyleRule('background', theme.palette.primary.main);
+    });
+
+    it('button with variant secondary uses secondary color', () => {
+        const container = mount(
+            <ThemeProvider theme={theme}>
+                <StyledButtonBase variant="secondary" />
+            </ThemeProvider>
+        );
+        expect(container.find('button')).toHaveStyleRule('background', theme.palette.secondary.main);
+    });
+
+    it('button with fullwidth property should have width: 100%', () => {
+        const givenText = 'A Button';
+        const container = mount(
+            <ThemeProvider theme={theme}>
+                <Button fullwidth>{givenText}</Button>
+            </ThemeProvider>
+        );
+
+        expect(container.find('button')).toHaveStyleRule('width', '100%', { modifier: '&&' });
     });
 });

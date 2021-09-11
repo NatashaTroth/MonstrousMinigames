@@ -26,6 +26,7 @@ import PlayerDead from './domain/controller/components/PlayerDead';
 import PlayerStunned from './domain/controller/components/PlayerStunned';
 import ShakeInstruction from './domain/controller/components/ShakeInstruction';
 import history from './domain/history/history';
+import { navigator } from './domain/navigator/NavigatorAdapter';
 import ChooseGame from './domain/screen/components/ChooseGame';
 import { ConnectScreen as ScreenConnectScreen } from './domain/screen/components/ConnectScreen';
 import { FinishedScreen as ScreenFinishedScreen } from './domain/screen/components/FinishedScreen';
@@ -34,6 +35,7 @@ import GameIntro from './domain/screen/components/GameIntro';
 import { Lobby as ScreenLobbyScreen } from './domain/screen/components/Lobby';
 import PlayersGetReady from './domain/screen/components/PlayersGetReady';
 import ScreenWrapper from './domain/screen/components/ScreenWrapper';
+import { sessionStorage } from './domain/storage/SessionStorage';
 import { ClickRequestDeviceMotion, getMicrophoneStream } from './domain/user/permissions';
 import theme from './styles/theme';
 import { Routes } from './utils/routes';
@@ -47,7 +49,7 @@ const App: React.FunctionComponent = () => {
     const [motionPermission, setMotionPermissions] = React.useState(false);
 
     async function getMicrophonePermission() {
-        const permission = await getMicrophoneStream();
+        const permission = await getMicrophoneStream(navigator);
         setMicPermissions(permission);
     }
 
@@ -69,7 +71,7 @@ const App: React.FunctionComponent = () => {
                                             <ControllerSocketContextProvider
                                                 permission={!(!micPermission || !motionPermission)}
                                             >
-                                                {!isMobileOnly && <MasterHeader />}
+                                                {!isMobileOnly && <MasterHeader history={history} />}
                                                 <PausedDialog>
                                                     <Switch>
                                                         <Route path={Routes.credits} component={Credits} exact />
@@ -81,12 +83,16 @@ const App: React.FunctionComponent = () => {
                                                         />
                                                         <Route
                                                             path={Routes.controllerLobby}
-                                                            component={ControllerLobbyScreen}
+                                                            component={() => (
+                                                                <ControllerLobbyScreen history={history} />
+                                                            )}
                                                             exact
                                                         />
                                                         <Route
                                                             path={Routes.controllerGame1}
-                                                            component={ShakeInstruction}
+                                                            component={() => (
+                                                                <ShakeInstruction sessionStorage={sessionStorage} />
+                                                            )}
                                                             exact
                                                         />
                                                         <Route
@@ -96,7 +102,7 @@ const App: React.FunctionComponent = () => {
                                                         />
                                                         <Route
                                                             path={Routes.controllerSpider}
-                                                            component={Spider}
+                                                            component={() => <Spider navigator={navigator} />}
                                                             exact
                                                         />
                                                         <Route path={Routes.controllerTrash} component={Trash} exact />

@@ -12,9 +12,9 @@ export function persistUser(
     }
 ) {
     const { setPlayerNumber, setName, setUserId } = dependencies;
-    sessionStorage.setItem('userId', data.userId || '');
-    localStorage.setItem('name', data.name || '');
-    sessionStorage.setItem('roomId', data.roomId || '');
+    sessionStorage.setItem('userId', data.userId);
+    localStorage.setItem('name', data.name);
+    sessionStorage.setItem('roomId', data.roomId);
 
     setName(data.name);
     setPlayerNumber(data.number);

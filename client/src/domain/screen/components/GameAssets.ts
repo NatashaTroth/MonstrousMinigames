@@ -5,6 +5,7 @@ import flare2 from '../../../assets/flares/flare_02.png';
 import flare3 from '../../../assets/flares/flare_03.png';
 import flaresJsonFile from '../../../assets/flares/flares.json';
 import flaresPngFile from '../../../assets/flares/flares.png';
+import { defaultAvailableCharacters } from '../../../config/characters';
 import floor from '../../../images/background/floor.png';
 import hills from '../../../images/background/hills.png';
 import laneBackground from '../../../images/background/laneBackground.png';
@@ -19,7 +20,6 @@ import steffi from '../../../images/characters/steffi_spritesheet.png';
 import susi from '../../../images/characters/susi_spritesheet.png';
 import caveBehind from '../../../images/obstacles/cave/cave_behind.png';
 import caveInFront from '../../../images/obstacles/cave/cave_in_front.png';
-// import hole from '../../../images/obstacles/hole/hole.png';
 import spider from '../../../images/obstacles/spider/spider.png';
 import stone from '../../../images/obstacles/stone/stone.png';
 import trash from '../../../images/obstacles/trash/trash.png';
@@ -28,7 +28,6 @@ import attention from '../../../images/ui/attention.png';
 import forest2 from '../../../images/ui/forest2.png';
 import forest2Smaller from '../../../images/ui/forest2Smaller.png';
 import forestTile from '../../../images/ui/forestTile.png';
-import { characterDictionary } from '../../../utils/characterDictionary';
 
 //TODO types
 
@@ -44,12 +43,6 @@ const characterSpriteProperties = {
 };
 
 export const characterFiles: string[] = [franz, noah, susi, steffi];
-export const defaultAvailableCharacters = [
-    characterDictionary.franz,
-    characterDictionary.noah,
-    characterDictionary.susi,
-    characterDictionary.steffi,
-];
 
 export const characterSpriteSheetPrefix = 'character_';
 

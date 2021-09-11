@@ -1,0 +1,4 @@
+cd client
+npm run test && npx lint-staged
+
+
