@@ -3,7 +3,6 @@ import Phaser from 'phaser';
 import { designDevelopment, localDevelopment, MessageTypes } from '../../../utils/constants';
 import { screenFinishedRoute } from '../../../utils/routes';
 import history from '../../history/history';
-import initialGameInput from '../../phaser/initialGameInput.json';
 import { MessageSocket } from '../../socket/MessageSocket';
 import { Socket } from '../../socket/Socket';
 import {
@@ -22,6 +21,7 @@ import GameEventEmitter from '../phaser/GameEventEmitter';
 import { GameEventTypes } from '../phaser/GameEventTypes';
 import { GameData } from '../phaser/gameInterfaces';
 import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
+import initialGameInput from '../phaser/initialGameInput.json';
 import { Player } from '../phaser/Player';
 import printMethod from '../phaser/printMethod';
 import { PhaserGameRenderer } from '../phaser/renderer/PhaserGameRenderer';
