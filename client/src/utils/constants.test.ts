@@ -1,4 +1,4 @@
-import { designDevelopment, GameState, localDevelopment, Obstacles } from './constants';
+import { designDevelopment, GameState, localDevelopment, ObstacleTypes } from './constants';
 
 describe('test GAMESTATE enum', () => {
     it('GAMESTATE.created should return CREATED', () => {
@@ -23,24 +23,24 @@ describe('test GAMESTATE enum', () => {
 });
 
 describe('test OBSTACLES enum', () => {
-    it('OBSTACLES.treeStump should return TreeStump', () => {
-        expect(Obstacles.treeStump).toBe('TreeStump');
+    it('ObstacleTypes.treeStump should return TREE_STUMP', () => {
+        expect(ObstacleTypes.treeStump).toBe('TREE_STUMP');
     });
 
-    it('OBSTACLES.spider should return Spider', () => {
-        expect(Obstacles.spider).toBe('Spider');
+    it('ObstacleTypes.spider should return SPIDER', () => {
+        expect(ObstacleTypes.spider).toBe('SPIDER');
     });
 
-    it('OBSTACLES.stone should return Stone', () => {
-        expect(Obstacles.stone).toBe('Stone');
+    it('ObstacleTypes.stone should return STONE', () => {
+        expect(ObstacleTypes.stone).toBe('STONE');
     });
 
-    it('OBSTACLES.trash should return Trash', () => {
-        expect(Obstacles.trash).toBe('Trash');
+    it('ObstacleTypes.trash should return TRASH', () => {
+        expect(ObstacleTypes.trash).toBe('TRASH');
     });
 
-    it('OBSTACLES should have length of 4', () => {
-        expect(Object.keys(Obstacles).length).toBe(4);
+    it('ObstacleTypes should have length of 4', () => {
+        expect(Object.keys(ObstacleTypes).length).toBe(4);
     });
 });
 

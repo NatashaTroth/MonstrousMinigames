@@ -1,4 +1,4 @@
-import { Obstacles } from './constants';
+import { ObstacleTypes } from './constants';
 import {
     controllerChooseCharacterRoute,
     controllerFinishedRoute,
@@ -49,15 +49,15 @@ describe('test routing functions', () => {
     });
 
     it('controllerObstacleRoute should return /controller/${roomId}/treestump', () => {
-        expect(controllerObstacleRoute(roomId, Obstacles.treeStump)).toBe(`/controller/${roomId}/treestump`);
+        expect(controllerObstacleRoute(roomId, ObstacleTypes.treeStump)).toBe(`/controller/${roomId}/treestump`);
     });
 
     it('controllerObstacleRoute should return /controller/${roomId}/spider', () => {
-        expect(controllerObstacleRoute(roomId, Obstacles.spider)).toBe(`/controller/${roomId}/spider`);
+        expect(controllerObstacleRoute(roomId, ObstacleTypes.spider)).toBe(`/controller/${roomId}/spider`);
     });
 
     it('controllerObstacleRoute should return /controller/${roomId}/trash', () => {
-        expect(controllerObstacleRoute(roomId, Obstacles.trash)).toBe(`/controller/${roomId}/trash`);
+        expect(controllerObstacleRoute(roomId, ObstacleTypes.trash)).toBe(`/controller/${roomId}/trash`);
     });
 
     it('screenGameIntroRoute should return /screen/${roomId}/game-intro', () => {

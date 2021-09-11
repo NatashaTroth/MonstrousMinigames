@@ -1,8 +1,8 @@
-export enum Obstacles {
-    treeStump = 'TreeStump',
-    spider = 'Spider',
-    trash = 'Trash',
-    stone = 'Stone',
+export enum ObstacleTypes {
+    treeStump = 'TREE_STUMP',
+    spider = 'SPIDER',
+    trash = 'TRASH',
+    stone = 'STONE',
 }
 
 export enum ObstacleRoutes {
