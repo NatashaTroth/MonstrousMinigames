@@ -1,9 +1,10 @@
-import { designDevelopment, Obstacles } from '../../../utils/constants';
+import { designDevelopment, ObstacleTypes } from '../../../utils/constants';
 import { depthDictionary } from '../../../utils/depthDictionary';
 import MainScene from '../components/MainScene';
 import { GameData } from './gameInterfaces';
 import { GameToScreenMapper } from './GameToScreenMapper';
 import { Coordinates } from './gameTypes';
+import printMethod from './printMethod';
 import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
 
 /**
@@ -164,20 +165,25 @@ export class Player {
             const posX = this.gameToScreenMapper.mapGameMeasurementToScreen(obstacle.positionX) + 75;
             let obstaclePosY = this.coordinates.y; //+ 30;
             let obstacleScale = 0.5 / this.numberPlayers;
+            let obstacleDepth = depthDictionary.obstacle - index;
 
+            printMethod('HEERE');
+            printMethod(obstacle.type);
             switch (obstacle.type) {
-                case Obstacles.treeStump:
+                case ObstacleTypes.treeStump:
                     obstacleScale = 0.7 / this.numberPlayers;
                     break;
-                case Obstacles.spider:
+                case ObstacleTypes.spider:
                     obstacleScale = 0.6 / this.numberPlayers;
                     break;
-                case Obstacles.trash:
+                case ObstacleTypes.trash:
                     obstacleScale = 0.6 / this.numberPlayers;
                     obstaclePosY += 10;
                     break;
-                case Obstacles.stone:
-                    obstacleScale = 0.6 / this.numberPlayers;
+                case ObstacleTypes.stone:
+                    obstacleScale = 0.25 / this.numberPlayers;
+                    obstaclePosY += 13 / this.numberPlayers;
+                    obstacleDepth = depthDictionary.stoneObstacle - index;
                     break;
             }
 
@@ -186,7 +192,7 @@ export class Player {
                 obstaclePosY,
                 obstacleScale,
                 obstacle.type.toLowerCase(),
-                depthDictionary.obstacle - index
+                obstacleDepth
             );
         });
     }
