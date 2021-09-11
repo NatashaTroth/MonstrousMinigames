@@ -7,7 +7,6 @@ import { ControllerSocketContext } from '../../../../contexts/ControllerSocketCo
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import wood from '../../../../images/obstacles/wood/wood.svg';
-import { Obstacles } from '../../../../utils/constants';
 import { treeParticlesConfig } from '../../../../utils/particlesConfig';
 import LinearProgressBar from './LinearProgressBar';
 import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
@@ -24,16 +23,13 @@ import {
 const MAX = 30;
 let sec = 0;
 let stoptime = true;
-interface ClickObstacleProps {
-    setObstacle: (value: undefined | Obstacles) => void;
-}
 
 function resetObstacle() {
     sec = 0;
     stoptime = true;
 }
 
-const TreeTrunk: React.FunctionComponent<ClickObstacleProps> = () => {
+const TreeTrunk: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { obstacle, setObstacle } = React.useContext(PlayerContext);
     const [skip, setSkip] = React.useState(false);

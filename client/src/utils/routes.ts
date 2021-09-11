@@ -1,4 +1,4 @@
-import { Obstacles } from './constants';
+import { ObstacleTypes } from './constants';
 
 export enum Routes {
     // Routes for router
@@ -56,13 +56,13 @@ export const controllerGame1Route = (roomId: undefined | string) => `${Routes.co
 export const controllerPlayerStunnedRoute = (roomId: undefined | string) =>
     `${Routes.controller}/${roomId}${Routes.stunned}`;
 
-export const controllerObstacleRoute = (roomId: undefined | string, obstacle: Obstacles) => {
+export const controllerObstacleRoute = (roomId: undefined | string, obstacle: ObstacleTypes) => {
     switch (obstacle) {
-        case Obstacles.treeStump:
+        case ObstacleTypes.treeStump:
             return `${Routes.controller}/${roomId}${Routes.treeStump}`;
-        case Obstacles.spider:
+        case ObstacleTypes.spider:
             return `${Routes.controller}/${roomId}${Routes.spider}`;
-        case Obstacles.trash:
+        case ObstacleTypes.trash:
             return `${Routes.controller}/${roomId}${Routes.trash}`;
     }
 };

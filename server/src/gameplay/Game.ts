@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 
-import { localDevelopment } from '../../constants';
+// import { localDevelopment } from '../../constants';
 import User from '../classes/user';
 import { Globals } from '../enums/globals';
 import { IMessage } from '../interfaces/messages';
