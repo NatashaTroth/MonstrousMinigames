@@ -7,6 +7,7 @@ describe('obstacle TypeGuard', () => {
             type: MessageTypes.obstacle,
             obstacleId: 1,
             obstacleType: ObstacleTypes.treeStump,
+            skippable: false,
         };
 
         expect(obstacleTypeGuard(data)).toEqual(true);

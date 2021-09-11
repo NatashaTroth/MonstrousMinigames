@@ -1,9 +1,15 @@
 import * as React from 'react';
 
 import FullScreenContainer from '../../../components/common/FullScreenContainer';
+import { GameContext } from '../../../contexts/GameContextProvider';
+import { PlayerContext } from '../../../contexts/PlayerContextProvider';
+import pebble from '../../../images/obstacles/stone/pebble.svg';
 import shakeIt from '../../../images/ui/shakeIt.svg';
+import { ObstacleTypes } from '../../../utils/constants';
+import { controllerObstacleRoute } from '../../../utils/routes';
+import history from '../../history/history';
 import { Storage } from '../../storage/Storage';
-import { Container, Countdown, ShakeIt } from './ShakeInstruction.sc';
+import { Container, Countdown, PebbleButton, PebbleContainer, ShakeIt, StyledPebbleImage } from './ShakeInstruction.sc';
 
 interface ShakeInstructionProps {
     sessionStorage: Storage;
@@ -13,6 +19,8 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
     const [counter, setCounter] = React.useState(
         sessionStorage.getItem('countdownTime') ? Number(sessionStorage.getItem('countdownTime')) / 1000 : null
     );
+    const { hasStone, setHasStone } = React.useContext(PlayerContext);
+    const { roomId } = React.useContext(GameContext);
 
     React.useEffect(() => {
         if (counter !== null && counter !== undefined) {
@@ -26,9 +34,29 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [counter]);
 
+    function handleThrowPebble() {
+        setHasStone(false);
+        history.push(`${controllerObstacleRoute(roomId, ObstacleTypes.stone)}?choosePlayer=true`);
+    }
+
     return (
         <FullScreenContainer>
-            <Container>{counter ? <Countdown>{counter}</Countdown> : <ShakeIt src={shakeIt} />}</Container>
+            <Container>
+                {counter ? (
+                    <Countdown>{counter}</Countdown>
+                ) : (
+                    <>
+                        <ShakeIt src={shakeIt} />
+                        {hasStone && (
+                            <PebbleContainer>
+                                <PebbleButton onClick={handleThrowPebble}>
+                                    <StyledPebbleImage src={pebble} />
+                                </PebbleButton>
+                            </PebbleContainer>
+                        )}
+                    </>
+                )}
+            </Container>
         </FullScreenContainer>
     );
 };

@@ -45,10 +45,15 @@ export const defaultValue = {
     setPlayerDead: () => {
         // do nothing
     },
+    hasStone: false,
+    setHasStone: () => {
+        // do nothing
+    },
 };
 export interface Obstacle {
     type: ObstacleTypes;
     id: number;
+    skippable: boolean;
 }
 interface PlayerContextProps {
     obstacle: undefined | Obstacle;
@@ -70,6 +75,8 @@ interface PlayerContextProps {
     setUserId: (val: string) => void;
     dead: boolean;
     setPlayerDead: (val: boolean) => void;
+    hasStone: boolean;
+    setHasStone: (val: boolean) => void;
 }
 
 export const PlayerContext = React.createContext<PlayerContextProps>(defaultValue);
@@ -85,6 +92,7 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [name, setName] = React.useState<string>('');
     const [ready, setReady] = React.useState<boolean>(false);
     const [dead, setPlayerDead] = React.useState(false);
+    const [hasStone, setHasStone] = React.useState(false);
 
     let reroute = true;
 
@@ -120,6 +128,8 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setUserId,
         dead,
         setPlayerDead,
+        hasStone,
+        setHasStone,
     };
     return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>;
 };

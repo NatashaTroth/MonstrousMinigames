@@ -44,8 +44,6 @@ export const controllerChooseCharacterRoute = (roomId: undefined | string) =>
 
 export const controllerLobbyRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.lobby}`;
 
-export const controllerStoneRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.stone}`;
-
 export const controllerPlayerDeadRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.dead}`;
 
 export const controllerFinishedRoute = (roomId: undefined | string) =>
@@ -64,6 +62,8 @@ export const controllerObstacleRoute = (roomId: undefined | string, obstacle: Ob
             return `${Routes.controller}/${roomId}${Routes.spider}`;
         case ObstacleTypes.trash:
             return `${Routes.controller}/${roomId}${Routes.trash}`;
+        case ObstacleTypes.stone:
+            return `${Routes.controller}/${roomId}${Routes.stone}`;
     }
 };
 

@@ -4,6 +4,7 @@ import Button from '../../../../components/common/Button';
 import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
+import { MessageTypes } from '../../../../utils/constants';
 import { Navigator } from '../../../navigator/Navigator';
 import { currentCount, getAudioInput, resetCurrentCount } from './getAudioInput';
 import LinearProgressBar from './LinearProgressBar';
@@ -34,7 +35,7 @@ const Spider: React.FunctionComponent<SpiderProps> = ({ navigator }) => {
 
     const solveObstacle = () => {
         if (obstacle) {
-            controllerSocket.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle.id });
+            controllerSocket.emit({ type: MessageTypes.obstacleSolved, obstacleId: obstacle.id });
             setObstacle(roomId, undefined);
             clearTimeout(handleSkip);
         }

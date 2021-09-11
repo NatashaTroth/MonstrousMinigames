@@ -8,6 +8,7 @@ import { ControllerSocketContext } from '../../../../contexts/ControllerSocketCo
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import wood from '../../../../images/obstacles/wood/wood.svg';
+import { MessageTypes } from '../../../../utils/constants';
 import LinearProgressBar from './LinearProgressBar';
 import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
 import {
@@ -94,7 +95,7 @@ const TreeTrunk: React.FunctionComponent = () => {
     }, []);
 
     const solveObstacle = () => {
-        controllerSocket?.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
+        controllerSocket?.emit({ type: MessageTypes.obstacleSolved, obstacleId: obstacle!.id });
         setShowInstructions(false);
         setObstacle(roomId, undefined);
         resetObstacle();

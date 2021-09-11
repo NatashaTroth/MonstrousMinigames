@@ -7,7 +7,6 @@ import {
     controllerObstacleRoute,
     controllerPlayerDeadRoute,
     controllerPlayerStunnedRoute,
-    controllerStoneRoute,
     Routes,
     screenChooseGameRoute,
     screenFinishedRoute,
@@ -26,10 +25,6 @@ describe('test routing functions', () => {
 
     it('controllerLobbyRoute should return /controller/${roomId}/lobby', () => {
         expect(controllerLobbyRoute(roomId)).toBe(`/controller/${roomId}/lobby`);
-    });
-
-    it('controllerStoneRoute should return /controller/${roomId}/stone', () => {
-        expect(controllerStoneRoute(roomId)).toBe(`/controller/${roomId}/stone`);
     });
 
     it('controllerPlayerDeadRoute should return /controller/${roomId}/dead', () => {
@@ -58,6 +53,10 @@ describe('test routing functions', () => {
 
     it('controllerObstacleRoute should return /controller/${roomId}/trash', () => {
         expect(controllerObstacleRoute(roomId, ObstacleTypes.trash)).toBe(`/controller/${roomId}/trash`);
+    });
+
+    it('controllerObstacleRoute should return /controller/${roomId}/stone', () => {
+        expect(controllerObstacleRoute(roomId, ObstacleTypes.stone)).toBe(`/controller/${roomId}/stone`);
     });
 
     it('screenGameIntroRoute should return /screen/${roomId}/game-intro', () => {
