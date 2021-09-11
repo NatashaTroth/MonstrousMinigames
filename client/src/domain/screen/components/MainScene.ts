@@ -21,7 +21,7 @@ import GameEventEmitter from '../phaser/GameEventEmitter';
 import { GameEventTypes } from '../phaser/GameEventTypes';
 import { GameData } from '../phaser/gameInterfaces';
 import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
-import initialGameInput from '../phaser/initialGameInput.json';
+import { initialGameInput } from '../phaser/initialGameInput';
 import { Player } from '../phaser/Player';
 import printMethod from '../phaser/printMethod';
 import { PhaserGameRenderer } from '../phaser/renderer/PhaserGameRenderer';
