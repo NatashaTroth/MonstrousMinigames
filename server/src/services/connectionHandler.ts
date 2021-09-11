@@ -85,6 +85,11 @@ class ConnectionHandler {
                 emitter.sendPlayerFinished(controllerNamespace, user, data);
             }
         });
+        this.gameEventEmitter.on(GameEventTypes.InitialGameStateInfoUpdate, (data: GameEvents.GameStateInfoUpdate) => {
+            this.consoleInfo(data.roomId, GameEventTypes.InitialGameStateInfoUpdate);
+            const room = rs.getRoomById(data.roomId);
+            emitter.sendInitialGameStateInfo(screenNameSpace, room, data.gameStateInfo);
+        });
         this.gameEventEmitter.on(GameEventTypes.GameHasStarted, (data: GameEvents.GameHasStarted) => {
             this.consoleInfo(data.roomId, GameEventTypes.GameHasStarted);
             emitter.sendGameHasStarted([controllerNamespace, screenNameSpace], data);

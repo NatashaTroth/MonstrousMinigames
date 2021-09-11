@@ -1,4 +1,5 @@
 import { Namespace, Socket } from 'socket.io';
+
 import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
 import Game from '../gameplay/Game';
@@ -9,6 +10,7 @@ import Room from './room';
 class Screen {
     protected roomId?: string;
     protected room?: Room;
+    public phaserGameReady: boolean;
 
     constructor(
         protected socket: Socket,
@@ -16,7 +18,9 @@ class Screen {
         protected emitter: typeof import('../helpers/emitter').default,
         protected screenNamespace: Namespace,
         protected controllerNamespace: Namespace
-    ) {}
+    ) {
+        this.phaserGameReady = false;
+    }
 
     init() {
         try {
@@ -41,18 +45,31 @@ class Screen {
     private onMessage(message: IMessage) {
         try {
             switch (message.type) {
+                case CatchFoodMsgType.PHASER_GAME_LOADED:
+                    this.room?.setScreenPhaserGameReady(this.socket.id, true);
+
+                    if (this.room?.allPhaserGamesReady()) {
+                        this.room?.setAllScreensPhaserGameReady(false); //reset for next game
+                        this.emitter.sendAllScreensPhaserGameLoaded([this.screenNamespace], this.room!);
+                    }
+                    break;
                 case CatchFoodMsgType.START_PHASER_GAME:
                     this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!);
                     break;
-                case CatchFoodMsgType.START:
-                    console.log('Received STARTING GAME');
+                case CatchFoodMsgType.CREATE:
                     if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
+                        this.room.createNewGame();
+                    }
+                    break;
+                case CatchFoodMsgType.START:
+                    if (this.room?.isCreated() && this.room.isAdminScreen(this.socket.id)) {
+                        // this.room.createNewGame();
                         this.room.startGame();
-
-                        this.emitter.sendGameState(this.screenNamespace, this.room);
+                        // this.emitter.sendGameState(this.screenNamespace, this.room);
 
                         this.room.game.addListener(Game.EVT_FRAME_READY, (game: Game) => {
                             if (this.room?.isPlaying()) {
+                                //TODO natasha SENDING GAME STATE - send from game class
                                 this.emitter.sendGameState(this.screenNamespace, this.room, true);
                             }
                         });

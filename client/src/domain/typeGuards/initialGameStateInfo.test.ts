@@ -1,10 +1,10 @@
 import { GameState, MessageTypes } from '../../utils/constants';
-import { GameStateInfoMessage, gameStateInfoTypeGuard } from './gameStateInfo';
+import { InitialGameStateInfoMessage, initialGameStateInfoTypeGuard } from './initialGameStateInfo';
 
-describe('game state info TypeGuard', () => {
+describe('initial game state info TypeGuard', () => {
     it('when type is paused, it should return true', () => {
-        const data: GameStateInfoMessage = {
-            type: MessageTypes.gameState,
+        const data: InitialGameStateInfoMessage = {
+            type: MessageTypes.initialGameState,
             data: {
                 roomId: 'xxx',
                 playersState: [],
@@ -18,6 +18,6 @@ describe('game state info TypeGuard', () => {
             // },
         };
 
-        expect(gameStateInfoTypeGuard(data)).toEqual(true);
+        expect(initialGameStateInfoTypeGuard(data)).toEqual(true);
     });
 });

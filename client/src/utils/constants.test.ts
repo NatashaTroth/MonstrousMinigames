@@ -1,4 +1,4 @@
-import { GameState, localDevelopment, Obstacles } from './constants';
+import { designDevelopment, GameState, localDevelopment, Obstacles } from './constants';
 
 describe('test GAMESTATE enum', () => {
     it('GAMESTATE.created should return CREATED', () => {
@@ -47,5 +47,8 @@ describe('test OBSTACLES enum', () => {
 describe('local development', () => {
     it('localDevelopment should return false', () => {
         expect(localDevelopment).toBe(false);
+    });
+    it('designDevelopment should return false', () => {
+        expect(designDevelopment).toBe(false);
     });
 });

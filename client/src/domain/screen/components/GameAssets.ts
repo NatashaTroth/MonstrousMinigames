@@ -22,6 +22,7 @@ import caveBehind from '../../../images/obstacles/cave/cave_behind.png';
 import caveInFront from '../../../images/obstacles/cave/cave_in_front.png';
 import spider from '../../../images/obstacles/spider/spider.png';
 import stone from '../../../images/obstacles/stone/stone.png';
+import trash from '../../../images/obstacles/trash/trash.png';
 import wood from '../../../images/obstacles/wood/wood.png';
 import attention from '../../../images/ui/attention.png';
 import forest2 from '../../../images/ui/forest2.png';
@@ -61,7 +62,7 @@ export const images = [
     { name: 'attention', file: attention },
     { name: 'treestump', file: wood },
     { name: 'stone', file: stone },
-    // { name: 'trash', file: trash },
+    { name: 'trash', file: trash },
     { name: 'spider', file: spider },
     { name: 'chasers', file: chasers },
     { name: 'caveBehind', file: caveBehind },
