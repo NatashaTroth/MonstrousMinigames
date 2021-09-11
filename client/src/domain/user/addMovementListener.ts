@@ -1,18 +1,10 @@
 import { sendMovement } from '../controller/gameState/sendMovement';
 import { Socket } from '../socket/Socket';
-import { Window } from '../window/Window';
 
-export default function addMovementListener(
-    controllerSocket: Socket,
-    hasPaused: boolean,
-    playerFinished: boolean,
-    window: Window
-) {
-    if (window && window.addEventListener) {
-        window.addEventListener('devicemotion', e =>
-            sendMovementToController(e, playerFinished, controllerSocket, hasPaused, sendMovement)
-        );
-    }
+export default function addMovementListener(controllerSocket: Socket, hasPaused: boolean, playerFinished: boolean) {
+    window.addEventListener('devicemotion', e =>
+        sendMovementToController(e, playerFinished, controllerSocket, hasPaused, sendMovement)
+    );
 }
 
 export function sendMovementToController(

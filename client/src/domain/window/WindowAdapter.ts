@@ -5,11 +5,8 @@ export class WindowAdapter implements Window {
         requestPermission?: () => Promise<string>;
     };
 
-    public addEventListener?: any;
-
     constructor() {
         this.DeviceMotionEvent = global.window.DeviceMotionEvent;
-        this.addEventListener = global.window.addEventListener;
     }
 }
 

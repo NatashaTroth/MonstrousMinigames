@@ -37,7 +37,6 @@ import PlayersGetReady from './domain/screen/components/PlayersGetReady';
 import ScreenWrapper from './domain/screen/components/ScreenWrapper';
 import { sessionStorage } from './domain/storage/SessionStorage';
 import { ClickRequestDeviceMotion, getMicrophoneStream } from './domain/user/permissions';
-import { window } from './domain/window/WindowAdapter';
 import theme from './styles/theme';
 import { Routes } from './utils/routes';
 

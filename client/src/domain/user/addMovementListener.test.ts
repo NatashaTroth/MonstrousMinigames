@@ -33,23 +33,7 @@ describe('test addMovementListener function', () => {
         const controllerSocket = new InMemorySocketFake();
         const handleEvent = jest.fn();
 
-        const window = new WindowFake('devicemotion', handleEvent);
-
-        addMovementListener(controllerSocket, hasPaused, playerFinished, window);
+        addMovementListener(controllerSocket, hasPaused, playerFinished);
         expect(handleEvent).toHaveBeenCalledTimes(1);
     });
 });
-
-class WindowFake implements Window {
-    public addEventListener?: (type: string, handleEvent: (e: any) => void) => void;
-
-    constructor(public type: string, public handleEvent: (e: any) => void) {
-        if (type === 'devicemotion') {
-            this.addEventListener = e => {
-                handleEvent(e);
-            };
-        } else {
-            this.addEventListener = undefined;
-        }
-    }
-}
