@@ -57,6 +57,7 @@ const Stone: React.FunctionComponent = () => {
             type: MessageTypes.stunPlayer,
             userId,
             receivingUserId,
+            usingCollectedStone: searchParams.get('choosePlayer') ? true : false,
         });
         // history.push(controllerPlayerDeadRoute(roomId)); // TODO ??
         history.push(controllerGame1Route(roomId));
