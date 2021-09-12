@@ -5,7 +5,7 @@ import { GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
 import { clearTimersAndIntervals } from './gameHelperFunctions';
 
-const TRACKLENGTH = 5000;
+const TRACK_LENGTH = 5000;
 const NUMBER_OF_OBSTACLES = 4;
 const NUMBER_OF_STONES = 2;
 let catchFoodGame: CatchFoodGame;
@@ -16,7 +16,7 @@ describe('Initiate CatchFoodGame correctly', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES, NUMBER_OF_STONES);
+        catchFoodGame.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, NUMBER_OF_STONES);
     });
     afterEach(async () => {
         clearTimersAndIntervals(catchFoodGame);
@@ -27,7 +27,7 @@ describe('Initiate CatchFoodGame correctly', () => {
     });
 
     it('initiates trackLength with correct length', async () => {
-        expect(catchFoodGame.trackLength).toBe(TRACKLENGTH);
+        expect(catchFoodGame.trackLength).toBe(TRACK_LENGTH);
     });
 
     it('initiates roomId with correct room', async () => {
@@ -77,6 +77,36 @@ describe('Initiate CatchFoodGame correctly', () => {
 
     it('initiates character number', async () => {
         expect(catchFoodGame.players.get('1')!.characterNumber).toBe(users[0].characterNumber);
+    });
+
+    it('initiates player with correct number of obstacles', () => {
+        const obstacles: Array<Obstacle> = catchFoodGame.players
+            .get('1')!
+            .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
+        expect(obstacles.length).toBe(NUMBER_OF_OBSTACLES);
+    });
+
+    it('initiates player with correct number of stones', () => {
+        const stones: Array<Obstacle> = catchFoodGame.players
+            .get('1')!
+            .obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
+        expect(stones.length).toBe(NUMBER_OF_STONES);
+    });
+
+    it('initiates player with stones not overlapping with other obstacles', () => {
+        const obstacles = catchFoodGame.players.get('1')!.obstacles;
+
+        for (let i = 0; i < obstacles.length; i++) {
+            if (obstacles[i].type !== ObstacleType.Stone) {
+                continue;
+            }
+            if (i > 0) {
+                expect(obstacles[i].positionX).toBeGreaterThan(obstacles[i - 1].positionX);
+            }
+            if (i < obstacles.length - 1) {
+                expect(obstacles[i].positionX).toBeLessThan(obstacles[i + 1].positionX);
+            }
+        }
     });
 
     it('initiates player with correct number of obstacles (all)', async () => {
