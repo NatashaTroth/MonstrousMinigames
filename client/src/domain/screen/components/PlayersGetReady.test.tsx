@@ -1,16 +1,15 @@
-import { cleanup, queryAllByText, queryByText, render } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+
+import { cleanup, fireEvent, queryAllByText, queryByText, render } from '@testing-library/react';
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 
 import { defaultValue, GameContext } from '../../../contexts/GameContextProvider';
-import { defaultValue as screenDefaultValue, ScreenSocketContext } from '../../../contexts/ScreenSocketContextProvider';
 import theme from '../../../styles/theme';
-import { formatMs } from '../../../utils/formatMs';
-import { InMemorySocketFake } from '../../socket/InMemorySocketFake';
 import PlayersGetReady from './PlayersGetReady';
 
 afterEach(cleanup);
-describe('Screen FinishedScreen', () => {
+describe('Screen GetReady', () => {
     const connectedUsers = [
         {
             roomId: "test", 
@@ -32,31 +31,25 @@ describe('Screen FinishedScreen', () => {
         },
     ];
 
-    const socket = new InMemorySocketFake();
     const ReadyScreenComponent = (
         <ThemeProvider theme={theme}>
-            <GameContext.Provider value={{ ...defaultValue, connectedUsers: connectedUsers }}>
+            <GameContext.Provider value={{ ...defaultValue, connectedUsers: connectedUsers, screenAdmin: true }}>
                 <PlayersGetReady />
             </GameContext.Provider>
         </ThemeProvider>
     );
 
     it('renders player numbers', () => {
-        const player1 = 'Player 1';
-        const player2 = 'Player 2';
-        const player3 = 'Player 3';
-        const player4 = 'Player 4';
+        const players = ['Player 1', 'Player 2', 'Player 3', 'Player 4'];
         const { container } = render(
             <ThemeProvider theme={theme}>
                 <PlayersGetReady />
             </ThemeProvider>
         );
-        expect(queryByText(container, player1)).toBeTruthy();
-        expect(queryByText(container, player2)).toBeTruthy();
-        expect(queryByText(container, player3)).toBeTruthy();
-        expect(queryByText(container, player4)).toBeTruthy();
+        players.forEach(player => {
+            expect(queryByText(container, player)).toBeTruthy();
+        });
     });
-
     it('renders "lets join" for each open spot', () => {
         const { container } = render(
             ReadyScreenComponent
@@ -79,5 +72,66 @@ describe('Screen FinishedScreen', () => {
         );
         expect(queryByText(container, "Max Mustermann")).toBeTruthy();
         expect(queryByText(container, "Maria Musterfrau")).toBeTruthy();
+    });
+
+    it('if player is admin renders the start button', () => {
+        const { container } = render(
+            <ThemeProvider theme={theme}>
+            <GameContext.Provider value={{ ...defaultValue, screenAdmin: true }}>
+                <PlayersGetReady/>
+            </GameContext.Provider>
+        </ThemeProvider>
+        );
+
+        expect(queryByText(container, "Start")).toBeTruthy();
+    });
+
+    it('if not all player are ready the start button is disabled', () => {
+        const { container } = render(
+            ReadyScreenComponent
+        );
+
+        const button = container.querySelector('button');
+        expect(button).toBeDisabled();
+
+    });
+
+    it('if start button is clicked the onclick method is called', () => {
+        const readyUsers = [
+            {
+                roomId: "test", 
+                id: "testuser",
+                name: "Max Mustermann",
+                number: 1, 
+                characterNumber: 1, 
+                active: true, 
+                ready: true
+            },
+            {
+                roomId: "test", 
+                id: "testuser2",
+                name: "Maria Musterfrau",
+                number: 2, 
+                characterNumber: 2, 
+                active: true, 
+                ready: true
+            },
+        ];
+        const { container } = render(
+            <ThemeProvider theme={theme}>
+            <GameContext.Provider value={{ ...defaultValue, connectedUsers: readyUsers, screenAdmin: true }}>
+                <PlayersGetReady />
+            </GameContext.Provider>
+        </ThemeProvider>
+        );
+
+        const button = container.querySelector('button');
+        expect(button).not.toBeDisabled();
+        const onclick = jest.fn()
+        if(button){
+            button.onclick = onclick
+            fireEvent.click(button);
+            expect(onclick).toHaveBeenCalled();
+        }
     });
 });
