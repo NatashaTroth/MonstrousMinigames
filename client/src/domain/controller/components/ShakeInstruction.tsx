@@ -4,12 +4,22 @@ import FullScreenContainer from '../../../components/common/FullScreenContainer'
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import pebble from '../../../images/obstacles/stone/pebble.svg';
+import arrow from '../../../images/ui/arrow_blue.svg';
 import shakeIt from '../../../images/ui/shakeIt.svg';
 import { ObstacleTypes } from '../../../utils/constants';
 import { controllerObstacleRoute } from '../../../utils/routes';
 import history from '../../history/history';
 import { Storage } from '../../storage/Storage';
-import { Container, Countdown, PebbleButton, PebbleContainer, ShakeIt, StyledPebbleImage } from './ShakeInstruction.sc';
+import {
+    Arrow,
+    Container,
+    Countdown,
+    PebbleButton,
+    PebbleContainer,
+    PebbleInstructions,
+    ShakeIt,
+    StyledPebbleImage,
+} from './ShakeInstruction.sc';
 
 interface ShakeInstructionProps {
     sessionStorage: Storage;
@@ -49,6 +59,8 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                         <ShakeIt src={shakeIt} />
                         {hasStone && (
                             <PebbleContainer>
+                                <PebbleInstructions>Click to use collected stone</PebbleInstructions>
+                                <Arrow src={arrow} />
                                 <PebbleButton onClick={handleThrowPebble}>
                                     <StyledPebbleImage src={pebble} />
                                 </PebbleButton>
