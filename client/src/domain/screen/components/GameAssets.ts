@@ -20,6 +20,7 @@ import pinkMonster from '../../../images/characters/spritesheets/pink_spriteshee
 import caveBehind from '../../../images/obstacles/cave/cave_behind.png';
 import caveInFront from '../../../images/obstacles/cave/cave_in_front.png';
 import spider from '../../../images/obstacles/spider/spider.png';
+import pebble from '../../../images/obstacles/stone/pebble.png';
 import stone from '../../../images/obstacles/stone/stone.png';
 import trash from '../../../images/obstacles/trash/trash.png';
 import wood from '../../../images/obstacles/wood/wood.png';
@@ -95,6 +96,7 @@ export const images = [
     { name: 'trees', file: trees },
     { name: 'moon', file: moon },
     { name: 'laneBackground', file: laneBackground },
+    { name: 'pebble', file: pebble },
 ];
 
 export const flaresPng = flaresPngFile;

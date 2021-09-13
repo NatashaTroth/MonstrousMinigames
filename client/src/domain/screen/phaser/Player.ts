@@ -65,6 +65,7 @@ export class Player {
             );
 
             // // test animation
+            this.handlePlayerStunned();
             // this.startRunning();
             // setTimeout(() => this.handlePlayerStunned(), 3000);
             // setTimeout(() => {
@@ -119,9 +120,8 @@ export class Player {
 
     handlePlayerStunned() {
         if (!this.stunned) {
-            // this.renderer.stunPlayer();
+            this.renderer.stunPlayer(this.character.animations.get(AnimationName.Stunned)!.name);
             this.stunned = true;
-            this.renderer.startAnimation(this.character.animations.get(AnimationName.Stunned)!.name);
         }
     }
 

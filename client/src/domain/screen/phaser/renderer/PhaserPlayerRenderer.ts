@@ -149,13 +149,27 @@ export class PhaserPlayerRenderer {
         this.player?.destroy();
     }
 
-    stunPlayer() {
-        if (this.player) this.player.alpha = 0.5;
+    stunPlayer(animationName: string) {
+        // if (this.player) this.player.alpha = 0.5;
+        const pebble = this.scene.physics.add.sprite(this.player!.x, this.player!.y - 75, 'pebble');
+        pebble.setScale((0.5 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+        pebble.body.setGravity(100, 1200);
+        pebble.setCollideWorldBounds(true);
+        setTimeout(() => {
+            pebble.destroy();
+            this.startAnimation(animationName);
+        }, 200);
+        // setTimeout(() => {
+        //     this.startAnimation(animationName);
+        // }, 200);
+
+        // pebble.body.onCollide.add()
+        // this.scene.physics.add.overlap(this.player, this.pebble, this.destroyPebble)
     }
 
-    unStunPlayer() {
-        if (this.player) this.player.alpha = 1;
-    }
+    // unStunPlayer() {
+    //     if (this.player) this.player.alpha = 1;
+    // }
 
     renderCave(posX: number, posY: number) {
         posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
@@ -232,7 +246,7 @@ export class PhaserPlayerRenderer {
         // const flareColors: string[] = ['blue', 'red', 'green'];
         const scales: Array<number | { min: number; max: number }> = [0.1, 0.01, { min: 0, max: 0.1 }];
         const lifespans: number[] = [250, 500, 700];
-        // const flareColo
+
         this.particles.forEach((particle, i) => {
             const particlesEmitter = particle.createEmitter({
                 // key: flare,
