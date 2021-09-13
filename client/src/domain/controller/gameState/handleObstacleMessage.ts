@@ -10,5 +10,5 @@ interface HandleMessageDataProps {
 export function handleObstacleMessage(props: HandleMessageDataProps) {
     const { data, setObstacle, roomId } = props;
 
-    setObstacle(roomId, { type: data.obstacleType, id: data.obstacleId });
+    setObstacle(roomId, { type: data.obstacleType, id: data.obstacleId, skippable: data.skippable });
 }

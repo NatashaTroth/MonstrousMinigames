@@ -10,6 +10,7 @@ export enum CatchFoodMsgType {
     OBSTACLE = 'game1/obstacle',
     GAME_STATE = 'game1/gameState',
     OBSTACLE_SOLVED = 'game1/obstacleSolved',
+    OBSTACLE_SKIPPED = 'game1/obstacleSkipped',
     PLAYER_FINISHED = 'game1/playerFinished',
     PLAYER_DIED = 'game1/playerDied',
     PLAYER_STUNNED = 'game1/playerStunned',

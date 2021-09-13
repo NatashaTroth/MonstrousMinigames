@@ -60,7 +60,7 @@ export const images = [
     { name: 'forest2Smaller', file: forest2Smaller },
     { name: 'forestTile', file: forestTile },
     { name: 'attention', file: attention },
-    { name: 'treestump', file: wood },
+    { name: 'tree_stump', file: wood },
     { name: 'stone', file: stone },
     { name: 'trash', file: trash },
     { name: 'spider', file: spider },

@@ -4,4 +4,5 @@ export interface IMessage {
     userId?: string;
     characterNumber?: string;
     receivingUserId?: string;
+    usingCollectedStone?: boolean;
 }

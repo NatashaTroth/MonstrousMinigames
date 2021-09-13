@@ -225,6 +225,7 @@ export class PhaserPlayerRenderer {
     renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number) {
         const obstacle = this.scene.physics.add.sprite(posX, posY, obstacleType);
         obstacle.setScale(obstacleScale * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+
         obstacle.y -= obstacle.displayHeight / 1.3;
         obstacle.setDepth(depth);
 

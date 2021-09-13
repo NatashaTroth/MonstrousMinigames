@@ -7,7 +7,7 @@ import {
     startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
-const TRACKLENGTH = 500;
+const TRACK_LENGTH = 5000; // has to be bigger than initial player position
 
 let catchFoodGame: CatchFoodGame;
 const dateNow = 1618665766156;
@@ -72,7 +72,7 @@ describe('Obstacles reached', () => {
     it('playerHasReachedObstacle is called and returns false', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const playerHasReachedObstacleSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasReachedObstacle');
-        catchFoodGame['runForward']('1', 5);
+        catchFoodGame['runForward']('1', catchFoodGame.players.get('1')!.obstacles[0].positionX / 2);
         expect(playerHasReachedObstacleSpy).toHaveBeenCalled();
         expect(playerHasReachedObstacleSpy).toHaveReturnedWith(false);
     });
@@ -112,7 +112,7 @@ describe('Obstacles reached', () => {
         const distanceToObstacle =
             catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
         catchFoodGame['runForward']('1', distanceToObstacle);
-        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(4);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(catchFoodGame.numberOfObstacles + catchFoodGame.numberOfStones);
     });
 
     it("doesn't allow players to move when they reach an obstacle", async () => {
@@ -157,7 +157,7 @@ describe('Obstacles reached', () => {
     it('should remove a completed obstacle', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         completeNextObstacle(catchFoodGame, '1');
-        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(3);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(catchFoodGame.numberOfObstacles + catchFoodGame.numberOfStones - 1);
     });
 
     it('can move a player again when obstacle is completed', async () => {
@@ -192,7 +192,7 @@ describe('Player has finished race', () => {
 
     it('should not set a player as finished if they have not completed all their obstacles but reached the goal', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame['runForward']('1', TRACKLENGTH);
+        catchFoodGame['runForward']('1', TRACK_LENGTH);
         expect(catchFoodGame.players.get('1')!.finished).toBeFalsy();
     });
 

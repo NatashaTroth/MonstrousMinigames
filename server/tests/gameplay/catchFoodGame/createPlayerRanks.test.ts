@@ -5,7 +5,7 @@ import {
     getGameFinishedDataSameRanks, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
-// const TRACKLENGTH = 500;
+// const TRACK_LENGTH = 5000;  // has to be bigger than initial player position
 
 let catchFoodGame: CatchFoodGame;
 const dateNow = 1618665766156;
