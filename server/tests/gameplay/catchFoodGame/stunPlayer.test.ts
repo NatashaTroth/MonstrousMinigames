@@ -4,8 +4,8 @@ import { CatchFoodGame } from '../../../src/gameplay';
 // import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId } from '../mockData';
 import {
-    advanceCountdown,
-    clearTimersAndIntervals, finishPlayer, releaseThread, releaseThreadN, startGameAndAdvanceCountdown
+    advanceCountdown, clearTimersAndIntervals, finishPlayer, releaseThread, releaseThreadN,
+    startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
@@ -118,9 +118,15 @@ describe('Stun player tests', () => {
     });
 
     it('should not stun a player if thrower has thrown max number of stones', async () => {
+        catchFoodGame.players.get('1')!.obstacles = [];
         for (let i = 0; i < catchFoodGame.maxNumberStones; i++) {
+            catchFoodGame.players.get('1')!.positionX = catchFoodGame.chasersPositionX + 10;
+            catchFoodGame.players.get('1')!.atObstacle = false;
+            catchFoodGame.players.get('1')!.dead = false;
+            catchFoodGame.players.get('1')!.finished = false;
             catchFoodGame['stunPlayer']('1', '2');
-            advanceCountdown(catchFoodGame.stunnedTime);
+            catchFoodGame.players.get('1')!.stunned = false;
+
             await releaseThreadN(3);
         }
         catchFoodGame['stunPlayer']('1', '2');

@@ -1,4 +1,5 @@
 import { inject, singleton } from 'tsyringe';
+
 import Room from '../classes/room';
 import { InvalidRoomCodeError } from '../customErrors';
 import { DI_ROOM_NUMBER } from '../di';
@@ -37,6 +38,7 @@ class RoomService {
     }
     /** starts the game in the room and returns the initial game state */
     public startGame(room: Room): IGameStateBase | undefined {
+        room.createNewGame();
         room.startGame();
         return room.game?.getGameStateInfo();
     }

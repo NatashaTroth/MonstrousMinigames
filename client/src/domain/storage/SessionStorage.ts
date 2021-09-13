@@ -2,11 +2,15 @@ import { Storage } from './Storage';
 
 export class SessionStorage implements Storage {
     getItem(key: string) {
-        return global.localStorage.getItem(key);
+        return global.sessionStorage.getItem(key);
     }
 
     setItem(key: string, value: string | number) {
-        global.localStorage.setItem(key, String(value));
+        global.sessionStorage.setItem(key, String(value));
+    }
+
+    removeItem(key: string) {
+        global.sessionStorage.removeItem(key);
     }
 }
 

@@ -10,6 +10,7 @@ class User {
     public number: number;
     public characterNumber: number;
     public ready: boolean;
+    // public phaserGameLoaded: boolean;
 
     constructor(
         roomId: string,
@@ -28,6 +29,7 @@ class User {
         this.number = number;
         this.characterNumber = characterNumber;
         this.ready = false;
+        // this.phaserGameLoaded = false;
     }
 
     public setRoomId(id: string): void {
@@ -61,6 +63,10 @@ class User {
     public setReady(ready: boolean): void {
         this.ready = ready;
     }
+
+    // public setPhaserGameLoaded(loaded: boolean): void {
+    //     this.phaserGameLoaded = loaded;
+    // }
 
     public isReady(): boolean {
         return this.ready;

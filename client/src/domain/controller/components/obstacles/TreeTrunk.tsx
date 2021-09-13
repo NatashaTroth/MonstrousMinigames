@@ -2,12 +2,11 @@ import * as React from 'react';
 
 import Button from '../../../../components/common/Button';
 import { StyledParticles } from '../../../../components/common/Particles.sc';
+import { treeParticlesConfig } from '../../../../config/particlesConfig';
 import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import wood from '../../../../images/obstacles/wood/wood.svg';
-import { Obstacles } from '../../../../utils/constants';
-import { treeParticlesConfig } from '../../../../utils/particlesConfig';
 import LinearProgressBar from './LinearProgressBar';
 import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
 import {
@@ -20,13 +19,9 @@ import {
     TouchContainer,
 } from './TreeTrunk.sc';
 
-interface ClickObstacleProps {
-    setObstacle: (value: undefined | Obstacles) => void;
-}
-
 export type Orientation = 'vertical' | 'horizontal';
 
-const TreeTrunk: React.FunctionComponent<ClickObstacleProps> = () => {
+const TreeTrunk: React.FunctionComponent = () => {
     const orientationOptions: Orientation[] = ['vertical', 'horizontal'];
     const tolerance = 10;
     const distance = 150;
@@ -91,34 +86,32 @@ const TreeTrunk: React.FunctionComponent<ClickObstacleProps> = () => {
     };
 
     return (
-        <>
-            <ObstacleContainer>
-                <ProgressBarContainer>
-                    <LinearProgressBar MAX={distance} progress={progress} />
-                </ProgressBarContainer>
-                <ObstacleContent>
-                    <ObstacleItem orientation={orientation}>
-                        <StyledObstacleImage src={wood} />
-                    </ObstacleItem>
-                    <TouchContainer
-                        id="touchContainer"
-                        onTouchEnd={() => setParticles(false)}
-                        onTouchStart={handleTouchStart}
-                        onTouchMove={handleTouch}
-                        orientation={orientation}
-                    >
-                        {skip && (
-                            <StyledSkipButton>
-                                <Button onClick={solveObstacle}>Skip</Button>
-                            </StyledSkipButton>
-                        )}
-                        <Line orientation={orientation} />
-                        {showInstructions && <StyledTouchAppIcon orientation={orientation} />}
-                    </TouchContainer>
-                    {particles && <StyledParticles params={treeParticlesConfig} />}
-                </ObstacleContent>
-            </ObstacleContainer>
-        </>
+        <ObstacleContainer>
+            <ProgressBarContainer>
+                <LinearProgressBar MAX={distance} progress={progress} />
+            </ProgressBarContainer>
+            <ObstacleContent>
+                <ObstacleItem orientation={orientation}>
+                    <StyledObstacleImage src={wood} />
+                </ObstacleItem>
+                <TouchContainer
+                    id="touchContainer"
+                    onTouchEnd={() => setParticles(false)}
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouch}
+                    orientation={orientation}
+                >
+                    {skip && (
+                        <StyledSkipButton>
+                            <Button onClick={solveObstacle}>Skip</Button>
+                        </StyledSkipButton>
+                    )}
+                    <Line orientation={orientation} />
+                    {showInstructions && <StyledTouchAppIcon orientation={orientation} />}
+                </TouchContainer>
+                {particles && <StyledParticles params={treeParticlesConfig} />}
+            </ObstacleContent>
+        </ObstacleContainer>
     );
 };
 

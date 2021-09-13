@@ -96,8 +96,6 @@ describe('Disconnect Player tests', () => {
         let eventData: GameEvents.GameHasFinished = {
             roomId: '',
             gameState: GameState.Started,
-            trackLength: 0,
-            numberOfObstacles: 0,
             playerRanks: [],
         };
         gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
@@ -123,8 +121,6 @@ describe('Disconnect Player tests', () => {
         let eventData: GameEvents.GameHasFinished = {
             roomId: '',
             gameState: GameState.Started,
-            trackLength: 0,
-            numberOfObstacles: 0,
             playerRanks: [],
         };
         gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
