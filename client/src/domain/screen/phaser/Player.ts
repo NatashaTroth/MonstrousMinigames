@@ -1,9 +1,11 @@
 import { designDevelopment, ObstacleTypes } from '../../../utils/constants';
 import { depthDictionary } from '../../../utils/depthDictionary';
 import MainScene from '../components/MainScene';
-import { GameData } from './gameInterfaces';
+import { AnimationName } from './enums';
+import { Character, GameData } from './gameInterfaces';
 import { GameToScreenMapper } from './GameToScreenMapper';
 import { Coordinates } from './gameTypes';
+import printMethod from './printMethod';
 import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
 
 /**
@@ -14,7 +16,7 @@ import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
  */
 export class Player {
     username: string;
-    animationName: string;
+    // animationName: string;
     playerRunning: boolean;
     playerAtObstacle: boolean;
     playerCountSameDistance: number;
@@ -30,11 +32,12 @@ export class Player {
         private index: number,
         private coordinates: Coordinates,
         private gameStateData: GameData,
-        private monsterName: string,
+        private character: Character,
         private numberPlayers: number,
         private gameToScreenMapper: GameToScreenMapper
     ) {
-        this.animationName = `${monsterName}Walk`;
+        printMethod(character);
+        // this.animationName = `${monsterName}Walk`;
         this.username = gameStateData.playersState[index].name;
         this.playerRunning = false;
         this.playerAtObstacle = false;
@@ -154,7 +157,7 @@ export class Player {
             y: this.coordinates.y,
         };
 
-        this.renderer.renderPlayer(this.index, screenCoordinates, this.monsterName, this.animationName, this.username);
+        this.renderer.renderPlayer(this.index, screenCoordinates, this.character, this.username);
     }
 
     private setObstacles() {
@@ -208,7 +211,8 @@ export class Player {
     }
 
     startRunning() {
-        this.renderer.startRunningAnimation(this.animationName);
+        const animationName = this.character.animations.get(AnimationName.Running)?.name;
+        if (animationName) this.renderer.startAnimation(animationName);
         this.playerRunning = true;
     }
 

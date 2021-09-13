@@ -3,7 +3,10 @@ import Phaser from 'phaser';
 import { depthDictionary } from '../../../../utils/depthDictionary';
 import { fireworkFlares } from '../../components/GameAssets';
 import MainScene from '../../components/MainScene';
+import { AnimationName } from '../enums';
+import { Character } from '../gameInterfaces';
 import { Coordinates } from '../gameTypes';
+import printMethod from '../printMethod';
 
 /**
  * this is an incomplete PlayerRenderer adapter which contains all the phaser logic. This class might only be tested via
@@ -85,8 +88,10 @@ export class PhaserPlayerRenderer {
     renderPlayer(
         idx: number,
         coordinates: Coordinates,
-        monsterName: string,
-        animationName: string,
+        character: Character,
+        // monsterName: string,
+        // runningAnimationName: string,
+        // stunnedAnimationName: string,
         username?: string
     ): void {
         let usernameToDisplay = '';
@@ -95,8 +100,14 @@ export class PhaserPlayerRenderer {
         }
 
         if (!this.player) {
-            this.renderPlayerInitially(coordinates, monsterName);
-            this.initiatePlayerAnimation(monsterName, animationName);
+            this.renderPlayerInitially(coordinates, character.animations.get(AnimationName.Running)!.spritesheetName);
+
+            character.animations.forEach(animation => {
+                printMethod('--------------------hhhheeere--------------');
+                printMethod(animation.name);
+                this.initiateAnimation(animation.spritesheetName, animation.name);
+            });
+            // this.initiateAnimation(monsterName, stunnedAnimationName);
             this.renderPlayerName(idx, usernameToDisplay, coordinates.y);
         } else if (this.player) {
             //only move player
@@ -252,13 +263,6 @@ export class PhaserPlayerRenderer {
         });
     }
 
-    startRunningAnimation(animationName: string) {
-        this.player?.play(animationName);
-    }
-    stopRunningAnimation() {
-        this.player?.anims.stop();
-    }
-
     movePlayerForward(newXPosition: number) {
         if (this.player) {
             this.player.x = newXPosition;
@@ -299,10 +303,11 @@ export class PhaserPlayerRenderer {
         this.playerAttention?.destroy();
     }
 
-    private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
+    private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
         // eslint-disable-next-line no-console
         // console.log(' coordinates.y + window.innerHeight / 15');
-        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterName);
+        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName);
+
         this.player.setDepth(depthDictionary.player);
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
@@ -310,12 +315,21 @@ export class PhaserPlayerRenderer {
         this.player.y = this.player.y - this.player.displayHeight / 2; //set correct y pos according to player height
     }
 
-    private initiatePlayerAnimation(monsterName: string, animationName: string) {
+    private initiateAnimation(spritesheetName: string, animationName: string) {
         this.scene.anims.create({
             key: animationName,
-            frames: this.scene.anims.generateFrameNumbers(monsterName, { start: 12, end: 15 }),
+            frames: this.scene.anims.generateFrameNumbers(spritesheetName, { start: 12, end: 15 }),
             frameRate: 6,
             repeat: -1,
         });
+
+        //`${monsterName}_stunned`
+    }
+
+    startAnimation(animationName: string) {
+        this.player?.play(animationName);
+    }
+    stopRunningAnimation() {
+        this.player?.anims.stop();
     }
 }

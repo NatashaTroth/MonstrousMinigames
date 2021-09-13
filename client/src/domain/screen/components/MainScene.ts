@@ -86,8 +86,12 @@ class MainScene extends Phaser.Scene {
         audioFiles.forEach(audio => this.load.audio(audio.name, audio.file));
 
         characters.forEach(character => {
-            this.load.spritesheet(character.name, character.file, character.properties);
+            character.animations.forEach(animation => {
+                this.load.spritesheet(animation.spritesheetName, animation.file, animation.properties);
+            });
         });
+
+        printMethod(JSON.stringify(characters));
 
         images.forEach(image => {
             this.load.image(image.name, image.file);
@@ -305,7 +309,7 @@ class MainScene extends Phaser.Scene {
             index,
             { x: gameStateData.playersState[index].positionX, y: posY },
             gameStateData,
-            character.name,
+            character,
             numberPlayers,
             this.gameToScreenMapper!
         );
