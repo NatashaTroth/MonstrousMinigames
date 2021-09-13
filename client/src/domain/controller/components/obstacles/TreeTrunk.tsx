@@ -3,12 +3,11 @@ import * as React from 'react';
 
 import Button from '../../../../components/common/Button';
 import { StyledParticles } from '../../../../components/common/Particles.sc';
+import { treeParticlesConfig } from '../../../../config/particlesConfig';
 import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import wood from '../../../../images/obstacles/wood/wood.svg';
-import { Obstacles } from '../../../../utils/constants';
-import { treeParticlesConfig } from '../../../../utils/particlesConfig';
 import LinearProgressBar from './LinearProgressBar';
 import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
 import {
@@ -24,16 +23,13 @@ import {
 const MAX = 30;
 let sec = 0;
 let stoptime = true;
-interface ClickObstacleProps {
-    setObstacle: (value: undefined | Obstacles) => void;
-}
 
 function resetObstacle() {
     sec = 0;
     stoptime = true;
 }
 
-const TreeTrunk: React.FunctionComponent<ClickObstacleProps> = () => {
+const TreeTrunk: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { obstacle, setObstacle } = React.useContext(PlayerContext);
     const [skip, setSkip] = React.useState(false);
@@ -105,28 +101,26 @@ const TreeTrunk: React.FunctionComponent<ClickObstacleProps> = () => {
     };
 
     return (
-        <>
-            <ObstacleContainer>
-                <ProgressBarContainer>
-                    <LinearProgressBar MAX={MAX} progress={progress} />
-                </ProgressBarContainer>
-                <ObstacleContent>
-                    <ObstacleItem>
-                        <StyledObstacleImage src={wood} />
-                    </ObstacleItem>
-                    <TouchContainer id="touchContainer">
-                        {skip && (
-                            <StyledSkipButton>
-                                <Button onClick={solveObstacle}>Skip</Button>
-                            </StyledSkipButton>
-                        )}
-                        <Line />
-                        {showInstructions && <StyledTouchAppIcon />}
-                    </TouchContainer>
-                    {particles && <StyledParticles params={treeParticlesConfig} />}
-                </ObstacleContent>
-            </ObstacleContainer>
-        </>
+        <ObstacleContainer>
+            <ProgressBarContainer>
+                <LinearProgressBar MAX={MAX} progress={progress} />
+            </ProgressBarContainer>
+            <ObstacleContent>
+                <ObstacleItem>
+                    <StyledObstacleImage src={wood} />
+                </ObstacleItem>
+                <TouchContainer id="touchContainer">
+                    {skip && (
+                        <StyledSkipButton>
+                            <Button onClick={solveObstacle}>Skip</Button>
+                        </StyledSkipButton>
+                    )}
+                    <Line />
+                    {showInstructions && <StyledTouchAppIcon />}
+                </TouchContainer>
+                {particles && <StyledParticles params={treeParticlesConfig} />}
+            </ObstacleContent>
+        </ObstacleContainer>
     );
 };
 

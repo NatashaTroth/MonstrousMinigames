@@ -29,13 +29,14 @@ describe('Get Obstacle Positions test', () => {
         expect(gameStateInfo.roomId).toBe(users[0].roomId);
     });
 
-    it('should return the track length', async () => {
-        expect(gameStateInfo.trackLength).toBe(TRACKLENGTH);
-    });
+    //TODO test initial game state info
+    // it('should return the track length', async () => {
+    //     expect(gameStateInfo.trackLength).toBe(TRACKLENGTH);
+    // });
 
-    it('should return the number of obstacles', async () => {
-        expect(gameStateInfo.numberOfObstacles).toBe(NUMBER_OF_OBSTACLES);
-    });
+    // it('should return the number of obstacles', async () => {
+    //     expect(gameStateInfo.numberOfObstacles).toBe(NUMBER_OF_OBSTACLES);
+    // });
 
     it('should return the playersState as an Array', async () => {
         expect(Array.isArray(gameStateInfo.playersState)).toBe(true);

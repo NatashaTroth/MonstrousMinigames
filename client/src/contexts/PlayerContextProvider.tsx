@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router';
 
-import { Character } from '../utils/characters';
+import { Character } from '../config/characters';
 import { Obstacles } from '../utils/constants';
 import { controllerGame1Route, controllerObstacleRoute } from '../utils/routes';
 

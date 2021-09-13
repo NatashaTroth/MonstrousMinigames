@@ -9,3 +9,8 @@ export interface Room {
     users: Array<User>;
     timestamp: number;
 }
+
+export interface ScreenInfo {
+    id: string;
+    phaserGameReady?: boolean;
+}
