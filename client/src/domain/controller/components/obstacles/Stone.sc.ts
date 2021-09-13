@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core';
+import { darken, Typography } from '@material-ui/core';
 import styled, { keyframes } from 'styled-components';
 
 import { ObstacleContainer } from './ObstaclStyles.sc';
@@ -22,7 +22,7 @@ export const StyledTypography = styled(Typography)`
 export const StyledStone = styled.div`
     display: flex;
     width: 100%;
-    height: 70%;
+    height: 60%;
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -31,7 +31,7 @@ export const StyledStone = styled.div`
 
 export const Sun = styled.div`
     position: absolute;
-    top: 150px;
+    top: 80px;
     left: 0;
     right: 0;
     margin: auto;
@@ -167,9 +167,9 @@ export const StyledStoneImage = styled.img`
 `;
 
 export const StyledPebbleImage = styled.img`
-    width: 40%;
+    width: 30%;
     z-index: 2;
-    top: 110px;
+    top: 70px;
     position: absolute;
     margin: auto;
     left: 0;
@@ -177,26 +177,34 @@ export const StyledPebbleImage = styled.img`
 `;
 
 export const PebbleContainer = styled(ObstacleContainer)`
-    height: 500px;
+    height: 200px;
     display: block;
     width: 100%;
 `;
 
 interface Props {
     characterNumber: number;
+    selected: boolean;
 }
+
+const boxShadowDepth = 7;
 
 export const PlayerButtonContainer = styled.div<Props>`
     && {
         margin-bottom: 20px;
-        background-color: ${({ characterNumber, theme }) => theme.colors.characterColors[characterNumber]};
+        background-color: ${({ characterNumber, theme, selected }) =>
+            selected ? theme.palette.secondary.main : theme.colors.characterColors[characterNumber]};
         color: black;
         cursor: pointer;
-        padding: 10px;
+        padding: 5px;
         font-weight: 700;
         font-size: 22px;
         border-radius: 10px;
         min-width: 200px;
+        box-shadow: ${({ characterNumber, theme, selected }) =>
+            `calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${
+                selected ? theme.palette.secondary.dark : darken(theme.colors.characterColors[characterNumber], 0.5)
+            }}`};
     }
 `;
 
@@ -204,4 +212,5 @@ export const UserButtons = styled.div`
     display: flex;
     flex-direction: column;
     height: 75%;
+    justify-content: space-around;
 `;

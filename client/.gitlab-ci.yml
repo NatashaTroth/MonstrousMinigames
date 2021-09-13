@@ -25,6 +25,7 @@ lint:client:
         - cd client/
         - echo "Linting.."
         - npm run lint-fix
+        - npm run tsc --silent
     except:
         - /^backend-.*$/
 
@@ -61,6 +62,7 @@ staging:client:
 
     only:
         - master
+        - staging
 
 production:client:
     stage: production

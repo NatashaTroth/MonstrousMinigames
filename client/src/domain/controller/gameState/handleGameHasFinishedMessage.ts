@@ -1,6 +1,7 @@
+import { History } from 'history';
+
 import { PlayerRank } from '../../../contexts/ScreenSocketContextProvider';
 import { controllerFinishedRoute } from '../../../utils/routes';
-import history from '../../history/history';
 
 interface HandleGameHasFinishedMessage {
     roomId: string;
@@ -9,14 +10,15 @@ interface HandleGameHasFinishedMessage {
     dependencies: {
         setPlayerRank: (val: number) => void;
     };
+    history: History;
 }
 export const handleGameHasFinishedMessage = (props: HandleGameHasFinishedMessage) => {
-    const { roomId, playerRank, playerRanks, dependencies } = props;
+    const { roomId, playerRank, playerRanks, dependencies, history } = props;
     const stoneTimeoutId = sessionStorage.getItem('stoneTimeoutId');
 
     if (stoneTimeoutId) {
         clearTimeout(Number(stoneTimeoutId));
-        sessionStorage.removeItem(stoneTimeoutId);
+        sessionStorage.removeItem('stoneTimeoutId');
     }
 
     if (!playerRank) {

@@ -5,6 +5,7 @@ import flare2 from '../../../assets/flares/flare_02.png';
 import flare3 from '../../../assets/flares/flare_03.png';
 import flaresJsonFile from '../../../assets/flares/flares.json';
 import flaresPngFile from '../../../assets/flares/flares.png';
+import { defaultAvailableCharacters } from '../../../config/characters';
 import floor from '../../../images/background/floor.png';
 import hills from '../../../images/background/hills.png';
 import laneBackground from '../../../images/background/laneBackground.png';

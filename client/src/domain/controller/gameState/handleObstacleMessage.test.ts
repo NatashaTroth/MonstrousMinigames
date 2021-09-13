@@ -7,6 +7,7 @@ describe('handleObstacleMessage', () => {
         type: MessageTypes.obstacle,
         obstacleType: ObstacleTypes.spider,
         obstacleId: 1,
+        skippable: false,
     };
 
     const roomId = '1234';

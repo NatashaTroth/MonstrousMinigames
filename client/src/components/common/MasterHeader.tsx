@@ -1,14 +1,18 @@
 import { Settings, VolumeOff, VolumeUp } from '@material-ui/icons';
+import { History } from 'history';
 import * as React from 'react';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { handleAudio } from '../../domain/audio/handleAudio';
-import history from '../../domain/history/history';
 import { Routes } from '../../utils/routes';
 import IconButton from '../common/IconButton';
 import { InnerContainer, StyledContainer } from './MasterHeader.sc';
 
-const MasterHeader: React.FC = () => {
+interface MasterHeaderProps {
+    history: History;
+}
+
+const MasterHeader: React.FC<MasterHeaderProps> = ({ history }) => {
     const {
         playLobbyMusic,
         pauseLobbyMusic,

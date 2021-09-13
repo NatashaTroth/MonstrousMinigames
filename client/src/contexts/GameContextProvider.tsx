@@ -1,9 +1,9 @@
 import * as React from 'react';
 
+import { defaultAvailableCharacters } from '../config/characters';
 import { handleSetGameFinished } from '../domain/controller/gameState/handleSetGameFinished';
 import { handleSetGameStarted } from '../domain/controller/gameState/handleSetGameStarted';
 import { User } from '../domain/typeGuards/connectedUsers';
-import { defaultAvailableCharacters } from '../utils/characters';
 import { PlayerRank } from './ScreenSocketContextProvider';
 
 export const defaultValue = {
