@@ -86,12 +86,8 @@ class MainScene extends Phaser.Scene {
         audioFiles.forEach(audio => this.load.audio(audio.name, audio.file));
 
         characters.forEach(character => {
-            character.animations.forEach(animation => {
-                this.load.spritesheet(animation.spritesheetName, animation.file, animation.properties);
-            });
+            this.load.spritesheet(character.name, character.file, character.properties);
         });
-
-        printMethod(JSON.stringify(characters));
 
         images.forEach(image => {
             this.load.image(image.name, image.file);
@@ -101,15 +97,11 @@ class MainScene extends Phaser.Scene {
             this.load.image(`flare${i}`, flare);
         });
 
-        // this.load.atlas('flares', flaresPng, flaresJson);
-
         //TODO Loading bar: https://www.patchesoft.com/phaser-3-loading-screen
         // this.load.on('progress', this.updateBar);
     }
 
     create() {
-        // const div = document.getElementById('game-root');
-        // div!.style.backgroundColor = '#000fff';
         this.gameRenderer = new PhaserGameRenderer(this);
         // // this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
         this.gameAudio = new GameAudio(this.sound);

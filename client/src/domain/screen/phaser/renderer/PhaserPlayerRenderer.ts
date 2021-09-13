@@ -3,10 +3,9 @@ import Phaser from 'phaser';
 import { depthDictionary } from '../../../../utils/depthDictionary';
 import { fireworkFlares } from '../../components/GameAssets';
 import MainScene from '../../components/MainScene';
-import { AnimationName } from '../enums';
 import { Character } from '../gameInterfaces';
+import { CharacterAnimationFrames } from '../gameInterfaces/Character';
 import { Coordinates } from '../gameTypes';
-import printMethod from '../printMethod';
 
 /**
  * this is an incomplete PlayerRenderer adapter which contains all the phaser logic. This class might only be tested via
@@ -85,29 +84,18 @@ export class PhaserPlayerRenderer {
         return (windowHeight - newHeight * this.numberPlayers) / 2 + newHeight * (index + 1);
     }
 
-    renderPlayer(
-        idx: number,
-        coordinates: Coordinates,
-        character: Character,
-        // monsterName: string,
-        // runningAnimationName: string,
-        // stunnedAnimationName: string,
-        username?: string
-    ): void {
+    renderPlayer(idx: number, coordinates: Coordinates, character: Character, username?: string): void {
         let usernameToDisplay = '';
         if (username) {
             usernameToDisplay = username;
         }
 
         if (!this.player) {
-            this.renderPlayerInitially(coordinates, character.animations.get(AnimationName.Running)!.spritesheetName);
+            this.renderPlayerInitially(coordinates, character.name);
 
             character.animations.forEach(animation => {
-                printMethod('--------------------hhhheeere--------------');
-                printMethod(animation.name);
-                this.initiateAnimation(animation.spritesheetName, animation.name);
+                this.initiateAnimation(character.name, animation.name, animation.frames);
             });
-            // this.initiateAnimation(monsterName, stunnedAnimationName);
             this.renderPlayerName(idx, usernameToDisplay, coordinates.y);
         } else if (this.player) {
             //only move player
@@ -115,9 +103,6 @@ export class PhaserPlayerRenderer {
         }
     }
 
-    // getPlayerYPosition(): number | undefined {
-    //     return this.player?.y;
-    // }
     private renderPlayerName(idx: number, name: string, posY: number) {
         this.playerNameBg = this.scene.add.rectangle(50, posY - 25, 250, 50, 0xb63bd4, 0.7);
         // this.playerName = this.scene.add.text(100, window.innerHeight / numberPlayers - 20, 'lsjhdf');
@@ -306,19 +291,19 @@ export class PhaserPlayerRenderer {
     private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
         // eslint-disable-next-line no-console
         // console.log(' coordinates.y + window.innerHeight / 15');
-        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName);
+        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
 
         this.player.setDepth(depthDictionary.player);
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
-        this.player.setScale((0.5 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+        this.player.setScale((0.66 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
         this.player.y = this.player.y - this.player.displayHeight / 2; //set correct y pos according to player height
     }
 
-    private initiateAnimation(spritesheetName: string, animationName: string) {
+    private initiateAnimation(spritesheetName: string, animationName: string, frames: CharacterAnimationFrames) {
         this.scene.anims.create({
             key: animationName,
-            frames: this.scene.anims.generateFrameNumbers(spritesheetName, { start: 12, end: 15 }),
+            frames: this.scene.anims.generateFrameNumbers(spritesheetName, frames),
             frameRate: 6,
             repeat: -1,
         });
@@ -329,7 +314,7 @@ export class PhaserPlayerRenderer {
     startAnimation(animationName: string) {
         this.player?.play(animationName);
     }
-    stopRunningAnimation() {
+    stopAnimation() {
         this.player?.anims.stop();
     }
 }

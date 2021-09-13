@@ -5,7 +5,6 @@ import { AnimationName } from './enums';
 import { Character, GameData } from './gameInterfaces';
 import { GameToScreenMapper } from './GameToScreenMapper';
 import { Coordinates } from './gameTypes';
-import printMethod from './printMethod';
 import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
 
 /**
@@ -16,7 +15,6 @@ import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
  */
 export class Player {
     username: string;
-    // animationName: string;
     playerRunning: boolean;
     playerAtObstacle: boolean;
     playerCountSameDistance: number;
@@ -36,8 +34,6 @@ export class Player {
         private numberPlayers: number,
         private gameToScreenMapper: GameToScreenMapper
     ) {
-        printMethod(character);
-        // this.animationName = `${monsterName}Walk`;
         this.username = gameStateData.playersState[index].name;
         this.playerRunning = false;
         this.playerAtObstacle = false;
@@ -67,7 +63,14 @@ export class Player {
                 this.coordinates.y,
                 this.laneHeight
             );
-            // setTimeout(() => this.handlePlayerDead(), 500);
+
+            // // test animation
+            // this.startRunning();
+            // setTimeout(() => this.handlePlayerStunned(), 3000);
+            // setTimeout(() => {
+            //     this.handlePlayerUnStunned();
+            //     this.startRunning();
+            // }, 6000);
         }
     }
 
@@ -115,13 +118,15 @@ export class Player {
     }
 
     handlePlayerStunned() {
-        this.renderer.stunPlayer();
-        this.stunned = true;
+        if (!this.stunned) {
+            // this.renderer.stunPlayer();
+            this.stunned = true;
+            this.renderer.startAnimation(this.character.animations.get(AnimationName.Stunned)!.name);
+        }
     }
 
     handlePlayerUnStunned() {
-        this.renderer.unStunPlayer();
-
+        this.renderer.stopAnimation();
         this.stunned = false;
     }
 
@@ -217,7 +222,7 @@ export class Player {
     }
 
     stopRunning() {
-        this.renderer.stopRunningAnimation();
+        this.renderer.stopAnimation();
         this.playerRunning = false;
     }
 }
