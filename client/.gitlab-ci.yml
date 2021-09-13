@@ -28,6 +28,7 @@ lint:client:
         - npm run tsc --silent
     except:
         - /^backend-.*$/
+        - staging
 
 test:client:
     stage: test
@@ -39,6 +40,7 @@ test:client:
         - ./node_modules/.bin/jest ./
     except:
         - /^backend-.*$/
+        - staging
 
 #--- Deployment ---
 .some-script: &deployment-script
