@@ -29,7 +29,7 @@ import attention from '../../../images/ui/attention.png';
 import forest2 from '../../../images/ui/forest2.png';
 import forest2Smaller from '../../../images/ui/forest2Smaller.png';
 import forestTile from '../../../images/ui/forestTile.png';
-import { characterDictionary } from '../../../utils/characterDictionary';
+// import { characterDictionary } from '../../../utils/characterDictionary';
 import { AnimationName } from '../phaser/enums';
 import { Character, CharacterAnimation, CharacterSpriteProperties } from '../phaser/gameInterfaces';
 
@@ -47,12 +47,12 @@ const characterSpriteProperties: CharacterSpriteProperties = {
 };
 
 export const characterFiles: string[] = [blueMonster, greenMonster, pinkMonster, orangeMonster];
-export const defaultAvailableCharacters = [
-    characterDictionary.franz,
-    characterDictionary.noah,
-    characterDictionary.susi,
-    characterDictionary.steffi,
-];
+// export const defaultAvailableCharacters = [
+//     characterDictionary.franz,
+//     characterDictionary.noah,
+//     characterDictionary.susi,
+//     characterDictionary.steffi,
+// ];
 
 export const characterSpriteSheetPrefix = 'character_';
 
