@@ -3,7 +3,7 @@ import Phaser from 'phaser';
 import { depthDictionary } from '../../../../utils/depthDictionary';
 import { fireworkFlares } from '../../components/GameAssets';
 import MainScene from '../../components/MainScene';
-import { Character } from '../gameInterfaces';
+import { Character, CharacterAnimation } from '../gameInterfaces';
 import { CharacterAnimationFrames } from '../gameInterfaces/Character';
 import { Coordinates } from '../gameTypes';
 
@@ -93,7 +93,7 @@ export class PhaserPlayerRenderer {
         if (!this.player) {
             this.renderPlayerInitially(coordinates, character.name);
 
-            character.animations.forEach(animation => {
+            character.animations.forEach((animation: CharacterAnimation) => {
                 this.initiateAnimation(character.name, animation.name, animation.frames);
             });
             this.renderPlayerName(idx, usernameToDisplay, coordinates.y);
