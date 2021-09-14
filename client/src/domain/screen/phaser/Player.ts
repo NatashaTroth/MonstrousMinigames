@@ -66,6 +66,11 @@ export class Player {
 
             // // test animation
             this.handlePlayerStunned();
+
+            setInterval(() => {
+                this.stunned = false;
+                this.handlePlayerStunned();
+            }, 4000);
             // this.startRunning();
             // setTimeout(() => this.handlePlayerStunned(), 3000);
             // setTimeout(() => {
