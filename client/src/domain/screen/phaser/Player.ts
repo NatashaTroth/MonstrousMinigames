@@ -64,13 +64,14 @@ export class Player {
                 this.laneHeight
             );
 
+            this.renderer.renderAttentionIcon();
             // // test animation
-            this.handlePlayerStunned();
+            // this.handlePlayerStunned();
 
-            setInterval(() => {
-                this.stunned = false;
-                this.handlePlayerStunned();
-            }, 4000);
+            // setInterval(() => {
+            //     this.stunned = false;
+            //     this.handlePlayerStunned();
+            // }, 4000);
             // this.startRunning();
             // setTimeout(() => this.handlePlayerStunned(), 3000);
             // setTimeout(() => {

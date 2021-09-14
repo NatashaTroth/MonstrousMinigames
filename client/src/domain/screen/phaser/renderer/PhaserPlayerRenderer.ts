@@ -160,15 +160,6 @@ export class PhaserPlayerRenderer {
         pebble.y += pebble.displayHeight / 2;
         pebble.body.setGravity(0, 1200);
         pebble.setCollideWorldBounds(true);
-        // pebble.body.onCollide = new Phaser.Signal();
-        // pebble.body.onCollide.add(hitSprite, this);
-        // const destroyPebble = () => {
-        //     printMethod('In callback');
-        //     // pebble.destroy();
-        //     // this.startAnimation(animationName);
-        // };
-        // this.scene.physics.collide(pebble, this.player, destroyPebble);
-        // this.scene.physics.collide(pebble, this.player, destroyPebble);
         const destroyPebbleInterval = setInterval(() => {
             if (pebble.y > this.player!.y - (this.player!.displayHeight / 5) * 2.5) {
                 clearInterval(destroyPebbleInterval);
@@ -176,19 +167,7 @@ export class PhaserPlayerRenderer {
                 this.startAnimation(animationName);
             }
         }, 100);
-
-        // setTimeout(() => {
-        //     pebble.destroy();
-        //     this.startAnimation(animationName);
-        // }, (1000 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
-
-        // pebble.body.onCollide.add()
-        // this.scene.physics.add.overlap(this.player, pebble, destroyPebble)
     }
-
-    // unStunPlayer() {
-    //     if (this.player) this.player.alpha = 1;
-    // }
 
     renderCave(posX: number, posY: number) {
         posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
@@ -311,9 +290,13 @@ export class PhaserPlayerRenderer {
     renderAttentionIcon() {
         if (!this.playerAttention && this.player) {
             this.playerAttention = this.scene.physics.add
-                .sprite(this.player.x + 75, this.player.y - 50, 'attention')
+                .sprite(
+                    this.player.x + this.player.displayWidth / 2,
+                    this.player.y - this.player.displayHeight / 2,
+                    'attention'
+                )
                 .setDepth(depthDictionary.attention)
-                .setScale(0.03 * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+                .setScale((0.085 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
         }
     }
 
