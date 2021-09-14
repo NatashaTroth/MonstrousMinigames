@@ -47,7 +47,7 @@ export class Player {
         this.renderer.renderBackground(
             window.innerWidth,
             window.innerHeight,
-            gameStateData.trackLength,
+            this.gameToScreenMapper.mapGameMeasurementToScreen(gameStateData.trackLength),
             this.index,
             this.laneHeight,
             this.coordinates.y
@@ -64,7 +64,16 @@ export class Player {
                 this.laneHeight
             );
 
-            this.renderer.renderAttentionIcon();
+            this.arrivedAtObstacle();
+
+            setInterval(() => {
+                this.playerAtObstacle = false;
+                this.renderer.destroyAttentionIcon();
+
+                setTimeout(() => this.arrivedAtObstacle(), 1000);
+            }, 5000);
+
+            // this.renderer.renderAttentionIcon();
             // // test animation
             // this.handlePlayerStunned();
 
@@ -203,7 +212,8 @@ export class Player {
                 obstaclePosY,
                 obstacleScale,
                 obstacle.type.toLowerCase(),
-                obstacleDepth
+                obstacleDepth,
+                obstacle.skippable
             );
         });
     }
