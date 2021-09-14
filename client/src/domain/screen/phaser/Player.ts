@@ -1,7 +1,8 @@
 import { designDevelopment, ObstacleTypes } from '../../../utils/constants';
 import { depthDictionary } from '../../../utils/depthDictionary';
 import MainScene from '../components/MainScene';
-import { GameData } from './gameInterfaces';
+import { AnimationName } from './enums';
+import { Character, GameData } from './gameInterfaces';
 import { GameToScreenMapper } from './GameToScreenMapper';
 import { Coordinates } from './gameTypes';
 import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
@@ -14,7 +15,6 @@ import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
  */
 export class Player {
     username: string;
-    animationName: string;
     playerRunning: boolean;
     playerAtObstacle: boolean;
     playerCountSameDistance: number;
@@ -30,11 +30,10 @@ export class Player {
         private index: number,
         private coordinates: Coordinates,
         private gameStateData: GameData,
-        private monsterName: string,
+        private character: Character,
         private numberPlayers: number,
         private gameToScreenMapper: GameToScreenMapper
     ) {
-        this.animationName = `${monsterName}Walk`;
         this.username = gameStateData.playersState[index].name;
         this.playerRunning = false;
         this.playerAtObstacle = false;
@@ -64,7 +63,15 @@ export class Player {
                 this.coordinates.y,
                 this.laneHeight
             );
-            // setTimeout(() => this.handlePlayerDead(), 500);
+
+            // // test animation
+            this.handlePlayerStunned();
+            // this.startRunning();
+            // setTimeout(() => this.handlePlayerStunned(), 3000);
+            // setTimeout(() => {
+            //     this.handlePlayerUnStunned();
+            //     this.startRunning();
+            // }, 6000);
         }
     }
 
@@ -112,13 +119,14 @@ export class Player {
     }
 
     handlePlayerStunned() {
-        this.renderer.stunPlayer();
-        this.stunned = true;
+        if (!this.stunned) {
+            this.renderer.stunPlayer(this.character.animations.get(AnimationName.Stunned)!.name);
+            this.stunned = true;
+        }
     }
 
     handlePlayerUnStunned() {
-        this.renderer.unStunPlayer();
-
+        this.renderer.stopAnimation();
         this.stunned = false;
     }
 
@@ -154,7 +162,7 @@ export class Player {
             y: this.coordinates.y,
         };
 
-        this.renderer.renderPlayer(this.index, screenCoordinates, this.monsterName, this.animationName, this.username);
+        this.renderer.renderPlayer(this.index, screenCoordinates, this.character, this.username);
     }
 
     private setObstacles() {
@@ -208,12 +216,13 @@ export class Player {
     }
 
     startRunning() {
-        this.renderer.startRunningAnimation(this.animationName);
+        const animationName = this.character.animations.get(AnimationName.Running)?.name;
+        if (animationName) this.renderer.startAnimation(animationName);
         this.playerRunning = true;
     }
 
     stopRunning() {
-        this.renderer.stopRunningAnimation();
+        this.renderer.stopAnimation();
         this.playerRunning = false;
     }
 }
