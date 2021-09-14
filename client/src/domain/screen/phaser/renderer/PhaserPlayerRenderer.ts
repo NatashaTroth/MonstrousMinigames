@@ -151,20 +151,39 @@ export class PhaserPlayerRenderer {
 
     stunPlayer(animationName: string) {
         // if (this.player) this.player.alpha = 0.5;
-        const pebble = this.scene.physics.add.sprite(this.player!.x, this.player!.y - 75, 'pebble');
-        pebble.setScale((0.5 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
-        pebble.body.setGravity(100, 1200);
+        const pebble = this.scene.physics.add.sprite(
+            this.player!.x,
+            this.backgroundLane![0].y - this.backgroundLane![0].displayHeight,
+            'pebble'
+        );
+        pebble.setScale((0.4 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+        pebble.y += pebble.displayHeight / 2;
+        pebble.body.setGravity(0, 1200);
         pebble.setCollideWorldBounds(true);
-        setTimeout(() => {
-            pebble.destroy();
-            this.startAnimation(animationName);
-        }, 200);
+        // pebble.body.onCollide = new Phaser.Signal();
+        // pebble.body.onCollide.add(hitSprite, this);
+        // const destroyPebble = () => {
+        //     printMethod('In callback');
+        //     // pebble.destroy();
+        //     // this.startAnimation(animationName);
+        // };
+        // this.scene.physics.collide(pebble, this.player, destroyPebble);
+        // this.scene.physics.collide(pebble, this.player, destroyPebble);
+        const destroyPebbleInterval = setInterval(() => {
+            if (pebble.y > this.player!.y - (this.player!.displayHeight / 5) * 2.5) {
+                clearInterval(destroyPebbleInterval);
+                pebble.destroy();
+                this.startAnimation(animationName);
+            }
+        }, 100);
+
         // setTimeout(() => {
+        //     pebble.destroy();
         //     this.startAnimation(animationName);
-        // }, 200);
+        // }, (1000 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
 
         // pebble.body.onCollide.add()
-        // this.scene.physics.add.overlap(this.player, this.pebble, this.destroyPebble)
+        // this.scene.physics.add.overlap(this.player, pebble, destroyPebble)
     }
 
     // unStunPlayer() {
