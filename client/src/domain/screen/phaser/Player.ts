@@ -185,14 +185,14 @@ export class Player {
                     obstacleScale = 0.7 / this.numberPlayers;
                     break;
                 case ObstacleTypes.spider:
-                    obstacleScale = 0.6 / this.numberPlayers;
+                    obstacleScale = 0.7 / this.numberPlayers;
                     break;
                 case ObstacleTypes.trash:
-                    obstacleScale = 0.6 / this.numberPlayers;
+                    obstacleScale = 0.7 / this.numberPlayers;
                     obstaclePosY += 10;
                     break;
                 case ObstacleTypes.stone:
-                    obstacleScale = 0.25 / this.numberPlayers;
+                    obstacleScale = 0.75 / this.numberPlayers;
                     obstaclePosY += 13 / this.numberPlayers;
                     obstacleDepth = depthDictionary.stoneObstacle - index;
                     break;

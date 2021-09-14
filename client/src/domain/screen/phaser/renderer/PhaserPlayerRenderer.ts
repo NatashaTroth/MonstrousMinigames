@@ -172,7 +172,7 @@ export class PhaserPlayerRenderer {
     renderCave(posX: number, posY: number) {
         posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
         // posY += 5;
-        const scale = (0.47 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1];
+        const scale = (0.85 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1];
         const yOffset = 2.2;
         this.caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
         this.caveBehind.setScale(scale);
@@ -242,7 +242,7 @@ export class PhaserPlayerRenderer {
 
     renderFireworks(posX: number, posY: number, laneHeight: number) {
         // const flareColors: string[] = ['blue', 'red', 'green'];
-        const scales: Array<number | { min: number; max: number }> = [0.1, 0.01, { min: 0, max: 0.1 }];
+        const scales: Array<number | { min: number; max: number }> = [0.1, 0.08, { min: 0, max: 0.1 }];
         const lifespans: number[] = [250, 500, 700];
 
         this.particles.forEach((particle, i) => {

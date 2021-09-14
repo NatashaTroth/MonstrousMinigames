@@ -3,8 +3,6 @@ import game1SoundStart from '../../../assets/audio/Game_1_Sound_Start.wav';
 import flare1 from '../../../assets/flares/flare_01.png';
 import flare2 from '../../../assets/flares/flare_02.png';
 import flare3 from '../../../assets/flares/flare_03.png';
-import flaresJsonFile from '../../../assets/flares/flares.json';
-import flaresPngFile from '../../../assets/flares/flares.png';
 import { defaultAvailableCharacters } from '../../../config/characters';
 import floor from '../../../images/background/floor.png';
 import hills from '../../../images/background/hills.png';
@@ -100,12 +98,4 @@ export const images = [
     { name: 'pebble', file: pebble },
 ];
 
-export const flaresPng = flaresPngFile;
-export const flaresJson = flaresJsonFile;
-
-export const fireworkFlares = [
-    flare1,
-    flare2,
-    flare3,
-    // {name: "fireworkFlare1", file:flare1}
-];
+export const fireworkFlares = [flare1, flare2, flare3];
