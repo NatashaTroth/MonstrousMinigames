@@ -1,12 +1,12 @@
 import * as React from 'react';
 
 import { StyledParticles } from '../../../../components/common/Particles.sc';
+import { stoneParticlesConfig } from '../../../../config/particlesConfig';
 import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import pebble from '../../../../images/obstacles/stone/pebble.svg';
 import stone from '../../../../images/obstacles/stone/stone.svg';
-import { stoneParticlesConfig } from '../../../../utils/particlesConfig';
 import { controllerPlayerDeadRoute } from '../../../../utils/routes';
 import history from '../../../history/history';
 import {

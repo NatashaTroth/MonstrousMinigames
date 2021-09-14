@@ -10,7 +10,6 @@ import noah_stunned from '../images/characters/stunned_green.png';
 import steffi_stunned from '../images/characters/stunned_orange.png';
 import susi_stunned from '../images/characters/stunned_pink.png';
 import susi from '../images/characters/susi.png';
-import { characterDictionary } from './characterDictionary';
 
 export interface Character {
     id: string;
@@ -25,6 +24,15 @@ export const characters: Character[] = [
     { id: 'susi', src: susi, stunned: susi_stunned, ghost: susi_ghost },
     { id: 'steffi', src: steffi, stunned: steffi_stunned, ghost: steffi_ghost },
 ];
+
+export const characterDictionary: {
+    [key: string]: number;
+} = {
+    franz: 0,
+    noah: 1,
+    susi: 2,
+    steffi: 3,
+};
 
 export const defaultAvailableCharacters = [
     characterDictionary.franz,

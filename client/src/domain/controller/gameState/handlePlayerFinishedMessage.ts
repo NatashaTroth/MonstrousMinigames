@@ -23,7 +23,7 @@ export function handlePlayerFinishedMessage(props: HandlePlayerFinished) {
         const stoneTimeoutId = sessionStorage.getItem('stoneTimeoutId');
         if (stoneTimeoutId) {
             clearTimeout(Number(stoneTimeoutId));
-            sessionStorage.removeItem(stoneTimeoutId);
+            sessionStorage.removeItem('stoneTimeoutId');
         }
 
         history.push(controllerFinishedRoute(roomId));
