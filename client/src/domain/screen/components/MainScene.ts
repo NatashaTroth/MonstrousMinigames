@@ -47,6 +47,8 @@ class MainScene extends Phaser.Scene {
     gameEventEmitter: GameEventEmitter;
     screenAdmin: boolean;
     gameToScreenMapper?: GameToScreenMapper;
+    firstGameStateReceived: boolean;
+    allScreensLoaded: boolean;
 
     constructor() {
         super('MainScene');
@@ -62,6 +64,8 @@ class MainScene extends Phaser.Scene {
         this.cameraSpeed = 2;
         this.gameEventEmitter = GameEventEmitter.getInstance();
         this.screenAdmin = false;
+        this.firstGameStateReceived = false;
+        this.allScreensLoaded = false;
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
@@ -75,6 +79,7 @@ class MainScene extends Phaser.Scene {
 
         // TODO: send to backend and start game when all loaded
         this.load.on('complete', () => {
+            printMethod('LOADING COMPLETE - SENDING TO SERVER');
             this.socket?.emit({
                 type: MessageTypes.phaserLoaded,
                 roomId: this.roomId,
@@ -109,8 +114,6 @@ class MainScene extends Phaser.Scene {
         this.initSockets();
         this.initiateEventEmitters();
 
-        if (this.screenAdmin) this.sendCreateNewGame();
-
         if (localDevelopment && designDevelopment) {
             this.initiateGame(initialGameInput);
         }
@@ -132,6 +135,7 @@ class MainScene extends Phaser.Scene {
     // }
 
     sendCreateNewGame() {
+        printMethod('**ADMIN SCREEN**');
         printMethod('SEND CREATE GAME');
         this.socket?.emit({
             type: MessageTypes.createGame,
@@ -159,13 +163,17 @@ class MainScene extends Phaser.Scene {
                 this.gameStarted = true;
                 this.initiateGame(data.data);
                 this.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');
+                if (this.screenAdmin && !designDevelopment) this.sendStartGame();
             });
+            // this.firstGameStateReceived = true;
         }
 
         const allScreensPhaserGameLoaded = new MessageSocket(allScreensPhaserGameLoadedTypeGuard, this.socket);
         allScreensPhaserGameLoaded.listen((data: AllScreensPhaserGameLoadedMessage) => {
             printMethod('RECEIVED All screens loaded');
-            if (this.screenAdmin && !designDevelopment) this.sendStartGame();
+            // this.allScreensLoaded = true;
+            if (this.screenAdmin) this.sendCreateNewGame();
+            // if (this.screenAdmin && !designDevelopment && this.firstGameStateReceived) this.sendStartGame();
         });
 
         const startedGame = new MessageSocket(startedTypeGuard, this.socket);
