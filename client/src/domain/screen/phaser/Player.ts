@@ -47,7 +47,7 @@ export class Player {
         this.renderer.renderBackground(
             window.innerWidth,
             window.innerHeight,
-            gameStateData.trackLength,
+            this.gameToScreenMapper.mapGameMeasurementToScreen(gameStateData.trackLength),
             this.index,
             this.laneHeight,
             this.coordinates.y
@@ -64,13 +64,23 @@ export class Player {
                 this.laneHeight
             );
 
-            // // test animation
-            this.handlePlayerStunned();
+            this.arrivedAtObstacle();
 
             setInterval(() => {
-                this.stunned = false;
-                this.handlePlayerStunned();
-            }, 4000);
+                this.playerAtObstacle = false;
+                this.renderer.destroyAttentionIcon();
+
+                setTimeout(() => this.arrivedAtObstacle(), 1000);
+            }, 5000);
+
+            // this.renderer.renderAttentionIcon();
+            // // test animation
+            // this.handlePlayerStunned();
+
+            // setInterval(() => {
+            //     this.stunned = false;
+            //     this.handlePlayerStunned();
+            // }, 4000);
             // this.startRunning();
             // setTimeout(() => this.handlePlayerStunned(), 3000);
             // setTimeout(() => {
@@ -184,14 +194,14 @@ export class Player {
                     obstacleScale = 0.7 / this.numberPlayers;
                     break;
                 case ObstacleTypes.spider:
-                    obstacleScale = 0.6 / this.numberPlayers;
+                    obstacleScale = 0.7 / this.numberPlayers;
                     break;
                 case ObstacleTypes.trash:
-                    obstacleScale = 0.6 / this.numberPlayers;
+                    obstacleScale = 0.7 / this.numberPlayers;
                     obstaclePosY += 10;
                     break;
                 case ObstacleTypes.stone:
-                    obstacleScale = 0.25 / this.numberPlayers;
+                    obstacleScale = 0.75 / this.numberPlayers;
                     obstaclePosY += 13 / this.numberPlayers;
                     obstacleDepth = depthDictionary.stoneObstacle - index;
                     break;
@@ -202,7 +212,8 @@ export class Player {
                 obstaclePosY,
                 obstacleScale,
                 obstacle.type.toLowerCase(),
-                obstacleDepth
+                obstacleDepth,
+                obstacle.skippable
             );
         });
     }
