@@ -42,15 +42,35 @@ class Screen {
             console.error(this.roomId + ' | ' + e.name);
         }
     }
+
+    private trySendAllScreensPhaserGameLoaded() {
+        if (!this.room!.sentAllScreensLoaded) {
+            // this.room?.setAllScreensPhaserGameReady(false); //reset for next game
+            // this.emitter.sendAllScreensPhaserGameLoaded([this.screenNamespace], this.room!);
+            this.room!.sentAllScreensLoaded = true;
+            if (this.room?.allScreensLoadedTimeout) clearTimeout(this.room.allScreensLoadedTimeout);
+            // this.room!.setAllScreensPhaserGameReady(false); //reset for next game
+            this.emitter.sendAllScreensPhaserGameLoaded([this.screenNamespace], this.room!);
+        }
+        // else if (this.room?.allPhaserGamesReady() && this.room!.sentAllScreensLoaded) {
+        //     //make sure all screensPhaserGameReady are reset to false again
+        // }
+    }
+
     private onMessage(message: IMessage) {
         try {
             switch (message.type) {
                 case CatchFoodMsgType.PHASER_GAME_LOADED:
                     this.room?.setScreenPhaserGameReady(this.socket.id, true);
+                    if (this.room && !this.room?.firstPhaserScreenLoaded) {
+                        this.room.firstPhaserScreenLoaded = true;
+                        this.room.allScreensLoadedTimeout = setTimeout(() => {
+                            this.trySendAllScreensPhaserGameLoaded();
+                        }, 8000);
+                    }
 
                     if (this.room?.allPhaserGamesReady()) {
-                        this.room?.setAllScreensPhaserGameReady(false); //reset for next game
-                        this.emitter.sendAllScreensPhaserGameLoaded([this.screenNamespace], this.room!);
+                        this.trySendAllScreensPhaserGameLoaded();
                     }
                     break;
                 case CatchFoodMsgType.START_PHASER_GAME:
@@ -96,6 +116,8 @@ class Screen {
                 case MessageTypes.BACK_TO_LOBBY:
                     if (this.room?.isAdminScreen(this.socket.id)) {
                         console.info(this.room.id + ' | Reset Game');
+                        this.room!.setAllScreensPhaserGameReady(false);
+                        this.room!.sentAllScreensLoaded = false;
                         this.room.resetGame().then(() => {
                             this.emitter.sendMessage(
                                 MessageTypes.GAME_HAS_RESET,

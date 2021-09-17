@@ -21,6 +21,9 @@ class Room {
     private state: RoomStates;
     private leaderboard: Leaderboard;
     public screens: Array<ScreenInfo>;
+    public firstPhaserScreenLoaded: boolean;
+    public allScreensLoadedTimeout: undefined | ReturnType<typeof setTimeout>;
+    public sentAllScreensLoaded: boolean;
 
     constructor(id: string, game?: Game) {
         this.id = id;
@@ -31,6 +34,9 @@ class Room {
         this.game.leaderboard = this.leaderboard;
         this.state = RoomStates.OPEN;
         this.screens = [];
+        this.firstPhaserScreenLoaded = false;
+        this.allScreensLoadedTimeout = undefined;
+        this.sentAllScreensLoaded = false;
     }
 
     public clear(): void {
