@@ -18,10 +18,7 @@ import ObstacleNotSkippable from './customErrors/ObstacleNotSkippable';
 import UserHasNoStones from './customErrors/UserHasNoStones';
 import { CatchFoodMsgType, ObstacleType } from './enums';
 import {
-    createObstacles,
-    getObstacleTypes,
-    getStonesForObstacles,
-    sortBy,
+    createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
 } from './helperFunctions/initiatePlayerState';
 import { GameStateInfo, Obstacle, PlayerRank } from './interfaces';
 
@@ -42,6 +39,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     speed = InitialGameParameters.SPEED;
     countdownTime = InitialGameParameters.COUNTDOWN_TIME; //should be 1 second more than client - TODO: make sure it is
     cameraSpeed = InitialGameParameters.CAMERA_SPEED;
+    chasersSpeed = InitialGameParameters.CHASERS_SPEED;
     stunnedTime = InitialGameParameters.STUNNED_TIME;
 
     initialPlayerPositionX = InitialGameParameters.PLAYERS_POSITION_X;
@@ -101,7 +99,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         if (localDevelopment) {
             for (const player of this.players.values()) {
                 if (player.positionX < this.trackLength) {
-                    this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
+                    this.runForward(player.id, ((this.speed / 13) * timeElapsedSinceLastFrame) / 1);
                 }
             }
         }
@@ -225,7 +223,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         // if (timeElapsed < this.timeWhenChasersAppear) return;
         if (this.chasersPositionX > this.trackLength) return;
         // this.chasersPositionX += (timeElapsedSinceLastFrame / 33) * this.cameraSpeed;
-        this.chasersPositionX += (timeElapsedSinceLastFrame / 33) * this.cameraSpeed;
+        this.chasersPositionX += (timeElapsedSinceLastFrame / 33) * this.chasersSpeed;
 
         //TODO test
         for (const player of this.players.values()) {
