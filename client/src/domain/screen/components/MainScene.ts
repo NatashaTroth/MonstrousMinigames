@@ -323,8 +323,9 @@ class MainScene extends Phaser.Scene {
 
     private createGameCountdown(countdownTime: number) {
         const decrementCounter = (counter: number) => counter - 1000;
-        let countdownValue = countdownTime - 1000; //to keep in track with server (1 sec less to start roughly at the same time as the server)
-        const countdownInterval = setInterval(() => {
+        let countdownValue = countdownTime;
+
+        const updateCountdown = () => {
             if (countdownValue > 0) {
                 this.gameRenderer?.renderCountdown((countdownValue / 1000).toString());
                 countdownValue = decrementCounter(countdownValue);
@@ -336,7 +337,10 @@ class MainScene extends Phaser.Scene {
                 this.gameRenderer?.destroyCountdown();
                 clearInterval(countdownInterval);
             }
-        }, 1000);
+        };
+
+        updateCountdown();
+        const countdownInterval = setInterval(updateCountdown, 1000);
     }
 
     private pauseGame() {
