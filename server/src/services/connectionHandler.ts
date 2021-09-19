@@ -7,8 +7,9 @@ import SocketIOServer from '../classes/SocketIOServer';
 import { MessageTypes } from '../enums/messageTypes';
 import { Namespaces } from '../enums/nameSpaces';
 import CatchFoodGameEventEmitter from '../gameplay/catchFood/CatchFoodGameEventEmitter';
-import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
+import { CatchFoodMsgType, ObstacleType } from '../gameplay/catchFood/enums';
 import { GameEvents } from '../gameplay/catchFood/interfaces';
+import { ObstacleReachedInfoController } from '../gameplay/catchFood/interfaces/GameEvents';
 import { GameEventTypes } from '../gameplay/enums';
 import emitter from '../helpers/emitter';
 import RoomService from './roomService';
@@ -69,11 +70,20 @@ class ConnectionHandler {
             console.info(data.roomId + ' | userId: ' + data.userId + ' | Obstacle: ' + data.obstacleType);
             const r = rs.getRoomById(data.roomId);
             const u = r.getUserById(data.userId);
+            const obstacleDetails: ObstacleReachedInfoController = {
+                obstacleType: data.obstacleType,
+                obstacleId: data.obstacleId,
+            };
+
+            if (data.obstacleType === ObstacleType.Trash) {
+                obstacleDetails.numberTrashItems = data.numberTrashItems;
+                obstacleDetails.trashType = data.trashType;
+            }
+
             if (u) {
                 this.controllerNamespace.to(u.socketId).emit('message', {
                     type: CatchFoodMsgType.OBSTACLE,
-                    obstacleType: data.obstacleType,
-                    obstacleId: data.obstacleId,
+                    ...obstacleDetails,
                 });
             }
         });
