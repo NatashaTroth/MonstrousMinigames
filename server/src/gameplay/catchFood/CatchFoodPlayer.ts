@@ -6,6 +6,8 @@ class CatchFoodPlayer extends Player implements PlayerState {
 
     finishedTimeMs = 0;
     atObstacle = false;
+    canSkipObstacle = false;
+    stonesCarrying = 0;
     dead = false;
     stunned = false;
     stunnedSeconds = 0;

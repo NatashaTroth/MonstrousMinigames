@@ -29,9 +29,10 @@ export function clearTimersAndIntervals(game: Game) {
     jest.clearAllMocks();
 }
 
-export function startGameAndAdvanceCountdown(catchFoodGame: CatchFoodGame) {
+export function startGameAndAdvanceCountdown(catchFoodGame: CatchFoodGame, afterCreate: () => any = () => void 0) {
     Date.now = () => dateNow;
     catchFoodGame.createNewGame(users, TRACK_LENGTH, 4);
+    afterCreate();
     catchFoodGame.startGame();
     advanceCountdown(catchFoodGame.countdownTime);
 }
@@ -68,9 +69,11 @@ export function finishPlayer(catchFoodGame: CatchFoodGame, userId: string) {
 }
 
 export function completePlayersObstacles(catchFoodGame: CatchFoodGame, userId: string) {
-    for (let i = 0; i < catchFoodGame.numberOfObstacles; i++) {
+    for (let i = 0; i < catchFoodGame.numberOfObstacles + catchFoodGame.numberOfStones; i++) {
+        const player = catchFoodGame.players.get(userId)!;
         catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
-        catchFoodGame['playerHasCompletedObstacle'](userId, i);
+        catchFoodGame['playerHasCompletedObstacle'](userId, player.obstacles[0].id);
+        player.stonesCarrying = 0;
     }
 }
 
