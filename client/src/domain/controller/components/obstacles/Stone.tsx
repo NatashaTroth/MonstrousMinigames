@@ -140,12 +140,18 @@ const Stone: React.FunctionComponent = () => {
                                                 handleThrow(selectedUser);
                                             }
                                         }}
+                                        variant="secondary"
+                                        size="large"
                                     >
                                         Throw Stone
                                     </Button>
                                 }
                             </div>
-                            {!hasStone && <Button onClick={handleCollectStone}>Collect Stone</Button>}
+                            {!hasStone && (
+                                <Button onClick={handleCollectStone} size="small">
+                                    Collect Stone
+                                </Button>
+                            )}
                         </UserButtons>
                     </>
                 )}
