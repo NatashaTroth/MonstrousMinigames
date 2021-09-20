@@ -50,75 +50,38 @@ export class PhaserPlayerRenderer {
         const repeats = Math.ceil(trackLength / (windowWidth / this.numberPlayers)) + 2;
 
         for (let i = 0; i < repeats; i++) {
-            // Background without parallax
-            /* const bg = this.scene.add.image((i * windowWidth) / this.numberPlayers, posY, 'starsAndSky');
-            const newWidth = this.calcWidthKeepAspectRatio(bg, laneHeight);
-            bg.setDisplaySize(newWidth, laneHeight);
-            bg.setOrigin(0, 1);
-            bg.setScrollFactor(1); */
-
-            //const newWidth = this.calcWidthKeepAspectRatio(bg, laneHeight);
-
-            const sky = this.scene.add.image((i * windowWidth) / this.numberPlayers, posY, 'starsAndSky');
-            const skyWidth = this.calcWidthKeepAspectRatio(sky, laneHeight);
-            sky.setDisplaySize(skyWidth, laneHeight);
+            const sky = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'starsAndSky');
+            const newWidth = this.calcWidthKeepAspectRatio(sky, laneHeight);
+            sky.setDisplaySize(newWidth, laneHeight);
             sky.setOrigin(0, 1);
-            sky.setScrollFactor(1);
+            sky.setScrollFactor(0.2);
 
-            const mountains = this.scene.add.image((i * windowWidth) / this.numberPlayers, posY, 'mountains');
-            const mtnWidth = this.calcWidthKeepAspectRatio(mountains, laneHeight);
-            mountains.setDisplaySize(mtnWidth, laneHeight);
+            const mountains = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'mountains');
+            mountains.setDisplaySize(newWidth, laneHeight);
             mountains.setOrigin(0, 1);
-            mountains.setScrollFactor(1);
+            mountains.setScrollFactor(0.4);
 
-            const hills = this.scene.add.image((i * windowWidth) / this.numberPlayers, posY, 'hills');
-            const hillWidth = this.calcWidthKeepAspectRatio(hills, laneHeight);
-            hills.setDisplaySize(hillWidth, laneHeight);
+            const hills = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'hills');
+            hills.setDisplaySize(newWidth, laneHeight);
             hills.setOrigin(0, 1);
-            hills.setScrollFactor(1);
+            hills.setScrollFactor(0.6);
 
-            const trees = this.scene.add.image((i * windowWidth) / this.numberPlayers, posY, 'trees');
-            const treeWidth = this.calcWidthKeepAspectRatio(trees, laneHeight);
-            trees.setDisplaySize(treeWidth, laneHeight);
+            const trees = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'trees');
+            trees.setDisplaySize(newWidth, laneHeight);
             trees.setOrigin(0, 1);
-            trees.setScrollFactor(1);
+            trees.setScrollFactor(0.8);
 
-            const floor = this.scene.add.image((i * windowWidth) / this.numberPlayers, posY, 'floor');
-            const floorWidth = this.calcWidthKeepAspectRatio(floor, laneHeight);
-            floor.setDisplaySize(floorWidth, laneHeight);
+            const floor = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'floor');
+            floor.setDisplaySize(newWidth, laneHeight);
             floor.setOrigin(0, 1);
             floor.setScrollFactor(1);
 
-            /* // SKY
-            const sky = this.scene.add.tileSprite((i * windowWidth) / this.numberPlayers, posY,
-                trackLength, laneHeight, 'starsAndSky'
-            );
+            // set new positions, based on size of image
 
-            // MOUNTAINS
-            const mountains = this.scene.add.tileSprite((i * windowWidth) / this.numberPlayers, posY,
-                trackLength, laneHeight, 'mountains'
-            );
-
-            // HILLS
-            const hills = this.scene.add.tileSprite((i * windowWidth) / this.numberPlayers, posY,
-                trackLength, laneHeight, 'hills'
-            );
-
-            // TREES
-            const trees = this.scene.add.tileSprite((i * windowWidth) / this.numberPlayers, posY,
-                trackLength, laneHeight, 'trees'
-            );
-
-            // FLOOR
-            const floor = this.scene.add.tileSprite((i * windowWidth) / this.numberPlayers, posY,
-                trackLength, laneHeight, 'floor'
-            ); */
-
-            /* // set new positions, based on size of image
-            bg.x = i * bg.displayWidth;
-            if (this.numberPlayers <= 2) bg.y = this.moveLanesToCenter(windowHeight, laneHeight, index); */
             const laneBg = [sky, mountains, hills, trees, floor];
             laneBg.forEach(element => {
+                element.x = i * element.displayWidth;
+                if (this.numberPlayers <= 2) element.y = this.moveLanesToCenter(windowHeight, laneHeight, index);
                 this.backgroundLane?.push(element);
             });
         }
