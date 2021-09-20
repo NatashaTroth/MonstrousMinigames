@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 import { designDevelopment, localDevelopment, MessageTypes } from '../../../utils/constants';
+import { getRandomInt } from '../../../utils/getRandomInt';
 import { screenFinishedRoute } from '../../../utils/routes';
 import history from '../../history/history';
 import { MessageSocket } from '../../socket/MessageSocket';
@@ -20,6 +21,7 @@ import { GameAudio } from '../phaser/GameAudio';
 import GameEventEmitter from '../phaser/GameEventEmitter';
 import { GameEventTypes } from '../phaser/GameEventTypes';
 import { GameData } from '../phaser/gameInterfaces';
+import { gameLoadingMessages } from '../phaser/gameLoadingMessages';
 import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
 import { initialGameInput } from '../phaser/initialGameInput';
 import { Player } from '../phaser/Player';
@@ -76,18 +78,124 @@ class MainScene extends Phaser.Scene {
         if (this.roomId === '' && data.roomId !== undefined) {
             this.roomId = data.roomId;
         }
+    }
 
-        // TODO: send to backend and start game when all loaded
+    preload(): void {
+        //progress bar: https://gamedevacademy.org/creating-a-preloading-screen-in-phaser-3/?a=13#Loading_Our_Assets
+        //TODO change any
+        const width = this.cameras.main.width;
+        const height = this.cameras.main.height;
+
+        //loading bar
+        const progressBar = this.add.graphics();
+        const progressBox = this.add.graphics();
+        progressBox.fillStyle(0xa7bdb1);
+        progressBox.setDepth(3);
+        // progressBox.fillRect(260, 270, 320, 50);
+        const progressBoxWidth = 320;
+        const progressBoxHeight = 50;
+        const screenCenterWidth = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+        const screenCenterHeight = this.cameras.main.worldView.y + this.cameras.main.height / 2;
+        const progressBoxXPos = width / 2 - progressBoxWidth / 2;
+        const progressBoxYPos = height / 2 - progressBoxHeight / 2;
+        progressBox.fillRect(progressBoxXPos, progressBoxYPos, progressBoxWidth, progressBoxHeight);
+
+        //loading text
+        // printMethod('**');
+        // printMethod(height);
+        // printMethod(windowHeight);
+        // printMethod('**');
+
+        const loadingText = this.make.text({
+            x: screenCenterWidth,
+            y: screenCenterHeight - progressBoxHeight,
+            text: `${gameLoadingMessages[getRandomInt(0, gameLoadingMessages.length)]}...`,
+            // text: 'Loading...',
+            style: {
+                fontSize: `${20}px`,
+                fontFamily: 'Roboto, Arial',
+                // font: '20px monospace',
+                // fixedWidth: progressBoxWidth,
+                // fixedHeight: progressBoxHeight,
+                align: 'center',
+                // boundsAlignV: 'middle',
+                // fill: '#ffffff',
+            },
+        });
+        loadingText.setOrigin(0.5);
+
+        //loading percentage
+        const percentText = this.make.text({
+            x: screenCenterWidth,
+            y: screenCenterHeight,
+            text: '0%',
+            style: {
+                fontSize: `${18}px`,
+                fontFamily: 'Roboto, Arial',
+                color: '#0d1a17',
+                // fixedWidth: progressBoxWidth,
+                // fixedHeight: progressBoxHeight,
+                align: 'center',
+                fontStyle: 'bold',
+
+                // verticalAlign:''
+                // fill: '#ffffff'
+            },
+        });
+        // percentText.setTextBounds(0, 0, progressBoxWidth, progressBoxHeight)
+        percentText.setOrigin(0.5);
+        percentText.setDepth(10);
+
+        // //asset text
+        // const assetText = this.make.text({
+        //     x: width / 2,
+        //     y: height / 2 + 50,
+        //     text: '',
+        //     style: {
+        //         font: '18px monospace',
+        //         // fill: '#ffffff'
+        //     },
+        // });
+        // assetText.setOrigin(0.5, 0.5);
+
+        // emitted every time a file has been loaded
+        this.load.on('progress', function (value: number) {
+            printMethod(value);
+            percentText.setText(`${Math.round(value * 100)}%`);
+
+            progressBar.clear();
+            progressBar.fillStyle(0xd2a44f, 1);
+            progressBar.fillRect(
+                width / 2 - progressBoxWidth / 2 + 10,
+                height / 2 - progressBoxHeight / 2 + 10,
+                300 * value,
+                30
+            );
+            progressBar.setDepth(5);
+        });
+        // emitted every time a file has been loaded
+        // this.load.on('fileprogress', function (file: any) {
+        //     printMethod(file.src);
+        //     // assetText.setText(`Loading asset: ${file.src}`);
+        // });
+
+        //once all the files are done loading
+
         this.load.on('complete', () => {
+            loadingText.destroy();
+            percentText.destroy();
+            progressBox.destroy();
+            progressBar.destroy();
+            // assetText.destroy();
+
             printMethod('LOADING COMPLETE - SENDING TO SERVER');
             this.socket?.emit({
                 type: MessageTypes.phaserLoaded,
                 roomId: this.roomId,
             });
         });
-    }
 
-    preload(): void {
+        //---------
         audioFiles.forEach(audio => this.load.audio(audio.name, audio.file));
 
         characters.forEach(character => {
