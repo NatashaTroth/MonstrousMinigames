@@ -1,21 +1,22 @@
 import { CatchFoodGame } from '../../../src/gameplay';
-import { ObstacleType } from '../../../src/gameplay/catchFood/enums';
+import { ObstacleType, regularObstactTypes } from '../../../src/gameplay/catchFood/enums/ObstacleType';
 import { Obstacle } from '../../../src/gameplay/catchFood/interfaces';
 import { GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
 import { clearTimersAndIntervals } from './gameHelperFunctions';
 
-const TRACKLENGTH = 5000;
+const TRACK_LENGTH = 5000;
 const NUMBER_OF_OBSTACLES = 4;
+const NUMBER_OF_STONES = 2;
 let catchFoodGame: CatchFoodGame;
 // const OBSTACLE_RANGE = 70;
-const OBSTACLE_TYPE_KEYS = Object.keys(ObstacleType);
+const REGULAR_OBSTACLE_TYPE_KEYS = regularObstactTypes;
 
 describe('Initiate CatchFoodGame correctly', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-        catchFoodGame.createNewGame(users, TRACKLENGTH, NUMBER_OF_OBSTACLES);
+        catchFoodGame.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, NUMBER_OF_STONES);
     });
     afterEach(async () => {
         clearTimersAndIntervals(catchFoodGame);
@@ -26,7 +27,7 @@ describe('Initiate CatchFoodGame correctly', () => {
     });
 
     it('initiates trackLength with correct length', async () => {
-        expect(catchFoodGame.trackLength).toBe(TRACKLENGTH);
+        expect(catchFoodGame.trackLength).toBe(TRACK_LENGTH);
     });
 
     it('initiates roomId with correct room', async () => {
@@ -78,8 +79,53 @@ describe('Initiate CatchFoodGame correctly', () => {
         expect(catchFoodGame.players.get('1')!.characterNumber).toBe(users[0].characterNumber);
     });
 
+    it('initiates player with correct number of obstacles', () => {
+        const obstacles: Array<Obstacle> = catchFoodGame.players
+            .get('1')!
+            .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
+        expect(obstacles.length).toBe(NUMBER_OF_OBSTACLES);
+    });
+
+    it('initiates player with correct number of stones', () => {
+        const stones: Array<Obstacle> = catchFoodGame.players
+            .get('1')!
+            .obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
+        expect(stones.length).toBe(NUMBER_OF_STONES);
+    });
+
+    it('initiates player with stones not overlapping with other obstacles', () => {
+        const obstacles = catchFoodGame.players.get('1')!.obstacles;
+
+        for (let i = 0; i < obstacles.length; i++) {
+            if (obstacles[i].type !== ObstacleType.Stone) {
+                continue;
+            }
+            if (i > 0) {
+                expect(obstacles[i].positionX).toBeGreaterThan(obstacles[i - 1].positionX);
+            }
+            if (i < obstacles.length - 1) {
+                expect(obstacles[i].positionX).toBeLessThan(obstacles[i + 1].positionX);
+            }
+        }
+    });
+
+    it('initiates all players\' stones at the same position', () => {
+        const playersWithStonesOnly = Array.from(catchFoodGame.players.values())
+            .map(player => {
+                player.obstacles = player.obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
+                return player;
+            });
+
+        for (let i = 1; i < playersWithStonesOnly.length; i++) {
+            expect(playersWithStonesOnly[i].obstacles.length).toBe(playersWithStonesOnly[i - 1].obstacles.length);
+            for (let j = 0; j < playersWithStonesOnly[i].obstacles.length; j++) {
+                expect(playersWithStonesOnly[i].obstacles[j].positionX).toBe(playersWithStonesOnly[i - 1].obstacles[j].positionX);
+            }
+        }
+    });
+
     it('initiates player with correct number of obstacles (all)', async () => {
-        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(NUMBER_OF_OBSTACLES);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(NUMBER_OF_OBSTACLES + NUMBER_OF_STONES);
     });
 
     function getObstacleRange(catchFoodGame: CatchFoodGame): number {
@@ -93,14 +139,18 @@ describe('Initiate CatchFoodGame correctly', () => {
 
     it('initiates the first obstacle in the correct range', async () => {
         const obstacleRange = getObstacleRange(catchFoodGame);
-        const obstacles: Array<Obstacle> = catchFoodGame.players.get('1')!.obstacles;
+        const obstacles: Array<Obstacle> = catchFoodGame.players
+            .get('1')!
+            .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
         expect(obstacles[0].positionX).toBeGreaterThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange);
         expect(obstacles[0].positionX).toBeLessThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange * 2);
     });
 
     it('initiates the second obstacle in the correct range', async () => {
         const obstacleRange = getObstacleRange(catchFoodGame);
-        const obstacles: Array<Obstacle> = catchFoodGame.players.get('1')!.obstacles;
+        const obstacles: Array<Obstacle> = catchFoodGame.players
+            .get('1')!
+            .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
         expect(obstacles[1].positionX).toBeGreaterThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange * 2);
         expect(obstacles[1].positionX).toBeLessThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange * 3);
     });
@@ -108,7 +158,9 @@ describe('Initiate CatchFoodGame correctly', () => {
     it('initiates the third obstacle in the correct range', async () => {
         const obstacleRange = getObstacleRange(catchFoodGame);
 
-        const obstacles: Array<Obstacle> = catchFoodGame.players.get('1')!.obstacles;
+        const obstacles: Array<Obstacle> = catchFoodGame.players
+            .get('1')!
+            .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
         expect(obstacles[2].positionX).toBeGreaterThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange * 3);
         expect(obstacles[2].positionX).toBeLessThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange * 4);
     });
@@ -116,29 +168,39 @@ describe('Initiate CatchFoodGame correctly', () => {
     it('initiates the fourth obstacle in the correct range', async () => {
         const obstacleRange = getObstacleRange(catchFoodGame);
 
-        const obstacles: Array<Obstacle> = catchFoodGame.players.get('1')!.obstacles;
+        const obstacles: Array<Obstacle> = catchFoodGame.players
+            .get('1')!
+            .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
         expect(obstacles[3].positionX).toBeGreaterThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange * 4);
         expect(obstacles[3].positionX).toBeLessThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange * 5);
     });
 
     it('initiates the first obstacle with the correct obstacle type', async () => {
-        const obstacles: Array<Obstacle> = catchFoodGame.players.get('1')!.obstacles;
-        expect(OBSTACLE_TYPE_KEYS).toContain(obstacles[0].type);
+        const obstacles: Array<Obstacle> = catchFoodGame.players
+            .get('1')!
+            .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
+        expect(REGULAR_OBSTACLE_TYPE_KEYS).toContain(obstacles[0].type);
     });
 
     it('initiates the second obstacle with the correct obstacle type', async () => {
-        const obstacles: Array<Obstacle> = catchFoodGame.players.get('1')!.obstacles;
-        expect(OBSTACLE_TYPE_KEYS).toContain(obstacles[1].type);
+        const obstacles: Array<Obstacle> = catchFoodGame.players
+            .get('1')!
+            .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
+        expect(REGULAR_OBSTACLE_TYPE_KEYS).toContain(obstacles[1].type);
     });
 
     it('initiates the third obstacle with the correct obstacle type', async () => {
-        const obstacles: Array<Obstacle> = catchFoodGame.players.get('1')!.obstacles;
-        expect(OBSTACLE_TYPE_KEYS).toContain(obstacles[2].type);
+        const obstacles: Array<Obstacle> = catchFoodGame.players
+            .get('1')!
+            .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
+        expect(REGULAR_OBSTACLE_TYPE_KEYS).toContain(obstacles[2].type);
     });
 
     it('initiates the fourth obstacle with the correct obstacle type', async () => {
-        const obstacles: Array<Obstacle> = catchFoodGame.players.get('1')!.obstacles;
-        expect(OBSTACLE_TYPE_KEYS).toContain(obstacles[3].type);
+        const obstacles: Array<Obstacle> = catchFoodGame.players
+            .get('1')!
+            .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
+        expect(REGULAR_OBSTACLE_TYPE_KEYS).toContain(obstacles[3].type);
     });
 
     it('initiates gameState as Created', async () => {
