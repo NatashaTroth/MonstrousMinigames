@@ -29,9 +29,10 @@ export function clearTimersAndIntervals(game: Game) {
     jest.clearAllMocks();
 }
 
-export function startGameAndAdvanceCountdown(catchFoodGame: CatchFoodGame) {
+export function startGameAndAdvanceCountdown(catchFoodGame: CatchFoodGame, afterCreate: () => any = () => void 0) {
     Date.now = () => dateNow;
     catchFoodGame.createNewGame(users, TRACK_LENGTH, 4);
+    afterCreate();
     catchFoodGame.startGame();
     advanceCountdown(catchFoodGame.countdownTime);
 }
