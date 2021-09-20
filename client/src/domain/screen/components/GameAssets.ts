@@ -36,7 +36,6 @@ import { Character, CharacterAnimation, CharacterSpriteProperties } from '../pha
 export const audioFiles = [
     { name: 'backgroundMusicStart', file: [game1SoundStart] },
     { name: 'backgroundMusicLoop', file: [game1SoundLoop] },
-    { name: 'backgroundMusicStart', file: [game1SoundStart] },
 ];
 
 const characterSpriteProperties: CharacterSpriteProperties = {
@@ -45,12 +44,6 @@ const characterSpriteProperties: CharacterSpriteProperties = {
 };
 
 export const characterFiles: string[] = [blueMonster, greenMonster, pinkMonster, orangeMonster];
-// export const defaultAvailableCharacters = [
-//     characterDictionary.franz,
-//     characterDictionary.noah,
-//     characterDictionary.susi,
-//     characterDictionary.steffi,
-// ];
 
 export const characterSpriteSheetPrefix = 'character_';
 

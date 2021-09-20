@@ -72,22 +72,40 @@ class MainScene extends Phaser.Scene {
         this.camera = this.cameras.main;
         this.socket = data.socket;
         this.screenAdmin = data.screenAdmin;
+        this.gameRenderer = new PhaserGameRenderer(this);
 
         if (this.roomId === '' && data.roomId !== undefined) {
             this.roomId = data.roomId;
         }
+    }
 
-        // TODO: send to backend and start game when all loaded
+    preload(): void {
+        printMethod('here 1');
+        this.gameRenderer?.renderLoadingScreen();
+        printMethod('here 2');
+
+        // emitted every time a file has been loaded
+        this.load.on('progress', (value: number) => {
+            this.gameRenderer?.updateLoadingScreen(value);
+        });
+
+        if (designDevelopment) {
+            // emitted every time a file has been loaded
+            this.load.on('fileprogress', (file: any) => {
+                this.gameRenderer?.fileProgressUpdate(file);
+            });
+        }
+
+        //once all the files are done loading
         this.load.on('complete', () => {
+            this.gameRenderer?.destroyLoadingScreen();
             printMethod('LOADING COMPLETE - SENDING TO SERVER');
             this.socket?.emit({
                 type: MessageTypes.phaserLoaded,
                 roomId: this.roomId,
             });
         });
-    }
 
-    preload(): void {
         audioFiles.forEach(audio => this.load.audio(audio.name, audio.file));
 
         characters.forEach(character => {
@@ -101,14 +119,9 @@ class MainScene extends Phaser.Scene {
         fireworkFlares.forEach((flare, i) => {
             this.load.image(`flare${i}`, flare);
         });
-
-        //TODO Loading bar: https://www.patchesoft.com/phaser-3-loading-screen
-        // this.load.on('progress', this.updateBar);
     }
 
     create() {
-        this.gameRenderer = new PhaserGameRenderer(this);
-        // // this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
         this.initSockets();
