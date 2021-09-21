@@ -14,7 +14,10 @@ import { Coordinates } from '../gameTypes';
 export class PhaserPlayerRenderer {
     private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private chaser?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-    private playerObstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[];
+    private obstacles: {
+        phaserInstance: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+        skippable: boolean;
+    }[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private particles: Phaser.GameObjects.Particles.ParticleEmitterManager[];
     private playerNameBg?: Phaser.GameObjects.Rectangle;
@@ -28,7 +31,7 @@ export class PhaserPlayerRenderer {
         private numberPlayers: number,
         private laneHeightsPerNumberPlayers: number[]
     ) {
-        this.playerObstacles = [];
+        this.obstacles = [];
         this.particles = [];
         this.backgroundLane = []; //TODO change
         //when <= 2 lanes, make them less high to fit more width
@@ -48,12 +51,15 @@ export class PhaserPlayerRenderer {
         laneHeight: number,
         posY: number
     ) {
-        const repeats = Math.ceil(trackLength / (windowWidth / this.numberPlayers)) + 2;
+        let repeats = 1;
 
         for (let i = 0; i < repeats; i++) {
             // Background without parallax
             const bg = this.scene.add.image((i * windowWidth) / this.numberPlayers, posY, 'laneBackground');
             const newWidth = this.calcWidthKeepAspectRatio(bg, laneHeight);
+            if (i === 0) {
+                repeats = Math.ceil(trackLength / newWidth);
+            }
             bg.setDisplaySize(newWidth, laneHeight);
             bg.setOrigin(0, 1);
             bg.setScrollFactor(1);
@@ -160,15 +166,6 @@ export class PhaserPlayerRenderer {
         pebble.y += pebble.displayHeight / 2;
         pebble.body.setGravity(0, 1200);
         pebble.setCollideWorldBounds(true);
-        // pebble.body.onCollide = new Phaser.Signal();
-        // pebble.body.onCollide.add(hitSprite, this);
-        // const destroyPebble = () => {
-        //     printMethod('In callback');
-        //     // pebble.destroy();
-        //     // this.startAnimation(animationName);
-        // };
-        // this.scene.physics.collide(pebble, this.player, destroyPebble);
-        // this.scene.physics.collide(pebble, this.player, destroyPebble);
         const destroyPebbleInterval = setInterval(() => {
             if (pebble.y > this.player!.y - (this.player!.displayHeight / 5) * 2.5) {
                 clearInterval(destroyPebbleInterval);
@@ -176,24 +173,12 @@ export class PhaserPlayerRenderer {
                 this.startAnimation(animationName);
             }
         }, 100);
-
-        // setTimeout(() => {
-        //     pebble.destroy();
-        //     this.startAnimation(animationName);
-        // }, (1000 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
-
-        // pebble.body.onCollide.add()
-        // this.scene.physics.add.overlap(this.player, pebble, destroyPebble)
     }
-
-    // unStunPlayer() {
-    //     if (this.player) this.player.alpha = 1;
-    // }
 
     renderCave(posX: number, posY: number) {
         posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
         // posY += 5;
-        const scale = (0.47 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1];
+        const scale = (0.9 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1];
         const yOffset = 2.2;
         this.caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
         this.caveBehind.setScale(scale);
@@ -251,19 +236,26 @@ export class PhaserPlayerRenderer {
         }
     }
 
-    renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number) {
+    renderObstacles(
+        posX: number,
+        posY: number,
+        obstacleScale: number,
+        obstacleType: string,
+        depth: number,
+        skippable: boolean
+    ) {
         const obstacle = this.scene.physics.add.sprite(posX, posY, obstacleType);
         obstacle.setScale(obstacleScale * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
 
         obstacle.y -= obstacle.displayHeight / 1.3;
         obstacle.setDepth(depth);
 
-        this.playerObstacles.push(obstacle);
+        this.obstacles.push({ phaserInstance: obstacle, skippable });
     }
 
     renderFireworks(posX: number, posY: number, laneHeight: number) {
         // const flareColors: string[] = ['blue', 'red', 'green'];
-        const scales: Array<number | { min: number; max: number }> = [0.1, 0.01, { min: 0, max: 0.1 }];
+        const scales: Array<number | { min: number; max: number }> = [0.1, 0.08, { min: 0, max: 0.1 }];
         const lifespans: number[] = [250, 500, 700];
 
         this.particles.forEach((particle, i) => {
@@ -288,14 +280,16 @@ export class PhaserPlayerRenderer {
     }
 
     destroyObstacle() {
-        if (this.playerObstacles.length > 0) {
-            this.playerObstacles[0].destroy();
-            this.playerObstacles.shift();
+        if (this.obstacles.length > 0) {
+            if (!this.obstacles[0].skippable) {
+                this.obstacles[0].phaserInstance.destroy();
+            }
+            this.obstacles.shift();
         }
     }
     destroyObstacles() {
-        this.playerObstacles.forEach(obstacle => {
-            obstacle.destroy();
+        this.obstacles.forEach(obstacle => {
+            obstacle.phaserInstance.destroy();
         });
     }
 
@@ -311,14 +305,19 @@ export class PhaserPlayerRenderer {
     renderAttentionIcon() {
         if (!this.playerAttention && this.player) {
             this.playerAttention = this.scene.physics.add
-                .sprite(this.player.x + 75, this.player.y - 50, 'attention')
+                .sprite(
+                    this.player.x + this.player.displayWidth / 2,
+                    this.player.y - this.player.displayHeight / 2,
+                    'attention'
+                )
                 .setDepth(depthDictionary.attention)
-                .setScale(0.03 * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+                .setScale((0.085 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
         }
     }
 
     destroyAttentionIcon() {
         this.playerAttention?.destroy();
+        this.playerAttention = undefined;
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
