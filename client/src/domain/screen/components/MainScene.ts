@@ -97,15 +97,11 @@ class MainScene extends Phaser.Scene {
             this.load.image(`flare${i}`, flare);
         });
 
-        // this.load.atlas('flares', flaresPng, flaresJson);
-
         //TODO Loading bar: https://www.patchesoft.com/phaser-3-loading-screen
         // this.load.on('progress', this.updateBar);
     }
 
     create() {
-        // const div = document.getElementById('game-root');
-        // div!.style.backgroundColor = '#000fff';
         this.gameRenderer = new PhaserGameRenderer(this);
         // // this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
         this.gameAudio = new GameAudio(this.sound);
@@ -159,6 +155,7 @@ class MainScene extends Phaser.Scene {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
                 printMethod('RECEIVED FIRST GAME STATE:');
+                // printMethod(JSON.stringify(data.data));
                 this.gameStarted = true;
                 this.initiateGame(data.data);
                 this.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');
@@ -304,7 +301,7 @@ class MainScene extends Phaser.Scene {
             index,
             { x: gameStateData.playersState[index].positionX, y: posY },
             gameStateData,
-            character.name,
+            character,
             numberPlayers,
             this.gameToScreenMapper!
         );
