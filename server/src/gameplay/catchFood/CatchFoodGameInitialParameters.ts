@@ -2,7 +2,8 @@ export const TRACK_LENGTH = 5000;
 export const NUMBER_OBSTACLES = 4;
 export const COUNTDOWN_TIME = 4000; //TODO CHANGE TO 3000
 export const STUNNED_TIME = 3000;
-export const MAX_NUMBER_STONES = 5;
+export const NUMBER_STONES = 4; //when alive
+export const MAX_NUMBER_STONES = 5; //when dead
 
 export const SPEED = 1;
 

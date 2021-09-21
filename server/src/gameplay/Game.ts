@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 
-import { localDevelopment } from '../../constants';
+// import { localDevelopment } from '../../constants';
 import User from '../classes/user';
 import { Globals } from '../enums/globals';
 import { IMessage } from '../interfaces/messages';
@@ -52,13 +52,13 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
         }
 
         // TODO delete: add extra players for local dev
-        if (localDevelopment && users.length <= 2) {
-            for (let i = 0; i < 2; i++) {
-                const newUser = users[0];
-                newUser.id = i.toString();
-                this.players.set(newUser.id, this.mapUserToPlayer(newUser));
-            }
-        }
+        // if (localDevelopment && users.length <= 2) {
+        //     for (let i = 0; i < 2; i++) {
+        //         const newUser = users[0];
+        //         newUser.id = i.toString() + 'lkjhgkljhg';
+        //         this.players.set(newUser.id, this.mapUserToPlayer(newUser));
+        //     }
+        // }
         this.postProcessPlayers(this.players.values());
 
         this.gameState = GameState.Created;

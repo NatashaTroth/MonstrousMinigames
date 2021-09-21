@@ -38,7 +38,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     trackLength = InitialGameParameters.TRACK_LENGTH;
     numberOfObstacles = InitialGameParameters.NUMBER_OBSTACLES;
     maxNumberStones = InitialGameParameters.MAX_NUMBER_STONES;
-    numberOfStones = 4;
+    numberOfStones = InitialGameParameters.NUMBER_STONES;
     speed = InitialGameParameters.SPEED;
     countdownTime = InitialGameParameters.COUNTDOWN_TIME; //should be 1 second more than client - TODO: make sure it is
     cameraSpeed = InitialGameParameters.CAMERA_SPEED;

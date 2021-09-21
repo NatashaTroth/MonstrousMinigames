@@ -1,7 +1,8 @@
 import { History } from 'history';
 
-import { controllerStoneRoute } from '../../../utils/routes';
+import { ObstacleTypes } from '../../../utils/constants';
+import { controllerObstacleRoute } from '../../../utils/routes';
 
 export function handlePlayerGetsStone(history: History, roomId: string | undefined) {
-    history.push(controllerStoneRoute(roomId));
+    history.push(controllerObstacleRoute(roomId, ObstacleTypes.stone));
 }

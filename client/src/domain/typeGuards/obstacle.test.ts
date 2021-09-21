@@ -1,4 +1,4 @@
-import { MessageTypes, Obstacles } from '../../utils/constants';
+import { MessageTypes, ObstacleTypes } from '../../utils/constants';
 import { ObstacleMessage, obstacleTypeGuard } from './obstacle';
 
 describe('obstacle TypeGuard', () => {
@@ -6,7 +6,8 @@ describe('obstacle TypeGuard', () => {
         const data: ObstacleMessage = {
             type: MessageTypes.obstacle,
             obstacleId: 1,
-            obstacleType: Obstacles.treeStump,
+            obstacleType: ObstacleTypes.treeStump,
+            skippable: false,
         };
 
         expect(obstacleTypeGuard(data)).toEqual(true);

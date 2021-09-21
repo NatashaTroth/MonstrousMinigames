@@ -3,6 +3,8 @@ import Phaser from 'phaser';
 import { depthDictionary } from '../../../../utils/depthDictionary';
 import { fireworkFlares } from '../../components/GameAssets';
 import MainScene from '../../components/MainScene';
+import { Character, CharacterAnimation } from '../gameInterfaces';
+import { CharacterAnimationFrames } from '../gameInterfaces/Character';
 import { Coordinates } from '../gameTypes';
 
 /**
@@ -82,21 +84,18 @@ export class PhaserPlayerRenderer {
         return (windowHeight - newHeight * this.numberPlayers) / 2 + newHeight * (index + 1);
     }
 
-    renderPlayer(
-        idx: number,
-        coordinates: Coordinates,
-        monsterName: string,
-        animationName: string,
-        username?: string
-    ): void {
+    renderPlayer(idx: number, coordinates: Coordinates, character: Character, username?: string): void {
         let usernameToDisplay = '';
         if (username) {
             usernameToDisplay = username;
         }
 
         if (!this.player) {
-            this.renderPlayerInitially(coordinates, monsterName);
-            this.initiatePlayerAnimation(monsterName, animationName);
+            this.renderPlayerInitially(coordinates, character.name);
+
+            character.animations.forEach((animation: CharacterAnimation) => {
+                this.initiateAnimation(character.name, animation.name, animation.frames);
+            });
             this.renderPlayerName(idx, usernameToDisplay, coordinates.y);
         } else if (this.player) {
             //only move player
@@ -104,9 +103,6 @@ export class PhaserPlayerRenderer {
         }
     }
 
-    // getPlayerYPosition(): number | undefined {
-    //     return this.player?.y;
-    // }
     private renderPlayerName(idx: number, name: string, posY: number) {
         this.playerNameBg = this.scene.add.rectangle(50, posY - 25, 250, 50, 0xb63bd4, 0.7);
         // this.playerName = this.scene.add.text(100, window.innerHeight / numberPlayers - 20, 'lsjhdf');
@@ -153,13 +149,46 @@ export class PhaserPlayerRenderer {
         this.player?.destroy();
     }
 
-    stunPlayer() {
-        if (this.player) this.player.alpha = 0.5;
+    stunPlayer(animationName: string) {
+        // if (this.player) this.player.alpha = 0.5;
+        const pebble = this.scene.physics.add.sprite(
+            this.player!.x,
+            this.backgroundLane![0].y - this.backgroundLane![0].displayHeight,
+            'pebble'
+        );
+        pebble.setScale((0.4 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+        pebble.y += pebble.displayHeight / 2;
+        pebble.body.setGravity(0, 1200);
+        pebble.setCollideWorldBounds(true);
+        // pebble.body.onCollide = new Phaser.Signal();
+        // pebble.body.onCollide.add(hitSprite, this);
+        // const destroyPebble = () => {
+        //     printMethod('In callback');
+        //     // pebble.destroy();
+        //     // this.startAnimation(animationName);
+        // };
+        // this.scene.physics.collide(pebble, this.player, destroyPebble);
+        // this.scene.physics.collide(pebble, this.player, destroyPebble);
+        const destroyPebbleInterval = setInterval(() => {
+            if (pebble.y > this.player!.y - (this.player!.displayHeight / 5) * 2.5) {
+                clearInterval(destroyPebbleInterval);
+                pebble.destroy();
+                this.startAnimation(animationName);
+            }
+        }, 100);
+
+        // setTimeout(() => {
+        //     pebble.destroy();
+        //     this.startAnimation(animationName);
+        // }, (1000 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+
+        // pebble.body.onCollide.add()
+        // this.scene.physics.add.overlap(this.player, pebble, destroyPebble)
     }
 
-    unStunPlayer() {
-        if (this.player) this.player.alpha = 1;
-    }
+    // unStunPlayer() {
+    //     if (this.player) this.player.alpha = 1;
+    // }
 
     renderCave(posX: number, posY: number) {
         posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
@@ -225,6 +254,7 @@ export class PhaserPlayerRenderer {
     renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number) {
         const obstacle = this.scene.physics.add.sprite(posX, posY, obstacleType);
         obstacle.setScale(obstacleScale * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+
         obstacle.y -= obstacle.displayHeight / 1.3;
         obstacle.setDepth(depth);
 
@@ -235,7 +265,7 @@ export class PhaserPlayerRenderer {
         // const flareColors: string[] = ['blue', 'red', 'green'];
         const scales: Array<number | { min: number; max: number }> = [0.1, 0.01, { min: 0, max: 0.1 }];
         const lifespans: number[] = [250, 500, 700];
-        // const flareColo
+
         this.particles.forEach((particle, i) => {
             const particlesEmitter = particle.createEmitter({
                 // key: flare,
@@ -249,13 +279,6 @@ export class PhaserPlayerRenderer {
             particlesEmitter.on = true;
             setTimeout(() => (particlesEmitter.on = false), 900);
         });
-    }
-
-    startRunningAnimation(animationName: string) {
-        this.player?.play(animationName);
-    }
-    stopRunningAnimation() {
-        this.player?.anims.stop();
     }
 
     movePlayerForward(newXPosition: number) {
@@ -298,23 +321,33 @@ export class PhaserPlayerRenderer {
         this.playerAttention?.destroy();
     }
 
-    private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
+    private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
         // eslint-disable-next-line no-console
         // console.log(' coordinates.y + window.innerHeight / 15');
-        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterName);
+        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
+
         this.player.setDepth(depthDictionary.player);
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
-        this.player.setScale((0.5 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+        this.player.setScale((0.66 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
         this.player.y = this.player.y - this.player.displayHeight / 2; //set correct y pos according to player height
     }
 
-    private initiatePlayerAnimation(monsterName: string, animationName: string) {
+    private initiateAnimation(spritesheetName: string, animationName: string, frames: CharacterAnimationFrames) {
         this.scene.anims.create({
             key: animationName,
-            frames: this.scene.anims.generateFrameNumbers(monsterName, { start: 12, end: 15 }),
+            frames: this.scene.anims.generateFrameNumbers(spritesheetName, frames),
             frameRate: 6,
             repeat: -1,
         });
+
+        //`${monsterName}_stunned`
+    }
+
+    startAnimation(animationName: string) {
+        this.player?.play(animationName);
+    }
+    stopAnimation() {
+        this.player?.anims.stop();
     }
 }

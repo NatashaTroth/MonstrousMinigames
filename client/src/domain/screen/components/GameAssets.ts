@@ -13,14 +13,15 @@ import moon from '../../../images/background/moon.png';
 import mountains from '../../../images/background/mountains.png';
 import starsAndSky from '../../../images/background/starsAndSky.png';
 import trees from '../../../images/background/trees.png';
-import franz from '../../../images/characters/franz_spritesheet.png';
 import chasers from '../../../images/characters/Mosquito.png';
-import noah from '../../../images/characters/noah_spritesheet.png';
-import steffi from '../../../images/characters/steffi_spritesheet.png';
-import susi from '../../../images/characters/susi_spritesheet.png';
+import blueMonster from '../../../images/characters/spritesheets/blue_spritesheet.png';
+import greenMonster from '../../../images/characters/spritesheets/green_spritesheet.png';
+import orangeMonster from '../../../images/characters/spritesheets/orange_spritesheet.png';
+import pinkMonster from '../../../images/characters/spritesheets/pink_spritesheet.png';
 import caveBehind from '../../../images/obstacles/cave/cave_behind.png';
 import caveInFront from '../../../images/obstacles/cave/cave_in_front.png';
 import spider from '../../../images/obstacles/spider/spider.png';
+import pebble from '../../../images/obstacles/stone/pebble.png';
 import stone from '../../../images/obstacles/stone/stone.png';
 import trash from '../../../images/obstacles/trash/trash.png';
 import wood from '../../../images/obstacles/wood/wood.png';
@@ -28,6 +29,9 @@ import attention from '../../../images/ui/attention.png';
 import forest2 from '../../../images/ui/forest2.png';
 import forest2Smaller from '../../../images/ui/forest2Smaller.png';
 import forestTile from '../../../images/ui/forestTile.png';
+// import { characterDictionary } from '../../../utils/characterDictionary';
+import { AnimationName } from '../phaser/enums';
+import { Character, CharacterAnimation, CharacterSpriteProperties } from '../phaser/gameInterfaces';
 
 //TODO types
 
@@ -37,20 +41,38 @@ export const audioFiles = [
     { name: 'backgroundMusicStart', file: [game1SoundStart] },
 ];
 
-const characterSpriteProperties = {
-    frameWidth: 826,
-    frameHeight: 1163,
+const characterSpriteProperties: CharacterSpriteProperties = {
+    frameWidth: 620,
+    frameHeight: 873,
 };
 
-export const characterFiles: string[] = [franz, noah, susi, steffi];
+export const characterFiles: string[] = [blueMonster, greenMonster, pinkMonster, orangeMonster];
+// export const defaultAvailableCharacters = [
+//     characterDictionary.franz,
+//     characterDictionary.noah,
+//     characterDictionary.susi,
+//     characterDictionary.steffi,
+// ];
 
 export const characterSpriteSheetPrefix = 'character_';
 
-export const characters = characterFiles.map((file, idx) => {
+export const characters: Character[] = characterFiles.map((file, idx) => {
+    const monsterName = `${characterSpriteSheetPrefix}${defaultAvailableCharacters[idx].toString()}`;
+    const animationsMap = new Map<AnimationName, CharacterAnimation>();
+    animationsMap.set(AnimationName.Running, {
+        name: `${monsterName}_running`,
+        frames: { start: 8, end: 11 },
+    });
+    animationsMap.set(AnimationName.Stunned, {
+        name: `${monsterName}_stunned`,
+        frames: { start: 12, end: 15 },
+    });
     return {
-        name: `${characterSpriteSheetPrefix}${defaultAvailableCharacters[idx].toString()}`,
+        name: monsterName,
         file: file,
         properties: characterSpriteProperties,
+
+        animations: animationsMap,
     };
 });
 
@@ -60,7 +82,7 @@ export const images = [
     { name: 'forest2Smaller', file: forest2Smaller },
     { name: 'forestTile', file: forestTile },
     { name: 'attention', file: attention },
-    { name: 'treestump', file: wood },
+    { name: 'tree_stump', file: wood },
     { name: 'stone', file: stone },
     { name: 'trash', file: trash },
     { name: 'spider', file: spider },
@@ -75,6 +97,7 @@ export const images = [
     { name: 'trees', file: trees },
     { name: 'moon', file: moon },
     { name: 'laneBackground', file: laneBackground },
+    { name: 'pebble', file: pebble },
 ];
 
 export const flaresPng = flaresPngFile;
