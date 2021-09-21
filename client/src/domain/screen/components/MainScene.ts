@@ -73,6 +73,8 @@ class MainScene extends Phaser.Scene {
         this.socket = data.socket;
         this.screenAdmin = data.screenAdmin;
         this.gameRenderer = new PhaserGameRenderer(this);
+        this.initSockets();
+        this.initiateEventEmitters();
 
         if (this.roomId === '' && data.roomId !== undefined) {
             this.roomId = data.roomId;
@@ -80,13 +82,11 @@ class MainScene extends Phaser.Scene {
     }
 
     preload(): void {
-        printMethod('here 1');
         this.gameRenderer?.renderLoadingScreen();
-        printMethod('here 2');
 
         // emitted every time a file has been loaded
         this.load.on('progress', (value: number) => {
-            this.gameRenderer?.updateLoadingScreen(value);
+            this.gameRenderer?.updateLoadingScreenPercent(value);
         });
 
         if (designDevelopment) {
@@ -98,8 +98,8 @@ class MainScene extends Phaser.Scene {
 
         //once all the files are done loading
         this.load.on('complete', () => {
-            this.gameRenderer?.destroyLoadingScreen();
             printMethod('LOADING COMPLETE - SENDING TO SERVER');
+            this.gameRenderer?.updateLoadingScreenFinishedPreloading();
             this.socket?.emit({
                 type: MessageTypes.phaserLoaded,
                 roomId: this.roomId,
@@ -124,8 +124,8 @@ class MainScene extends Phaser.Scene {
     create() {
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
-        this.initSockets();
-        this.initiateEventEmitters();
+        // this.initSockets();
+        // this.initiateEventEmitters();
 
         if (localDevelopment && designDevelopment) {
             this.initiateGame(initialGameInput);
@@ -173,6 +173,8 @@ class MainScene extends Phaser.Scene {
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
                 printMethod('RECEIVED FIRST GAME STATE:');
                 // printMethod(JSON.stringify(data.data));
+                this.gameRenderer?.destroyLoadingScreen();
+
                 this.gameStarted = true;
                 this.initiateGame(data.data);
                 this.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');

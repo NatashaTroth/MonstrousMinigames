@@ -66,7 +66,8 @@ class Screen {
                         this.room.firstPhaserScreenLoaded = true;
                         this.room.allScreensLoadedTimeout = setTimeout(() => {
                             this.trySendAllScreensPhaserGameLoaded();
-                        }, 8000);
+                            ///TODO natasha - send timedout to other screens
+                        }, 10000);
                     }
 
                     if (this.room?.allPhaserGamesReady()) {
