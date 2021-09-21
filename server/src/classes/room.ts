@@ -1,8 +1,6 @@
 import {
-    CannotStartEmptyGameError,
-    CharacterNotAvailableError,
-    GameAlreadyStartedError,
-    UsersNotReadyError,
+    CannotStartEmptyGameError, CharacterNotAvailableError, GameAlreadyStartedError,
+    UsersNotReadyError
 } from '../customErrors';
 import { Globals } from '../enums/globals';
 import { CatchFoodGame } from '../gameplay';
@@ -152,6 +150,10 @@ class Room {
 
     public setAllScreensPhaserGameReady(value: boolean) {
         this.screens.forEach(screen => (screen.phaserGameReady = value));
+    }
+
+    public getScreensPhaserNotReady() {
+        return this.screens.filter(screen => screen.phaserGameReady === false);
     }
 
     public startGame() {

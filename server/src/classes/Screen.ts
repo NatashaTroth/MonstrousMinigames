@@ -43,18 +43,19 @@ class Screen {
         }
     }
 
-    private trySendAllScreensPhaserGameLoaded() {
+    private trySendAllScreensPhaserGameLoaded(timedOut = false) {
         if (!this.room!.sentAllScreensLoaded) {
-            // this.room?.setAllScreensPhaserGameReady(false); //reset for next game
-            // this.emitter.sendAllScreensPhaserGameLoaded([this.screenNamespace], this.room!);
             this.room!.sentAllScreensLoaded = true;
             if (this.room?.allScreensLoadedTimeout) clearTimeout(this.room.allScreensLoadedTimeout);
-            // this.room!.setAllScreensPhaserGameReady(false); //reset for next game
             this.emitter.sendAllScreensPhaserGameLoaded([this.screenNamespace], this.room!);
         }
-        // else if (this.room?.allPhaserGamesReady() && this.room!.sentAllScreensLoaded) {
-        //     //make sure all screensPhaserGameReady are reset to false again
-        // }
+
+        if (timedOut) {
+            const notReadyScreens = this.room!.getScreensPhaserNotReady();
+            notReadyScreens.forEach(screen => {
+                // this.emitter.sendScreenPhaserGameLoadedTimedOut(screen, this.room!) //TODO natasha
+            });
+        }
     }
 
     private onMessage(message: IMessage) {
@@ -65,7 +66,7 @@ class Screen {
                     if (this.room && !this.room?.firstPhaserScreenLoaded) {
                         this.room.firstPhaserScreenLoaded = true;
                         this.room.allScreensLoadedTimeout = setTimeout(() => {
-                            this.trySendAllScreensPhaserGameLoaded();
+                            this.trySendAllScreensPhaserGameLoaded(true);
                             ///TODO natasha - send timedout to other screens
                         }, 10000);
                     }
@@ -90,7 +91,6 @@ class Screen {
 
                         this.room.game.addListener(Game.EVT_FRAME_READY, (game: Game) => {
                             if (this.room?.isPlaying()) {
-                                //TODO natasha SENDING GAME STATE - send from game class
                                 this.emitter.sendGameState(this.screenNamespace, this.room, true);
                             }
                         });
