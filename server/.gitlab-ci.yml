@@ -63,6 +63,7 @@ staging:server:
         HEROKU_APP: $HEROKU_APP_STAGING
     only:
         - master
+        - staging
 
 production:server:
     <<: *deployment_configuration

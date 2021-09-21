@@ -63,6 +63,7 @@ staging:client:
         - *deployment-script
 
     only:
+        - master
         - staging
 
 production:client:

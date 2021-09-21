@@ -1,10 +1,11 @@
-import { MessageTypes, Obstacles } from '../../utils/constants';
+import { MessageTypes, ObstacleTypes } from '../../utils/constants';
 import { MessageData } from './MessageData';
 
 export interface ObstacleMessage {
     type: MessageTypes.obstacle;
-    obstacleType: Obstacles;
+    obstacleType: ObstacleTypes;
     obstacleId: number;
+    skippable: boolean;
 }
 
 export const obstacleTypeGuard = (data: MessageData): data is ObstacleMessage =>

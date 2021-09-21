@@ -4,10 +4,15 @@ import { regularObstactTypes } from '../enums/ObstacleType';
 import { Obstacle } from '../interfaces';
 
 function getObstaclesInRange(obstacles: Obstacle[], obstacleWidth: number, beginning: number, ending: number) {
-    return obstacles.filter(obstacle => obstacle.positionX > beginning - obstacleWidth / 2 && obstacle.positionX < ending + obstacleWidth / 2);
+    return obstacles.filter(
+        obstacle =>
+            obstacle.positionX > beginning - obstacleWidth / 2 && obstacle.positionX < ending + obstacleWidth / 2
+    );
 }
 function getAvailableSlotsInRange(obstacles: Obstacle[], obstacleWidth: number, beginning: number, ending: number) {
-    const obstaclesInRange = getObstaclesInRange(obstacles, obstacleWidth, beginning, ending).map(obstacle => obstacle.positionX);
+    const obstaclesInRange = getObstaclesInRange(obstacles, obstacleWidth, beginning, ending).map(
+        obstacle => obstacle.positionX
+    );
     obstaclesInRange.sort();
     const freeRanges: Array<[number, number]> = [];
     let lastPosition = beginning;
@@ -49,9 +54,9 @@ export function getStonesForObstacles(
     trackLength: number,
     initialPlayerPositionX: number,
     obstacleWidth: number,
-    count = 4,
+    count: number,
     minObstacleWidth?: number,
-    noClone = false,
+    noClone = false
 ): Obstacle[] {
     minObstacleWidth = minObstacleWidth || obstacleWidth / 2;
     const obstacleClone = noClone ? obstacles : [...obstacles];
@@ -72,7 +77,8 @@ export function getStonesForObstacles(
 
         const stone = {
             id: id++,
-            positionX: initialPlayerPositionX + availablePositions[Math.floor(Math.random() * availablePositions.length)],
+            positionX:
+                initialPlayerPositionX + availablePositions[Math.floor(Math.random() * availablePositions.length)],
             type: ObstacleType.Stone,
             skippable: true,
         };
@@ -83,7 +89,15 @@ export function getStonesForObstacles(
     }
 
     if (stonesAdded < count * 0.8 && obstacleWidth > minObstacleWidth) {
-        const newStones = getStonesForObstacles(obstacleClone, trackLength, initialPlayerPositionX, obstacleWidth * 0.9, count - stonesAdded, minObstacleWidth, true);
+        const newStones = getStonesForObstacles(
+            obstacleClone,
+            trackLength,
+            initialPlayerPositionX,
+            obstacleWidth * 0.9,
+            count - stonesAdded,
+            minObstacleWidth,
+            true
+        );
 
         return sortBy([...stones, ...newStones], 'positionX');
     }
@@ -105,7 +119,7 @@ export function createObstacles(
     obstacleTypes: Array<ObstacleType>,
     numberOfObstacles: number,
     trackLength: number,
-    initialPlayerPositionX: number,
+    initialPlayerPositionX: number
 ): Array<Obstacle> {
     if (trackLength - initialPlayerPositionX <= numberOfObstacles) {
         throw new Error('Track length is too short for the number of obstacles!');
