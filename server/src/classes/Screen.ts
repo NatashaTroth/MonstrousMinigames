@@ -138,14 +138,13 @@ class Screen {
                     }
                     break;
                 case MessageTypes.SCREEN_STATE:
-                    if (this.room?.isAdminScreen(this.socket.id)) {
+                    if (this.room?.isAdminScreen(this.socket.id) && message.state) {
                         console.info(this.room.id + ' | Send Screen State' + ' | ' + message.state);
-                        this.room.resetGame().then(() => {
-                            this.emitter.sendScreenState(
-                                this.screenNamespace,
-                                this.room?.getScreenState()
-                            );
-                        });
+                        this.room?.setScreenState(message.state);
+                        this.emitter.sendScreenState(
+                            this.screenNamespace,
+                            this.room?.getScreenState()
+                        );
                     }
                     break;
                 default:

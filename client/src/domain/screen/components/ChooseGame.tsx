@@ -7,7 +7,7 @@ import { ScreenSocketContext } from '../../../contexts/ScreenSocketContextProvid
 import oliverLobby from '../../../images/characters/oliverLobby.svg';
 import game1Img from '../../../images/ui/instructions1.png';
 import { MessageTypes } from '../../../utils/constants';
-import { screenGameIntroRoute, screenGetReadyRoute } from '../../../utils/routes';
+import { Routes, screenGameIntroRoute, screenGetReadyRoute } from '../../../utils/routes';
 import { ScreenStates } from '../../../utils/screenStates';
 import { handleAudioPermission } from '../../audio/handlePermission';
 import history from '../../history/history';
@@ -27,7 +27,7 @@ import LobbyHeader from './LobbyHeader';
 
 const ChooseGame: React.FunctionComponent = () => {
     const [selectedGame, setSelectedGame] = React.useState(0);
-    const { roomId, screenAdmin } = React.useContext(GameContext);
+    const { roomId, screenAdmin, screenState } = React.useContext(GameContext);
     const tutorial = localStorage.getItem('tutorial') ? false : true;
     const { audioPermission, setAudioPermissionGranted } = React.useContext(AudioContext);
     const { screenSocket } = React.useContext(ScreenSocketContext);
@@ -57,6 +57,12 @@ const ChooseGame: React.FunctionComponent = () => {
             });
         }
     }, [selectedGame]);
+
+    React.useEffect(() => {
+        if (!screenAdmin && screenState !== ScreenStates.chooseGame) {
+            history.push(`${Routes.screen}/${roomId}/${screenState}`);
+        }
+    }, [screenState]);
 
     return (
         <LobbyContainer>

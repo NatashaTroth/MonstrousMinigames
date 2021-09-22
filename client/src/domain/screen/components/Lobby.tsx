@@ -34,7 +34,7 @@ import {
 import LobbyHeader from './LobbyHeader';
 
 export const Lobby: React.FunctionComponent = () => {
-    const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
+    const { roomId, connectedUsers, screenAdmin, screenState } = React.useContext(GameContext);
     const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: RouteParams = useParams();
@@ -43,6 +43,12 @@ export const Lobby: React.FunctionComponent = () => {
     if (id && !screenSocket) {
         handleSocketConnection(id, 'lobby');
     }
+
+    React.useEffect(() => {
+        if (!screenAdmin && screenState !== ScreenStates.lobby) {
+            history.push(`${Routes.screen}/${roomId}/${screenState}`);
+        }
+    }, [screenState]);
 
     async function handleCopyToClipboard() {
         if (navigator.clipboard) {
@@ -76,6 +82,7 @@ export const Lobby: React.FunctionComponent = () => {
                 <LobbyHeader />
                 <ContentContainer>
                     <LeftContainer>
+                        {screenState}
                         <ConnectedUsers>
                             {getUserArray(connectedUsers || []).map((user, index) => (
                                 <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>
