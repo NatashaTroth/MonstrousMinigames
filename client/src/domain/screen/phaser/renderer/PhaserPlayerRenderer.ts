@@ -3,6 +3,8 @@ import Phaser from 'phaser';
 import { depthDictionary } from '../../../../utils/depthDictionary';
 import { fireworkFlares } from '../../components/GameAssets';
 import MainScene from '../../components/MainScene';
+import { Character, CharacterAnimation } from '../gameInterfaces';
+import { CharacterAnimationFrames } from '../gameInterfaces/Character';
 import { Coordinates } from '../gameTypes';
 
 /**
@@ -12,7 +14,10 @@ import { Coordinates } from '../gameTypes';
 export class PhaserPlayerRenderer {
     private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private chaser?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-    private playerObstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[];
+    private obstacles: {
+        phaserInstance: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+        skippable: boolean;
+    }[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private particles: Phaser.GameObjects.Particles.ParticleEmitterManager[];
     private playerNameBg?: Phaser.GameObjects.Rectangle;
@@ -27,7 +32,7 @@ export class PhaserPlayerRenderer {
         private numberPlayers: number,
         private laneHeightsPerNumberPlayers: number[]
     ) {
-        this.playerObstacles = [];
+        this.obstacles = [];
         this.particles = [];
         this.backgroundLane = []; //TODO change
         //when <= 2 lanes, make them less high to fit more width
@@ -47,7 +52,7 @@ export class PhaserPlayerRenderer {
         laneHeight: number,
         posY: number
     ) {
-        const repeats = Math.ceil(trackLength / (windowWidth / this.numberPlayers)) + 2;
+        const repeats = 1;
 
         for (let i = 0; i < repeats; i++) {
             const sky = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'starsAndSky');
@@ -75,6 +80,15 @@ export class PhaserPlayerRenderer {
             floor.setDisplaySize(newWidth, laneHeight);
             floor.setOrigin(0, 1);
             floor.setScrollFactor(1);
+            // // Background without parallax
+            // const bg = this.scene.add.image((i * windowWidth) / this.numberPlayers, posY, 'laneBackground');
+            // const newWidth = this.calcWidthKeepAspectRatio(bg, laneHeight);
+            // if (i === 0) {
+            //     repeats = Math.ceil(trackLength / newWidth);
+            // }
+            // bg.setDisplaySize(newWidth, laneHeight);
+            // bg.setOrigin(0, 1);
+            // bg.setScrollFactor(1);
 
             // set new positions, based on size of image
 
@@ -105,21 +119,18 @@ export class PhaserPlayerRenderer {
         return (windowHeight - newHeight * this.numberPlayers) / 2 + newHeight * (index + 1);
     }
 
-    renderPlayer(
-        idx: number,
-        coordinates: Coordinates,
-        monsterName: string,
-        animationName: string,
-        username?: string
-    ): void {
+    renderPlayer(idx: number, coordinates: Coordinates, character: Character, username?: string): void {
         let usernameToDisplay = '';
         if (username) {
             usernameToDisplay = username;
         }
 
         if (!this.player) {
-            this.renderPlayerInitially(coordinates, monsterName);
-            this.initiatePlayerAnimation(monsterName, animationName);
+            this.renderPlayerInitially(coordinates, character.name);
+
+            character.animations.forEach((animation: CharacterAnimation) => {
+                this.initiateAnimation(character.name, animation.name, animation.frames);
+            });
             this.renderPlayerName(idx, usernameToDisplay, coordinates.y);
         } else if (this.player) {
             //only move player
@@ -127,9 +138,6 @@ export class PhaserPlayerRenderer {
         }
     }
 
-    // getPlayerYPosition(): number | undefined {
-    //     return this.player?.y;
-    // }
     private renderPlayerName(idx: number, name: string, posY: number) {
         this.playerNameBg = this.scene.add.rectangle(50, posY - 25, 250, 50, 0xb63bd4, 0.7);
         // this.playerName = this.scene.add.text(100, window.innerHeight / numberPlayers - 20, 'lsjhdf');
@@ -176,18 +184,30 @@ export class PhaserPlayerRenderer {
         this.player?.destroy();
     }
 
-    stunPlayer() {
-        if (this.player) this.player.alpha = 0.5;
-    }
-
-    unStunPlayer() {
-        if (this.player) this.player.alpha = 1;
+    stunPlayer(animationName: string) {
+        // if (this.player) this.player.alpha = 0.5;
+        const pebble = this.scene.physics.add.sprite(
+            this.player!.x,
+            this.backgroundLane![0].y - this.backgroundLane![0].displayHeight,
+            'pebble'
+        );
+        pebble.setScale((0.4 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+        pebble.y += pebble.displayHeight / 2;
+        pebble.body.setGravity(0, 1200);
+        pebble.setCollideWorldBounds(true);
+        const destroyPebbleInterval = setInterval(() => {
+            if (pebble.y > this.player!.y - (this.player!.displayHeight / 5) * 2.5) {
+                clearInterval(destroyPebbleInterval);
+                pebble.destroy();
+                this.startAnimation(animationName);
+            }
+        }, 100);
     }
 
     renderCave(posX: number, posY: number) {
         posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
         // posY += 5;
-        const scale = (0.47 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1];
+        const scale = (0.9 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1];
         const yOffset = 2.2;
         this.caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
         this.caveBehind.setScale(scale);
@@ -245,20 +265,28 @@ export class PhaserPlayerRenderer {
         }
     }
 
-    renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number) {
+    renderObstacles(
+        posX: number,
+        posY: number,
+        obstacleScale: number,
+        obstacleType: string,
+        depth: number,
+        skippable: boolean
+    ) {
         const obstacle = this.scene.physics.add.sprite(posX, posY, obstacleType);
         obstacle.setScale(obstacleScale * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+
         obstacle.y -= obstacle.displayHeight / 1.3;
         obstacle.setDepth(depth);
 
-        this.playerObstacles.push(obstacle);
+        this.obstacles.push({ phaserInstance: obstacle, skippable });
     }
 
     renderFireworks(posX: number, posY: number, laneHeight: number) {
         // const flareColors: string[] = ['blue', 'red', 'green'];
-        const scales: Array<number | { min: number; max: number }> = [0.1, 0.01, { min: 0, max: 0.1 }];
+        const scales: Array<number | { min: number; max: number }> = [0.1, 0.08, { min: 0, max: 0.1 }];
         const lifespans: number[] = [250, 500, 700];
-        // const flareColo
+
         this.particles.forEach((particle, i) => {
             const particlesEmitter = particle.createEmitter({
                 // key: flare,
@@ -274,13 +302,6 @@ export class PhaserPlayerRenderer {
         });
     }
 
-    startRunningAnimation(animationName: string) {
-        this.player?.play(animationName);
-    }
-    stopRunningAnimation() {
-        this.player?.anims.stop();
-    }
-
     movePlayerForward(newXPosition: number) {
         if (this.player) {
             this.player.x = newXPosition;
@@ -288,14 +309,16 @@ export class PhaserPlayerRenderer {
     }
 
     destroyObstacle() {
-        if (this.playerObstacles.length > 0) {
-            this.playerObstacles[0].destroy();
-            this.playerObstacles.shift();
+        if (this.obstacles.length > 0) {
+            if (!this.obstacles[0].skippable) {
+                this.obstacles[0].phaserInstance.destroy();
+            }
+            this.obstacles.shift();
         }
     }
     destroyObstacles() {
-        this.playerObstacles.forEach(obstacle => {
-            obstacle.destroy();
+        this.obstacles.forEach(obstacle => {
+            obstacle.phaserInstance.destroy();
         });
     }
 
@@ -311,33 +334,48 @@ export class PhaserPlayerRenderer {
     renderAttentionIcon() {
         if (!this.playerAttention && this.player) {
             this.playerAttention = this.scene.physics.add
-                .sprite(this.player.x + 75, this.player.y - 50, 'attention')
+                .sprite(
+                    this.player.x + this.player.displayWidth / 2,
+                    this.player.y - this.player.displayHeight / 2,
+                    'attention'
+                )
                 .setDepth(depthDictionary.attention)
-                .setScale(0.03 * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+                .setScale((0.085 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
         }
     }
 
     destroyAttentionIcon() {
         this.playerAttention?.destroy();
+        this.playerAttention = undefined;
     }
 
-    private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
+    private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
         // eslint-disable-next-line no-console
         // console.log(' coordinates.y + window.innerHeight / 15');
-        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterName);
+        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
+
         this.player.setDepth(depthDictionary.player);
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
-        this.player.setScale((0.5 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+        this.player.setScale((0.66 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
         this.player.y = this.player.y - this.player.displayHeight / 2; //set correct y pos according to player height
     }
 
-    private initiatePlayerAnimation(monsterName: string, animationName: string) {
+    private initiateAnimation(spritesheetName: string, animationName: string, frames: CharacterAnimationFrames) {
         this.scene.anims.create({
             key: animationName,
-            frames: this.scene.anims.generateFrameNumbers(monsterName, { start: 12, end: 15 }),
+            frames: this.scene.anims.generateFrameNumbers(spritesheetName, frames),
             frameRate: 6,
             repeat: -1,
         });
+
+        //`${monsterName}_stunned`
+    }
+
+    startAnimation(animationName: string) {
+        this.player?.play(animationName);
+    }
+    stopAnimation() {
+        this.player?.anims.stop();
     }
 }

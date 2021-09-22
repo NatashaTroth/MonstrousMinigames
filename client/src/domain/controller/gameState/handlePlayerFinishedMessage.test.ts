@@ -1,4 +1,3 @@
-
 import { MessageTypes } from '../../../utils/constants';
 import { PlayerFinishedMessage } from '../../typeGuards/playerFinished';
 import { handlePlayerFinishedMessage } from './handlePlayerFinishedMessage';

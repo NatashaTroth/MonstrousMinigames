@@ -1,10 +1,14 @@
-import { MessageTypes, Obstacles } from '../../utils/constants';
+import { MessageTypes, ObstacleTypes } from '../../utils/constants';
+import { TrashType } from '../screen/phaser/enums';
 import { MessageData } from './MessageData';
 
 export interface ObstacleMessage {
     type: MessageTypes.obstacle;
-    obstacleType: Obstacles;
+    obstacleType: ObstacleTypes;
     obstacleId: number;
+    skippable: boolean;
+    numberTrashItems?: number;
+    trashType?: TrashType;
 }
 
 export const obstacleTypeGuard = (data: MessageData): data is ObstacleMessage =>
