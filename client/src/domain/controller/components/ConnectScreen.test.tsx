@@ -2,7 +2,7 @@
 import 'jest-styled-components';
 import { cleanup } from '@testing-library/react';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount } from 'enzyme';
+import { configure, shallow } from 'enzyme';
 import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 
@@ -16,7 +16,7 @@ afterEach(cleanup);
 
 describe('ConnectScreen', () => {
     it('renders an iframe', () => {
-        const container = mount(
+        const container = shallow(
             <ThemeProvider theme={theme}>
                 <ConnectScreen history={history} />
             </ThemeProvider>
@@ -27,7 +27,7 @@ describe('ConnectScreen', () => {
 
     it('renders a button with text "Enter"', () => {
         const givenText = 'Enter';
-        const container = mount(
+        const container = shallow(
             <ThemeProvider theme={theme}>
                 <ConnectScreen history={history} />
             </ThemeProvider>
