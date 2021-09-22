@@ -79,5 +79,5 @@ production:client:
         - *deployment-script
 
     only:
-        - master
+        - dev
     when: manual
