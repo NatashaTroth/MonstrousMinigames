@@ -1,33 +1,13 @@
-import { TouchApp } from '@material-ui/icons';
-import styled, { css, keyframes } from 'styled-components';
+import { TouchApp } from "@material-ui/icons";
+import styled, { css, keyframes } from "styled-components";
 
-import { SkipButton } from '../../../../components/common/SkipButton.sc';
-import { Orientation } from './TreeTrunk';
+import { SkipButton } from "../../../../components/common/SkipButton.sc";
+import { Orientation } from "./TreeTrunk";
 
 const slideVertical = keyframes`
-    0%, 33% { 
-        transform: translateY(-200);
-          opacity: 1;
-    }
-    16% {
-        transform: translateY(200px); 
-          opacity: 1;
-    }
-    33%{
-       transform: translateY(-200px);
-         opacity: 1;  
-    }
-    49%{
-       transform: translateY(200px);  
-         opacity: 1;
-    }
-    66%{
-       transform: translateY(-200px);  
-         opacity: 1;
-    }
-    82%{
-       transform: translateY(200px);  
-       opacity: 1;
+    0% { 
+        transform: translateY(-200px);
+        opacity: 1;
     }
     100% { 
         transform: translateY(200px);
@@ -36,33 +16,23 @@ const slideVertical = keyframes`
 `;
 
 const slideHorizontal = keyframes`
-    0%, 33% { 
-        transform: translateX(-100);
-          opacity: 1;
-    }
-    16% {
-        transform: translateX(100px); 
-          opacity: 1;
-    }
-    33%{
-       transform: translateX(-100px);
-         opacity: 1;  
-    }
-    49%{
-       transform: translateX(100px);  
-         opacity: 1;
-    }
-    66%{
-       transform: translateX(-100px);  
-         opacity: 1;
-    }
-    82%{
-       transform: translateX(100px);  
-       opacity: 1;
+    0%{ 
+        transform: translateX(-100px);
+        opacity: 1;
     }
     100% { 
         transform: translateX(100px);
         opacity: 0;  
+    }
+`;
+
+const slideIn = keyframes`
+    0% {
+        transform: scale(0.2);
+    }
+
+    100% {
+        transform: scale(1);
     }
 `;
 
@@ -87,6 +57,12 @@ export const ObstacleItem = styled.div<Props>`
 
 export const StyledObstacleImage = styled.img`
     width: 100%;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+    animation-name: ${slideIn};
+    transform-origin: top;
+    transition: 1s;
+    animation-timing-function: ease;
 `;
 
 export const TouchContainer = styled.div<Props>`
@@ -132,8 +108,8 @@ export const StyledTouchAppIcon = styled(TouchApp)<Props>`
         width: 50px;
         height: 50px;
         color: white;
-        animation-duration: 6s;
-        animation-iteration-count: 1;
+        animation-duration: 2s;
+        animation-iteration-count: 3;
         transform-origin: bottom;
         animation-name: ${({ orientation }) => (orientation === 'vertical' ? slideVertical : slideHorizontal)};
         opacity: 0;
@@ -153,4 +129,22 @@ export const ProgressBarContainer = styled.div`
     align-items: center;
     justify-content: center;
     height: 20%;
+`;
+
+interface DragItemProps {
+    orientation: Orientation;
+    failed: boolean;
+}
+
+export const DragItem = styled.div<DragItemProps>`
+    width: 20px;
+    height: 20px;
+    background-color: ${({ failed }) => (failed ? 'red' : 'rgb(245, 230, 99)')};
+    border: 10px solid rgba(136, 136, 136, 0.5);
+    border-radius: 50%;
+    touch-action: none;
+    user-select: none;
+    position: absolute;
+    left: ${({ orientation }) => (orientation === 'horizontal' ? 0 : '30px')};
+    top: ${({ orientation }) => (orientation === 'vertical' ? 0 : '30px')}; ;
 `;

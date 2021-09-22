@@ -1,6 +1,6 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes } from "styled-components";
 
-import forest from '../../../../images/ui/forest_mobile.svg';
+import forest from "../../../../images/ui/forest_mobile.svg";
 
 export const swing = keyframes`
     0% {
