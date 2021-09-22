@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import Button from '../../../../components/common/Button';
 import { StyledParticles } from '../../../../components/common/Particles.sc';
+import { SkipButton } from '../../../../components/common/SkipButton.sc';
 import { stoneParticlesConfig } from '../../../../config/particlesConfig';
 import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
@@ -45,6 +46,18 @@ const Stone: React.FunctionComponent = () => {
     const { userId, obstacle, setObstacle, hasStone, setHasStone } = React.useContext(PlayerContext);
     const { connectedUsers, roomId } = React.useContext(GameContext);
 
+    React.useEffect(() => {
+        document.body.style.overflow = 'visible';
+        document.body.style.position = 'static';
+        document.body.style.userSelect = 'auto';
+    }, []);
+
+    function resetBodyStyles() {
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.userSelect = 'none';
+    }
+
     function handleTouch() {
         if (counter <= limit) {
             setParticles(true);
@@ -59,7 +72,7 @@ const Stone: React.FunctionComponent = () => {
             receivingUserId,
             usingCollectedStone: searchParams.get('choosePlayer') ? true : false,
         });
-        // history.push(controllerPlayerDeadRoute(roomId)); // TODO ??
+        resetBodyStyles();
         history.push(controllerGame1Route(roomId));
     }
 
@@ -69,6 +82,7 @@ const Stone: React.FunctionComponent = () => {
                 type: MessageTypes.obstacleSkipped,
                 obstacleId: obstacle.id,
             });
+            resetBodyStyles();
             setObstacle(roomId, undefined);
         }
     }
@@ -96,7 +110,9 @@ const Stone: React.FunctionComponent = () => {
                             {particles && <StyledParticles params={stoneParticlesConfig} />}
                         </StyledStone>
                         {obstacle?.skippable && <Button onClick={handleSkip}>Skip</Button>}
-                        <Button onClick={handleSkip}>Skip</Button>
+                        <SkipButton>
+                            <Button onClick={handleSkip}>Skip</Button>
+                        </SkipButton>
                     </>
                 ) : (
                     <>
@@ -140,12 +156,18 @@ const Stone: React.FunctionComponent = () => {
                                                 handleThrow(selectedUser);
                                             }
                                         }}
+                                        variant="secondary"
+                                        size="large"
                                     >
                                         Throw Stone
                                     </Button>
                                 }
                             </div>
-                            {!hasStone && <Button onClick={handleCollectStone}>Collect Stone</Button>}
+                            {!hasStone && (
+                                <Button onClick={handleCollectStone} size="small">
+                                    Collect Stone
+                                </Button>
+                            )}
                         </UserButtons>
                     </>
                 )}
