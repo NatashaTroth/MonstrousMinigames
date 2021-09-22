@@ -12,3 +12,4 @@ export const CHASERS_POSITION_X = 100;
 
 export const CAMERA_POSITION_X = 0;
 export const CAMERA_SPEED = 1.7;
+export const CHASERS_SPEED = 1.75;
