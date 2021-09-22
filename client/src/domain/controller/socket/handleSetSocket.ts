@@ -171,11 +171,11 @@ export function handleSetSocket(
     });
 
     playerStunnedSocket.listen(() => {
-        handlePlayerStunned(roomId);
+        handlePlayerStunned(history, roomId);
     });
 
     playerUnstunnedSocket.listen(() => {
-        handlePlayerUnstunned(roomId);
+        handlePlayerUnstunned(history, roomId);
     });
 
     gameFinishedSocket.listen((data: GameHasFinishedMessage) => {
@@ -186,6 +186,7 @@ export function handleSetSocket(
             dependencies: {
                 setPlayerRank,
             },
+            history,
         });
     });
 

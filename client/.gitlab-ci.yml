@@ -25,8 +25,10 @@ lint:client:
         - cd client/
         - echo "Linting.."
         - npm run lint-fix
+        - npm run tsc --silent
     except:
         - /^backend-.*$/
+        - staging
 
 test:client:
     stage: test
@@ -38,6 +40,7 @@ test:client:
         - ./node_modules/.bin/jest ./
     except:
         - /^backend-.*$/
+        - staging
 
 #--- Deployment ---
 .some-script: &deployment-script
@@ -61,6 +64,7 @@ staging:client:
 
     only:
         - master
+        - staging
 
 production:client:
     stage: production
@@ -75,5 +79,5 @@ production:client:
         - *deployment-script
 
     only:
-        - master
+        - dev
     when: manual

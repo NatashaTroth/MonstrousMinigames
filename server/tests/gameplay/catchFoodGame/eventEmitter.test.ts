@@ -6,9 +6,7 @@ import { GameEvents } from '../../../src/gameplay/catchFood/interfaces/';
 import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
 import {
-    advanceCountdown,
-    clearTimersAndIntervals, finishGame, finishPlayer, releaseThreadN, skipTimeToStartChasers,
-    startGameAndAdvanceCountdown
+    clearTimersAndIntervals, finishGame, finishPlayer, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
@@ -35,21 +33,6 @@ describe('Event Emitter', () => {
     afterEach(() => {
         afterEachFunction();
     });
-
-    // test super is being called
-    // it.only('should create a new CatchFoodGameEventEmitter instance (same object)', async () => {
-    //     const GameEventEmitterNew = require('../../../src/classes/GameEventEmitter')
-    //     jest.mock('../../../src/classes/GameEventEmitter');
-    //     const CatchFoodGameEventEmitterNew = require('../../../src/gameplay/catchFood/CatchFoodGameEventEmitter')
-
-    //     // const EventEmitterSuperSpy = jest.spyOn(CatchFoodGameEventEmitterNew.prototype as any, 'constructor')
-    //     // const soundPlayerConsumer = new SoundPlayerConsumer();
-    //     // expect(SoundPlayer).toHaveBeenCalledTimes(1);
-    //     expect(GameEventEmitterNew).toHaveBeenCalledTimes(1)
-
-    //     // CatchFoodGameEventEmitter.mockClear()
-
-    // })
 
     it('should create a new CatchFoodGameEventEmitter instance (same object)', async () => {
         const gameEventEmitterNew = CatchFoodGameEventEmitter.getInstance();
@@ -456,8 +439,6 @@ describe('Game has finished events', () => {
         let eventData: GameEvents.GameHasFinished = {
             roomId: '',
             gameState: GameState.Started,
-            trackLength: 0,
-            numberOfObstacles: 0,
             playerRanks: [],
         };
         gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
@@ -470,8 +451,6 @@ describe('Game has finished events', () => {
         expect(eventData).toMatchObject({
             roomId: catchFoodGame.roomId,
             gameState: catchFoodGame.gameState,
-            trackLength: catchFoodGame.trackLength,
-            numberOfObstacles: catchFoodGame.numberOfObstacles,
         });
 
         const playerOneTotalTime = dateNow + 10000 - catchFoodGame['gameStartedAt'];
@@ -485,115 +464,6 @@ describe('Game has finished events', () => {
             positionX: catchFoodGame.players.get('1')?.positionX,
             isActive: true,
         });
-    });
-});
-
-describe('Game has timed out events', () => {
-    beforeAll(() => {
-        gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
-    });
-
-    beforeEach(() => {
-        beforeEachFunction();
-    });
-
-    afterEach(() => {
-        afterEachFunction();
-    });
-
-    it('should emit a GameHasTimedOut event when the game has timed out', async () => {
-        // disable chasers
-        jest.spyOn(catchFoodGame as any, 'updateChasersPosition').mockImplementation(() => 0);
-        const timedOutEvent = jest.fn();
-        jest.spyOn(catchFoodGame as any, 'update');
-        gameEventEmitter.on(GameEventTypes.GameHasTimedOut, timedOutEvent);
-        startGameAndAdvanceCountdown(catchFoodGame);
-        await releaseThreadN(3);
-        advanceCountdown(catchFoodGame.timeOutLimit + 50);
-        await releaseThreadN(3);
-
-        expect(timedOutEvent).toHaveBeenCalled();
-    });
-
-    it('should emit correct GameHasFinished data when the game has timed out', async () => {
-        // disable chasers
-        jest.spyOn(catchFoodGame as any, 'updateChasersPosition').mockImplementation(() => 0);
-        const dateNow = 1618665766156;
-        Date.now = jest.fn(() => dateNow);
-        let eventData: GameEvents.GameHasFinished = {
-            roomId: '',
-            gameState: GameState.Started,
-            trackLength: 0,
-            numberOfObstacles: 0,
-            playerRanks: [],
-        };
-
-        gameEventEmitter.on(GameEventTypes.GameHasTimedOut, (data: GameEvents.GameHasFinished) => {
-            eventData = data;
-        });
-        startGameAndAdvanceCountdown(catchFoodGame);
-        await releaseThreadN(3);
-
-        // player 1 has finished
-        const player1FinishedTime = 500;
-        advanceCountdown(player1FinishedTime);
-        await releaseThreadN(3);
-        finishPlayer(catchFoodGame, '1');
-        await releaseThreadN(3);
-        
-        // player 2 has run forward - but should get the same rank as player 1
-        catchFoodGame['runForward']('2', 50);
-        await releaseThreadN(3);
-
-        //avoid being caught (for this test)
-        catchFoodGame.chasersPositionX = catchFoodGame.trackLength * -100;
-
-        advanceCountdown(catchFoodGame.timeOutLimit + 50000 - player1FinishedTime);
-        await releaseThreadN(3);
-
-        expect(eventData).toMatchObject({
-            roomId: catchFoodGame.roomId,
-            gameState: catchFoodGame.gameState,
-            trackLength: catchFoodGame.trackLength,
-            numberOfObstacles: catchFoodGame.numberOfObstacles,
-        });
-
-        // // const playerOneTotalTime = dateNow + 10000 - catchFoodGame.gameStartedTime;
-        // const userId1 = '1';
-        // expect(eventData.playerRanks[0]).toMatchObject({
-        //     id: userId1,
-        //     name: catchFoodGame.players.get(userId1)?.name,
-        //     rank: 1,
-        //     finished: true,
-        //     dead: false,
-        //     totalTimeInMs: player1FinishedTime,
-        //     positionX: catchFoodGame.players.get(userId1)?.positionX,
-        //     isActive: true,
-        // });
-
-        // const userId2 = '2';
-        // expect(eventData.playerRanks[1]).toMatchObject({
-        //     id: userId2,
-        //     name: catchFoodGame.players.get(userId2)?.name,
-        //     rank: 2,
-        //     finished: true,
-        //     dead: true, //because didn't run
-        //     totalTimeInMs: catchFoodGame.timeOutLimit,
-        //     positionX: catchFoodGame.players.get(userId2)?.positionX,
-        //     isActive: true,
-        // });
-
-        // const userId3 = '3';
-        // expect(eventData.playerRanks[2]).toMatchObject({
-        //     id: userId3,
-        //     name: catchFoodGame.players.get(userId3)?.name,
-        //     rank: 2,
-        //     finished: true,
-        //     dead: true,
-        //     totalTimeInMs: catchFoodGame.timeOutLimit,
-        //     positionX: catchFoodGame.players.get(userId3)?.positionX,
-        //     isActive: true,
-        // });
     });
 });
 
@@ -621,7 +491,6 @@ describe('Chaser event', () => {
         gameEventEmitter.on(GameEventTypes.PlayerIsDead, () => {
             playerIsDeadEvent = true;
         });
-        skipTimeToStartChasers(catchFoodGame);
         // catchFoodGame['runForward']('1', chasersStartPosX);
         jest.advanceTimersByTime(1000);
         expect(playerIsDeadEvent).toBeTruthy();
@@ -644,7 +513,6 @@ describe('Chaser event', () => {
         catchFoodGame.players.get('4')!.positionX = chasersStartPosX + 2000;
 
         // should catch the other three players
-        skipTimeToStartChasers(catchFoodGame);
         jest.advanceTimersByTime(2000); //move 1 every 100ms -> 2000/100 = 20. move 20 to get to player
 
         expect(eventData).toMatchObject({

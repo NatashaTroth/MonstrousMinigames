@@ -4,9 +4,6 @@ import Frame from 'react-frame-component';
 
 import Button from '../../../components/common/Button';
 import { ControllerSocketContext } from '../../../contexts/ControllerSocketContextProvider';
-import { GameContext } from '../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../contexts/PlayerContextProvider';
-import { sendMovement } from '../gameState/sendMovement';
 import { ConnectScreenContainer, FormContainer, inputStyles, LabelStyles, wrapperStyles } from './ConnectScreen.sc';
 
 interface FormStateProps {
@@ -17,6 +14,7 @@ interface FormStateProps {
 interface ConnectScreen {
     history: History;
 }
+
 export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history }) => {
     const { location } = history;
     const roomId = checkRoomCode(location.pathname.slice(1));
@@ -24,37 +22,13 @@ export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history 
         name: localStorage.getItem('name') || '',
         roomId: roomId || '',
     });
-    const { controllerSocket, handleSocketConnection } = React.useContext(ControllerSocketContext);
-    const { playerFinished, permission } = React.useContext(PlayerContext);
-    const { hasPaused } = React.useContext(GameContext);
+    const { handleSocketConnection } = React.useContext(ControllerSocketContext);
 
     React.useEffect(() => {
         if (roomId) {
             sessionStorage.setItem('roomId', roomId);
         }
     }, [roomId]);
-
-    React.useEffect(() => {
-        document.body.style.position = 'fixed';
-        document.body.style.overflow = 'hidden';
-    }, []);
-
-    if (permission) {
-        window.addEventListener(
-            'devicemotion',
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (event: any) => {
-                event.preventDefault();
-                if (
-                    event?.acceleration?.x &&
-                    (event.acceleration.x < -2 || event.acceleration.x > 2) &&
-                    !playerFinished
-                ) {
-                    sendMovement(controllerSocket, hasPaused);
-                }
-            }
-        );
-    }
 
     return (
         <ConnectScreenContainer>
@@ -112,7 +86,7 @@ export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history 
     );
 };
 
-function checkRoomCode(roomId: string) {
+export function checkRoomCode(roomId: string) {
     if (roomId.length !== 4) {
         return null;
     } else if (!roomId.match('[a-zA-Z]')) {

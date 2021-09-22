@@ -5,4 +5,5 @@ export interface IMessage {
     characterNumber?: string;
     receivingUserId?: string;
     state?: string;
+    usingCollectedStone?: boolean;
 }

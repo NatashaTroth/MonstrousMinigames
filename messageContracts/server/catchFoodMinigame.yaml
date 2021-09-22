@@ -1,70 +1,66 @@
 asyncapi: 2.0.0
 info:
-  title: Catch food (working title) minigame
-  version: 1.0.0
-  description: The food has run away - monsters have to run after it to catch it 
+    title: Catch food (working title) minigame
+    version: 1.0.0
+    description: The food has run away - monsters have to run after it to catch it
 channels:
- updatePosition:
-    publish:
-      message:
-        $ref: '#/components/messages/updatePosition'
-    subscribe:
-      message:
-        $ref: '#/components/messages/updatePosition'
- newObstacle:
-    publish:
-      message:
-        $ref: '#/components/messages/newObstacle'
-    subscribe:
-      message:
-        $ref: '#/components/messages/newObstacle'
-components:
-  messages:
     updatePosition:
-      description: Broadcast new position of player with player id
-      payload:
-        type: object
-        properties:
-          newPosition:
-            type: integer
-            description: X-axis position
-        playerId:
-            type: string
-            description: Player id of referenced player 
-    game1/newObstacle:
-      description: Broadcast obstacle type (e.g. tree stump) that player id has 
-      payload:
-        type: object
-        properties:
-          obstacleType:
-            type: object
-            properties:
-              name:
-                type: string
-                value: TREE-STUMP, BEAR-TRAP, SPIDER, HOLE
-    game1/playerFinished:
-      description: Player with player id has finished the game
-      payload:
-        type: object
-        properties:
-          playerId:
-            type: string
-            description: Player id of referenced player 
-    game1/gameOver:
-      description: The game has finished - all players have finished the game, or a player has timed out
-      payload:
-        type: object
-        properties:
-          allPlayersFinished:
-            type: boolean
-            description: True if all players finished. False if a player timed out
-          finishedPlayers:
-            description: List of player ids that finished the race
-            type: array
-            items:
-              string:
-              description: Player id
-
-          
-                
-             
+        publish:
+            message:
+                $ref: "#/components/messages/updatePosition"
+        subscribe:
+            message:
+                $ref: "#/components/messages/updatePosition"
+    newObstacle:
+        publish:
+            message:
+                $ref: "#/components/messages/newObstacle"
+        subscribe:
+            message:
+                $ref: "#/components/messages/newObstacle"
+components:
+    messages:
+        updatePosition:
+            description: Broadcast new position of player with player id
+            payload:
+                type: object
+                properties:
+                    newPosition:
+                        type: integer
+                        description: X-axis position
+                playerId:
+                    type: string
+                    description: Player id of referenced player
+        game1/newObstacle:
+            description: Broadcast obstacle type (e.g. tree stump) that player id has
+            payload:
+                type: object
+                properties:
+                    obstacleType:
+                        type: object
+                        properties:
+                            name:
+                                type: string
+                                value: TREE-STUMP, BEAR-TRAP, SPIDER, TRASH
+        game1/playerFinished:
+            description: Player with player id has finished the game
+            payload:
+                type: object
+                properties:
+                    playerId:
+                        type: string
+                        description: Player id of referenced player
+        game1/gameOver:
+            description: The game has finished - all players have finished the game, or a player has timed out
+            payload:
+                type: object
+                properties:
+                    allPlayersFinished:
+                        type: boolean
+                        description: True if all players finished. False if a player timed out
+                    finishedPlayers:
+                        description: List of player ids that finished the race
+                        type: array
+                        items:
+                            string:
+                            description: Player id

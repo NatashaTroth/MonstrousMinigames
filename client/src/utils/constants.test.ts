@@ -1,4 +1,4 @@
-import { GameState, localDevelopment, Obstacles, TouchEvent } from './constants';
+import { designDevelopment, GameState, localDevelopment, ObstacleTypes } from './constants';
 
 describe('test GAMESTATE enum', () => {
     it('GAMESTATE.created should return CREATED', () => {
@@ -23,43 +23,32 @@ describe('test GAMESTATE enum', () => {
 });
 
 describe('test OBSTACLES enum', () => {
-    it('OBSTACLES.treeStump should return TreeStump', () => {
-        expect(Obstacles.treeStump).toBe('TreeStump');
+    it('ObstacleTypes.treeStump should return TREE_STUMP', () => {
+        expect(ObstacleTypes.treeStump).toBe('TREE_STUMP');
     });
 
-    it('OBSTACLES.spider should return Spider', () => {
-        expect(Obstacles.spider).toBe('Spider');
+    it('ObstacleTypes.spider should return SPIDER', () => {
+        expect(ObstacleTypes.spider).toBe('SPIDER');
     });
 
-    it('OBSTACLES.stone should return Stone', () => {
-        expect(Obstacles.stone).toBe('Stone');
+    it('ObstacleTypes.stone should return STONE', () => {
+        expect(ObstacleTypes.stone).toBe('STONE');
     });
 
-    it('OBSTACLES.hole should return Hole', () => {
-        expect(Obstacles.hole).toBe('Hole');
+    it('ObstacleTypes.trash should return TRASH', () => {
+        expect(ObstacleTypes.trash).toBe('TRASH');
     });
 
-    it('OBSTACLES should have length of 4', () => {
-        expect(Object.keys(Obstacles).length).toBe(4);
-    });
-});
-
-describe('test TOUCHEVENT enum', () => {
-    it('TOUCHEVENT.panLeft should return panLeft', () => {
-        expect(TouchEvent.panLeft).toBe('panleft');
-    });
-
-    it('TOUCHEVENT.panRight should return panRight', () => {
-        expect(TouchEvent.panRight).toBe('panright');
-    });
-
-    it('OBSTACLES should have length of 2', () => {
-        expect(Object.keys(TouchEvent).length).toBe(2);
+    it('ObstacleTypes should have length of 4', () => {
+        expect(Object.keys(ObstacleTypes).length).toBe(4);
     });
 });
 
 describe('local development', () => {
     it('localDevelopment should return false', () => {
         expect(localDevelopment).toBe(false);
+    });
+    it('designDevelopment should return false', () => {
+        expect(designDevelopment).toBe(false);
     });
 });

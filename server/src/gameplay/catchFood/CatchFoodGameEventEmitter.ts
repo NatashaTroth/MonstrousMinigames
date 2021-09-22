@@ -32,6 +32,10 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
         return this.CatchFoodGameEventEmitter;
     }
 
+    public static emitInitialGameStateInfoUpdate(data: GameEvents.InitialGameStateInfoUpdate) {
+        this.CatchFoodGameEventEmitter.emit(GameEventTypes.InitialGameStateInfoUpdate, data);
+    }
+
     public static emitGameHasStartedEvent(data: GameEvents.GameHasStarted) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasStarted, data);
     }
@@ -73,10 +77,6 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
     }
     public static emitAllPlayersHaveDisconnected(data: GameEvents.GameStateHasChanged) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.AllPlayersHaveDisconnected, data);
-    }
-
-    public static emitGameHasTimedOutEvent(data: GameEvents.GameHasFinished) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasTimedOut, data);
     }
 
     public static emitPlayerHasDisconnected(data: GameEvents.PlayerHasDisconnectedInfo) {

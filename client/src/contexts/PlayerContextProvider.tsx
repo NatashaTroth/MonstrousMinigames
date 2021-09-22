@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useHistory } from 'react-router';
 
-import { Character } from '../utils/characters';
-import { Obstacles } from '../utils/constants';
+import { Character } from '../config/characters';
+import { ObstacleTypes } from '../utils/constants';
 import { controllerGame1Route, controllerObstacleRoute } from '../utils/routes';
 
 export const defaultValue = {
@@ -16,10 +16,6 @@ export const defaultValue = {
     },
     playerRank: undefined,
     setPlayerRank: () => {
-        // do nothing
-    },
-    permission: false,
-    setPermissionGranted: () => {
         // do nothing
     },
     resetPlayer: () => {
@@ -49,10 +45,15 @@ export const defaultValue = {
     setPlayerDead: () => {
         // do nothing
     },
+    hasStone: false,
+    setHasStone: () => {
+        // do nothing
+    },
 };
 export interface Obstacle {
-    type: Obstacles;
+    type: ObstacleTypes;
     id: number;
+    skippable: boolean;
 }
 interface PlayerContextProps {
     obstacle: undefined | Obstacle;
@@ -61,8 +62,6 @@ interface PlayerContextProps {
     setPlayerFinished: (val: boolean) => void;
     playerRank: number | undefined;
     setPlayerRank: (val: number) => void;
-    permission: boolean;
-    setPermissionGranted: (val: boolean) => void;
     resetPlayer: () => void;
     playerNumber: number | undefined;
     setPlayerNumber: (val: number) => void;
@@ -76,6 +75,8 @@ interface PlayerContextProps {
     setUserId: (val: string) => void;
     dead: boolean;
     setPlayerDead: (val: boolean) => void;
+    hasStone: boolean;
+    setHasStone: (val: boolean) => void;
 }
 
 export const PlayerContext = React.createContext<PlayerContextProps>(defaultValue);
@@ -86,12 +87,12 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [playerFinished, setPlayerFinished] = React.useState<boolean>(false);
     const [playerRank, setPlayerRank] = React.useState<undefined | number>();
     const [playerNumber, setPlayerNumber] = React.useState<number | undefined>();
-    const [permission, setPermissionGranted] = React.useState<boolean>(false);
     const history = useHistory();
     const [character, setCharacter] = React.useState<undefined | Character>(undefined);
     const [name, setName] = React.useState<string>('');
     const [ready, setReady] = React.useState<boolean>(false);
     const [dead, setPlayerDead] = React.useState(false);
+    const [hasStone, setHasStone] = React.useState(false);
 
     let reroute = true;
 
@@ -101,7 +102,7 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
             setObstacle(val);
             if (val) {
                 reroute = true;
-                history.push(controllerObstacleRoute(roomId, val.type));
+                history.push(controllerObstacleRoute(roomId, val.type)!);
             } else if (reroute) {
                 reroute = false;
                 history.push(controllerGame1Route(roomId));
@@ -111,8 +112,6 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setPlayerFinished,
         playerRank,
         setPlayerRank,
-        permission,
-        setPermissionGranted,
         resetPlayer: () => {
             setPlayerFinished(false);
             setPlayerRank(undefined);
@@ -129,6 +128,8 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setUserId,
         dead,
         setPlayerDead,
+        hasStone,
+        setHasStone,
     };
     return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>;
 };

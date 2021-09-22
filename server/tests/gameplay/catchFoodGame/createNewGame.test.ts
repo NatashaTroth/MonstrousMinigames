@@ -4,6 +4,7 @@ import { clearTimersAndIntervals, releaseThreadN, startAndFinishGame } from './g
 
 const NEW_TRACKLENGTH = 1000;
 const NEW_NUMBER_OF_OBSTACLES = 6;
+const NEW_STONE_COUNT = 1;
 let catchFoodGame: CatchFoodGame;
 
 describe('Create new game tests', () => {
@@ -14,7 +15,7 @@ describe('Create new game tests', () => {
 
         startAndFinishGame(catchFoodGame);
         await releaseThreadN(3);
-        catchFoodGame.createNewGame(users, NEW_TRACKLENGTH, NEW_NUMBER_OF_OBSTACLES);
+        catchFoodGame.createNewGame(users, NEW_TRACKLENGTH, NEW_NUMBER_OF_OBSTACLES, NEW_STONE_COUNT);
     });
     afterEach(async () => {
         clearTimersAndIntervals(catchFoodGame);
@@ -45,6 +46,6 @@ describe('Create new game tests', () => {
     });
 
     it('should have initiated the correct new number of obstacles', async () => {
-        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(NEW_NUMBER_OF_OBSTACLES);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(NEW_NUMBER_OF_OBSTACLES + NEW_STONE_COUNT);
     });
 });

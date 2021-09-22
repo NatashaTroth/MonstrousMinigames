@@ -1,11 +1,13 @@
-import Player from "../Player";
-import { Obstacle, PlayerState } from "./interfaces";
+import Player from '../Player';
+import { Obstacle, PlayerState } from './interfaces';
 
 class CatchFoodPlayer extends Player implements PlayerState {
     static readonly EVT_UNSTUNNED = 'unstunned';
 
     finishedTimeMs = 0;
     atObstacle = false;
+    canSkipObstacle = false;
+    stonesCarrying = 0;
     dead = false;
     stunned = false;
     stunnedSeconds = 0;
@@ -16,7 +18,7 @@ class CatchFoodPlayer extends Player implements PlayerState {
         name: string,
         public positionX: number,
         public obstacles: Obstacle[],
-        public characterNumber: number,
+        public characterNumber: number
     ) {
         super(id, name);
     }

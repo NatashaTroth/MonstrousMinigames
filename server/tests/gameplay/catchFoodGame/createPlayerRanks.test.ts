@@ -1,12 +1,11 @@
 import { CatchFoodGame } from '../../../src/gameplay';
 import { leaderboard, roomId } from '../mockData';
 import {
-    advanceCountdown,
     clearTimersAndIntervals, finishGame, getGameFinishedDataDifferentTimes,
-    getGameFinishedDataSameRanks, releaseThreadN, startGameAndAdvanceCountdown
+    getGameFinishedDataSameRanks, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
-// const TRACKLENGTH = 500;
+// const TRACK_LENGTH = 5000;  // has to be bigger than initial player position
 
 let catchFoodGame: CatchFoodGame;
 const dateNow = 1618665766156;
@@ -25,15 +24,6 @@ describe('Game logic tests', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const createPlayerRanksSpy = jest.spyOn(catchFoodGame, 'createPlayerRanks');
         finishGame(catchFoodGame);
-        expect(createPlayerRanksSpy).toHaveBeenCalled();
-    });
-
-    it('createPlayerRanks is called when the game times out', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
-        await releaseThreadN(3);
-        const createPlayerRanksSpy = jest.spyOn(catchFoodGame, 'createPlayerRanks');
-        advanceCountdown(catchFoodGame.timeOutLimit);
-        await releaseThreadN(3);
         expect(createPlayerRanksSpy).toHaveBeenCalled();
     });
 

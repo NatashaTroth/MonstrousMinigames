@@ -4,12 +4,18 @@ import Button from '../../../../components/common/Button';
 import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
+import { MessageTypes } from '../../../../utils/constants';
+import { Navigator } from '../../../navigator/Navigator';
 import { currentCount, getAudioInput, resetCurrentCount } from './getAudioInput';
 import LinearProgressBar from './LinearProgressBar';
 import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
 import { StyledNet, StyledSkipButton, StyledSpider } from './Spider.sc';
 
-const Spider: React.FunctionComponent = () => {
+interface SpiderProps {
+    navigator: Navigator;
+}
+
+const Spider: React.FunctionComponent<SpiderProps> = ({ navigator }) => {
     const [progress, setProgress] = React.useState(0);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { roomId } = React.useContext(GameContext);
@@ -29,7 +35,7 @@ const Spider: React.FunctionComponent = () => {
 
     const solveObstacle = () => {
         if (obstacle) {
-            controllerSocket.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle.id });
+            controllerSocket.emit({ type: MessageTypes.obstacleSolved, obstacleId: obstacle.id });
             setObstacle(roomId, undefined);
             clearTimeout(handleSkip);
         }
@@ -40,14 +46,18 @@ const Spider: React.FunctionComponent = () => {
         resetCurrentCount();
         initializeSkip();
 
-        getAudioInput(MAX, {
-            solveObstacle: () => {
-                if (mounted) {
-                    solveObstacle();
-                }
+        getAudioInput(
+            MAX,
+            {
+                solveObstacle: () => {
+                    if (mounted) {
+                        solveObstacle();
+                    }
+                },
+                setProgress,
             },
-            setProgress,
-        });
+            navigator
+        );
 
         return () => {
             mounted = false;
@@ -57,27 +67,25 @@ const Spider: React.FunctionComponent = () => {
     }, []);
 
     return (
-        <>
-            <ObstacleContainer>
-                <LinearProgressBar MAX={MAX} progress={progress} />
-                <ObstacleContent>
-                    <StyledNet />
-                    <StyledSpider
-                        className={[
-                            (progress > 0 && progress < 14 && 'swing') || '',
-                            'eyeRoll',
-                            ((progress >= 14 || skip) && 'fallOff') || '',
-                        ].join(' ')}
-                        strokeWidth={skip ? 0 : (MAX - progress) / 2}
-                    />
-                </ObstacleContent>
-                {skip && (
-                    <StyledSkipButton>
-                        <Button onClick={solveObstacle}>Skip</Button>
-                    </StyledSkipButton>
-                )}
-            </ObstacleContainer>
-        </>
+        <ObstacleContainer>
+            <LinearProgressBar MAX={MAX} progress={progress} />
+            <ObstacleContent>
+                <StyledNet />
+                <StyledSpider
+                    className={[
+                        (progress > 0 && progress < 14 && 'swing') || '',
+                        'eyeRoll',
+                        ((progress >= 14 || skip) && 'fallOff') || '',
+                    ].join(' ')}
+                    strokeWidth={skip ? 0 : (MAX - progress) / 2}
+                />
+            </ObstacleContent>
+            {skip && (
+                <StyledSkipButton>
+                    <Button onClick={solveObstacle}>Skip</Button>
+                </StyledSkipButton>
+            )}
+        </ObstacleContainer>
     );
 };
 

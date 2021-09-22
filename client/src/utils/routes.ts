@@ -1,4 +1,4 @@
-import { Obstacles } from './constants';
+import { ObstacleTypes } from './constants';
 
 export enum Routes {
     // Routes for router
@@ -9,7 +9,7 @@ export enum Routes {
     controllerGame1 = '/controller/:id/game1',
     controllerTreeStump = `/controller/:id/treestump`,
     controllerSpider = `/controller/:id/spider`,
-    controllerHole = `/controller/:id/hole`,
+    controllerTrash = `/controller/:id/trash`,
     controllerStone = `/controller/:id/stone`,
     controllerPlayerDead = '/controller/:id/dead',
     controllerPlayerStunned = '/controller/:id/stunned',
@@ -27,7 +27,7 @@ export enum Routes {
     lobby = '/lobby',
     treeStump = '/treestump',
     spider = '/spider',
-    hole = '/hole',
+    trash = '/trash',
     stone = '/stone',
     game1 = '/game1',
     dead = '/dead',
@@ -44,8 +44,6 @@ export const controllerChooseCharacterRoute = (roomId: undefined | string) =>
 
 export const controllerLobbyRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.lobby}`;
 
-export const controllerStoneRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.stone}`;
-
 export const controllerPlayerDeadRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.dead}`;
 
 export const controllerFinishedRoute = (roomId: undefined | string) =>
@@ -56,16 +54,16 @@ export const controllerGame1Route = (roomId: undefined | string) => `${Routes.co
 export const controllerPlayerStunnedRoute = (roomId: undefined | string) =>
     `${Routes.controller}/${roomId}${Routes.stunned}`;
 
-export const controllerObstacleRoute = (roomId: undefined | string, obstacle: Obstacles) => {
+export const controllerObstacleRoute = (roomId: undefined | string, obstacle: ObstacleTypes) => {
     switch (obstacle) {
-        case Obstacles.treeStump:
+        case ObstacleTypes.treeStump:
             return `${Routes.controller}/${roomId}${Routes.treeStump}`;
-        case Obstacles.spider:
+        case ObstacleTypes.spider:
             return `${Routes.controller}/${roomId}${Routes.spider}`;
-        case Obstacles.hole:
-            return `${Routes.controller}/${roomId}${Routes.hole}`;
-        default:
-            return '';
+        case ObstacleTypes.trash:
+            return `${Routes.controller}/${roomId}${Routes.trash}`;
+        case ObstacleTypes.stone:
+            return `${Routes.controller}/${roomId}${Routes.stone}`;
     }
 };
 

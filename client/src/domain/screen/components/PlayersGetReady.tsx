@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import Button from '../../../components/common/Button';
+import { characters } from '../../../config/characters';
 import { AudioContext } from '../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { ScreenSocketContext, User } from '../../../contexts/ScreenSocketContextProvider';
-import { characters } from '../../../utils/characters';
 import { MessageTypes } from '../../../utils/constants';
 import { ScreenStates } from '../../../utils/screenStates';
 import { handleAudioPermission } from '../../audio/handlePermission';

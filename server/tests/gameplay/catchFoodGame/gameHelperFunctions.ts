@@ -25,13 +25,15 @@ export function clearTimersAndIntervals(game: Game) {
     } catch (e) {
         //no need to handle, game is already finished
     }
-    jest.runAllTimers();
+    // jest.runAllTimers();
     jest.clearAllMocks();
 }
 
-export function startGameAndAdvanceCountdown(catchFoodGame: CatchFoodGame) {
+export function startGameAndAdvanceCountdown(catchFoodGame: CatchFoodGame, afterCreate: () => any = () => void 0) {
     Date.now = () => dateNow;
-    catchFoodGame.createNewGame(users, TRACK_LENGTH, 4, 1);
+    catchFoodGame.createNewGame(users, TRACK_LENGTH, 4);
+    afterCreate();
+    catchFoodGame.startGame();
     advanceCountdown(catchFoodGame.countdownTime);
 }
 export function advanceCountdown(time: number) {
@@ -39,10 +41,6 @@ export function advanceCountdown(time: number) {
     const previousNow = Date.now;
     Date.now = () => previousNow() + time;
     jest.advanceTimersByTime(time);
-}
-
-export function skipTimeToStartChasers(catchFoodGame: CatchFoodGame) {
-    advanceCountdown(catchFoodGame.timeWhenChasersAppear);
 }
 
 export function finishCreatedGame(catchFoodGame: CatchFoodGame) {
@@ -71,9 +69,11 @@ export function finishPlayer(catchFoodGame: CatchFoodGame, userId: string) {
 }
 
 export function completePlayersObstacles(catchFoodGame: CatchFoodGame, userId: string) {
-    for (let i = 0; i < catchFoodGame.numberOfObstacles; i++) {
+    for (let i = 0; i < catchFoodGame.numberOfObstacles + catchFoodGame.numberOfStones; i++) {
+        const player = catchFoodGame.players.get(userId)!;
         catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
-        catchFoodGame['playerHasCompletedObstacle'](userId, i);
+        catchFoodGame['playerHasCompletedObstacle'](userId, player.obstacles[0].id);
+        player.stonesCarrying = 0;
     }
 }
 
@@ -118,12 +118,12 @@ export async function startAndFinishGameDifferentTimes(catchFoodGame: CatchFoodG
     return catchFoodGame;
 }
 
-export async function getGameFinishedDataDifferentTimes(catchFoodGame: CatchFoodGame): Promise<GameEvents.GameHasFinished> {
+export async function getGameFinishedDataDifferentTimes(
+    catchFoodGame: CatchFoodGame
+): Promise<GameEvents.GameHasFinished> {
     let eventData: GameEvents.GameHasFinished = {
         roomId: '',
         gameState: GameState.Started,
-        trackLength: 0,
-        numberOfObstacles: 0,
         playerRanks: [],
     };
     gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
@@ -137,8 +137,6 @@ export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
     let eventData: GameEvents.GameHasFinished = {
         roomId: '',
         gameState: GameState.Started,
-        trackLength: 0,
-        numberOfObstacles: 0,
         playerRanks: [],
     };
 
@@ -161,12 +159,12 @@ export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
     return eventData;
 }
 
-export async function getGameFinishedDataWithSomeDead(catchFoodGame: CatchFoodGame): Promise<GameEvents.GameHasFinished> {
+export async function getGameFinishedDataWithSomeDead(
+    catchFoodGame: CatchFoodGame
+): Promise<GameEvents.GameHasFinished> {
     let eventData: GameEvents.GameHasFinished = {
         roomId: '',
         gameState: GameState.Started,
-        trackLength: 0,
-        numberOfObstacles: 0,
         playerRanks: [],
     };
     gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
