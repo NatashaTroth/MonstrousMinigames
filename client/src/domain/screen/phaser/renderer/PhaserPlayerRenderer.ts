@@ -52,11 +52,14 @@ export class PhaserPlayerRenderer {
         laneHeight: number,
         posY: number
     ) {
-        const repeats = 1;
+        const repeats = Math.ceil(trackLength / (windowWidth / this.numberPlayers)) + 2;
 
         for (let i = 0; i < repeats; i++) {
             const sky = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'starsAndSky');
             const newWidth = this.calcWidthKeepAspectRatio(sky, laneHeight);
+            // if (i === 0) {
+            //     repeats = Math.ceil(trackLength / newWidth);
+            // }
             sky.setDisplaySize(newWidth, laneHeight);
             sky.setOrigin(0, 1);
             sky.setScrollFactor(0.2);
