@@ -137,7 +137,7 @@ class Screen {
                         });
                     }
                     break;
-                case MessageTypes.SEND_SCREEN_STATE:
+                case MessageTypes.SCREEN_STATE:
                     if (this.room?.isAdminScreen(this.socket.id)) {
                         console.info(this.room.id + ' | Send Screen State' + ' | ' + message.state);
                         this.room.resetGame().then(() => {

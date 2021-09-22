@@ -13,6 +13,7 @@ import { PlayerUnstunnedMessage } from './playerUnstunned';
 import { GameHasResetMessage } from './reset';
 import { GameHasResumedMessage } from './resumed';
 import { ScreenAdminMessage } from './screenAdmin';
+import { ScreenStateMessage } from './screenState';
 import { GameHasStartedMessage } from './started';
 import { StartPhaserGameMessage } from './startPhaserGame';
 import { GameHasStoppedMessage } from './stopped';
@@ -40,4 +41,5 @@ export type MessageData =
     | PlayerDiedMessage
     | PlayerStunnedMessage
     | PlayerUnstunnedMessage
+    | ScreenStateMessage
     | undefined;

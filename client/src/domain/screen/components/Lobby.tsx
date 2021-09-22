@@ -64,7 +64,7 @@ export const Lobby: React.FunctionComponent = () => {
         initialPlayLobbyMusic(true);
         if (screenAdmin) {
             screenSocket?.emit({
-                type: MessageTypes.sendScreenState,
+                type: MessageTypes.screenState,
                 state: ScreenStates.lobby,
             });
         }

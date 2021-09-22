@@ -46,7 +46,7 @@ const PlayersGetReady: React.FC = () => {
         initialPlayLobbyMusic(true);
         if (screenAdmin) {
             screenSocket?.emit({
-                type: MessageTypes.sendScreenState,
+                type: MessageTypes.screenState,
                 state: ScreenStates.getReady,
             });
         }

@@ -51,7 +51,7 @@ const ChooseGame: React.FunctionComponent = () => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
         if (screenAdmin) {
             screenSocket?.emit({
-                type: MessageTypes.sendScreenState,
+                type: MessageTypes.screenState,
                 state: ScreenStates.chooseGame,
                 game: selectedGame,
             });
