@@ -1,7 +1,8 @@
-import { designDevelopment, Obstacles } from '../../../utils/constants';
+import { designDevelopment, ObstacleTypes } from '../../../utils/constants';
 import { depthDictionary } from '../../../utils/depthDictionary';
 import MainScene from '../components/MainScene';
-import { GameData } from './gameInterfaces';
+import { AnimationName } from './enums';
+import { Character, GameData } from './gameInterfaces';
 import { GameToScreenMapper } from './GameToScreenMapper';
 import { Coordinates } from './gameTypes';
 import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
@@ -14,7 +15,6 @@ import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
  */
 export class Player {
     username: string;
-    animationName: string;
     playerRunning: boolean;
     playerAtObstacle: boolean;
     playerCountSameDistance: number;
@@ -30,11 +30,10 @@ export class Player {
         private index: number,
         private coordinates: Coordinates,
         private gameStateData: GameData,
-        private monsterName: string,
+        private character: Character,
         private numberPlayers: number,
         private gameToScreenMapper: GameToScreenMapper
     ) {
-        this.animationName = `${monsterName}Walk`;
         this.username = gameStateData.playersState[index].name;
         this.playerRunning = false;
         this.playerAtObstacle = false;
@@ -48,7 +47,7 @@ export class Player {
         this.renderer.renderBackground(
             window.innerWidth,
             window.innerHeight,
-            gameStateData.trackLength,
+            this.gameToScreenMapper.mapGameMeasurementToScreen(gameStateData.trackLength),
             this.index,
             this.laneHeight,
             this.coordinates.y
@@ -64,7 +63,30 @@ export class Player {
                 this.coordinates.y,
                 this.laneHeight
             );
-            // setTimeout(() => this.handlePlayerDead(), 500);
+
+            this.arrivedAtObstacle();
+
+            setInterval(() => {
+                this.playerAtObstacle = false;
+                this.renderer.destroyAttentionIcon();
+
+                setTimeout(() => this.arrivedAtObstacle(), 1000);
+            }, 5000);
+
+            // this.renderer.renderAttentionIcon();
+            // // test animation
+            // this.handlePlayerStunned();
+
+            // setInterval(() => {
+            //     this.stunned = false;
+            //     this.handlePlayerStunned();
+            // }, 4000);
+            // this.startRunning();
+            // setTimeout(() => this.handlePlayerStunned(), 3000);
+            // setTimeout(() => {
+            //     this.handlePlayerUnStunned();
+            //     this.startRunning();
+            // }, 6000);
         }
     }
 
@@ -112,13 +134,14 @@ export class Player {
     }
 
     handlePlayerStunned() {
-        this.renderer.stunPlayer();
-        this.stunned = true;
+        if (!this.stunned) {
+            this.renderer.stunPlayer(this.character.animations.get(AnimationName.Stunned)!.name);
+            this.stunned = true;
+        }
     }
 
     handlePlayerUnStunned() {
-        this.renderer.unStunPlayer();
-
+        this.renderer.stopAnimation();
         this.stunned = false;
     }
 
@@ -154,7 +177,7 @@ export class Player {
             y: this.coordinates.y,
         };
 
-        this.renderer.renderPlayer(this.index, screenCoordinates, this.monsterName, this.animationName, this.username);
+        this.renderer.renderPlayer(this.index, screenCoordinates, this.character, this.username);
     }
 
     private setObstacles() {
@@ -164,20 +187,23 @@ export class Player {
             const posX = this.gameToScreenMapper.mapGameMeasurementToScreen(obstacle.positionX) + 75;
             let obstaclePosY = this.coordinates.y; //+ 30;
             let obstacleScale = 0.5 / this.numberPlayers;
+            let obstacleDepth = depthDictionary.obstacle - index;
 
             switch (obstacle.type) {
-                case Obstacles.treeStump:
+                case ObstacleTypes.treeStump:
                     obstacleScale = 0.7 / this.numberPlayers;
                     break;
-                case Obstacles.spider:
-                    obstacleScale = 0.6 / this.numberPlayers;
+                case ObstacleTypes.spider:
+                    obstacleScale = 0.7 / this.numberPlayers;
                     break;
-                case Obstacles.trash:
-                    obstacleScale = 0.6 / this.numberPlayers;
+                case ObstacleTypes.trash:
+                    obstacleScale = 0.7 / this.numberPlayers;
                     obstaclePosY += 10;
                     break;
-                case Obstacles.stone:
-                    obstacleScale = 0.6 / this.numberPlayers;
+                case ObstacleTypes.stone:
+                    obstacleScale = 0.75 / this.numberPlayers;
+                    obstaclePosY += 13 / this.numberPlayers;
+                    obstacleDepth = depthDictionary.stoneObstacle - index;
                     break;
             }
 
@@ -186,7 +212,8 @@ export class Player {
                 obstaclePosY,
                 obstacleScale,
                 obstacle.type.toLowerCase(),
-                depthDictionary.obstacle - index
+                obstacleDepth,
+                obstacle.skippable
             );
         });
     }
@@ -205,12 +232,13 @@ export class Player {
     }
 
     startRunning() {
-        this.renderer.startRunningAnimation(this.animationName);
+        const animationName = this.character.animations.get(AnimationName.Running)?.name;
+        if (animationName) this.renderer.startAnimation(animationName);
         this.playerRunning = true;
     }
 
     stopRunning() {
-        this.renderer.stopRunningAnimation();
+        this.renderer.stopAnimation();
         this.playerRunning = false;
     }
 }

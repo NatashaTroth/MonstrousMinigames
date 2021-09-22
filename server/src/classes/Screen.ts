@@ -42,15 +42,38 @@ class Screen {
             console.error(this.roomId + ' | ' + e.name);
         }
     }
+
+    private trySendAllScreensPhaserGameLoaded(timedOut = false) {
+        if (!this.room!.sentAllScreensLoaded) {
+            this.room!.sentAllScreensLoaded = true;
+            if (this.room?.allScreensLoadedTimeout) clearTimeout(this.room.allScreensLoadedTimeout);
+            this.emitter.sendAllScreensPhaserGameLoaded([this.screenNamespace], this.room!);
+        }
+
+        if (timedOut) {
+            console.log('sending timed out');
+            const notReadyScreens = this.room!.getScreensPhaserNotReady();
+            notReadyScreens.forEach(screen => {
+                this.emitter.sendScreenPhaserGameLoadedTimedOut(this.screenNamespace, screen.id); //TODO natasha
+            });
+        }
+    }
+
     private onMessage(message: IMessage) {
         try {
             switch (message.type) {
                 case CatchFoodMsgType.PHASER_GAME_LOADED:
                     this.room?.setScreenPhaserGameReady(this.socket.id, true);
+                    if (this.room && !this.room?.firstPhaserScreenLoaded) {
+                        this.room.firstPhaserScreenLoaded = true;
+                        this.room.allScreensLoadedTimeout = setTimeout(() => {
+                            this.trySendAllScreensPhaserGameLoaded(true);
+                            ///TODO natasha - send timedout to other screens
+                        }, 10000);
+                    }
 
                     if (this.room?.allPhaserGamesReady()) {
-                        this.room?.setAllScreensPhaserGameReady(false); //reset for next game
-                        this.emitter.sendAllScreensPhaserGameLoaded([this.screenNamespace], this.room!);
+                        this.trySendAllScreensPhaserGameLoaded();
                     }
                     break;
                 case CatchFoodMsgType.START_PHASER_GAME:
@@ -69,7 +92,6 @@ class Screen {
 
                         this.room.game.addListener(Game.EVT_FRAME_READY, (game: Game) => {
                             if (this.room?.isPlaying()) {
-                                //TODO natasha SENDING GAME STATE - send from game class
                                 this.emitter.sendGameState(this.screenNamespace, this.room, true);
                             }
                         });
@@ -96,6 +118,8 @@ class Screen {
                 case MessageTypes.BACK_TO_LOBBY:
                     if (this.room?.isAdminScreen(this.socket.id)) {
                         console.info(this.room.id + ' | Reset Game');
+                        this.room!.setAllScreensPhaserGameReady(false);
+                        this.room!.sentAllScreensLoaded = false;
                         this.room.resetGame().then(() => {
                             this.emitter.sendMessage(
                                 MessageTypes.GAME_HAS_RESET,

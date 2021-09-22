@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const boxShadowDepth = 7;
 
@@ -7,6 +7,7 @@ export const Container = styled.div``;
 interface ButtonProps {
     variant: 'primary' | 'secondary';
     fullwidth?: boolean;
+    size?: 'small' | 'medium' | 'large';
 }
 
 export const StyledButtonBase = styled.button<ButtonProps>`
@@ -52,5 +53,18 @@ export const StyledButton = styled(StyledButtonBase)<ButtonProps>`
         border-radius: 10px;
         min-width: 200px;
         ${({ fullwidth }) => fullwidth && 'width: 100%;'}
+        ${({ size }) => {
+            switch (size) {
+                case 'large':
+                    return css`
+                        height: 80px;
+                    `;
+                case 'small':
+                    return css`
+                        padding: 5px;
+                        font-size: 18px;
+                    `;
+            }
+        }}
     }
 `;

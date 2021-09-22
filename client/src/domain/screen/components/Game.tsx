@@ -1,7 +1,7 @@
 import { Pause, PlayArrow, VolumeOff, VolumeUp } from '@material-ui/icons';
 import Phaser from 'phaser';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import { RouteParams } from '../../../App';
 import { AudioContext } from '../../../contexts/AudioContextProvider';
@@ -101,6 +101,6 @@ export default Game;
 
 const GameContent: React.FunctionComponent = () => (
     <div>
-        <div id="game-root"></div>
+        <div id="game-root" data-testid="game-container"></div>
     </div>
 );

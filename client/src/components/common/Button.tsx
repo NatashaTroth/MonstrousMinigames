@@ -11,6 +11,7 @@ interface ButtonProps {
     variant?: 'primary' | 'secondary';
     fullwidth?: boolean;
     title?: string;
+    size?: 'small' | 'medium' | 'large';
 }
 
 const Button: React.FunctionComponent<ButtonProps> = ({
@@ -22,6 +23,7 @@ const Button: React.FunctionComponent<ButtonProps> = ({
     variant = 'primary',
     fullwidth = false,
     title,
+    size,
 }) => (
     <Container>
         <Tooltip title={title || ''}>
@@ -33,6 +35,7 @@ const Button: React.FunctionComponent<ButtonProps> = ({
                     name={name}
                     variant={variant}
                     fullwidth={fullwidth}
+                    size={size}
                 >
                     {children}
                 </StyledButton>

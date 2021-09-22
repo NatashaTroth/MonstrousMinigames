@@ -27,6 +27,7 @@ lint:server:
         - npm run lint
     except:
         - /^frontend-.*$/
+        - staging
 
 test:server:
     stage: test
@@ -38,6 +39,7 @@ test:server:
         - ./node_modules/.bin/jest ./
     except:
         - /^frontend-.*$/
+        - staging
 
 # --- Deployment ---
 .job_template: &deployment_configuration
@@ -61,6 +63,7 @@ staging:server:
         HEROKU_APP: $HEROKU_APP_STAGING
     only:
         - master
+        - staging
 
 production:server:
     <<: *deployment_configuration
@@ -71,5 +74,5 @@ production:server:
     variables:
         HEROKU_APP: $HEROKU_APP_PRODUCTION
     only:
-        - master
+        - dev
     when: manual

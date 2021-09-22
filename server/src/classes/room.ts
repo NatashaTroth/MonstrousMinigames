@@ -21,6 +21,9 @@ class Room {
     private state: RoomStates;
     private leaderboard: Leaderboard;
     public screens: Array<ScreenInfo>;
+    public firstPhaserScreenLoaded: boolean;
+    public allScreensLoadedTimeout: undefined | ReturnType<typeof setTimeout>;
+    public sentAllScreensLoaded: boolean;
 
     constructor(id: string, game?: Game) {
         this.id = id;
@@ -31,6 +34,9 @@ class Room {
         this.game.leaderboard = this.leaderboard;
         this.state = RoomStates.OPEN;
         this.screens = [];
+        this.firstPhaserScreenLoaded = false;
+        this.allScreensLoadedTimeout = undefined;
+        this.sentAllScreensLoaded = false;
     }
 
     public clear(): void {
@@ -148,6 +154,10 @@ class Room {
         this.screens.forEach(screen => (screen.phaserGameReady = value));
     }
 
+    public getScreensPhaserNotReady(): ScreenInfo[] {
+        return this.screens.filter(screen => screen.phaserGameReady === false);
+    }
+
     public startGame() {
         this.setState(RoomStates.PLAYING);
         this.game.startGame();
@@ -226,7 +236,7 @@ class Room {
     }
 
     public addScreen(screenId: string): void {
-        this.screens.push({ id: screenId });
+        this.screens.push({ id: screenId, phaserGameReady: false });
     }
     public removeScreen(screenId: string): void {
         const index = this.screens.findIndex(element => element.id === screenId);
