@@ -1,19 +1,25 @@
-import * as React from "react";
-import styled from "styled-components";
+import * as React from 'react';
 
-import Button from "../../../../components/common/Button";
-import { StyledParticles } from "../../../../components/common/Particles.sc";
-import { treeParticlesConfig } from "../../../../config/particlesConfig";
-import { ControllerSocketContext } from "../../../../contexts/ControllerSocketContextProvider";
-import { GameContext } from "../../../../contexts/GameContextProvider";
-import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
-import wood from "../../../../images/obstacles/wood/wood.svg";
-import LinearProgressBar from "./LinearProgressBar";
-import { ObstacleContainer, ObstacleContent } from "./ObstaclStyles.sc";
+import Button from '../../../../components/common/Button';
+import { StyledParticles } from '../../../../components/common/Particles.sc';
+import { treeParticlesConfig } from '../../../../config/particlesConfig';
+import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
+import { GameContext } from '../../../../contexts/GameContextProvider';
+import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
+import wood from '../../../../images/obstacles/wood/wood.svg';
+import { MessageTypes } from '../../../../utils/constants';
+import LinearProgressBar from './LinearProgressBar';
+import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
 import {
-    DragItem, Line, ObstacleItem, ProgressBarContainer, StyledObstacleImage, StyledSkipButton,
-    StyledTouchAppIcon, TouchContainer
-} from "./TreeTrunk.sc";
+    DragItem,
+    Line,
+    ObstacleItem,
+    ProgressBarContainer,
+    StyledObstacleImage,
+    StyledSkipButton,
+    StyledTouchAppIcon,
+    TouchContainer,
+} from './TreeTrunk.sc';
 
 export type Orientation = 'vertical' | 'horizontal';
 
@@ -32,7 +38,7 @@ interface TouchStart {
 const TreeTrunk: React.FunctionComponent = () => {
     const orientationOptions: Orientation[] = ['vertical', 'horizontal'];
     const tolerance = 10;
-    const distance = 50;
+    const distance = 80;
     const trunksToFinish = 5;
 
     const { controllerSocket } = React.useContext(ControllerSocketContext);
@@ -52,22 +58,17 @@ const TreeTrunk: React.FunctionComponent = () => {
     let currentY;
     let initialX: number;
     let initialY: number;
-    let xOffset = 0;
-    let yOffset = 0;
+    let xOffset = orientation === 'vertical' ? 0 : 20;
+    let yOffset = orientation === 'horizontal' ? 0 : 20;
 
     React.useEffect(() => {
-        // TODO remove
-        document.body.style.overflow = 'hidden';
-        document.body.style.position = 'fixed';
-        document.body.style.userSelect = 'none';
+        setTimeout(() => {
+            if (progress === 0) {
+                setSkip(true);
+            }
+        }, 10000);
 
-        // setTimeout(() => {
-        //     if (progress === 0) {
-        //         setSkip(true);
-        //     }
-        // }, 10000);
-
-        newTrunk();
+        newTrunk(orientationOptions, setOrientation);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -79,20 +80,15 @@ const TreeTrunk: React.FunctionComponent = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [progress]);
 
-    function newTrunk() {
-        const newOrientation = orientationOptions[Math.floor(Math.random() * orientationOptions.length)];
-        setOrientation(newOrientation);
-    }
-
     const solveObstacle = () => {
-        // controllerSocket?.emit({ type: 'game1/obstacleSolved', obstacleId: obstacle!.id });
-        // setShowInstructions(false);
-        // setObstacle(roomId, undefined);
+        controllerSocket?.emit({ type: MessageTypes.obstacleSolved, obstacleId: obstacle!.id });
+        setShowInstructions(false);
+        setObstacle(roomId, undefined);
     };
 
     function drag(e: any) {
         e.preventDefault();
-        const wood = document.getElementById('dragItem');
+        const dragItem = document.getElementById('dragItem');
 
         currentX = e.touches[0].clientX - initialX;
         currentY = e.touches[0].clientY - initialY;
@@ -100,7 +96,7 @@ const TreeTrunk: React.FunctionComponent = () => {
         xOffset = currentX;
         yOffset = currentY;
 
-        setTranslate(currentX, currentY, wood!);
+        setTranslate(currentX, currentY, dragItem!);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -143,11 +139,9 @@ const TreeTrunk: React.FunctionComponent = () => {
                     solveObstacle();
                 } else {
                     setProgress(progress + 1);
-                    newTrunk();
+                    newTrunk(orientationOptions, setOrientation);
                 }
             } else {
-                // eslint-disable-next-line no-console
-                console.log('Fail');
                 setFailed(true);
             }
         }
@@ -172,16 +166,16 @@ const TreeTrunk: React.FunctionComponent = () => {
                     key={`touchContainer${progress}`}
                 >
                     <DragItem id="dragItem" orientation={orientation} failed={failed}></DragItem>
-                    {skip && (
-                        <StyledSkipButton>
-                            <Button onClick={solveObstacle}>Skip</Button>
-                        </StyledSkipButton>
-                    )}
                     <Line orientation={orientation} />
                     {showInstructions && <StyledTouchAppIcon orientation={orientation} />}
                 </TouchContainer>
                 {particles && <StyledParticles params={treeParticlesConfig} />}
             </ObstacleContent>
+            {skip && (
+                <StyledSkipButton>
+                    <Button onClick={solveObstacle}>Skip</Button>
+                </StyledSkipButton>
+            )}
         </ObstacleContainer>
     );
 };
@@ -199,4 +193,10 @@ const isInContainer = (touches: TouchStart, coordinates: Coordinates) => {
 
 function setTranslate(xPos: number, yPos: number, el: HTMLElement) {
     el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+    el.style.opacity = '1';
+}
+
+function newTrunk(orientationOptions: Orientation[], setOrientation: (orientation: Orientation) => void) {
+    const newOrientation = orientationOptions[Math.floor(Math.random() * orientationOptions.length)];
+    setOrientation(newOrientation);
 }

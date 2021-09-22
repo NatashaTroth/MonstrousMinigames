@@ -33,7 +33,7 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
-        "test": "jest --coverage",
+        "test": "jest --maxWorkers=50%",
         "test:watch": "jest --watchAll --coverage --config ./jest.config.js",
         "eject": "react-scripts eject",
         "lint": "eslint . --ext .ts",

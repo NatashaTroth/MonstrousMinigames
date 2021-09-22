@@ -1,8 +1,8 @@
-import { TouchApp } from "@material-ui/icons";
-import styled, { css, keyframes } from "styled-components";
+import { TouchApp } from '@material-ui/icons';
+import styled, { css, keyframes } from 'styled-components';
 
-import { SkipButton } from "../../../../components/common/SkipButton.sc";
-import { Orientation } from "./TreeTrunk";
+import { SkipButton } from '../../../../components/common/SkipButton.sc';
+import { Orientation } from './TreeTrunk';
 
 const slideVertical = keyframes`
     0% { 
@@ -119,7 +119,7 @@ export const StyledTouchAppIcon = styled(TouchApp)<Props>`
 export const StyledSkipButton = styled(SkipButton)`
     && {
         position: absolute;
-        bottom: -20px;
+        bottom: 30px;
     }
 `;
 
@@ -146,5 +146,6 @@ export const DragItem = styled.div<DragItemProps>`
     user-select: none;
     position: absolute;
     left: ${({ orientation }) => (orientation === 'horizontal' ? 0 : '30px')};
-    top: ${({ orientation }) => (orientation === 'vertical' ? 0 : '30px')}; ;
+    top: ${({ orientation }) => (orientation === 'vertical' ? 0 : '30px')};
+    opacity: 0;
 `;
