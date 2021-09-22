@@ -3,6 +3,7 @@ export enum CatchFoodMsgType {
     INITIAL_GAME_STATE_INFO = 'game1/initialGameState',
     START = 'game1/start',
     PHASER_GAME_LOADED = 'game1/phaserGameLoaded',
+    PHASER_LOADING_TIMED_OUT = 'game1/phaserLoadingTimedOut',
     ALL_SCREENS_PHASER_GAME_LOADED = 'game1/allScreensPhaserGameLoaded',
     START_PHASER_GAME = 'game1/startPhaserGame',
     HAS_STARTED = 'game1/hasStarted',

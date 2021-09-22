@@ -154,6 +154,10 @@ class Room {
         this.screens.forEach(screen => (screen.phaserGameReady = value));
     }
 
+    public getScreensPhaserNotReady(): ScreenInfo[] {
+        return this.screens.filter(screen => screen.phaserGameReady === false);
+    }
+
     public startGame() {
         this.setState(RoomStates.PLAYING);
         this.game.startGame();
@@ -232,7 +236,7 @@ class Room {
     }
 
     public addScreen(screenId: string): void {
-        this.screens.push({ id: screenId });
+        this.screens.push({ id: screenId, phaserGameReady: false });
     }
     public removeScreen(screenId: string): void {
         const index = this.screens.findIndex(element => element.id === screenId);

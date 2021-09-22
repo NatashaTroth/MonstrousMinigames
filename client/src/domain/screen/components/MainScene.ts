@@ -13,6 +13,7 @@ import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/fini
 import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../typeGuards/gameStateInfo';
 import { InitialGameStateInfoMessage, initialGameStateInfoTypeGuard } from '../../typeGuards/initialGameStateInfo';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
+import { PhaserLoadingTimedOutMessage, phaserLoadingTimedOutTypeGuard } from '../../typeGuards/phaserLoadingTimedOut';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
 import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/started';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../typeGuards/stopped';
@@ -73,6 +74,8 @@ class MainScene extends Phaser.Scene {
         this.socket = data.socket;
         this.screenAdmin = data.screenAdmin;
         this.gameRenderer = new PhaserGameRenderer(this);
+        this.initSockets();
+        this.initiateEventEmitters();
 
         if (this.roomId === '' && data.roomId !== undefined) {
             this.roomId = data.roomId;
@@ -80,13 +83,11 @@ class MainScene extends Phaser.Scene {
     }
 
     preload(): void {
-        printMethod('here 1');
         this.gameRenderer?.renderLoadingScreen();
-        printMethod('here 2');
 
         // emitted every time a file has been loaded
         this.load.on('progress', (value: number) => {
-            this.gameRenderer?.updateLoadingScreen(value);
+            this.gameRenderer?.updateLoadingScreenPercent(value);
         });
 
         if (designDevelopment) {
@@ -98,8 +99,10 @@ class MainScene extends Phaser.Scene {
 
         //once all the files are done loading
         this.load.on('complete', () => {
-            this.gameRenderer?.destroyLoadingScreen();
             printMethod('LOADING COMPLETE - SENDING TO SERVER');
+            // if (localDevelopment && this.screenAdmin) return;
+
+            this.gameRenderer?.updateLoadingScreenFinishedPreloading();
             this.socket?.emit({
                 type: MessageTypes.phaserLoaded,
                 roomId: this.roomId,
@@ -124,8 +127,8 @@ class MainScene extends Phaser.Scene {
     create() {
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
-        this.initSockets();
-        this.initiateEventEmitters();
+        // this.initSockets();
+        // this.initiateEventEmitters();
 
         if (localDevelopment && designDevelopment) {
             this.initiateGame(initialGameInput);
@@ -173,6 +176,8 @@ class MainScene extends Phaser.Scene {
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
                 printMethod('RECEIVED FIRST GAME STATE:');
                 // printMethod(JSON.stringify(data.data));
+                this.gameRenderer?.destroyLoadingScreen();
+
                 this.gameStarted = true;
                 this.initiateGame(data.data);
                 this.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');
@@ -187,6 +192,12 @@ class MainScene extends Phaser.Scene {
             // this.allScreensLoaded = true;
             if (this.screenAdmin) this.sendCreateNewGame();
             // if (this.screenAdmin && !designDevelopment && this.firstGameStateReceived) this.sendStartGame();
+        });
+
+        const phaserLoadedTimedOut = new MessageSocket(phaserLoadingTimedOutTypeGuard, this.socket);
+        phaserLoadedTimedOut.listen((data: PhaserLoadingTimedOutMessage) => {
+            printMethod('TIMED OUT');
+            //TODO handle
         });
 
         const startedGame = new MessageSocket(startedTypeGuard, this.socket);
