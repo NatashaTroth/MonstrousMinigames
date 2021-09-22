@@ -58,6 +58,13 @@ function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room): voi
         });
     });
 }
+
+function sendScreenPhaserGameLoadedTimedOut(nsp: Namespace, socketId: string): void {
+    //TODO
+    nsp.to(socketId).emit('message', {
+        type: CatchFoodMsgType.PHASER_LOADING_TIMED_OUT,
+    });
+}
 function sendStartPhaserGame(nsps: Array<Namespace>, room: Room): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(room.id).emit('message', {
@@ -161,6 +168,7 @@ export default {
     sendGameState,
     sendErrorMessage,
     sendAllScreensPhaserGameLoaded,
+    sendScreenPhaserGameLoadedTimedOut,
     sendStartPhaserGame,
     sendGameHasStarted,
     sendPlayerFinished,

@@ -74,5 +74,5 @@ production:server:
     variables:
         HEROKU_APP: $HEROKU_APP_PRODUCTION
     only:
-        - master
+        - dev
     when: manual

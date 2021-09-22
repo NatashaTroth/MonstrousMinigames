@@ -6,6 +6,7 @@ import { GameStateInfoMessage } from './gameStateInfo';
 import { InitialGameStateInfoMessage } from './initialGameStateInfo';
 import { ObstacleMessage } from './obstacle';
 import { GameHasPausedMessage } from './paused';
+import { PhaserLoadingTimedOutMessage } from './phaserLoadingTimedOut';
 import { PlayerDiedMessage } from './playerDied';
 import { PlayerFinishedMessage } from './playerFinished';
 import { PlayerStunnedMessage } from './playerStunned';
@@ -27,6 +28,7 @@ export type MessageData =
     | GameHasPausedMessage
     | StartPhaserGameMessage
     | AllScreensPhaserGameLoadedMessage
+    | PhaserLoadingTimedOutMessage
     | GameHasStartedMessage
     | GameHasResumedMessage
     | GameHasStoppedMessage

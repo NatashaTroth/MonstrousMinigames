@@ -18,12 +18,10 @@ import ObstacleNotSkippable from './customErrors/ObstacleNotSkippable';
 import UserHasNoStones from './customErrors/UserHasNoStones';
 import { CatchFoodMsgType, ObstacleType } from './enums';
 import {
-    createObstacles,
-    getObstacleTypes,
-    getStonesForObstacles,
-    sortBy,
+    createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
 } from './helperFunctions/initiatePlayerState';
 import { GameStateInfo, Obstacle, PlayerRank } from './interfaces';
+import { ObstacleReachedInfoController } from './interfaces/GameEvents';
 
 interface CatchFoodGameInterface extends IGameInterface<CatchFoodPlayer, GameStateInfo> {
     trackLength: number;
@@ -42,6 +40,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     speed = InitialGameParameters.SPEED;
     countdownTime = InitialGameParameters.COUNTDOWN_TIME; //should be 1 second more than client - TODO: make sure it is
     cameraSpeed = InitialGameParameters.CAMERA_SPEED;
+    chasersSpeed = InitialGameParameters.CHASERS_SPEED;
     stunnedTime = InitialGameParameters.STUNNED_TIME;
 
     initialPlayerPositionX = InitialGameParameters.PLAYERS_POSITION_X;
@@ -101,7 +100,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         if (localDevelopment) {
             for (const player of this.players.values()) {
                 if (player.positionX < this.trackLength) {
-                    this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
+                    this.runForward(player.id, ((this.speed / 13) * timeElapsedSinceLastFrame) / 1);
                 }
             }
         }
@@ -222,10 +221,8 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     //TODO test
     private updateChasersPosition(timeElapsed: number, timeElapsedSinceLastFrame: number) {
         //10000 to 90000  * timePassed //TODO - make faster over time??
-        // if (timeElapsed < this.timeWhenChasersAppear) return;
         if (this.chasersPositionX > this.trackLength) return;
-        // this.chasersPositionX += (timeElapsedSinceLastFrame / 33) * this.cameraSpeed;
-        this.chasersPositionX += (timeElapsedSinceLastFrame / 33) * this.cameraSpeed;
+        this.chasersPositionX += (timeElapsedSinceLastFrame / 33) * this.chasersSpeed;
 
         //TODO test
         for (const player of this.players.values()) {
@@ -317,11 +314,19 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
         //set position x to obstacle position (in case ran past)
         player.positionX = player.obstacles[0].positionX;
+        const obstacleDetails: ObstacleReachedInfoController = {
+            obstacleType: player.obstacles[0].type,
+            obstacleId: player.obstacles[0].id,
+        };
+        if (player.obstacles[0].type === ObstacleType.Trash) {
+            obstacleDetails.trashType = player.obstacles[0].trashType;
+            obstacleDetails.numberTrashItems = player.obstacles[0].numberTrashItems;
+        }
+
         CatchFoodGameEventEmitter.emitObstacleReachedEvent({
             roomId: this.roomId,
             userId,
-            obstacleType: player.obstacles[0].type,
-            obstacleId: player.obstacles[0].id,
+            ...obstacleDetails,
         });
     }
 

@@ -18,3 +18,5 @@ export const gameLoadingMessages = [
     'On your marks, get set, ',
     'Waiting for the bus',
 ];
+
+export const gameLoadedWaitingMessages = ['Finished loading. Waiting for fellow monsters to connect'];
