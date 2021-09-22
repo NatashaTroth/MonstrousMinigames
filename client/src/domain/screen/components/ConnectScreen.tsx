@@ -19,6 +19,9 @@ import {
 } from './ConnectScreen.sc';
 import GettingStartedDialog from './GettingStarted';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const fetch = require('node-fetch');
+
 export const ConnectScreen: React.FunctionComponent = () => {
     const [joinDialogOpen, setJoinDialogOpen] = React.useState(false);
     const [gettingStartedDialogOpen, setGettingStartedDialogOpen] = React.useState(false);
