@@ -51,9 +51,10 @@ class Screen {
         }
 
         if (timedOut) {
+            console.log('sending timed out');
             const notReadyScreens = this.room!.getScreensPhaserNotReady();
             notReadyScreens.forEach(screen => {
-                // this.emitter.sendScreenPhaserGameLoadedTimedOut(screen, this.room!) //TODO natasha
+                this.emitter.sendScreenPhaserGameLoadedTimedOut(this.screenNamespace, screen.id); //TODO natasha
             });
         }
     }

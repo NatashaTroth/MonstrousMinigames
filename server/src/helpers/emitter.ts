@@ -59,12 +59,10 @@ function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room): voi
     });
 }
 
-function sendScreenPhaserGameLoadedTimedOut(nsps: Array<Namespace>, room: Room): void {
+function sendScreenPhaserGameLoadedTimedOut(nsp: Namespace, socketId: string): void {
     //TODO
-    nsps.forEach(function (namespace: Namespace) {
-        namespace.to(room.id).emit('message', {
-            type: CatchFoodMsgType.ALL_SCREENS_PHASER_GAME_LOADED,
-        });
+    nsp.to(socketId).emit('message', {
+        type: CatchFoodMsgType.PHASER_LOADING_TIMED_OUT,
     });
 }
 function sendStartPhaserGame(nsps: Array<Namespace>, room: Room): void {

@@ -13,6 +13,7 @@ import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/fini
 import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../typeGuards/gameStateInfo';
 import { InitialGameStateInfoMessage, initialGameStateInfoTypeGuard } from '../../typeGuards/initialGameStateInfo';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
+import { PhaserLoadingTimedOutMessage, phaserLoadingTimedOutTypeGuard } from '../../typeGuards/phaserLoadingTimedOut';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
 import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/started';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../typeGuards/stopped';
@@ -99,6 +100,8 @@ class MainScene extends Phaser.Scene {
         //once all the files are done loading
         this.load.on('complete', () => {
             printMethod('LOADING COMPLETE - SENDING TO SERVER');
+            // if (localDevelopment && this.screenAdmin) return;
+
             this.gameRenderer?.updateLoadingScreenFinishedPreloading();
             this.socket?.emit({
                 type: MessageTypes.phaserLoaded,
@@ -189,6 +192,12 @@ class MainScene extends Phaser.Scene {
             // this.allScreensLoaded = true;
             if (this.screenAdmin) this.sendCreateNewGame();
             // if (this.screenAdmin && !designDevelopment && this.firstGameStateReceived) this.sendStartGame();
+        });
+
+        const phaserLoadedTimedOut = new MessageSocket(phaserLoadingTimedOutTypeGuard, this.socket);
+        phaserLoadedTimedOut.listen((data: PhaserLoadingTimedOutMessage) => {
+            printMethod('TIMED OUT');
+            //TODO handle
         });
 
         const startedGame = new MessageSocket(startedTypeGuard, this.socket);
