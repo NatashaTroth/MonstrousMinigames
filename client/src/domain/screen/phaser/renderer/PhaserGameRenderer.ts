@@ -1,17 +1,39 @@
+//TODO can be used by all phaser games!!
+
 import Phaser from 'phaser';
 
+import { designDevelopment } from '../../../../utils/constants';
 import { depthDictionary } from '../../../../utils/depthDictionary';
+import { getRandomInt } from '../../../../utils/getRandomInt';
 import MainScene from '../../components/MainScene';
+import { gameLoadingMessages } from '../gameLoadingMessages';
+import {
+    countdownTextStyleProperties,
+    loadingTextStyleProperties,
+} from '../textStyleProperties';
 
 /**
  * this is an incomplete GameRenderer adapter which contains all the phaser logic. This class might only be tested via
  * integration tests. That's why we want to keep this class as small as possible.
  */
 export class PhaserGameRenderer {
+    sceneWidth: number;
+    sceneHeight: number;
+    progressBoxWidth: number;
+    progressBoxHeight: number;
     countdownText?: Phaser.GameObjects.Text;
+    progressBox?: Phaser.GameObjects.Graphics;
+    progressBar?: Phaser.GameObjects.Graphics;
+    loadingText?: Phaser.GameObjects.Text;
+    percentText?: Phaser.GameObjects.Text;
+    assetText?: Phaser.GameObjects.Text; //only for local dev -> to see which assets take long to load
 
     constructor(private scene: MainScene) {
         this.scene = scene;
+        this.sceneWidth = this.scene.cameras.main.width;
+        this.sceneHeight = this.scene.cameras.main.height;
+        this.progressBoxWidth = 320;
+        this.progressBoxHeight = 50;
     }
 
     renderCountdown(text: string) {
@@ -28,29 +50,99 @@ export class PhaserGameRenderer {
                 y,
                 text,
                 style: {
+                    ...countdownTextStyleProperties,
                     fontSize: `${fixedHeight}px`,
-                    fontFamily: 'Roboto, Arial',
-                    color: '#d2a44f',
-                    stroke: '#d2a44f',
-                    strokeThickness: 15,
                     fixedWidth,
                     fixedHeight,
-                    align: 'center',
-                    shadow: {
-                        offsetX: 10,
-                        offsetY: 10,
-                        color: '#000',
-                        blur: 0,
-                        stroke: false,
-                        fill: false,
-                    },
                 },
-
                 add: true,
             });
             this.countdownText.scrollFactorX = 0;
             this.countdownText.setDepth(depthDictionary.countdown);
         }
+    }
+
+    renderLoadingScreen() {
+        //progress bar: https://gamedevacademy.org/creating-a-preloading-screen-in-phaser-3/?a=13#Loading_Our_Assets
+        //TODO change any
+
+        //loading bar
+        this.progressBar = this.scene.add.graphics();
+        this.progressBox = this.scene.add.graphics();
+        this.progressBox.fillStyle(0xa7bdb1);
+        this.progressBox.setDepth(3);
+
+        const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
+        const screenCenterHeight = this.scene.cameras.main.worldView.y + this.scene.cameras.main.height / 2;
+        const progressBoxXPos = this.sceneWidth / 2 - this.progressBoxWidth / 2;
+        const progressBoxYPos = this.sceneHeight / 2 - this.progressBoxHeight / 2;
+        this.progressBox.fillRect(progressBoxXPos, progressBoxYPos, this.progressBoxWidth, this.progressBoxHeight);
+
+        this.loadingText = this.scene.make.text({
+            x: screenCenterWidth,
+            y: screenCenterHeight - this.progressBoxHeight,
+            text: `${gameLoadingMessages[getRandomInt(0, gameLoadingMessages.length)]}...`,
+            style: {
+                ...loadingTextStyleProperties,
+                fontSize: `${20}px`,
+            },
+        });
+        this.loadingText.setOrigin(0.5);
+
+        //loading percentage
+        this.percentText = this.scene.make.text({
+            x: screenCenterWidth,
+            y: screenCenterHeight,
+            text: '0%',
+            style: {
+                ...loadingTextStyleProperties,
+                fontSize: `${18}px`,
+                color: '#0d1a17',
+                fontStyle: 'bold',
+            },
+        });
+        this.percentText.setOrigin(0.5);
+        this.percentText.setDepth(10);
+
+        if (designDevelopment) {
+            //asset text
+            this.assetText = this.scene.make.text({
+                x: this.sceneWidth / 2,
+                y: this.sceneHeight / 2 + 50,
+                text: '',
+                style: {
+                    ...loadingTextStyleProperties,
+                },
+            });
+            this.assetText.setOrigin(0.5, 0.5);
+        }
+    }
+
+    updateLoadingScreen(value: number) {
+        this.percentText?.setText(`${Math.round(value * 100)}%`);
+
+        this.progressBar?.clear();
+        this.progressBar?.fillStyle(0xd2a44f, 1);
+        this.progressBar?.fillRect(
+            this.sceneWidth / 2 - this.progressBoxWidth / 2 + 10,
+            this.sceneHeight / 2 - this.progressBoxHeight / 2 + 10,
+            300 * value,
+            30
+        );
+        this.progressBar?.setDepth(5);
+    }
+
+    //only for local development
+    fileProgressUpdate(file: any) {
+        this.assetText?.setText(`Loading asset: ${file.src}`);
+    }
+
+    destroyLoadingScreen() {
+        this.loadingText?.destroy();
+        this.percentText?.destroy();
+        this.progressBox?.destroy();
+        this.progressBar?.destroy();
+        if (designDevelopment) this.assetText?.destroy();
     }
 
     destroyCountdown() {

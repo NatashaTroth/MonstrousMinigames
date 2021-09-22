@@ -47,6 +47,8 @@ class MainScene extends Phaser.Scene {
     gameEventEmitter: GameEventEmitter;
     screenAdmin: boolean;
     gameToScreenMapper?: GameToScreenMapper;
+    firstGameStateReceived: boolean;
+    allScreensLoaded: boolean;
 
     constructor() {
         super('MainScene');
@@ -62,27 +64,48 @@ class MainScene extends Phaser.Scene {
         this.cameraSpeed = 2;
         this.gameEventEmitter = GameEventEmitter.getInstance();
         this.screenAdmin = false;
+        this.firstGameStateReceived = false;
+        this.allScreensLoaded = false;
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
         this.camera = this.cameras.main;
         this.socket = data.socket;
         this.screenAdmin = data.screenAdmin;
+        this.gameRenderer = new PhaserGameRenderer(this);
 
         if (this.roomId === '' && data.roomId !== undefined) {
             this.roomId = data.roomId;
         }
+    }
 
-        // TODO: send to backend and start game when all loaded
+    preload(): void {
+        printMethod('here 1');
+        this.gameRenderer?.renderLoadingScreen();
+        printMethod('here 2');
+
+        // emitted every time a file has been loaded
+        this.load.on('progress', (value: number) => {
+            this.gameRenderer?.updateLoadingScreen(value);
+        });
+
+        if (designDevelopment) {
+            // emitted every time a file has been loaded
+            this.load.on('fileprogress', (file: any) => {
+                this.gameRenderer?.fileProgressUpdate(file);
+            });
+        }
+
+        //once all the files are done loading
         this.load.on('complete', () => {
+            this.gameRenderer?.destroyLoadingScreen();
+            printMethod('LOADING COMPLETE - SENDING TO SERVER');
             this.socket?.emit({
                 type: MessageTypes.phaserLoaded,
                 roomId: this.roomId,
             });
         });
-    }
 
-    preload(): void {
         audioFiles.forEach(audio => this.load.audio(audio.name, audio.file));
 
         characters.forEach(character => {
@@ -96,20 +119,13 @@ class MainScene extends Phaser.Scene {
         fireworkFlares.forEach((flare, i) => {
             this.load.image(`flare${i}`, flare);
         });
-
-        //TODO Loading bar: https://www.patchesoft.com/phaser-3-loading-screen
-        // this.load.on('progress', this.updateBar);
     }
 
     create() {
-        this.gameRenderer = new PhaserGameRenderer(this);
-        // // this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
         this.initSockets();
         this.initiateEventEmitters();
-
-        if (this.screenAdmin) this.sendCreateNewGame();
 
         if (localDevelopment && designDevelopment) {
             this.initiateGame(initialGameInput);
@@ -132,6 +148,7 @@ class MainScene extends Phaser.Scene {
     // }
 
     sendCreateNewGame() {
+        printMethod('**ADMIN SCREEN**');
         printMethod('SEND CREATE GAME');
         this.socket?.emit({
             type: MessageTypes.createGame,
@@ -159,13 +176,17 @@ class MainScene extends Phaser.Scene {
                 this.gameStarted = true;
                 this.initiateGame(data.data);
                 this.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');
+                if (this.screenAdmin && !designDevelopment) this.sendStartGame();
             });
+            // this.firstGameStateReceived = true;
         }
 
         const allScreensPhaserGameLoaded = new MessageSocket(allScreensPhaserGameLoadedTypeGuard, this.socket);
         allScreensPhaserGameLoaded.listen((data: AllScreensPhaserGameLoadedMessage) => {
             printMethod('RECEIVED All screens loaded');
-            if (this.screenAdmin && !designDevelopment) this.sendStartGame();
+            // this.allScreensLoaded = true;
+            if (this.screenAdmin) this.sendCreateNewGame();
+            // if (this.screenAdmin && !designDevelopment && this.firstGameStateReceived) this.sendStartGame();
         });
 
         const startedGame = new MessageSocket(startedTypeGuard, this.socket);
@@ -315,8 +336,9 @@ class MainScene extends Phaser.Scene {
 
     private createGameCountdown(countdownTime: number) {
         const decrementCounter = (counter: number) => counter - 1000;
-        let countdownValue = countdownTime - 1000; //to keep in track with server (1 sec less to start roughly at the same time as the server)
-        const countdownInterval = setInterval(() => {
+        let countdownValue = countdownTime;
+
+        const updateCountdown = () => {
             if (countdownValue > 0) {
                 this.gameRenderer?.renderCountdown((countdownValue / 1000).toString());
                 countdownValue = decrementCounter(countdownValue);
@@ -328,7 +350,10 @@ class MainScene extends Phaser.Scene {
                 this.gameRenderer?.destroyCountdown();
                 clearInterval(countdownInterval);
             }
-        }, 1000);
+        };
+
+        updateCountdown();
+        const countdownInterval = setInterval(updateCountdown, 1000);
     }
 
     private pauseGame() {
