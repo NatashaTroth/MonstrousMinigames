@@ -4,6 +4,7 @@ export const COUNTDOWN_TIME = 3000;
 export const STUNNED_TIME = 3000;
 export const NUMBER_STONES = 4; //when alive
 export const MAX_NUMBER_STONES = 5; //when dead
+export const EARLY_SKIP_OBSTACLE_DISTANCE = 200;
 
 export const SPEED = 1;
 

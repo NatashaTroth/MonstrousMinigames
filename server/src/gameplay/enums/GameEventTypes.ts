@@ -1,6 +1,7 @@
 export enum GameEventTypes {
     InitialGameStateInfoUpdate = 'INITIAL_GAME_STATE_INFO_UPDATE',
     ObstacleReached = 'OBSTACLE_REACHED',
+    ApproachingSkippableObstacle = 'APPROACHING_SKIPPABLE_OBSTACLE',
     PlayerHasFinished = 'PLAYER_HAS_FINISHED',
     GameHasStarted = 'GAME_HAS_STARTED',
     GameHasPaused = 'GAME_HAS_PAUSED',

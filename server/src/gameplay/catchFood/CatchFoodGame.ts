@@ -43,6 +43,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     countdownTime = InitialGameParameters.COUNTDOWN_TIME; //should be 1 second more than client - TODO: make sure it is
     cameraSpeed = InitialGameParameters.CAMERA_SPEED;
     stunnedTime = InitialGameParameters.STUNNED_TIME;
+    earlySkipObstacleDistance = InitialGameParameters.EARLY_SKIP_OBSTACLE_DISTANCE;
 
     initialPlayerPositionX = InitialGameParameters.PLAYERS_POSITION_X;
     chasersPositionX = InitialGameParameters.CHASERS_POSITION_X;
@@ -279,6 +280,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         player.positionX += speed;
 
         if (this.playerHasReachedObstacle(userId)) this.handlePlayerReachedObstacle(userId);
+        if (this.playerIsApproachingSkippableObstacle(player)) this.handlePlayerApproachingSkippableObstacle(player);
         if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId);
     }
 
@@ -286,6 +288,15 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         const player = this.players.get(userId)!;
 
         return player.finished || player.dead || player.atObstacle;
+    }
+
+    private playerIsApproachingSkippableObstacle(player: CatchFoodPlayer): boolean {
+        return (
+            !player.atObstacle
+            && (player.obstacles.length || 0) > 0
+            && (player.positionX || 0) >= ((player.obstacles[0].positionX || 0) - this.earlySkipObstacleDistance)
+            && player.obstacles[0].skippable
+        );
     }
 
     private playerHasReachedObstacle(userId: string): boolean {
@@ -300,6 +311,21 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         const player = this.players.get(userId)!;
 
         return player.positionX >= this.trackLength && player.obstacles.length === 0;
+    }
+
+    private handlePlayerApproachingSkippableObstacle(player: CatchFoodPlayer): void {
+        // when already carrying a stone, no action is required
+        if (player.obstacles[0].type === ObstacleType.Stone && player.stonesCarrying > 0) {
+            return;
+        }
+
+        CatchFoodGameEventEmitter.emitApproachingSkippableObstacleEvent({
+            roomId: this.roomId,
+            userId: player.id,
+            obstacleType: player.obstacles[0].type,
+            obstacleId: player.obstacles[0].id,
+            distance: player.obstacles[0].positionX - player.positionX,
+        });
     }
 
     private handlePlayerReachedObstacle(userId: string): void {
@@ -407,8 +433,11 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
     private verifyUserIsAtObstacle(userId: string) {
         const player = this.players.get(userId);
+        const skippableObstacleInReach = player && this.playerIsApproachingSkippableObstacle(player!);
+
         if (
             !player?.atObstacle
+            && !skippableObstacleInReach
             // ||
             // player?.positionX !== player?.obstacles?.[0]?.positionX
         ) {
@@ -421,7 +450,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
         const player = this.players.get(userId)!;
 
-        if (!player.canSkipObstacle) {
+        if (!player.canSkipObstacle && !this.playerIsApproachingSkippableObstacle(player)) {
             throw new ObstacleNotSkippable(undefined, userId, player.obstacles[0].id);
         }
     }

@@ -77,6 +77,19 @@ class ConnectionHandler {
                 });
             }
         });
+        this.gameEventEmitter.on(GameEventTypes.ApproachingSkippableObstacle, (data: GameEvents.ApproachingSkippableObstacle) => {
+            console.info(data.roomId + ' | userId: ' + data.userId + ' | Obstacle: ' + data.obstacleType + ' | Distance: ' + data.distance);
+            const r = rs.getRoomById(data.roomId);
+            const u = r.getUserById(data.userId);
+            if (u) {
+                this.controllerNamespace.to(u.socketId).emit('message', {
+                    type: CatchFoodMsgType.APPROACHING_SKIPPABLE_OBSTACLE,
+                    obstacleType: data.obstacleType,
+                    obstacleId: data.obstacleId,
+                    distance: data.distance,
+                });
+            }
+        });
         this.gameEventEmitter.on(GameEventTypes.PlayerHasFinished, (data: GameEvents.PlayerHasFinished) => {
             console.info(data.roomId + ' | userId: ' + data.userId + ' | Rank: ' + data.rank);
             const room = rs.getRoomById(data.roomId);

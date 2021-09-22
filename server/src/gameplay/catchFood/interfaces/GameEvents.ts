@@ -55,6 +55,14 @@ export interface ObstacleReachedInfo extends GameEventInterface {
     obstacleType: ObstacleType;
 }
 
+export interface ApproachingSkippableObstacle extends GameEventInterface {
+    roomId: string;
+    userId: string;
+    obstacleId: number;
+    obstacleType: ObstacleType;
+    distance: number;
+}
+
 export interface PlayerHasDisconnectedInfo extends GameEventInterface {
     roomId: string;
     userId: string;

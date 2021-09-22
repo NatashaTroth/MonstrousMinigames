@@ -52,6 +52,10 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.ObstacleReached, data);
     }
 
+    public static emitApproachingSkippableObstacleEvent(data: GameEvents.ApproachingSkippableObstacle) {
+        this.CatchFoodGameEventEmitter.emit(GameEventTypes.ApproachingSkippableObstacle, data);
+    }
+
     public static emitPlayerHasFinishedEvent(data: GameEvents.PlayerHasFinished) {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerHasFinished, data);
     }
