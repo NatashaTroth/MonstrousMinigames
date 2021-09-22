@@ -6,7 +6,7 @@ import { Obstacle } from '../interfaces';
 function getObstaclesInRange(obstacles: Obstacle[], obstacleWidth: number, beginning: number, ending: number) {
     return obstacles.filter(
         obstacle =>
-            obstacle.positionX > beginning - obstacleWidth / 2 && obstacle.positionX < ending + obstacleWidth / 2
+            obstacle.positionX >= beginning - obstacleWidth && obstacle.positionX <= ending + obstacleWidth
     );
 }
 function getAvailableSlotsInRange(obstacles: Obstacle[], obstacleWidth: number, beginning: number, ending: number) {
@@ -17,8 +17,8 @@ function getAvailableSlotsInRange(obstacles: Obstacle[], obstacleWidth: number, 
     const freeRanges: Array<[number, number]> = [];
     let lastPosition = beginning;
     for (let i = 0; i < obstaclesInRange.length; i++) {
-        freeRanges.push([lastPosition, obstaclesInRange[i] - obstacleWidth / 2]);
-        lastPosition = obstaclesInRange[i] + obstacleWidth / 2;
+        freeRanges.push([lastPosition, obstaclesInRange[i] - obstacleWidth]);
+        lastPosition = obstaclesInRange[i] + obstacleWidth;
     }
     freeRanges.push([lastPosition, ending]);
     const possibleRanges = freeRanges.filter(range => range[1] - range[0] >= obstacleWidth);
@@ -58,7 +58,7 @@ export function getStonesForObstacles(
     minObstacleWidth?: number,
     noClone = false
 ): Obstacle[] {
-    minObstacleWidth = minObstacleWidth || obstacleWidth / 2;
+    minObstacleWidth = minObstacleWidth || (obstacleWidth / 3 * 2);
     const obstacleClone = noClone ? obstacles : [...obstacles];
     const splitLength = (trackLength - initialPlayerPositionX) / ((count + 1.5) * 1.1);
     const availableSplitLength = splitLength / 1.1;
@@ -67,7 +67,7 @@ export function getStonesForObstacles(
     const stones: Obstacle[] = [];
 
     for (let i = 1; i <= count; i++) {
-        const beginning = splitLength * i;
+        const beginning = initialPlayerPositionX + splitLength * i;
         const ending = beginning + availableSplitLength;
         const availablePositions = getAvailableSlotsInRange(obstacleClone, obstacleWidth, beginning, ending);
 
@@ -78,7 +78,7 @@ export function getStonesForObstacles(
         const stone = {
             id: id++,
             positionX:
-                initialPlayerPositionX + availablePositions[Math.floor(Math.random() * availablePositions.length)],
+                availablePositions[Math.floor(Math.random() * availablePositions.length)],
             type: ObstacleType.Stone,
             skippable: true,
         };

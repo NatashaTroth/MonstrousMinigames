@@ -101,10 +101,20 @@ describe('Initiate CatchFoodGame correctly', () => {
                 continue;
             }
             if (i > 0) {
-                expect(obstacles[i].positionX).toBeGreaterThan(obstacles[i - 1].positionX);
+                // try {
+                    expect(obstacles[i].positionX).toBeGreaterThan(obstacles[i - 1].positionX + 100);
+                // } catch (e: any) {
+                //     console.table(obstacles.map((obstacle, idx) => ({ ...obstacle, distanceToPrevious: idx > 0 ? obstacle.positionX - obstacles[idx - 1].positionX : obstacle.positionX })));
+                //     throw e;
+                // }
             }
             if (i < obstacles.length - 1) {
-                expect(obstacles[i].positionX).toBeLessThan(obstacles[i + 1].positionX);
+                // try {
+                    expect(obstacles[i].positionX).toBeLessThan(obstacles[i + 1].positionX - 100);
+                // } catch (e: any) {
+                //     console.table(obstacles.map((obstacle, idx) => ({ ...obstacle, distanceToNext: idx < obstacles.length - 1 ? obstacles[idx + 1].positionX - obstacle.positionX : TRACK_LENGTH - obstacle.positionX })));
+                //     throw e;
+                // }
             }
         }
     });
