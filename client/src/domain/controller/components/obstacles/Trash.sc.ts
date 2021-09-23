@@ -4,7 +4,7 @@ import { SkipButton } from '../../../../components/common/SkipButton.sc';
 import foodCan from '../../../../images/obstacles/trash/foodCan.svg';
 import paperCan from '../../../../images/obstacles/trash/paperCan.svg';
 import plasticCan from '../../../../images/obstacles/trash/plasticCan.svg';
-import { TrashType } from './Trash';
+import { TrashType } from '../../../../utils/constants';
 
 export const Container = styled.div`
     display: flex;
@@ -70,11 +70,11 @@ export const DropZone = styled.div<DropZoneProps>`
     background-position: bottom;
     background-image: url(${({ variant }) => {
         switch (variant) {
-            case 'paper':
+            case TrashType.Paper:
                 return paperCan;
-            case 'food':
+            case TrashType.Food:
                 return foodCan;
-            case 'plastic':
+            case TrashType.Plastic:
                 return plasticCan;
         }
     }});

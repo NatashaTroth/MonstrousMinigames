@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router';
 
 import { Character } from '../config/characters';
-import { ObstacleTypes } from '../utils/constants';
+import { ObstacleTypes, TrashType } from '../utils/constants';
 import { controllerGame1Route, controllerObstacleRoute } from '../utils/routes';
 
 export const defaultValue = {
@@ -54,6 +54,8 @@ export interface Obstacle {
     type: ObstacleTypes;
     id: number;
     skippable: boolean;
+    numberTrashItems?: number;
+    trashType?: TrashType;
 }
 interface PlayerContextProps {
     obstacle: undefined | Obstacle;
