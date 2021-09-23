@@ -11,7 +11,6 @@ class CatchFoodPlayer extends Player implements PlayerState {
     dead = false;
     stunned = false;
     stunnedSeconds = 0;
-    numberStonesThrown = 0;
 
     constructor(
         id: string,

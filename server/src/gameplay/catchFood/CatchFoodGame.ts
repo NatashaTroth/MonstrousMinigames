@@ -37,7 +37,6 @@ interface CatchFoodGameInterface extends IGameInterface<CatchFoodPlayer, GameSta
 export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> implements CatchFoodGameInterface {
     trackLength = InitialGameParameters.TRACK_LENGTH;
     numberOfObstacles = InitialGameParameters.NUMBER_OBSTACLES;
-    maxNumberStones = InitialGameParameters.MAX_NUMBER_STONES;
     numberOfStones = InitialGameParameters.NUMBER_STONES;
     speed = InitialGameParameters.SPEED;
     countdownTime = InitialGameParameters.COUNTDOWN_TIME; //should be 1 second more than client - TODO: make sure it is
@@ -213,7 +212,6 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
                 isActive: player.isActive,
                 stunned: player.stunned,
                 characterNumber: player.characterNumber,
-                numberStonesThrown: player.numberStonesThrown,
             })),
             chasersPositionX: this.chasersPositionX,
             cameraPositionX: this.cameraPositionX,
@@ -366,12 +364,8 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         const playerStunned = this.players.get(userIdStunned)!;
         if (this.playerIsNotAllowedToRun(userIdStunned)) return;
         if (playerStunned.stunned || playerStunned.atObstacle) return;
-        if (!usingCollectedStone && playerThrown.numberStonesThrown >= this.maxNumberStones) return;
-        if (usingCollectedStone) {
-            playerThrown.stonesCarrying--;
-        } else {
-            playerThrown.numberStonesThrown++;
-        }
+        if (!usingCollectedStone) return;
+        playerThrown.stonesCarrying--;
         playerStunned.stunned = true;
         playerStunned.stunnedSeconds = this.stunnedTime;
 

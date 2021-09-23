@@ -15,5 +15,4 @@ export interface PlayerState extends IPlayerState {
     stunned: boolean;
     stunnedSeconds: number;
     characterNumber: number;
-    numberStonesThrown: number;
 }
