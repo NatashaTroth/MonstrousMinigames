@@ -487,6 +487,15 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         const player = this.players.get(userId)!;
         player.finished = true;
         player.finishedTimeMs = Date.now();
+
+        const playersNotFinished = Array.from(this.players.values()).filter(player => !player.finished);
+
+        // when there is only one player left the stone obstacles are removed as they do not serve a purpose at that point
+        if (playersNotFinished.length <= 1) {
+            for (const player of playersNotFinished) {
+                player.obstacles = player.obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
+            }
+        }
     }
 
     private gameHasFinished(): boolean {
