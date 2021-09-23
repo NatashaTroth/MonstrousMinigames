@@ -154,6 +154,9 @@ class ConnectionHandler {
             const user = room.getUserById(data.userId);
             emitter.sendPlayerStunned(controllerNamespace, user.socketId);
         });
+        this.gameEventEmitter.on(GameEventTypes.ChasersWerePushed, (data: GameEvents.ChasersWerePushed) => {
+            emitter.sendChasersWerePushed(screenNameSpace, data.userIdPushing, data.amount);
+        });
         this.gameEventEmitter.on(GameEventTypes.PlayerIsUnstunned, (data: GameEvents.PlayerStunnedState) => {
             // this.consoleInfo(data.roomId, GameEventTypes.GameHasResumed);
             const room = rs.getRoomById(data.roomId);

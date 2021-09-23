@@ -13,5 +13,6 @@ export enum GameEventTypes {
     PlayerHasReconnected = 'PLAYER_HAS_RECONNECTED',
     PlayerIsDead = 'PLAYER_IS_DEAD',
     PlayerIsStunned = 'PLAYER_IS_STUNNED',
+    ChasersWerePushed = 'CHASERS_WERE_PUSHED',
     PlayerIsUnstunned = 'PLAYER_IS_UNSTUNNED',
 }

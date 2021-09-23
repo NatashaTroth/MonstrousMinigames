@@ -37,6 +37,8 @@ interface CatchFoodGameInterface extends IGameInterface<CatchFoodPlayer, GameSta
 export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> implements CatchFoodGameInterface {
     trackLength = InitialGameParameters.TRACK_LENGTH;
     numberOfObstacles = InitialGameParameters.NUMBER_OBSTACLES;
+    maxNumberOfChaserPushes = InitialGameParameters.MAX_NUMBER_CHASER_PUSHES;
+    chaserPushAmount = InitialGameParameters.CHASER_PUSH_AMOUNT;
     numberOfStones = InitialGameParameters.NUMBER_STONES;
     speed = InitialGameParameters.SPEED;
     countdownTime = InitialGameParameters.COUNTDOWN_TIME; //should be 1 second more than client - TODO: make sure it is
@@ -123,6 +125,9 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
                     break;
                 }
                 this.stunPlayer(message.receivingUserId, message.userId!, message.usingCollectedStone || false);
+                break;
+            case CatchFoodMsgType.CHASERS_WERE_PUSHED:
+                this.pushChasers(message.userId!);
                 break;
             default:
                 console.info(message);
@@ -212,6 +217,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
                 isActive: player.isActive,
                 stunned: player.stunned,
                 characterNumber: player.characterNumber,
+                chaserPushesUsed: player.chaserPushesUsed,
             })),
             chasersPositionX: this.chasersPositionX,
             cameraPositionX: this.cameraPositionX,
@@ -372,6 +378,27 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         CatchFoodGameEventEmitter.emitPlayerIsStunned({
             roomId: this.roomId,
             userId: userIdStunned,
+        });
+    }
+
+    private pushChasers(userIdPushing: string) {
+        verifyGameState(this.gameState, [GameState.Started]);
+        verifyUserId(this.players, userIdPushing);
+
+        const userPushing = this.players.get(userIdPushing)!;
+
+        if (!userPushing.finished) return;
+        if (userPushing.chaserPushesUsed >= this.maxNumberOfChaserPushes) return;
+
+        this.chasersPositionX += this.chaserPushAmount;
+        userPushing.chaserPushesUsed++;
+
+        this.updateChasersPosition(this.gameTime, 0);
+
+        CatchFoodGameEventEmitter.emitChasersWerePushed({
+            roomId: this.roomId,
+            userIdPushing: userIdPushing,
+            amount: this.chaserPushAmount,
         });
     }
 

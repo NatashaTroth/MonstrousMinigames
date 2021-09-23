@@ -42,6 +42,11 @@ export interface PlayerStunnedState extends GameEventInterface {
     roomId: string;
     userId: string;
 }
+export interface ChasersWerePushed extends GameEventInterface {
+    roomId: string;
+    userIdPushing: string;
+    amount: number;
+}
 
 export interface GameHasFinished extends GameEventInterface {
     roomId: string;

@@ -127,6 +127,14 @@ function sendPlayerStunned(nsp: Namespace, socketId: string): void {
     });
 }
 
+function sendChasersWerePushed(nsp: Namespace, pushedBy: string, amount: number): void {
+    nsp.emit('message', {
+        type: CatchFoodMsgType.CHASERS_WERE_PUSHED,
+        pushedBy,
+        amount,
+    });
+}
+
 function sendPlayerUnstunned(nsp: Namespace, socketId: string): void {
     nsp.to(socketId).emit('message', {
         type: CatchFoodMsgType.PLAYER_UNSTUNNED,
@@ -171,6 +179,7 @@ export default {
     sendScreenAdmin,
     sendPlayerDied,
     sendPlayerStunned,
+    sendChasersWerePushed,
     sendPlayerUnstunned,
     sendPlayerHasDisconnected,
     sendPlayerHasReconnected,
