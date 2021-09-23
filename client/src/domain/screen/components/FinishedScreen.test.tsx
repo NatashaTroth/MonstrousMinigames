@@ -168,7 +168,7 @@ describe('Screen FinishedScreen', () => {
                 </GameContext.Provider>
             </ThemeProvider>
         );
-            expect(queryAllByText(container, "Dead Players")).toBeTruthy();
+        expect(queryAllByText(container, 'Dead Players')).toBeTruthy();
     });
 
     it('show user names on the leaderboard', () => {
@@ -202,53 +202,49 @@ describe('Screen FinishedScreen', () => {
                 </GameContext.Provider>
             </ThemeProvider>
         );
-        expect(queryByText(container, "User 2")).toBeFalsy();
-            
+        expect(queryByText(container, 'User 2')).toBeFalsy();
     });
 
     it('does not display back to lobby button if player is not admin', () => {
         const { container } = render(
             <ThemeProvider theme={theme}>
-            <GameContext.Provider value={{ ...defaultValue, screenAdmin: false }}>
-                {FinishedScreenComponent}
-            </GameContext.Provider>
-        </ThemeProvider>
+                <GameContext.Provider value={{ ...defaultValue, screenAdmin: false }}>
+                    {FinishedScreenComponent}
+                </GameContext.Provider>
+            </ThemeProvider>
         );
 
-        expect(queryByText(container, "Back to Lobby")).toBeFalsy();
+        expect(queryByText(container, 'Back to Lobby')).toBeFalsy();
     });
 
     it('if player is admin the back to lobby button is rendered', () => {
         const { container } = render(
             <ThemeProvider theme={theme}>
-            <GameContext.Provider value={{ ...defaultValue, screenAdmin: true }}>
-                {FinishedScreenComponent}
-            </GameContext.Provider>
-        </ThemeProvider>
+                <GameContext.Provider value={{ ...defaultValue, screenAdmin: true }}>
+                    {FinishedScreenComponent}
+                </GameContext.Provider>
+            </ThemeProvider>
         );
-        expect(queryByText(container, "Back to Lobby")).toBeTruthy();
-        
+        expect(queryByText(container, 'Back to Lobby')).toBeTruthy();
     });
 
     it('the back to lobby button is active and calls the onclick method', () => {
         const onClick = jest.fn();
         const { container } = render(
             <ThemeProvider theme={theme}>
-            <GameContext.Provider value={{ ...defaultValue, screenAdmin: true }}>
-                {FinishedScreenComponent}
-            </GameContext.Provider>
-        </ThemeProvider>
+                <GameContext.Provider value={{ ...defaultValue, screenAdmin: true }}>
+                    {FinishedScreenComponent}
+                </GameContext.Provider>
+            </ThemeProvider>
         );
 
         const button = container.querySelector('button');
-        expect(button).toBeDefined()
-        
+        expect(button).toBeDefined();
 
-         if (button) {
-             button.onclick = onClick
+        if (button) {
+            button.onclick = onClick;
             fireEvent.click(button);
             expect(onClick).toHaveBeenCalledTimes(1);
-        } 
+        }
     });
-    
 });

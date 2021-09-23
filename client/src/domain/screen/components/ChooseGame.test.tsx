@@ -12,22 +12,22 @@ afterEach(cleanup);
 describe('Screen GetReady', () => {
     const connectedUsers = [
         {
-            roomId: "test", 
-            id: "testuser",
-            name: "Max Mustermann",
-            number: 1, 
-            characterNumber: 1, 
-            active: true, 
-            ready: true
+            roomId: 'test',
+            id: 'testuser',
+            name: 'Max Mustermann',
+            number: 1,
+            characterNumber: 1,
+            active: true,
+            ready: true,
         },
         {
-            roomId: "test", 
-            id: "testuser2",
-            name: "Maria Musterfrau",
-            number: 2, 
-            characterNumber: 2, 
-            active: true, 
-            ready: false
+            roomId: 'test',
+            id: 'testuser2',
+            name: 'Maria Musterfrau',
+            number: 2,
+            characterNumber: 2,
+            active: true,
+            ready: false,
         },
     ];
 
@@ -40,28 +40,27 @@ describe('Screen GetReady', () => {
     );
 
     it('renders game names', () => {
-        const { container } = render(
-            ChooseGameScreen
-        );
-        const gameNames = ["The Great Monster Escape", "Game 2 - coming soon", "Game 3 - coming soon", "Game 4 - coming soon"]
+        const { container } = render(ChooseGameScreen);
+        const gameNames = [
+            'The Great Monster Escape',
+            'Game 2 - coming soon',
+            'Game 3 - coming soon',
+            'Game 4 - coming soon',
+        ];
         gameNames.forEach(name => {
             expect(queryByText(container, name)).toBeTruthy();
         });
-    
     });
 
     it('renders button to start selected game', () => {
-        const { container } = render(
-            ChooseGameScreen
-        );
+        const { container } = render(ChooseGameScreen);
         const button = container.querySelector('button');
         expect(button).not.toBeDisabled();
-        const onclick = jest.fn()
-        if(button){
-            button.onclick = onclick
+        const onclick = jest.fn();
+        if (button) {
+            button.onclick = onclick;
             fireEvent.click(button);
             expect(onclick).toHaveBeenCalledTimes(1);
         }
-    
     });
 });
