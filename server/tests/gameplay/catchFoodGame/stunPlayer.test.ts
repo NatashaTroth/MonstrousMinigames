@@ -27,41 +27,11 @@ describe('Stun player tests', () => {
     // Date.now = jest.fn(() => dateNow);
     // startGameAndAdvanceCountdown(catchFoodGame);
 
-    it('stunPlayer should set a player as stunned', async () => {
-        catchFoodGame['stunPlayer']('1', '2');
-        expect(catchFoodGame.players.get('1')!.stunned).toBeTruthy();
-    });
-
-    it('stunPlayer should stay stunned until stun time', async () => {
-        catchFoodGame['stunPlayer']('1', '2');
-        advanceCountdown(catchFoodGame.stunnedTime - 1);
-        expect(catchFoodGame.players.get('1')!.stunned).toBeTruthy();
-    });
-
     it('stunPlayer should be over after stun time', async () => {
         catchFoodGame['stunPlayer']('1', '2');
         advanceCountdown(catchFoodGame.stunnedTime);
         await releaseThread();
         expect(catchFoodGame.players.get('1')!.stunned).toBeFalsy();
-    });
-
-    it('stun time should be paused during pause', async () => {
-        catchFoodGame['stunPlayer']('1', '2');
-        catchFoodGame.pauseGame();
-        advanceCountdown(catchFoodGame.stunnedTime * 2);
-        await releaseThread();
-        expect(catchFoodGame.players.get('1')!.stunned).toBeTruthy();
-    });
-
-    it('stun time should resume after pause and not finish early', async () => {
-        catchFoodGame['stunPlayer']('1', '2');
-        catchFoodGame.pauseGame();
-        advanceCountdown(catchFoodGame.stunnedTime * 2);
-        await releaseThread();
-        catchFoodGame.resumeGame();
-        advanceCountdown(catchFoodGame.stunnedTime - 1);
-        await releaseThread();
-        expect(catchFoodGame.players.get('1')!.stunned).toBeTruthy();
     });
 
     it('stun time should resume after pause and finish on time', async () => {
