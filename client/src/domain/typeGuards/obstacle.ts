@@ -1,5 +1,4 @@
-import { MessageTypes, ObstacleTypes } from '../../utils/constants';
-import { TrashType } from '../screen/phaser/enums';
+import { MessageTypes, ObstacleTypes, TrashType } from '../../utils/constants';
 import { MessageData } from './MessageData';
 
 export interface ObstacleMessage {

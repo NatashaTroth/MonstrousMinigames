@@ -5,6 +5,12 @@ export enum ObstacleTypes {
     stone = 'STONE',
 }
 
+export enum TrashType {
+    Paper = 'PAPER',
+    Food = 'FOOD',
+    Plastic = 'PLASTIC',
+}
+
 export enum ObstacleRoutes {
     treeStump = 'treestump',
     spider = 'spider',

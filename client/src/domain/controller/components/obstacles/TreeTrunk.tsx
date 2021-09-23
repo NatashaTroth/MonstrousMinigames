@@ -135,7 +135,7 @@ const TreeTrunk: React.FunctionComponent = () => {
                 ((orientation === 'vertical' && endY >= touchStart.clientY + distance) ||
                     (orientation === 'horizontal' && endX >= touchStart.clientX + distance))
             ) {
-                if (trunksToFinish === progress - 1) {
+                if (trunksToFinish - 1 === progress) {
                     solveObstacle();
                 } else {
                     setProgress(progress + 1);

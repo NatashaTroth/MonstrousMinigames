@@ -1,6 +1,8 @@
 import { InteractEvent } from '@interactjs/types';
 import interact from 'interactjs';
 
+import { TrashType } from '../../../../utils/constants';
+
 export function dragMoveListener(event: InteractEvent) {
     const target = event.target;
     // keep the dragged position in the data-x/data-y attributes
@@ -18,7 +20,7 @@ export function dragMoveListener(event: InteractEvent) {
 export let itemCounter = 0;
 
 export function initializeInteractListeners(
-    actualItem: string,
+    actualItem: TrashType,
     counter: number,
     solveObstacle: () => void,
     setProgress: (val: number) => void
