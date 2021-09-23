@@ -1,6 +1,7 @@
 export enum GameEventTypes {
     InitialGameStateInfoUpdate = 'INITIAL_GAME_STATE_INFO_UPDATE',
     ObstacleReached = 'OBSTACLE_REACHED',
+    ApproachingSkippableObstacle = 'APPROACHING_SKIPPABLE_OBSTACLE',
     PlayerHasFinished = 'PLAYER_HAS_FINISHED',
     GameHasStarted = 'GAME_HAS_STARTED',
     GameHasPaused = 'GAME_HAS_PAUSED',
@@ -12,5 +13,6 @@ export enum GameEventTypes {
     PlayerHasReconnected = 'PLAYER_HAS_RECONNECTED',
     PlayerIsDead = 'PLAYER_IS_DEAD',
     PlayerIsStunned = 'PLAYER_IS_STUNNED',
+    ChasersWerePushed = 'CHASERS_WERE_PUSHED',
     PlayerIsUnstunned = 'PLAYER_IS_UNSTUNNED',
 }

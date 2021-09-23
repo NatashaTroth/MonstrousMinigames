@@ -87,6 +87,30 @@ class ConnectionHandler {
                 });
             }
         });
+        this.gameEventEmitter.on(
+            GameEventTypes.ApproachingSkippableObstacle,
+            (data: GameEvents.ApproachingSkippableObstacle) => {
+                console.info(
+                    data.roomId +
+                        ' | userId: ' +
+                        data.userId +
+                        ' | Obstacle: ' +
+                        data.obstacleType +
+                        ' | Distance: ' +
+                        data.distance
+                );
+                const r = rs.getRoomById(data.roomId);
+                const u = r.getUserById(data.userId);
+                if (u) {
+                    this.controllerNamespace.to(u.socketId).emit('message', {
+                        type: CatchFoodMsgType.APPROACHING_SKIPPABLE_OBSTACLE,
+                        obstacleType: data.obstacleType,
+                        obstacleId: data.obstacleId,
+                        distance: data.distance,
+                    });
+                }
+            }
+        );
         this.gameEventEmitter.on(GameEventTypes.PlayerHasFinished, (data: GameEvents.PlayerHasFinished) => {
             console.info(data.roomId + ' | userId: ' + data.userId + ' | Rank: ' + data.rank);
             const room = rs.getRoomById(data.roomId);
@@ -139,6 +163,9 @@ class ConnectionHandler {
             const room = rs.getRoomById(data.roomId);
             const user = room.getUserById(data.userId);
             emitter.sendPlayerStunned(controllerNamespace, user.socketId);
+        });
+        this.gameEventEmitter.on(GameEventTypes.ChasersWerePushed, (data: GameEvents.ChasersWerePushed) => {
+            emitter.sendChasersWerePushed(screenNameSpace, data.userIdPushing, data.amount);
         });
         this.gameEventEmitter.on(GameEventTypes.PlayerIsUnstunned, (data: GameEvents.PlayerStunnedState) => {
             // this.consoleInfo(data.roomId, GameEventTypes.GameHasResumed);

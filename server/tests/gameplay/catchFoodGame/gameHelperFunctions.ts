@@ -69,8 +69,9 @@ export function finishPlayer(catchFoodGame: CatchFoodGame, userId: string) {
 }
 
 export function completePlayersObstacles(catchFoodGame: CatchFoodGame, userId: string) {
-    for (let i = 0; i < catchFoodGame.numberOfObstacles + catchFoodGame.numberOfStones; i++) {
-        const player = catchFoodGame.players.get(userId)!;
+    const player = catchFoodGame.players.get(userId)!;
+
+    while (player.obstacles.length) {
         catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
         catchFoodGame['playerHasCompletedObstacle'](userId, player.obstacles[0].id);
         player.stonesCarrying = 0;
