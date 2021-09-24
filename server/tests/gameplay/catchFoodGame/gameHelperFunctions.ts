@@ -1,12 +1,14 @@
+import GameEventEmitter from '../../../src/classes/GameEventEmitter';
+import DI from '../../../src/di';
 import { CatchFoodGame } from '../../../src/gameplay';
-import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
-import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
+import { GameState } from '../../../src/gameplay/enums';
 import Game from '../../../src/gameplay/Game';
+import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
 import { users } from '../mockData';
 
 const TRACK_LENGTH = 5000;
-const gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
+const gameEventEmitter = DI.resolve(GameEventEmitter);
 const dateNow = 1618665766156;
 
 export const releaseThread = () => new Promise<void>(resolve => resolve());
@@ -127,8 +129,10 @@ export async function getGameFinishedDataDifferentTimes(
         gameState: GameState.Started,
         playerRanks: [],
     };
-    gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
-        eventData = data;
+    gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+        if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+            eventData = message.data as any;
+        }
     });
     catchFoodGame = await startAndFinishGameDifferentTimes(catchFoodGame);
     return eventData;
@@ -141,8 +145,10 @@ export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
         playerRanks: [],
     };
 
-    gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
-        eventData = data;
+    gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+        if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+            eventData = message.data as any;
+        }
     });
 
     startGameAndAdvanceCountdown(catchFoodGame);
@@ -168,8 +174,10 @@ export async function getGameFinishedDataWithSomeDead(
         gameState: GameState.Started,
         playerRanks: [],
     };
-    gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
-        eventData = data;
+    gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+        if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+            eventData = message.data as any;
+        }
     });
     catchFoodGame = await startAndFinishGameDifferentTimes(catchFoodGame);
     return eventData;

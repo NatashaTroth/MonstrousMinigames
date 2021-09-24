@@ -1,7 +1,11 @@
+import 'reflect-metadata';
+import GameEventEmitter from '../../../src/classes/GameEventEmitter';
+import DI from '../../../src/di';
 import { CatchFoodGame } from '../../../src/gameplay';
-import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
-import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
+import { CatchFoodGameEventMessage, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD } from '../../../src/gameplay/catchFood/interfaces/CatchFoodGameEventMessages';
+import { GameState } from '../../../src/gameplay/enums';
+import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
 import { leaderboard, roomId } from '../mockData';
 import {
     advanceCountdown, clearTimersAndIntervals, getToCreatedGameState, releaseThreadN,
@@ -11,11 +15,11 @@ import {
 let catchFoodGame: CatchFoodGame;
 const dateNow = 1618665766156;
 let chasersStartPosX: number;
-let gameEventEmitter: CatchFoodGameEventEmitter;
+let gameEventEmitter: GameEventEmitter;
 
 describe('Chasers', () => {
     beforeAll(() => {
-        gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
+        gameEventEmitter = DI.resolve(GameEventEmitter);
     });
     beforeEach(() => {
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
@@ -61,8 +65,10 @@ describe('Chasers', () => {
             rank: 0,
         };
         const userId = '1';
-        gameEventEmitter.on(GameEventTypes.PlayerIsDead, data => {
-            eventData = data;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: CatchFoodGameEventMessage) => {
+            if (message.type === CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD) {
+                eventData = message as any;
+            }
         });
 
         catchFoodGame['runForward'](userId, chasersStartPosX + 20);
@@ -89,8 +95,10 @@ describe('Chasers', () => {
             playerRanks: [],
         };
         const userId = '1';
-        gameEventEmitter.on(GameEventTypes.GameHasFinished, data => {
-            eventData = data;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+            if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+                eventData = message.data as any;
+            }
         });
 
         //finish game
@@ -120,8 +128,10 @@ describe('Chasers', () => {
             playerRanks: [],
         };
         const userId = '1';
-        gameEventEmitter.on(GameEventTypes.GameHasFinished, data => {
-            eventData = data;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+            if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+                eventData = message.data as any;
+            }
         });
 
         //finish game
@@ -164,8 +174,10 @@ describe('Chasers', () => {
             playerRanks: [],
         };
         const userId = '1';
-        gameEventEmitter.on(GameEventTypes.GameHasFinished, data => {
-            eventData = data;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+            if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+                eventData = message.data as any;
+            }
         });
 
         //finish game
@@ -204,8 +216,10 @@ describe('Chasers', () => {
     it.skip('should test that the game stops when only one player was not caught', async () => {
         let event = false;
         const userId = '1';
-        gameEventEmitter.on(GameEventTypes.GameHasFinished, data => {
-            event = true;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+            if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+                event = true;
+            }
         });
 
         //finish game

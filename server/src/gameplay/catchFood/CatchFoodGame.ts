@@ -194,8 +194,6 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
     stopGameAllUsersDisconnected() {
         super.stopGameAllUsersDisconnected();
-
-        CatchFoodGameEventEmitter.emitAllPlayersHaveDisconnected({ roomId: this.roomId });
     }
 
     getGameStateInfo(): GameStateInfo {

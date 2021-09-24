@@ -27,6 +27,7 @@ class Server {
     }
     private registerRoutes() {
         this.app.get('/', (req, res) => res.send('GAAAAME!'));
+        // for a new game add a separate route or add a query param and pass (undefined, new CoolGame(...args)) to create room
         this.app.get('/create-room', (req, res) => {
             const room = this.roomService.createRoom();
 

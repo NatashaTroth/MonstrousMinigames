@@ -1,97 +1,139 @@
-// export class old{
-//   eventEmitter :
-//   public static EventEmitterInstance: EventEmitter = new EventEmitter();
-//   private constructor(){
-//     this.eventEmitter = require('events');
-
-//   }
-// }
-
-// const myEmitter = new MyEmitter();
-// myEmitter.on('event', (a, b) => {
-//   setImmediate(() => {
-//     console.log('this happens asynchronously');
-//   });
-// });
-// myEmitter.emit('event', 'a', 'b');
-
-import GameEventEmitter from '../../classes/GameEventEmitter';
-import { GameEventTypes } from '../enums';
-// import {
-//     GameHasFinished, GameHasStarted, GameStateHasChanged, ObstacleReachedInfo, PlayerHasFinished, Game
-// } from './interfaces/GameEvents';
+import DI from '../../di';
+import { GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED, GLOBAL_EVENT_MESSAGE__GAME_HAS_RESUMED, GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED, GLOBAL_EVENT_MESSAGE__GAME_HAS_STOPPED, GLOBAL_EVENT_MESSAGE__PLAYER_HAS_DISCONNECTED, GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED } from '../interfaces/GlobalEventMessages';
+import { CatchFoodGameEventMessageEmitter } from './CatchFoodGameEventMessageEmitter';
 import { GameEvents } from './interfaces';
+import { CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SKIPPABLE_OBSTACLE, CATCH_FOOD_GAME_EVENT_MESSAGE__CHASERS_WERE_PUSHED, CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED } from './interfaces/CatchFoodGameEventMessages';
 
-export default class CatchFoodGameEventEmitter extends GameEventEmitter {
-    private static CatchFoodGameEventEmitter: CatchFoodGameEventEmitter = new CatchFoodGameEventEmitter();
-    private constructor() {
-        super();
-    }
-
-    public static getInstance(): CatchFoodGameEventEmitter {
-        return this.CatchFoodGameEventEmitter;
-    }
+export default class CatchFoodGameEventEmitter {
+    private static readonly catchFoodGameEventMessageEmitter = DI.resolve(CatchFoodGameEventMessageEmitter);
 
     public static emitInitialGameStateInfoUpdate(data: GameEvents.InitialGameStateInfoUpdate) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.InitialGameStateInfoUpdate, data);
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
+            roomId: data.roomId,
+            data: data.gameStateInfo,
+        });
     }
 
     public static emitGameHasStartedEvent(data: GameEvents.GameHasStarted) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasStarted, data);
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED,
+            roomId: data.roomId,
+            countdownTime: data.countdownTime,
+        });
     }
 
     public static emitGameHasPausedEvent(data: GameEvents.GameStateHasChanged) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasPaused, data);
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED,
+            roomId: data.roomId,
+        });
     }
 
     public static emitGameHasResumedEvent(data: GameEvents.GameStateHasChanged) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasResumed, data);
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: GLOBAL_EVENT_MESSAGE__GAME_HAS_RESUMED,
+            roomId: data.roomId,
+        });
     }
 
     public static emitObstacleReachedEvent(data: GameEvents.ObstacleReachedInfo) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.ObstacleReached, data);
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED,
+            roomId: data.roomId,
+            userId: data.userId,
+            obstacleId: data.obstacleId,
+            obstacleType: data.obstacleType,
+            numberTrashItems: data.numberTrashItems,
+            trashType: data.trashType,
+        });
     }
 
     public static emitApproachingSkippableObstacleEvent(data: GameEvents.ApproachingSkippableObstacle) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.ApproachingSkippableObstacle, data);
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SKIPPABLE_OBSTACLE,
+            roomId: data.roomId,
+            userId: data.userId,
+            obstacleId: data.obstacleId,
+            obstacleType: data.obstacleType,
+            distance: data.distance,
+        });
     }
 
     public static emitPlayerHasFinishedEvent(data: GameEvents.PlayerHasFinished) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerHasFinished, data);
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED,
+            roomId: data.roomId,
+            userId: data.userId,
+            rank: data.rank,
+        });
     }
 
     public static emitPlayerIsDead(data: GameEvents.PlayerIsDead) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerIsDead, data);
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD,
+            roomId: data.roomId,
+            userId: data.userId,
+            rank: data.rank,
+        });
     }
 
     public static emitPlayerIsStunned(data: GameEvents.PlayerStunnedState) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerIsStunned, data);
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED,
+            roomId: data.roomId,
+            userId: data.userId,
+        });
     }
 
     public static emitChasersWerePushed(data: GameEvents.ChasersWerePushed) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.ChasersWerePushed, data);
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: CATCH_FOOD_GAME_EVENT_MESSAGE__CHASERS_WERE_PUSHED,
+            roomId: data.roomId,
+            amount: data.amount,
+        });
     }
 
     public static emitPlayerIsUnstunned(data: GameEvents.PlayerStunnedState) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerIsUnstunned, data);
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED,
+            roomId: data.roomId,
+            userId: data.userId,
+        });
     }
 
     public static emitGameHasFinishedEvent(data: GameEvents.GameHasFinished) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasFinished, data);
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED,
+            roomId: data.roomId,
+            data: {
+                roomId: data.roomId,
+                gameState: data.gameState,
+                playerRanks: data.playerRanks,
+            },
+        });
     }
 
     public static emitGameHasStoppedEvent(data: GameEvents.GameStateHasChanged) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.GameHasStopped, data);
-    }
-    public static emitAllPlayersHaveDisconnected(data: GameEvents.GameStateHasChanged) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.AllPlayersHaveDisconnected, data);
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: GLOBAL_EVENT_MESSAGE__GAME_HAS_STOPPED,
+            roomId: data.roomId,
+        });
     }
 
     public static emitPlayerHasDisconnected(data: GameEvents.PlayerHasDisconnectedInfo) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerHasDisconnected, data);
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: GLOBAL_EVENT_MESSAGE__PLAYER_HAS_DISCONNECTED,
+            roomId: data.roomId,
+            userId: data.userId,
+        });
     }
 
     public static emitPlayerHasReconnected(data: GameEvents.PlayerHasReconnectedInfo) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerHasReconnected, data);
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED,
+            roomId: data.roomId,
+            userId: data.userId,
+        });
     }
 }

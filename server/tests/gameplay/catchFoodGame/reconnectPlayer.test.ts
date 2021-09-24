@@ -1,9 +1,10 @@
+import 'reflect-metadata';
+import GameEventEmitter from '../../../src/classes/GameEventEmitter';
+import DI from '../../../src/di';
 import { CatchFoodGame } from '../../../src/gameplay';
-import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
-// import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
-// ..
-import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
+import { GameState } from '../../../src/gameplay/enums';
+import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
 import { leaderboard, roomId } from '../mockData';
 import {
     clearTimersAndIntervals, completeNextObstacle, finishPlayer, startGameAndAdvanceCountdown
@@ -12,11 +13,11 @@ import {
 // const TRACK_LENGTH = 500;
 
 let catchFoodGame: CatchFoodGame;
-let gameEventEmitter: CatchFoodGameEventEmitter;
+let gameEventEmitter: GameEventEmitter;
 
 describe('Reconnect Player tests', () => {
     beforeAll(() => {
-        gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
+        gameEventEmitter = DI.resolve(GameEventEmitter);
     });
 
     beforeEach(() => {
@@ -111,8 +112,10 @@ describe('Reconnect Player tests', () => {
             gameState: GameState.Started,
             playerRanks: [],
         };
-        gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
-            eventData = data;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+            if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+                eventData = message.data as any;
+            }
         });
         // finish game
         Date.now = jest.fn(() => dateNow + 10000);

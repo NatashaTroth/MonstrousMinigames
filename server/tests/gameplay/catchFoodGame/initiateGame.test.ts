@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { CatchFoodGame } from '../../../src/gameplay';
 import {
     ObstacleType, regularObstacleTypes

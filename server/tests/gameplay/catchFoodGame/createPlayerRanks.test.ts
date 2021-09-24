@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { CatchFoodGame } from '../../../src/gameplay';
 import { leaderboard, roomId } from '../mockData';
 import {

@@ -1,7 +1,10 @@
+import 'reflect-metadata';
+import GameEventEmitter from '../../../src/classes/GameEventEmitter';
+import DI from '../../../src/di';
 import { CatchFoodGame } from '../../../src/gameplay';
-import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
 import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
-import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
+import { GameState } from '../../../src/gameplay/enums';
+import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
 import { GameType } from '../../../src/gameplay/leaderboard/enums/GameType';
 import Leaderboard from '../../../src/gameplay/leaderboard/Leaderboard';
 import { roomId } from '../mockData';
@@ -11,10 +14,10 @@ let catchFoodGame: CatchFoodGame;
 
 describe('Leaderboard tests for Catch Food Game', () => {
     let leaderboard: Leaderboard;
-    let gameEventEmitter: CatchFoodGameEventEmitter;
+    let gameEventEmitter: GameEventEmitter;
 
     beforeAll(() => {
-        gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
+        gameEventEmitter = DI.resolve(GameEventEmitter);
     });
 
     beforeEach(() => {
@@ -46,8 +49,10 @@ describe('Leaderboard tests for Catch Food Game', () => {
             playerRanks: [],
         };
 
-        gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
-            eventData = data;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+            if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+                eventData = message.data as any;
+            }
         });
 
         startAndFinishGame(catchFoodGame);

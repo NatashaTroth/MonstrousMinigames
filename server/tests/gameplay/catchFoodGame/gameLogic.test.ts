@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { CatchFoodGame } from '../../../src/gameplay';
 import { ObstacleType } from '../../../src/gameplay/catchFood/enums';
 import { GameState } from '../../../src/gameplay/enums';

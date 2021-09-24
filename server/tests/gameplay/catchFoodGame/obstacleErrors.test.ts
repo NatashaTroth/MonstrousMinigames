@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { CatchFoodGame } from '../../../src/gameplay';
 import {
     NotAtObstacleError, WrongObstacleIdError
@@ -25,7 +26,7 @@ describe('NotAtObstacleError handling tests', () => {
     it('the NotAtObstacleError has a userId property', async () => {
         try {
             catchFoodGame['playerHasCompletedObstacle'](USER_ID, OBSTACLE_ID_THAT_IS_NEXT);
-        } catch (e) {
+        } catch (e: any) {
             expect(e.userId).toBe(USER_ID);
         }
     });
@@ -50,7 +51,7 @@ describe('WrongObstacleIdError handling tests', () => {
     it('the WrongObstacleIdError has a userId and obstacleId property', async () => {
         try {
             catchFoodGame['playerHasCompletedObstacle'](USER_ID, OBSTACLE_ID_THAT_DOES_NOT_EXIST);
-        } catch (e) {
+        } catch (e: any) {
             expect(e.userId).toBe(USER_ID);
             expect(e.obstacleId).toBe(OBSTACLE_ID_THAT_DOES_NOT_EXIST);
         }
