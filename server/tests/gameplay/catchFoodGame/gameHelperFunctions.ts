@@ -1,7 +1,7 @@
 import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import DI from '../../../src/di';
 import { CatchFoodGame } from '../../../src/gameplay';
-import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
+import { PlayerRank } from '../../../src/gameplay/catchFood/interfaces';
 import { GameState } from '../../../src/gameplay/enums';
 import Game from '../../../src/gameplay/Game';
 import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
@@ -123,11 +123,11 @@ export async function startAndFinishGameDifferentTimes(catchFoodGame: CatchFoodG
 
 export async function getGameFinishedDataDifferentTimes(
     catchFoodGame: CatchFoodGame
-): Promise<GameEvents.GameHasFinished> {
-    let eventData: GameEvents.GameHasFinished = {
+) {
+    let eventData = {
         roomId: '',
         gameState: GameState.Started,
-        playerRanks: [],
+        playerRanks: [] as PlayerRank[],
     };
     gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
         if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
@@ -139,10 +139,10 @@ export async function getGameFinishedDataDifferentTimes(
 }
 
 export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
-    let eventData: GameEvents.GameHasFinished = {
+    let eventData = {
         roomId: '',
         gameState: GameState.Started,
-        playerRanks: [],
+        playerRanks: [] as PlayerRank[],
     };
 
     gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
@@ -168,11 +168,11 @@ export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
 
 export async function getGameFinishedDataWithSomeDead(
     catchFoodGame: CatchFoodGame
-): Promise<GameEvents.GameHasFinished> {
-    let eventData: GameEvents.GameHasFinished = {
+) {
+    let eventData = {
         roomId: '',
         gameState: GameState.Started,
-        playerRanks: [],
+        playerRanks: [] as PlayerRank[],
     };
     gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
         if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {

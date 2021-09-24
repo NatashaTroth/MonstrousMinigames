@@ -71,7 +71,7 @@ describe('Start Game events ', () => {
     });
 
     it('should emit GameHasStarted data when the game is started', async () => {
-        let eventData: GameEvents.GameHasStarted = {
+        let eventData = {
             roomId: '',
             countdownTime: 0,
         };
@@ -177,7 +177,7 @@ describe('Game has paused events', () => {
     });
 
     it('should emit GameStateHasChanged data when the game has been paused', async () => {
-        let eventData: GameEvents.GameStateHasChanged = {
+        let eventData = {
             roomId: '',
         };
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
@@ -222,7 +222,7 @@ describe('Game has resumed events', () => {
     });
 
     it('should emit GameStateHasChanged data when the game has resumed', async () => {
-        let eventData: GameEvents.GameStateHasChanged = {
+        let eventData = {
             roomId: '',
         };
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
@@ -267,7 +267,7 @@ describe('Game has stopped events', () => {
     });
 
     it('should emit GameStateHasChanged data when the game has stopped', async () => {
-        let eventData: GameEvents.GameStateHasChanged = {
+        let eventData = {
             roomId: '',
         };
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
@@ -311,7 +311,7 @@ describe('Player has disconnected events', () => {
     });
 
     it('should emit a roomId and userId when a player is disconnected', async () => {
-        let eventData: GameEvents.PlayerHasDisconnectedInfo = {
+        let eventData = {
             roomId: '',
             userId: '',
         };
@@ -372,7 +372,7 @@ describe('Player has reconnected events', () => {
     });
 
     it('should emit a roomId and userId when a player is reconnected', async () => {
-        let eventData: GameEvents.PlayerHasReconnectedInfo = {
+        let eventData = {
             roomId: '',
             userId: '',
         };
@@ -435,7 +435,7 @@ describe('Player has finished events', () => {
     it('should emit a PlayerHasFinished data when a player has reached the end of the race', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
 
-        let eventData: GameEvents.PlayerHasFinished = {
+        let eventData = {
             roomId: '',
             userId: '',
             rank: 0,
@@ -486,7 +486,7 @@ describe('Game has finished events', () => {
         const dateNow = 1618665766156;
         Date.now = jest.fn(() => dateNow);
         startGameAndAdvanceCountdown(catchFoodGame);
-        let eventData: GameEvents.GameHasFinished = {
+        let eventData = {
             roomId: '',
             gameState: GameState.Started,
             playerRanks: [],
@@ -553,7 +553,7 @@ describe('Chaser event', () => {
     });
 
     it.skip('should emit a PlayerIsDead data when a chaser catches a player', async () => {
-        let eventData: GameEvents.PlayerIsDead = {
+        let eventData = {
             roomId: '',
             userId: '',
             rank: 0,

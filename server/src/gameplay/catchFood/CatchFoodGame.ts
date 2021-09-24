@@ -149,9 +149,9 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         super.createNewGame(users);
 
         const firstGameStateInfo = this.getGameStateInfo();
-        CatchFoodGameEventEmitter.emitInitialGameStateInfoUpdate({
-            roomId: this.roomId,
-            gameStateInfo: {
+        CatchFoodGameEventEmitter.emitInitialGameStateInfoUpdate(
+            this.roomId,
+            {
                 roomId: firstGameStateInfo.roomId,
                 trackLength: this.trackLength,
                 numberOfObstacles: this.numberOfObstacles,
@@ -160,7 +160,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
                 chasersPositionX: firstGameStateInfo.chasersPositionX,
                 cameraPositionX: firstGameStateInfo.cameraPositionX,
             },
-        });
+        );
     }
 
     startGame(): void {
@@ -168,28 +168,28 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             super.startGame();
         }, this.countdownTime);
 
-        CatchFoodGameEventEmitter.emitGameHasStartedEvent({
-            roomId: this.roomId,
-            countdownTime: this.countdownTime,
-        });
+        CatchFoodGameEventEmitter.emitGameHasStartedEvent(
+            this.roomId,
+            this.countdownTime,
+        );
     }
 
     pauseGame(): void {
         super.pauseGame();
 
-        CatchFoodGameEventEmitter.emitGameHasPausedEvent({ roomId: this.roomId });
+        CatchFoodGameEventEmitter.emitGameHasPausedEvent(this.roomId);
     }
 
     resumeGame(): void {
         super.resumeGame();
 
-        CatchFoodGameEventEmitter.emitGameHasResumedEvent({ roomId: this.roomId });
+        CatchFoodGameEventEmitter.emitGameHasResumedEvent(this.roomId);
     }
 
     stopGameUserClosed() {
         super.stopGameUserClosed();
 
-        CatchFoodGameEventEmitter.emitGameHasStoppedEvent({ roomId: this.roomId });
+        CatchFoodGameEventEmitter.emitGameHasStoppedEvent(this.roomId);
     }
 
     stopGameAllUsersDisconnected() {
@@ -239,11 +239,11 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         playerState.dead = true;
         this.updatePlayerStateFinished(playerState.id);
         playerState.rank = this.rankFailedUser(playerState.finishedTimeMs);
-        CatchFoodGameEventEmitter.emitPlayerIsDead({
-            roomId: this.roomId,
-            userId: playerState.id,
-            rank: playerState.rank,
-        });
+        CatchFoodGameEventEmitter.emitPlayerIsDead(
+            this.roomId,
+            playerState.id,
+            playerState.rank,
+        );
         //todo duplicate
         if (!localDevelopment) {
             const players = Array.from(this.players.values());
@@ -378,10 +378,10 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         playerStunned.stunned = true;
         playerStunned.stunnedSeconds = this.stunnedTime;
 
-        CatchFoodGameEventEmitter.emitPlayerIsStunned({
-            roomId: this.roomId,
-            userId: userIdStunned,
-        });
+        CatchFoodGameEventEmitter.emitPlayerIsStunned(
+            this.roomId,
+            userIdStunned,
+        );
     }
 
     private pushChasers(userIdPushing: string) {
@@ -398,19 +398,18 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
         this.updateChasersPosition(this.gameTime, 0);
 
-        CatchFoodGameEventEmitter.emitChasersWerePushed({
-            roomId: this.roomId,
-            userIdPushing: userIdPushing,
-            amount: this.chaserPushAmount,
-        });
+        CatchFoodGameEventEmitter.emitChasersWerePushed(
+            this.roomId,
+            this.chaserPushAmount,
+        );
     }
 
     //TODO test & move to player
     private onPlayerUnstunned(userId: string) {
-        CatchFoodGameEventEmitter.emitPlayerIsUnstunned({
-            roomId: this.roomId,
-            userId: userId,
-        });
+        CatchFoodGameEventEmitter.emitPlayerIsUnstunned(
+            this.roomId,
+            userId,
+        );
     }
 
     private playerHasSkippedObstacle(userId: string, obstacleId: number): void {
@@ -496,11 +495,11 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         player.rank = this.rankSuccessfulUser(player.finishedTimeMs);
         player.positionX = this.trackLength;
 
-        CatchFoodGameEventEmitter.emitPlayerHasFinishedEvent({
+        CatchFoodGameEventEmitter.emitPlayerHasFinishedEvent(
+            this.roomId,
             userId,
-            roomId: this.roomId,
-            rank: player.rank,
-        });
+            player.rank,
+        );
 
         if (this.gameHasFinished()) {
             this.handleGameFinished();
@@ -536,11 +535,11 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         this.leaderboard.addGameToHistory(GameType.CatchFoodGame, [...playerRanks]);
 
         const currentGameStateInfo = this.getGameStateInfo();
-        CatchFoodGameEventEmitter.emitGameHasFinishedEvent({
-            roomId: currentGameStateInfo.roomId,
-            gameState: currentGameStateInfo.gameState,
-            playerRanks: [...playerRanks],
-        });
+        CatchFoodGameEventEmitter.emitGameHasFinishedEvent(
+            currentGameStateInfo.roomId,
+            currentGameStateInfo.gameState,
+            [...playerRanks],
+        );
         //Broadcast, stop game, return ranks
     }
 
@@ -559,10 +558,10 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
     disconnectPlayer(userId: string) {
         if (super.disconnectPlayer(userId)) {
-            CatchFoodGameEventEmitter.emitPlayerHasDisconnected({
-                roomId: this.roomId,
+            CatchFoodGameEventEmitter.emitPlayerHasDisconnected(
+                this.roomId,
                 userId,
-            });
+            );
             return true;
         }
 
@@ -571,10 +570,10 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
     reconnectPlayer(userId: string) {
         if (super.reconnectPlayer(userId)) {
-            CatchFoodGameEventEmitter.emitPlayerHasReconnected({
-                roomId: this.roomId,
+            CatchFoodGameEventEmitter.emitPlayerHasReconnected(
+                this.roomId,
                 userId,
-            });
+            );
 
             return true;
         }

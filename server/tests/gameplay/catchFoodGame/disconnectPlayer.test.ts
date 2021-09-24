@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import DI from '../../../src/di';
 import { CatchFoodGame } from '../../../src/gameplay';
-import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
+import { PlayerRank } from '../../../src/gameplay/catchFood/interfaces';
 // ..
 import { GameState } from '../../../src/gameplay/enums';
 import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
@@ -94,10 +94,10 @@ describe('Disconnect Player tests', () => {
         const dateNow = 1618665766156;
         Date.now = jest.fn(() => dateNow);
         startGameAndAdvanceCountdown(catchFoodGame);
-        let eventData: GameEvents.GameHasFinished = {
+        let eventData = {
             roomId: '',
             gameState: GameState.Started,
-            playerRanks: [],
+            playerRanks: [] as PlayerRank[],
         };
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
             if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
@@ -121,10 +121,10 @@ describe('Disconnect Player tests', () => {
         const dateNow = 1618665766156;
         Date.now = jest.fn(() => dateNow);
         startGameAndAdvanceCountdown(catchFoodGame);
-        let eventData: GameEvents.GameHasFinished = {
+        let eventData = {
             roomId: '',
             gameState: GameState.Started,
-            playerRanks: [],
+            playerRanks: [] as PlayerRank[],
         };
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
             if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {

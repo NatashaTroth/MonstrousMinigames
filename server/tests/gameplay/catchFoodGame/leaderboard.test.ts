@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import DI from '../../../src/di';
 import { CatchFoodGame } from '../../../src/gameplay';
-import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
 import { GameState } from '../../../src/gameplay/enums';
 import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
 import { GameType } from '../../../src/gameplay/leaderboard/enums/GameType';
@@ -43,7 +42,7 @@ describe('Leaderboard tests for Catch Food Game', () => {
     });
 
     it('should save the game to leaderboard game history', async () => {
-        let eventData: GameEvents.GameHasFinished = {
+        let eventData = {
             roomId: '',
             gameState: GameState.Started,
             playerRanks: [],

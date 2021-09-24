@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import DI from '../../../src/di';
 import { CatchFoodGame } from '../../../src/gameplay';
-import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
+import { PlayerRank } from '../../../src/gameplay/catchFood/interfaces';
 import { CatchFoodGameEventMessage, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD } from '../../../src/gameplay/catchFood/interfaces/CatchFoodGameEventMessages';
 import { GameState } from '../../../src/gameplay/enums';
 import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
@@ -59,7 +59,7 @@ describe('Chasers', () => {
     });
 
     it.skip('have the last rank when first to be caught', async () => {
-        let eventData: GameEvents.PlayerIsDead = {
+        let eventData = {
             roomId: '',
             userId: '',
             rank: 0,
@@ -89,10 +89,10 @@ describe('Chasers', () => {
     });
 
     it.skip('should test that all players have rank 1 when all caught at the same time', async () => {
-        let eventData: GameEvents.GameHasFinished = {
+        let eventData = {
             roomId: '',
             gameState: GameState.Started,
-            playerRanks: [],
+            playerRanks: [] as PlayerRank[],
         };
         const userId = '1';
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
@@ -122,10 +122,10 @@ describe('Chasers', () => {
     });
 
     it.skip('should test that all players have the correct ranks when 2 are caught', async () => {
-        let eventData: GameEvents.GameHasFinished = {
+        let eventData = {
             roomId: '',
             gameState: GameState.Started,
-            playerRanks: [],
+            playerRanks: [] as PlayerRank[],
         };
         const userId = '1';
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
@@ -168,10 +168,10 @@ describe('Chasers', () => {
     });
 
     it.skip('should test that players have the correct ranks, when player finishes before someone is caught ', async () => {
-        let eventData: GameEvents.GameHasFinished = {
+        let eventData = {
             roomId: '',
             gameState: GameState.Started,
-            playerRanks: [],
+            playerRanks: [] as PlayerRank[],
         };
         const userId = '1';
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
