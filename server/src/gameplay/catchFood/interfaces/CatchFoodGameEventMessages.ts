@@ -2,7 +2,7 @@ import { GameStateInfo } from ".";
 import { ObstacleType, TrashType } from "../enums";
 
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED = 'game1/obstacle';
-export const CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SKIPPABLE_OBSTACLE = 'game1/approachingSkippableObstacle';
+export const CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE = 'game1/approachingSolvableObstacle';
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED = 'game1/playerFinished';
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE = 'game1/initialGameState';
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD = 'game1/playerDied';
@@ -12,7 +12,7 @@ export const CATCH_FOOD_GAME_EVENT_MESSAGE__CHASERS_WERE_PUSHED = 'game1/chasers
 
 export const CATCH_FOOD_GAME_EVENT_MESSAGES = [
     CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED,
-    CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SKIPPABLE_OBSTACLE,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED,
@@ -30,8 +30,8 @@ export interface CatchFoodGameObstacleReachedInfo {
     numberTrashItems?: number;
     trashType?: TrashType;
 }
-export interface CatchFoodGameApproachingSkippableObstacle {
-    type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SKIPPABLE_OBSTACLE;
+export interface CatchFoodGameApproachingSolvableObstacle {
+    type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE;
     roomId: string;
     userId: string;
     obstacleId: number;
@@ -73,7 +73,7 @@ export interface CatchFoodGameChasersWerePushed {
 
 export type CatchFoodGameEventMessage =
     CatchFoodGameObstacleReachedInfo
-    | CatchFoodGameApproachingSkippableObstacle
+    | CatchFoodGameApproachingSolvableObstacle
     | CatchFoodGamePlayerHasFinished
     | CatchFoodGameInitialGameState
     | CatchFoodGamePlayerIsDead

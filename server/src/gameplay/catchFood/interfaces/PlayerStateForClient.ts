@@ -7,7 +7,6 @@ export interface PlayerStateForClient extends IPlayerState {
     positionX: number;
     obstacles: Array<Obstacle>;
     atObstacle: boolean;
-    canSkipObstacle: boolean;
     finished: boolean;
     finishedTimeMs: number;
     dead: boolean; //TODO test

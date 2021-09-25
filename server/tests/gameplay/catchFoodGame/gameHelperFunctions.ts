@@ -75,14 +75,23 @@ export function completePlayersObstacles(catchFoodGame: CatchFoodGame, userId: s
 
     while (player.obstacles.length) {
         catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
-        catchFoodGame['playerHasCompletedObstacle'](userId, player.obstacles[0].id);
-        player.stonesCarrying = 0;
+        if (player.atObstacle)
+            catchFoodGame['playerHasCompletedObstacle'](userId, player.obstacles[0].id);
+    }
+}
+
+export function goToNextUnsolvableObstacle(catchFoodGame: CatchFoodGame, userId: string) {
+    const player = catchFoodGame.players.get(userId)!;
+    
+    while (player.obstacles.length && !player.atObstacle) {
+        catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
     }
 }
 
 export function completeNextObstacle(catchFoodGame: CatchFoodGame, userId: string) {
     catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
-    catchFoodGame['playerHasCompletedObstacle'](userId, catchFoodGame.players.get(userId)!.obstacles[0].id);
+    if (catchFoodGame['playerHasReachedObstacle'](userId))
+        catchFoodGame['playerHasCompletedObstacle'](userId, catchFoodGame.players.get(userId)!.obstacles[0].id);
 }
 
 export function distanceToNextObstacle(catchFoodGame: CatchFoodGame, userId: string) {

@@ -4,7 +4,7 @@ import {
     NotAtObstacleError, WrongObstacleIdError
 } from '../../../src/gameplay/catchFood/customErrors';
 import { leaderboard, roomId } from '../mockData';
-import { clearTimersAndIntervals, startGameAndAdvanceCountdown } from './gameHelperFunctions';
+import { clearTimersAndIntervals, goToNextUnsolvableObstacle, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
 const USER_ID = '1';
@@ -43,9 +43,7 @@ describe('WrongObstacleIdError handling tests', () => {
         jest.useFakeTimers();
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         startGameAndAdvanceCountdown(catchFoodGame);
-        const distanceToObstacle =
-            catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame['runForward']('1', distanceToObstacle); //atObstacle = true
+        goToNextUnsolvableObstacle(catchFoodGame, USER_ID);
     });
 
     it('the WrongObstacleIdError has a userId and obstacleId property', async () => {

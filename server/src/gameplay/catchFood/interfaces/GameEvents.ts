@@ -18,7 +18,7 @@ export interface ObstacleReachedInfoController {
     trashType?: TrashType;
 }
 
-export interface ApproachingSkippableObstacle extends GameEventInterface {
+export interface ApproachingSolvableObstacle extends GameEventInterface {
     userId: string;
     obstacleId: number;
     obstacleType: ObstacleType;

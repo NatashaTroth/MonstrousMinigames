@@ -9,7 +9,7 @@ import { GameState } from '../../../src/gameplay/enums';
 import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED, GLOBAL_EVENT_MESSAGE__GAME_HAS_RESUMED, GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED, GLOBAL_EVENT_MESSAGE__GAME_HAS_STOPPED, GLOBAL_EVENT_MESSAGE__PLAYER_HAS_DISCONNECTED, GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
 import { leaderboard, roomId } from '../mockData';
 import {
-    clearTimersAndIntervals, finishGame, finishPlayer, startGameAndAdvanceCountdown
+    clearTimersAndIntervals, finishGame, finishPlayer, goToNextUnsolvableObstacle, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
@@ -114,9 +114,7 @@ describe('Obstacle reached events', () => {
             }
         });
 
-        const distanceToObstacle =
-            catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame['runForward']('1', distanceToObstacle);
+        goToNextUnsolvableObstacle(catchFoodGame, '1');
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(obstacleEventReceived).toBeTruthy();
     });
@@ -135,10 +133,7 @@ describe('Obstacle reached events', () => {
         });
 
         startGameAndAdvanceCountdown(catchFoodGame);
-
-        const distanceToObstacle =
-            catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame['runForward']('1', distanceToObstacle);
+        goToNextUnsolvableObstacle(catchFoodGame, '1');
 
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(eventData).toMatchObject({
