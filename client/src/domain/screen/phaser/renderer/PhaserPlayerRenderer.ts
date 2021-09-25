@@ -52,39 +52,47 @@ export class PhaserPlayerRenderer {
         laneHeight: number,
         posY: number
     ) {
-        let repeats = 1;
         let i = 0;
+        const moon = this.scene.add.image(0, posY, 'moon');
+        const newWidth = this.calcWidthKeepAspectRatio(moon, laneHeight);
+        moon.setDisplaySize(newWidth, laneHeight);
+        moon.setOrigin(0, 1);
+        moon.setScrollFactor(0.2);
+        moon.setDepth(depthDictionary.moon);
+
+        const repeats = Math.ceil(trackLength / newWidth) + 1;
+
         while (i < repeats) {
             const sky = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'starsAndSky');
-            const newWidth = this.calcWidthKeepAspectRatio(sky, laneHeight);
-
-            if (i === 0) {
-                repeats = Math.ceil(trackLength / newWidth);
-            }
-
             sky.setDisplaySize(newWidth, laneHeight);
             sky.setOrigin(0, 1);
             sky.setScrollFactor(0.2);
+            sky.setDepth(depthDictionary.sky);
 
             const mountains = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'mountains');
             mountains.setDisplaySize(newWidth, laneHeight);
             mountains.setOrigin(0, 1);
             mountains.setScrollFactor(0.4);
+            mountains.setDepth(depthDictionary.mountains);
 
             const hills = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'hills');
             hills.setDisplaySize(newWidth, laneHeight);
             hills.setOrigin(0, 1);
             hills.setScrollFactor(0.6);
+            hills.setDepth(depthDictionary.hills);
 
             const trees = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'trees');
             trees.setDisplaySize(newWidth, laneHeight);
             trees.setOrigin(0, 1);
             trees.setScrollFactor(0.8);
+            trees.setDepth(depthDictionary.trees);
 
             const floor = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'floor');
             floor.setDisplaySize(newWidth, laneHeight);
             floor.setOrigin(0, 1);
             floor.setScrollFactor(1);
+            floor.setDepth(depthDictionary.floor);
+
             // // Background without parallax
             // const bg = this.scene.add.image((i * windowWidth) / this.numberPlayers, posY, 'laneBackground');
             // const newWidth = this.calcWidthKeepAspectRatio(bg, laneHeight);
@@ -218,7 +226,7 @@ export class PhaserPlayerRenderer {
         const yOffset = 2.2;
         this.caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
         this.caveBehind.setScale(scale);
-        this.caveBehind.setDepth(depthDictionary.cave);
+        this.caveBehind.setDepth(depthDictionary.caveBehind);
         this.caveBehind.y -= this.caveBehind.displayHeight / yOffset; /// (0.01 * numberPlayers);
 
         this.caveInFront = this.scene.physics.add.sprite(posX, posY, 'caveInFront'); //TODO change caveInFront to enum

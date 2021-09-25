@@ -1,6 +1,6 @@
 export const initialGameInput = {
     roomId: 'ZVSH',
-    trackLength: 800,
+    trackLength: 900,
     numberOfObstacles: 4,
     playersState: [
         // {

@@ -67,7 +67,7 @@ export class PhaserGameRenderer {
         this.progressBar = this.scene.add.graphics();
         this.progressBox = this.scene.add.graphics();
         this.progressBox.fillStyle(0xa7bdb1);
-        this.progressBox.setDepth(3);
+        this.progressBox.setDepth(depthDictionary.progressBox);
 
         const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
         const screenCenterHeight = this.scene.cameras.main.worldView.y + this.scene.cameras.main.height / 2;
@@ -99,7 +99,7 @@ export class PhaserGameRenderer {
             },
         });
         this.percentText.setOrigin(0.5);
-        this.percentText.setDepth(10);
+        this.percentText.setDepth(depthDictionary.percentText);
 
         if (designDevelopment) {
             //asset text
@@ -126,7 +126,7 @@ export class PhaserGameRenderer {
             300 * value,
             30
         );
-        this.progressBar?.setDepth(5);
+        this.progressBar?.setDepth(depthDictionary.progressBar);
     }
 
     updateLoadingScreenFinishedPreloading() {
