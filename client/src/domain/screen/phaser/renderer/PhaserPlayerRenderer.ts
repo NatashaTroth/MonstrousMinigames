@@ -52,14 +52,16 @@ export class PhaserPlayerRenderer {
         laneHeight: number,
         posY: number
     ) {
-        const repeats = Math.ceil(trackLength / (windowWidth / this.numberPlayers)) + 2;
-
-        for (let i = 0; i < repeats; i++) {
+        let repeats = 1;
+        let i = 0;
+        while (i < repeats) {
             const sky = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'starsAndSky');
             const newWidth = this.calcWidthKeepAspectRatio(sky, laneHeight);
-            // if (i === 0) {
-            //     repeats = Math.ceil(trackLength / newWidth);
-            // }
+
+            if (i === 0) {
+                repeats = Math.ceil(trackLength / newWidth);
+            }
+
             sky.setDisplaySize(newWidth, laneHeight);
             sky.setOrigin(0, 1);
             sky.setScrollFactor(0.2);
@@ -101,6 +103,8 @@ export class PhaserPlayerRenderer {
                 if (this.numberPlayers <= 2) element.y = this.moveLanesToCenter(windowHeight, laneHeight, index);
                 this.backgroundLane?.push(element);
             });
+
+            i++;
         }
     }
 
