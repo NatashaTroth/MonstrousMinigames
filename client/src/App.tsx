@@ -25,6 +25,7 @@ import TreeTrunk from './domain/controller/components/obstacles/TreeTrunk';
 import PlayerDead from './domain/controller/components/PlayerDead';
 import PlayerStunned from './domain/controller/components/PlayerStunned';
 import ShakeInstruction from './domain/controller/components/ShakeInstruction';
+import Windmill from './domain/controller/components/Windmill';
 import history from './domain/history/history';
 import { navigator } from './domain/navigator/NavigatorAdapter';
 import ChooseGame from './domain/screen/components/ChooseGame';
@@ -120,6 +121,11 @@ const App: React.FunctionComponent = () => {
                                                         <Route
                                                             path={Routes.controllerPlayerFinished}
                                                             component={ControllerFinishedScreen}
+                                                            exact
+                                                        />
+                                                        <Route
+                                                            path={Routes.controllerWindmill}
+                                                            component={Windmill}
                                                             exact
                                                         />
 
