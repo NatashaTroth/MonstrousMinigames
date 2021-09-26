@@ -6,6 +6,7 @@ import { designDevelopment } from '../../../../utils/constants';
 import { depthDictionary } from '../../../../utils/depthDictionary';
 import { getRandomInt } from '../../../../utils/getRandomInt';
 import MainScene from '../../components/MainScene';
+import * as colors from '../colors';
 import { gameLoadedWaitingMessages, gameLoadingMessages } from '../gameLoadingMessages';
 import { countdownTextStyleProperties, loadingTextStyleProperties } from '../textStyleProperties';
 
@@ -61,13 +62,12 @@ export class PhaserGameRenderer {
 
     renderLoadingScreen() {
         //progress bar: https://gamedevacademy.org/creating-a-preloading-screen-in-phaser-3/?a=13#Loading_Our_Assets
-        //TODO change any
 
         //loading bar
         this.progressBar = this.scene.add.graphics();
         this.progressBox = this.scene.add.graphics();
         this.progressBox.fillStyle(0xa7bdb1);
-        this.progressBox.setDepth(3);
+        this.progressBox.setDepth(depthDictionary.progressBox);
 
         const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
         const screenCenterHeight = this.scene.cameras.main.worldView.y + this.scene.cameras.main.height / 2;
@@ -94,12 +94,12 @@ export class PhaserGameRenderer {
             style: {
                 ...loadingTextStyleProperties,
                 fontSize: `${18}px`,
-                color: '#0d1a17',
+                color: colors.darkTreeGreen,
                 fontStyle: 'bold',
             },
         });
         this.percentText.setOrigin(0.5);
-        this.percentText.setDepth(10);
+        this.percentText.setDepth(depthDictionary.percentText);
 
         if (designDevelopment) {
             //asset text
@@ -126,7 +126,7 @@ export class PhaserGameRenderer {
             300 * value,
             30
         );
-        this.progressBar?.setDepth(5);
+        this.progressBar?.setDepth(depthDictionary.progressBar);
     }
 
     updateLoadingScreenFinishedPreloading() {
