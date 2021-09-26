@@ -82,7 +82,6 @@ export const Lobby: React.FunctionComponent = () => {
                 <LobbyHeader />
                 <ContentContainer>
                     <LeftContainer>
-                        {screenState}
                         <ConnectedUsers>
                             {getUserArray(connectedUsers || []).map((user, index) => (
                                 <ConnectedUserContainer key={`LobbyScreen${roomId}${user.number}`}>

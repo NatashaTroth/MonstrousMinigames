@@ -89,18 +89,20 @@ const ChooseGame: React.FunctionComponent = () => {
                             <PreviewImage src={games[selectedGame].image} />
                         </GamePreviewContainer>
                         <SelectGameButtonContainer>
-                            <Button
-                                variant="secondary"
-                                onClick={() =>
-                                    tutorial
-                                        ? history.push(screenGameIntroRoute(roomId))
-                                        : history.push(screenGetReadyRoute(roomId))
-                                }
-                                fullwidth
-                            >{`Start ${games[selectedGame].name}`}</Button>
+                            {screenAdmin && (
+                                <Button
+                                    variant="secondary"
+                                    onClick={() =>
+                                        tutorial
+                                            ? history.push(screenGameIntroRoute(roomId))
+                                            : history.push(screenGetReadyRoute(roomId))
+                                    }
+                                    fullwidth
+                                >{`Start ${games[selectedGame].name}`}</Button>
+                            )}
                         </SelectGameButtonContainer>
                         <BackButtonContainer>
-                            <Button onClick={history.goBack}>Back</Button>
+                            {screenAdmin && <Button onClick={history.goBack}>Back</Button>}
                         </BackButtonContainer>
                     </RightContainer>
                 </GameSelectionContainer>
