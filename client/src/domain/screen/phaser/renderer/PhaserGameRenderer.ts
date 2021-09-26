@@ -61,7 +61,6 @@ export class PhaserGameRenderer {
 
     renderLoadingScreen() {
         //progress bar: https://gamedevacademy.org/creating-a-preloading-screen-in-phaser-3/?a=13#Loading_Our_Assets
-        //TODO change any
 
         //loading bar
         this.progressBar = this.scene.add.graphics();

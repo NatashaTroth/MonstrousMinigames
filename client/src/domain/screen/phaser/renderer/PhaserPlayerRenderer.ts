@@ -11,13 +11,16 @@ import { Coordinates } from '../gameTypes';
  * this is an incomplete PlayerRenderer adapter which contains all the phaser logic. This class might only be tested via
  * integration tests. That's why we want to keep this class as small as possible.
  */
+
+interface RendererObstacle {
+    phaserInstance: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    skippable: boolean;
+}
 export class PhaserPlayerRenderer {
     private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private chaser?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-    private obstacles: {
-        phaserInstance: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-        skippable: boolean;
-    }[];
+    private obstacles: RendererObstacle[];
+    private skippableObstacles: RendererObstacle[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private particles: Phaser.GameObjects.Particles.ParticleEmitterManager[];
     private playerNameBg?: Phaser.GameObjects.Rectangle;
@@ -33,6 +36,7 @@ export class PhaserPlayerRenderer {
         private laneHeightsPerNumberPlayers: number[]
     ) {
         this.obstacles = [];
+        this.skippableObstacles = [];
         this.particles = [];
         this.backgroundLane = []; //TODO change
         //when <= 2 lanes, make them less high to fit more width
@@ -324,15 +328,21 @@ export class PhaserPlayerRenderer {
     }
 
     destroyObstacle() {
-        if (this.obstacles.length > 0) {
-            if (!this.obstacles[0].skippable) {
-                this.obstacles[0].phaserInstance.destroy();
+        const currentObstacle = this.obstacles.shift();
+        if (currentObstacle) {
+            if (!currentObstacle.skippable) {
+                currentObstacle.phaserInstance.destroy();
+            } else {
+                this.skippableObstacles.push(currentObstacle);
             }
-            this.obstacles.shift();
         }
     }
     destroyObstacles() {
         this.obstacles.forEach(obstacle => {
+            obstacle.phaserInstance.destroy();
+        });
+
+        this.skippableObstacles.forEach(obstacle => {
             obstacle.phaserInstance.destroy();
         });
     }

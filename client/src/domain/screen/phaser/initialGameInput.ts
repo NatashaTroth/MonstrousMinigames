@@ -74,8 +74,13 @@ export const initialGameInput = {
             name: 'test',
             positionX: 600,
             obstacles: [
+                // { id: 2, positionX: 160, type: 'STONE', skippable: false },
+                // { id: 2, positionX: 260, type: 'STONE', skippable: false },
                 { id: 5, positionX: 293, type: 'TREE_STUMP', skippable: true },
+                // { id: 2, positionX: 360, type: 'STONE', skippable: false },
                 { id: 3, positionX: 410, type: 'TRASH', skippable: false },
+                // { id: 2, positionX: 460, type: 'STONE', skippable: false },
+                // { id: 2, positionX: 560, type: 'STONE', skippable: false },
                 { id: 2, positionX: 660, type: 'STONE', skippable: false },
                 { id: 1, positionX: 860, type: 'SPIDER', skippable: false },
             ],
