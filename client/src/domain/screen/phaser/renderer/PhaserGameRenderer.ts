@@ -6,6 +6,7 @@ import { designDevelopment } from '../../../../utils/constants';
 import { depthDictionary } from '../../../../utils/depthDictionary';
 import { getRandomInt } from '../../../../utils/getRandomInt';
 import MainScene from '../../components/MainScene';
+import * as colors from '../colors';
 import { gameLoadedWaitingMessages, gameLoadingMessages } from '../gameLoadingMessages';
 import { countdownTextStyleProperties, loadingTextStyleProperties } from '../textStyleProperties';
 
@@ -93,7 +94,7 @@ export class PhaserGameRenderer {
             style: {
                 ...loadingTextStyleProperties,
                 fontSize: `${18}px`,
-                color: '#0d1a17',
+                color: colors.darkTreeGreen,
                 fontStyle: 'bold',
             },
         });

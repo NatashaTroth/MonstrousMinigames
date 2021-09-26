@@ -14,10 +14,10 @@ export const depthDictionary = {
     chaser: 50,
     attention: 55,
     flares: 60,
-    deadText: 70,
     nameTag: 75,
     countdown: 80,
     progressBox: 85,
     progressBar: 90,
     percentText: 95,
+    deadText: 100,
 };
