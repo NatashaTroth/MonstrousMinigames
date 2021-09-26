@@ -15,5 +15,5 @@ export interface PlayerStateForClient extends IPlayerState {
     isActive: boolean;
     stunned: boolean;
     characterNumber: number;
-    numberStonesThrown: number;
+    chaserPushesUsed: number;
 }

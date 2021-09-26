@@ -1,5 +1,5 @@
 import { GameState } from '../../enums';
-import { ObstacleType } from '../enums';
+import { ObstacleType, TrashType } from '../enums';
 import { GameStateInfo, PlayerRank } from './';
 import { InitialGameStateInfo } from './InitialGameStateInfo';
 
@@ -42,6 +42,11 @@ export interface PlayerStunnedState extends GameEventInterface {
     roomId: string;
     userId: string;
 }
+export interface ChasersWerePushed extends GameEventInterface {
+    roomId: string;
+    userIdPushing: string;
+    amount: number;
+}
 
 export interface GameHasFinished extends GameEventInterface {
     roomId: string;
@@ -53,6 +58,22 @@ export interface ObstacleReachedInfo extends GameEventInterface {
     userId: string;
     obstacleId: number;
     obstacleType: ObstacleType;
+    numberTrashItems?: number;
+    trashType?: TrashType;
+}
+export interface ObstacleReachedInfoController {
+    obstacleId: number;
+    obstacleType: ObstacleType;
+    numberTrashItems?: number;
+    trashType?: TrashType;
+}
+
+export interface ApproachingSkippableObstacle extends GameEventInterface {
+    roomId: string;
+    userId: string;
+    obstacleId: number;
+    obstacleType: ObstacleType;
+    distance: number;
 }
 
 export interface PlayerHasDisconnectedInfo extends GameEventInterface {

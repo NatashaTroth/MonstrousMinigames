@@ -6,7 +6,7 @@ import { designDevelopment } from '../../../../utils/constants';
 import { depthDictionary } from '../../../../utils/depthDictionary';
 import { getRandomInt } from '../../../../utils/getRandomInt';
 import MainScene from '../../components/MainScene';
-import { gameLoadingMessages } from '../gameLoadingMessages';
+import { gameLoadedWaitingMessages, gameLoadingMessages } from '../gameLoadingMessages';
 import { countdownTextStyleProperties, loadingTextStyleProperties } from '../textStyleProperties';
 
 /**
@@ -115,7 +115,7 @@ export class PhaserGameRenderer {
         }
     }
 
-    updateLoadingScreen(value: number) {
+    updateLoadingScreenPercent(value: number) {
         this.percentText?.setText(`${Math.round(value * 100)}%`);
 
         this.progressBar?.clear();
@@ -127,6 +127,10 @@ export class PhaserGameRenderer {
             30
         );
         this.progressBar?.setDepth(5);
+    }
+
+    updateLoadingScreenFinishedPreloading() {
+        this.loadingText?.setText(`${gameLoadedWaitingMessages[getRandomInt(0, gameLoadedWaitingMessages.length)]}...`);
     }
 
     //only for local development

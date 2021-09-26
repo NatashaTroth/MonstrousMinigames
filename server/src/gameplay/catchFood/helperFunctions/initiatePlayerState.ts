@@ -1,12 +1,12 @@
 import { shuffleArray } from '../../../helpers/shuffleArray';
-import { ObstacleType } from '../enums';
-import { regularObstactTypes } from '../enums/ObstacleType';
-import { Obstacle } from '../interfaces';
+import { ObstacleType, TrashType } from '../enums';
+import { regularObstacleTypes as regularObstacleTypes } from '../enums/ObstacleType';
+import { Obstacle, ObstacleTypeObject } from '../interfaces';
 
 function getObstaclesInRange(obstacles: Obstacle[], obstacleWidth: number, beginning: number, ending: number) {
     return obstacles.filter(
         obstacle =>
-            obstacle.positionX > beginning - obstacleWidth / 2 && obstacle.positionX < ending + obstacleWidth / 2
+            obstacle.positionX >= beginning - obstacleWidth && obstacle.positionX <= ending + obstacleWidth
     );
 }
 function getAvailableSlotsInRange(obstacles: Obstacle[], obstacleWidth: number, beginning: number, ending: number) {
@@ -17,8 +17,8 @@ function getAvailableSlotsInRange(obstacles: Obstacle[], obstacleWidth: number, 
     const freeRanges: Array<[number, number]> = [];
     let lastPosition = beginning;
     for (let i = 0; i < obstaclesInRange.length; i++) {
-        freeRanges.push([lastPosition, obstaclesInRange[i] - obstacleWidth / 2]);
-        lastPosition = obstaclesInRange[i] + obstacleWidth / 2;
+        freeRanges.push([lastPosition, obstaclesInRange[i] - obstacleWidth]);
+        lastPosition = obstaclesInRange[i] + obstacleWidth;
     }
     freeRanges.push([lastPosition, ending]);
     const possibleRanges = freeRanges.filter(range => range[1] - range[0] >= obstacleWidth);
@@ -58,7 +58,7 @@ export function getStonesForObstacles(
     minObstacleWidth?: number,
     noClone = false
 ): Obstacle[] {
-    minObstacleWidth = minObstacleWidth || obstacleWidth / 2;
+    minObstacleWidth = minObstacleWidth || (obstacleWidth / 3 * 2);
     const obstacleClone = noClone ? obstacles : [...obstacles];
     const splitLength = (trackLength - initialPlayerPositionX) / ((count + 1.5) * 1.1);
     const availableSplitLength = splitLength / 1.1;
@@ -67,7 +67,7 @@ export function getStonesForObstacles(
     const stones: Obstacle[] = [];
 
     for (let i = 1; i <= count; i++) {
-        const beginning = splitLength * i;
+        const beginning = initialPlayerPositionX + splitLength * i;
         const ending = beginning + availableSplitLength;
         const availablePositions = getAvailableSlotsInRange(obstacleClone, obstacleWidth, beginning, ending);
 
@@ -78,7 +78,7 @@ export function getStonesForObstacles(
         const stone = {
             id: id++,
             positionX:
-                initialPlayerPositionX + availablePositions[Math.floor(Math.random() * availablePositions.length)],
+                availablePositions[Math.floor(Math.random() * availablePositions.length)],
             type: ObstacleType.Stone,
             skippable: true,
         };
@@ -105,18 +105,31 @@ export function getStonesForObstacles(
     return sortBy(stones, 'positionX');
 }
 
-export function getObstacleTypes(numberOfObstacles: number): Array<ObstacleType> {
-    const obstacleTypeKeys: Array<string> = regularObstactTypes;
-    const obstacleTypes: Array<ObstacleType> = [];
+function getRandomInt(min: number, max: number) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+}
+
+export function getObstacleTypes(numberOfObstacles: number): Array<ObstacleTypeObject> {
+    const obstacleTypeKeys: Array<ObstacleType> = regularObstacleTypes;
+    const trashTypeKeys: Array<TrashType> = [TrashType.Paper, TrashType.Food, TrashType.Plastic];
+    const obstacleTypes: Array<ObstacleTypeObject> = [];
     for (let i = 0; i < numberOfObstacles; i++) {
         const randomNr = Math.floor(Math.random() * Math.floor(obstacleTypeKeys.length));
-        obstacleTypes.push(obstacleTypeKeys[randomNr] as ObstacleType);
+        const obstacleTypeObject: ObstacleTypeObject = { type: obstacleTypeKeys[randomNr] };
+
+        if (obstacleTypeObject.type === ObstacleType.Trash) {
+            (obstacleTypeObject.numberTrashItems = getRandomInt(3, 6)),
+                (obstacleTypeObject.trashType = trashTypeKeys[getRandomInt(0, trashTypeKeys.length)]);
+        }
+        obstacleTypes.push(obstacleTypeObject);
     }
     return obstacleTypes;
 }
 
 export function createObstacles(
-    obstacleTypes: Array<ObstacleType>,
+    obstacleTypes: Array<ObstacleTypeObject>,
     numberOfObstacles: number,
     trackLength: number,
     initialPlayerPositionX: number
@@ -126,7 +139,7 @@ export function createObstacles(
     }
 
     const obstacles: Array<Obstacle> = [];
-    const shuffledObstacleTypes: Array<ObstacleType> = shuffleArray(obstacleTypes);
+    const shuffledObstacleTypes: Array<ObstacleTypeObject> = shuffleArray(obstacleTypes);
 
     const quadrantRange = Math.floor((trackLength - initialPlayerPositionX) / (numberOfObstacles + 1)) - 100; //e.g. 500/4 = 125, +10 to avoid obstacle being at the very beginning, - 10 to stop 2 being right next to eachother
 
@@ -135,12 +148,19 @@ export function createObstacles(
 
         let position = randomNr + quadrantRange * (i + 1);
         position = Math.round(position / 10) * 10; //round to nearest 10 (to stop exactly at it)
-        obstacles.push({
+        const obstacle: Obstacle = {
             id: i,
             positionX: initialPlayerPositionX + position,
-            type: shuffledObstacleTypes[i],
+            type: shuffledObstacleTypes[i].type,
             skippable: false,
-        });
+        };
+
+        if (shuffledObstacleTypes[i].type === ObstacleType.Trash) {
+            obstacle.numberTrashItems = shuffledObstacleTypes[i].numberTrashItems;
+            obstacle.trashType = shuffledObstacleTypes[i].trashType;
+        }
+
+        obstacles.push(obstacle);
     }
 
     return obstacles;

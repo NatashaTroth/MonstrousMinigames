@@ -5,6 +5,12 @@ export enum ObstacleTypes {
     stone = 'STONE',
 }
 
+export enum TrashType {
+    Paper = 'PAPER',
+    Food = 'FOOD',
+    Plastic = 'PLASTIC',
+}
+
 export enum ObstacleRoutes {
     treeStump = 'treestump',
     spider = 'spider',
@@ -47,6 +53,7 @@ export enum MessageTypes {
     playerFinished = 'game1/playerFinished',
     started = 'game1/hasStarted',
     phaserLoaded = 'game1/phaserGameLoaded',
+    phaserLoadingTimedOut = 'game1/phaserLoadingTimedOut',
     allScreensPhaserGameLoaded = 'game1/allScreensPhaserGameLoaded',
     startPhaserGame = 'game1/startPhaserGame',
     initialGameState = 'game1/initialGameState',

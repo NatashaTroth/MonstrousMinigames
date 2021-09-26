@@ -1,5 +1,7 @@
 import { CatchFoodGame } from '../../../src/gameplay';
-import { ObstacleType, regularObstactTypes } from '../../../src/gameplay/catchFood/enums/ObstacleType';
+import {
+    ObstacleType, regularObstacleTypes
+} from '../../../src/gameplay/catchFood/enums/ObstacleType';
 import { Obstacle } from '../../../src/gameplay/catchFood/interfaces';
 import { GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
@@ -10,7 +12,7 @@ const NUMBER_OF_OBSTACLES = 4;
 const NUMBER_OF_STONES = 2;
 let catchFoodGame: CatchFoodGame;
 // const OBSTACLE_RANGE = 70;
-const REGULAR_OBSTACLE_TYPE_KEYS = regularObstactTypes;
+const REGULAR_OBSTACLE_TYPE_KEYS = regularObstacleTypes;
 
 describe('Initiate CatchFoodGame correctly', () => {
     beforeEach(async () => {
@@ -101,25 +103,36 @@ describe('Initiate CatchFoodGame correctly', () => {
                 continue;
             }
             if (i > 0) {
-                expect(obstacles[i].positionX).toBeGreaterThan(obstacles[i - 1].positionX);
+                // try {
+                    expect(obstacles[i].positionX).toBeGreaterThan(obstacles[i - 1].positionX + 100);
+                // } catch (e: any) {
+                //     console.table(obstacles.map((obstacle, idx) => ({ ...obstacle, distanceToPrevious: idx > 0 ? obstacle.positionX - obstacles[idx - 1].positionX : obstacle.positionX })));
+                //     throw e;
+                // }
             }
             if (i < obstacles.length - 1) {
-                expect(obstacles[i].positionX).toBeLessThan(obstacles[i + 1].positionX);
+                // try {
+                    expect(obstacles[i].positionX).toBeLessThan(obstacles[i + 1].positionX - 100);
+                // } catch (e: any) {
+                //     console.table(obstacles.map((obstacle, idx) => ({ ...obstacle, distanceToNext: idx < obstacles.length - 1 ? obstacles[idx + 1].positionX - obstacle.positionX : TRACK_LENGTH - obstacle.positionX })));
+                //     throw e;
+                // }
             }
         }
     });
 
-    it('initiates all players\' stones at the same position', () => {
-        const playersWithStonesOnly = Array.from(catchFoodGame.players.values())
-            .map(player => {
-                player.obstacles = player.obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
-                return player;
-            });
+    it("initiates all players' stones at the same position", () => {
+        const playersWithStonesOnly = Array.from(catchFoodGame.players.values()).map(player => {
+            player.obstacles = player.obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
+            return player;
+        });
 
         for (let i = 1; i < playersWithStonesOnly.length; i++) {
             expect(playersWithStonesOnly[i].obstacles.length).toBe(playersWithStonesOnly[i - 1].obstacles.length);
             for (let j = 0; j < playersWithStonesOnly[i].obstacles.length; j++) {
-                expect(playersWithStonesOnly[i].obstacles[j].positionX).toBe(playersWithStonesOnly[i - 1].obstacles[j].positionX);
+                expect(playersWithStonesOnly[i].obstacles[j].positionX).toBe(
+                    playersWithStonesOnly[i - 1].obstacles[j].positionX
+                );
             }
         }
     });

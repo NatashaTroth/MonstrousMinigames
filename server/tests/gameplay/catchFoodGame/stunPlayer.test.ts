@@ -27,41 +27,11 @@ describe('Stun player tests', () => {
     // Date.now = jest.fn(() => dateNow);
     // startGameAndAdvanceCountdown(catchFoodGame);
 
-    it('stunPlayer should set a player as stunned', async () => {
-        catchFoodGame['stunPlayer']('1', '2');
-        expect(catchFoodGame.players.get('1')!.stunned).toBeTruthy();
-    });
-
-    it('stunPlayer should stay stunned until stun time', async () => {
-        catchFoodGame['stunPlayer']('1', '2');
-        advanceCountdown(catchFoodGame.stunnedTime - 1);
-        expect(catchFoodGame.players.get('1')!.stunned).toBeTruthy();
-    });
-
     it('stunPlayer should be over after stun time', async () => {
         catchFoodGame['stunPlayer']('1', '2');
         advanceCountdown(catchFoodGame.stunnedTime);
         await releaseThread();
         expect(catchFoodGame.players.get('1')!.stunned).toBeFalsy();
-    });
-
-    it('stun time should be paused during pause', async () => {
-        catchFoodGame['stunPlayer']('1', '2');
-        catchFoodGame.pauseGame();
-        advanceCountdown(catchFoodGame.stunnedTime * 2);
-        await releaseThread();
-        expect(catchFoodGame.players.get('1')!.stunned).toBeTruthy();
-    });
-
-    it('stun time should resume after pause and not finish early', async () => {
-        catchFoodGame['stunPlayer']('1', '2');
-        catchFoodGame.pauseGame();
-        advanceCountdown(catchFoodGame.stunnedTime * 2);
-        await releaseThread();
-        catchFoodGame.resumeGame();
-        advanceCountdown(catchFoodGame.stunnedTime - 1);
-        await releaseThread();
-        expect(catchFoodGame.players.get('1')!.stunned).toBeTruthy();
     });
 
     it('stun time should resume after pause and finish on time', async () => {
@@ -103,34 +73,6 @@ describe('Stun player tests', () => {
         finishPlayer(catchFoodGame, '1');
         catchFoodGame['runForward']('1', catchFoodGame.trackLength);
         catchFoodGame['stunPlayer']('1', '2');
-        expect(catchFoodGame.players.get('1')!.stunned).toBeFalsy();
-    });
-
-    it('should stun a player if thrower has not exceeded max number of stones', async () => {
-        for (let i = 0; i < catchFoodGame.maxNumberStones - 1; i++) {
-            catchFoodGame['stunPlayer']('1', '2');
-            advanceCountdown(catchFoodGame.stunnedTime);
-            await releaseThread();
-        }
-        catchFoodGame['stunPlayer']('1', '2');
-        await releaseThread();
-        expect(catchFoodGame.players.get('1')!.stunned).toBeTruthy();
-    });
-
-    it('should not stun a player if thrower has thrown max number of stones', async () => {
-        catchFoodGame.players.get('1')!.obstacles = [];
-        for (let i = 0; i < catchFoodGame.maxNumberStones; i++) {
-            catchFoodGame.players.get('1')!.positionX = catchFoodGame.chasersPositionX + 10;
-            catchFoodGame.players.get('1')!.atObstacle = false;
-            catchFoodGame.players.get('1')!.dead = false;
-            catchFoodGame.players.get('1')!.finished = false;
-            catchFoodGame['stunPlayer']('1', '2');
-            catchFoodGame.players.get('1')!.stunned = false;
-
-            await releaseThreadN(3);
-        }
-        catchFoodGame['stunPlayer']('1', '2');
-        await releaseThread();
         expect(catchFoodGame.players.get('1')!.stunned).toBeFalsy();
     });
 });

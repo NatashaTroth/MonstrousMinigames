@@ -25,6 +25,7 @@ export class PhaserPlayerRenderer {
     private caveBehind?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private caveInFront?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private backgroundLane?: Phaser.GameObjects.Image[];
+    //private backgroundLane?: Phaser.GameObjects.TileSprite[]; // for tile parallax
 
     constructor(
         private scene: MainScene,
@@ -52,27 +53,62 @@ export class PhaserPlayerRenderer {
         posY: number
     ) {
         let repeats = 1;
+        let i = 0;
+        while (i < repeats) {
+            const sky = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'starsAndSky');
+            const newWidth = this.calcWidthKeepAspectRatio(sky, laneHeight);
 
-        for (let i = 0; i < repeats; i++) {
-            // Background without parallax
-            const bg = this.scene.add.image((i * windowWidth) / this.numberPlayers, posY, 'laneBackground');
-            const newWidth = this.calcWidthKeepAspectRatio(bg, laneHeight);
             if (i === 0) {
                 repeats = Math.ceil(trackLength / newWidth);
             }
-            bg.setDisplaySize(newWidth, laneHeight);
-            bg.setOrigin(0, 1);
-            bg.setScrollFactor(1);
+
+            sky.setDisplaySize(newWidth, laneHeight);
+            sky.setOrigin(0, 1);
+            sky.setScrollFactor(0.2);
+
+            const mountains = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'mountains');
+            mountains.setDisplaySize(newWidth, laneHeight);
+            mountains.setOrigin(0, 1);
+            mountains.setScrollFactor(0.4);
+
+            const hills = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'hills');
+            hills.setDisplaySize(newWidth, laneHeight);
+            hills.setOrigin(0, 1);
+            hills.setScrollFactor(0.6);
+
+            const trees = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'trees');
+            trees.setDisplaySize(newWidth, laneHeight);
+            trees.setOrigin(0, 1);
+            trees.setScrollFactor(0.8);
+
+            const floor = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, 'floor');
+            floor.setDisplaySize(newWidth, laneHeight);
+            floor.setOrigin(0, 1);
+            floor.setScrollFactor(1);
+            // // Background without parallax
+            // const bg = this.scene.add.image((i * windowWidth) / this.numberPlayers, posY, 'laneBackground');
+            // const newWidth = this.calcWidthKeepAspectRatio(bg, laneHeight);
+            // if (i === 0) {
+            //     repeats = Math.ceil(trackLength / newWidth);
+            // }
+            // bg.setDisplaySize(newWidth, laneHeight);
+            // bg.setOrigin(0, 1);
+            // bg.setScrollFactor(1);
 
             // set new positions, based on size of image
-            bg.x = i * bg.displayWidth;
-            if (this.numberPlayers <= 2) bg.y = this.moveLanesToCenter(windowHeight, laneHeight, index);
 
-            this.backgroundLane?.push(bg);
+            const laneBg = [sky, mountains, hills, trees, floor];
+            laneBg.forEach(element => {
+                element.x = i * element.displayWidth;
+                if (this.numberPlayers <= 2) element.y = this.moveLanesToCenter(windowHeight, laneHeight, index);
+                this.backgroundLane?.push(element);
+            });
+
+            i++;
         }
     }
 
-    private calcWidthKeepAspectRatio(bg: Phaser.GameObjects.Image, laneHeight: number) {
+    private calcWidthKeepAspectRatio(bg: Phaser.GameObjects.Image | Phaser.GameObjects.TileSprite, laneHeight: number) {
         //Keep aspect ratio when setting displaySize
         // oldHeight .... 100%
         // newHeight ... x -> 100 / oldHeight * newHeight
