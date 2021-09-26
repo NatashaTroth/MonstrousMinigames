@@ -5,6 +5,7 @@ import {
     UsersNotReadyError,
 } from '../customErrors';
 import { Globals } from '../enums/globals';
+import { ScreenStates } from '../enums/screenStates';
 import { CatchFoodGame } from '../gameplay';
 import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
 import Game from '../gameplay/Game';
@@ -20,6 +21,7 @@ class Room {
     public game: Game;
     private state: RoomStates;
     private leaderboard: Leaderboard;
+    public screenState: string;
     public screens: Array<ScreenInfo>;
     public firstPhaserScreenLoaded: boolean;
     public allScreensLoadedTimeout: undefined | ReturnType<typeof setTimeout>;
@@ -34,6 +36,7 @@ class Room {
         this.game.leaderboard = this.leaderboard;
         this.state = RoomStates.OPEN;
         this.screens = [];
+        this.screenState = ScreenStates.LOBBY;
         this.firstPhaserScreenLoaded = false;
         this.allScreensLoadedTimeout = undefined;
         this.sentAllScreensLoaded = false;
@@ -271,6 +274,12 @@ class Room {
         } else {
             throw new CharacterNotAvailableError();
         }
+    }
+    public setScreenState(screenState: string): void{
+        this.screenState = screenState;
+    }
+    public getScreenState(): string{
+        return this.screenState;
     }
 }
 

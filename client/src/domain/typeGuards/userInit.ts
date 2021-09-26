@@ -8,6 +8,7 @@ export interface UserInitMessage {
     roomId: string;
     isAdmin: boolean;
     number: number;
+    ready: boolean;
 }
 
 export const userInitTypeGuard = (data: MessageData): data is UserInitMessage =>
