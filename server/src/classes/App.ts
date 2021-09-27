@@ -7,11 +7,13 @@ class App {
     constructor(
         private readonly connectionHandler: ConnectionHandler,
         private readonly clearRoomCronJob: ClearRoomCronJob
-    ) {}
+    ) { }
 
     run() {
         this.connectionHandler.handle();
-        this.clearRoomCronJob.start();
+        if (!process.env.LOCAL_DEVELOPMENT) {
+            this.clearRoomCronJob.start();
+        }
     }
 }
 
