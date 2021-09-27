@@ -5,6 +5,10 @@ import * as React from 'react';
 import Button from '../../../components/common/Button';
 import { AudioContext } from '../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
+import shakeInstructionsDemo from '../../../images/ui/shakeInstructionDemo.png';
+import spiderDemo from '../../../images/ui/spiderDemo.png';
+import trashDemo from '../../../images/ui/trashDemo.png';
+import treeDemo from '../../../images/ui/treeDemo.png';
 import { screenGetReadyRoute } from '../../../utils/routes';
 import { handleAudioPermission } from '../../audio/handlePermission';
 import history from '../../history/history';
@@ -15,10 +19,12 @@ import {
     GameIntroBackground,
     GameIntroContainer,
     ImageDescription,
+    InstructionImg,
     IntroText,
     PaddingContainer,
     PreviewImageContainer,
     StyledFormGroup,
+    Wrapper,
 } from './GameIntro.sc';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -77,10 +83,28 @@ const GameIntro: React.FunctionComponent = () => {
                             along the way!
                         </ImageDescription>
                         <ControlInstructionsContainer>
-                            <ControlInstruction>Shake your phone to run!</ControlInstruction>
-                            <ControlInstruction>Swipe your screen to slice the tree trunk!</ControlInstruction>
-                            <ControlInstruction>Blow into your phone to scare the spider away!</ControlInstruction>
-                            <ControlInstruction>Move the trash in the right trash container!</ControlInstruction>
+                            <Wrapper>
+                                <ControlInstruction>Shake your phone to run!</ControlInstruction>
+                                <InstructionImg src={shakeInstructionsDemo} />
+                            </Wrapper>
+                            <Wrapper>
+                                <ControlInstruction>
+                                    Remove the tree trunk by cutting it along the line!
+                                </ControlInstruction>
+                                <InstructionImg src={treeDemo} />
+                            </Wrapper>
+                            <Wrapper>
+                                <ControlInstruction>
+                                    Blow into the microphone to get rid of the spider!
+                                </ControlInstruction>
+                                <InstructionImg src={spiderDemo} />
+                            </Wrapper>
+                            <Wrapper>
+                                <ControlInstruction>
+                                    Put the right trash in the garbage can to get the forest clean again!
+                                </ControlInstruction>
+                                <InstructionImg src={trashDemo} />
+                            </Wrapper>
                         </ControlInstructionsContainer>
                     </div>
                 )}
