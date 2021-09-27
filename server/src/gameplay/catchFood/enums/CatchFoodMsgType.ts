@@ -1,7 +1,6 @@
 export enum CatchFoodMsgType {
     CREATE = 'game1/create',
     INITIAL_GAME_STATE_INFO = 'game1/initialGameState',
-    START = 'game1/start',
     PHASER_GAME_LOADED = 'game1/phaserGameLoaded',
     PHASER_LOADING_TIMED_OUT = 'game1/phaserLoadingTimedOut',
     ALL_SCREENS_PHASER_GAME_LOADED = 'game1/allScreensPhaserGameLoaded',
@@ -17,6 +16,7 @@ export enum CatchFoodMsgType {
     PLAYER_DIED = 'game1/playerDied',
     PLAYER_STUNNED = 'game1/playerStunned',
     CHASERS_WERE_PUSHED = 'game1/chasersPushed',
+    PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES = 'game1/playerHasExceededMaxNumberChaserPushes',
     PLAYER_UNSTUNNED = 'game1/playerUnstunned',
     STUN_PLAYER = 'game1/stunPlayer',
 }

@@ -10,6 +10,7 @@ describe('handleUserInitMessage', () => {
         name: 'User',
         userId: '1',
         roomId: '1',
+        ready: false,
     };
     /*
     it('when message type is user init, handed setPlayerAdmin should be called', () => {
@@ -36,6 +37,7 @@ describe('handleUserInitMessage', () => {
         const setPlayerNumber = jest.fn();
         const setName = jest.fn();
         const setUserId = jest.fn();
+        const setReady = jest.fn();
 
         handleUserInitMessage({
             data: mockData,
@@ -43,6 +45,7 @@ describe('handleUserInitMessage', () => {
                 setPlayerNumber,
                 setName,
                 setUserId,
+                setReady,
             },
         });
 

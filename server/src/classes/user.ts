@@ -1,4 +1,4 @@
-import shortid from 'shortid';
+import nanoid from 'nanoid';
 
 class User {
     public id: string;
@@ -17,7 +17,7 @@ class User {
         socketId: string,
         name: string,
         characterNumber = -1,
-        id: string = shortid.generate(),
+        id: string = nanoid.nanoid(),
         number = 0
     ) {
         this.id = id;

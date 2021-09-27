@@ -12,7 +12,7 @@ import plastic from '../../../../images/obstacles/trash/plastic.svg';
 import { MessageTypes, TrashType } from '../../../../utils/constants';
 import { dragMoveListener, initializeInteractListeners, itemCounter } from './Draggable';
 import LinearProgressBar from './LinearProgressBar';
-import { ObstacleContainer } from './ObstaclStyles.sc';
+import { ObstacleContainer, ObstacleInstructions } from './ObstacleStyles.sc';
 import { Container, Draggable, DropZone, StyledImage, StyledSkipButton } from './Trash.sc';
 
 interface WindowProps extends Window {
@@ -89,6 +89,9 @@ const Trash: React.FunctionComponent = () => {
         <>
             <ObstacleContainer>
                 <LinearProgressBar MAX={obstacle?.numberTrashItems} progress={progress} />
+                <ObstacleInstructions>
+                    Put the right trash in the garbage can to get the forest clean again
+                </ObstacleInstructions>
                 <Container>
                     {randomArray.map((item, index) => {
                         switch (item) {

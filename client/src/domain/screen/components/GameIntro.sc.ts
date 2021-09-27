@@ -2,7 +2,7 @@ import { FormGroup } from '@material-ui/core';
 import styled from 'styled-components';
 
 import forest from '../../../images/ui/forest.svg';
-import introImg from '../../../images/ui/forest2.png';
+import gameDemo from '../../../images/ui/gameDemo.png';
 
 const boxShadowDepth = 7;
 
@@ -46,11 +46,11 @@ export const PaddingContainer = styled.div`
 
 export const PreviewImageContainer = styled.div`
     margin-top: 40px;
-    background-image: url(${introImg});
+    background-image: url(${gameDemo});
     width: 100%;
     height: 200px;
-    background-repeat-y: repeat;
-    background-size: contain;
+    background-size: cover;
+    background-position: bottom;
 `;
 
 export const PreviewImage = styled.img`
@@ -70,10 +70,10 @@ export const ImageDescription = styled.div`
 
 export const ControlInstructionsContainer = styled.div`
     display: flex;
+    justify-content: space-around;
 `;
 
 export const ControlInstruction = styled.div`
-    width: 33%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -81,10 +81,24 @@ export const ControlInstruction = styled.div`
     margin-top: 30px;
     font-size: 20px;
     font-weight: 400;
+    width: 100%;
+    margin-bottom: 10px;
 `;
 
 export const StyledFormGroup = styled(FormGroup)`
     && {
         width: 100%;
     }
+`;
+
+export const InstructionImg = styled.img`
+    display: flex;
+    width: 50%;
+`;
+
+export const Wrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 18%;
 `;

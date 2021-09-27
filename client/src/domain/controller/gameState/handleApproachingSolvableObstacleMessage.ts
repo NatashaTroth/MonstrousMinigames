@@ -1,10 +1,8 @@
-import { Obstacle } from "../../../contexts/PlayerContextProvider";
-import {
-    ApproachingSkippableObstacleMessage
-} from "../../typeGuards/approachingSkippableObstacleTypeGuard";
+import { Obstacle } from '../../../contexts/PlayerContextProvider';
+import { ApproachingSolvableObstacleMessage } from '../../typeGuards/approachingSolvableObstacleTypeGuard';
 
 interface HandleApproachingObstacleMessageProps {
-    data: ApproachingSkippableObstacleMessage;
+    data: ApproachingSolvableObstacleMessage;
     setEarlySkipableObstacle: (value: undefined | Obstacle) => void;
 }
 

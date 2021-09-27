@@ -1,4 +1,4 @@
-import { localDevelopment } from '../../../constants';
+import { localDevelopment, pushChasers } from '../../../constants';
 import User from '../../classes/user';
 import { IMessageObstacle } from '../../interfaces/messageObstacle';
 import { IMessage } from '../../interfaces/messages';
@@ -22,6 +22,8 @@ import {
 } from './helperFunctions/initiatePlayerState';
 import { GameStateInfo, Obstacle, PlayerRank } from './interfaces';
 import { ObstacleReachedInfoController } from './interfaces/GameEvents';
+
+let pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
 
 interface CatchFoodGameInterface extends IGameInterface<CatchFoodPlayer, GameStateInfo> {
     trackLength: number;
@@ -94,15 +96,22 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         if (this.cameraPositionX < this.trackLength)
             this.cameraPositionX += (timeElapsedSinceLastFrame / 33) * this.cameraSpeed;
 
-        // console.log(this.cameraPositionX);
         this.updateChasersPosition(timeElapsed, timeElapsedSinceLastFrame);
-        // console.log(this.chasersPositionX);
-        // console.log('------------------------------------');
 
         if (localDevelopment) {
             for (const player of this.players.values()) {
                 if (player.positionX < this.trackLength) {
-                    this.runForward(player.id, ((this.speed / 13) * timeElapsedSinceLastFrame) / 1);
+                    this.runForward(player.id, ((this.speed / 10) * timeElapsedSinceLastFrame) / 1);
+                }
+
+                // push chasers
+                if (pushChasers) {
+                    if (pushChasersPeriodicallyCounter >= 100) {
+                        console.log('---------- PUUSH--------');
+                        pushChasersPeriodicallyCounter = 0;
+                        this.pushChasers(player.id!);
+                    }
+                    pushChasersPeriodicallyCounter++;
                 }
             }
         }
@@ -293,10 +302,10 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
     private playerIsApproachingSkippableObstacle(player: CatchFoodPlayer): boolean {
         return (
-            !player.atObstacle
-            && (player.obstacles.length || 0) > 0
-            && (player.positionX || 0) >= ((player.obstacles[0].positionX || 0) - this.earlySkipObstacleDistance)
-            && player.obstacles[0].skippable
+            !player.atObstacle &&
+            (player.obstacles.length || 0) > 0 &&
+            (player.positionX || 0) >= (player.obstacles[0].positionX || 0) - this.earlySkipObstacleDistance &&
+            player.obstacles[0].skippable
         );
     }
 
@@ -391,12 +400,23 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         verifyUserId(this.players, userIdPushing);
 
         const userPushing = this.players.get(userIdPushing)!;
+        if (!pushChasers) if (!userPushing.finished) return;
+        if (this.maxNumberPushChasersExceeded(userPushing)) return;
 
-        if (!userPushing.finished) return;
-        if (userPushing.chaserPushesUsed >= this.maxNumberOfChaserPushes) return;
-
+        //TODO Test
         this.chasersPositionX += this.chaserPushAmount;
+        this.chasersSpeed = InitialGameParameters.CHASERS_PUSH_SPEED;
+        setTimeout(() => {
+            this.chasersSpeed = InitialGameParameters.CHASERS_SPEED;
+        }, 1300);
         userPushing.chaserPushesUsed++;
+
+        if (this.maxNumberPushChasersExceeded(userPushing)) {
+            CatchFoodGameEventEmitter.emitPlayerHasExceededMaxNumberChaserPushes({
+                roomId: this.roomId,
+                userId: userPushing.id,
+            });
+        }
 
         this.updateChasersPosition(this.gameTime, 0);
 
@@ -405,6 +425,10 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             userIdPushing: userIdPushing,
             amount: this.chaserPushAmount,
         });
+    }
+
+    private maxNumberPushChasersExceeded(player: CatchFoodPlayer) {
+        return player.chaserPushesUsed >= this.maxNumberOfChaserPushes;
     }
 
     //TODO test & move to player
@@ -462,8 +486,8 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         const skippableObstacleInReach = player && this.playerIsApproachingSkippableObstacle(player!);
 
         if (
-            !player?.atObstacle
-            && !skippableObstacleInReach
+            !player?.atObstacle &&
+            !skippableObstacleInReach
             // ||
             // player?.positionX !== player?.obstacles?.[0]?.positionX
         ) {

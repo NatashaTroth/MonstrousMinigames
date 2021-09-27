@@ -1,9 +1,9 @@
-import * as React from "react";
-import { useHistory } from "react-router";
+import * as React from 'react';
+import { useHistory } from 'react-router';
 
-import { Character } from "../config/characters";
-import { ObstacleTypes, TrashType } from "../utils/constants";
-import { controllerGame1Route, controllerObstacleRoute } from "../utils/routes";
+import { Character } from '../config/characters';
+import { ObstacleTypes, TrashType } from '../utils/constants';
+import { controllerGame1Route, controllerObstacleRoute } from '../utils/routes';
 
 export const defaultValue = {
     obstacle: undefined,
@@ -53,6 +53,10 @@ export const defaultValue = {
     setEarlySkipableObstacle: () => {
         // do nothing
     },
+    exceededChaserPushes: false,
+    setExceededChaserPushes: () => {
+        // do nothing
+    },
 };
 export interface Obstacle {
     type: ObstacleTypes;
@@ -86,6 +90,8 @@ interface PlayerContextProps {
     setHasStone: (val: boolean) => void;
     earlySkipableObstacle: Obstacle | undefined;
     setEarlySkipableObstacle: (val: Obstacle | undefined) => void;
+    exceededChaserPushes: boolean;
+    setExceededChaserPushes: (val: boolean) => void;
 }
 
 export const PlayerContext = React.createContext<PlayerContextProps>(defaultValue);
@@ -106,6 +112,7 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         id: 1,
         type: ObstacleTypes.stone,
     });
+    const [exceededChaserPushes, setExceededChaserPushes] = React.useState(false);
 
     let reroute = true;
 
@@ -145,6 +152,8 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setHasStone,
         earlySkipableObstacle,
         setEarlySkipableObstacle,
+        exceededChaserPushes,
+        setExceededChaserPushes,
     };
     return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>;
 };

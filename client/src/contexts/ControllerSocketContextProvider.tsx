@@ -1,13 +1,13 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { handleSetSocket } from "../domain/controller/socket/handleSetSocket";
-import { handleSocketConnection } from "../domain/controller/socket/handleSocketConnection";
-import history from "../domain/history/history";
-import { InMemorySocketFake } from "../domain/socket/InMemorySocketFake";
-import { Socket } from "../domain/socket/Socket";
-import addMovementListener from "../domain/user/addMovementListener";
-import { GameContext } from "./GameContextProvider";
-import { PlayerContext } from "./PlayerContextProvider";
+import { handleSetSocket } from '../domain/controller/socket/handleSetSocket';
+import { handleSocketConnection } from '../domain/controller/socket/handleSocketConnection';
+import history from '../domain/history/history';
+import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
+import { Socket } from '../domain/socket/Socket';
+import addMovementListener from '../domain/user/addMovementListener';
+import { GameContext } from './GameContextProvider';
+import { PlayerContext } from './PlayerContextProvider';
 
 export const defaultValue = {
     controllerSocket: new InMemorySocketFake(),
@@ -45,9 +45,11 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         resetPlayer,
         setName,
         setUserId,
+        setReady,
         setPlayerDead,
         playerRank,
         setEarlySkipableObstacle,
+        setExceededChaserPushes,
     } = React.useContext(PlayerContext);
 
     const {
@@ -80,10 +82,12 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         resetPlayer,
         setHasPaused,
         setUserId,
+        setReady,
         setPlayerDead,
         setConnectedUsers,
         setEarlySkipableObstacle,
         playerRank,
+        setExceededChaserPushes,
     };
 
     const content = {
