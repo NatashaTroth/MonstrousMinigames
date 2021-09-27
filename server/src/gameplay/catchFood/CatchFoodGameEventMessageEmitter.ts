@@ -39,7 +39,6 @@ export class CatchFoodGameEventMessageEmitter implements EventMessageEmitter {
     ): void {
         let user: User;
 
-        console.log(room.id + ' | ', message);
         switch (message.type) {
             // send to single user's controller
             case CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED:
