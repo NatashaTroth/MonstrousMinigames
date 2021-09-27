@@ -1,6 +1,7 @@
 import { AllScreensPhaserGameLoadedMessage } from './allScreensPhaserGameLoaded';
 import { ConnectedUsersMessage } from './connectedUsers';
 import { ErrorMessage } from './error';
+import { ExceededMaxChaserPushesMessage } from './exceededMaxChaserPushes';
 import { GameHasFinishedMessage } from './finished';
 import { GameStateInfoMessage } from './gameStateInfo';
 import { InitialGameStateInfoMessage } from './initialGameStateInfo';
@@ -44,4 +45,5 @@ export type MessageData =
     | PlayerStunnedMessage
     | PlayerUnstunnedMessage
     | ScreenStateMessage
+    | ExceededMaxChaserPushesMessage
     | undefined;

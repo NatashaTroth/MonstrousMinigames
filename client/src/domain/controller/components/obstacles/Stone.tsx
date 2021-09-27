@@ -13,6 +13,7 @@ import stone from '../../../../images/obstacles/stone/stone.svg';
 import { MessageTypes } from '../../../../utils/constants';
 import { controllerGame1Route } from '../../../../utils/routes';
 import history from '../../../history/history';
+import { ObstacleInstructions } from './ObstacleStyles.sc';
 import {
     PebbleContainer,
     PlayerButtonContainer,
@@ -31,7 +32,6 @@ import {
     StyledPebbleImage,
     StyledStone,
     StyledStoneImage,
-    StyledTypography,
     Sun,
     UserButtons,
 } from './Stone.sc';
@@ -101,10 +101,10 @@ const Stone: React.FunctionComponent = () => {
             <StoneContainer pebble={counter > limit}>
                 {counter <= limit ? (
                     <>
-                        <StyledTypography>
+                        <ObstacleInstructions>
                             Tap on this rock several times to get a stone. Throw it at a fellow player to freeze their
-                            movement for a few seconds.
-                        </StyledTypography>
+                            movement for a few seconds or collect it for later.
+                        </ObstacleInstructions>
                         <StyledStone onTouchStart={handleTouch}>
                             <StyledStoneImage src={stone} />
                             {particles && <StyledParticles params={stoneParticlesConfig} />}

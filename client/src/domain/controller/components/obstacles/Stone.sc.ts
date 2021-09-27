@@ -1,7 +1,7 @@
 import { darken, Typography } from '@material-ui/core';
 import styled, { keyframes } from 'styled-components';
 
-import { ObstacleContainer } from './ObstaclStyles.sc';
+import { ObstacleContainer } from './ObstacleStyles.sc';
 
 const ray_anim = keyframes`
     0% {

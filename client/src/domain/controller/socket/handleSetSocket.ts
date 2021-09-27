@@ -6,6 +6,7 @@ import { MessageSocket } from '../../socket/MessageSocket';
 import { Socket } from '../../socket/Socket';
 import { ConnectedUsersMessage, connectedUsersTypeGuard, User } from '../../typeGuards/connectedUsers';
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
+import { exceededMaxChaserPushesTypeGuard } from '../../typeGuards/exceededMaxChaserPushes';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
 import { ObstacleMessage, obstacleTypeGuard } from '../../typeGuards/obstacle';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
@@ -48,6 +49,7 @@ export interface HandleSetSocketDependencies {
     history: History;
     setConnectedUsers: (val: User[]) => void;
     playerRank: undefined | number;
+    setExceededChaserPushes: (val: boolean) => void;
 }
 
 export function handleSetSocket(
@@ -72,6 +74,7 @@ export function handleSetSocket(
         history,
         setConnectedUsers,
         playerRank,
+        setExceededChaserPushes,
     } = dependencies;
 
     setControllerSocket(socket);
@@ -90,6 +93,7 @@ export function handleSetSocket(
     const playerStunnedSocket = new MessageSocket(playerStunnedTypeGuard, socket);
     const gameFinishedSocket = new MessageSocket(finishedTypeGuard, socket);
     const playerUnstunnedSocket = new MessageSocket(playerUnstunnedTypeGuard, socket);
+    const exceededMaxChaserPushesSocket = new MessageSocket(exceededMaxChaserPushesTypeGuard, socket);
 
     userInitSocket.listen((data: UserInitMessage) => {
         handleUserInitMessage({
@@ -189,6 +193,8 @@ export function handleSetSocket(
             history,
         });
     });
+
+    exceededMaxChaserPushesSocket.listen(() => setExceededChaserPushes(true));
 
     if (socket) {
         history.push(controllerChooseCharacterRoute(roomId));

@@ -14,6 +14,7 @@ export enum Routes {
     controllerPlayerDead = '/controller/:id/dead',
     controllerPlayerStunned = '/controller/:id/stunned',
     controllerPlayerFinished = '/controller/:id/finished',
+    controllerWindmill = '/controller/:id/windmill',
     screenLobby = '/screen/:id/lobby',
     screenChooseGame = '/screen/:id/choose-game',
     screenGameIntro = '/screen/:id/game-intro',
@@ -37,6 +38,7 @@ export enum Routes {
     getReady = '/get-ready',
     stunned = '/stunned',
     chooseCharacter = '/choose-character',
+    windmill = '/windmill',
 }
 
 export const controllerChooseCharacterRoute = (roomId: undefined | string) =>
@@ -66,6 +68,9 @@ export const controllerObstacleRoute = (roomId: undefined | string, obstacle: Ob
             return `${Routes.controller}/${roomId}${Routes.stone}`;
     }
 };
+
+export const controllerWindmillRoute = (roomId: undefined | string) =>
+    `${Routes.controller}/${roomId}${Routes.windmill}`;
 
 export const screenGameIntroRoute = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.gameIntro}`;
 
