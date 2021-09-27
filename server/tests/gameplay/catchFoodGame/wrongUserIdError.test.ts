@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { CatchFoodGame } from '../../../src/gameplay';
 import { WrongUserIdError } from '../../../src/gameplay/customErrors';
 import { leaderboard, roomId } from '../mockData';
@@ -20,7 +21,7 @@ describe('WrongUserIdError handling tests', () => {
     it('the WrongUserIdError has a userId property', async () => {
         try {
             catchFoodGame['runForward'](USER_ID_THAT_DOES_NOT_EXIST);
-        } catch (e) {
+        } catch (e: any) {
             expect(e.userId).toBe(USER_ID_THAT_DOES_NOT_EXIST);
         }
     });

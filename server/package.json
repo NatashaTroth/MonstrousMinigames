@@ -16,7 +16,8 @@
         "postinstall": "npm run tsc",
         "start": "node src/app.js",
         "deploy": "cd .. && git subtree push --prefix server heroku master",
-        "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}"
+        "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
+        "preCommitHook": "rm -rf dist/ && npm run prettier && jest --coverage && npm run lint"
     },
     "repository": {
         "type": "git",
@@ -65,7 +66,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "rm -rf dist/ && npm run prettier && jest --coverage && npm run lint"
+            "pre-commit": "npm run preCommitHook"
         }
     },
     "jest": {

@@ -1,12 +1,14 @@
+import GameEventEmitter from '../../../src/classes/GameEventEmitter';
+import DI from '../../../src/di';
 import { CatchFoodGame } from '../../../src/gameplay';
-import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
-import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
-import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
+import { PlayerRank } from '../../../src/gameplay/catchFood/interfaces';
+import { GameState } from '../../../src/gameplay/enums';
 import Game from '../../../src/gameplay/Game';
+import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
 import { users } from '../mockData';
 
 const TRACK_LENGTH = 5000;
-const gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
+const gameEventEmitter = DI.resolve(GameEventEmitter);
 const dateNow = 1618665766156;
 
 export const releaseThread = () => new Promise<void>(resolve => resolve());
@@ -73,14 +75,23 @@ export function completePlayersObstacles(catchFoodGame: CatchFoodGame, userId: s
 
     while (player.obstacles.length) {
         catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
-        catchFoodGame['playerHasCompletedObstacle'](userId, player.obstacles[0].id);
-        player.stonesCarrying = 0;
+        if (player.atObstacle)
+            catchFoodGame['playerHasCompletedObstacle'](userId, player.obstacles[0].id);
+    }
+}
+
+export function goToNextUnsolvableObstacle(catchFoodGame: CatchFoodGame, userId: string) {
+    const player = catchFoodGame.players.get(userId)!;
+    
+    while (player.obstacles.length && !player.atObstacle) {
+        catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
     }
 }
 
 export function completeNextObstacle(catchFoodGame: CatchFoodGame, userId: string) {
     catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
-    catchFoodGame['playerHasCompletedObstacle'](userId, catchFoodGame.players.get(userId)!.obstacles[0].id);
+    if (catchFoodGame['playerHasReachedObstacle'](userId))
+        catchFoodGame['playerHasCompletedObstacle'](userId, catchFoodGame.players.get(userId)!.obstacles[0].id);
 }
 
 export function distanceToNextObstacle(catchFoodGame: CatchFoodGame, userId: string) {
@@ -121,28 +132,32 @@ export async function startAndFinishGameDifferentTimes(catchFoodGame: CatchFoodG
 
 export async function getGameFinishedDataDifferentTimes(
     catchFoodGame: CatchFoodGame
-): Promise<GameEvents.GameHasFinished> {
-    let eventData: GameEvents.GameHasFinished = {
+) {
+    let eventData = {
         roomId: '',
         gameState: GameState.Started,
-        playerRanks: [],
+        playerRanks: [] as PlayerRank[],
     };
-    gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
-        eventData = data;
+    gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+        if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+            eventData = message.data as any;
+        }
     });
     catchFoodGame = await startAndFinishGameDifferentTimes(catchFoodGame);
     return eventData;
 }
 
 export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
-    let eventData: GameEvents.GameHasFinished = {
+    let eventData = {
         roomId: '',
         gameState: GameState.Started,
-        playerRanks: [],
+        playerRanks: [] as PlayerRank[],
     };
 
-    gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
-        eventData = data;
+    gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+        if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+            eventData = message.data as any;
+        }
     });
 
     startGameAndAdvanceCountdown(catchFoodGame);
@@ -162,14 +177,16 @@ export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
 
 export async function getGameFinishedDataWithSomeDead(
     catchFoodGame: CatchFoodGame
-): Promise<GameEvents.GameHasFinished> {
-    let eventData: GameEvents.GameHasFinished = {
+) {
+    let eventData = {
         roomId: '',
         gameState: GameState.Started,
-        playerRanks: [],
+        playerRanks: [] as PlayerRank[],
     };
-    gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
-        eventData = data;
+    gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+        if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+            eventData = message.data as any;
+        }
     });
     catchFoodGame = await startAndFinishGameDifferentTimes(catchFoodGame);
     return eventData;

@@ -4,7 +4,6 @@ import Room from '../classes/room';
 import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
-import { GameEvents, GameStateInfo } from '../gameplay/catchFood/interfaces';
 
 function sendUserInit(socket: Socket, user: User, room: Room): void {
     socket.emit('message', {
@@ -17,6 +16,7 @@ function sendUserInit(socket: Socket, user: User, room: Room): void {
         ready: user.ready,
     });
 }
+
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
     if (volatile) {
         nsp.to(room.id).volatile.emit('message', {
@@ -27,19 +27,6 @@ function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
         nsp.to(room.id).emit('message', {
             type: CatchFoodMsgType.GAME_STATE,
             data: room.game?.getGameStateInfo(),
-        });
-    }
-}
-function sendInitialGameStateInfo(nsp: Namespace, room: Room, data: GameStateInfo, volatile = false): void {
-    if (volatile) {
-        nsp.to(room.id).volatile.emit('message', {
-            type: CatchFoodMsgType.INITIAL_GAME_STATE_INFO,
-            data,
-        });
-    } else {
-        nsp.to(room.id).emit('message', {
-            type: CatchFoodMsgType.INITIAL_GAME_STATE_INFO,
-            data,
         });
     }
 }
@@ -66,55 +53,12 @@ function sendScreenPhaserGameLoadedTimedOut(nsp: Namespace, socketId: string): v
         type: CatchFoodMsgType.PHASER_LOADING_TIMED_OUT,
     });
 }
+
 function sendStartPhaserGame(nsps: Array<Namespace>, room: Room): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(room.id).emit('message', {
             type: CatchFoodMsgType.START_PHASER_GAME,
         });
-    });
-}
-
-function sendGameHasStarted(nsps: Array<Namespace>, data: GameEvents.GameHasStarted): void {
-    nsps.forEach(function (namespace: Namespace) {
-        namespace.to(data.roomId).emit('message', {
-            type: CatchFoodMsgType.HAS_STARTED,
-            countdownTime: data.countdownTime,
-        });
-    });
-}
-
-function sendGameHasFinished(nsps: Array<Namespace>, data: GameEvents.GameHasFinished): void {
-    nsps.forEach(function (namespace: Namespace) {
-        namespace.to(data.roomId).emit('message', {
-            type: MessageTypes.GAME_HAS_FINISHED,
-            data: data,
-        });
-    });
-}
-
-// function sendGameHasTimedOut(nsps: Array<Namespace>, data: GameEvents.GameHasFinished): void {
-//     nsps.forEach(function (namespace: Namespace) {
-//         namespace.to(data.roomId).emit('message', {
-//             type: MessageTypes.GAME_HAS_TIMED_OUT,
-//             data: data,
-//         });
-//     });
-// }
-
-function sendPlayerExceededMaxNumberChaserPushes(
-    nsp: Namespace,
-    user: User,
-    data: GameEvents.PlayerHasExceededMaxNumberChaserPushes
-): void {
-    console.log('SEENDING YEES');
-    nsp.to(user.socketId).emit('message', {
-        type: CatchFoodMsgType.PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
-    });
-}
-function sendPlayerFinished(nsp: Namespace, user: User, data: GameEvents.PlayerHasFinished): void {
-    nsp.to(user.socketId).emit('message', {
-        type: CatchFoodMsgType.PLAYER_FINISHED,
-        rank: data.rank,
     });
 }
 
@@ -133,47 +77,6 @@ function sendScreenAdmin(nsp: Namespace, socketId: string): void {
     });
 }
 
-function sendPlayerDied(nsp: Namespace, socketId: string, rank: number): void {
-    nsp.to(socketId).emit('message', {
-        type: CatchFoodMsgType.PLAYER_DIED,
-        rank: rank,
-    });
-}
-
-function sendPlayerStunned(nsp: Namespace, socketId: string): void {
-    nsp.to(socketId).emit('message', {
-        type: CatchFoodMsgType.PLAYER_STUNNED,
-    });
-}
-
-function sendChasersWerePushed(nsp: Namespace, pushedBy: string, amount: number): void {
-    nsp.emit('message', {
-        type: CatchFoodMsgType.CHASERS_WERE_PUSHED,
-        pushedBy,
-        amount,
-    });
-}
-
-function sendPlayerUnstunned(nsp: Namespace, socketId: string): void {
-    nsp.to(socketId).emit('message', {
-        type: CatchFoodMsgType.PLAYER_UNSTUNNED,
-    });
-}
-
-function sendPlayerHasDisconnected(nsp: Namespace, userId: string): void {
-    nsp.emit('message', {
-        type: MessageTypes.PLAYER_HAS_DISCONNECTED,
-        userId: userId,
-    });
-}
-
-function sendPlayerHasReconnected(nsp: Namespace, userId: string): void {
-    nsp.emit('message', {
-        type: MessageTypes.PLAYER_HAS_RECONNECTED,
-        userId: userId,
-    });
-}
-
 function sendScreenState(nsp: Namespace | Socket, state: string | undefined): void {
     nsp.emit('message', {
         type: MessageTypes.SCREEN_STATE,
@@ -189,27 +92,27 @@ function sendMessage(type: MessageTypes | CatchFoodMsgType, nsps: Array<Namespac
     });
 }
 
+// function sendPlayerExceededMaxNumberChaserPushes(
+//     nsp: Namespace,
+//     user: User,
+//     data: GameEvents.PlayerHasExceededMaxNumberChaserPushes
+// ): void {
+//     console.log('SEENDING YEES');
+//     nsp.to(user.socketId).emit('message', {
+//         type: CatchFoodMsgType.PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
+//     });
+// }
+
 export default {
     sendUserInit,
-    sendInitialGameStateInfo,
     sendGameState,
     sendErrorMessage,
     sendAllScreensPhaserGameLoaded,
     sendScreenPhaserGameLoadedTimedOut,
     sendStartPhaserGame,
-    sendGameHasStarted,
-    sendPlayerExceededMaxNumberChaserPushes,
-    sendPlayerFinished,
-    sendGameHasFinished,
-    // sendGameHasTimedOut,
     sendConnectedUsers,
     sendMessage,
+    // sendPlayerExceededMaxNumberChaserPushes,
     sendScreenAdmin,
-    sendPlayerDied,
-    sendPlayerStunned,
-    sendChasersWerePushed,
-    sendPlayerUnstunned,
-    sendPlayerHasDisconnected,
-    sendPlayerHasReconnected,
     sendScreenState,
 };
