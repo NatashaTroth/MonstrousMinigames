@@ -14,7 +14,7 @@ function sendUserInit(socket: Socket, user: User, room: Room): void {
         name: user.name,
         number: user.number,
         characterNumber: user.characterNumber,
-        ready: user.ready
+        ready: user.ready,
     });
 }
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
@@ -163,10 +163,10 @@ function sendPlayerHasReconnected(nsp: Namespace, userId: string): void {
     });
 }
 
-function sendScreenState(nsp: Namespace | Socket, state: string|undefined): void {
+function sendScreenState(nsp: Namespace | Socket, state: string | undefined): void {
     nsp.emit('message', {
         type: MessageTypes.SCREEN_STATE,
-        state: state
+        state: state,
     });
 }
 

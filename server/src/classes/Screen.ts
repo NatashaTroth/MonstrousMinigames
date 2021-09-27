@@ -30,10 +30,7 @@ class Screen {
             this.socket.join(this.room.id);
             console.info(this.room.id + ' | Screen connected');
             this.room.resetGame().then(() => {
-                this.emitter.sendScreenState(
-                    this.screenNamespace,
-                    this.room?.getScreenState()
-                );
+                this.emitter.sendScreenState(this.screenNamespace, this.room?.getScreenState());
             });
 
             this.emitter.sendConnectedUsers([this.screenNamespace], this.room);
@@ -143,10 +140,7 @@ class Screen {
                     if (this.room?.isAdminScreen(this.socket.id) && message.state) {
                         console.info(this.room.id + ' | Send Screen State' + ' | ' + message.state);
                         this.room?.setScreenState(message.state);
-                        this.emitter.sendScreenState(
-                            this.screenNamespace,
-                            this.room?.getScreenState()
-                        );
+                        this.emitter.sendScreenState(this.screenNamespace, this.room?.getScreenState());
                     }
                     break;
                 default:
