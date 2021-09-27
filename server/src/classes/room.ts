@@ -275,10 +275,10 @@ class Room {
             throw new CharacterNotAvailableError();
         }
     }
-    public setScreenState(screenState: string): void{
+    public setScreenState(screenState: string): void {
         this.screenState = screenState;
     }
-    public getScreenState(): string{
+    public getScreenState(): string {
         return this.screenState;
     }
 }
