@@ -72,8 +72,8 @@ export default class CatchFoodGameEventEmitter extends GameEventEmitter {
         this.CatchFoodGameEventEmitter.emit(GameEventTypes.ChasersWerePushed, data);
     }
 
-    public static emitPlayerHasPushedMaxNumberChasers(data: GameEvents.PlayerHasPushedMaxNumberChasers) {
-        this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerHasPushedMaxNumberChasers, data);
+    public static emitPlayerHasExceededMaxNumberChaserPushes(data: GameEvents.PlayerHasExceededMaxNumberChaserPushes) {
+        this.CatchFoodGameEventEmitter.emit(GameEventTypes.PlayerHasExceededMaxNumberChaserPushes, data);
     }
 
     public static emitPlayerIsUnstunned(data: GameEvents.PlayerStunnedState) {
