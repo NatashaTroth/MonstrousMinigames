@@ -108,10 +108,7 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [ready, setReady] = React.useState<boolean>(false);
     const [dead, setPlayerDead] = React.useState(false);
     const [hasStone, setHasStone] = React.useState(false);
-    const [earlySolvableObstacle, setEarlySolvableObstacle] = React.useState<Obstacle | undefined>({
-        id: 1,
-        type: ObstacleTypes.stone,
-    });
+    const [earlySolvableObstacle, setEarlySolvableObstacle] = React.useState<Obstacle | undefined>();
     const [exceededChaserPushes, setExceededChaserPushes] = React.useState(false);
 
     let reroute = true;

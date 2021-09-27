@@ -1,13 +1,14 @@
 import * as React from 'react';
 
 import FullScreenContainer from '../../../components/common/FullScreenContainer';
+import { ControllerSocketContext } from '../../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import pebble from '../../../images/obstacles/stone/pebble.svg';
 import stone from '../../../images/obstacles/stone/stone.svg';
 import arrow from '../../../images/ui/arrow_blue.svg';
 import shakeIt from '../../../images/ui/shakeIt.svg';
-import { ObstacleTypes } from '../../../utils/constants';
+import { MessageTypes, ObstacleTypes } from '../../../utils/constants';
 import { controllerObstacleRoute } from '../../../utils/routes';
 import history from '../../history/history';
 import { Storage } from '../../storage/Storage';
@@ -30,8 +31,9 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
     const [counter, setCounter] = React.useState(
         sessionStorage.getItem('countdownTime') ? Number(sessionStorage.getItem('countdownTime')) / 1000 : null
     );
-    const { hasStone, setHasStone, earlySolvableObstacle, setObstacle } = React.useContext(PlayerContext);
+    const { hasStone, setHasStone, earlySolvableObstacle } = React.useContext(PlayerContext);
     const { roomId } = React.useContext(GameContext);
+    const { controllerSocket } = React.useContext(ControllerSocketContext);
 
     React.useEffect(() => {
         if (counter !== null && counter !== undefined) {
@@ -51,7 +53,9 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
     }
 
     function handleSolveStone() {
-        setObstacle(roomId, earlySolvableObstacle);
+        if (earlySolvableObstacle) {
+            controllerSocket.emit({ type: MessageTypes.solveObstacle, obstacleId: earlySolvableObstacle.id });
+        }
     }
 
     return (
@@ -71,7 +75,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                                 </PebbleButton>
                             </PebbleContainer>
                         )}
-                        {earlySolvableObstacle && (
+                        {!hasStone && earlySolvableObstacle && (
                             <PebbleContainer>
                                 <PebbleInstructions>Click to solve obstacle</PebbleInstructions>
                                 <Arrow src={arrow} />
