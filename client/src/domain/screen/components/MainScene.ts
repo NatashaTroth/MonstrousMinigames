@@ -28,7 +28,6 @@ import printMethod from '../phaser/printMethod';
 import { PhaserGameRenderer } from '../phaser/renderer/PhaserGameRenderer';
 import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
-const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;
 class MainScene extends Phaser.Scene {
     roomId: string;
@@ -92,7 +91,7 @@ class MainScene extends Phaser.Scene {
 
         if (designDevelopment) {
             // emitted every time a file has been loaded
-            this.load.on('fileprogress', (file: any) => {
+            this.load.on('fileprogress', (file: unknown) => {
                 this.gameRenderer?.fileProgressUpdate(file);
             });
         }
