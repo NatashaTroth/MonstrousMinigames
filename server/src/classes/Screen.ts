@@ -1,4 +1,5 @@
 import { Namespace, Socket } from 'socket.io';
+import { GameNames } from '../enums/gameNames';
 
 import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
@@ -86,6 +87,7 @@ class Screen {
                     break;
                 case CatchFoodMsgType.CREATE:
                     if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
+                        this.room.setGame(GameNames.GAME2);
                         this.room.createNewGame();
                     }
                     break;
