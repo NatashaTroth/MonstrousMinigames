@@ -1,39 +1,24 @@
+// eslint-disable-next-line simple-import-sort/imports
 import * as React from 'react';
-import styled from 'styled-components';
 
+import { ControllerSocketContext } from '../../../contexts/ControllerSocketContextProvider';
 import windmill from '../../../images/ui/pinwheel.svg';
 import windmillWood from '../../../images/ui/pinwheel2.svg';
+import { MessageTypes } from '../../../utils/constants';
+import LinearProgressBar from './obstacles/LinearProgressBar';
 import { ObstacleContainer } from './obstacles/ObstaclStyles.sc';
-
-const WindmillImage = styled.img`
-    display: flex;
-    width: 60%;
-    z-index: 2;
-`;
-
-const WindmillWood = styled.img`
-    position: absolute;
-    top: 50%;
-    width: 8%;
-`;
-
-const TouchContainer = styled.div`
-    position: absolute;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-`;
+import { ProgressBarContainer, TouchContainer, WindmillImage, WindmillWood } from './Windmill.sc';
 
 const Windmill: React.FunctionComponent = () => {
+    const MAX = 5;
+    const [distance, setDistance] = React.useState(0);
+    const [rounds, setRounds] = React.useState(0);
+
+    const { controllerSocket } = React.useContext(ControllerSocketContext);
+
     React.useEffect(() => {
         const box = document.getElementById('box');
-
-        // TODO remove
-        document.body.style.overflow = 'hidden';
-        document.body.style.position = 'fixed';
-        document.body.style.userSelect = 'none';
+        let lastAngle = 0;
 
         if (box) {
             const boxBoundingRect = box.getBoundingClientRect();
@@ -44,16 +29,43 @@ const Windmill: React.FunctionComponent = () => {
 
             const touchContainer = document.getElementById('touchContainer');
             touchContainer?.addEventListener('touchmove', e => {
-                // eslint-disable-next-line no-console
                 const touches = e.touches[0];
                 const angle = Math.atan2(touches.pageX - boxCenter.x, -(touches.pageY - boxCenter.y)) * (180 / Math.PI);
+
+                if (lastAngle != 0 || angle > 0) {
+                    if (angle < 0) {
+                        lastAngle += 360 - Math.abs(angle) - lastAngle;
+                        setDistance(lastAngle);
+                    } else {
+                        lastAngle += angle - lastAngle;
+                        setDistance(lastAngle);
+                    }
+
+                    if (lastAngle >= 350 && angle < 10) {
+                        // eslint-disable-next-line no-console
+                        console.log('reset to 0');
+                        lastAngle = 0;
+                    }
+                }
+
                 box.style.transform = `rotate(${angle}deg)`;
             });
         }
     }, []);
 
+    if (distance >= 350) {
+        if (rounds + 1 === MAX) {
+            controllerSocket.emit({ type: MessageTypes.pushChasers });
+        }
+        setRounds(rounds + 1);
+        setDistance(0);
+    }
+
     return (
         <ObstacleContainer>
+            <ProgressBarContainer>
+                <LinearProgressBar MAX={MAX} progress={rounds} key={`progressbar${rounds}`} />
+            </ProgressBarContainer>
             <TouchContainer id={`touchContainer`}>
                 <WindmillImage id="box" src={windmill} />
                 <WindmillWood src={windmillWood} />

@@ -63,6 +63,8 @@ export enum MessageTypes {
 
     createGame = 'game1/create',
     startGame = 'game1/start',
+
+    pushChasers = 'game1/chasersPushed',
 }
 
 export const localDevelopment = false; //the one in constants.ts on the server
