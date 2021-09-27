@@ -86,6 +86,7 @@ const TreeTrunk: React.FunctionComponent = () => {
         setObstacle(roomId, undefined);
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function drag(e: any) {
         e.preventDefault();
         const dragItem = document.getElementById('dragItem');

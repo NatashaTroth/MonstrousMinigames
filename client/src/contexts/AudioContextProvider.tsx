@@ -96,20 +96,16 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     const [gameAudioPlaying, setGameAudioPlaying] = React.useState<boolean>(false);
     const [lobbyMusic, setLobbyMusic] = React.useState<HTMLAudioElement>(new Audio(lobbyMusicFile));
     const [finishedMusic, setFinishedMusic] = React.useState<HTMLAudioElement>(new Audio(finishedMusicFile));
-    const [campfireSounds, setCampfireSounds] = React.useState<HTMLAudioElement>(new Audio(campfireSoundsFile));
-    const [owlSounds, setOwlSounds] = React.useState<HTMLAudioElement>(new Audio(owlSoundsFile));
+    const [campfireSounds] = React.useState<HTMLAudioElement>(new Audio(campfireSoundsFile));
+    const [owlSounds] = React.useState<HTMLAudioElement>(new Audio(owlSoundsFile));
     const [owlSoundsTimeout, setOwlSoundsTimeout] = React.useState<ReturnType<typeof setTimeout>>(
         setTimeout(() => {
             /*do nothing*/
         }, 0)
     );
-    const [woodSounds, setWoodSounds] = React.useState<HTMLAudioElement>(new Audio(woodSoundsFile));
-    const [lobbyMusicAndSfx, setLobbyMusicAndSfx] = React.useState<HTMLAudioElement[]>([
-        lobbyMusic,
-        campfireSounds,
-        woodSounds,
-    ]);
-    const [allAudio, setAllAudio] = React.useState<HTMLAudioElement[]>([...lobbyMusicAndSfx, finishedMusic, owlSounds]);
+    const [woodSounds] = React.useState<HTMLAudioElement>(new Audio(woodSoundsFile));
+    const [lobbyMusicAndSfx] = React.useState<HTMLAudioElement[]>([lobbyMusic, campfireSounds, woodSounds]);
+    const [allAudio] = React.useState<HTMLAudioElement[]>([...lobbyMusicAndSfx, finishedMusic, owlSounds]);
 
     const [volume, setVolume] = React.useState<number>(
         localStorage.getItem('audioVolume') ? Number(localStorage.getItem('audioVolume')) : 0.2

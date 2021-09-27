@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Socket } from './Socket';
 
 export class MessageSocket<T> {
