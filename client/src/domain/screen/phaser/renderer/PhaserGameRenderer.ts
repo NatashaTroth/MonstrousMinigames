@@ -134,6 +134,7 @@ export class PhaserGameRenderer {
     }
 
     //only for local development
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fileProgressUpdate(file: any) {
         this.assetText?.setText(`Loading asset: ${file.src}`);
     }
