@@ -3,7 +3,6 @@ import * as React from 'react';
 
 import Button from '../../../../components/common/Button';
 import { StyledParticles } from '../../../../components/common/Particles.sc';
-import { SkipButton } from '../../../../components/common/SkipButton.sc';
 import { stoneParticlesConfig } from '../../../../config/particlesConfig';
 import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
@@ -43,7 +42,7 @@ const Stone: React.FunctionComponent = () => {
     const [particles, setParticles] = React.useState(false);
     const [selectedUser, setSelectedUser] = React.useState<string | undefined>();
     const { controllerSocket } = React.useContext(ControllerSocketContext);
-    const { userId, obstacle, setObstacle, hasStone, setHasStone } = React.useContext(PlayerContext);
+    const { userId, obstacle, hasStone, setHasStone } = React.useContext(PlayerContext);
     const { connectedUsers, roomId } = React.useContext(GameContext);
 
     React.useEffect(() => {
@@ -76,17 +75,6 @@ const Stone: React.FunctionComponent = () => {
         history.push(controllerGame1Route(roomId));
     }
 
-    function handleSkip() {
-        if (obstacle) {
-            controllerSocket.emit({
-                type: MessageTypes.obstacleSkipped,
-                obstacleId: obstacle.id,
-            });
-            resetBodyStyles();
-            setObstacle(roomId, undefined);
-        }
-    }
-
     function handleCollectStone() {
         controllerSocket.emit({
             type: MessageTypes.obstacleSolved,
@@ -109,10 +97,6 @@ const Stone: React.FunctionComponent = () => {
                             <StyledStoneImage src={stone} />
                             {particles && <StyledParticles params={stoneParticlesConfig} />}
                         </StyledStone>
-                        {obstacle?.skippable && <Button onClick={handleSkip}>Skip</Button>}
-                        <SkipButton>
-                            <Button onClick={handleSkip}>Skip</Button>
-                        </SkipButton>
                     </>
                 ) : (
                     <>

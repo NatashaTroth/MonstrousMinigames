@@ -80,7 +80,7 @@ export function getStonesForObstacles(
             positionX:
                 availablePositions[Math.floor(Math.random() * availablePositions.length)],
             type: ObstacleType.Stone,
-            skippable: true,
+            solvable: true,
         };
 
         obstacleClone.push(stone);
@@ -152,7 +152,7 @@ export function createObstacles(
             id: i,
             positionX: initialPlayerPositionX + position,
             type: shuffledObstacleTypes[i].type,
-            skippable: false,
+            solvable: false,
         };
 
         if (shuffledObstacleTypes[i].type === ObstacleType.Trash) {

@@ -1,5 +1,5 @@
-import { Obstacle } from '../../../contexts/PlayerContextProvider';
-import { ObstacleMessage } from '../../typeGuards/obstacle';
+import { Obstacle } from "../../../contexts/PlayerContextProvider";
+import { ObstacleMessage } from "../../typeGuards/obstacle";
 
 interface HandleMessageDataProps {
     data: ObstacleMessage;
@@ -12,7 +12,6 @@ export function handleObstacleMessage(props: HandleMessageDataProps) {
     setObstacle(roomId, {
         type: data.obstacleType,
         id: data.obstacleId,
-        skippable: data.skippable,
         numberTrashItems: data.numberTrashItems,
         trashType: data.trashType,
     });

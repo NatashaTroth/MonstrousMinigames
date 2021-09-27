@@ -1,10 +1,11 @@
+import 'reflect-metadata';
 import { CatchFoodGame } from '../../../src/gameplay';
 import { ObstacleType } from '../../../src/gameplay/catchFood/enums';
 import { GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId } from '../mockData';
 import {
     clearTimersAndIntervals, completeNextObstacle, completePlayersObstacles, finishPlayer,
-    getGameFinishedDataDifferentTimes, startAndFinishGameDifferentTimes,
+    getGameFinishedDataDifferentTimes, goToNextUnsolvableObstacle, startAndFinishGameDifferentTimes,
     startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
@@ -61,9 +62,6 @@ describe('Run forward', () => {
     });
 });
 
-const removeNonStonesFromObstacles = (game: CatchFoodGame) => () => {
-    game.players.get('1')!.obstacles = game.players.get('1')!.obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
-};
 const removeStonesFromObstacles = (game: CatchFoodGame) => () => {
     game.players.get('1')!.obstacles = game.players.get('1')!.obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
 };
@@ -87,9 +85,7 @@ describe('Obstacles reached', () => {
 
     it('recognises when player has reached an obstacle', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const distanceToObstacle =
-            catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame['runForward']('1', distanceToObstacle);
+        goToNextUnsolvableObstacle(catchFoodGame, '1');
         expect(catchFoodGame.players.get('1')!.atObstacle).toBeTruthy();
     });
 
@@ -116,19 +112,11 @@ describe('Obstacles reached', () => {
     });
 
     it("doesn't remove an obstacle when a player arrives at it", async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(catchFoodGame, removeStonesFromObstacles(catchFoodGame));
         const distanceToObstacle =
             catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
         catchFoodGame['runForward']('1', distanceToObstacle);
-        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(catchFoodGame.numberOfObstacles + catchFoodGame.numberOfStones);
-    });
-
-    it('doesn\'t remove a stone obstacle when a player arrives at it carrying none', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame, removeNonStonesFromObstacles(catchFoodGame));
-        const distanceToObstacle =
-            catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame['runForward']('1', distanceToObstacle);
-        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(catchFoodGame.numberOfStones);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(catchFoodGame.numberOfObstacles);
     });
 
     it('removes a stone obstacle when a player arrives at it carrying one', async () => {
@@ -140,24 +128,6 @@ describe('Obstacles reached', () => {
             catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
         catchFoodGame['runForward']('1', distanceToObstacle);
         expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(catchFoodGame.numberOfStones - 1);
-    });
-
-    it('should tell that a stone is skippable', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame, removeNonStonesFromObstacles(catchFoodGame));
-        const distanceToObstacle =
-            catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame['runForward']('1', distanceToObstacle);
-        expect(catchFoodGame.players.get('1')!.atObstacle).toBeTruthy();
-        expect(catchFoodGame.players.get('1')!.canSkipObstacle).toBeTruthy();
-    });
-
-    it('should tell that a non-stone obstacle is not skippable', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame, removeStonesFromObstacles(catchFoodGame));
-        const distanceToObstacle =
-            catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame['runForward']('1', distanceToObstacle);
-        expect(catchFoodGame.players.get('1')!.atObstacle).toBeTruthy();
-        expect(catchFoodGame.players.get('1')!.canSkipObstacle).toBeFalsy();
     });
 
     it("doesn't allow players to move when they reach an obstacle", async () => {
@@ -173,9 +143,7 @@ describe('Obstacles reached', () => {
 
     it('should not backup run forward requests while at obstacle', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const distanceToObstacle =
-            catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame['runForward']('1', distanceToObstacle);
+        goToNextUnsolvableObstacle(catchFoodGame, '1');
 
         const tmpPlayerPositionX = catchFoodGame.players.get('1')!.positionX;
         for (let i = 0; i < 10; i++) {
@@ -193,9 +161,9 @@ describe('Obstacles reached', () => {
 
     it('sets positionX to Obstacle when player has reached it (should not be further than obstacle position)', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
+        goToNextUnsolvableObstacle(catchFoodGame, '1');
         const obstaclePosition = catchFoodGame.players.get('1')!.obstacles[0].positionX;
-        const distanceToObstacle = obstaclePosition - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame['runForward']('1', distanceToObstacle + 500);
+        catchFoodGame['runForward']('1', 500);
         expect(catchFoodGame.players.get('1')!.positionX).toBe(obstaclePosition);
     });
 

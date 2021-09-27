@@ -212,8 +212,7 @@ export class Player {
                 obstaclePosY,
                 obstacleScale,
                 obstacle.type.toLowerCase(),
-                obstacleDepth,
-                obstacle.skippable
+                obstacleDepth
             );
         });
     }

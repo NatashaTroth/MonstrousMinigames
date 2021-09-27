@@ -7,7 +7,7 @@ class App {
     constructor(
         private readonly connectionHandler: ConnectionHandler,
         private readonly clearRoomCronJob: ClearRoomCronJob
-    ) { }
+    ) {}
 
     run() {
         this.connectionHandler.handle();

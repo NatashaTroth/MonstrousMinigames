@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { CatchFoodGame } from '../../../src/gameplay';
 import { WrongGameStateError } from '../../../src/gameplay/customErrors';
 import { GameState } from '../../../src/gameplay/enums';
@@ -24,7 +25,7 @@ describe('Create new game', () => {
         let errorThrown = false;
         try {
             catchFoodGame.createNewGame(users);
-        } catch (e) {
+        } catch (e: any) {
             errorThrown = true;
             expect([GameState.Initialised, GameState.Finished, GameState.Stopped].sort()).toEqual([
                 ...e.requiredGameStates.sort(),
@@ -59,7 +60,7 @@ describe('Pause game', () => {
         let errorThrown = false;
         try {
             catchFoodGame.pauseGame();
-        } catch (e) {
+        } catch (e: any) {
             errorThrown = true;
             expect([GameState.Started].sort()).toEqual([...e.requiredGameStates.sort()]);
         }
@@ -103,7 +104,7 @@ describe('Resume game', () => {
         try {
             getToCreatedGameState(catchFoodGame);
             catchFoodGame.resumeGame();
-        } catch (e) {
+        } catch (e: any) {
             errorThrown = true;
             expect([GameState.Paused].sort()).toEqual([...e.requiredGameStates.sort()]);
         }
@@ -147,7 +148,7 @@ describe('Stop game', () => {
         try {
             getToCreatedGameState(catchFoodGame);
             catchFoodGame.stopGameUserClosed();
-        } catch (e) {
+        } catch (e: any) {
             errorThrown = true;
             expect([GameState.Started, GameState.Paused].sort()).toEqual(e.requiredGameStates.sort());
         }
@@ -184,7 +185,7 @@ describe('Run forward', () => {
         let errorThrown = false;
         try {
             catchFoodGame['runForward']('1');
-        } catch (e) {
+        } catch (e: any) {
             errorThrown = true;
             expect([GameState.Started].sort()).toEqual(e.requiredGameStates.sort());
         }
@@ -226,7 +227,7 @@ describe('Player has completed obstacle', () => {
         let errorThrown = false;
         try {
             catchFoodGame['playerHasCompletedObstacle']('1', 1);
-        } catch (e) {
+        } catch (e: any) {
             errorThrown = true;
             expect([GameState.Started].sort()).toEqual(e.requiredGameStates.sort());
         }
@@ -269,7 +270,7 @@ describe('Disconnect player', () => {
         try {
             getToStoppedGameState(catchFoodGame);
             catchFoodGame.disconnectPlayer('1');
-        } catch (e) {
+        } catch (e: any) {
             errorThrown = true;
             expect([GameState.Initialised, GameState.Started, GameState.Created, GameState.Paused].sort()).toEqual(
                 e.requiredGameStates.sort()
