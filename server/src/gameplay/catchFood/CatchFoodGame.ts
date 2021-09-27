@@ -398,7 +398,8 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         verifyUserId(this.players, userIdPushing);
 
         const userPushing = this.players.get(userIdPushing)!;
-        if (userPushing.chaserPushesUsed >= this.maxNumberOfChaserPushes) return;
+        if (!userPushing.finished) return;
+        if (this.maxNumberPushChasersExceeded(userPushing)) return;
 
         //TODO Test
         this.chasersPositionX += this.chaserPushAmount;
