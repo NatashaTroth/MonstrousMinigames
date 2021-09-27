@@ -14,7 +14,7 @@ function sendUserInit(socket: Socket, user: User, room: Room): void {
         name: user.name,
         number: user.number,
         characterNumber: user.characterNumber,
-        ready: user.ready
+        ready: user.ready,
     });
 }
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
@@ -82,6 +82,7 @@ function sendGameHasStarted(nsps: Array<Namespace>, data: GameEvents.GameHasStar
         });
     });
 }
+
 function sendGameHasFinished(nsps: Array<Namespace>, data: GameEvents.GameHasFinished): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(data.roomId).emit('message', {
@@ -100,6 +101,16 @@ function sendGameHasFinished(nsps: Array<Namespace>, data: GameEvents.GameHasFin
 //     });
 // }
 
+function sendPlayerExceededMaxNumberChaserPushes(
+    nsp: Namespace,
+    user: User,
+    data: GameEvents.PlayerHasExceededMaxNumberChaserPushes
+): void {
+    console.log('SEENDING YEES');
+    nsp.to(user.socketId).emit('message', {
+        type: CatchFoodMsgType.PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
+    });
+}
 function sendPlayerFinished(nsp: Namespace, user: User, data: GameEvents.PlayerHasFinished): void {
     nsp.to(user.socketId).emit('message', {
         type: CatchFoodMsgType.PLAYER_FINISHED,
@@ -163,10 +174,10 @@ function sendPlayerHasReconnected(nsp: Namespace, userId: string): void {
     });
 }
 
-function sendScreenState(nsp: Namespace | Socket, state: string|undefined): void {
+function sendScreenState(nsp: Namespace | Socket, state: string | undefined): void {
     nsp.emit('message', {
         type: MessageTypes.SCREEN_STATE,
-        state: state
+        state: state,
     });
 }
 
@@ -187,6 +198,7 @@ export default {
     sendScreenPhaserGameLoadedTimedOut,
     sendStartPhaserGame,
     sendGameHasStarted,
+    sendPlayerExceededMaxNumberChaserPushes,
     sendPlayerFinished,
     sendGameHasFinished,
     // sendGameHasTimedOut,

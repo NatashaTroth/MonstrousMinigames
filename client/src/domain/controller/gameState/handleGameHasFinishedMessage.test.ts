@@ -76,7 +76,7 @@ describe('handleGameHasFinishedMessage', () => {
     it('stomeTimeoutId should be remove from sessionStorage', () => {
         const setPlayerRank = jest.fn();
         const history = createMemoryHistory();
-        global.sessionStorage.setItem('stoneTimeoutId', '1');
+        global.sessionStorage.setItem('windmillTimeoutId', '1');
 
         handleGameHasFinishedMessage({
             roomId,
@@ -86,6 +86,6 @@ describe('handleGameHasFinishedMessage', () => {
             history,
         });
 
-        expect(global.sessionStorage.getItem('stoneTimeoutId')).toBe(null);
+        expect(global.sessionStorage.getItem('windmillTimeoutId')).toBe(null);
     });
 });

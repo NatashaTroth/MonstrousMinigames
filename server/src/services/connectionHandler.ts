@@ -111,6 +111,17 @@ class ConnectionHandler {
                 }
             }
         );
+        this.gameEventEmitter.on(
+            GameEventTypes.PlayerHasExceededMaxNumberChaserPushes,
+            (data: GameEvents.PlayerHasExceededMaxNumberChaserPushes) => {
+                console.info(data.roomId + ' | userId: ' + data.userId + ' | Exceeded max number chaser pushes ');
+                const room = rs.getRoomById(data.roomId);
+                const user = room.getUserById(data.userId);
+                if (user) {
+                    emitter.sendPlayerExceededMaxNumberChaserPushes(controllerNamespace, user, data);
+                }
+            }
+        );
         this.gameEventEmitter.on(GameEventTypes.PlayerHasFinished, (data: GameEvents.PlayerHasFinished) => {
             console.info(data.roomId + ' | userId: ' + data.userId + ' | Rank: ' + data.rank);
             const room = rs.getRoomById(data.roomId);

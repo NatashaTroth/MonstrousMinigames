@@ -16,6 +16,7 @@ export enum CatchFoodMsgType {
     PLAYER_DIED = 'game1/playerDied',
     PLAYER_STUNNED = 'game1/playerStunned',
     CHASERS_WERE_PUSHED = 'game1/chasersPushed',
+    PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES = 'game1/playerHasExceededMaxNumberChaserPushes',
     PLAYER_UNSTUNNED = 'game1/playerUnstunned',
     STUN_PLAYER = 'game1/stunPlayer',
 }

@@ -14,11 +14,11 @@ interface HandleGameHasFinishedMessage {
 }
 export const handleGameHasFinishedMessage = (props: HandleGameHasFinishedMessage) => {
     const { roomId, playerRank, playerRanks, dependencies, history } = props;
-    const stoneTimeoutId = sessionStorage.getItem('stoneTimeoutId');
+    const windmillTimeoutId = sessionStorage.getItem('windmillTimeoutId');
 
-    if (stoneTimeoutId) {
-        clearTimeout(Number(stoneTimeoutId));
-        sessionStorage.removeItem('stoneTimeoutId');
+    if (windmillTimeoutId) {
+        clearTimeout(Number(windmillTimeoutId));
+        sessionStorage.removeItem('windmillTimeoutId');
     }
 
     if (!playerRank) {
