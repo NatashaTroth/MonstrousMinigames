@@ -1,5 +1,5 @@
 import { Namespace, Socket } from 'socket.io';
-import { inject, singleton } from 'tsyringe';
+import { injectAll, singleton } from 'tsyringe';
 
 import Controller from '../classes/Controller';
 import GameEventEmitter from '../classes/GameEventEmitter';
@@ -21,7 +21,7 @@ class ConnectionHandler {
         private readonly socketIOServer: SocketIOServer,
         private readonly roomService: RoomService,
         private readonly gameEventEmitter: GameEventEmitter,
-        @inject(DI_EVENT_MESSAGE_EMITTERS) private readonly eventMessageEmitters: EventMessageEmitter[]
+        @injectAll(DI_EVENT_MESSAGE_EMITTERS) private readonly eventMessageEmitters: EventMessageEmitter[]
     ) {
         this.controllerNamespace = this.socketIOServer.socketIo.of(Namespaces.CONTROLLER);
         this.screenNameSpace = this.socketIOServer.socketIo.of(Namespaces.SCREEN);
