@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { CatchFoodGame } from '../../../src/gameplay';
 import { DisconnectedUserError } from '../../../src/gameplay/customErrors';
 import { leaderboard, roomId } from '../mockData';
@@ -26,7 +27,7 @@ describe('DisconnectedUserError handling tests', () => {
 
         try {
             catchFoodGame['runForward'](userId);
-        } catch (e) {
+        } catch (e: any) {
             expect(e.userId).toBe(userId);
         }
     });

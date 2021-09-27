@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { CatchFoodGame } from '../../../src/gameplay';
 import { Obstacle } from '../../../src/gameplay/catchFood/interfaces';
 import { HashTable } from '../../../src/gameplay/interfaces';

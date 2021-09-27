@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import Room from '../../src/classes/room';
 import User from '../../src/classes/user';
 import { GameAlreadyStartedError } from '../../src/customErrors';

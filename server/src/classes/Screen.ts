@@ -38,14 +38,11 @@ class Screen {
                 this.emitter.sendScreenAdmin(this.screenNamespace, this.socket.id, this.room.isAdminScreen(this.socket.id));
             }
             if (this.room?.isAdminScreen(this.socket.id)) {
-                this.emitter.sendScreenState(
-                    this.socket,
-                    this.room?.getScreenState()
-                );
+                this.emitter.sendScreenState(this.socket, this.room?.getScreenState());
             }
             this.socket.on('disconnect', this.onDisconnect.bind(this));
             this.socket.on('message', this.onMessage.bind(this));
-        } catch (e) {
+        } catch (e: any) {
             this.emitter.sendErrorMessage(this.socket, e);
             console.error(this.roomId + ' | ' + e.name);
         }
@@ -151,7 +148,7 @@ class Screen {
                 default:
                     console.info(message);
             }
-        } catch (e) {
+        } catch (e: any) {
             this.emitter.sendErrorMessage(this.socket, e);
             console.error(this.roomId + ' | ' + e.name);
         }

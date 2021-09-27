@@ -11,6 +11,9 @@ import emitter from '../../src/helpers/emitter';
 import ConnectionHandler from '../../src/services/connectionHandler';
 import RoomService from '../../src/services/roomService';
 import Server from '../../src/classes/Server';
+import GameEventEmitter from '../../src/classes/GameEventEmitter';
+import { GlobalEventMessageEmitter } from '../../src/classes/GlobalEventMessageEmitter';
+import { CatchFoodGameEventMessageEmitter } from '../../src/gameplay/catchFood/CatchFoodGameEventMessageEmitter';
 
 dotenv.config({
     path: '.env',
@@ -25,6 +28,7 @@ describe('connectionHandler', () => {
     let roomCode: string;
     let controller: SocketIOClient.Socket;
     let screen: SocketIOClient.Socket;
+    let gameEventEmitter: GameEventEmitter;
 
     let server: HttpServer;
 
@@ -34,15 +38,21 @@ describe('connectionHandler', () => {
         server = new HttpServer(app);
         console.error = jest.fn();
         console.info = jest.fn();
+        gameEventEmitter = new GameEventEmitter();
 
         server.listen(PORT, () => {
             rs = new RoomService(100);
             roomCode = rs.createRoom()?.id;
 
-            ch = new ConnectionHandler(new SocketIOServer({
-                httpServer: server,
-                app: app,
-            } as Server), rs);
+            ch = new ConnectionHandler(
+                    new SocketIOServer({
+                    httpServer: server,
+                    app: app,
+                } as Server),
+                rs,
+                gameEventEmitter,
+                [new GlobalEventMessageEmitter(gameEventEmitter), new CatchFoodGameEventMessageEmitter(gameEventEmitter)],
+            );
             ch.handle();
             done();
         });
