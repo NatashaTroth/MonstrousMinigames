@@ -1,10 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Checkbox, createStyles, FormControlLabel, makeStyles, Theme } from '@material-ui/core';
 import * as React from 'react';
 
 import Button from '../../../components/common/Button';
 import { AudioContext } from '../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
-import { screenGetReadyRoute } from '../../../utils/routes';
+import { ScreenSocketContext } from '../../../contexts/ScreenSocketContextProvider';
+import { MessageTypes } from '../../../utils/constants';
+import { Routes, screenGetReadyRoute } from '../../../utils/routes';
+import { ScreenStates } from '../../../utils/screenStates';
 import { handleAudioPermission } from '../../audio/handlePermission';
 import history from '../../history/history';
 import {
@@ -33,10 +37,11 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const GameIntro: React.FunctionComponent = () => {
-    const { roomId } = React.useContext(GameContext);
+    const { roomId, screenAdmin, screenState } = React.useContext(GameContext);
     const [showFirstIntro, setShowFirstIntro] = React.useState(true);
     const [doNotShowChecked, setDoNotShowChecked] = React.useState(false);
     const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
+    const { screenSocket } = React.useContext(ScreenSocketContext);
 
     function handleNext() {
         if (showFirstIntro) {
@@ -55,6 +60,21 @@ const GameIntro: React.FunctionComponent = () => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
         initialPlayLobbyMusic(true);
     }, []);
+
+    React.useEffect(() => {
+        if (screenAdmin) {
+            screenSocket?.emit({
+                type: MessageTypes.screenState,
+                state: ScreenStates.gameIntro,
+            });
+        }
+    });
+
+    React.useEffect(() => {
+        if (!screenAdmin && screenState !== ScreenStates.gameIntro) {
+            history.push(`${Routes.screen}/${roomId}/${screenState}`);
+        }
+    }, [screenState]);
 
     return (
         <GameIntroContainer>
@@ -86,22 +106,29 @@ const GameIntro: React.FunctionComponent = () => {
 
                 <PaddingContainer>
                     <StyledFormGroup row>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={doNotShowChecked}
-                                    onChange={() => setDoNotShowChecked(!doNotShowChecked)}
-                                    classes={{
-                                        root: classes.root,
-                                        checked: classes.checked,
-                                    }}
-                                />
-                            }
-                            label="Don't show these instructions again"
-                        />
+                        {screenAdmin && (
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={doNotShowChecked}
+                                        onChange={() => setDoNotShowChecked(!doNotShowChecked)}
+                                        classes={{
+                                            root: classes.root,
+                                            checked: classes.checked,
+                                        }}
+                                        hidden={!screenAdmin}
+                                    />
+                                }
+                                label="Don't show these instructions again"
+                            />
+                        )}
                     </StyledFormGroup>
                     <BackButtonContainer>
-                        <Button onClick={handleNext}>Next</Button>
+                        {!screenAdmin && !showFirstIntro ? (
+                            <Button onClick={handleNext}>Previous</Button>
+                        ) : (
+                            <Button onClick={handleNext}>Next</Button>
+                        )}
                     </BackButtonContainer>
                 </PaddingContainer>
             </GameIntroBackground>

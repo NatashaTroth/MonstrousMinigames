@@ -108,7 +108,7 @@ function getDraggableLeftPosition(index: number) {
 }
 
 function getDraggableTopPosition(index: number) {
-    const topMargin = 100;
+    const topMargin = 140;
     switch (index) {
         case 0:
         case 1:

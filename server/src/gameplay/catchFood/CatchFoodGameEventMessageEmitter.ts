@@ -1,15 +1,25 @@
-import { Namespace } from "socket.io";
-import { singleton } from "tsyringe";
-import GameEventEmitter from "../../classes/GameEventEmitter";
-import Room from "../../classes/room";
-import User from "../../classes/user";
-import { EventMessage } from "../../interfaces/EventMessage";
-import { EventMessageEmitter } from "../../interfaces/EventMessageEmitter";
-import Game from "../Game";
-import { GlobalEventMessage } from "../interfaces/GlobalEventMessages";
-import { IGameStateBase } from "../interfaces/IGameStateBase";
-import Player from "../Player";
-import { CatchFoodGameEventMessage, CATCH_FOOD_GAME_EVENT_MESSAGES, CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE, CATCH_FOOD_GAME_EVENT_MESSAGE__CHASERS_WERE_PUSHED, CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED } from "./interfaces/CatchFoodGameEventMessages";
+import { Namespace } from 'socket.io';
+import { singleton } from 'tsyringe';
+
+import GameEventEmitter from '../../classes/GameEventEmitter';
+import Room from '../../classes/room';
+import User from '../../classes/user';
+import { EventMessage } from '../../interfaces/EventMessage';
+import { EventMessageEmitter } from '../../interfaces/EventMessageEmitter';
+import Game from '../Game';
+import { GlobalEventMessage } from '../interfaces/GlobalEventMessages';
+import { IGameStateBase } from '../interfaces/IGameStateBase';
+import Player from '../Player';
+import {
+    CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__CHASERS_WERE_PUSHED,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED, CATCH_FOOD_GAME_EVENT_MESSAGES,
+    CatchFoodGameEventMessage
+} from './interfaces/CatchFoodGameEventMessages';
 
 @singleton()
 export class CatchFoodGameEventMessageEmitter implements EventMessageEmitter {
@@ -21,10 +31,15 @@ export class CatchFoodGameEventMessageEmitter implements EventMessageEmitter {
     canHandle(message: EventMessage, game: Game<Player, IGameStateBase>): boolean {
         return CATCH_FOOD_GAME_EVENT_MESSAGES.includes(message.type);
     }
-    handle(controllerNameSpace: Namespace, screenNameSpace: Namespace, room: Room, message: CatchFoodGameEventMessage): void {
+    handle(
+        controllerNameSpace: Namespace,
+        screenNameSpace: Namespace,
+        room: Room,
+        message: CatchFoodGameEventMessage
+    ): void {
         let user: User;
 
-        console.log(room.id+' | ', message);
+        console.log(room.id + ' | ', message);
         switch (message.type) {
             // send to single user's controller
             case CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED:

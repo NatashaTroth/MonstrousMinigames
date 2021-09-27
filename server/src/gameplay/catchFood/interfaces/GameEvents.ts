@@ -4,6 +4,10 @@ interface GameEventInterface {
     roomId: string;
 }
 
+export interface PlayerHasExceededMaxNumberChaserPushes extends GameEventInterface {
+    roomId: string;
+    userId: string;
+}
 export interface ObstacleReachedInfo extends GameEventInterface {
     userId: string;
     obstacleId: number;

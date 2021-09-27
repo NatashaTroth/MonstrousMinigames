@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Assignment } from '@material-ui/icons';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';

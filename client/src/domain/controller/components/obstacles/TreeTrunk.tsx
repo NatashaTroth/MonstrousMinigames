@@ -9,7 +9,7 @@ import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import wood from '../../../../images/obstacles/wood/wood.svg';
 import { MessageTypes } from '../../../../utils/constants';
 import LinearProgressBar from './LinearProgressBar';
-import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
+import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from './ObstacleStyles.sc';
 import {
     DragItem,
     Line,
@@ -86,6 +86,7 @@ const TreeTrunk: React.FunctionComponent = () => {
         setObstacle(roomId, undefined);
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function drag(e: any) {
         e.preventDefault();
         const dragItem = document.getElementById('dragItem');
@@ -155,6 +156,7 @@ const TreeTrunk: React.FunctionComponent = () => {
             <ProgressBarContainer>
                 <LinearProgressBar MAX={trunksToFinish} progress={progress} key={`progressbar${progress}`} />
             </ProgressBarContainer>
+            <ObstacleInstructions>Remove the tree trunk by cutting it along the line</ObstacleInstructions>
             <ObstacleContent>
                 <ObstacleItem orientation={orientation}>
                     <StyledObstacleImage src={wood} key={`trunk${progress}`} id="wood" />

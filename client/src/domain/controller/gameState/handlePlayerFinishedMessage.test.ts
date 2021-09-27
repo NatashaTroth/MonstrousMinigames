@@ -71,7 +71,7 @@ describe('playerHasFinished function', () => {
         const setPlayerFinished = jest.fn();
 
         const playerFinished = false;
-        global.sessionStorage.setItem('stoneTimeoutId', '1');
+        global.sessionStorage.setItem('windmillTimeoutId', '1');
 
         handlePlayerFinishedMessage({
             data: mockData,
@@ -80,6 +80,6 @@ describe('playerHasFinished function', () => {
             dependencies: { setPlayerRank, setPlayerFinished },
         });
 
-        expect(global.sessionStorage.getItem('stoneTimeoutId')).toBe(null);
+        expect(global.sessionStorage.getItem('windmillTimeoutId')).toBe(null);
     });
 });

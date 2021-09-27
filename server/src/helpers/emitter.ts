@@ -92,6 +92,17 @@ function sendMessage(type: MessageTypes | CatchFoodMsgType, nsps: Array<Namespac
     });
 }
 
+// function sendPlayerExceededMaxNumberChaserPushes(
+//     nsp: Namespace,
+//     user: User,
+//     data: GameEvents.PlayerHasExceededMaxNumberChaserPushes
+// ): void {
+//     console.log('SEENDING YEES');
+//     nsp.to(user.socketId).emit('message', {
+//         type: CatchFoodMsgType.PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
+//     });
+// }
+
 export default {
     sendUserInit,
     sendGameState,
@@ -101,6 +112,7 @@ export default {
     sendStartPhaserGame,
     sendConnectedUsers,
     sendMessage,
+    // sendPlayerExceededMaxNumberChaserPushes,
     sendScreenAdmin,
     sendScreenState,
 };

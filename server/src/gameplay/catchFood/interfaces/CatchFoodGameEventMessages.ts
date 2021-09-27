@@ -1,5 +1,5 @@
-import { GameStateInfo } from ".";
-import { ObstacleType, TrashType } from "../enums";
+import { ObstacleType, TrashType } from '../enums';
+import { GameStateInfo } from './';
 
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED = 'game1/obstacle';
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE = 'game1/approachingSolvableObstacle';
@@ -9,6 +9,8 @@ export const CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD = 'game1/playerDied';
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED = 'game1/playerStunned';
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED = 'game1/playerUnstunned';
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__CHASERS_WERE_PUSHED = 'game1/chasersPushed';
+export const CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES =
+    'game1/playerHasExceededMaxNumberChaserPushes';
 
 export const CATCH_FOOD_GAME_EVENT_MESSAGES = [
     CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED,
@@ -19,6 +21,7 @@ export const CATCH_FOOD_GAME_EVENT_MESSAGES = [
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__CHASERS_WERE_PUSHED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
 ];
 
 export interface CatchFoodGameObstacleReachedInfo {
@@ -70,13 +73,19 @@ export interface CatchFoodGameChasersWerePushed {
     roomId: string;
     amount: number;
 }
+export interface CatchFoodGamePlayerHasExceededMaxNumberChaserPushes {
+    type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES;
+    roomId: string;
+    userId: string;
+}
 
 export type CatchFoodGameEventMessage =
-    CatchFoodGameObstacleReachedInfo
+    | CatchFoodGameObstacleReachedInfo
     | CatchFoodGameApproachingSolvableObstacle
     | CatchFoodGamePlayerHasFinished
     | CatchFoodGameInitialGameState
     | CatchFoodGamePlayerIsDead
     | CatchFoodGamePlayerStunnedState
     | CatchFoodGamePlayerUnstunnedState
-    | CatchFoodGameChasersWerePushed;
+    | CatchFoodGameChasersWerePushed
+    | CatchFoodGamePlayerHasExceededMaxNumberChaserPushes;
