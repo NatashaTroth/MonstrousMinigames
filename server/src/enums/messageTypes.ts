@@ -4,6 +4,7 @@ export enum MessageTypes {
     CONNECTED_USERS = 'connectedUsers',
     BACK_TO_LOBBY = 'backToLobby',
     PAUSE_RESUME = 'pauseResume',
+    START = 'startGame',
     STOP_GAME = 'stopGame',
     // PHASER_LOADED = 'phaserLoaded',
     GAME_HAS_RESET = 'gameHasReset',
@@ -16,4 +17,6 @@ export enum MessageTypes {
     SELECT_CHARACTER = 'selectCharacter',
     PLAYER_HAS_DISCONNECTED = 'playerHasDisconnected',
     PLAYER_HAS_RECONNECTED = 'playerHasReconnected',
+    SEND_SCREEN_STATE = 'sendScreenState',
+    SCREEN_STATE = 'screenState',
 }

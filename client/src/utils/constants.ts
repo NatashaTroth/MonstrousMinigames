@@ -32,6 +32,7 @@ export enum MessageTypes {
     screenAdmin = 'screenAdmin',
     selectCharacter = 'selectCharacter',
     userReady = 'userReady',
+    screenState = 'screenState',
 
     gameHasFinished = 'gameHasFinished',
     gameHasReset = 'gameHasReset',
@@ -40,6 +41,7 @@ export enum MessageTypes {
     gameHasResumed = 'gameHasResumed',
 
     pauseResume = 'pauseResume',
+    startGame = 'startGame',
     stopGame = 'stopGame',
 
     error = 'error',
@@ -60,9 +62,7 @@ export enum MessageTypes {
     playerStunned = 'game1/playerStunned',
     playerUnstunned = 'game1/playerUnstunned',
     stunPlayer = 'game1/stunPlayer',
-
     createGame = 'game1/create',
-    startGame = 'game1/start',
 
     pushChasers = 'game1/chasersPushed',
 }

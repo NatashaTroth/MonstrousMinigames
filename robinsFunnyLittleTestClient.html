@@ -63,7 +63,7 @@
         function input(type) {
             if (type == 'start')
                 ssocket.emit('message', {
-                    type: 'game1/start',
+                    type: 'startGame',
                 });
             if (type == 'move')
                 socket.emit('message', {
