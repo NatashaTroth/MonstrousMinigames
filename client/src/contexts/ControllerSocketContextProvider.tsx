@@ -48,6 +48,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setReady,
         setPlayerDead,
         playerRank,
+        setEarlySolvableObstacle,
         setExceededChaserPushes,
     } = React.useContext(PlayerContext);
 
@@ -84,6 +85,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setReady,
         setPlayerDead,
         setConnectedUsers,
+        setEarlySolvableObstacle,
         playerRank,
         setExceededChaserPushes,
     };

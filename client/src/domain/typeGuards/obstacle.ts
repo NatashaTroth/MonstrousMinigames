@@ -5,7 +5,6 @@ export interface ObstacleMessage {
     type: MessageTypes.obstacle;
     obstacleType: ObstacleTypes;
     obstacleId: number;
-    skippable: boolean;
     numberTrashItems?: number;
     trashType?: TrashType;
 }

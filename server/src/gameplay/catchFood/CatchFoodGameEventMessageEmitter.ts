@@ -1,25 +1,26 @@
-import { Namespace } from 'socket.io';
-import { singleton } from 'tsyringe';
+import { Namespace } from "socket.io";
+import { singleton } from "tsyringe";
 
-import GameEventEmitter from '../../classes/GameEventEmitter';
-import Room from '../../classes/room';
-import User from '../../classes/user';
-import { EventMessage } from '../../interfaces/EventMessage';
-import { EventMessageEmitter } from '../../interfaces/EventMessageEmitter';
-import Game from '../Game';
-import { GlobalEventMessage } from '../interfaces/GlobalEventMessages';
-import { IGameStateBase } from '../interfaces/IGameStateBase';
-import Player from '../Player';
+import GameEventEmitter from "../../classes/GameEventEmitter";
+import Room from "../../classes/room";
+import User from "../../classes/user";
+import { EventMessage } from "../../interfaces/EventMessage";
+import { EventMessageEmitter } from "../../interfaces/EventMessageEmitter";
+import Game from "../Game";
+import { GlobalEventMessage } from "../interfaces/GlobalEventMessages";
+import { IGameStateBase } from "../interfaces/IGameStateBase";
+import Player from "../Player";
 import {
     CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE,
     CATCH_FOOD_GAME_EVENT_MESSAGE__CHASERS_WERE_PUSHED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED, CATCH_FOOD_GAME_EVENT_MESSAGES,
     CatchFoodGameEventMessage
-} from './interfaces/CatchFoodGameEventMessages';
+} from "./interfaces/CatchFoodGameEventMessages";
 
 @singleton()
 export class CatchFoodGameEventMessageEmitter implements EventMessageEmitter {
@@ -47,6 +48,7 @@ export class CatchFoodGameEventMessageEmitter implements EventMessageEmitter {
             case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED:
+            case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES:
                 user = room.getUserById(message.userId);
                 if (!user) {
                     break;
