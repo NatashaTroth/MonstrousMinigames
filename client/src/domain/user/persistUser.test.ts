@@ -16,11 +16,13 @@ describe('persistUser function', () => {
         roomId: '1',
         isAdmin: true,
         number: 1,
+        ready: false,
     };
 
     const setPlayerNumber = jest.fn();
     const setName = jest.fn();
     const setUserId = jest.fn();
+    const setReady = jest.fn();
 
     it('handed function should be called with passed data', () => {
         persistUser(mockData, {
@@ -29,6 +31,7 @@ describe('persistUser function', () => {
             sessionStorage: new LocalStorageFake(),
             setName,
             setUserId,
+            setReady,
         });
 
         expect(setPlayerNumber).toHaveBeenLastCalledWith(mockData.number);
@@ -42,6 +45,7 @@ describe('persistUser function', () => {
             sessionStorage: new LocalStorageFake(),
             setName,
             setUserId,
+            setReady,
         });
         expect(global.localStorage.getItem('name')).toBe(mockData.name);
     });
@@ -55,6 +59,7 @@ describe('persistUser function', () => {
             sessionStorage: new LocalStorageFake(),
             setName,
             setUserId,
+            setReady,
         });
         expect(global.sessionStorage.getItem('userId')).toBe(mockData.userId);
     });
@@ -68,6 +73,7 @@ describe('persistUser function', () => {
             sessionStorage: new LocalStorageFake(),
             setName,
             setUserId,
+            setReady,
         });
         expect(global.sessionStorage.getItem('roomId')).toBe(mockData.roomId);
     });

@@ -43,6 +43,7 @@ export interface HandleSetSocketDependencies {
     setName: (val: string) => void;
     setAvailableCharacters: (val: number[]) => void;
     setUserId: (val: string) => void;
+    setReady: (val: boolean) => void;
     setPlayerDead: (val: boolean) => void;
     history: History;
     setConnectedUsers: (val: User[]) => void;
@@ -66,6 +67,7 @@ export function handleSetSocket(
         setName,
         setAvailableCharacters,
         setUserId,
+        setReady,
         setPlayerDead,
         history,
         setConnectedUsers,
@@ -96,6 +98,7 @@ export function handleSetSocket(
                 setPlayerNumber,
                 setName,
                 setUserId,
+                setReady,
             },
         });
     });

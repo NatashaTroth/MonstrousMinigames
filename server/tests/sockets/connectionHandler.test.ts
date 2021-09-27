@@ -303,7 +303,7 @@ describe('connectionHandler', () => {
                 });
 
                 screen.on('message', (msg: any) => {
-                    if (msg.type !== MessageTypes.SCREEN_ADMIN) {
+                    if (msg.type !== MessageTypes.SCREEN_ADMIN && msg.type !== MessageTypes.SCREEN_STATE) {
                         expect(msg.type).toEqual(MessageTypes.CONNECTED_USERS);
                         expect(msg.users[0].socketId).toEqual(controller.id);
                         done();

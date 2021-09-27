@@ -1,3 +1,5 @@
+import * as colors from './colors';
+
 export const sharedTextStyleProperties = {
     fontFamily: 'Roboto, Arial',
 };
@@ -9,14 +11,14 @@ export const loadingTextStyleProperties = {
 
 export const countdownTextStyleProperties = {
     ...sharedTextStyleProperties,
-    color: '#d2a44f',
-    stroke: '#d2a44f',
+    color: colors.orange,
+    stroke: colors.orange,
     strokeThickness: 15,
     align: 'center',
     shadow: {
         offsetX: 10,
         offsetY: 10,
-        color: '#000',
+        color: colors.black,
         blur: 0,
         stroke: false,
         fill: false,

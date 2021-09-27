@@ -8,9 +8,10 @@ import { characters } from '../../../config/characters';
 import { AudioContext } from '../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../../contexts/ScreenSocketContextProvider';
-import { localDevelopment } from '../../../utils/constants';
+import { localDevelopment, MessageTypes } from '../../../utils/constants';
 import { generateQRCode } from '../../../utils/generateQRCode';
 import { Routes, screenChooseGameRoute } from '../../../utils/routes';
+import { ScreenStates } from '../../../utils/screenStates';
 import { handleAudioPermission } from '../../audio/handlePermission';
 import history from '../../history/history';
 import {
@@ -33,7 +34,7 @@ import {
 import LobbyHeader from './LobbyHeader';
 
 export const Lobby: React.FunctionComponent = () => {
-    const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
+    const { roomId, connectedUsers, screenAdmin, screenState } = React.useContext(GameContext);
     const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: RouteParams = useParams();
@@ -42,6 +43,12 @@ export const Lobby: React.FunctionComponent = () => {
     if (id && !screenSocket) {
         handleSocketConnection(id, 'lobby');
     }
+
+    React.useEffect(() => {
+        if (!screenAdmin && screenState !== ScreenStates.lobby) {
+            history.push(`${Routes.screen}/${roomId}/${screenState}`);
+        }
+    }, [screenState]);
 
     async function handleCopyToClipboard() {
         if (navigator.clipboard) {
@@ -61,6 +68,12 @@ export const Lobby: React.FunctionComponent = () => {
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
         initialPlayLobbyMusic(true);
+        if (screenAdmin) {
+            screenSocket?.emit({
+                type: MessageTypes.screenState,
+                state: ScreenStates.lobby,
+            });
+        }
     }, []);
 
     return (

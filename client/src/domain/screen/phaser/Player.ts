@@ -202,7 +202,7 @@ export class Player {
                     break;
                 case ObstacleTypes.stone:
                     obstacleScale = 0.75 / this.numberPlayers;
-                    obstaclePosY += 13 / this.numberPlayers;
+                    obstaclePosY += 16 / this.numberPlayers;
                     obstacleDepth = depthDictionary.stoneObstacle - index;
                     break;
             }

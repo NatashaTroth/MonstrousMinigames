@@ -75,6 +75,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setFinished,
         setPlayerRanks,
         setScreenAdmin,
+        setScreenState,
     } = React.useContext(GameContext);
 
     const content = {
@@ -92,6 +93,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     setFinished,
                     setPlayerRanks,
                     setScreenAdmin,
+                    setScreenState,
                     history,
                 },
                 route
@@ -108,6 +110,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 setFinished,
                 setPlayerRanks,
                 setScreenAdmin,
+                setScreenState,
                 history,
             });
         },
