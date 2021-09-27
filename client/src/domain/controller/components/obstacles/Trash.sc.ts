@@ -60,7 +60,7 @@ interface DropZoneProps {
 export const DropZone = styled.div<DropZoneProps>`
     border: dashed 4px transparent;
     border-radius: 4px;
-    margin-bottom: 50px;
+    margin-bottom: 30%;
     padding: 10px;
     width: 80%;
     transition: background-color 0.3s;
