@@ -49,6 +49,10 @@ export const defaultValue = {
     setHasStone: () => {
         // do nothing
     },
+    exceededChaserPushes: false,
+    setExceededChaserPushes: () => {
+        // do nothing
+    },
 };
 export interface Obstacle {
     type: ObstacleTypes;
@@ -79,6 +83,8 @@ interface PlayerContextProps {
     setPlayerDead: (val: boolean) => void;
     hasStone: boolean;
     setHasStone: (val: boolean) => void;
+    exceededChaserPushes: boolean;
+    setExceededChaserPushes: (val: boolean) => void;
 }
 
 export const PlayerContext = React.createContext<PlayerContextProps>(defaultValue);
@@ -95,6 +101,7 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [ready, setReady] = React.useState<boolean>(false);
     const [dead, setPlayerDead] = React.useState(false);
     const [hasStone, setHasStone] = React.useState(false);
+    const [exceededChaserPushes, setExceededChaserPushes] = React.useState(false);
 
     let reroute = true;
 
@@ -132,6 +139,8 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setPlayerDead,
         hasStone,
         setHasStone,
+        exceededChaserPushes,
+        setExceededChaserPushes,
     };
     return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>;
 };

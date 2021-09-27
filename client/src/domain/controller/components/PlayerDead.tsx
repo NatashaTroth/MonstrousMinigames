@@ -12,15 +12,17 @@ import { PlayerDeadContainer, TextWrapper } from './PlayerDead.sc';
 const PlayerDead: React.FC = () => {
     const { roomId } = React.useContext(GameContext);
 
-    const { character } = React.useContext(PlayerContext);
+    const { character, exceededChaserPushes } = React.useContext(PlayerContext);
     const [counter, setCounter] = React.useState(10);
 
     React.useEffect(() => {
-        if (counter > 0) {
-            const windmillTimeoutId = setTimeout(() => setCounter(counter - 1), 1000);
-            sessionStorage.setItem('windmillTimeoutId', String(windmillTimeoutId));
-        } else {
-            handlePlayerGetsWindmill(history, roomId);
+        if (!exceededChaserPushes) {
+            if (counter > 0) {
+                const windmillTimeoutId = setTimeout(() => setCounter(counter - 1), 1000);
+                sessionStorage.setItem('windmillTimeoutId', String(windmillTimeoutId));
+            } else {
+                handlePlayerGetsWindmill(history, roomId);
+            }
         }
     }, [counter]);
 
@@ -30,7 +32,11 @@ const PlayerDead: React.FC = () => {
                 {character && <Character src={character.ghost} />}
                 <TextWrapper>
                     Oh no! Unfortunately the mosquitoes got you.
-                    <div>A windmill will appear in {counter} seconds</div>. Rotate it to speed up the mosquitos.
+                    {!exceededChaserPushes && (
+                        <>
+                            <div>A windmill will appear in {counter} seconds</div>. Rotate it to speed up the mosquitos.
+                        </>
+                    )}
                 </TextWrapper>
             </PlayerDeadContainer>
         </FullScreenContainer>
