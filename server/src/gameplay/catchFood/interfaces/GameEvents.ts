@@ -32,6 +32,10 @@ export interface PlayerHasFinished extends GameEventInterface {
     userId: string;
     rank: number;
 }
+export interface PlayerHasPushedMaxNumberChasers extends GameEventInterface {
+    roomId: string;
+    userId: string;
+}
 
 export interface PlayerIsDead extends GameEventInterface {
     roomId: string;

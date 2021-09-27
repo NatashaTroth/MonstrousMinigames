@@ -409,6 +409,13 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         }, 1300);
         userPushing.chaserPushesUsed++;
 
+        if (this.maxNumberPushChasersExceeded(userPushing)) {
+            CatchFoodGameEventEmitter.emitPlayerHasPushedMaxNumberChasers({
+                roomId: this.roomId,
+                userId: userPushing.id,
+            });
+        }
+
         this.updateChasersPosition(this.gameTime, 0);
 
         CatchFoodGameEventEmitter.emitChasersWerePushed({
@@ -416,6 +423,10 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             userIdPushing: userIdPushing,
             amount: this.chaserPushAmount,
         });
+    }
+
+    private maxNumberPushChasersExceeded(player: CatchFoodPlayer) {
+        return player.chaserPushesUsed >= this.maxNumberOfChaserPushes;
     }
 
     //TODO test & move to player
