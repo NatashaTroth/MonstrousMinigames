@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { useHistory } from 'react-router';
+import * as React from "react";
+import { useHistory } from "react-router";
 
-import { Character } from '../config/characters';
-import { ObstacleTypes, TrashType } from '../utils/constants';
-import { controllerGame1Route, controllerObstacleRoute } from '../utils/routes';
+import { Character } from "../config/characters";
+import { ObstacleTypes, TrashType } from "../utils/constants";
+import { controllerGame1Route, controllerObstacleRoute } from "../utils/routes";
 
 export const defaultValue = {
     obstacle: undefined,
@@ -49,14 +49,19 @@ export const defaultValue = {
     setHasStone: () => {
         // do nothing
     },
+    earlySkipableObstacle: undefined,
+    setEarlySkipableObstacle: () => {
+        // do nothing
+    },
 };
 export interface Obstacle {
     type: ObstacleTypes;
     id: number;
-    skippable: boolean;
     numberTrashItems?: number;
     trashType?: TrashType;
+    distance?: number;
 }
+
 interface PlayerContextProps {
     obstacle: undefined | Obstacle;
     setObstacle: (roomId: string | undefined, val: Obstacle | undefined) => void;
@@ -79,6 +84,8 @@ interface PlayerContextProps {
     setPlayerDead: (val: boolean) => void;
     hasStone: boolean;
     setHasStone: (val: boolean) => void;
+    earlySkipableObstacle: Obstacle | undefined;
+    setEarlySkipableObstacle: (val: Obstacle | undefined) => void;
 }
 
 export const PlayerContext = React.createContext<PlayerContextProps>(defaultValue);
@@ -95,6 +102,10 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [ready, setReady] = React.useState<boolean>(false);
     const [dead, setPlayerDead] = React.useState(false);
     const [hasStone, setHasStone] = React.useState(false);
+    const [earlySkipableObstacle, setEarlySkipableObstacle] = React.useState<Obstacle | undefined>({
+        id: 1,
+        type: ObstacleTypes.stone,
+    });
 
     let reroute = true;
 
@@ -132,6 +143,8 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setPlayerDead,
         hasStone,
         setHasStone,
+        earlySkipableObstacle,
+        setEarlySkipableObstacle,
     };
     return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>;
 };

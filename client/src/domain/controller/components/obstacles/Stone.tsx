@@ -1,40 +1,23 @@
 /* eslint-disable simple-import-sort/imports */
-import * as React from 'react';
+import * as React from "react";
 
-import Button from '../../../../components/common/Button';
-import { StyledParticles } from '../../../../components/common/Particles.sc';
-import { SkipButton } from '../../../../components/common/SkipButton.sc';
-import { stoneParticlesConfig } from '../../../../config/particlesConfig';
-import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
-import pebble from '../../../../images/obstacles/stone/pebble.svg';
-import stone from '../../../../images/obstacles/stone/stone.svg';
-import { MessageTypes } from '../../../../utils/constants';
-import { controllerGame1Route } from '../../../../utils/routes';
-import history from '../../../history/history';
+import Button from "../../../../components/common/Button";
+import { StyledParticles } from "../../../../components/common/Particles.sc";
+import { SkipButton } from "../../../../components/common/SkipButton.sc";
+import { stoneParticlesConfig } from "../../../../config/particlesConfig";
+import { ControllerSocketContext } from "../../../../contexts/ControllerSocketContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
+import pebble from "../../../../images/obstacles/stone/pebble.svg";
+import stone from "../../../../images/obstacles/stone/stone.svg";
+import { MessageTypes } from "../../../../utils/constants";
+import { controllerGame1Route } from "../../../../utils/routes";
+import history from "../../../history/history";
 import {
-    PebbleContainer,
-    PlayerButtonContainer,
-    Ray1,
-    Ray10,
-    Ray2,
-    Ray3,
-    Ray4,
-    Ray5,
-    Ray6,
-    Ray7,
-    Ray8,
-    Ray9,
-    RayBox,
-    StoneContainer,
-    StyledPebbleImage,
-    StyledStone,
-    StyledStoneImage,
-    StyledTypography,
-    Sun,
-    UserButtons,
-} from './Stone.sc';
+    PebbleContainer, PlayerButtonContainer, Ray1, Ray10, Ray2, Ray3, Ray4, Ray5, Ray6, Ray7, Ray8,
+    Ray9, RayBox, StoneContainer, StyledPebbleImage, StyledStone, StyledStoneImage,
+    StyledTypography, Sun, UserButtons
+} from "./Stone.sc";
 
 const Stone: React.FunctionComponent = () => {
     const searchParams = new URLSearchParams(history.location.search);
@@ -76,17 +59,6 @@ const Stone: React.FunctionComponent = () => {
         history.push(controllerGame1Route(roomId));
     }
 
-    function handleSkip() {
-        if (obstacle) {
-            controllerSocket.emit({
-                type: MessageTypes.obstacleSkipped,
-                obstacleId: obstacle.id,
-            });
-            resetBodyStyles();
-            setObstacle(roomId, undefined);
-        }
-    }
-
     function handleCollectStone() {
         controllerSocket.emit({
             type: MessageTypes.obstacleSolved,
@@ -109,10 +81,6 @@ const Stone: React.FunctionComponent = () => {
                             <StyledStoneImage src={stone} />
                             {particles && <StyledParticles params={stoneParticlesConfig} />}
                         </StyledStone>
-                        {obstacle?.skippable && <Button onClick={handleSkip}>Skip</Button>}
-                        <SkipButton>
-                            <Button onClick={handleSkip}>Skip</Button>
-                        </SkipButton>
                     </>
                 ) : (
                     <>
