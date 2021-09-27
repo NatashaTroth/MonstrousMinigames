@@ -11,7 +11,7 @@ import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/fini
 import { pausedTypeGuard } from '../../typeGuards/paused';
 import { resetTypeGuard } from '../../typeGuards/reset';
 import { resumedTypeGuard } from '../../typeGuards/resumed';
-import { screenAdminTypeGuard } from '../../typeGuards/screenAdmin';
+import { ScreenAdminMessage, screenAdminTypeGuard } from '../../typeGuards/screenAdmin';
 import { ScreenStateMessage, screenStateTypeGuard } from '../../typeGuards/screenState';
 import { StartPhaserGameMessage, startPhaserGameTypeGuard } from '../../typeGuards/startPhaserGame';
 import { stoppedTypeGuard } from '../../typeGuards/stopped';
@@ -90,7 +90,7 @@ export function handleSetSocket(
         // TODO handle errors
     });
 
-    screenAdminSocket.listen(() => setScreenAdmin(true));
+    screenAdminSocket.listen((data: ScreenAdminMessage) => setScreenAdmin(data.isAdmin));
 
     screenStateSocket.listen((data: ScreenStateMessage) => setScreenState(data.state));
 

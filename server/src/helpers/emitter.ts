@@ -127,9 +127,10 @@ function sendConnectedUsers(nsps: Array<Namespace>, room: Room): void {
     });
 }
 
-function sendScreenAdmin(nsp: Namespace, socketId: string): void {
+function sendScreenAdmin(nsp: Namespace, socketId: string, isScreenAdmin: boolean): void {
     nsp.to(socketId).emit('message', {
         type: MessageTypes.SCREEN_ADMIN,
+        isAdmin: isScreenAdmin
     });
 }
 

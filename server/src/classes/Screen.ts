@@ -28,16 +28,15 @@ class Screen {
             this.room = this.roomService.getRoomById(this.roomId!);
             this.room.addScreen(this.socket.id);
             this.socket.join(this.room.id);
-            console.info(this.room.id + ' | Screen connected');
+            console.info(this.room.id + ' | Screen connected | ' + this.socket.id);
             this.room.resetGame().then(() => {
                 this.emitter.sendScreenState(this.screenNamespace, this.room?.getScreenState());
             });
 
             this.emitter.sendConnectedUsers([this.screenNamespace], this.room);
             if (this.room.isAdminScreen(this.socket.id)) {
-                this.emitter.sendScreenAdmin(this.screenNamespace, this.socket.id);
+                this.emitter.sendScreenAdmin(this.screenNamespace, this.socket.id, this.room.isAdminScreen(this.socket.id));
             }
-
             if (this.room?.isAdminScreen(this.socket.id)) {
                 this.emitter.sendScreenState(
                     this.socket,
@@ -162,7 +161,7 @@ class Screen {
         this.room?.removeScreen(this.socket.id);
 
         if (this.room?.getAdminScreenId()) {
-            this.emitter.sendScreenAdmin(this.screenNamespace, this.room.getAdminScreenId());
+            this.emitter.sendScreenAdmin(this.screenNamespace, this.room.getAdminScreenId(), true);
         }
     }
 }
