@@ -54,7 +54,7 @@ export interface HandleSetSocketDependencies {
     history: History;
     setConnectedUsers: (val: User[]) => void;
     playerRank: undefined | number;
-    setEarlySkipableObstacle: (val: Obstacle | undefined) => void;
+    setEarlySolvableObstacle: (val: Obstacle | undefined) => void;
     setExceededChaserPushes: (val: boolean) => void;
 }
 
@@ -80,7 +80,7 @@ export function handleSetSocket(
         history,
         setConnectedUsers,
         playerRank,
-        setEarlySkipableObstacle,
+        setEarlySolvableObstacle,
         setExceededChaserPushes,
     } = dependencies;
 
@@ -203,7 +203,7 @@ export function handleSetSocket(
     });
 
     approachingSolvableObstacleSocket.listen((data: ApproachingSolvableObstacleMessage) => {
-        handleApproachingObstacleMessage({ data, setEarlySkipableObstacle });
+        handleApproachingObstacleMessage({ data, setEarlySolvableObstacle });
     });
     exceededMaxChaserPushesSocket.listen(() => setExceededChaserPushes(true));
 

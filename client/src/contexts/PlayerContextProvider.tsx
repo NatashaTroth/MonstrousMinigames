@@ -49,8 +49,8 @@ export const defaultValue = {
     setHasStone: () => {
         // do nothing
     },
-    earlySkipableObstacle: undefined,
-    setEarlySkipableObstacle: () => {
+    earlySolvableObstacle: undefined,
+    setEarlySolvableObstacle: () => {
         // do nothing
     },
     exceededChaserPushes: false,
@@ -88,8 +88,8 @@ interface PlayerContextProps {
     setPlayerDead: (val: boolean) => void;
     hasStone: boolean;
     setHasStone: (val: boolean) => void;
-    earlySkipableObstacle: Obstacle | undefined;
-    setEarlySkipableObstacle: (val: Obstacle | undefined) => void;
+    earlySolvableObstacle: Obstacle | undefined;
+    setEarlySolvableObstacle: (val: Obstacle | undefined) => void;
     exceededChaserPushes: boolean;
     setExceededChaserPushes: (val: boolean) => void;
 }
@@ -108,7 +108,7 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [ready, setReady] = React.useState<boolean>(false);
     const [dead, setPlayerDead] = React.useState(false);
     const [hasStone, setHasStone] = React.useState(false);
-    const [earlySkipableObstacle, setEarlySkipableObstacle] = React.useState<Obstacle | undefined>({
+    const [earlySolvableObstacle, setEarlySolvableObstacle] = React.useState<Obstacle | undefined>({
         id: 1,
         type: ObstacleTypes.stone,
     });
@@ -150,8 +150,8 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setPlayerDead,
         hasStone,
         setHasStone,
-        earlySkipableObstacle,
-        setEarlySkipableObstacle,
+        earlySolvableObstacle,
+        setEarlySolvableObstacle,
         exceededChaserPushes,
         setExceededChaserPushes,
     };

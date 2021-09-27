@@ -1,20 +1,26 @@
-import * as React from "react";
+import * as React from 'react';
 
-import FullScreenContainer from "../../../components/common/FullScreenContainer";
-import { GameContext } from "../../../contexts/GameContextProvider";
-import { PlayerContext } from "../../../contexts/PlayerContextProvider";
-import pebble from "../../../images/obstacles/stone/pebble.svg";
-import stone from "../../../images/obstacles/stone/stone.svg";
-import arrow from "../../../images/ui/arrow_blue.svg";
-import shakeIt from "../../../images/ui/shakeIt.svg";
-import { ObstacleTypes } from "../../../utils/constants";
-import { controllerObstacleRoute } from "../../../utils/routes";
-import history from "../../history/history";
-import { Storage } from "../../storage/Storage";
+import FullScreenContainer from '../../../components/common/FullScreenContainer';
+import { GameContext } from '../../../contexts/GameContextProvider';
+import { PlayerContext } from '../../../contexts/PlayerContextProvider';
+import pebble from '../../../images/obstacles/stone/pebble.svg';
+import stone from '../../../images/obstacles/stone/stone.svg';
+import arrow from '../../../images/ui/arrow_blue.svg';
+import shakeIt from '../../../images/ui/shakeIt.svg';
+import { ObstacleTypes } from '../../../utils/constants';
+import { controllerObstacleRoute } from '../../../utils/routes';
+import history from '../../history/history';
+import { Storage } from '../../storage/Storage';
 import {
-    Arrow, Container, Countdown, PebbleButton, PebbleContainer, PebbleInstructions, ShakeIt,
-    StyledPebbleImage
-} from "./ShakeInstruction.sc";
+    Arrow,
+    Container,
+    Countdown,
+    PebbleButton,
+    PebbleContainer,
+    PebbleInstructions,
+    ShakeIt,
+    StyledPebbleImage,
+} from './ShakeInstruction.sc';
 
 interface ShakeInstructionProps {
     sessionStorage: Storage;
@@ -24,7 +30,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
     const [counter, setCounter] = React.useState(
         sessionStorage.getItem('countdownTime') ? Number(sessionStorage.getItem('countdownTime')) / 1000 : null
     );
-    const { hasStone, setHasStone, earlySkipableObstacle, setObstacle } = React.useContext(PlayerContext);
+    const { hasStone, setHasStone, earlySolvableObstacle, setObstacle } = React.useContext(PlayerContext);
     const { roomId } = React.useContext(GameContext);
 
     React.useEffect(() => {
@@ -45,7 +51,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
     }
 
     function handleSolveStone() {
-        setObstacle(roomId, earlySkipableObstacle);
+        setObstacle(roomId, earlySolvableObstacle);
     }
 
     return (
@@ -65,7 +71,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                                 </PebbleButton>
                             </PebbleContainer>
                         )}
-                        {earlySkipableObstacle && (
+                        {earlySolvableObstacle && (
                             <PebbleContainer>
                                 <PebbleInstructions>Click to solve obstacle</PebbleInstructions>
                                 <Arrow src={arrow} />
