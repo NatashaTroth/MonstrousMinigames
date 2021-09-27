@@ -2,11 +2,14 @@
 import * as React from 'react';
 
 import { ControllerSocketContext } from '../../../contexts/ControllerSocketContextProvider';
+import { GameContext } from '../../../contexts/GameContextProvider';
 import windmill from '../../../images/ui/pinwheel.svg';
 import windmillWood from '../../../images/ui/pinwheel2.svg';
 import { MessageTypes } from '../../../utils/constants';
+import { controllerPlayerDeadRoute } from '../../../utils/routes';
+import history from '../../history/history';
 import LinearProgressBar from './obstacles/LinearProgressBar';
-import { ObstacleContainer } from './obstacles/ObstaclStyles.sc';
+import { ObstacleContainer, ObstacleInstructions } from './obstacles/ObstacleStyles.sc';
 import { ProgressBarContainer, TouchContainer, WindmillImage, WindmillWood } from './Windmill.sc';
 
 const Windmill: React.FunctionComponent = () => {
@@ -15,6 +18,7 @@ const Windmill: React.FunctionComponent = () => {
     const [rounds, setRounds] = React.useState(0);
 
     const { controllerSocket } = React.useContext(ControllerSocketContext);
+    const { roomId } = React.useContext(GameContext);
 
     React.useEffect(() => {
         const box = document.getElementById('box');
@@ -42,8 +46,6 @@ const Windmill: React.FunctionComponent = () => {
                     }
 
                     if (lastAngle >= 350 && angle < 10) {
-                        // eslint-disable-next-line no-console
-                        console.log('reset to 0');
                         lastAngle = 0;
                     }
                 }
@@ -56,6 +58,7 @@ const Windmill: React.FunctionComponent = () => {
     if (distance >= 350) {
         if (rounds + 1 === MAX) {
             controllerSocket.emit({ type: MessageTypes.pushChasers });
+            history.push(controllerPlayerDeadRoute(roomId));
         }
         setRounds(rounds + 1);
         setDistance(0);
@@ -66,6 +69,7 @@ const Windmill: React.FunctionComponent = () => {
             <ProgressBarContainer>
                 <LinearProgressBar MAX={MAX} progress={rounds} key={`progressbar${rounds}`} />
             </ProgressBarContainer>
+            <ObstacleInstructions>Rotate the windmill clockwise to speed up the mosquitos</ObstacleInstructions>
             <TouchContainer id={`touchContainer`}>
                 <WindmillImage id="box" src={windmill} />
                 <WindmillWood src={windmillWood} />

@@ -8,7 +8,7 @@ import { MessageTypes } from '../../../../utils/constants';
 import { Navigator } from '../../../navigator/Navigator';
 import { currentCount, getAudioInput, resetCurrentCount } from './getAudioInput';
 import LinearProgressBar from './LinearProgressBar';
-import { ObstacleContainer, ObstacleContent } from './ObstaclStyles.sc';
+import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from './ObstacleStyles.sc';
 import { StyledNet, StyledSkipButton, StyledSpider } from './Spider.sc';
 
 interface SpiderProps {
@@ -69,6 +69,7 @@ const Spider: React.FunctionComponent<SpiderProps> = ({ navigator }) => {
     return (
         <ObstacleContainer>
             <LinearProgressBar MAX={MAX} progress={progress} />
+            <ObstacleInstructions>Blow into the microphone to get rid of the spider</ObstacleInstructions>
             <ObstacleContent>
                 <StyledNet />
                 <StyledSpider

@@ -7,7 +7,8 @@ import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import history from '../../history/history';
 import { handlePlayerGetsWindmill } from '../gameState/handlePlayerGetsWindmill';
-import { PlayerDeadContainer, TextWrapper } from './PlayerDead.sc';
+import { ObstacleInstructions } from './obstacles/ObstacleStyles.sc';
+import { PlayerDeadContainer } from './PlayerDead.sc';
 
 const PlayerDead: React.FC = () => {
     const { roomId } = React.useContext(GameContext);
@@ -30,14 +31,14 @@ const PlayerDead: React.FC = () => {
         <FullScreenContainer>
             <PlayerDeadContainer>
                 {character && <Character src={character.ghost} />}
-                <TextWrapper>
+                <ObstacleInstructions>
                     Oh no! Unfortunately the mosquitoes got you.
                     {!exceededChaserPushes && (
                         <>
-                            <div>A windmill will appear in {counter} seconds</div>. Rotate it to speed up the mosquitos.
+                            <div>A windmill will appear in {counter} seconds.</div>Rotate it to speed up the mosquitos.
                         </>
                     )}
-                </TextWrapper>
+                </ObstacleInstructions>
             </PlayerDeadContainer>
         </FullScreenContainer>
     );

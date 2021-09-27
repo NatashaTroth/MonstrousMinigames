@@ -1,3 +1,4 @@
+import { Typography } from '@material-ui/core';
 import styled, { keyframes } from 'styled-components';
 
 import forest from '../../../../images/ui/forest_mobile.svg';
@@ -109,4 +110,11 @@ export const ObstacleContent = styled.div`
         animation-timing-function: ease;
         animation-fill-mode: forwards;
     }
+`;
+
+export const ObstacleInstructions = styled(Typography)`
+    color: ${({ theme }) => theme.palette.primary.main};
+    font-weight: 700;
+    font-style: italic;
+    margin-bottom: 30px;
 `;
