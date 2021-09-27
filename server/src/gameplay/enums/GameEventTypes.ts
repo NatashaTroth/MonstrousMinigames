@@ -14,5 +14,6 @@ export enum GameEventTypes {
     PlayerIsDead = 'PLAYER_IS_DEAD',
     PlayerIsStunned = 'PLAYER_IS_STUNNED',
     ChasersWerePushed = 'CHASERS_WERE_PUSHED',
+    PlayerHasExceededMaxNumberChaserPushes = 'PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES',
     PlayerIsUnstunned = 'PLAYER_IS_UNSTUNNED',
 }
