@@ -54,3 +54,12 @@ Once the players join in the game, they will all be presented with a topic (e.g.
 ### End of the mini game
 
 The shared screen shows a victory pedestal where the 1st, 2nd and 3rd place monsters stand on.
+
+---
+
+## Game run through
+
+1. Admin user creates and starts game
+2. todo
+
+## Connection: Controller - Server - Screen
