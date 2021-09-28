@@ -434,10 +434,6 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     }
 
     private playerWantsToSolveObstacle(userId: string, obstacleId: number): void {
-        Array.from(this.players.values()).map(player => {
-            console.log(player.obstacles[0]);
-            console.log('--------');
-        });
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.players, userId);
         verifyUserIsActive(userId, this.players.get(userId)!.isActive);
@@ -448,11 +444,6 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         if (!obstacle) return;
 
         obstacle.solvable = false;
-
-        Array.from(this.players.values()).map(player => {
-            console.log(player.obstacles[0]);
-        });
-        console.log('******************');
     }
 
     private playerHasCompletedObstacle(userId: string, obstacleId: number): void {
