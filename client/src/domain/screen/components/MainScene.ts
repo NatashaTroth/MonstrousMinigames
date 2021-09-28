@@ -11,6 +11,10 @@ import {
     AllScreensPhaserGameLoadedMessage,
     allScreensPhaserGameLoadedTypeGuard,
 } from '../../typeGuards/allScreensPhaserGameLoaded';
+import {
+    ApproachingSolvableObstacleOnceMessage,
+    approachingSolvableObstacleOnceTypeGuard,
+} from '../../typeGuards/approachingSolvableObstacleOnceTypeGuard';
 import { ChasersPushedMessage, ChasersPushedTypeGuard } from '../../typeGuards/chasersPushed';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
 import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../typeGuards/gameStateInfo';
@@ -211,10 +215,15 @@ class MainScene extends Phaser.Scene {
             // if (this.screenAdmin && !designDevelopment && this.firstGameStateReceived) this.sendStartGame();
         });
 
+        const approachingObstacle = new MessageSocket(approachingSolvableObstacleOnceTypeGuard, this.socket);
+        approachingObstacle.listen((data: ApproachingSolvableObstacleOnceMessage) => {
+            printMethod('Approaching obstacle');
+            this.players.find(player => player.userId === data.userId)?.handleApproachingObstacle();
+        });
+
         const obstacleSkipped = new MessageSocket(obstacleSkippedTypeGuard, this.socket);
         obstacleSkipped.listen((data: ObstacleSkippedMessage) => {
             printMethod('Obstacle skipped');
-            printMethod(this.players.find(player => player.userId === data.userId));
             this.players.find(player => player.userId === data.userId)?.handleObstacleSkipped();
         });
 

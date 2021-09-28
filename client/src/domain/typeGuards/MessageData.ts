@@ -1,4 +1,5 @@
 import { AllScreensPhaserGameLoadedMessage } from './allScreensPhaserGameLoaded';
+import { ApproachingSolvableObstacleOnceMessage } from './approachingSolvableObstacleOnceTypeGuard';
 import { ApproachingSolvableObstacleMessage } from './approachingSolvableObstacleTypeGuard';
 import { ChasersPushedMessage } from './chasersPushed';
 import { ConnectedUsersMessage } from './connectedUsers';
@@ -49,6 +50,7 @@ export type MessageData =
     | PlayerStunnedMessage
     | PlayerUnstunnedMessage
     | ApproachingSolvableObstacleMessage
+    | ApproachingSolvableObstacleOnceMessage
     | ScreenStateMessage
     | ExceededMaxChaserPushesMessage
     | ChasersPushedMessage
