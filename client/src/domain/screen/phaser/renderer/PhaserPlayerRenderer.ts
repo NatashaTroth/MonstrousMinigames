@@ -374,13 +374,11 @@ export class PhaserPlayerRenderer {
             this.scene.anims.create({
                 key: 'windAnimation',
                 frames: this.scene.anims.generateFrameNumbers('windSpritesheet', { start: 0, end: 5 }),
-                frameRate: 15,
-                repeat: 1,
+                frameRate: 8,
+                repeat: 0,
             });
             this.wind = this.scene.physics.add.sprite(this.chaser.x - 50, this.chaser.y, 'windSpritesheet');
-            // this.wind.setScale(
-            //     (1.25 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]
-            // );
+            this.wind.setScale((0.75 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
             this.wind.setDepth(depthDictionary.chaser);
             this.wind.y = this.wind.y - this.wind.displayHeight / 2; //set correct y pos according to player height
             this.wind.play('windAnimation');
