@@ -37,7 +37,7 @@ class Controller {
 
             this.socket.on('disconnect', this.onDisconnect.bind(this));
             this.socket.on('message', this.onMessage.bind(this));
-        } catch (e) {
+        } catch (e: any) {
             this.emitter.sendErrorMessage(this.socket, e);
             console.error(this.roomId + ' | ' + e.name);
         }
@@ -65,7 +65,7 @@ class Controller {
 
                     await this.room?.game.receiveInput(message);
             }
-        } catch (e) {
+        } catch (e: any) {
             this.emitter.sendErrorMessage(this.socket, e);
             console.error(this.roomId + ' | ' + e.name);
         }
@@ -75,7 +75,7 @@ class Controller {
 
         try {
             this.room?.userDisconnected(this.user!.id);
-        } catch (e) {
+        } catch (e: any) {
             this.emitter.sendErrorMessage(this.socket, e);
             console.error(this.roomId + ' | ' + e.name + ' | ' + this.user?.id);
             return;

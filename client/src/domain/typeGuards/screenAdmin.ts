@@ -3,6 +3,7 @@ import { MessageData } from './MessageData';
 
 export interface ScreenAdminMessage {
     type: MessageTypes.screenAdmin;
+    isAdmin: boolean;
 }
 
 export const screenAdminTypeGuard = (data: MessageData): data is ScreenAdminMessage =>

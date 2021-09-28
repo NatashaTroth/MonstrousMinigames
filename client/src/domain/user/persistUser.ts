@@ -9,14 +9,16 @@ export function persistUser(
         setPlayerNumber: (val: number) => void;
         setName: (val: string) => void;
         setUserId: (val: string) => void;
+        setReady: (val: boolean) => void;
     }
 ) {
-    const { setPlayerNumber, setName, setUserId } = dependencies;
-    sessionStorage.setItem('userId', data.userId || '');
-    localStorage.setItem('name', data.name || '');
-    sessionStorage.setItem('roomId', data.roomId || '');
+    const { setPlayerNumber, setName, setUserId, setReady } = dependencies;
+    sessionStorage.setItem('userId', data.userId);
+    localStorage.setItem('name', data.name);
+    sessionStorage.setItem('roomId', data.roomId);
 
     setName(data.name);
     setPlayerNumber(data.number);
     setUserId(data.userId);
+    setReady(data.ready);
 }

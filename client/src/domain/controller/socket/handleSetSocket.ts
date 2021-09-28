@@ -4,8 +4,13 @@ import { Obstacle } from '../../../contexts/PlayerContextProvider';
 import { controllerChooseCharacterRoute } from '../../../utils/routes';
 import { MessageSocket } from '../../socket/MessageSocket';
 import { Socket } from '../../socket/Socket';
+import {
+    ApproachingSolvableObstacleMessage,
+    approachingSolvableObstacleTypeGuard,
+} from '../../typeGuards/approachingSolvableObstacleTypeGuard';
 import { ConnectedUsersMessage, connectedUsersTypeGuard, User } from '../../typeGuards/connectedUsers';
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
+import { exceededMaxChaserPushesTypeGuard } from '../../typeGuards/exceededMaxChaserPushes';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
 import { ObstacleMessage, obstacleTypeGuard } from '../../typeGuards/obstacle';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
@@ -18,16 +23,17 @@ import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resume
 import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/started';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../typeGuards/stopped';
 import { UserInitMessage, userInitTypeGuard } from '../../typeGuards/userInit';
+import { handleApproachingObstacleMessage } from '../gameState/game1/handleApproachingSolvableObstacleMessage';
+import { handleObstacleMessage } from '../gameState/game1/handleObstacleMessage';
+import { handlePlayerDied } from '../gameState/game1/handlePlayerDied';
+import { handlePlayerStunned } from '../gameState/game1/handlePlayerStunned';
+import { handlePlayerUnstunned } from '../gameState/game1/handlePlayerUnstunned';
 import { handleConnectedUsersMessage } from '../gameState/handleConnectedUsersMessage';
 import { handleGameHasFinishedMessage } from '../gameState/handleGameHasFinishedMessage';
 import { handleGameHasResetMessage } from '../gameState/handleGameHasResetMessage';
 import { handleGameHasStoppedMessage } from '../gameState/handleGameHasStoppedMessage';
 import { handleGameStartedMessage } from '../gameState/handleGameStartedMessage';
-import { handleObstacleMessage } from '../gameState/handleObstacleMessage';
-import { handlePlayerDied } from '../gameState/handlePlayerDied';
 import { handlePlayerFinishedMessage } from '../gameState/handlePlayerFinishedMessage';
-import { handlePlayerStunned } from '../gameState/handlePlayerStunned';
-import { handlePlayerUnstunned } from '../gameState/handlePlayerUnstunned';
 import { handleUserInitMessage } from '../gameState/handleUserInitMessage';
 
 export interface HandleSetSocketDependencies {
@@ -43,10 +49,13 @@ export interface HandleSetSocketDependencies {
     setName: (val: string) => void;
     setAvailableCharacters: (val: number[]) => void;
     setUserId: (val: string) => void;
+    setReady: (val: boolean) => void;
     setPlayerDead: (val: boolean) => void;
     history: History;
     setConnectedUsers: (val: User[]) => void;
     playerRank: undefined | number;
+    setEarlySolvableObstacle: (val: Obstacle | undefined) => void;
+    setExceededChaserPushes: (val: boolean) => void;
 }
 
 export function handleSetSocket(
@@ -66,10 +75,13 @@ export function handleSetSocket(
         setName,
         setAvailableCharacters,
         setUserId,
+        setReady,
         setPlayerDead,
         history,
         setConnectedUsers,
         playerRank,
+        setEarlySolvableObstacle,
+        setExceededChaserPushes,
     } = dependencies;
 
     setControllerSocket(socket);
@@ -88,6 +100,8 @@ export function handleSetSocket(
     const playerStunnedSocket = new MessageSocket(playerStunnedTypeGuard, socket);
     const gameFinishedSocket = new MessageSocket(finishedTypeGuard, socket);
     const playerUnstunnedSocket = new MessageSocket(playerUnstunnedTypeGuard, socket);
+    const approachingSolvableObstacleSocket = new MessageSocket(approachingSolvableObstacleTypeGuard, socket);
+    const exceededMaxChaserPushesSocket = new MessageSocket(exceededMaxChaserPushesTypeGuard, socket);
 
     userInitSocket.listen((data: UserInitMessage) => {
         handleUserInitMessage({
@@ -96,6 +110,7 @@ export function handleSetSocket(
                 setPlayerNumber,
                 setName,
                 setUserId,
+                setReady,
             },
         });
     });
@@ -183,8 +198,14 @@ export function handleSetSocket(
             dependencies: {
                 setPlayerRank,
             },
+            history,
         });
     });
+
+    approachingSolvableObstacleSocket.listen((data: ApproachingSolvableObstacleMessage) => {
+        handleApproachingObstacleMessage({ data, setEarlySolvableObstacle });
+    });
+    exceededMaxChaserPushesSocket.listen(() => setExceededChaserPushes(true));
 
     if (socket) {
         history.push(controllerChooseCharacterRoute(roomId));

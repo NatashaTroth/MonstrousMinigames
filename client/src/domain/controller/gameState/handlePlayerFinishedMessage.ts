@@ -20,10 +20,10 @@ export function handlePlayerFinishedMessage(props: HandlePlayerFinished) {
         setPlayerFinished(true);
         setPlayerRank(data.rank);
 
-        const stoneTimeoutId = sessionStorage.getItem('stoneTimeoutId');
-        if (stoneTimeoutId) {
-            clearTimeout(Number(stoneTimeoutId));
-            sessionStorage.removeItem(stoneTimeoutId);
+        const windmillTimeoutId = sessionStorage.getItem('windmillTimeoutId');
+        if (windmillTimeoutId) {
+            clearTimeout(Number(windmillTimeoutId));
+            sessionStorage.removeItem('windmillTimeoutId');
         }
 
         history.push(controllerFinishedRoute(roomId));

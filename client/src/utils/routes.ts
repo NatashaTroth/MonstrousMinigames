@@ -1,4 +1,4 @@
-import { Obstacles } from './constants';
+import { ObstacleTypes } from './constants';
 
 export enum Routes {
     // Routes for router
@@ -14,6 +14,7 @@ export enum Routes {
     controllerPlayerDead = '/controller/:id/dead',
     controllerPlayerStunned = '/controller/:id/stunned',
     controllerPlayerFinished = '/controller/:id/finished',
+    controllerWindmill = '/controller/:id/windmill',
     screenLobby = '/screen/:id/lobby',
     screenChooseGame = '/screen/:id/choose-game',
     screenGameIntro = '/screen/:id/game-intro',
@@ -37,14 +38,13 @@ export enum Routes {
     getReady = '/get-ready',
     stunned = '/stunned',
     chooseCharacter = '/choose-character',
+    windmill = '/windmill',
 }
 
 export const controllerChooseCharacterRoute = (roomId: undefined | string) =>
     `${Routes.controller}/${roomId}${Routes.chooseCharacter}`;
 
 export const controllerLobbyRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.lobby}`;
-
-export const controllerStoneRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.stone}`;
 
 export const controllerPlayerDeadRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.dead}`;
 
@@ -56,16 +56,21 @@ export const controllerGame1Route = (roomId: undefined | string) => `${Routes.co
 export const controllerPlayerStunnedRoute = (roomId: undefined | string) =>
     `${Routes.controller}/${roomId}${Routes.stunned}`;
 
-export const controllerObstacleRoute = (roomId: undefined | string, obstacle: Obstacles) => {
+export const controllerObstacleRoute = (roomId: undefined | string, obstacle: ObstacleTypes) => {
     switch (obstacle) {
-        case Obstacles.treeStump:
+        case ObstacleTypes.treeStump:
             return `${Routes.controller}/${roomId}${Routes.treeStump}`;
-        case Obstacles.spider:
+        case ObstacleTypes.spider:
             return `${Routes.controller}/${roomId}${Routes.spider}`;
-        case Obstacles.trash:
+        case ObstacleTypes.trash:
             return `${Routes.controller}/${roomId}${Routes.trash}`;
+        case ObstacleTypes.stone:
+            return `${Routes.controller}/${roomId}${Routes.stone}`;
     }
 };
+
+export const controllerWindmillRoute = (roomId: undefined | string) =>
+    `${Routes.controller}/${roomId}${Routes.windmill}`;
 
 export const screenGameIntroRoute = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.gameIntro}`;
 

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 
 import Button from '../../../components/common/Button';
@@ -18,6 +19,9 @@ import {
     RightContainer,
 } from './ConnectScreen.sc';
 import GettingStartedDialog from './GettingStarted';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const fetch = require('node-fetch');
 
 export const ConnectScreen: React.FunctionComponent = () => {
     const [joinDialogOpen, setJoinDialogOpen] = React.useState(false);

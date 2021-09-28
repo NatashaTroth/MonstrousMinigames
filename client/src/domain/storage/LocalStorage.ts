@@ -8,6 +8,10 @@ export class LocalStorage implements Storage {
     setItem(key: string, value: string | number) {
         global.localStorage.setItem(key, String(value));
     }
+
+    removeItem(key: string) {
+        global.localStorage.removeItem(key);
+    }
 }
 
 export const localStorage = new LocalStorage();

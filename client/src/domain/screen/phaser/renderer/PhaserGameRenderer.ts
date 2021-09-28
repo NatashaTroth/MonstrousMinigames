@@ -1,178 +1,37 @@
+//TODO can be used by all phaser games!!
+
 import Phaser from 'phaser';
 
+import { designDevelopment } from '../../../../utils/constants';
 import { depthDictionary } from '../../../../utils/depthDictionary';
+import { getRandomInt } from '../../../../utils/getRandomInt';
 import MainScene from '../../components/MainScene';
-import { GameRenderer } from './GameRenderer';
+import * as colors from '../colors';
+import { gameLoadedWaitingMessages, gameLoadingMessages } from '../gameLoadingMessages';
+import { countdownTextStyleProperties, loadingTextStyleProperties } from '../textStyleProperties';
 
 /**
  * this is an incomplete GameRenderer adapter which contains all the phaser logic. This class might only be tested via
  * integration tests. That's why we want to keep this class as small as possible.
  */
-export class PhaserGameRenderer implements GameRenderer {
-    pauseButton?: Phaser.GameObjects.Text;
+export class PhaserGameRenderer {
+    sceneWidth: number;
+    sceneHeight: number;
+    progressBoxWidth: number;
+    progressBoxHeight: number;
     countdownText?: Phaser.GameObjects.Text;
-    backgroundLanes: Phaser.GameObjects.Image[][];
+    progressBox?: Phaser.GameObjects.Graphics;
+    progressBar?: Phaser.GameObjects.Graphics;
+    loadingText?: Phaser.GameObjects.Text;
+    percentText?: Phaser.GameObjects.Text;
+    assetText?: Phaser.GameObjects.Text; //only for local dev -> to see which assets take long to load
 
     constructor(private scene: MainScene) {
         this.scene = scene;
-        this.backgroundLanes = [[], [], [], []]; //TODO change
-    }
-
-    renderBackground(windowWidth: number, windowHeight: number, trackLength: number) {
-        //TODO move lanes to player renderer
-        this.scene.cameras.main.backgroundColor.setTo(255, 255, 255);
-        const reps = Math.ceil(trackLength / (windowWidth / 4)) + 2;
-
-        for (let i = 0; i < reps; i++) {
-            for (let j = 0; j < 4; j++) {
-                // Background without parallax
-                const bg = this.scene.add.image(
-                    (i * windowWidth) / 4,
-                    (j * windowHeight) / 4 + windowHeight / 4,
-                    'laneBackground'
-                );
-                bg.setDisplaySize(windowWidth / 4, windowHeight / 4);
-                bg.setOrigin(0, 1);
-                bg.setScrollFactor(1);
-
-                /*
-                const sky = this.scene.add.image(
-                    (i * windowWidth) / 4,
-                    (j * windowHeight) / 4 + windowHeight / 4,
-                    'starsAndSky'
-                );
-
-                const mountains = this.scene.add.image(
-                    (i * windowWidth) / 4,
-                    (j * windowHeight) / 4 + windowHeight / 4,
-                    'mountains'
-                );
-                const hills = this.scene.add.image(
-                    (i * windowWidth) / 4,
-                    (j * windowHeight) / 4 + windowHeight / 4,
-                    'hills'
-                );
-
-                const trees = this.scene.add.image(
-                    (i * windowWidth) / 4,
-                    (j * windowHeight) / 4 + windowHeight / 4,
-                    'trees'
-                );
-
-                const floor = this.scene.add.image(
-                    (i * windowWidth) / 4,
-                    (j * windowHeight) / 4 + windowHeight / 4,
-                    'floor'
-                );
-
-                 sky.setDisplaySize(windowWidth / 4, windowHeight / 4);
-                mountains.setDisplaySize(windowWidth / 4, windowHeight / 4);
-                hills.setDisplaySize(windowWidth / 4, windowHeight / 4);
-                trees.setDisplaySize(windowWidth / 4, windowHeight / 4);
-                floor.setDisplaySize(windowWidth / 4, windowHeight / 4);
-
-                sky.setOrigin(0, 1);
-                mountains.setOrigin(0, 1);
-                hills.setOrigin(0, 1);
-                trees.setOrigin(0, 1);
-                floor.setOrigin(0, 1);
-
-                sky.setScrollFactor(0);
-                mountains.setScrollFactor(0.25)
-                hills.setScrollFactor(0.5)
-                trees.setScrollFactor(0.75)
-                floor.setScrollFactor(1) */
-
-                this.backgroundLanes[j].push(bg);
-            }
-        }
-
-        // const playerNameBg = this.scene.add.rectangle(50, window.innerHeight / 4 - 25, 250, 50, 0xb63bd4, 0.7);
-        // // this.playerName = this.scene.add.text(100, window.innerHeight / 4 - 20, 'lsjhdf');
-
-        // const playerName = this.scene.make.text({
-        //     x: 50,
-        //     // x: this.scene.camera?.scrollX,
-        //     y: window.innerHeight / 4 - 30,
-        //     text: ' skjhdf',
-        //     style: {
-        //         fontSize: `${16}px`,
-        //         fontFamily: 'Roboto, Arial',
-        //         // color: '#d2a44f',
-        //         // stroke: '#d2a44f',
-        //         color: '#fff',
-        //         // stroke: '#d2a44f',
-        //         // strokeThickness: 1,
-        //         // fixedWidth,
-        //         // fixedHeight,
-        //         // align: 'left',
-        //         // shadow: {
-        //         //     offsetX: 10,
-        //         //     offsetY: 10,
-        //         //     color: '#000',
-        //         //     blur: 0,
-        //         //     stroke: false,
-        //         //     fill: false,
-        //         // },
-        //     },
-
-        //     // origin: {x: 0.5, y: 0.5},
-        //     add: true,
-        // });
-        // playerName.setPadding(0, 0, 0, 40);
-
-        // playerNameBg.setDepth(depthDictionary.nameTag);
-        // playerName.setDepth(depthDictionary.nameTag);
-    }
-
-    handleLanePlayerDead(idx: number) {
-        //TODO change later - no need to color images that have already gone past
-        this.backgroundLanes[idx].forEach(img => {
-            // img.setAlpha(0.3);
-            img.setTint(0x123a3a); //081919);
-        });
-        const yPos = this.backgroundLanes[idx][0].y;
-        const height = window.innerHeight / 4; //TODO change for variable number of lanes
-        const fixedWidth = 1200;
-
-        const text = this.scene.make.text({
-            x: window.innerWidth / 2 - fixedWidth / 2,
-            // x: this.scene.camera?.scrollX,
-            y: yPos - height / 2,
-            text: 'The mosquito caught you. Look at your phone!',
-            style: {
-                fontSize: `${35}px`,
-                fontFamily: 'Roboto, Arial',
-                // color: '#d2a44f',
-                // stroke: '#d2a44f',
-                color: '#d2a44f',
-                stroke: '#d2a44f',
-                strokeThickness: 1,
-                fixedWidth,
-                // fixedHeight,
-                align: 'center',
-                shadow: {
-                    offsetX: 10,
-                    offsetY: 10,
-                    color: '#000',
-                    blur: 0,
-                    stroke: false,
-                    fill: false,
-                },
-            },
-
-            // origin: {x: 0.5, y: 0.5},
-            add: true,
-        });
-        text.scrollFactorX = 0;
-    }
-
-    renderPauseButton() {
-        this.pauseButton = this.scene.add.text(window.innerWidth / 2, window.innerHeight - 50, 'Pause');
-        this.pauseButton.setInteractive();
-        this.pauseButton.on('pointerdown', () => {
-            this.scene.handlePauseResumeButton();
-        });
+        this.sceneWidth = this.scene.cameras.main.width;
+        this.sceneHeight = this.scene.cameras.main.height;
+        this.progressBoxWidth = 320;
+        this.progressBoxHeight = 50;
     }
 
     renderCountdown(text: string) {
@@ -189,25 +48,11 @@ export class PhaserGameRenderer implements GameRenderer {
                 y,
                 text,
                 style: {
+                    ...countdownTextStyleProperties,
                     fontSize: `${fixedHeight}px`,
-                    fontFamily: 'Roboto, Arial',
-                    color: '#d2a44f',
-                    stroke: '#d2a44f',
-                    strokeThickness: 15,
                     fixedWidth,
                     fixedHeight,
-                    align: 'center',
-                    shadow: {
-                        offsetX: 10,
-                        offsetY: 10,
-                        color: '#000',
-                        blur: 0,
-                        stroke: false,
-                        fill: false,
-                    },
                 },
-
-                // origin: {x: 0.5, y: 0.5},
                 add: true,
             });
             this.countdownText.scrollFactorX = 0;
@@ -215,15 +60,94 @@ export class PhaserGameRenderer implements GameRenderer {
         }
     }
 
+    renderLoadingScreen() {
+        //progress bar: https://gamedevacademy.org/creating-a-preloading-screen-in-phaser-3/?a=13#Loading_Our_Assets
+
+        //loading bar
+        this.progressBar = this.scene.add.graphics();
+        this.progressBox = this.scene.add.graphics();
+        this.progressBox.fillStyle(0xa7bdb1);
+        this.progressBox.setDepth(depthDictionary.progressBox);
+
+        const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
+        const screenCenterHeight = this.scene.cameras.main.worldView.y + this.scene.cameras.main.height / 2;
+        const progressBoxXPos = this.sceneWidth / 2 - this.progressBoxWidth / 2;
+        const progressBoxYPos = this.sceneHeight / 2 - this.progressBoxHeight / 2;
+        this.progressBox.fillRect(progressBoxXPos, progressBoxYPos, this.progressBoxWidth, this.progressBoxHeight);
+
+        this.loadingText = this.scene.make.text({
+            x: screenCenterWidth,
+            y: screenCenterHeight - this.progressBoxHeight,
+            text: `${gameLoadingMessages[getRandomInt(0, gameLoadingMessages.length)]}...`,
+            style: {
+                ...loadingTextStyleProperties,
+                fontSize: `${20}px`,
+            },
+        });
+        this.loadingText.setOrigin(0.5);
+
+        //loading percentage
+        this.percentText = this.scene.make.text({
+            x: screenCenterWidth,
+            y: screenCenterHeight,
+            text: '0%',
+            style: {
+                ...loadingTextStyleProperties,
+                fontSize: `${18}px`,
+                color: colors.darkTreeGreen,
+                fontStyle: 'bold',
+            },
+        });
+        this.percentText.setOrigin(0.5);
+        this.percentText.setDepth(depthDictionary.percentText);
+
+        if (designDevelopment) {
+            //asset text
+            this.assetText = this.scene.make.text({
+                x: this.sceneWidth / 2,
+                y: this.sceneHeight / 2 + 50,
+                text: '',
+                style: {
+                    ...loadingTextStyleProperties,
+                },
+            });
+            this.assetText.setOrigin(0.5, 0.5);
+        }
+    }
+
+    updateLoadingScreenPercent(value: number) {
+        this.percentText?.setText(`${Math.round(value * 100)}%`);
+
+        this.progressBar?.clear();
+        this.progressBar?.fillStyle(0xd2a44f, 1);
+        this.progressBar?.fillRect(
+            this.sceneWidth / 2 - this.progressBoxWidth / 2 + 10,
+            this.sceneHeight / 2 - this.progressBoxHeight / 2 + 10,
+            300 * value,
+            30
+        );
+        this.progressBar?.setDepth(depthDictionary.progressBar);
+    }
+
+    updateLoadingScreenFinishedPreloading() {
+        this.loadingText?.setText(`${gameLoadedWaitingMessages[getRandomInt(0, gameLoadedWaitingMessages.length)]}...`);
+    }
+
+    //only for local development
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fileProgressUpdate(file: any) {
+        this.assetText?.setText(`Loading asset: ${file.src}`);
+    }
+
+    destroyLoadingScreen() {
+        this.loadingText?.destroy();
+        this.percentText?.destroy();
+        this.progressBox?.destroy();
+        this.progressBar?.destroy();
+        if (designDevelopment) this.assetText?.destroy();
+    }
+
     destroyCountdown() {
         this.countdownText?.destroy();
-    }
-
-    pauseGame() {
-        this.pauseButton?.setText('Resume');
-    }
-
-    resumeGame() {
-        this.pauseButton?.setText('Pause');
     }
 }

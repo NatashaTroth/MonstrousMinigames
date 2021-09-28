@@ -1,11 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 
 import Button from '../../../components/common/Button';
 import { AudioContext } from '../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
+import { ScreenSocketContext } from '../../../contexts/ScreenSocketContextProvider';
 import oliverLobby from '../../../images/characters/oliverLobby.svg';
-import game1Img from '../../../images/ui/instructions1.png';
-import { screenGameIntroRoute, screenGetReadyRoute } from '../../../utils/routes';
+import game1Demo from '../../../images/ui/gameDemo.png';
+import { MessageTypes } from '../../../utils/constants';
+import { Routes, screenGameIntroRoute, screenGetReadyRoute } from '../../../utils/routes';
+import { ScreenStates } from '../../../utils/screenStates';
 import { handleAudioPermission } from '../../audio/handlePermission';
 import history from '../../history/history';
 import {
@@ -24,15 +28,16 @@ import LobbyHeader from './LobbyHeader';
 
 const ChooseGame: React.FunctionComponent = () => {
     const [selectedGame, setSelectedGame] = React.useState(0);
-    const { roomId } = React.useContext(GameContext);
+    const { roomId, screenAdmin, screenState } = React.useContext(GameContext);
     const tutorial = localStorage.getItem('tutorial') ? false : true;
     const { audioPermission, setAudioPermissionGranted } = React.useContext(AudioContext);
+    const { screenSocket } = React.useContext(ScreenSocketContext);
 
     const games = [
         {
             id: 1,
             name: 'The Great Monster Escape',
-            image: game1Img,
+            image: game1Demo,
         },
         { id: 2, name: 'Game 2 - coming soon' },
         { id: 3, name: 'Game 3 - coming soon' },
@@ -42,6 +47,23 @@ const ChooseGame: React.FunctionComponent = () => {
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
     }, []);
+
+    React.useEffect(() => {
+        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        if (screenAdmin) {
+            screenSocket?.emit({
+                type: MessageTypes.screenState,
+                state: ScreenStates.chooseGame,
+                game: selectedGame,
+            });
+        }
+    }, [selectedGame]);
+
+    React.useEffect(() => {
+        if (!screenAdmin && screenState !== ScreenStates.chooseGame) {
+            history.push(`${Routes.screen}/${roomId}/${screenState}`);
+        }
+    }, [screenState]);
 
     return (
         <LobbyContainer>
@@ -68,18 +90,20 @@ const ChooseGame: React.FunctionComponent = () => {
                             <PreviewImage src={games[selectedGame].image} />
                         </GamePreviewContainer>
                         <SelectGameButtonContainer>
-                            <Button
-                                variant="secondary"
-                                onClick={() =>
-                                    tutorial
-                                        ? history.push(screenGameIntroRoute(roomId))
-                                        : history.push(screenGetReadyRoute(roomId))
-                                }
-                                fullwidth
-                            >{`Start ${games[selectedGame].name}`}</Button>
+                            {screenAdmin && (
+                                <Button
+                                    variant="secondary"
+                                    onClick={() =>
+                                        tutorial
+                                            ? history.push(screenGameIntroRoute(roomId))
+                                            : history.push(screenGetReadyRoute(roomId))
+                                    }
+                                    fullwidth
+                                >{`Start ${games[selectedGame].name}`}</Button>
+                            )}
                         </SelectGameButtonContainer>
                         <BackButtonContainer>
-                            <Button onClick={history.goBack}>Back</Button>
+                            {screenAdmin && <Button onClick={history.goBack}>Back</Button>}
                         </BackButtonContainer>
                     </RightContainer>
                 </GameSelectionContainer>

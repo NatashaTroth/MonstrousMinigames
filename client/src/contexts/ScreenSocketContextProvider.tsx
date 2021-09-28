@@ -4,14 +4,9 @@ import { useHistory } from 'react-router-dom';
 import { handleSetSocket } from '../domain/screen/socket/handleSetSocket';
 import { handleSocketConnection } from '../domain/screen/socket/handleSocketConnection';
 import { Socket } from '../domain/socket/Socket';
-import { GameState, Obstacles } from '../utils/constants';
+import { GameState } from '../utils/constants';
 import { GameContext } from './GameContextProvider';
 import { Obstacle } from './PlayerContextProvider';
-
-export interface ObstacleMessage {
-    type: string;
-    obstacleType?: Obstacles;
-}
 
 interface ScreenSocketContextProps {
     screenSocket: Socket | undefined;
@@ -80,6 +75,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setFinished,
         setPlayerRanks,
         setScreenAdmin,
+        setScreenState,
     } = React.useContext(GameContext);
 
     const content = {
@@ -97,6 +93,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     setFinished,
                     setPlayerRanks,
                     setScreenAdmin,
+                    setScreenState,
                     history,
                 },
                 route
@@ -113,6 +110,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 setFinished,
                 setPlayerRanks,
                 setScreenAdmin,
+                setScreenState,
                 history,
             });
         },

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useHistory } from 'react-router';
 
-import { Character } from '../utils/characters';
-import { Obstacles } from '../utils/constants';
+import { Character } from '../config/characters';
+import { ObstacleTypes, TrashType } from '../utils/constants';
 import { controllerGame1Route, controllerObstacleRoute } from '../utils/routes';
 
 export const defaultValue = {
@@ -45,11 +45,27 @@ export const defaultValue = {
     setPlayerDead: () => {
         // do nothing
     },
+    hasStone: false,
+    setHasStone: () => {
+        // do nothing
+    },
+    earlySolvableObstacle: undefined,
+    setEarlySolvableObstacle: () => {
+        // do nothing
+    },
+    exceededChaserPushes: false,
+    setExceededChaserPushes: () => {
+        // do nothing
+    },
 };
 export interface Obstacle {
-    type: Obstacles;
+    type: ObstacleTypes;
     id: number;
+    numberTrashItems?: number;
+    trashType?: TrashType;
+    distance?: number;
 }
+
 interface PlayerContextProps {
     obstacle: undefined | Obstacle;
     setObstacle: (roomId: string | undefined, val: Obstacle | undefined) => void;
@@ -70,6 +86,12 @@ interface PlayerContextProps {
     setUserId: (val: string) => void;
     dead: boolean;
     setPlayerDead: (val: boolean) => void;
+    hasStone: boolean;
+    setHasStone: (val: boolean) => void;
+    earlySolvableObstacle: Obstacle | undefined;
+    setEarlySolvableObstacle: (val: Obstacle | undefined) => void;
+    exceededChaserPushes: boolean;
+    setExceededChaserPushes: (val: boolean) => void;
 }
 
 export const PlayerContext = React.createContext<PlayerContextProps>(defaultValue);
@@ -85,6 +107,9 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [name, setName] = React.useState<string>('');
     const [ready, setReady] = React.useState<boolean>(false);
     const [dead, setPlayerDead] = React.useState(false);
+    const [hasStone, setHasStone] = React.useState(false);
+    const [earlySolvableObstacle, setEarlySolvableObstacle] = React.useState<Obstacle | undefined>();
+    const [exceededChaserPushes, setExceededChaserPushes] = React.useState(false);
 
     let reroute = true;
 
@@ -120,6 +145,12 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setUserId,
         dead,
         setPlayerDead,
+        hasStone,
+        setHasStone,
+        earlySolvableObstacle,
+        setEarlySolvableObstacle,
+        exceededChaserPushes,
+        setExceededChaserPushes,
     };
     return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>;
 };

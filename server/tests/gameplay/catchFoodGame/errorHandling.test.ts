@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import User from '../../../src/classes/user';
 import { CatchFoodGame } from '../../../src/gameplay';
 import { MaxNumberUsersExceededError } from '../../../src/gameplay/customErrors';
@@ -24,7 +25,7 @@ describe('Error handling tests', () => {
     it('throws an error when game is created with more than 4 players with the max number of users', () => {
         try {
             catchFoodGame.createNewGame(longerUsers);
-        } catch (e) {
+        } catch (e: any) {
             expect(e.maxNumberOfUsers).toBe((catchFoodGame as any).maxNumberOfPlayers);
         }
     });

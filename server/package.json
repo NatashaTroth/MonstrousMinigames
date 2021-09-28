@@ -16,7 +16,8 @@
         "postinstall": "npm run tsc",
         "start": "node src/app.js",
         "deploy": "cd .. && git subtree push --prefix server heroku master",
-        "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}"
+        "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
+        "preCommitHook": "rm -rf dist/ && npm run prettier && jest --coverage && npm run lint"
     },
     "repository": {
         "type": "git",
@@ -26,7 +27,7 @@
     "license": "ISC",
     "dependencies": {
         "@types/cron": "^1.7.2",
-        "@types/shortid": "0.0.29",
+        "@types/nanoid": "^3.0.0",
         "@types/socket.io": "^2.1.13",
         "@types/socket.io-client": "^1.4.36",
         "ansi-styles": "^5.1.0",
@@ -35,12 +36,12 @@
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "http-terminator": "^3.0.0",
+        "nanoid": "^3.1.28",
         "node-code-generator": "^1.0.3",
         "phaser": "^3.52.0",
         "qrcode": "^1.4.4",
         "reflect-metadata": "^0.1.13",
         "seedrandom": "^3.0.5",
-        "shortid": "^2.2.16",
         "socket.io": "^3.1.0",
         "socket.io-client": "^4.0.0",
         "tsyringe": "^4.6.0"
@@ -65,7 +66,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "rm -rf dist/ && npm run prettier && jest --coverage && npm run lint"
+            "pre-commit": "npm run preCommitHook"
         }
     },
     "jest": {

@@ -11,7 +11,9 @@ class App {
 
     run() {
         this.connectionHandler.handle();
-        this.clearRoomCronJob.start();
+        if (!process.env.LOCAL_DEVELOPMENT) {
+            this.clearRoomCronJob.start();
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-import { cleanup, queryAllByText, queryByText, render } from '@testing-library/react';
+import { cleanup, fireEvent, queryAllByText, queryByText, render } from '@testing-library/react';
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 
@@ -135,5 +135,116 @@ describe('Screen FinishedScreen', () => {
         );
 
         expect(queryByText(container, givenText)).toBeFalsy();
+    });
+
+    it('if user died show a dead players section', () => {
+        const playerRanks = [
+            {
+                id: '1',
+                rank: 1,
+                name: 'User 1',
+                totalTimeInMs: 5000,
+                finished: true,
+                positionX: 0,
+                isActive: true,
+                dead: true,
+            },
+            {
+                id: '2',
+                rank: 2,
+                name: 'User 2',
+                totalTimeInMs: 5600,
+                finished: true,
+                positionX: 0,
+                isActive: true,
+                dead: false,
+            },
+        ];
+
+        const { container } = render(
+            <ThemeProvider theme={theme}>
+                <GameContext.Provider value={{ ...defaultValue, playerRanks }}>
+                    <FinishedScreen />
+                </GameContext.Provider>
+            </ThemeProvider>
+        );
+        expect(queryAllByText(container, 'Dead Players')).toBeTruthy();
+    });
+
+    it('show user names on the leaderboard', () => {
+        const playerRanks = [
+            {
+                id: '1',
+                rank: 1,
+                name: 'User 1',
+                totalTimeInMs: 5000,
+                finished: true,
+                positionX: 0,
+                isActive: true,
+                dead: false,
+            },
+            {
+                id: '2',
+                rank: 2,
+                name: 'User 2',
+                totalTimeInMs: 5600,
+                finished: true,
+                positionX: 0,
+                isActive: true,
+                dead: false,
+            },
+        ];
+
+        const { container } = render(
+            <ThemeProvider theme={theme}>
+                <GameContext.Provider value={{ ...defaultValue, playerRanks }}>
+                    <FinishedScreen />
+                </GameContext.Provider>
+            </ThemeProvider>
+        );
+        expect(queryByText(container, 'User 2')).toBeFalsy();
+    });
+
+    it('does not display back to lobby button if player is not admin', () => {
+        const { container } = render(
+            <ThemeProvider theme={theme}>
+                <GameContext.Provider value={{ ...defaultValue, screenAdmin: false }}>
+                    {FinishedScreenComponent}
+                </GameContext.Provider>
+            </ThemeProvider>
+        );
+
+        expect(queryByText(container, 'Back to Lobby')).toBeFalsy();
+    });
+
+    it('if player is admin the back to lobby button is rendered', () => {
+        const { container } = render(
+            <ThemeProvider theme={theme}>
+                <GameContext.Provider value={{ ...defaultValue, screenAdmin: true }}>
+                    {FinishedScreenComponent}
+                </GameContext.Provider>
+            </ThemeProvider>
+        );
+        expect(queryByText(container, 'Back to Lobby')).toBeTruthy();
+    });
+
+    it('the back to lobby button is active and calls the onclick method', () => {
+        const onClick = jest.fn();
+        const { container } = render(
+            <ThemeProvider theme={theme}>
+                <GameContext.Provider value={{ ...defaultValue, screenAdmin: true }}>
+                    {FinishedScreenComponent}
+                </GameContext.Provider>
+            </ThemeProvider>
+        );
+
+        const button = container.querySelector('button');
+        expect(button).toBeDefined();
+
+        if (button) {
+            button.onclick = onClick;
+            fireEvent.click(button);
+            expect(onClick).toHaveBeenCalledTimes(1);
+        }
     });
 });

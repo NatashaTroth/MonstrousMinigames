@@ -1,12 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 
 import Button from '../../../components/common/Button';
+import { characters } from '../../../config/characters';
 import { AudioContext } from '../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { ScreenSocketContext, User } from '../../../contexts/ScreenSocketContextProvider';
-import { characters } from '../../../utils/characters';
 import { MessageTypes } from '../../../utils/constants';
+import { Routes } from '../../../utils/routes';
+import { ScreenStates } from '../../../utils/screenStates';
 import { handleAudioPermission } from '../../audio/handlePermission';
+import history from '../../history/history';
 import { getUserArray } from './Lobby';
 import {
     Character,
@@ -23,7 +27,7 @@ import {
 const PlayersGetReady: React.FC = () => {
     const { screenSocket } = React.useContext(ScreenSocketContext);
     const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
-    const { roomId, connectedUsers, screenAdmin } = React.useContext(GameContext);
+    const { roomId, connectedUsers, screenAdmin, screenState } = React.useContext(GameContext);
 
     const emptyGame = !connectedUsers || connectedUsers.length === 0;
     const usersReady =
@@ -43,7 +47,19 @@ const PlayersGetReady: React.FC = () => {
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
         initialPlayLobbyMusic(true);
+        if (screenAdmin) {
+            screenSocket?.emit({
+                type: MessageTypes.screenState,
+                state: ScreenStates.getReady,
+            });
+        }
     }, []);
+
+    React.useEffect(() => {
+        if (!screenAdmin && screenState !== ScreenStates.getReady) {
+            history.push(`${Routes.screen}/${roomId}/${screenState}`);
+        }
+    }, [screenState]);
 
     return (
         <GetReadyContainer>

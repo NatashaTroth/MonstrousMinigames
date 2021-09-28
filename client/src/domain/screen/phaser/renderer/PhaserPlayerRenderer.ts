@@ -3,27 +3,47 @@ import Phaser from 'phaser';
 import { depthDictionary } from '../../../../utils/depthDictionary';
 import { fireworkFlares } from '../../components/GameAssets';
 import MainScene from '../../components/MainScene';
-import { Coordinates, PlayerRenderer } from './PlayerRenderer';
+import * as colors from '../colors';
+import { Character, CharacterAnimation } from '../gameInterfaces';
+import { CharacterAnimationFrames } from '../gameInterfaces/Character';
+import { Coordinates } from '../gameTypes';
+import { sharedTextStyleProperties } from '../textStyleProperties';
 
 /**
  * this is an incomplete PlayerRenderer adapter which contains all the phaser logic. This class might only be tested via
  * integration tests. That's why we want to keep this class as small as possible.
  */
-export class PhaserPlayerRenderer implements PlayerRenderer {
+
+interface RendererObstacle {
+    phaserInstance: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+}
+export class PhaserPlayerRenderer {
     private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-    // private playerText?: Phaser.GameObjects.Text;
     private chaser?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-    private playerObstacles: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[];
+    private obstacles: RendererObstacle[];
+    // Natasha bitte löschen wenn das nicht mehr gebraucht wird
+    // private skippableObstacles: RendererObstacle[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private particles: Phaser.GameObjects.Particles.ParticleEmitterManager[];
     private playerNameBg?: Phaser.GameObjects.Rectangle;
     private playerName?: Phaser.GameObjects.Text;
     private caveBehind?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private caveInFront?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    private backgroundElements?: Phaser.GameObjects.Image[];
+    //private backgroundLane?: Phaser.GameObjects.TileSprite[]; // for tile parallax
 
-    constructor(private scene: MainScene) {
-        this.playerObstacles = [];
+    constructor(
+        private scene: MainScene,
+        private numberPlayers: number,
+        private laneHeightsPerNumberPlayers: number[]
+    ) {
+        this.obstacles = [];
+        // Natasha bitte löschen wenn das nicht mehr gebraucht wird
+        // this.skippableObstacles = [];
         this.particles = [];
+        this.backgroundElements = []; //TODO change
+
+        //when <= 2 lanes, make them less high to fit more width
 
         fireworkFlares.forEach((flare, i) => {
             const particle = this.scene.add.particles(`flare${i}`);
@@ -32,94 +52,104 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         });
     }
 
-    renderChasers(chasersPositionX: number, chasersPositionY: number) {
-        if (!this.chaser) {
-            this.chaser = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasers');
-            this.chaser.setScale(0.4, 0.4);
-            this.chaser.setDepth(depthDictionary.chaser);
+    renderBackground(
+        windowWidth: number,
+        windowHeight: number,
+        trackLength: number,
+        index: number,
+        laneHeight: number,
+        posY: number
+    ) {
+        let i = 0;
+        const moon = this.scene.add.image(0, posY, 'moon');
+        const newWidth = this.calcWidthKeepAspectRatio(moon, laneHeight);
+        moon.setDisplaySize(newWidth, laneHeight);
+        moon.setOrigin(0, 1);
+        moon.setScrollFactor(0.1);
+        moon.setDepth(depthDictionary.moon);
+        this.backgroundElements?.push(moon);
+
+        const repeats = Math.ceil(trackLength / newWidth) + 1;
+        const backgroundKeys = ['starsAndSky', 'mountains', 'hills', 'trees', 'floor'];
+        const scrollFactors = [0.1, 0.4, 0.6, 0.9, 1];
+        const depths = [
+            depthDictionary.sky,
+            depthDictionary.mountains,
+            depthDictionary.hills,
+            depthDictionary.trees,
+            depthDictionary.floor,
+        ];
+
+        while (i < repeats) {
+            backgroundKeys.forEach((backgroundKey, idx) => {
+                const element = this.scene.add.image(i * (windowWidth / this.numberPlayers), posY, backgroundKey);
+                element.setDisplaySize(newWidth, laneHeight);
+                element.setOrigin(0, 1);
+                element.setScrollFactor(scrollFactors[idx]);
+                element.setDepth(depths[idx]);
+
+                // set new positions, based on size of image
+                element.x = i * element.displayWidth;
+                if (this.numberPlayers <= 2) element.y = this.moveLanesToCenter(windowHeight, laneHeight, index);
+                this.backgroundElements?.push(element);
+            });
+
+            i++;
         }
-        this.chaser.setX(chasersPositionX - 50); // - 50 so that not quite on top of player when caught
     }
 
-    destroyPlayer() {
-        this.player?.destroy();
+    private calcWidthKeepAspectRatio(bg: Phaser.GameObjects.Image | Phaser.GameObjects.TileSprite, laneHeight: number) {
+        //Keep aspect ratio when setting displaySize
+        // oldHeight .... 100%
+        // newHeight ... x -> 100 / oldHeight * newHeight
+        // ---
+        // 100% ...... oldWidth
+        // x ......... newWidth -> oldWidth/100 * x
+
+        const oldHeight = bg.displayHeight;
+        const backgroundScalingFactor = (100 / oldHeight) * laneHeight;
+        const newWidth = (bg.displayWidth / 100) * backgroundScalingFactor;
+        return newWidth;
     }
 
-    stunPlayer() {
-        if (this.player) this.player.alpha = 0.5;
+    private moveLanesToCenter(windowHeight: number, newHeight: number, index: number) {
+        return (windowHeight - newHeight * this.numberPlayers) / 2 + newHeight * (index + 1);
     }
 
-    unStunPlayer() {
-        if (this.player) this.player.alpha = 1;
-    }
-
-    renderPlayer(
-        idx: number,
-        coordinates: Coordinates,
-        monsterName: string,
-        animationName: string,
-        username?: string,
-        background?: string
-    ): void {
-        // eslint-disable-next-line no-console
-        // console.log(username);
+    renderPlayer(idx: number, coordinates: Coordinates, character: Character, username?: string): void {
         let usernameToDisplay = '';
         if (username) {
             usernameToDisplay = username;
         }
 
         if (!this.player) {
-            this.renderPlayerInitially(coordinates, monsterName);
-            this.initiatePlayerAnimation(monsterName, animationName);
-            this.renderPlayerName(idx, usernameToDisplay);
-        }
-        if (this.player) {
+            this.renderPlayerInitially(coordinates, character.name);
+
+            character.animations.forEach((animation: CharacterAnimation) => {
+                this.initiateAnimation(character.name, animation.name, animation.frames);
+            });
+            this.renderPlayerName(idx, usernameToDisplay, coordinates.y);
+        } else if (this.player) {
+            //only move player
             this.player.x = coordinates.x;
-            this.player.y = coordinates.y + window.innerHeight / 20;
         }
     }
 
-    renderPlayerName(idx: number, name: string) {
-        this.playerNameBg = this.scene.add.rectangle(
-            50,
-            (window.innerHeight / 4) * (idx + 1) - 25,
-            250,
-            50,
-            0xb63bd4,
-            0.7
-        );
-        // this.playerName = this.scene.add.text(100, window.innerHeight / 4 - 20, 'lsjhdf');
+    private renderPlayerName(idx: number, name: string, posY: number) {
+        this.playerNameBg = this.scene.add.rectangle(50, posY - 25, 250, 50, 0xb63bd4, 0.7);
+        // this.playerName = this.scene.add.text(100, window.innerHeight / numberPlayers - 20, 'lsjhdf');
 
         this.playerName = this.scene.make.text({
             x: 20,
-            // x: this.scene.camera?.scrollX,
-            y: (window.innerHeight / 4) * (idx + 1) - 30,
-            text: `${name}`, //TODO QUICKFIX - GET PADDING TO WORK INSTEAD OF SPACE
+            y: posY - 30,
+            text: `${name}`,
             style: {
+                ...sharedTextStyleProperties,
                 fontSize: `${16}px`,
-                fontFamily: 'Roboto, Arial',
-                // color: '#d2a44f',
-                // stroke: '#d2a44f',
-                color: '#fff',
-                // stroke: '#d2a44f',
-                // strokeThickness: 1,
-                // fixedWidth,
-                // fixedHeight,
-                // align: 'left',
-                // shadow: {
-                //     offsetX: 10,
-                //     offsetY: 10,
-                //     color: '#000',
-                //     blur: 0,
-                //     stroke: false,
-                //     fill: false,
-                // },
+                color: colors.white,
             },
-
-            // origin: {x: 0.5, y: 0.5},
             add: true,
         });
-        // this.playerName.setPadding(0, 0, 0, 50);
 
         this.playerNameBg.setDepth(depthDictionary.nameTag);
         this.playerName.setDepth(depthDictionary.nameTag);
@@ -134,52 +164,113 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         }
     }
 
-    renderCave(posX: number, posY: number) {
-        posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
-        posY += 5;
-        const scale = 0.13;
-        const caveBehind = this.scene.physics.add.sprite(posX, posY + window.innerHeight / 16, 'caveBehind'); //TODO change caveBehind to enum
-        caveBehind.setScale(scale, scale);
-        caveBehind.setDepth(depthDictionary.cave);
-        const caveInFront = this.scene.physics.add.sprite(posX, posY + window.innerHeight / 16, 'caveInFront'); //TODO change caveInFront to enum
-        caveInFront.setScale(scale, scale);
-        caveInFront.setDepth(depthDictionary.caveInFront);
+    renderChasers(chasersPositionX: number, chasersPositionY: number) {
+        if (!this.chaser) {
+            this.chaser = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasers');
+            this.chaser.setScale(
+                (1.25 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]
+            );
+            this.chaser.setDepth(depthDictionary.chaser);
+            this.chaser.y = this.chaser.y - this.chaser.displayHeight / 2; //set correct y pos according to player height
+        }
+        this.chaser.setX(chasersPositionX - 50); // - 50 so that not quite on top of player when caught
     }
 
-    // renderText(coordinates: Coordinates, text: string, background?: string): void {
-    //     this.playerText?.destroy(); // TODO: maybe reuse existing text (see renderPlayer)
-    //     this.playerText = this.scene.add
-    //         .text(
-    //             coordinates.x, //+ 50
-    //             coordinates.y - 100,
-    //             text,
-    //             { font: '16px Arial', align: 'center', fixedWidth: 150 }
-    //         )
-    //         .setDepth(50);
+    destroyPlayer() {
+        this.player?.destroy();
+    }
 
-    //     if (background) {
-    //         this.playerText.setBackgroundColor(background);
-    //     }
-    // }
+    stunPlayer(animationName: string) {
+        const pebble = this.scene.physics.add.sprite(
+            this.player!.x,
+            this.backgroundElements![0].y - this.backgroundElements![0].displayHeight,
+            'pebble'
+        );
+        pebble.setScale((0.4 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+        pebble.y += pebble.displayHeight / 2;
+        pebble.body.setGravity(0, 1200);
+        pebble.setCollideWorldBounds(true);
+        const destroyPebbleInterval = setInterval(() => {
+            if (pebble.y > this.player!.y - (this.player!.displayHeight / 5) * 2.5) {
+                clearInterval(destroyPebbleInterval);
+                pebble.destroy();
+                this.startAnimation(animationName);
+            }
+        }, 100);
+    }
+
+    renderCave(posX: number, posY: number) {
+        posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
+        const scale = (0.9 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1];
+        const yOffset = 2.2;
+        this.caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
+        this.caveBehind.setScale(scale);
+        this.caveBehind.setDepth(depthDictionary.caveBehind);
+        this.caveBehind.y -= this.caveBehind.displayHeight / yOffset; /// (0.01 * numberPlayers);
+
+        this.caveInFront = this.scene.physics.add.sprite(posX, posY, 'caveInFront'); //TODO change caveInFront to enum
+        this.caveInFront.setScale(scale);
+        this.caveInFront.setDepth(depthDictionary.caveInFront);
+        this.caveInFront.y -= this.caveInFront.displayHeight / yOffset; //(0.01 * numberPlayers);
+    }
+
+    handlePlayerDead() {
+        //TODO change later - no need to color images that have already gone past
+        if (this.backgroundElements && this.backgroundElements.length > 0) {
+            this.backgroundElements.forEach(img => {
+                img.setTint(0x123a3a);
+            });
+            const yPos = this.backgroundElements[0].y;
+            const height = this.backgroundElements[0].displayHeight;
+            const fixedWidth = 1200;
+
+            const text = this.scene.make.text({
+                x: window.innerWidth / 2 - fixedWidth / 2,
+                y: yPos - height / 2,
+                text: 'The mosquito caught you. Look at your phone!',
+                style: {
+                    ...sharedTextStyleProperties,
+                    fontSize: `${35}px`,
+                    color: colors.orange,
+                    stroke: colors.orange,
+                    strokeThickness: 1,
+                    fixedWidth,
+                    align: 'center',
+                    shadow: {
+                        offsetX: 10,
+                        offsetY: 10,
+                        color: colors.black,
+                        blur: 0,
+                        stroke: false,
+                        fill: false,
+                    },
+                },
+                add: true,
+            });
+            text.scrollFactorX = 0;
+            text.setDepth(depthDictionary.deadText);
+        }
+    }
 
     renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number) {
         const obstacle = this.scene.physics.add.sprite(posX, posY, obstacleType);
-        obstacle.setScale(obstacleScale, obstacleScale);
+        obstacle.setScale(obstacleScale * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+
+        obstacle.y -= obstacle.displayHeight / 1.3;
         obstacle.setDepth(depth);
 
-        this.playerObstacles.push(obstacle);
+        this.obstacles.push({ phaserInstance: obstacle });
     }
 
-    renderFireworks(posX: number, posY: number) {
-        // const flareColors: string[] = ['blue', 'red', 'green'];
-        const scales: Array<number | { min: number; max: number }> = [0.1, 0.01, { min: 0, max: 0.1 }];
+    renderFireworks(posX: number, posY: number, laneHeight: number) {
+        const scales: Array<number | { min: number; max: number }> = [0.1, 0.08, { min: 0, max: 0.1 }];
         const lifespans: number[] = [250, 500, 700];
-        // const flareColo
+
         this.particles.forEach((particle, i) => {
             const particlesEmitter = particle.createEmitter({
                 // key: flare,
                 x: posX,
-                y: posY,
+                y: posY - (laneHeight / 4) * 3,
                 scale: scales[i],
                 speed: 75,
                 blendMode: 'ADD',
@@ -190,13 +281,6 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         });
     }
 
-    startRunningAnimation(animationName: string) {
-        this.player?.play(animationName);
-    }
-    stopRunningAnimation() {
-        this.player?.anims.stop();
-    }
-
     movePlayerForward(newXPosition: number) {
         if (this.player) {
             this.player.x = newXPosition;
@@ -204,15 +288,25 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
     }
 
     destroyObstacle() {
-        if (this.playerObstacles.length > 0) {
-            this.playerObstacles[0].destroy();
-            this.playerObstacles.shift();
+        const currentObstacle = this.obstacles.shift();
+        if (currentObstacle) {
+            // if (!currentObstacle.skippable) {
+            //     currentObstacle.phaserInstance.destroy();
+            // } else {
+            //     this.skippableObstacles.push(currentObstacle);
+            // }
+            currentObstacle.phaserInstance.destroy();
         }
     }
     destroyObstacles() {
-        this.playerObstacles.forEach(obstacle => {
-            obstacle.destroy();
+        this.obstacles.forEach(obstacle => {
+            obstacle.phaserInstance.destroy();
         });
+
+        // Natasha bitte löschen wenn das nicht mehr gebraucht wird
+        // this.skippableObstacles.forEach(obstacle => {
+        //     obstacle.phaserInstance.destroy();
+        // });
     }
 
     destroyCave() {
@@ -224,41 +318,46 @@ export class PhaserPlayerRenderer implements PlayerRenderer {
         this.chaser?.destroy();
     }
 
-    addAttentionIcon() {
+    renderAttentionIcon() {
         if (!this.playerAttention && this.player) {
             this.playerAttention = this.scene.physics.add
-                .sprite(this.player.x + 75, this.player.y - 50, 'attention')
+                .sprite(
+                    this.player.x + this.player.displayWidth / 2,
+                    this.player.y - this.player.displayHeight / 2,
+                    'attention'
+                )
                 .setDepth(depthDictionary.attention)
-                .setScale(0.03, 0.03);
+                .setScale((0.085 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
         }
     }
 
     destroyAttentionIcon() {
-        //TODO reuse
         this.playerAttention?.destroy();
         this.playerAttention = undefined;
     }
 
-    private renderPlayerInitially(coordinates: Coordinates, monsterName: string) {
-        // eslint-disable-next-line no-console
-        console.log(' coordinates.y + window.innerHeight / 15');
-        this.player = this.scene.physics.add.sprite(
-            coordinates.x,
-            coordinates.y + window.innerHeight / 15,
-            monsterName
-        );
+    private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
+        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
         this.player.setDepth(depthDictionary.player);
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
-        this.player.setScale(0.13, 0.13);
+        this.player.setScale((0.66 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+        this.player.y = this.player.y - this.player.displayHeight / 2; //set correct y pos according to player height
     }
 
-    private initiatePlayerAnimation(monsterName: string, animationName: string) {
+    private initiateAnimation(spritesheetName: string, animationName: string, frames: CharacterAnimationFrames) {
         this.scene.anims.create({
             key: animationName,
-            frames: this.scene.anims.generateFrameNumbers(monsterName, { start: 12, end: 15 }),
+            frames: this.scene.anims.generateFrameNumbers(spritesheetName, frames),
             frameRate: 6,
             repeat: -1,
         });
+    }
+
+    startAnimation(animationName: string) {
+        this.player?.play(animationName);
+    }
+    stopAnimation() {
+        this.player?.anims.stop();
     }
 }

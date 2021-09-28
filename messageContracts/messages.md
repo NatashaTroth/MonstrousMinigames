@@ -20,7 +20,8 @@ example:
     "roomId": "XXXX",
     "name": "John",
     "isAdmin": true,
-    "number": 1
+    "number": 1,
+    "ready": false
 }
 ```
 
@@ -101,7 +102,8 @@ example:
 
 ```json
 {
-    "type": "screenAdmin"
+    "type": "screenAdmin",
+    "isAdmin": true
 }
 ```
 ### playerHasDisconnected
@@ -158,6 +160,21 @@ example:
     ],
     "trackLength": 3000,
     "numberOfObstacles": 3
+```
+### screenState
+
+-   sends the current state of the admin screen
+  
+example:
+
+```json
+{
+    "type": "screenState",
+    "state": "choose-game",
+    .
+    .
+    .
+}
 ```
 
 
@@ -446,7 +463,7 @@ example:
 }
 ```
 
-### game1/start
+### startGame
 
 -   starts the game (if the screen is admin)
   
@@ -454,6 +471,20 @@ example:
 
 ```json
 {
-    "type": "game1/start"
+    "type": "startGame"
 }
 ```
+
+### sendScreenState
+
+-   sends the current state of the admin screen
+  
+example:
+
+```json
+{
+    "type": "sendScreenState",
+    "state": "choose-game"
+}
+```
+

@@ -1,13 +1,15 @@
+import 'reflect-metadata';
 import { CatchFoodGame } from '../../../src/gameplay';
+import { ObstacleType } from '../../../src/gameplay/catchFood/enums';
 import { GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId } from '../mockData';
 import {
     clearTimersAndIntervals, completeNextObstacle, completePlayersObstacles, finishPlayer,
-    getGameFinishedDataDifferentTimes, startAndFinishGameDifferentTimes,
+    getGameFinishedDataDifferentTimes, goToNextUnsolvableObstacle, startAndFinishGameDifferentTimes,
     startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
-const TRACKLENGTH = 500;
+const TRACK_LENGTH = 5000; // has to be bigger than initial player position
 
 let catchFoodGame: CatchFoodGame;
 const dateNow = 1618665766156;
@@ -60,6 +62,10 @@ describe('Run forward', () => {
     });
 });
 
+const removeStonesFromObstacles = (game: CatchFoodGame) => () => {
+    game.players.get('1')!.obstacles = game.players.get('1')!.obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
+};
+
 describe('Obstacles reached', () => {
     beforeEach(() => {
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
@@ -72,16 +78,14 @@ describe('Obstacles reached', () => {
     it('playerHasReachedObstacle is called and returns false', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const playerHasReachedObstacleSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasReachedObstacle');
-        catchFoodGame['runForward']('1', 5);
+        catchFoodGame['runForward']('1', catchFoodGame.players.get('1')!.obstacles[0].positionX / 2);
         expect(playerHasReachedObstacleSpy).toHaveBeenCalled();
         expect(playerHasReachedObstacleSpy).toHaveReturnedWith(false);
     });
 
     it('recognises when player has reached an obstacle', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const distanceToObstacle =
-            catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame['runForward']('1', distanceToObstacle);
+        goToNextUnsolvableObstacle(catchFoodGame, '1');
         expect(catchFoodGame.players.get('1')!.atObstacle).toBeTruthy();
     });
 
@@ -108,15 +112,26 @@ describe('Obstacles reached', () => {
     });
 
     it("doesn't remove an obstacle when a player arrives at it", async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(catchFoodGame, removeStonesFromObstacles(catchFoodGame));
         const distanceToObstacle =
             catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
         catchFoodGame['runForward']('1', distanceToObstacle);
-        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(4);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(catchFoodGame.numberOfObstacles);
+    });
+
+    it('removes a stone obstacle when a player arrives at it carrying one', async () => {
+        startGameAndAdvanceCountdown(catchFoodGame, () => {
+            catchFoodGame.players.get('1')!.obstacles = catchFoodGame.players.get('1')!.obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
+            catchFoodGame.players.get('1')!.stonesCarrying = 1;
+        });
+        const distanceToObstacle =
+            catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
+        catchFoodGame['runForward']('1', distanceToObstacle);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(catchFoodGame.numberOfStones - 1);
     });
 
     it("doesn't allow players to move when they reach an obstacle", async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(catchFoodGame, removeStonesFromObstacles(catchFoodGame));
         const distanceToObstacle =
             catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
         catchFoodGame['runForward']('1', distanceToObstacle);
@@ -128,9 +143,7 @@ describe('Obstacles reached', () => {
 
     it('should not backup run forward requests while at obstacle', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const distanceToObstacle =
-            catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame['runForward']('1', distanceToObstacle);
+        goToNextUnsolvableObstacle(catchFoodGame, '1');
 
         const tmpPlayerPositionX = catchFoodGame.players.get('1')!.positionX;
         for (let i = 0; i < 10; i++) {
@@ -148,20 +161,20 @@ describe('Obstacles reached', () => {
 
     it('sets positionX to Obstacle when player has reached it (should not be further than obstacle position)', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
+        goToNextUnsolvableObstacle(catchFoodGame, '1');
         const obstaclePosition = catchFoodGame.players.get('1')!.obstacles[0].positionX;
-        const distanceToObstacle = obstaclePosition - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame['runForward']('1', distanceToObstacle + 500);
+        catchFoodGame['runForward']('1', 500);
         expect(catchFoodGame.players.get('1')!.positionX).toBe(obstaclePosition);
     });
 
     it('should remove a completed obstacle', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         completeNextObstacle(catchFoodGame, '1');
-        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(3);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(catchFoodGame.numberOfObstacles + catchFoodGame.numberOfStones - 1);
     });
 
     it('can move a player again when obstacle is completed', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(catchFoodGame, removeStonesFromObstacles(catchFoodGame));
         completeNextObstacle(catchFoodGame, '1');
         const tmpPlayerPositionX = catchFoodGame.players.get('1')!.positionX;
         catchFoodGame['runForward']('1', 5);
@@ -192,7 +205,7 @@ describe('Player has finished race', () => {
 
     it('should not set a player as finished if they have not completed all their obstacles but reached the goal', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame['runForward']('1', TRACKLENGTH);
+        catchFoodGame['runForward']('1', TRACK_LENGTH);
         expect(catchFoodGame.players.get('1')!.finished).toBeFalsy();
     });
 
@@ -279,8 +292,6 @@ describe('Game finished', () => {
         const expectedEventObj = {
             roomId: catchFoodGame.roomId,
             gameState: GameState.Finished,
-            trackLength: catchFoodGame.trackLength,
-            numberOfObstacles: catchFoodGame.numberOfObstacles,
         };
 
         expect(eventData).toMatchObject(expectedEventObj);

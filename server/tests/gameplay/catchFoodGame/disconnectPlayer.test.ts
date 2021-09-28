@@ -1,9 +1,11 @@
+import 'reflect-metadata';
+import GameEventEmitter from '../../../src/classes/GameEventEmitter';
+import DI from '../../../src/di';
 import { CatchFoodGame } from '../../../src/gameplay';
-import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
-// import CatchFoodGameEventEmitter from '../../../src/gameplay/catchFood/CatchFoodGameEventEmitter';
-import { GameEvents } from '../../../src/gameplay/catchFood/interfaces';
+import { PlayerRank } from '../../../src/gameplay/catchFood/interfaces';
 // ..
-import { GameEventTypes, GameState } from '../../../src/gameplay/enums';
+import { GameState } from '../../../src/gameplay/enums';
+import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
 import { leaderboard, roomId, users } from '../mockData';
 import {
     clearTimersAndIntervals, completeNextObstacle, finishPlayer, startAndFinishGameDifferentTimes,
@@ -13,15 +15,14 @@ import {
 // const TRACK_LENGTH = 500;
 
 let catchFoodGame: CatchFoodGame;
-let gameEventEmitter: CatchFoodGameEventEmitter;
+let gameEventEmitter: GameEventEmitter;
 
 describe('Disconnect Player tests', () => {
     beforeAll(() => {
-        gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
+        gameEventEmitter = DI.resolve(GameEventEmitter);
     });
 
     beforeEach(() => {
-        // gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         jest.useFakeTimers();
     });
@@ -93,15 +94,15 @@ describe('Disconnect Player tests', () => {
         const dateNow = 1618665766156;
         Date.now = jest.fn(() => dateNow);
         startGameAndAdvanceCountdown(catchFoodGame);
-        let eventData: GameEvents.GameHasFinished = {
+        let eventData = {
             roomId: '',
             gameState: GameState.Started,
-            trackLength: 0,
-            numberOfObstacles: 0,
-            playerRanks: [],
+            playerRanks: [] as PlayerRank[],
         };
-        gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
-            eventData = data;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+            if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+                eventData = message.data as any;
+            }
         });
         // finish game
         Date.now = jest.fn(() => dateNow + 10000);
@@ -120,15 +121,15 @@ describe('Disconnect Player tests', () => {
         const dateNow = 1618665766156;
         Date.now = jest.fn(() => dateNow);
         startGameAndAdvanceCountdown(catchFoodGame);
-        let eventData: GameEvents.GameHasFinished = {
+        let eventData = {
             roomId: '',
             gameState: GameState.Started,
-            trackLength: 0,
-            numberOfObstacles: 0,
-            playerRanks: [],
+            playerRanks: [] as PlayerRank[],
         };
-        gameEventEmitter.on(GameEventTypes.GameHasFinished, (data: GameEvents.GameHasFinished) => {
-            eventData = data;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+            if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+                eventData = message.data as any;
+            }
         });
         // finish game
         Date.now = jest.fn(() => dateNow + 10000);

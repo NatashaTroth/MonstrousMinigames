@@ -11,7 +11,8 @@ import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/fini
 import { pausedTypeGuard } from '../../typeGuards/paused';
 import { resetTypeGuard } from '../../typeGuards/reset';
 import { resumedTypeGuard } from '../../typeGuards/resumed';
-import { screenAdminTypeGuard } from '../../typeGuards/screenAdmin';
+import { ScreenAdminMessage, screenAdminTypeGuard } from '../../typeGuards/screenAdmin';
+import { ScreenStateMessage, screenStateTypeGuard } from '../../typeGuards/screenState';
 import { StartPhaserGameMessage, startPhaserGameTypeGuard } from '../../typeGuards/startPhaserGame';
 import { stoppedTypeGuard } from '../../typeGuards/stopped';
 import { handleConnectedUsersMessage } from '../gameState/handleConnectedUsersMessage';
@@ -29,6 +30,7 @@ export interface HandleSetSocketDependencies {
     setFinished: (val: boolean) => void;
     setPlayerRanks: (val: PlayerRank[]) => void;
     setScreenAdmin: (val: boolean) => void;
+    setScreenState: (val: string) => void;
     history: History;
 }
 
@@ -46,6 +48,7 @@ export function handleSetSocket(
         setPlayerRanks,
         setFinished,
         setScreenAdmin,
+        setScreenState,
         history,
     } = dependencies;
 
@@ -61,6 +64,7 @@ export function handleSetSocket(
     const stoppedSocket = new MessageSocket(stoppedTypeGuard, socket);
     const errorSocket = new MessageSocket(errorTypeGuard, socket);
     const screenAdminSocket = new MessageSocket(screenAdminTypeGuard, socket);
+    const screenStateSocket = new MessageSocket(screenStateTypeGuard, socket);
 
     connectedUsersSocket.listen((data: ConnectedUsersMessage) =>
         handleConnectedUsersMessage({ data, dependencies: { setConnectedUsers } })
@@ -86,7 +90,9 @@ export function handleSetSocket(
         // TODO handle errors
     });
 
-    screenAdminSocket.listen(() => setScreenAdmin(true));
+    screenAdminSocket.listen((data: ScreenAdminMessage) => setScreenAdmin(data.isAdmin));
+
+    screenStateSocket.listen((data: ScreenStateMessage) => setScreenState(data.state));
 
     if (socket) {
         history.push(`${Routes.screen}/${roomId}/${route || Routes.lobby}`);

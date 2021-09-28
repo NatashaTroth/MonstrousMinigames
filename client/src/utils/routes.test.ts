@@ -1,4 +1,4 @@
-import { Obstacles } from './constants';
+import { ObstacleTypes } from './constants';
 import {
     controllerChooseCharacterRoute,
     controllerFinishedRoute,
@@ -7,7 +7,6 @@ import {
     controllerObstacleRoute,
     controllerPlayerDeadRoute,
     controllerPlayerStunnedRoute,
-    controllerStoneRoute,
     Routes,
     screenChooseGameRoute,
     screenFinishedRoute,
@@ -28,10 +27,6 @@ describe('test routing functions', () => {
         expect(controllerLobbyRoute(roomId)).toBe(`/controller/${roomId}/lobby`);
     });
 
-    it('controllerStoneRoute should return /controller/${roomId}/stone', () => {
-        expect(controllerStoneRoute(roomId)).toBe(`/controller/${roomId}/stone`);
-    });
-
     it('controllerPlayerDeadRoute should return /controller/${roomId}/dead', () => {
         expect(controllerPlayerDeadRoute(roomId)).toBe(`/controller/${roomId}/dead`);
     });
@@ -49,15 +44,19 @@ describe('test routing functions', () => {
     });
 
     it('controllerObstacleRoute should return /controller/${roomId}/treestump', () => {
-        expect(controllerObstacleRoute(roomId, Obstacles.treeStump)).toBe(`/controller/${roomId}/treestump`);
+        expect(controllerObstacleRoute(roomId, ObstacleTypes.treeStump)).toBe(`/controller/${roomId}/treestump`);
     });
 
     it('controllerObstacleRoute should return /controller/${roomId}/spider', () => {
-        expect(controllerObstacleRoute(roomId, Obstacles.spider)).toBe(`/controller/${roomId}/spider`);
+        expect(controllerObstacleRoute(roomId, ObstacleTypes.spider)).toBe(`/controller/${roomId}/spider`);
     });
 
     it('controllerObstacleRoute should return /controller/${roomId}/trash', () => {
-        expect(controllerObstacleRoute(roomId, Obstacles.trash)).toBe(`/controller/${roomId}/trash`);
+        expect(controllerObstacleRoute(roomId, ObstacleTypes.trash)).toBe(`/controller/${roomId}/trash`);
+    });
+
+    it('controllerObstacleRoute should return /controller/${roomId}/stone', () => {
+        expect(controllerObstacleRoute(roomId, ObstacleTypes.stone)).toBe(`/controller/${roomId}/stone`);
     });
 
     it('screenGameIntroRoute should return /screen/${roomId}/game-intro', () => {

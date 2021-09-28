@@ -1,9 +1,10 @@
+import 'reflect-metadata';
 import { CatchFoodGame } from '../../../src/gameplay';
 import {
     NotAtObstacleError, WrongObstacleIdError
 } from '../../../src/gameplay/catchFood/customErrors';
 import { leaderboard, roomId } from '../mockData';
-import { clearTimersAndIntervals, startGameAndAdvanceCountdown } from './gameHelperFunctions';
+import { clearTimersAndIntervals, goToNextUnsolvableObstacle, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
 const USER_ID = '1';
@@ -25,7 +26,7 @@ describe('NotAtObstacleError handling tests', () => {
     it('the NotAtObstacleError has a userId property', async () => {
         try {
             catchFoodGame['playerHasCompletedObstacle'](USER_ID, OBSTACLE_ID_THAT_IS_NEXT);
-        } catch (e) {
+        } catch (e: any) {
             expect(e.userId).toBe(USER_ID);
         }
     });
@@ -42,15 +43,13 @@ describe('WrongObstacleIdError handling tests', () => {
         jest.useFakeTimers();
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
         startGameAndAdvanceCountdown(catchFoodGame);
-        const distanceToObstacle =
-            catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        catchFoodGame['runForward']('1', distanceToObstacle); //atObstacle = true
+        goToNextUnsolvableObstacle(catchFoodGame, USER_ID);
     });
 
     it('the WrongObstacleIdError has a userId and obstacleId property', async () => {
         try {
             catchFoodGame['playerHasCompletedObstacle'](USER_ID, OBSTACLE_ID_THAT_DOES_NOT_EXIST);
-        } catch (e) {
+        } catch (e: any) {
             expect(e.userId).toBe(USER_ID);
             expect(e.obstacleId).toBe(OBSTACLE_ID_THAT_DOES_NOT_EXIST);
         }

@@ -1,7 +1,7 @@
 import { Pause, PlayArrow, VolumeOff, VolumeUp } from '@material-ui/icons';
 import Phaser from 'phaser';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import { RouteParams } from '../../../App';
 import { AudioContext } from '../../../contexts/AudioContextProvider';
@@ -13,7 +13,7 @@ import { AudioButton, Container, PauseButton } from './Game.sc';
 import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
-    const { roomId, hasPaused } = React.useContext(GameContext);
+    const { roomId, hasPaused, screenAdmin } = React.useContext(GameContext);
     const {
         pauseLobbyMusicNoMute,
         audioPermission,
@@ -51,6 +51,8 @@ const Game: React.FunctionComponent = () => {
             type: Phaser.WEBGL,
             width: '100%',
             height: '100%',
+            // backgroundColor: '#081919',
+            backgroundColor: '#000b18',
             physics: {
                 default: 'arcade',
                 arcade: {
@@ -58,8 +60,8 @@ const Game: React.FunctionComponent = () => {
                 },
             },
         });
-        game.scene.add('MainScene', MainScene, false, { roomId });
-        game.scene.start('MainScene', { roomId: roomId });
+        game.scene.add('MainScene', MainScene, false); //socket: ScreenSocket.getInstance(socket)
+        game.scene.start('MainScene', { roomId, socket: screenSocket, screenAdmin });
 
         // game.world.setBounds(0,0,7500, window.innerHeight)
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -99,6 +101,6 @@ export default Game;
 
 const GameContent: React.FunctionComponent = () => (
     <div>
-        <div id="game-root"></div>
+        <div id="game-root" data-testid="game-container"></div>
     </div>
 );

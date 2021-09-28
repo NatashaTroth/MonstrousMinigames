@@ -1,15 +1,18 @@
 import {
-    GameAlreadyStartedError,
     CannotStartEmptyGameError,
     CharacterNotAvailableError,
+    GameAlreadyStartedError,
     UsersNotReadyError,
 } from '../customErrors';
+import { GameNames } from '../enums/gameNames';
 import { Globals } from '../enums/globals';
-import { CatchFoodGame } from '../gameplay';
+import { ScreenStates } from '../enums/screenStates';
+import { CatchFoodGame, Game2 } from '../gameplay';
 import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
 import Game from '../gameplay/Game';
-import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
+// import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
 import Leaderboard from '../gameplay/leaderboard/Leaderboard';
+import { ScreenInfo } from '../interfaces/interfaces';
 import User from './user';
 
 class Room {
@@ -19,7 +22,11 @@ class Room {
     public game: Game;
     private state: RoomStates;
     private leaderboard: Leaderboard;
-    public screens: Array<string>;
+    public screenState: string;
+    public screens: Array<ScreenInfo>;
+    public firstPhaserScreenLoaded: boolean;
+    public allScreensLoadedTimeout: undefined | ReturnType<typeof setTimeout>;
+    public sentAllScreensLoaded: boolean;
 
     constructor(id: string, game?: Game) {
         this.id = id;
@@ -30,6 +37,10 @@ class Room {
         this.game.leaderboard = this.leaderboard;
         this.state = RoomStates.OPEN;
         this.screens = [];
+        this.screenState = ScreenStates.LOBBY;
+        this.firstPhaserScreenLoaded = false;
+        this.allScreensLoadedTimeout = undefined;
+        this.sentAllScreensLoaded = false;
     }
 
     public clear(): void {
@@ -114,7 +125,18 @@ class Room {
         this.timestamp = Date.now();
     }
 
-    public startGame(game?: Game): IGameStateBase {
+    public setGame(gameName: string): void {
+        switch (gameName) {
+            case GameNames.GAME1:
+                this.game = new CatchFoodGame(this.id, this.leaderboard);
+                break;
+            case GameNames.GAME2:
+                this.game = new Game2(this.id, this.leaderboard);
+                break;
+        }
+    }
+
+    public createNewGame(game?: Game) {
         if (this.users.length === 0) {
             throw new CannotStartEmptyGameError();
         }
@@ -125,10 +147,36 @@ class Room {
             this.game = game;
             this.game.leaderboard = this.leaderboard;
         }
-        this.setState(RoomStates.PLAYING);
+        this.setState(RoomStates.CREATED);
+
         this.game.createNewGame(this.users);
         this.updateTimestamp();
-        return this.game.getGameStateInfo();
+        // return this.game.getGameStateInfo();
+    }
+
+    public allPhaserGamesReady() {
+        return this.screens.every(screen => {
+            if (screen.phaserGameReady) return true;
+            return false;
+        });
+    }
+
+    public setScreenPhaserGameReady(screenId: string, value: boolean) {
+        const index = this.screens.findIndex(element => element.id === screenId);
+        this.screens[index].phaserGameReady = value;
+    }
+
+    public setAllScreensPhaserGameReady(value: boolean) {
+        this.screens.forEach(screen => (screen.phaserGameReady = value));
+    }
+
+    public getScreensPhaserNotReady(): ScreenInfo[] {
+        return this.screens.filter(screen => screen.phaserGameReady === false);
+    }
+
+    public startGame() {
+        this.setState(RoomStates.PLAYING);
+        this.game.startGame();
     }
 
     public stopGame() {
@@ -163,6 +211,9 @@ class Room {
 
     public isOpen(): boolean {
         return this.state === RoomStates.OPEN;
+    }
+    public isCreated(): boolean {
+        return this.state === RoomStates.CREATED;
     }
     public isPlaying(): boolean {
         return this.state === RoomStates.PLAYING;
@@ -201,17 +252,20 @@ class Room {
     }
 
     public addScreen(screenId: string): void {
-        this.screens.push(screenId);
+        this.screens.push({ id: screenId, phaserGameReady: false });
     }
     public removeScreen(screenId: string): void {
-        const index = this.screens.indexOf(screenId);
+        const index = this.screens.findIndex(element => element.id === screenId);
+        // const index = this.screens.indexOf({ id: screenId });
         this.screens.splice(index, 1);
     }
     public isAdminScreen(screenId: string): boolean {
-        return this.screens.indexOf(screenId) === 0;
+        //TODO test
+        return this.screens.findIndex(element => element.id === screenId) === 0;
+        // return this.screens.indexOf({ id: screenId }) === 0;
     }
     public getAdminScreenId(): string {
-        return this.screens[0];
+        return this.screens[0]?.id;
     }
     public getAvailableCharacters(): Array<number> {
         const characters: Array<number> = [];
@@ -234,12 +288,19 @@ class Room {
             throw new CharacterNotAvailableError();
         }
     }
+    public setScreenState(screenState: string): void {
+        this.screenState = screenState;
+    }
+    public getScreenState(): string {
+        return this.screenState;
+    }
 }
 
 export default Room;
 
 export enum RoomStates {
     OPEN,
+    CREATED,
     PLAYING,
     FINISHED,
     PAUSED,

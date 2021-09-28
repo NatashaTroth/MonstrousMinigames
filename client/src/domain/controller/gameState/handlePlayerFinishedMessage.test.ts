@@ -65,4 +65,21 @@ describe('playerHasFinished function', () => {
 
         expect(setPlayerRank).toHaveBeenCalledTimes(0);
     });
+
+    it('stomeTimeoutId should be remove from sessionStorage', () => {
+        const setPlayerRank = jest.fn();
+        const setPlayerFinished = jest.fn();
+
+        const playerFinished = false;
+        global.sessionStorage.setItem('windmillTimeoutId', '1');
+
+        handlePlayerFinishedMessage({
+            data: mockData,
+            roomId,
+            playerFinished,
+            dependencies: { setPlayerRank, setPlayerFinished },
+        });
+
+        expect(global.sessionStorage.getItem('windmillTimeoutId')).toBe(null);
+    });
 });
