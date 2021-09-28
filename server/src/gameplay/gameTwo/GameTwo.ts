@@ -2,7 +2,6 @@ import User from '../../classes/user';
 import { IMessage } from '../../interfaces/messages';
 import Game from '../Game';
 import { IGameInterface } from '../interfaces';
-import { IGameStateBase } from '../interfaces/IGameStateBase';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
 import GameTwoPlayer from './GameTwoPlayer';
@@ -62,29 +61,11 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
-        // this.players.forEach(player => {
-        //     switch (player.direction) {
-        //         case 'C':
-        //             break;
-        //         case 'N':
-        //             player.posY -= 1;
-        //             break;
-        //         case 'E':
-        //             player.posX += 1;
-        //             break;
-        //         case 'S':
-        //             player.posY += 1;
-        //             break;
-        //         case 'W':
-        //             player.posX -= 1;
-        //             break;
-        //     }
-        //     //console.log(player.posX);
-        // });
-
+        console.error("Unimplemented Method")
 
     }
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
+        console.error("Unimplemented Method")
     }
 
 
