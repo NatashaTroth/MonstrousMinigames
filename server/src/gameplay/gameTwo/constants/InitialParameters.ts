@@ -20,8 +20,16 @@ const PLAYERS_POSITIONS = [
     }
 ];
 
+const MARGIN = 20;
+
+
+const SHEEP_COUNT = 100;
+
+
 export default {
     LENGTH_X,
     LENGTH_Y,
-    PLAYERS_POSITIONS
+    PLAYERS_POSITIONS,
+    MARGIN,
+    SHEEP_COUNT
 }
