@@ -28,6 +28,12 @@
         <button onclick="input('userReady')">READY</button>
 
         <br />
+        <br />
+
+        <button onclick="input('game1/create')">game1/create</button>
+        <button onclick="input('game2/create')">game2/create</button>
+
+        <br />
         <button onclick="input('move')">MOVE</button>
         <button onclick="input('obstacleSolved')">SOLVE OBSTACLE</button>
         <br />
@@ -65,6 +71,14 @@
                 ssocket.emit('message', {
                     type: 'startGame',
                 });
+            if (type == 'game1/create')
+            ssocket.emit('message', {
+                type: 'game1/create',
+            });
+            if (type == 'game2/create')
+            ssocket.emit('message', {
+                type: 'game2/create',
+            });
             if (type == 'move')
                 socket.emit('message', {
                     type: 'game1/runForward',
