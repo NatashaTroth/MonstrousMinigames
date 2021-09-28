@@ -8,6 +8,7 @@ import { GameHasFinishedMessage } from './finished';
 import { GameStateInfoMessage } from './gameStateInfo';
 import { InitialGameStateInfoMessage } from './initialGameStateInfo';
 import { ObstacleMessage } from './obstacle';
+import { ObstacleSkippedMessage } from './obstacleSkipped';
 import { GameHasPausedMessage } from './paused';
 import { PhaserLoadingTimedOutMessage } from './phaserLoadingTimedOut';
 import { PlayerDiedMessage } from './playerDied';
@@ -26,6 +27,7 @@ import { UserInitMessage } from './userInit';
 export type MessageData =
     | UserInitMessage
     | ObstacleMessage
+    | ObstacleSkippedMessage
     | GameHasFinishedMessage
     | ErrorMessage
     | PlayerFinishedMessage

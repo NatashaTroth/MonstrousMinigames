@@ -336,6 +336,10 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             player.obstacles[0].solvable
         ) {
             player.obstacles.shift();
+            CatchFoodGameEventEmitter.emitObstacleSkippedEvent({
+                roomId: this.roomId,
+                userId,
+            });
             return;
         }
 

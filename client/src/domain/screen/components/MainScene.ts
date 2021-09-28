@@ -15,6 +15,7 @@ import { ChasersPushedMessage, ChasersPushedTypeGuard } from '../../typeGuards/c
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
 import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../typeGuards/gameStateInfo';
 import { InitialGameStateInfoMessage, initialGameStateInfoTypeGuard } from '../../typeGuards/initialGameStateInfo';
+import { ObstacleSkippedMessage, obstacleSkippedTypeGuard } from '../../typeGuards/obstacleSkipped';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
 import { PhaserLoadingTimedOutMessage, phaserLoadingTimedOutTypeGuard } from '../../typeGuards/phaserLoadingTimedOut';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
@@ -208,6 +209,13 @@ class MainScene extends Phaser.Scene {
             // this.allScreensLoaded = true;
             if (this.screenAdmin) this.sendCreateNewGame();
             // if (this.screenAdmin && !designDevelopment && this.firstGameStateReceived) this.sendStartGame();
+        });
+
+        const obstacleSkipped = new MessageSocket(obstacleSkippedTypeGuard, this.socket);
+        obstacleSkipped.listen((data: ObstacleSkippedMessage) => {
+            printMethod('Obstacle skipped');
+            printMethod(this.players.find(player => player.userId === data.userId));
+            this.players.find(player => player.userId === data.userId)?.handleObstacleSkipped();
         });
 
         const phaserLoadedTimedOut = new MessageSocket(phaserLoadingTimedOutTypeGuard, this.socket);
