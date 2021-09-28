@@ -102,7 +102,8 @@ example:
 
 ```json
 {
-    "type": "screenAdmin"
+    "type": "screenAdmin",
+    "isAdmin": true
 }
 ```
 ### playerHasDisconnected

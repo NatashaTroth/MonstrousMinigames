@@ -16,13 +16,13 @@ import { sharedTextStyleProperties } from '../textStyleProperties';
 
 interface RendererObstacle {
     phaserInstance: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-    skippable: boolean;
 }
 export class PhaserPlayerRenderer {
     private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private chaser?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private obstacles: RendererObstacle[];
-    private skippableObstacles: RendererObstacle[];
+    // Natasha bitte löschen wenn das nicht mehr gebraucht wird
+    // private skippableObstacles: RendererObstacle[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private particles: Phaser.GameObjects.Particles.ParticleEmitterManager[];
     private playerNameBg?: Phaser.GameObjects.Rectangle;
@@ -38,7 +38,8 @@ export class PhaserPlayerRenderer {
         private laneHeightsPerNumberPlayers: number[]
     ) {
         this.obstacles = [];
-        this.skippableObstacles = [];
+        // Natasha bitte löschen wenn das nicht mehr gebraucht wird
+        // this.skippableObstacles = [];
         this.particles = [];
         this.backgroundElements = []; //TODO change
 
@@ -258,21 +259,14 @@ export class PhaserPlayerRenderer {
         }
     }
 
-    renderObstacles(
-        posX: number,
-        posY: number,
-        obstacleScale: number,
-        obstacleType: string,
-        depth: number,
-        skippable: boolean
-    ) {
+    renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number) {
         const obstacle = this.scene.physics.add.sprite(posX, posY, obstacleType);
         obstacle.setScale(obstacleScale * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
 
         obstacle.y -= obstacle.displayHeight / 1.3;
         obstacle.setDepth(depth);
 
-        this.obstacles.push({ phaserInstance: obstacle, skippable });
+        this.obstacles.push({ phaserInstance: obstacle });
     }
 
     renderFireworks(posX: number, posY: number, laneHeight: number) {
@@ -303,11 +297,12 @@ export class PhaserPlayerRenderer {
     destroyObstacle() {
         const currentObstacle = this.obstacles.shift();
         if (currentObstacle) {
-            if (!currentObstacle.skippable) {
-                currentObstacle.phaserInstance.destroy();
-            } else {
-                this.skippableObstacles.push(currentObstacle);
-            }
+            // if (!currentObstacle.skippable) {
+            //     currentObstacle.phaserInstance.destroy();
+            // } else {
+            //     this.skippableObstacles.push(currentObstacle);
+            // }
+            currentObstacle.phaserInstance.destroy();
         }
     }
     destroyObstacles() {
@@ -315,9 +310,10 @@ export class PhaserPlayerRenderer {
             obstacle.phaserInstance.destroy();
         });
 
-        this.skippableObstacles.forEach(obstacle => {
-            obstacle.phaserInstance.destroy();
-        });
+        // Natasha bitte löschen wenn das nicht mehr gebraucht wird
+        // this.skippableObstacles.forEach(obstacle => {
+        //     obstacle.phaserInstance.destroy();
+        // });
     }
 
     destroyCave() {

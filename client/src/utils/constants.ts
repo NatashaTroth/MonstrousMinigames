@@ -49,7 +49,6 @@ export enum MessageTypes {
     runForward = 'game1/runForward',
     obstacle = 'game1/obstacle', //obstacle reached
     obstacleSolved = 'game1/obstacleSolved',
-    obstacleSkipped = 'game1/obstacleSkipped',
     playerFinished = 'game1/playerFinished',
     started = 'game1/hasStarted',
     phaserLoaded = 'game1/phaserGameLoaded',
@@ -66,6 +65,8 @@ export enum MessageTypes {
 
     pushChasers = 'game1/chasersPushed',
     exceededNumberOfChaserPushes = 'game1/playerHasExceededMaxNumberChaserPushes',
+    approachingSolvableObstacle = 'game1/approachingSolvableObstacle',
+    solveObstacle = 'game1/solveObstacle',
 }
 
 export const localDevelopment = true; //the one in constants.ts on the server

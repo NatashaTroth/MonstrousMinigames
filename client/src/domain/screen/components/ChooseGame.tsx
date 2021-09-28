@@ -6,7 +6,7 @@ import { AudioContext } from '../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../../contexts/ScreenSocketContextProvider';
 import oliverLobby from '../../../images/characters/oliverLobby.svg';
-import game1Img from '../../../images/ui/instructions1.png';
+import game1Demo from '../../../images/ui/gameDemo.png';
 import { MessageTypes } from '../../../utils/constants';
 import { Routes, screenGameIntroRoute, screenGetReadyRoute } from '../../../utils/routes';
 import { ScreenStates } from '../../../utils/screenStates';
@@ -37,7 +37,7 @@ const ChooseGame: React.FunctionComponent = () => {
         {
             id: 1,
             name: 'The Great Monster Escape',
-            image: game1Img,
+            image: game1Demo,
         },
         { id: 2, name: 'Game 2 - coming soon' },
         { id: 3, name: 'Game 3 - coming soon' },

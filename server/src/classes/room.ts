@@ -4,9 +4,10 @@ import {
     GameAlreadyStartedError,
     UsersNotReadyError,
 } from '../customErrors';
+import { GameNames } from '../enums/gameNames';
 import { Globals } from '../enums/globals';
 import { ScreenStates } from '../enums/screenStates';
-import { CatchFoodGame } from '../gameplay';
+import { CatchFoodGame, Game2 } from '../gameplay';
 import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
 import Game from '../gameplay/Game';
 // import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
@@ -124,6 +125,17 @@ class Room {
         this.timestamp = Date.now();
     }
 
+    public setGame(gameName: string): void {
+        switch (gameName) {
+            case GameNames.GAME1:
+                this.game = new CatchFoodGame(this.id, this.leaderboard);
+                break;
+            case GameNames.GAME2:
+                this.game = new Game2(this.id, this.leaderboard);
+                break;
+        }
+    }
+
     public createNewGame(game?: Game) {
         if (this.users.length === 0) {
             throw new CannotStartEmptyGameError();
@@ -136,6 +148,7 @@ class Room {
             this.game.leaderboard = this.leaderboard;
         }
         this.setState(RoomStates.CREATED);
+
         this.game.createNewGame(this.users);
         this.updateTimestamp();
         // return this.game.getGameStateInfo();
