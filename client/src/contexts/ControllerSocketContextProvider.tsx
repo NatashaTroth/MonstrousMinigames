@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { handleSetSocket } from '../domain/common/socket/handleSetSocket';
-import { handleSocketConnection } from '../domain/common/socket/handleSocketConnection';
 import history from '../domain/history/history';
+import { handleSetSocket } from '../domain/socket/controller/handleSetSocket';
+import { handleSocketConnection } from '../domain/socket/controller/handleSocketConnection';
 import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
 import { Socket } from '../domain/socket/Socket';
 import addMovementListener from '../domain/user/game1/addMovementListener';
