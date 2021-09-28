@@ -1,10 +1,10 @@
-import { MessageTypes, ObstacleTypes } from '../../../../utils/constants';
-import { ObstacleMessage } from '../../../typeGuards/obstacle';
+import { MessageTypesGame1, ObstacleTypes } from '../../../../utils/constants';
+import { ObstacleMessage } from '../../../typeGuards/game1/obstacle';
 import { handleObstacleMessage } from './handleObstacleMessage';
 
 describe('handleObstacleMessage', () => {
     const data: ObstacleMessage = {
-        type: MessageTypes.obstacle,
+        type: MessageTypesGame1.obstacle,
         obstacleType: ObstacleTypes.spider,
         obstacleId: 1,
     };

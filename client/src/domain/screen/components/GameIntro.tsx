@@ -23,6 +23,7 @@ import {
     GameIntroContainer,
     ImageDescription,
     InstructionImg,
+    IntroContentWrapper,
     IntroText,
     PaddingContainer,
     PreviewImageContainer,
@@ -92,7 +93,7 @@ const GameIntro: React.FunctionComponent = () => {
                         Voice-over oder mit Text)
                     </IntroText>
                 ) : (
-                    <div>
+                    <IntroContentWrapper>
                         <PreviewImageContainer />
                         {/* TODO make dynamic */}
                         {/* <PreviewImage src={forest} /> */}
@@ -125,7 +126,7 @@ const GameIntro: React.FunctionComponent = () => {
                                 <InstructionImg src={trashDemo} />
                             </Wrapper>
                         </ControlInstructionsContainer>
-                    </div>
+                    </IntroContentWrapper>
                 )}
 
                 <PaddingContainer>

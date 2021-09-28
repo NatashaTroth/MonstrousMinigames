@@ -9,7 +9,7 @@ import { PlayerContext } from '../../../../../contexts/PlayerContextProvider';
 import food from '../../../../../images/obstacles/trash/food.svg';
 import paper from '../../../../../images/obstacles/trash/paper.svg';
 import plastic from '../../../../../images/obstacles/trash/plastic.svg';
-import { MessageTypes, TrashType } from '../../../../../utils/constants';
+import { MessageTypesGame1, TrashType } from '../../../../../utils/constants';
 import { dragMoveListener, initializeInteractListeners, itemCounter } from './Draggable';
 import LinearProgressBar from './LinearProgressBar';
 import { ObstacleContainer, ObstacleInstructions } from './ObstacleStyles.sc';
@@ -32,7 +32,7 @@ const Trash: React.FunctionComponent = () => {
     let handleSkip: ReturnType<typeof setTimeout>;
 
     const solveObstacle = () => {
-        controllerSocket.emit({ type: MessageTypes.obstacleSolved, obstacleId: obstacle?.id });
+        controllerSocket.emit({ type: MessageTypesGame1.obstacleSolved, obstacleId: obstacle?.id });
         setObstacle(roomId, undefined);
         interact('.dropzone').unset();
         interact('.drag-drop').unset();

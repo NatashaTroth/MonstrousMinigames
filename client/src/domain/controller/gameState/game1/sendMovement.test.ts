@@ -1,4 +1,4 @@
-import { MessageTypes } from '../../../../utils/constants';
+import { MessageTypesGame1 } from '../../../../utils/constants';
 import { InMemorySocketFake } from '../../../socket/InMemorySocketFake';
 import { sendMovement } from './sendMovement';
 
@@ -8,7 +8,7 @@ describe('sendMovement function', () => {
 
         sendMovement(socket, false);
 
-        expect(socket.emitedVals).toEqual([{ type: MessageTypes.runForward }]);
+        expect(socket.emitedVals).toEqual([{ type: MessageTypesGame1.runForward }]);
     });
 
     it('when game is paused, nothing should be emitted', () => {

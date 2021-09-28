@@ -1,24 +1,25 @@
-import { AllScreensPhaserGameLoadedMessage } from './allScreensPhaserGameLoaded';
-import { ApproachingSolvableObstacleMessage } from './approachingSolvableObstacleTypeGuard';
-import { ChasersPushedMessage } from './chasersPushed';
 import { ConnectedUsersMessage } from './connectedUsers';
 import { ErrorMessage } from './error';
-import { ExceededMaxChaserPushesMessage } from './exceededMaxChaserPushes';
 import { GameHasFinishedMessage } from './finished';
-import { GameStateInfoMessage } from './gameStateInfo';
-import { InitialGameStateInfoMessage } from './initialGameStateInfo';
-import { ObstacleMessage } from './obstacle';
+import { AllScreensPhaserGameLoadedMessage } from './game1/allScreensPhaserGameLoaded';
+import { ApproachingSolvableObstacleMessage } from './game1/approachingSolvableObstacleTypeGuard';
+import { ChasersPushedMessage } from './game1/chasersPushed';
+import { ExceededMaxChaserPushesMessage } from './game1/exceededMaxChaserPushes';
+import { GameStateInfoMessage } from './game1/gameStateInfo';
+import { InitialGameStateInfoMessage } from './game1/initialGameStateInfo';
+import { ObstacleMessage } from './game1/obstacle';
+import { ObstacleSkippedMessage } from './game1/obstacleSkipped';
+import { PhaserLoadingTimedOutMessage } from './game1/phaserLoadingTimedOut';
+import { PlayerDiedMessage } from './game1/playerDied';
+import { PlayerFinishedMessage } from './game1/playerFinished';
+import { PlayerStunnedMessage } from './game1/playerStunned';
+import { PlayerUnstunnedMessage } from './game1/playerUnstunned';
+import { GameHasStartedMessage } from './game1/started';
 import { GameHasPausedMessage } from './paused';
-import { PhaserLoadingTimedOutMessage } from './phaserLoadingTimedOut';
-import { PlayerDiedMessage } from './playerDied';
-import { PlayerFinishedMessage } from './playerFinished';
-import { PlayerStunnedMessage } from './playerStunned';
-import { PlayerUnstunnedMessage } from './playerUnstunned';
 import { GameHasResetMessage } from './reset';
 import { GameHasResumedMessage } from './resumed';
 import { ScreenAdminMessage } from './screenAdmin';
 import { ScreenStateMessage } from './screenState';
-import { GameHasStartedMessage } from './started';
 import { StartPhaserGameMessage } from './startPhaserGame';
 import { GameHasStoppedMessage } from './stopped';
 import { UserInitMessage } from './userInit';
@@ -26,6 +27,7 @@ import { UserInitMessage } from './userInit';
 export type MessageData =
     | UserInitMessage
     | ObstacleMessage
+    | ObstacleSkippedMessage
     | GameHasFinishedMessage
     | ErrorMessage
     | PlayerFinishedMessage

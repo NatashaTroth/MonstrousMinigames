@@ -9,7 +9,7 @@ import { GameContext } from '../../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../../contexts/PlayerContextProvider';
 import pebble from '../../../../../images/obstacles/stone/pebble.svg';
 import stone from '../../../../../images/obstacles/stone/stone.svg';
-import { MessageTypes } from '../../../../../utils/constants';
+import { MessageTypesGame1 } from '../../../../../utils/constants';
 import { controllerGame1Route } from '../../../../../utils/routes';
 import history from '../../../../history/history';
 import { ObstacleInstructions } from './ObstacleStyles.sc';
@@ -66,7 +66,7 @@ const Stone: React.FunctionComponent = () => {
 
     function handleThrow(receivingUserId: string) {
         controllerSocket.emit({
-            type: MessageTypes.stunPlayer,
+            type: MessageTypesGame1.stunPlayer,
             userId,
             receivingUserId,
             usingCollectedStone: searchParams.get('choosePlayer') ? true : false,
@@ -77,7 +77,7 @@ const Stone: React.FunctionComponent = () => {
 
     function handleCollectStone() {
         controllerSocket.emit({
-            type: MessageTypes.obstacleSolved,
+            type: MessageTypesGame1.obstacleSolved,
             obstacleId: obstacle?.id,
         });
         setHasStone(true);
