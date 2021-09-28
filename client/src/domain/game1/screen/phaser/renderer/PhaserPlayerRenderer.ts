@@ -24,6 +24,7 @@ export class PhaserPlayerRenderer {
     private obstacles: RendererObstacle[];
     private skippedObstacles: RendererObstacle[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    private playerWarning?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private particles: Phaser.GameObjects.Particles.ParticleEmitterManager[];
     private playerNameBg?: Phaser.GameObjects.Rectangle;
     private playerName?: Phaser.GameObjects.Text;
@@ -173,9 +174,7 @@ export class PhaserPlayerRenderer {
                 repeat: -1,
             });
             this.chaser = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasersSpritesheet');
-            this.chaser.setScale(
-                (1.25 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]
-            );
+            this.chaser.setScale((0.7 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
             this.chaser.setDepth(depthDictionary.chaser);
             this.chaser.y = this.chaser.y - this.chaser.displayHeight / 2; //set correct y pos according to player height
             this.chaser.play('chasersAnimation');
@@ -339,13 +338,31 @@ export class PhaserPlayerRenderer {
                     'attention'
                 )
                 .setDepth(depthDictionary.attention)
-                .setScale((0.085 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+                .setScale((1 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+        }
+    }
+
+    renderWarningIcon() {
+        if (!this.playerWarning && this.player) {
+            this.playerWarning = this.scene.physics.add
+                .sprite(
+                    this.player.x + this.player.displayWidth / 2,
+                    this.player.y - this.player.displayHeight / 2,
+                    'warning'
+                )
+                .setDepth(depthDictionary.attention)
+                .setScale((1 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
         }
     }
 
     destroyAttentionIcon() {
         this.playerAttention?.destroy();
         this.playerAttention = undefined;
+    }
+
+    destroyWarningIcon() {
+        this.playerWarning?.destroy();
+        this.playerWarning = undefined;
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
@@ -381,8 +398,8 @@ export class PhaserPlayerRenderer {
                 frameRate: 8,
                 repeat: 0,
             });
-            this.wind = this.scene.physics.add.sprite(this.chaser.x - 50, this.chaser.y, 'windSpritesheet');
-            this.wind.setScale((0.75 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+            this.wind = this.scene.physics.add.sprite(this.chaser.x - 50, this.chaser.y + 30, 'windSpritesheet');
+            this.wind.setScale((0.5 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
             this.wind.setDepth(depthDictionary.chaser);
             this.wind.y = this.wind.y - this.wind.displayHeight / 2; //set correct y pos according to player height
             this.wind.play('windAnimation');
