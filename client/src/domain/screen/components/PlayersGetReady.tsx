@@ -6,7 +6,7 @@ import { characters } from '../../../config/characters';
 import { AudioContext } from '../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { ScreenSocketContext, User } from '../../../contexts/ScreenSocketContextProvider';
-import { MessageTypes } from '../../../utils/constants';
+import { MessageTypes, MessageTypesGame1 } from '../../../utils/constants';
 import { Routes } from '../../../utils/routes';
 import { ScreenStates } from '../../../utils/screenStates';
 import { handleAudioPermission } from '../../audio/handlePermission';
@@ -38,7 +38,7 @@ const PlayersGetReady: React.FC = () => {
 
     function startGame() {
         screenSocket?.emit({
-            type: MessageTypes.startPhaserGame,
+            type: MessageTypesGame1.startPhaserGame,
             roomId: sessionStorage.getItem('roomId'),
             userId: sessionStorage.getItem('userId'),
         });

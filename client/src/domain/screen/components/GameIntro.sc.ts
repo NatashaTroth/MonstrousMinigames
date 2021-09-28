@@ -93,7 +93,7 @@ export const StyledFormGroup = styled(FormGroup)`
 
 export const InstructionImg = styled.img`
     display: flex;
-    width: 50%;
+    width: 60%;
 `;
 
 export const Wrapper = styled.div`
@@ -101,4 +101,10 @@ export const Wrapper = styled.div`
     flex-direction: column;
     align-items: center;
     width: 18%;
+`;
+
+export const IntroContentWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 80%;
 `;

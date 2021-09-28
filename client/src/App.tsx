@@ -33,7 +33,7 @@ import { navigator } from './domain/navigator/NavigatorAdapter';
 import ChooseGame from './domain/screen/components/ChooseGame';
 import { ConnectScreen as ScreenConnectScreen } from './domain/screen/components/ConnectScreen';
 import { FinishedScreen as ScreenFinishedScreen } from './domain/screen/components/FinishedScreen';
-import Game from './domain/screen/components/Game';
+import Game from './domain/screen/components/game1/Game';
 import GameIntro from './domain/screen/components/GameIntro';
 import { Lobby as ScreenLobbyScreen } from './domain/screen/components/Lobby';
 import PlayersGetReady from './domain/screen/components/PlayersGetReady';

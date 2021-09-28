@@ -1,5 +1,5 @@
 import { Obstacle } from '../../../../contexts/PlayerContextProvider';
-import { ObstacleMessage } from '../../../typeGuards/obstacle';
+import { ObstacleMessage } from '../../../typeGuards/game1/obstacle';
 
 interface HandleMessageDataProps {
     data: ObstacleMessage;

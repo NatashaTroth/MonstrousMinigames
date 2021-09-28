@@ -5,7 +5,7 @@ import Phaser from 'phaser';
 import { designDevelopment } from '../../../../utils/constants';
 import { depthDictionary } from '../../../../utils/depthDictionary';
 import { getRandomInt } from '../../../../utils/getRandomInt';
-import MainScene from '../../components/MainScene';
+import MainScene from '../../components/game1/MainScene';
 import * as colors from '../colors';
 import { gameLoadedWaitingMessages, gameLoadingMessages } from '../gameLoadingMessages';
 import { countdownTextStyleProperties, loadingTextStyleProperties } from '../textStyleProperties';

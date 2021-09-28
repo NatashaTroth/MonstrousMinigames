@@ -4,23 +4,23 @@ import { Obstacle } from '../../../contexts/PlayerContextProvider';
 import { controllerChooseCharacterRoute } from '../../../utils/routes';
 import { MessageSocket } from '../../socket/MessageSocket';
 import { Socket } from '../../socket/Socket';
+import { ConnectedUsersMessage, connectedUsersTypeGuard, User } from '../../typeGuards/connectedUsers';
+import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
+import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
 import {
     ApproachingSolvableObstacleMessage,
     approachingSolvableObstacleTypeGuard,
-} from '../../typeGuards/approachingSolvableObstacleTypeGuard';
-import { ConnectedUsersMessage, connectedUsersTypeGuard, User } from '../../typeGuards/connectedUsers';
-import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
-import { exceededMaxChaserPushesTypeGuard } from '../../typeGuards/exceededMaxChaserPushes';
-import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
-import { ObstacleMessage, obstacleTypeGuard } from '../../typeGuards/obstacle';
+} from '../../typeGuards/game1/approachingSolvableObstacleTypeGuard';
+import { exceededMaxChaserPushesTypeGuard } from '../../typeGuards/game1/exceededMaxChaserPushes';
+import { ObstacleMessage, obstacleTypeGuard } from '../../typeGuards/game1/obstacle';
+import { PlayerDiedMessage, playerDiedTypeGuard } from '../../typeGuards/game1/playerDied';
+import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../typeGuards/game1/playerFinished';
+import { playerStunnedTypeGuard } from '../../typeGuards/game1/playerStunned';
+import { playerUnstunnedTypeGuard } from '../../typeGuards/game1/playerUnstunned';
+import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/game1/started';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
-import { PlayerDiedMessage, playerDiedTypeGuard } from '../../typeGuards/playerDied';
-import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../typeGuards/playerFinished';
-import { playerStunnedTypeGuard } from '../../typeGuards/playerStunned';
-import { playerUnstunnedTypeGuard } from '../../typeGuards/playerUnstunned';
 import { GameHasResetMessage, resetTypeGuard } from '../../typeGuards/reset';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
-import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/started';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../typeGuards/stopped';
 import { UserInitMessage, userInitTypeGuard } from '../../typeGuards/userInit';
 import { handleApproachingObstacleMessage } from '../gameState/game1/handleApproachingSolvableObstacleMessage';

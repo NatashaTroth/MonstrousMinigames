@@ -45,9 +45,12 @@ export enum MessageTypes {
     stopGame = 'stopGame',
 
     error = 'error',
+}
 
+export enum MessageTypesGame1 {
     runForward = 'game1/runForward',
     obstacle = 'game1/obstacle', //obstacle reached
+    obstacleSkipped = 'game1/obstacleSkipped', //obstacle reached
     obstacleSolved = 'game1/obstacleSolved',
     playerFinished = 'game1/playerFinished',
     started = 'game1/hasStarted',
@@ -62,6 +65,7 @@ export enum MessageTypes {
     playerUnstunned = 'game1/playerUnstunned',
     stunPlayer = 'game1/stunPlayer',
     createGame = 'game1/create',
+    chasersPushed = 'game1/chasersPushed',
 
     pushChasers = 'game1/chasersPushed',
     exceededNumberOfChaserPushes = 'game1/playerHasExceededMaxNumberChaserPushes',
