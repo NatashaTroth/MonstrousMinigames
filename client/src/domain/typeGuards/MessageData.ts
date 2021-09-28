@@ -10,6 +10,7 @@ import { GameStateInfoMessage } from './game1/gameStateInfo';
 import { InitialGameStateInfoMessage } from './game1/initialGameStateInfo';
 import { ObstacleMessage } from './game1/obstacle';
 import { ObstacleSkippedMessage } from './game1/obstacleSkipped';
+import { ObstacleWillBeSolvedMessage } from './game1/obstacleWillBeSolved';
 import { PhaserLoadingTimedOutMessage } from './game1/phaserLoadingTimedOut';
 import { PlayerDiedMessage } from './game1/playerDied';
 import { PlayerFinishedMessage } from './game1/playerFinished';
@@ -51,6 +52,7 @@ export type MessageData =
     | PlayerUnstunnedMessage
     | ApproachingSolvableObstacleMessage
     | ApproachingSolvableObstacleOnceMessage
+    | ObstacleWillBeSolvedMessage
     | ScreenStateMessage
     | ExceededMaxChaserPushesMessage
     | ChasersPushedMessage

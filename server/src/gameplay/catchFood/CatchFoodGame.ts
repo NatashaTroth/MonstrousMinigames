@@ -444,6 +444,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         if (!obstacle) return;
 
         obstacle.solvable = false;
+        CatchFoodGameEventEmitter.emitPlayerWantsToSolveObstacle({ roomId: this.roomId, userId });
     }
 
     private playerHasCompletedObstacle(userId: string, obstacleId: number): void {
