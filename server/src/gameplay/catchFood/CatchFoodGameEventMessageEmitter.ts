@@ -12,6 +12,7 @@ import { IGameStateBase } from '../interfaces/IGameStateBase';
 import Player from '../Player';
 import {
     CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE_ONCE,
     CATCH_FOOD_GAME_EVENT_MESSAGE__CHASERS_WERE_PUSHED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED,
@@ -43,8 +44,8 @@ export class CatchFoodGameEventMessageEmitter implements EventMessageEmitter {
 
         switch (message.type) {
             // send to single user's controller
-            case CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE:
+            case CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED:
@@ -58,6 +59,7 @@ export class CatchFoodGameEventMessageEmitter implements EventMessageEmitter {
                 break;
             // send to room's screens
             case CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE:
+            case CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE_ONCE:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_SKIPPED:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__CHASERS_WERE_PUSHED:
                 screenNameSpace.to(room.id).emit('message', message);

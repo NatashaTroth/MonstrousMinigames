@@ -116,7 +116,12 @@ export class Player {
         }
     }
 
+    handleApproachingObstacle() {
+        //TODO ASH show warning
+    }
+
     handleObstacleSkipped() {
+        //TODO ASH destroy warning
         this.renderer.handleSkippedObstacle();
     }
 

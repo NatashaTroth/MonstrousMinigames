@@ -70,6 +70,7 @@ export enum MessageTypesGame1 {
     pushChasers = 'game1/chasersPushed',
     exceededNumberOfChaserPushes = 'game1/playerHasExceededMaxNumberChaserPushes',
     approachingSolvableObstacle = 'game1/approachingSolvableObstacle',
+    approachingSolvableObstacleOnce = 'game1/approachingSolvableObstacleOnce',
     solveObstacle = 'game1/solveObstacle',
 }
 

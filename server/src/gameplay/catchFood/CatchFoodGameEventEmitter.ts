@@ -10,6 +10,7 @@ import { CatchFoodGameEventMessageEmitter } from './CatchFoodGameEventMessageEmi
 import { GameEvents, InitialGameStateInfo, PlayerRank } from './interfaces';
 import {
     CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE_ONCE,
     CATCH_FOOD_GAME_EVENT_MESSAGE__CHASERS_WERE_PUSHED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED,
@@ -70,6 +71,17 @@ export default class CatchFoodGameEventEmitter {
             type: CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_SKIPPED,
             roomId: data.roomId,
             userId: data.userId,
+        });
+    }
+
+    public static emitApproachingSolvableObstacleEventOnce(data: GameEvents.ApproachingSolvableObstacle) {
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE_ONCE,
+            roomId: data.roomId,
+            userId: data.userId,
+            obstacleId: data.obstacleId,
+            obstacleType: data.obstacleType,
+            distance: data.distance,
         });
     }
 

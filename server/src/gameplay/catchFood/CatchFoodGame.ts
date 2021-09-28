@@ -318,6 +318,17 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             return;
         }
 
+        if (!player.obstacles[0].sentApproachingMessage) {
+            player.obstacles[0].sentApproachingMessage = true;
+            CatchFoodGameEventEmitter.emitApproachingSolvableObstacleEventOnce({
+                roomId: this.roomId,
+                userId: player.id,
+                obstacleType: player.obstacles[0].type,
+                obstacleId: player.obstacles[0].id,
+                distance: player.obstacles[0].positionX - player.positionX,
+            });
+        }
+
         CatchFoodGameEventEmitter.emitApproachingSolvableObstacleEvent({
             roomId: this.roomId,
             userId: player.id,
@@ -329,7 +340,8 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
     private handlePlayerReachedObstacle(userId: string): void {
         const player = this.players.get(userId)!;
-
+        //reset sentApproachingMessage for next optional obstacle
+        player.obstacles[0].sentApproachingMessage = false;
         // when already carrying a stone or not opt in automatically skip the stone obstacle
         if (
             (player.obstacles[0].type === ObstacleType.Stone && player.stonesCarrying > 0) ||
