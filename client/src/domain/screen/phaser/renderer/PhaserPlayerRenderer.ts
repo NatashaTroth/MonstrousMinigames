@@ -24,6 +24,7 @@ export class PhaserPlayerRenderer {
     private obstacles: RendererObstacle[];
     private skippedObstacles: RendererObstacle[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    private playerWarning?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private particles: Phaser.GameObjects.Particles.ParticleEmitterManager[];
     private playerNameBg?: Phaser.GameObjects.Rectangle;
     private playerName?: Phaser.GameObjects.Text;
@@ -343,9 +344,27 @@ export class PhaserPlayerRenderer {
         }
     }
 
+    renderWarningIcon() {
+        if (!this.playerWarning && this.player) {
+            this.playerWarning = this.scene.physics.add
+                .sprite(
+                    this.player.x + this.player.displayWidth / 2,
+                    this.player.y - this.player.displayHeight / 2,
+                    'warning'
+                )
+                .setDepth(depthDictionary.attention)
+                .setScale((0.085 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+        }
+    }
+
     destroyAttentionIcon() {
         this.playerAttention?.destroy();
         this.playerAttention = undefined;
+    }
+
+    destroyWarningIcon() {
+        this.playerWarning?.destroy();
+        this.playerWarning = undefined;
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
