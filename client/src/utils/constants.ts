@@ -62,6 +62,7 @@ export enum MessageTypes {
     playerUnstunned = 'game1/playerUnstunned',
     stunPlayer = 'game1/stunPlayer',
     createGame = 'game1/create',
+    chasersPushed = 'game1/chasersPushed',
 
     pushChasers = 'game1/chasersPushed',
     exceededNumberOfChaserPushes = 'game1/playerHasExceededMaxNumberChaserPushes',

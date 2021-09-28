@@ -20,6 +20,7 @@ interface RendererObstacle {
 export class PhaserPlayerRenderer {
     private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private chaser?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    private wind?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private obstacles: RendererObstacle[];
     // Natasha bitte löschen wenn das nicht mehr gebraucht wird
     // private skippableObstacles: RendererObstacle[];
@@ -166,12 +167,19 @@ export class PhaserPlayerRenderer {
 
     renderChasers(chasersPositionX: number, chasersPositionY: number) {
         if (!this.chaser) {
-            this.chaser = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasers');
+            this.scene.anims.create({
+                key: 'chasersAnimation',
+                frames: this.scene.anims.generateFrameNumbers('chasersSpritesheet', { start: 0, end: 5 }),
+                frameRate: 15,
+                repeat: -1,
+            });
+            this.chaser = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasersSpritesheet');
             this.chaser.setScale(
                 (1.25 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]
             );
             this.chaser.setDepth(depthDictionary.chaser);
             this.chaser.y = this.chaser.y - this.chaser.displayHeight / 2; //set correct y pos according to player height
+            this.chaser.play('chasersAnimation');
         }
         this.chaser.setX(chasersPositionX - 50); // - 50 so that not quite on top of player when caught
     }
@@ -359,5 +367,22 @@ export class PhaserPlayerRenderer {
     }
     stopAnimation() {
         this.player?.anims.stop();
+    }
+
+    renderWind() {
+        if (this.chaser) {
+            this.scene.anims.create({
+                key: 'windAnimation',
+                frames: this.scene.anims.generateFrameNumbers('windSpritesheet', { start: 0, end: 5 }),
+                frameRate: 8,
+                repeat: 0,
+            });
+            this.wind = this.scene.physics.add.sprite(this.chaser.x - 50, this.chaser.y, 'windSpritesheet');
+            this.wind.setScale((0.75 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+            this.wind.setDepth(depthDictionary.chaser);
+            this.wind.y = this.wind.y - this.wind.displayHeight / 2; //set correct y pos according to player height
+            this.wind.play('windAnimation');
+            this.wind.on('animationcomplete', this.wind.destroy);
+        }
     }
 }
