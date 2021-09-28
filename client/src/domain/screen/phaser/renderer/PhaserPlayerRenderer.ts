@@ -343,8 +343,6 @@ export class PhaserPlayerRenderer {
     }
 
     renderWarningIcon() {
-        // eslint-disable-next-line no-console
-        console.log('warning');
         if (!this.playerWarning && this.player) {
             this.playerWarning = this.scene.physics.add
                 .sprite(
