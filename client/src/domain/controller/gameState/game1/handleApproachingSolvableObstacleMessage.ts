@@ -1,5 +1,5 @@
 import { Obstacle } from '../../../../contexts/PlayerContextProvider';
-import { ApproachingSolvableObstacleMessage } from '../../../typeGuards/approachingSolvableObstacleTypeGuard';
+import { ApproachingSolvableObstacleMessage } from '../../../typeGuards/game1/approachingSolvableObstacleTypeGuard';
 
 interface HandleApproachingObstacleMessageProps {
     data: ApproachingSolvableObstacleMessage;
