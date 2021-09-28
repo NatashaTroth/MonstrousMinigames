@@ -10,6 +10,7 @@ import Sheep from './classes/Sheep';
 import random from 'random';
 import { GameStateInfo } from './interfaces/GameStateInfo';
 import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
+import { SheepStates } from './enums/SheepStates';
 
 
 
@@ -44,10 +45,22 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     public lengthX: number;
     public lengthY: number;
     public sheep: Sheep[];
+    private currentSheepId: number;
     countdownTime = InitialParameters.COUNTDOWN_TIME;
 
-
     initialPlayerPositions = InitialParameters.PLAYERS_POSITIONS;
+
+
+    constructor(roomId: string, public leaderboard: Leaderboard) {
+        super(roomId);
+        this.lengthX = InitialParameters.LENGTH_X;
+        this.lengthY = InitialParameters.LENGTH_Y;
+        this.sheep = [];
+        this.currentSheepId = 0;
+        console.log('game2 created')
+        console.info(this);
+    }
+
 
     getGameStateInfo(): GameStateInfo {
         return {
@@ -56,7 +69,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         };
     }
     protected mapUserToPlayer(user: User): GameTwoPlayer {
-        const player = new GameTwoPlayer(user.id, user.name, this.initialPlayerPositions[user.number].x, this.initialPlayerPositions[user.number].y, user.characterNumber);
+        const player = new GameTwoPlayer(user.id, user.name, this.initialPlayerPositions[user.number].x, this.initialPlayerPositions[user.number].y, InitialParameters.KILLS_PER_ROUND, user.characterNumber);
         console.info(player);
         return player;
     }
@@ -66,17 +79,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     }
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
         console.error("Unimplemented Method")
-    }
-
-
-
-    constructor(roomId: string, public leaderboard: Leaderboard) {
-        super(roomId);
-        this.lengthX = InitialParameters.LENGTH_X;
-        this.lengthY = InitialParameters.LENGTH_Y;
-        this.sheep = [];
-        console.log('game2 created')
-        console.info(this);
     }
 
     protected initSheep(count: number): void {
@@ -90,7 +92,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 posX = random.int(InitialParameters.MARGIN, InitialParameters.LENGTH_X - InitialParameters.MARGIN);
                 posY = random.int(InitialParameters.MARGIN, InitialParameters.LENGTH_Y - InitialParameters.MARGIN);
             } while (!this.isValidStartingPosition(posX, posY))
-            this.sheep.push(new Sheep(posX, posY))
+            this.sheep.push(new Sheep(posX, posY, this.currentSheepId))
+            this.currentSheepId++;
         }
     }
 
@@ -140,14 +143,41 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     }
 
     protected movePlayer(userId: string, direction: string) {
-    this.players.get(userId)!.setDirection(direction);
+        this.players.get(userId)!.setDirection(direction);
+    }
+    protected killSheep(userId: string) {
+        const player = this.players.get(userId)!;
+
+        if (player.killsLeft < 1) {
+            return
+        }
+
+        const sheepInRadius = this.sheep.filter(sheep => {
+            return sheep.state === SheepStates.ALIVE && (Math.abs(sheep.posX - player.posX) <= InitialParameters.KILL_RADIUS) && (Math.abs(sheep.posY - player.posY) <= InitialParameters.KILL_RADIUS)
+        })
+
+        this.sheep.forEach(sheep => {
+            (Math.abs(sheep.posX - player.posX) <= InitialParameters.KILL_RADIUS) && (Math.abs(sheep.posY - player.posY) <= InitialParameters.KILL_RADIUS)
+        })
+
+        if (sheepInRadius.length < 1) {
+            return
+        }
+        if (sheepInRadius.length >= 1) {
+            const sheepId = sheepInRadius[0].id;
+            this.sheep[sheepId].state = SheepStates.DECOY
+            //todo how to handle if multiple sheep
+        }
+
     }
 
     protected handleInput(message: IMessage) {
         switch (message.type) {
             case GameTwoMessageTypes.MOVE:
                 this.movePlayer(message.userId!, message.direction!);
-                //this.players.get(message.userId!)!.setDirection(message.direction!);
+                break;
+            case GameTwoMessageTypes.KILL:
+                this.killSheep(message.userId!);
                 break;
             default:
                 console.info(message);
