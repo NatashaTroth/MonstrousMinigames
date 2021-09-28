@@ -1,19 +1,41 @@
 import Player from "../Player";
 
 class GameTwoPlayer extends Player {
+    public direction: string;
     constructor(
         id: string,
         name: string,
         public posX: number,
         public posY: number,
         public characterNumber: number
-    ){
+    ) {
         super(id, name);
+        this.direction = 'C'
     }
 
     update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
-        throw new Error("Method not implemented.");
+            switch (this.direction) {
+                case 'C':
+                    break;
+                case 'N':
+                    this.posY -= 1;
+                    break;
+                case 'E':
+                    this.posX += 1;
+                    break;
+                case 'S':
+                    this.posY += 1;
+                    break;
+                case 'W':
+                    this.posX -= 1;
+                    break;
+            }
+            console.log(this);
     }
-    
+
+    public setDirection(direction: string) {
+        this.direction = direction;
+    }
+
 }
 export default GameTwoPlayer;

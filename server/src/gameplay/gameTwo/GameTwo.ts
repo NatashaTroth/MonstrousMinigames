@@ -1,6 +1,5 @@
 import User from '../../classes/user';
 import { IMessage } from '../../interfaces/messages';
-import { GameStateInfo } from '../catchFood/interfaces';
 import Game from '../Game';
 import { IGameInterface } from '../interfaces';
 import { IGameStateBase } from '../interfaces/IGameStateBase';
@@ -10,6 +9,8 @@ import GameTwoPlayer from './GameTwoPlayer';
 import InitialParameters from './constants/InitialParameters'
 import Sheep from './classes/Sheep';
 import random from 'random';
+import { GameStateInfo } from './interfaces/GameStateInfo';
+import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
 
 
 
@@ -40,15 +41,20 @@ interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateIn
 }
 
 
-export default class GameTwo extends Game<GameTwoPlayer> {
+export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implements GameTwoGameInterface {
     public lengthX: number;
     public lengthY: number;
     public sheep: Sheep[];
+    countdownTime = InitialParameters.COUNTDOWN_TIME;
+
 
     initialPlayerPositions = InitialParameters.PLAYERS_POSITIONS;
 
-    getGameStateInfo(): IGameStateBase {
-        throw new Error('Method not implemented.');
+    getGameStateInfo(): GameStateInfo {
+        return {
+            gameState: this.gameState,
+            roomId: this.roomId,
+        };
     }
     protected mapUserToPlayer(user: User): GameTwoPlayer {
         const player = new GameTwoPlayer(user.id, user.name, this.initialPlayerPositions[user.number].x, this.initialPlayerPositions[user.number].y, user.characterNumber);
@@ -56,13 +62,29 @@ export default class GameTwo extends Game<GameTwoPlayer> {
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
-        console.error('Method not implemented.');
-    }
-    protected handleInput(message: IMessage): void | Promise<void> {
-        console.error('Method not implemented.');
+        // this.players.forEach(player => {
+        //     switch (player.direction) {
+        //         case 'C':
+        //             break;
+        //         case 'N':
+        //             player.posY -= 1;
+        //             break;
+        //         case 'E':
+        //             player.posX += 1;
+        //             break;
+        //         case 'S':
+        //             player.posY += 1;
+        //             break;
+        //         case 'W':
+        //             player.posX -= 1;
+        //             break;
+        //     }
+        //     //console.log(player.posX);
+        // });
+
+
     }
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
-        console.error('Method not implemented.');
     }
 
 
@@ -113,6 +135,42 @@ export default class GameTwo extends Game<GameTwoPlayer> {
         super.createNewGame(users);
         this.initSheep(InitialParameters.SHEEP_COUNT);
         console.info(this.sheep);
-
     }
+
+    startGame(): void {
+        setTimeout(() => {
+            super.startGame();
+        }, this.countdownTime);
+    }
+    pauseGame(): void {
+        super.pauseGame();
+    }
+
+    resumeGame(): void {
+        super.resumeGame();
+    }
+
+    stopGameUserClosed() {
+        super.stopGameUserClosed();
+    }
+
+    stopGameAllUsersDisconnected() {
+        super.stopGameAllUsersDisconnected();
+    }
+
+    protected movePlayer(userId: string, direction: string) {
+    this.players.get(userId)!.setDirection(direction);
+    }
+
+    protected handleInput(message: IMessage) {
+        switch (message.type) {
+            case GameTwoMessageTypes.MOVE:
+                this.movePlayer(message.userId!, message.direction!);
+                //this.players.get(message.userId!)!.setDirection(message.direction!);
+                break;
+            default:
+                console.info(message);
+        }
+    }
+
 }
