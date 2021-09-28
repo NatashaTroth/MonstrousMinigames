@@ -3,6 +3,8 @@ import Phaser from 'phaser';
 import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1 } from '../../../../utils/constants';
 import { screenFinishedRoute } from '../../../../utils/routes';
 import history from '../../../history/history';
+import chasersSpritesheet from '../../../images/characters/spritesheets/chasers/chasers_spritesheet.png';
+import windSpritesheet from '../../../images/characters/spritesheets/chasers/wind_spritesheet.png';
 import { MessageSocket } from '../../../socket/MessageSocket';
 import { Socket } from '../../../socket/Socket';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
@@ -10,11 +12,13 @@ import {
     AllScreensPhaserGameLoadedMessage,
     allScreensPhaserGameLoadedTypeGuard,
 } from '../../../typeGuards/game1/allScreensPhaserGameLoaded';
+import { ChasersPushedMessage, ChasersPushedTypeGuard } from '../../../typeGuards/game1/chasersPushed';
 import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../../typeGuards/game1/gameStateInfo';
 import {
     InitialGameStateInfoMessage,
     initialGameStateInfoTypeGuard,
 } from '../../../typeGuards/game1/initialGameStateInfo';
+import { ObstacleSkippedMessage, obstacleSkippedTypeGuard } from '../../../typeGuards/game1/obstacleSkipped';
 import {
     PhaserLoadingTimedOutMessage,
     phaserLoadingTimedOutTypeGuard,
@@ -120,6 +124,20 @@ class MainScene extends Phaser.Scene {
             this.load.spritesheet(character.name, character.file, character.properties);
         });
 
+        this.load.spritesheet('chasersSpritesheet', chasersSpritesheet, {
+            frameWidth: 1240,
+            frameHeight: 876,
+            startFrame: 0,
+            endFrame: 5,
+        });
+
+        this.load.spritesheet('windSpritesheet', windSpritesheet, {
+            frameWidth: 1240,
+            frameHeight: 690,
+            startFrame: 0,
+            endFrame: 5,
+        });
+
         images.forEach(image => {
             this.load.image(image.name, image.file);
         });
@@ -199,6 +217,13 @@ class MainScene extends Phaser.Scene {
             // if (this.screenAdmin && !designDevelopment && this.firstGameStateReceived) this.sendStartGame();
         });
 
+        const obstacleSkipped = new MessageSocket(obstacleSkippedTypeGuard, this.socket);
+        obstacleSkipped.listen((data: ObstacleSkippedMessage) => {
+            printMethod('Obstacle skipped');
+            printMethod(this.players.find(player => player.userId === data.userId));
+            this.players.find(player => player.userId === data.userId)?.handleObstacleSkipped();
+        });
+
         const phaserLoadedTimedOut = new MessageSocket(phaserLoadingTimedOutTypeGuard, this.socket);
         phaserLoadedTimedOut.listen((data: PhaserLoadingTimedOutMessage) => {
             printMethod('TIMED OUT');
@@ -236,6 +261,22 @@ class MainScene extends Phaser.Scene {
         const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);
         stoppedSocket.listen((data: GameHasStoppedMessage) => {
             this.gameAudio?.stopMusic();
+        });
+
+        const chasersPushedSocket = new MessageSocket(ChasersPushedTypeGuard, this.socket);
+        const xPositions: number[] = [];
+        const yPositions: number[] = [];
+        this.players.forEach(element => {
+            if (!element.dead) {
+                xPositions.push(element.coordinates.x);
+                yPositions.push(element.coordinates.x);
+            }
+        });
+
+        chasersPushedSocket.listen((data: ChasersPushedMessage) => {
+            this.players.forEach(player => {
+                player.renderer.renderWind();
+            });
         });
 
         //TODO

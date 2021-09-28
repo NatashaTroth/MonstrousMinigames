@@ -12,6 +12,7 @@ import { MessageTypesGame1, ObstacleTypes } from '../../../../utils/constants';
 import { controllerObstacleRoute } from '../../../../utils/routes';
 import history from '../../../history/history';
 import { Storage } from '../../../storage/Storage';
+import { ObstacleInstructions } from './obstacles/ObstacleStyles.sc';
 import {
     Arrow,
     Container,
@@ -31,6 +32,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
     const [counter, setCounter] = React.useState(
         sessionStorage.getItem('countdownTime') ? Number(sessionStorage.getItem('countdownTime')) / 1000 : null
     );
+    const [solveStoneClicked, setSolveStoneClicked] = React.useState(false);
     const { hasStone, setHasStone, earlySolvableObstacle } = React.useContext(PlayerContext);
     const { roomId } = React.useContext(GameContext);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
@@ -53,6 +55,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
     }
 
     function handleSolveStone() {
+        setSolveStoneClicked(true);
         if (earlySolvableObstacle) {
             controllerSocket.emit({ type: MessageTypesGame1.solveObstacle, obstacleId: earlySolvableObstacle.id });
         }
@@ -75,7 +78,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                                 </PebbleButton>
                             </PebbleContainer>
                         )}
-                        {!hasStone && earlySolvableObstacle && (
+                        {!hasStone && earlySolvableObstacle && !solveStoneClicked && (
                             <PebbleContainer>
                                 <PebbleInstructions>Click to solve obstacle</PebbleInstructions>
                                 <Arrow src={arrow} />
@@ -83,6 +86,11 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                                     <StyledPebbleImage src={stone} />
                                 </PebbleButton>
                             </PebbleContainer>
+                        )}
+                        {solveStoneClicked && (
+                            <ObstacleInstructions>
+                                Your character will stop at the stone to solve it
+                            </ObstacleInstructions>
                         )}
                     </>
                 )}

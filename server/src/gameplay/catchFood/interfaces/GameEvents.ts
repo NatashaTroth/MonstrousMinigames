@@ -15,6 +15,9 @@ export interface ObstacleReachedInfo extends GameEventInterface {
     numberTrashItems?: number;
     trashType?: TrashType;
 }
+export interface ObstacleSkippedInfo extends GameEventInterface {
+    userId: string;
+}
 export interface ObstacleReachedInfoController {
     obstacleId: number;
     obstacleType: ObstacleType;

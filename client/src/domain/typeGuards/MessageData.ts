@@ -3,10 +3,12 @@ import { ErrorMessage } from './error';
 import { GameHasFinishedMessage } from './finished';
 import { AllScreensPhaserGameLoadedMessage } from './game1/allScreensPhaserGameLoaded';
 import { ApproachingSolvableObstacleMessage } from './game1/approachingSolvableObstacleTypeGuard';
+import { ChasersPushedMessage } from './game1/chasersPushed';
 import { ExceededMaxChaserPushesMessage } from './game1/exceededMaxChaserPushes';
 import { GameStateInfoMessage } from './game1/gameStateInfo';
 import { InitialGameStateInfoMessage } from './game1/initialGameStateInfo';
 import { ObstacleMessage } from './game1/obstacle';
+import { ObstacleSkippedMessage } from './game1/obstacleSkipped';
 import { PhaserLoadingTimedOutMessage } from './game1/phaserLoadingTimedOut';
 import { PlayerDiedMessage } from './game1/playerDied';
 import { PlayerFinishedMessage } from './game1/playerFinished';
@@ -25,6 +27,7 @@ import { UserInitMessage } from './userInit';
 export type MessageData =
     | UserInitMessage
     | ObstacleMessage
+    | ObstacleSkippedMessage
     | GameHasFinishedMessage
     | ErrorMessage
     | PlayerFinishedMessage
@@ -48,4 +51,5 @@ export type MessageData =
     | ApproachingSolvableObstacleMessage
     | ScreenStateMessage
     | ExceededMaxChaserPushesMessage
+    | ChasersPushedMessage
     | undefined;

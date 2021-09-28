@@ -15,6 +15,7 @@ import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
  */
 export class Player {
     username: string;
+    userId: string;
     playerRunning: boolean;
     playerAtObstacle: boolean;
     playerCountSameDistance: number;
@@ -28,13 +29,14 @@ export class Player {
         private laneHeightsPerNumberPlayers: number[],
         private laneHeight: number,
         private index: number,
-        private coordinates: Coordinates,
+        public coordinates: Coordinates,
         private gameStateData: GameData,
         private character: Character,
         private numberPlayers: number,
         private gameToScreenMapper: GameToScreenMapper
     ) {
         this.username = gameStateData.playersState[index].name;
+        this.userId = gameStateData.playersState[index].id;
         this.playerRunning = false;
         this.playerAtObstacle = false;
         this.playerCountSameDistance = 0;
@@ -112,6 +114,10 @@ export class Player {
         } else if (this.finishedObstacle(isAtObstacle)) {
             this.finishObstacle();
         }
+    }
+
+    handleObstacleSkipped() {
+        this.renderer.handleSkippedObstacle();
     }
 
     handlePlayerDead() {
