@@ -1,10 +1,10 @@
 import Phaser from 'phaser';
 
+import chasersSpritesheet from '../../../../images/characters/spritesheets/chasers/chasers_spritesheet.png';
+import windSpritesheet from '../../../../images/characters/spritesheets/chasers/wind_spritesheet.png';
 import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1 } from '../../../../utils/constants';
 import { screenFinishedRoute } from '../../../../utils/routes';
 import history from '../../../history/history';
-import chasersSpritesheet from '../../../images/characters/spritesheets/chasers/chasers_spritesheet.png';
-import windSpritesheet from '../../../images/characters/spritesheets/chasers/wind_spritesheet.png';
 import { MessageSocket } from '../../../socket/MessageSocket';
 import { Socket } from '../../../socket/Socket';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
