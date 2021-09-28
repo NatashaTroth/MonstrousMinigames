@@ -7,7 +7,7 @@ import { ControllerSocketContext } from '../../../../../contexts/ControllerSocke
 import { GameContext } from '../../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../../contexts/PlayerContextProvider';
 import wood from '../../../../../images/obstacles/wood/wood.svg';
-import { MessageTypes } from '../../../../../utils/constants';
+import { MessageTypesGame1 } from '../../../../../utils/constants';
 import LinearProgressBar from './LinearProgressBar';
 import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from './ObstacleStyles.sc';
 import {
@@ -81,7 +81,7 @@ const TreeTrunk: React.FunctionComponent = () => {
     }, [progress]);
 
     const solveObstacle = () => {
-        controllerSocket?.emit({ type: MessageTypes.obstacleSolved, obstacleId: obstacle!.id });
+        controllerSocket?.emit({ type: MessageTypesGame1.obstacleSolved, obstacleId: obstacle!.id });
         setShowInstructions(false);
         setObstacle(roomId, undefined);
     };

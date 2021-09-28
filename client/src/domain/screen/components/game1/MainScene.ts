@@ -1,31 +1,37 @@
 import Phaser from 'phaser';
 
-import { designDevelopment, localDevelopment, MessageTypes } from '../../../utils/constants';
-import { screenFinishedRoute } from '../../../utils/routes';
-import history from '../../history/history';
-import { MessageSocket } from '../../socket/MessageSocket';
-import { Socket } from '../../socket/Socket';
+import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1 } from '../../../../utils/constants';
+import { screenFinishedRoute } from '../../../../utils/routes';
+import history from '../../../history/history';
+import { MessageSocket } from '../../../socket/MessageSocket';
+import { Socket } from '../../../socket/Socket';
+import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
 import {
     AllScreensPhaserGameLoadedMessage,
     allScreensPhaserGameLoadedTypeGuard,
-} from '../../typeGuards/allScreensPhaserGameLoaded';
-import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
-import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../typeGuards/gameStateInfo';
-import { InitialGameStateInfoMessage, initialGameStateInfoTypeGuard } from '../../typeGuards/initialGameStateInfo';
-import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
-import { PhaserLoadingTimedOutMessage, phaserLoadingTimedOutTypeGuard } from '../../typeGuards/phaserLoadingTimedOut';
-import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
-import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/started';
-import { GameHasStoppedMessage, stoppedTypeGuard } from '../../typeGuards/stopped';
-import { GameAudio } from '../phaser/GameAudio';
-import GameEventEmitter from '../phaser/GameEventEmitter';
-import { GameEventTypes } from '../phaser/GameEventTypes';
-import { GameData } from '../phaser/gameInterfaces';
-import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
-import { initialGameInput } from '../phaser/initialGameInput';
-import { Player } from '../phaser/Player';
-import printMethod from '../phaser/printMethod';
-import { PhaserGameRenderer } from '../phaser/renderer/PhaserGameRenderer';
+} from '../../../typeGuards/game1/allScreensPhaserGameLoaded';
+import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../../typeGuards/game1/gameStateInfo';
+import {
+    InitialGameStateInfoMessage,
+    initialGameStateInfoTypeGuard,
+} from '../../../typeGuards/game1/initialGameStateInfo';
+import {
+    PhaserLoadingTimedOutMessage,
+    phaserLoadingTimedOutTypeGuard,
+} from '../../../typeGuards/game1/phaserLoadingTimedOut';
+import { GameHasStartedMessage, startedTypeGuard } from '../../../typeGuards/game1/started';
+import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
+import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
+import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
+import { GameAudio } from '../../phaser/GameAudio';
+import GameEventEmitter from '../../phaser/GameEventEmitter';
+import { GameEventTypes } from '../../phaser/GameEventTypes';
+import { GameData } from '../../phaser/gameInterfaces';
+import { GameToScreenMapper } from '../../phaser/GameToScreenMapper';
+import { initialGameInput } from '../../phaser/initialGameInput';
+import { Player } from '../../phaser/Player';
+import printMethod from '../../phaser/printMethod';
+import { PhaserGameRenderer } from '../../phaser/renderer/PhaserGameRenderer';
 import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
 const windowHeight = window.innerHeight;
@@ -103,7 +109,7 @@ class MainScene extends Phaser.Scene {
 
             this.gameRenderer?.updateLoadingScreenFinishedPreloading();
             this.socket?.emit({
-                type: MessageTypes.phaserLoaded,
+                type: MessageTypesGame1.phaserLoaded,
                 roomId: this.roomId,
             });
         });
@@ -153,7 +159,7 @@ class MainScene extends Phaser.Scene {
         printMethod('**ADMIN SCREEN**');
         printMethod('SEND CREATE GAME');
         this.socket?.emit({
-            type: MessageTypes.createGame,
+            type: MessageTypesGame1.createGame,
             roomId: this.roomId,
         });
     }

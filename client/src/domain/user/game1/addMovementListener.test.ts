@@ -1,4 +1,4 @@
-import { InMemorySocketFake } from '../socket/InMemorySocketFake';
+import { InMemorySocketFake } from '../../socket/InMemorySocketFake';
 import { sendMovementToController } from './addMovementListener';
 
 describe('test sendMovementToController function', () => {

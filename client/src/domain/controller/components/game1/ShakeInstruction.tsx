@@ -8,7 +8,7 @@ import pebble from '../../../../images/obstacles/stone/pebble.svg';
 import stone from '../../../../images/obstacles/stone/stone.svg';
 import arrow from '../../../../images/ui/arrow_blue.svg';
 import shakeIt from '../../../../images/ui/shakeIt.svg';
-import { MessageTypes, ObstacleTypes } from '../../../../utils/constants';
+import { MessageTypesGame1, ObstacleTypes } from '../../../../utils/constants';
 import { controllerObstacleRoute } from '../../../../utils/routes';
 import history from '../../../history/history';
 import { Storage } from '../../../storage/Storage';
@@ -54,7 +54,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
 
     function handleSolveStone() {
         if (earlySolvableObstacle) {
-            controllerSocket.emit({ type: MessageTypes.solveObstacle, obstacleId: earlySolvableObstacle.id });
+            controllerSocket.emit({ type: MessageTypesGame1.solveObstacle, obstacleId: earlySolvableObstacle.id });
         }
     }
 

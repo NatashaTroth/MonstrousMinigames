@@ -3,12 +3,12 @@ import Phaser from 'phaser';
 import * as React from 'react';
 import { useParams } from 'react-router';
 
-import { RouteParams } from '../../../App';
-import { AudioContext } from '../../../contexts/AudioContextProvider';
-import { GameContext } from '../../../contexts/GameContextProvider';
-import { ScreenSocketContext } from '../../../contexts/ScreenSocketContextProvider';
-import { handleAudioPermission } from '../../audio/handlePermission';
-import GameEventEmitter from '../phaser/GameEventEmitter';
+import { RouteParams } from '../../../../App';
+import { AudioContext } from '../../../../contexts/AudioContextProvider';
+import { GameContext } from '../../../../contexts/GameContextProvider';
+import { ScreenSocketContext } from '../../../../contexts/ScreenSocketContextProvider';
+import { handleAudioPermission } from '../../../audio/handlePermission';
+import GameEventEmitter from '../../phaser/GameEventEmitter';
 import { AudioButton, Container, PauseButton } from './Game.sc';
 import MainScene from './MainScene';
 

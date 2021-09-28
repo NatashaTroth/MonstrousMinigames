@@ -45,7 +45,9 @@ export enum MessageTypes {
     stopGame = 'stopGame',
 
     error = 'error',
+}
 
+export enum MessageTypesGame1 {
     runForward = 'game1/runForward',
     obstacle = 'game1/obstacle', //obstacle reached
     obstacleSolved = 'game1/obstacleSolved',

@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
-import { StyledButtonBase } from '../../../components/common/Button.sc';
+import { StyledButtonBase } from '../../../../components/common/Button.sc';
 
 const fadeOut = keyframes`
     0% {

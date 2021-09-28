@@ -1,6 +1,6 @@
 import { controllerPlayerDeadRoute } from '../../../../utils/routes';
 import history from '../../../history/history';
-import { PlayerDiedMessage } from '../../../typeGuards/playerDied';
+import { PlayerDiedMessage } from '../../../typeGuards/game1/playerDied';
 
 interface HandlePlayerDied {
     data: PlayerDiedMessage;

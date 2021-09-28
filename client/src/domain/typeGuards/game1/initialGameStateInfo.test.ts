@@ -1,10 +1,10 @@
-import { GameState, MessageTypes } from '../../utils/constants';
+import { GameState, MessageTypesGame1 } from '../../../utils/constants';
 import { InitialGameStateInfoMessage, initialGameStateInfoTypeGuard } from './initialGameStateInfo';
 
 describe('initial game state info TypeGuard', () => {
     it('when type is paused, it should return true', () => {
         const data: InitialGameStateInfoMessage = {
-            type: MessageTypes.initialGameState,
+            type: MessageTypesGame1.initialGameState,
             data: {
                 roomId: 'xxx',
                 playersState: [],
@@ -14,8 +14,6 @@ describe('initial game state info TypeGuard', () => {
                 numberOfObstacles: 4,
                 cameraPositionX: 0,
             },
-
-            // },
         };
 
         expect(initialGameStateInfoTypeGuard(data)).toEqual(true);

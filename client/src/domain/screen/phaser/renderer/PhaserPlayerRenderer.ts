@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
 
 import { depthDictionary } from '../../../../utils/depthDictionary';
-import { fireworkFlares } from '../../components/GameAssets';
-import MainScene from '../../components/MainScene';
+import { fireworkFlares } from '../../components/game1/GameAssets';
+import MainScene from '../../components/game1/MainScene';
 import * as colors from '../colors';
 import { Character, CharacterAnimation } from '../gameInterfaces';
 import { CharacterAnimationFrames } from '../gameInterfaces/Character';

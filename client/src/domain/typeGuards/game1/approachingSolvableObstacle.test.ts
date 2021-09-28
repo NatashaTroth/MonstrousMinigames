@@ -1,4 +1,4 @@
-import { MessageTypes, ObstacleTypes } from '../../utils/constants';
+import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
 import {
     ApproachingSolvableObstacleMessage,
     approachingSolvableObstacleTypeGuard,
@@ -7,7 +7,7 @@ import {
 describe('approachingSolvableObstacle TypeGuard', () => {
     it('when type is approachingSolvableObstacle, it should return true', () => {
         const data: ApproachingSolvableObstacleMessage = {
-            type: MessageTypes.approachingSolvableObstacle,
+            type: MessageTypesGame1.approachingSolvableObstacle,
             obstacleId: 1,
             obstacleType: ObstacleTypes.stone,
             distance: 1,

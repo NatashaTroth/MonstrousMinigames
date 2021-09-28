@@ -1,10 +1,10 @@
-import { MessageTypes } from '../../utils/constants';
+import { MessageTypesGame1 } from '../../../utils/constants';
 import { AllScreensPhaserGameLoadedMessage, allScreensPhaserGameLoadedTypeGuard } from './allScreensPhaserGameLoaded';
 
 describe('allScreensPhaserGameLoaded TypeGuard', () => {
     it('when type is started, it should return true', () => {
         const data: AllScreensPhaserGameLoadedMessage = {
-            type: MessageTypes.allScreensPhaserGameLoaded,
+            type: MessageTypesGame1.allScreensPhaserGameLoaded,
         };
 
         expect(allScreensPhaserGameLoadedTypeGuard(data)).toEqual(true);
