@@ -7,6 +7,7 @@ export enum Routes {
     controllerChooseCharacter = '/controller/:id/choose-character',
     controllerLobby = '/controller/:id/lobby',
     controllerGame1 = '/controller/:id/game1',
+    controllerGame2 = '/controller/:id/game2',
     controllerTreeStump = `/controller/:id/treestump`,
     controllerSpider = `/controller/:id/spider`,
     controllerTrash = `/controller/:id/trash`,

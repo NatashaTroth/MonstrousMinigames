@@ -16,6 +16,7 @@
         "@types/wav": "^1.0.0",
         "ansi-styles": "^5.1.0",
         "es6-promise": "^4.2.8",
+        "firebase": "^9.1.0",
         "identity-obj-proxy": "^3.0.0",
         "interactjs": "^1.10.11",
         "isomorphic-fetch": "^3.0.0",
