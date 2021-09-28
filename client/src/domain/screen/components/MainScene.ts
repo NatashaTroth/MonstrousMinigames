@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 import chasersSpritesheet from '../../../images/characters/spritesheets/chasers/chasers_spritesheet.png';
+import windSpritesheet from '../../../images/characters/spritesheets/chasers/wind_spritesheet.png';
 import { designDevelopment, localDevelopment, MessageTypes } from '../../../utils/constants';
 import { screenFinishedRoute } from '../../../utils/routes';
 import history from '../../history/history';
@@ -10,6 +11,7 @@ import {
     AllScreensPhaserGameLoadedMessage,
     allScreensPhaserGameLoadedTypeGuard,
 } from '../../typeGuards/allScreensPhaserGameLoaded';
+import { ChasersPushedMessage, ChasersPushedTypeGuard } from '../../typeGuards/chasersPushed';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
 import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../typeGuards/gameStateInfo';
 import { InitialGameStateInfoMessage, initialGameStateInfoTypeGuard } from '../../typeGuards/initialGameStateInfo';
@@ -118,6 +120,13 @@ class MainScene extends Phaser.Scene {
         this.load.spritesheet('chasersSpritesheet', chasersSpritesheet, {
             frameWidth: 1240,
             frameHeight: 876,
+            startFrame: 0,
+            endFrame: 5,
+        });
+
+        this.load.spritesheet('windSpritesheet', windSpritesheet, {
+            frameWidth: 1240,
+            frameHeight: 690,
             startFrame: 0,
             endFrame: 5,
         });
@@ -238,6 +247,22 @@ class MainScene extends Phaser.Scene {
         const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);
         stoppedSocket.listen((data: GameHasStoppedMessage) => {
             this.gameAudio?.stopMusic();
+        });
+
+        const chasersPushedSocket = new MessageSocket(ChasersPushedTypeGuard, this.socket);
+        const xPositions: number[] = [];
+        const yPositions: number[] = [];
+        this.players.forEach(element => {
+            if (!element.dead) {
+                xPositions.push(element.coordinates.x);
+                yPositions.push(element.coordinates.x);
+            }
+        });
+
+        chasersPushedSocket.listen((data: ChasersPushedMessage) => {
+            this.players.forEach(player => {
+                player.renderer.renderWind();
+            });
         });
 
         //TODO

@@ -28,7 +28,7 @@ export class Player {
         private laneHeightsPerNumberPlayers: number[],
         private laneHeight: number,
         private index: number,
-        private coordinates: Coordinates,
+        public coordinates: Coordinates,
         private gameStateData: GameData,
         private character: Character,
         private numberPlayers: number,
