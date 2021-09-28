@@ -23,17 +23,17 @@ import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resume
 import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/started';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../typeGuards/stopped';
 import { UserInitMessage, userInitTypeGuard } from '../../typeGuards/userInit';
-import { handleApproachingObstacleMessage } from '../gameState/handleApproachingSolvableObstacleMessage';
+import { handleApproachingObstacleMessage } from '../gameState/game1/handleApproachingSolvableObstacleMessage';
+import { handleObstacleMessage } from '../gameState/game1/handleObstacleMessage';
+import { handlePlayerDied } from '../gameState/game1/handlePlayerDied';
+import { handlePlayerStunned } from '../gameState/game1/handlePlayerStunned';
+import { handlePlayerUnstunned } from '../gameState/game1/handlePlayerUnstunned';
 import { handleConnectedUsersMessage } from '../gameState/handleConnectedUsersMessage';
 import { handleGameHasFinishedMessage } from '../gameState/handleGameHasFinishedMessage';
 import { handleGameHasResetMessage } from '../gameState/handleGameHasResetMessage';
 import { handleGameHasStoppedMessage } from '../gameState/handleGameHasStoppedMessage';
 import { handleGameStartedMessage } from '../gameState/handleGameStartedMessage';
-import { handleObstacleMessage } from '../gameState/handleObstacleMessage';
-import { handlePlayerDied } from '../gameState/handlePlayerDied';
 import { handlePlayerFinishedMessage } from '../gameState/handlePlayerFinishedMessage';
-import { handlePlayerStunned } from '../gameState/handlePlayerStunned';
-import { handlePlayerUnstunned } from '../gameState/handlePlayerUnstunned';
 import { handleUserInitMessage } from '../gameState/handleUserInitMessage';
 
 export interface HandleSetSocketDependencies {
