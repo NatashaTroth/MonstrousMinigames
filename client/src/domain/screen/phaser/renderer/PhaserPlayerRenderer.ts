@@ -165,12 +165,19 @@ export class PhaserPlayerRenderer {
 
     renderChasers(chasersPositionX: number, chasersPositionY: number) {
         if (!this.chaser) {
-            this.chaser = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasers');
+            this.scene.anims.create({
+                key: 'chasersAnimation',
+                frames: this.scene.anims.generateFrameNumbers('chasersSpritesheet', { start: 0, end: 5 }),
+                frameRate: 15,
+                repeat: -1,
+            });
+            this.chaser = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasersSpritesheet');
             this.chaser.setScale(
                 (1.25 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]
             );
             this.chaser.setDepth(depthDictionary.chaser);
             this.chaser.y = this.chaser.y - this.chaser.displayHeight / 2; //set correct y pos according to player height
+            this.chaser.play('chasersAnimation');
         }
         this.chaser.setX(chasersPositionX - 50); // - 50 so that not quite on top of player when caught
     }

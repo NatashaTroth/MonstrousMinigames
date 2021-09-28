@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 
+import chasersSpritesheet from '../../../images/characters/spritesheets/chasers/chasers_spritesheet.png';
 import { designDevelopment, localDevelopment, MessageTypes } from '../../../utils/constants';
 import { screenFinishedRoute } from '../../../utils/routes';
 import history from '../../history/history';
@@ -112,6 +113,13 @@ class MainScene extends Phaser.Scene {
 
         characters.forEach(character => {
             this.load.spritesheet(character.name, character.file, character.properties);
+        });
+
+        this.load.spritesheet('chasersSpritesheet', chasersSpritesheet, {
+            frameWidth: 1240,
+            frameHeight: 876,
+            startFrame: 0,
+            endFrame: 5,
         });
 
         images.forEach(image => {

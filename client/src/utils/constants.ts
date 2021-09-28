@@ -68,7 +68,7 @@ export enum MessageTypes {
     exceededNumberOfChaserPushes = 'game1/playerHasExceededMaxNumberChaserPushes',
 }
 
-export const localDevelopment = false; //the one in constants.ts on the server
+export const localDevelopment = true; //the one in constants.ts on the server
 export const designDevelopment = false; //so that phaser game doesn't start, but loads
 
 export const localBackend = 'http://localhost:5000/';
