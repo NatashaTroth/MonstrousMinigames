@@ -21,6 +21,7 @@ import {
     PebbleContainer,
     PebbleInstructions,
     ShakeIt,
+    StoneButton,
     StyledPebbleImage,
 } from './ShakeInstruction.sc';
 
@@ -82,9 +83,9 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                             <PebbleContainer>
                                 <PebbleInstructions>Click to solve obstacle</PebbleInstructions>
                                 <Arrow src={arrow} />
-                                <PebbleButton onClick={handleSolveStone}>
+                                <StoneButton onClick={handleSolveStone}>
                                     <StyledPebbleImage src={stone} />
-                                </PebbleButton>
+                                </StoneButton>
                             </PebbleContainer>
                         )}
                         {solveStoneClicked && (
