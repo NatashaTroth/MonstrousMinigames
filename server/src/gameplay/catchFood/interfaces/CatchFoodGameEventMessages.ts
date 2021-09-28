@@ -3,6 +3,7 @@ import { GameStateInfo } from './';
 
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED = 'game1/obstacle';
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_SKIPPED = 'game1/obstacleSkipped';
+export const CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_WILL_BE_SOLVED = 'game1/obstacleWillBeSolved';
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE = 'game1/approachingSolvableObstacle';
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE_ONCE =
     'game1/approachingSolvableObstacleOnce';
@@ -18,6 +19,7 @@ export const CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASE
 export const CATCH_FOOD_GAME_EVENT_MESSAGES = [
     CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_SKIPPED,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_WILL_BE_SOLVED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE,
     CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE_ONCE,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED,
@@ -41,6 +43,12 @@ export interface CatchFoodGameObstacleReachedInfo {
 
 export interface CatchFoodGameObstacleSkippedInfo {
     type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_SKIPPED;
+    roomId: string;
+    userId: string;
+}
+
+export interface CatchFoodGameSolveObstacleInfo {
+    type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_WILL_BE_SOLVED;
     roomId: string;
     userId: string;
 }
@@ -101,6 +109,7 @@ export interface CatchFoodGamePlayerHasExceededMaxNumberChaserPushes {
 export type CatchFoodGameEventMessage =
     | CatchFoodGameObstacleReachedInfo
     | CatchFoodGameObstacleSkippedInfo
+    | CatchFoodGameSolveObstacleInfo
     | CatchFoodGameApproachingSolvableObstacle
     | CatchFoodGameApproachingSolvableObstacleOnce
     | CatchFoodGamePlayerHasFinished

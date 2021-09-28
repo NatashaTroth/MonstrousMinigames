@@ -121,8 +121,12 @@ export class Player {
     }
 
     handleObstacleSkipped() {
-        this.renderer.destroyWarningIcon();
+        this.destroyWarningIcon();
         this.renderer.handleSkippedObstacle();
+    }
+
+    destroyWarningIcon() {
+        this.renderer.destroyWarningIcon();
     }
 
     handlePlayerDead() {

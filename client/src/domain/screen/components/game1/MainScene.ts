@@ -24,6 +24,10 @@ import {
 } from '../../../typeGuards/game1/initialGameStateInfo';
 import { ObstacleSkippedMessage, obstacleSkippedTypeGuard } from '../../../typeGuards/game1/obstacleSkipped';
 import {
+    ObstacleWillBeSolvedMessage,
+    obstacleWillBeSolvedTypeGuard,
+} from '../../../typeGuards/game1/obstacleWillBeSolved';
+import {
     PhaserLoadingTimedOutMessage,
     phaserLoadingTimedOutTypeGuard,
 } from '../../../typeGuards/game1/phaserLoadingTimedOut';
@@ -231,6 +235,12 @@ class MainScene extends Phaser.Scene {
         obstacleSkipped.listen((data: ObstacleSkippedMessage) => {
             printMethod('Obstacle skipped');
             this.players.find(player => player.userId === data.userId)?.handleObstacleSkipped();
+        });
+
+        const obstacleWillBeSolved = new MessageSocket(obstacleWillBeSolvedTypeGuard, this.socket);
+        obstacleWillBeSolved.listen((data: ObstacleWillBeSolvedMessage) => {
+            printMethod('Obstacle will be solved');
+            this.players.find(player => player.userId === data.userId)?.destroyWarningIcon();
         });
 
         const phaserLoadedTimedOut = new MessageSocket(phaserLoadingTimedOutTypeGuard, this.socket);

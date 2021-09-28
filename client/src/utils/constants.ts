@@ -50,7 +50,8 @@ export enum MessageTypes {
 export enum MessageTypesGame1 {
     runForward = 'game1/runForward',
     obstacle = 'game1/obstacle', //obstacle reached
-    obstacleSkipped = 'game1/obstacleSkipped', //obstacle reached
+    obstacleSkipped = 'game1/obstacleSkipped',
+    obstacleWillBeSolved = 'game1/obstacleWillBeSolved',
     obstacleSolved = 'game1/obstacleSolved',
     playerFinished = 'game1/playerFinished',
     started = 'game1/hasStarted',

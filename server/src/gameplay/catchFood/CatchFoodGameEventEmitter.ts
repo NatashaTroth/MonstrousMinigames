@@ -15,6 +15,7 @@ import {
     CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_SKIPPED,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_WILL_BE_SOLVED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED,
@@ -69,6 +70,13 @@ export default class CatchFoodGameEventEmitter {
     public static emitObstacleSkippedEvent(data: GameEvents.ObstacleSkippedInfo) {
         this.catchFoodGameEventMessageEmitter.emit({
             type: CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_SKIPPED,
+            roomId: data.roomId,
+            userId: data.userId,
+        });
+    }
+    public static emitPlayerWantsToSolveObstacle(data: GameEvents.SolveObstacle) {
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_WILL_BE_SOLVED,
             roomId: data.roomId,
             userId: data.userId,
         });
