@@ -1,6 +1,6 @@
 import { designDevelopment, ObstacleTypes } from '../../../utils/constants';
 import { depthDictionary } from '../../../utils/depthDictionary';
-import MainScene from '../components/MainScene';
+import MainScene from '../components/game1/MainScene';
 import { AnimationName } from './enums';
 import { Character, GameData } from './gameInterfaces';
 import { GameToScreenMapper } from './GameToScreenMapper';

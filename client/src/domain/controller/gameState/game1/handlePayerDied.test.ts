@@ -1,5 +1,5 @@
-import { MessageTypes } from '../../../../utils/constants';
-import { PlayerDiedMessage } from '../../../typeGuards/playerDied';
+import { MessageTypesGame1 } from '../../../../utils/constants';
+import { PlayerDiedMessage } from '../../../typeGuards/game1/playerDied';
 import { handlePlayerDied } from './handlePlayerDied';
 
 describe('playerDied function', () => {
@@ -8,7 +8,7 @@ describe('playerDied function', () => {
     const roomId = 'ABCDE';
 
     const mockData: PlayerDiedMessage = {
-        type: MessageTypes.playerDied,
+        type: MessageTypesGame1.playerDied,
         rank: 1,
     };
 

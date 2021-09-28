@@ -5,7 +5,7 @@ import { ControllerSocketContext } from '../../../../contexts/ControllerSocketCo
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import windmill from '../../../../images/ui/pinwheel.svg';
 import windmillWood from '../../../../images/ui/pinwheel2.svg';
-import { MessageTypes } from '../../../../utils/constants';
+import { MessageTypesGame1 } from '../../../../utils/constants';
 import { controllerPlayerDeadRoute } from '../../../../utils/routes';
 import history from '../../../history/history';
 import LinearProgressBar from './obstacles/LinearProgressBar';
@@ -57,7 +57,7 @@ const Windmill: React.FunctionComponent = () => {
 
     if (distance >= 350) {
         if (rounds + 1 === MAX) {
-            controllerSocket.emit({ type: MessageTypes.pushChasers });
+            controllerSocket.emit({ type: MessageTypesGame1.pushChasers });
             history.push(controllerPlayerDeadRoute(roomId));
         }
         setRounds(rounds + 1);

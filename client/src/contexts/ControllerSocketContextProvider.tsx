@@ -5,7 +5,7 @@ import { handleSocketConnection } from '../domain/controller/socket/handleSocket
 import history from '../domain/history/history';
 import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
 import { Socket } from '../domain/socket/Socket';
-import addMovementListener from '../domain/user/addMovementListener';
+import addMovementListener from '../domain/user/game1/addMovementListener';
 import { GameContext } from './GameContextProvider';
 import { PlayerContext } from './PlayerContextProvider';
 

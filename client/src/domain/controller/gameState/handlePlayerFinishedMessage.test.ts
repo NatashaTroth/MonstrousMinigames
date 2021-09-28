@@ -1,5 +1,5 @@
-import { MessageTypes } from '../../../utils/constants';
-import { PlayerFinishedMessage } from '../../typeGuards/playerFinished';
+import { MessageTypesGame1 } from '../../../utils/constants';
+import { PlayerFinishedMessage } from '../../typeGuards/game1/playerFinished';
 import { handlePlayerFinishedMessage } from './handlePlayerFinishedMessage';
 
 describe('playerHasFinished function', () => {
@@ -8,7 +8,7 @@ describe('playerHasFinished function', () => {
     const roomId = 'ABCDE';
 
     const mockData: PlayerFinishedMessage = {
-        type: MessageTypes.playerFinished,
+        type: MessageTypesGame1.playerFinished,
         rank: 1,
         userId: 1,
     };

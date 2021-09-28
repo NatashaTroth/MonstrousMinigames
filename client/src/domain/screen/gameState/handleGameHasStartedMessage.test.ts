@@ -1,8 +1,6 @@
 import { createMemoryHistory } from 'history';
 
-import { MessageTypes } from '../../../utils/constants';
 import { screenGame1Route } from '../../../utils/routes';
-import { StartPhaserGameMessage } from '../../typeGuards/startPhaserGame';
 import { handleStartGameMessage } from './handleGameHasStartedMessage';
 
 describe('handleGameHasStartedMessage', () => {
@@ -10,9 +8,7 @@ describe('handleGameHasStartedMessage', () => {
 
     it('when message type is gameStarted, history push should be called', () => {
         const history = createMemoryHistory();
-        const setCountdownTime = jest.fn();
         const setGameStarted = jest.fn();
-        const data: StartPhaserGameMessage = { type: MessageTypes.startPhaserGame };
 
         handleStartGameMessage({ roomId, dependencies: { history, setGameStarted } });
 
@@ -21,9 +17,7 @@ describe('handleGameHasStartedMessage', () => {
 
     it('handed setGameStarted should be called with true', () => {
         const history = createMemoryHistory();
-        const setCountdownTime = jest.fn();
         const setGameStarted = jest.fn();
-        const data: StartPhaserGameMessage = { type: MessageTypes.startPhaserGame };
 
         handleStartGameMessage({
             roomId,
