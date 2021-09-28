@@ -1,5 +1,5 @@
 export const TRACK_LENGTH = 5000;
-export const NUMBER_OBSTACLES = 4;
+export const NUMBER_OBSTACLES = 1;
 export const COUNTDOWN_TIME = 3000;
 export const STUNNED_TIME = 3000;
 export const NUMBER_STONES = 4; //when alive

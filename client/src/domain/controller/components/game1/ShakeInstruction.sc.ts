@@ -1,5 +1,15 @@
 import { darken } from '@material-ui/core';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+import theme from '../../../../styles/theme';
+
+const boxShadowDepth = 7;
+
+const glowing = keyframes`{
+  0% { background-color: ${theme.palette.primary.main}; box-shadow: 0 0 3px  ${theme.palette.primary.dark}; transform: scale(1);  }
+  50% { background-color: ${theme.palette.secondary.light}; box-shadow: 0 0 40px  ${theme.palette.secondary.dark}; transform: scale(1.2); }
+  100% { background-color:  ${theme.palette.primary.main}; box-shadow: 0 0 3px  ${theme.palette.primary.dark}; transform: scale(1); }
+}`;
 
 export const Container = styled.div`
     display: flex;
@@ -24,8 +34,6 @@ export const StyledPebbleImage = styled.img`
     width: 100%;
 `;
 
-const boxShadowDepth = 7;
-
 export const PebbleButton = styled.div`
     width: 20%;
     padding: 20px;
@@ -48,6 +56,14 @@ export const PebbleButton = styled.div`
     }
 `;
 
+export const StoneButton = styled.div`
+    width: 20%;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: ${({ theme }) => theme.colors.playerName};
+    animation: ${glowing} 1500ms infinite;
+`;
+
 export const PebbleContainer = styled.div`
     display: flex;
     justify-content: center;
@@ -65,4 +81,5 @@ export const Arrow = styled.img`
     margin-left: 80px;
     margin-top: -25px;
     position: absolute;
+    z-index: 2;
 `;
