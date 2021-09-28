@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { handleSetSocket } from '../domain/controller/socket/handleSetSocket';
-import { handleSocketConnection } from '../domain/controller/socket/handleSocketConnection';
+import { handleSetSocket } from '../domain/common/socket/handleSetSocket';
+import { handleSocketConnection } from '../domain/common/socket/handleSocketConnection';
 import history from '../domain/history/history';
 import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
 import { Socket } from '../domain/socket/Socket';

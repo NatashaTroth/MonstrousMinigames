@@ -2,6 +2,11 @@ import { History } from 'history';
 
 import { PlayerRank } from '../../../contexts/ScreenSocketContextProvider';
 import { Routes } from '../../../utils/routes';
+import { handleConnectedUsersMessage } from '../../commonGameState/screen/handleConnectedUsersMessage';
+import { handleGameHasFinishedMessage } from '../../commonGameState/screen/handleGameHasFinishedMessage';
+import { handleGameHasResetMessage } from '../../commonGameState/screen/handleGameHasResetMessage';
+import { handleStartGameMessage } from '../../commonGameState/screen/handleGameHasStartedMessage';
+import { handleGameHasStoppedMessage } from '../../commonGameState/screen/handleGameHasStoppedMessage';
 import { MessageSocket } from '../../socket/MessageSocket';
 import ScreenSocket from '../../socket/screenSocket';
 import { Socket } from '../../socket/Socket';
@@ -15,11 +20,6 @@ import { ScreenAdminMessage, screenAdminTypeGuard } from '../../typeGuards/scree
 import { ScreenStateMessage, screenStateTypeGuard } from '../../typeGuards/screenState';
 import { StartPhaserGameMessage, startPhaserGameTypeGuard } from '../../typeGuards/startPhaserGame';
 import { stoppedTypeGuard } from '../../typeGuards/stopped';
-import { handleConnectedUsersMessage } from '../gameState/handleConnectedUsersMessage';
-import { handleGameHasFinishedMessage } from '../gameState/handleGameHasFinishedMessage';
-import { handleGameHasResetMessage } from '../gameState/handleGameHasResetMessage';
-import { handleStartGameMessage } from '../gameState/handleGameHasStartedMessage';
-import { handleGameHasStoppedMessage } from '../gameState/handleGameHasStoppedMessage';
 
 export interface HandleSetSocketDependencies {
     setScreenSocket: (socket: Socket) => void;
