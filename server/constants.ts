@@ -1,2 +1,2 @@
-export const localDevelopment = true;
-export const pushChasers = true;
+export const localDevelopment = false;
+export const pushChasers = false;
