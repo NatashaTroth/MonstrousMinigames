@@ -66,6 +66,10 @@ const Stone: React.FunctionComponent = () => {
 
     function handleThrow(receivingUserId: string) {
         controllerSocket.emit({
+            type: MessageTypesGame1.obstacleSolved,
+            obstacleId: obstacle?.id,
+        });
+        controllerSocket.emit({
             type: MessageTypesGame1.stunPlayer,
             userId,
             receivingUserId,
