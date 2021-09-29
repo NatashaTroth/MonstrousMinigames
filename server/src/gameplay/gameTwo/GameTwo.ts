@@ -10,29 +10,9 @@ import Sheep from './classes/Sheep';
 import InitialParameters from './constants/InitialParameters';
 import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
 import { SheepStates } from './enums/SheepStates';
+import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
 import GameTwoPlayer from './GameTwoPlayer';
-import { GameStateInfo } from './interfaces/GameStateInfo';
-
-/*
-- sheepCount
-- position for every user
-- position for every sheep
-- movement
-- decoys
-
-
-
-class Sheep {
-    posX
-    posY
-    isDead
-}
-
-getSheepCount
-
-
-
-*/
+import { GameStateInfo } from './interfaces';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -50,6 +30,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     constructor(roomId: string, public leaderboard: Leaderboard) {
         super(roomId);
+        this.gameStateMessage = GameTwoMessageTypes.GAME_STATE;
         this.lengthX = InitialParameters.LENGTH_X;
         this.lengthY = InitialParameters.LENGTH_Y;
         this.sheep = [];
@@ -62,6 +43,18 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         return {
             gameState: this.gameState,
             roomId: this.roomId,
+            playersState: Array.from(this.players.values()).map(player => ({
+                id: player.id,
+                name: player.name,
+                positionX: player.posX,
+                positionY: player.posY,
+                finished: player.finished,
+                isActive: player.isActive,
+                characterNumber: player.characterNumber
+            })),
+            sheep: this.sheep,
+            lengthX: this.lengthX,
+            lengthY: this.lengthY,
         };
     }
 
@@ -82,10 +75,11 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
-        console.error('Unimplemented Method');
+        return
+
     }
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
-        console.error('Unimplemented Method');
+        return
     }
 
     protected initSheep(count: number): void {
@@ -132,12 +126,18 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         super.createNewGame(users);
         this.initSheep(InitialParameters.SHEEP_COUNT);
         console.info(this.sheep);
+        GameTwoEventEmitter.emitInitialGameStateInfoUpdate(
+            this.roomId,
+            this.getGameStateInfo()
+        )
     }
 
     startGame(): void {
         setTimeout(() => {
             super.startGame();
         }, this.countdownTime);
+        GameTwoEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime);
+
     }
     pauseGame(): void {
         super.pauseGame();
@@ -200,4 +200,24 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 console.info(message);
         }
     }
+
+    disconnectPlayer(userId: string) {
+        if (super.disconnectPlayer(userId)) {
+            //.emitPlayerHasDisconnected(this.roomId, userId);
+            return true;
+        }
+
+        return false;
+    }
+
+    reconnectPlayer(userId: string) {
+        if (super.reconnectPlayer(userId)) {
+            //.emitPlayerHasReconnected(this.roomId, userId);
+
+            return true;
+        }
+
+        return false;
+    }
+
 }
