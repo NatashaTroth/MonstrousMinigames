@@ -1,4 +1,4 @@
-import { sendMovement } from '../../controller/gameState/game1/sendMovement';
+import { sendMovement } from '../../game1/controller/gameState/sendMovement';
 import { Socket } from '../../socket/Socket';
 
 export default function addMovementListener(controllerSocket: Socket, hasPaused: boolean, playerFinished: boolean) {
