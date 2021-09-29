@@ -1,6 +1,7 @@
 import "reflect-metadata";
 
 import { CatchFoodGame } from "../../../src/gameplay";
+import { ObstacleType } from "../../../src/gameplay/catchFood/enums";
 import { leaderboard, roomId } from "../mockData";
 import {
     advanceCountdown, clearTimersAndIntervals, finishPlayer, releaseThread, releaseThreadN,
@@ -14,11 +15,13 @@ describe('Stun player tests', () => {
     beforeEach(() => {
         // gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
-
-        catchFoodGame.players.get('1')!.stonesCarrying = 1;
-        catchFoodGame.players.get('2')!.stonesCarrying = 1;
         jest.useFakeTimers();
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(catchFoodGame, () => {
+            catchFoodGame.players.get('2')!.obstacles = catchFoodGame.players
+                .get('2')!
+                .obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
+            catchFoodGame.players.get('2')!.stonesCarrying = 3;
+        });
     });
 
     afterEach(() => {
