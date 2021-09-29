@@ -31,7 +31,6 @@ export class PhaserPlayerRenderer {
     private caveBehind?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private caveInFront?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private backgroundElements?: Phaser.GameObjects.Image[];
-    //private backgroundLane?: Phaser.GameObjects.TileSprite[]; // for tile parallax
 
     constructor(
         private scene: MainScene,
@@ -39,10 +38,9 @@ export class PhaserPlayerRenderer {
         private laneHeightsPerNumberPlayers?: number[]
     ) {
         this.obstacles = [];
-        // Natasha bitte löschen wenn das nicht mehr gebraucht wird
         this.skippedObstacles = [];
         this.particles = [];
-        this.backgroundElements = []; //TODO change
+        this.backgroundElements = [];
 
         //when <= 2 lanes, make them less high to fit more width
 
@@ -229,7 +227,6 @@ export class PhaserPlayerRenderer {
     }
 
     handlePlayerDead() {
-        //TODO change later - no need to color images that have already gone past
         if (this.backgroundElements && this.backgroundElements.length > 0) {
             this.backgroundElements.forEach(img => {
                 img.setTint(0x123a3a);
@@ -282,7 +279,6 @@ export class PhaserPlayerRenderer {
 
         this.particles.forEach((particle, i) => {
             const particlesEmitter = particle.createEmitter({
-                // key: flare,
                 x: posX,
                 y: posY - (laneHeight / 4) * 3,
                 scale: scales[i],
@@ -303,14 +299,7 @@ export class PhaserPlayerRenderer {
 
     destroyObstacle() {
         const currentObstacle = this.obstacles.shift();
-        if (currentObstacle) {
-            //     if (!currentObstacle.solvable) {
-            //         currentObstacle.phaserInstance.destroy();
-            //     } else {
-            //         this.solvableObstacles.push(currentObstacle);
-            //     }
-            currentObstacle.phaserInstance.destroy();
-        }
+        currentObstacle?.phaserInstance.destroy();
     }
 
     handleSkippedObstacle() {
