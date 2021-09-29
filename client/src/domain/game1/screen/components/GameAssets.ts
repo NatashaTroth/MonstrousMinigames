@@ -5,6 +5,7 @@ import flare2 from '../../../../assets/flares/flare_02.png';
 import flare3 from '../../../../assets/flares/flare_03.png';
 import { defaultAvailableCharacters } from '../../../../config/characters';
 import floor from '../../../../images/background/floor.png';
+import grass from '../../../../images/background/grass.png';
 import hills from '../../../../images/background/hills.png';
 import laneBackground from '../../../../images/background/laneBackground.png';
 import moon from '../../../../images/background/moon.png';
@@ -89,6 +90,7 @@ export const images = [
     { name: 'mountains', file: mountains },
     { name: 'starsAndSky', file: starsAndSky },
     { name: 'trees', file: trees },
+    { name: 'grass', file: grass },
     { name: 'moon', file: moon },
     { name: 'laneBackground', file: laneBackground },
     { name: 'pebble', file: pebble },

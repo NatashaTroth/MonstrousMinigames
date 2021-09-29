@@ -38,8 +38,8 @@ export class PhaserGameRenderer {
     renderCountdown(text: string) {
         const fixedWidth = 800;
         const fixedHeight = 200;
-        const x = window.innerWidth / 2 - fixedWidth / 2;
-        const y = window.innerHeight / 2 - fixedHeight / 2;
+        const x = this.scene.windowWidth / 2 - fixedWidth / 2;
+        const y = this.scene.windowHeight / 2 - fixedHeight / 2;
 
         if (this.countdownText) {
             this.countdownText.setText(text);
