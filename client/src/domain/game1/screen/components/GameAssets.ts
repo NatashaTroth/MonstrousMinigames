@@ -32,10 +32,6 @@ import warning from '../../../../images/ui/warning.png';
 import { AnimationName } from '../phaser/enums';
 import { Character, CharacterAnimation, CharacterSpriteProperties } from '../phaser/gameInterfaces';
 
-// import { characterDictionary } from '../../../utils/characterDictionary';
-
-//TODO types
-
 export const audioFiles = [
     { name: 'backgroundMusicStart', file: [game1SoundStart] },
     { name: 'backgroundMusicLoop', file: [game1SoundLoop] },
