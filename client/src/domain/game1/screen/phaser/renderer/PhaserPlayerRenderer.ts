@@ -71,14 +71,15 @@ export class PhaserPlayerRenderer {
         this.backgroundElements?.push(moon);
 
         const repeats = Math.ceil(trackLength / newWidth) + 1;
-        const backgroundKeys = ['starsAndSky', 'mountains', 'hills', 'trees', 'floor'];
-        const scrollFactors = [0.1, 0.4, 0.6, 0.9, 1];
+        const backgroundKeys = ['starsAndSky', 'mountains', 'hills', 'trees', 'floor', 'grass'];
+        const scrollFactors = [0.1, 0.4, 0.6, 0.9, 1, 1];
         const depths = [
             depthDictionary.sky,
             depthDictionary.mountains,
             depthDictionary.hills,
             depthDictionary.trees,
             depthDictionary.floor,
+            depthDictionary.grass,
         ];
 
         while (i < repeats) {
