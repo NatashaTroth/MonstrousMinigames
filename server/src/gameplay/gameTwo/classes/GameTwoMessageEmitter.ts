@@ -13,7 +13,6 @@ import {
 } from '../interfaces/GameTwoEventMessages';
 import { EventMessage } from '../../../interfaces/EventMessage';
 import Room from '../../../classes/room';
-import User from '../../../classes/user';
 import Player from '../../Player';
 
 @singleton()
@@ -32,7 +31,6 @@ export class GameTwoMessageEmitter implements EventMessageEmitter {
         room: Room,
         message: GameTwoEventMessage
     ): void {
-        let user: User;
 
         switch (message.type) {
             // send to room's screens

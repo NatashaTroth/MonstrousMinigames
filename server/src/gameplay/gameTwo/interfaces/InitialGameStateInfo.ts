@@ -1,6 +1,5 @@
 import { GameStateInfo } from '.';
 import { GameState } from '../../enums';
-import { IGameStateBase } from '../../interfaces/IGameStateBase';
 import Sheep from '../classes/Sheep';
 import { PlayerStateForClient } from './PlayerStateForClient';
 

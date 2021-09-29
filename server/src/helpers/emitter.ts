@@ -4,7 +4,6 @@ import Room from '../classes/room';
 import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
-import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
 
 function sendUserInit(socket: Socket, user: User, room: Room): void {
     socket.emit('message', {
