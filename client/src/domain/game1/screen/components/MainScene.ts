@@ -46,8 +46,9 @@ import printMethod from '../phaser/printMethod';
 import { PhaserGameRenderer } from '../phaser/renderer/PhaserGameRenderer';
 import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
-const windowHeight = window.innerHeight;
 class MainScene extends Phaser.Scene {
+    windowWidth: number;
+    windowHeight: number;
     roomId: string;
     socket?: Socket;
     posX: number;
@@ -70,10 +71,13 @@ class MainScene extends Phaser.Scene {
 
     constructor() {
         super('MainScene');
+        this.windowWidth = 0;
+        this.windowHeight = 0;
+
         this.roomId = sessionStorage.getItem('roomId') || '';
         this.posX = 50;
         this.plusX = 40;
-        this.posY = window.innerHeight / 2 - 50;
+        this.posY = 0;
         this.plusY = 110;
         this.players = [];
         this.trackLength = 5000;
@@ -88,6 +92,9 @@ class MainScene extends Phaser.Scene {
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
         this.camera = this.cameras.main;
+        this.windowWidth = this.cameras.main.width;
+        this.windowHeight = this.cameras.main.height;
+        this.posY = this.windowHeight / 2 - 50;
         this.socket = data.socket;
         this.screenAdmin = data.screenAdmin;
         this.gameRenderer = new PhaserGameRenderer(this);
@@ -324,7 +331,8 @@ class MainScene extends Phaser.Scene {
     initiateGame(gameStateData: GameData) {
         this.gameToScreenMapper = new GameToScreenMapper(
             gameStateData.playersState[0].positionX,
-            gameStateData.chasersPositionX
+            gameStateData.chasersPositionX,
+            this.windowWidth
         );
         // const otherTrackLength = this.mapGameMeasurementToScene(gameStateData.trackLength)
 
@@ -332,7 +340,12 @@ class MainScene extends Phaser.Scene {
 
         // this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
 
-        this.physics.world.setBounds(0, 0, 7500, windowHeight);
+        this.physics.world.setBounds(
+            0,
+            0,
+            this.gameToScreenMapper!.mapGameMeasurementToScreen(this.trackLength + 150),
+            this.windowHeight
+        );
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);
@@ -376,7 +389,7 @@ class MainScene extends Phaser.Scene {
                 0,
                 0,
                 this.gameToScreenMapper!.mapGameMeasurementToScreen(this.trackLength + 150),
-                windowHeight
+                this.windowHeight
             ); //+150 so the cave can be fully seen
             // this.players.forEach(player => {
             //     player.renderer.updatePlayerNamePosition(posX, this.trackLength);
@@ -388,8 +401,8 @@ class MainScene extends Phaser.Scene {
         const character = characters[gameStateData.playersState[index].characterNumber];
         const numberPlayers = gameStateData.playersState.length;
         const laneHeightsPerNumberPlayers = [1 / 3, 2 / 3, 1, 1];
-        const laneHeight = (windowHeight / numberPlayers) * laneHeightsPerNumberPlayers[numberPlayers - 1];
-        const posY = this.moveLanesToCenter(windowHeight, laneHeight, index, numberPlayers);
+        const laneHeight = (this.windowHeight / numberPlayers) * laneHeightsPerNumberPlayers[numberPlayers - 1];
+        const posY = this.moveLanesToCenter(this.windowHeight, laneHeight, index, numberPlayers);
 
         const player = new Player(
             this,

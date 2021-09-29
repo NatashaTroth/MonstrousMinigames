@@ -1,10 +1,11 @@
-import 'reflect-metadata';
-import { CatchFoodGame } from '../../../src/gameplay';
-import { leaderboard, roomId } from '../mockData';
+import "reflect-metadata";
+
+import { CatchFoodGame } from "../../../src/gameplay";
+import { leaderboard, roomId } from "../mockData";
 import {
     advanceCountdown, clearTimersAndIntervals, finishPlayer, releaseThread, releaseThreadN,
     startGameAndAdvanceCountdown
-} from './gameHelperFunctions';
+} from "./gameHelperFunctions";
 
 let catchFoodGame: CatchFoodGame;
 // let gameEventEmitter: CatchFoodGameEventEmitter;
@@ -13,6 +14,9 @@ describe('Stun player tests', () => {
     beforeEach(() => {
         // gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
         catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+
+        catchFoodGame.players.get('1')!.stonesCarrying = 1;
+        catchFoodGame.players.get('2')!.stonesCarrying = 1;
         jest.useFakeTimers();
         startGameAndAdvanceCountdown(catchFoodGame);
     });
