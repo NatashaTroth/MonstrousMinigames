@@ -5,6 +5,7 @@ import flare2 from '../../../../assets/flares/flare_02.png';
 import flare3 from '../../../../assets/flares/flare_03.png';
 import { defaultAvailableCharacters } from '../../../../config/characters';
 import floor from '../../../../images/background/floor.png';
+import grass from '../../../../images/background/grass.png';
 import hills from '../../../../images/background/hills.png';
 import laneBackground from '../../../../images/background/laneBackground.png';
 import moon from '../../../../images/background/moon.png';
@@ -30,10 +31,6 @@ import forestTile from '../../../../images/ui/forestTile.png';
 import warning from '../../../../images/ui/warning.png';
 import { AnimationName } from '../phaser/enums';
 import { Character, CharacterAnimation, CharacterSpriteProperties } from '../phaser/gameInterfaces';
-
-// import { characterDictionary } from '../../../utils/characterDictionary';
-
-//TODO types
 
 export const audioFiles = [
     { name: 'backgroundMusicStart', file: [game1SoundStart] },
@@ -89,6 +86,7 @@ export const images = [
     { name: 'mountains', file: mountains },
     { name: 'starsAndSky', file: starsAndSky },
     { name: 'trees', file: trees },
+    { name: 'grass', file: grass },
     { name: 'moon', file: moon },
     { name: 'laneBackground', file: laneBackground },
     { name: 'pebble', file: pebble },

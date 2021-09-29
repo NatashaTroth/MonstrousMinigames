@@ -19,7 +19,7 @@ import { CatchFoodMsgType, ObstacleType } from './enums';
 import {
     createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
 } from './helperFunctions/initiatePlayerState';
-import { GameStateInfo, Obstacle, PlayerRank } from './interfaces';
+import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from './interfaces';
 import { ObstacleReachedInfoController } from './interfaces/GameEvents';
 
 let pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
@@ -27,6 +27,7 @@ let pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
 interface CatchFoodGameInterface extends IGameInterface<CatchFoodPlayer, GameStateInfo> {
     trackLength: number;
     numberOfObstacles: number;
+    obstacleTypes: ObstacleTypeObject[];
 
     createNewGame(players: Array<User>, trackLength?: number, numberOfObstacles?: number): void;
     getGameStateInfo(): GameStateInfo;
@@ -49,10 +50,15 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     initialPlayerPositionX = InitialGameParameters.PLAYERS_POSITION_X;
     chasersPositionX = InitialGameParameters.CHASERS_POSITION_X;
     cameraPositionX = InitialGameParameters.CAMERA_POSITION_X;
+    obstacleTypes: ObstacleTypeObject[] = [];
 
     constructor(roomId: string, public leaderboard: Leaderboard /*, public usingChasers = false*/) {
         super(roomId);
         this.gameStateMessage = CatchFoodMsgType.GAME_STATE;
+    }
+
+    protected beforeCreateNewGame() {
+        this.obstacleTypes = getObstacleTypes(this.numberOfObstacles);
     }
 
     protected mapUserToPlayer(user: User) {
@@ -60,12 +66,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             user.id,
             user.name,
             this.initialPlayerPositionX,
-            createObstacles(
-                getObstacleTypes(this.numberOfObstacles),
-                this.numberOfObstacles,
-                this.trackLength,
-                this.initialPlayerPositionX
-            ),
+            createObstacles(this.obstacleTypes, this.numberOfObstacles, this.trackLength, this.initialPlayerPositionX),
             user.characterNumber
         );
 

@@ -1,14 +1,13 @@
+import random from 'random';
+
 import User from '../../classes/user';
 import { IMessage } from '../../interfaces/messages';
 import Game from '../Game';
 import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
-import GameTwoPlayer from './GameTwoPlayer';
-import InitialParameters from './constants/InitialParameters'
 import Sheep from './classes/Sheep';
-import random from 'random';
-import { GameStateInfo } from './interfaces/GameStateInfo';
+import InitialParameters from './constants/InitialParameters';
 import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
 import { SheepStates } from './enums/SheepStates';
 import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
@@ -17,7 +16,6 @@ interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateIn
     lengthX: number;
     lengthY: number;
 }
-
 
 export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implements GameTwoGameInterface {
     public lengthX: number;
@@ -28,7 +26,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     initialPlayerPositions = InitialParameters.PLAYERS_POSITIONS;
 
-
     constructor(roomId: string, public leaderboard: Leaderboard) {
         super(roomId);
         this.gameStateMessage = GameTwoMessageTypes.GAME_STATE;
@@ -36,10 +33,9 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.lengthY = InitialParameters.LENGTH_Y;
         this.sheep = [];
         this.currentSheepId = 0;
-        console.log('game2 created')
+        console.log('game2 created');
         console.info(this);
     }
-
 
     getGameStateInfo(): GameStateInfo {
         return {
@@ -59,8 +55,20 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             lengthY: this.lengthY,
         };
     }
+
+    protected beforeCreateNewGame() {
+        throw new Error('Method not implemented.');
+    }
+
     protected mapUserToPlayer(user: User): GameTwoPlayer {
-        const player = new GameTwoPlayer(user.id, user.name, this.initialPlayerPositions[user.number].x, this.initialPlayerPositions[user.number].y, InitialParameters.KILLS_PER_ROUND, user.characterNumber);
+        const player = new GameTwoPlayer(
+            user.id,
+            user.name,
+            this.initialPlayerPositions[user.number].x,
+            this.initialPlayerPositions[user.number].y,
+            InitialParameters.KILLS_PER_ROUND,
+            user.characterNumber
+        );
         console.info(player);
         return player;
     }
@@ -73,7 +81,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     }
 
     protected initSheep(count: number): void {
-        const seedrandom = require('seedrandom')
+        const seedrandom = require('seedrandom');
         random.use(seedrandom('sheep'));
 
         for (let i = 0; i <= count; i++) {
@@ -82,8 +90,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             do {
                 posX = random.int(InitialParameters.MARGIN, InitialParameters.LENGTH_X - InitialParameters.MARGIN);
                 posY = random.int(InitialParameters.MARGIN, InitialParameters.LENGTH_Y - InitialParameters.MARGIN);
-            } while (!this.isValidStartingPosition(posX, posY))
-            this.sheep.push(new Sheep(posX, posY, this.currentSheepId))
+            } while (!this.isValidStartingPosition(posX, posY));
+            this.sheep.push(new Sheep(posX, posY, this.currentSheepId));
             this.currentSheepId++;
         }
     }
@@ -92,15 +100,21 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         let valid = true;
 
         this.players.forEach(player => {
-            if (Math.abs(player.posX - posX) < InitialParameters.MARGIN || Math.abs(player.posY - posY) < InitialParameters.MARGIN) {
+            if (
+                Math.abs(player.posX - posX) < InitialParameters.MARGIN ||
+                Math.abs(player.posY - posY) < InitialParameters.MARGIN
+            ) {
                 valid = false;
-                return
+                return;
             }
         });
         this.sheep.forEach(sheep => {
-            if ((Math.abs(sheep.posX - posX) < InitialParameters.MARGIN) && (Math.abs(sheep.posY - posY) < InitialParameters.MARGIN)) {
+            if (
+                Math.abs(sheep.posX - posX) < InitialParameters.MARGIN &&
+                Math.abs(sheep.posY - posY) < InitialParameters.MARGIN
+            ) {
                 valid = false;
-                return
+                return;
             }
         });
 
@@ -146,26 +160,30 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         const player = this.players.get(userId)!;
 
         if (player.killsLeft < 1) {
-            return
+            return;
         }
 
         const sheepInRadius = this.sheep.filter(sheep => {
-            return sheep.state === SheepStates.ALIVE && (Math.abs(sheep.posX - player.posX) <= InitialParameters.KILL_RADIUS) && (Math.abs(sheep.posY - player.posY) <= InitialParameters.KILL_RADIUS)
-        })
+            return (
+                sheep.state === SheepStates.ALIVE &&
+                Math.abs(sheep.posX - player.posX) <= InitialParameters.KILL_RADIUS &&
+                Math.abs(sheep.posY - player.posY) <= InitialParameters.KILL_RADIUS
+            );
+        });
 
         this.sheep.forEach(sheep => {
-            (Math.abs(sheep.posX - player.posX) <= InitialParameters.KILL_RADIUS) && (Math.abs(sheep.posY - player.posY) <= InitialParameters.KILL_RADIUS)
-        })
+            Math.abs(sheep.posX - player.posX) <= InitialParameters.KILL_RADIUS &&
+                Math.abs(sheep.posY - player.posY) <= InitialParameters.KILL_RADIUS;
+        });
 
         if (sheepInRadius.length < 1) {
-            return
+            return;
         }
         if (sheepInRadius.length >= 1) {
             const sheepId = sheepInRadius[0].id;
-            this.sheep[sheepId].state = SheepStates.DECOY
+            this.sheep[sheepId].state = SheepStates.DECOY;
             //todo how to handle if multiple sheep
         }
-
     }
 
     protected handleInput(message: IMessage) {

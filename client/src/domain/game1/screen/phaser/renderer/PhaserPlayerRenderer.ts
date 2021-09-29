@@ -31,7 +31,6 @@ export class PhaserPlayerRenderer {
     private caveBehind?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private caveInFront?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private backgroundElements?: Phaser.GameObjects.Image[];
-    //private backgroundLane?: Phaser.GameObjects.TileSprite[]; // for tile parallax
 
     constructor(
         private scene: MainScene,
@@ -39,10 +38,9 @@ export class PhaserPlayerRenderer {
         private laneHeightsPerNumberPlayers: number[]
     ) {
         this.obstacles = [];
-        // Natasha bitte löschen wenn das nicht mehr gebraucht wird
         this.skippedObstacles = [];
         this.particles = [];
-        this.backgroundElements = []; //TODO change
+        this.backgroundElements = [];
 
         //when <= 2 lanes, make them less high to fit more width
 
@@ -71,14 +69,15 @@ export class PhaserPlayerRenderer {
         this.backgroundElements?.push(moon);
 
         const repeats = Math.ceil(trackLength / newWidth) + 1;
-        const backgroundKeys = ['starsAndSky', 'mountains', 'hills', 'trees', 'floor'];
-        const scrollFactors = [0.1, 0.4, 0.6, 0.9, 1];
+        const backgroundKeys = ['starsAndSky', 'mountains', 'hills', 'trees', 'floor', 'grass'];
+        const scrollFactors = [0.1, 0.4, 0.6, 0.9, 1, 1];
         const depths = [
             depthDictionary.sky,
             depthDictionary.mountains,
             depthDictionary.hills,
             depthDictionary.trees,
             depthDictionary.floor,
+            depthDictionary.grass,
         ];
 
         while (i < repeats) {
@@ -138,7 +137,6 @@ export class PhaserPlayerRenderer {
 
     private renderPlayerName(idx: number, name: string, posY: number) {
         this.playerNameBg = this.scene.add.rectangle(50, posY - 25, 250, 50, 0xb63bd4, 0.7);
-        // this.playerName = this.scene.add.text(100, window.innerHeight / numberPlayers - 20, 'lsjhdf');
 
         this.playerName = this.scene.make.text({
             x: 20,
@@ -159,7 +157,7 @@ export class PhaserPlayerRenderer {
     }
 
     public updatePlayerNamePosition(newX: number, trackLength: number) {
-        if (this.playerNameBg && this.playerNameBg.x < trackLength - window.innerWidth) {
+        if (this.playerNameBg && this.playerNameBg.x < trackLength - this.scene.windowWidth) {
             this.playerNameBg?.setPosition(newX, this.playerNameBg.y);
             this.playerName?.setPosition(newX, this.playerName.y);
         }
@@ -221,7 +219,6 @@ export class PhaserPlayerRenderer {
     }
 
     handlePlayerDead() {
-        //TODO change later - no need to color images that have already gone past
         if (this.backgroundElements && this.backgroundElements.length > 0) {
             this.backgroundElements.forEach(img => {
                 img.setTint(0x123a3a);
@@ -231,7 +228,7 @@ export class PhaserPlayerRenderer {
             const fixedWidth = 1200;
 
             const text = this.scene.make.text({
-                x: window.innerWidth / 2 - fixedWidth / 2,
+                x: this.scene.windowWidth / 2 - fixedWidth / 2,
                 y: yPos - height / 2,
                 text: 'The mosquito caught you. Look at your phone!',
                 style: {
@@ -274,7 +271,6 @@ export class PhaserPlayerRenderer {
 
         this.particles.forEach((particle, i) => {
             const particlesEmitter = particle.createEmitter({
-                // key: flare,
                 x: posX,
                 y: posY - (laneHeight / 4) * 3,
                 scale: scales[i],
@@ -295,14 +291,7 @@ export class PhaserPlayerRenderer {
 
     destroyObstacle() {
         const currentObstacle = this.obstacles.shift();
-        if (currentObstacle) {
-            //     if (!currentObstacle.solvable) {
-            //         currentObstacle.phaserInstance.destroy();
-            //     } else {
-            //         this.solvableObstacles.push(currentObstacle);
-            //     }
-            currentObstacle.phaserInstance.destroy();
-        }
+        currentObstacle?.phaserInstance.destroy();
     }
 
     handleSkippedObstacle() {
