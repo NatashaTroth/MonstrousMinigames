@@ -5,6 +5,7 @@ import Phaser from 'phaser';
 import { designDevelopment } from '../../../../../utils/constants';
 import { depthDictionary } from '../../../../../utils/depthDictionary';
 import { getRandomInt } from '../../../../../utils/getRandomInt';
+import SheepGameScene from '../../../../game2/screen/components/SheepGameScene';
 import MainScene from '../../components/MainScene';
 import * as colors from '../colors';
 import { gameLoadedWaitingMessages, gameLoadingMessages } from '../gameLoadingMessages';
@@ -26,7 +27,7 @@ export class PhaserGameRenderer {
     percentText?: Phaser.GameObjects.Text;
     assetText?: Phaser.GameObjects.Text; //only for local dev -> to see which assets take long to load
 
-    constructor(private scene: MainScene) {
+    constructor(private scene: MainScene | SheepGameScene) {
         this.scene = scene;
         this.sceneWidth = this.scene.cameras.main.width;
         this.sceneHeight = this.scene.cameras.main.height;

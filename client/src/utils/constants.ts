@@ -75,6 +75,18 @@ export enum MessageTypesGame1 {
     solveObstacle = 'game1/solveObstacle',
 }
 
+export enum MessageTypesGame2 {
+    runForward = 'game2/runForward',
+    started = 'game2/hasStarted',
+    phaserLoaded = 'game2/phaserGameLoaded',
+    phaserLoadingTimedOut = 'game2/phaserLoadingTimedOut',
+    allScreensPhaserGameLoaded = 'game2/allScreensPhaserGameLoaded',
+    startPhaserGame = 'game2/startPhaserGame',
+    initialGameState = 'game2/initialGameState',
+    gameState = 'game2/gameState',
+    createGame = 'game2/create',
+}
+
 export const localDevelopment = false; //the one in constants.ts on the server
 export const designDevelopment = false; //so that phaser game doesn't start, but loads
 
