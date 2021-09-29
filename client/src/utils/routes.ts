@@ -1,4 +1,4 @@
-import { ObstacleTypes } from './constants';
+import { ObstacleTypes } from "./constants";
 
 export enum Routes {
     // Routes for router
@@ -8,6 +8,7 @@ export enum Routes {
     controllerLobby = '/controller/:id/lobby',
     controllerGame1 = '/controller/:id/game1',
     controllerGame2 = '/controller/:id/game2',
+    controllerGame3 = '/controller/:id/game3',
     controllerTreeStump = `/controller/:id/treestump`,
     controllerSpider = `/controller/:id/spider`,
     controllerTrash = `/controller/:id/trash`,

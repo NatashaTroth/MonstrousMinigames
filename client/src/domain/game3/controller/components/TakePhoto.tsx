@@ -1,14 +1,20 @@
-import * as React from 'react';
+import { Typography } from "@material-ui/core";
+import * as React from "react";
+import { Field, FieldRenderProps, Form } from "react-final-form";
 
-import Button from '../../../../components/common/Button';
-import FullScreenContainer from '../../../../components/common/FullScreenContainer';
-import { FirebaseContext } from '../../../../contexts/FirebaseContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
-import uploadFile from '../../../storage/uploadFile';
+import Button from "../../../../components/common/Button";
+import FullScreenContainer from "../../../../components/common/FullScreenContainer";
+import { FirebaseContext } from "../../../../contexts/FirebaseContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
+import uploadFile from "../../../storage/uploadFile";
+import { StyledImg, StyledLabel, UploadWrapper } from "./TakePhoto.sc";
+
+interface UploadProps {
+    picture: File;
+}
 
 const TakePicture: React.FunctionComponent = () => {
-    const [image, setImage] = React.useState<File | undefined>();
     const { storage } = React.useContext(FirebaseContext);
     const { roomId } = React.useContext(GameContext);
     const { userId } = React.useContext(PlayerContext);
@@ -16,27 +22,58 @@ const TakePicture: React.FunctionComponent = () => {
     // TODO Change
     const challengeId = 1;
 
-    const upload = () => {
-        if (!image) return;
+    const upload = (values: UploadProps) => {
+        if (!values.picture) return;
 
         if (storage && roomId) {
-            uploadFile(storage, image, roomId, userId, challengeId);
+            uploadFile(storage, values.picture, roomId, userId, challengeId);
         }
     };
 
     return (
         <FullScreenContainer>
-            <input
-                type="file"
-                accept="image/*"
-                capture="camera"
-                onChange={(e: { target: { files: FileList | null } }) => {
-                    setImage(e.target.files?.[0]);
-                }}
+            <Form
+                mode="add"
+                onSubmit={upload}
+                render={({ handleSubmit, values }) => (
+                    <form onSubmit={handleSubmit}>
+                        <Field
+                            type="file"
+                            name="picture"
+                            label="Picture"
+                            render={({ input, meta }) => <FileInput input={input} meta={meta} />}
+                            fullWidth
+                        />
+                        <Button type="submit" disabled={!values.picture}>
+                            Upload
+                        </Button>
+                    </form>
+                )}
             />
-            <Button onClick={upload}>Upload</Button>
         </FullScreenContainer>
     );
 };
 
 export default TakePicture;
+
+const FileInput: React.FC<FieldRenderProps<string, HTMLElement>> = ({ input: { value, onChange, ...input }, meta }) => {
+    const [preview, setPreview] = React.useState<undefined | string>();
+    const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+        if (target.files && target.files[0]) {
+            setPreview(URL.createObjectURL(target.files[0]));
+            onChange(target.files[0]);
+        }
+    };
+
+    return (
+        <UploadWrapper>
+            {preview && <StyledImg id="blah" src={preview} alt="" />}
+            <Button>
+                <StyledLabel>
+                    <input type="file" accept="image/*" capture="camera" onChange={handleChange} />
+                    <Typography>{preview ? 'Retake' : 'Take picture'}</Typography>
+                </StyledLabel>
+            </Button>
+        </UploadWrapper>
+    );
+};
