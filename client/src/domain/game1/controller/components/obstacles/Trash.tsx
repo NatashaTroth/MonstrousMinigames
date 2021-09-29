@@ -4,8 +4,8 @@ import * as React from 'react';
 
 import Button from '../../../../../components/common/Button';
 import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
+import { Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
 import { GameContext } from '../../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../../contexts/PlayerContextProvider';
 import food from '../../../../../images/obstacles/trash/food.svg';
 import paper from '../../../../../images/obstacles/trash/paper.svg';
 import plastic from '../../../../../images/obstacles/trash/plastic.svg';
@@ -21,7 +21,7 @@ interface WindowProps extends Window {
 
 const Trash: React.FunctionComponent = () => {
     const [skip, setSkip] = React.useState(false);
-    const { obstacle, setObstacle } = React.useContext(PlayerContext);
+    const { obstacle, setObstacle } = React.useContext(Game1Context);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { roomId } = React.useContext(GameContext);
     const [randomArray, setRandomArray] = React.useState<TrashType[]>([]);

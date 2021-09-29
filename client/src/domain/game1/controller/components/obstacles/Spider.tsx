@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import Button from '../../../../../components/common/Button';
 import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
+import { Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
 import { GameContext } from '../../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../../contexts/PlayerContextProvider';
 import { MessageTypesGame1 } from '../../../../../utils/constants';
 import { Navigator } from '../../../../navigator/Navigator';
 import { currentCount, getAudioInput, resetCurrentCount } from './getAudioInput';
@@ -19,7 +19,7 @@ const Spider: React.FunctionComponent<SpiderProps> = ({ navigator }) => {
     const [progress, setProgress] = React.useState(0);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { roomId } = React.useContext(GameContext);
-    const { obstacle, setObstacle } = React.useContext(PlayerContext);
+    const { obstacle, setObstacle } = React.useContext(Game1Context);
     const [skip, setSkip] = React.useState(false);
 
     const MAX = 15;

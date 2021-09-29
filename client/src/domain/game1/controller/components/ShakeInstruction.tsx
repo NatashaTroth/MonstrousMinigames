@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import FullScreenContainer from '../../../../components/common/FullScreenContainer';
 import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
+import { Game1Context } from '../../../../contexts/game1/Game1ContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import pebble from '../../../../images/obstacles/stone/pebble.svg';
 import stone from '../../../../images/obstacles/stone/stone.svg';
 import arrow from '../../../../images/ui/arrow_blue.svg';
@@ -34,7 +34,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
         sessionStorage.getItem('countdownTime') ? Number(sessionStorage.getItem('countdownTime')) / 1000 : null
     );
     const [solveStoneClicked, setSolveStoneClicked] = React.useState(false);
-    const { hasStone, setHasStone, earlySolvableObstacle } = React.useContext(PlayerContext);
+    const { hasStone, setHasStone, earlySolvableObstacle } = React.useContext(Game1Context);
     const { roomId } = React.useContext(GameContext);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
 

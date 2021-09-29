@@ -4,8 +4,8 @@ import Button from '../../../../../components/common/Button';
 import { StyledParticles } from '../../../../../components/common/Particles.sc';
 import { treeParticlesConfig } from '../../../../../config/particlesConfig';
 import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
+import { Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
 import { GameContext } from '../../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../../contexts/PlayerContextProvider';
 import wood from '../../../../../images/obstacles/wood/wood.svg';
 import { MessageTypesGame1 } from '../../../../../utils/constants';
 import LinearProgressBar from './LinearProgressBar';
@@ -42,7 +42,7 @@ const TreeTrunk: React.FunctionComponent = () => {
     const trunksToFinish = 5;
 
     const { controllerSocket } = React.useContext(ControllerSocketContext);
-    const { obstacle, setObstacle } = React.useContext(PlayerContext);
+    const { obstacle, setObstacle } = React.useContext(Game1Context);
     const [skip, setSkip] = React.useState(false);
     const { showInstructions, setShowInstructions, roomId } = React.useContext(GameContext);
     const [progress, setProgress] = React.useState(0);

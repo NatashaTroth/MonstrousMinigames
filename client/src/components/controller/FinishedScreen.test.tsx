@@ -52,26 +52,6 @@ describe('Controller FinishedScreen', () => {
         expect(queryByText(container, givenText)).toBeTruthy();
     });
 
-    it('when connect back to lobby is clicked, resetPlayer function should be called', () => {
-        const onClick = jest.fn();
-        const { container } = render(
-            <ThemeProvider theme={theme}>
-                <Router history={history}>
-                    <PlayerContext.Provider value={{ ...defaultValue, resetPlayer: onClick }}>
-                        {FinishedScreenComponent}
-                    </PlayerContext.Provider>
-                </Router>
-            </ThemeProvider>
-        );
-
-        const button = container.querySelector('button');
-
-        if (button) {
-            fireEvent.click(button);
-            expect(onClick).toHaveBeenCalledTimes(1);
-        }
-    });
-
     it('when connect back to lobby is clicked, resetGame function should be called', () => {
         const onClick = jest.fn();
         const { container } = render(

@@ -43,8 +43,6 @@ export interface HandleSetSocketDependencies {
     setObstacle: (roomId: string | undefined, obstacle: undefined | Obstacle) => void;
     setPlayerRank: (val: number) => void;
     setHasPaused: (val: boolean) => void;
-    resetGame: () => void;
-    resetPlayer: () => void;
     setGameStarted: (val: boolean) => void;
     setName: (val: string) => void;
     setAvailableCharacters: (val: number[]) => void;
