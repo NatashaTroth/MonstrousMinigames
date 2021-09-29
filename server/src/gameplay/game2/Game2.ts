@@ -9,6 +9,9 @@ export default class Game2 extends Game {
     getGameStateInfo(): IGameStateBase {
         throw new Error('Method not implemented.');
     }
+    protected beforeCreateNewGame(): void {
+        throw new Error('Method not implemented.');
+    }
     protected mapUserToPlayer(user: User): Player {
         throw new Error('Method not implemented.');
     }
@@ -24,6 +27,6 @@ export default class Game2 extends Game {
 
     constructor(roomId: string, public leaderboard: Leaderboard) {
         super(roomId);
-        console.log('game2 created')
+        console.log('game2 created');
     }
 }
