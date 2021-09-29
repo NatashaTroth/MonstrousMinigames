@@ -62,9 +62,6 @@ const Game: React.FunctionComponent = () => {
         });
         game.scene.add('MainScene', MainScene, false); //socket: ScreenSocket.getInstance(socket)
         game.scene.start('MainScene', { roomId, socket: screenSocket, screenAdmin });
-
-        // game.world.setBounds(0,0,7500, window.innerHeight)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     async function handleAudio() {

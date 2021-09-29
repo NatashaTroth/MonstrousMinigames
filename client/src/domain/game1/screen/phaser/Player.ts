@@ -23,6 +23,8 @@ export class Player {
     finished: boolean;
     stunned: boolean;
     renderer: PhaserPlayerRenderer;
+    windowWidth: number;
+    windowHeight: number;
 
     constructor(
         scene: MainScene,
@@ -43,12 +45,14 @@ export class Player {
         this.dead = false;
         this.finished = false;
         this.stunned = false;
+        this.windowWidth = scene.windowWidth;
+        this.windowHeight = scene.windowHeight;
 
         this.renderer = new PhaserPlayerRenderer(scene, this.numberPlayers, this.laneHeightsPerNumberPlayers);
 
         this.renderer.renderBackground(
-            window.innerWidth,
-            window.innerHeight,
+            this.windowWidth,
+            this.windowHeight,
             this.gameToScreenMapper.mapGameMeasurementToScreen(gameStateData.trackLength),
             this.index,
             this.laneHeight,
@@ -142,7 +146,7 @@ export class Player {
     handlePlayerFinished() {
         this.renderer.renderFireworks(
             this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
-            this.coordinates.y - window.innerHeight / 8 + 50,
+            this.coordinates.y - this.windowHeight / 8 + 50,
             this.laneHeight
         );
         this.destroyPlayer();
