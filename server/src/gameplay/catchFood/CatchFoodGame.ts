@@ -52,6 +52,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
     constructor(roomId: string, public leaderboard: Leaderboard /*, public usingChasers = false*/) {
         super(roomId);
+        this.gameStateMessage = CatchFoodMsgType.GAME_STATE;
     }
 
     protected mapUserToPlayer(user: User) {

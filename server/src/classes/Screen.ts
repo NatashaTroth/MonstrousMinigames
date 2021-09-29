@@ -104,7 +104,7 @@ class Screen {
 
                         this.room.game.addListener(Game.EVT_FRAME_READY, (game: Game) => {
                             if (this.room?.isPlaying()) {
-                                this.emitter.sendGameState(this.screenNamespace, this.room, true);
+                                this.emitter.sendGameState(this.screenNamespace, this.room, false);
                             }
                         });
                     }

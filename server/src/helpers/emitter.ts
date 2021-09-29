@@ -4,6 +4,7 @@ import Room from '../classes/room';
 import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
+import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
 
 function sendUserInit(socket: Socket, user: User, room: Room): void {
     socket.emit('message', {
@@ -20,12 +21,12 @@ function sendUserInit(socket: Socket, user: User, room: Room): void {
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
     if (volatile) {
         nsp.to(room.id).volatile.emit('message', {
-            type: CatchFoodMsgType.GAME_STATE,
+            type: room.game.gameStateMessage,
             data: room.game?.getGameStateInfo(),
         });
     } else {
         nsp.to(room.id).emit('message', {
-            type: CatchFoodMsgType.GAME_STATE,
+            type: room.game.gameStateMessage,
             data: room.game?.getGameStateInfo(),
         });
     }

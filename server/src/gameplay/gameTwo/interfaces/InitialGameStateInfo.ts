@@ -1,9 +1,10 @@
+import { GameStateInfo } from '.';
 import { GameState } from '../../enums';
 import { IGameStateBase } from '../../interfaces/IGameStateBase';
 import Sheep from '../classes/Sheep';
 import { PlayerStateForClient } from './PlayerStateForClient';
 
-export interface GameStateInfo extends IGameStateBase {
+export interface InitialGameStateInfo extends GameStateInfo {
     roomId: string;
     gameState: GameState;
     playersState: Array<PlayerStateForClient>;
