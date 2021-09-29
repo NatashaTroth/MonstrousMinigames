@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 
 import { depthDictionary } from '../../../../../utils/depthDictionary';
-import SheepGameScene from '../../../../game2/screen/components/SheepGameScene';
 import { fireworkFlares } from '../../components/GameAssets';
 import MainScene from '../../components/MainScene';
 import * as colors from '../colors';
@@ -35,7 +34,7 @@ export class PhaserPlayerRenderer {
     //private backgroundLane?: Phaser.GameObjects.TileSprite[]; // for tile parallax
 
     constructor(
-        private scene: MainScene | SheepGameScene,
+        private scene: MainScene,
         private numberPlayers: number,
         private laneHeightsPerNumberPlayers?: number[]
     ) {
