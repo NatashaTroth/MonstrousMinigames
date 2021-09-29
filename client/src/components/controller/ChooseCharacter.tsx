@@ -8,7 +8,7 @@ import Button from '../../components/common/Button';
 import IconButton from '../../components/common/IconButton';
 import { Label } from '../../components/common/Label.sc';
 import { carouselOptions } from '../../config/carouselOptions';
-import { characters } from '../../config/characters';
+import { characterDictionary, characters } from '../../config/characters';
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
@@ -26,25 +26,36 @@ import {
 } from './ChooseCharacter.sc';
 
 const ChooseCharacter: React.FunctionComponent = () => {
-    const { setCharacter } = React.useContext(PlayerContext);
+    const { character, setCharacter } = React.useContext(PlayerContext);
     const { roomId, availableCharacters } = React.useContext(GameContext);
     const [actualCharacter, setActualCharacter] = React.useState(0);
+    const [isMoving, setIsMoving] = React.useState(false);
+
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const searchParams = new URLSearchParams(history.location.search);
 
+    let characterIndex = -1;
+    if (character) {
+        characterIndex = characterDictionary[character.id];
+    }
+
     function handleRightClick() {
-        if (actualCharacter === characters.length - 1) {
-            setActualCharacter(0);
-        } else {
-            setActualCharacter(actualCharacter + 1);
+        if (!isMoving) {
+            if (actualCharacter === characters.length - 1) {
+                setActualCharacter(0);
+            } else {
+                setActualCharacter(actualCharacter + 1);
+            }
         }
     }
 
     function handleLeftClick() {
-        if (actualCharacter === 0) {
-            setActualCharacter(characters.length - 1);
-        } else {
-            setActualCharacter(actualCharacter - 1);
+        if (!isMoving) {
+            if (actualCharacter === 0) {
+                setActualCharacter(characters.length - 1);
+            } else {
+                setActualCharacter(actualCharacter - 1);
+            }
         }
     }
 
@@ -57,27 +68,36 @@ const ChooseCharacter: React.FunctionComponent = () => {
                     </IconButton>
                 </ClearContainer>
             )}
-
             <Label>Choose your character:</Label>
             <Carousel
+                afterChange={(previousSlide, { currentSlide }) => {
+                    setIsMoving(false);
+                    //todo handle swiping
+                }}
+                beforeChange={() => setIsMoving(true)}
                 {...carouselOptions}
                 customRightArrow={<CustomRightArrow handleOnClick={handleRightClick} />}
                 customLeftArrow={<CustomLeftArrow handleOnClick={handleLeftClick} />}
             >
                 {characters.map((character, index) => (
                     <CharacterContainer key={`character${character.id}`}>
-                        <Character src={character.src} available={availableCharacters.includes(index)} />
+                        <Character
+                            src={character.src}
+                            available={availableCharacters.includes(index) || characterIndex === index}
+                        />
                     </CharacterContainer>
                 ))}
             </Carousel>
             <ChooseButtonContainer>
                 <Button
                     onClick={() => {
-                        controllerSocket.emit({
-                            type: MessageTypes.selectCharacter,
-                            characterNumber: actualCharacter,
-                        });
-                        setCharacter(characters[actualCharacter]);
+                        if (characterIndex !== actualCharacter) {
+                            controllerSocket.emit({
+                                type: MessageTypes.selectCharacter,
+                                characterNumber: actualCharacter,
+                            });
+                            setCharacter(characters[actualCharacter]);
+                        }
 
                         if (searchParams.get('back')) {
                             history.goBack();
@@ -85,7 +105,7 @@ const ChooseCharacter: React.FunctionComponent = () => {
                             history.push(controllerLobbyRoute(roomId));
                         }
                     }}
-                    disabled={!availableCharacters.includes(actualCharacter)}
+                    disabled={!availableCharacters.includes(actualCharacter) && characterIndex !== actualCharacter}
                 >
                     Choose Character
                 </Button>

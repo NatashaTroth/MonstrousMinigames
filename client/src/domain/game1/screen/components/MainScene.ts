@@ -47,6 +47,7 @@ import { PhaserGameRenderer } from '../phaser/renderer/PhaserGameRenderer';
 import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
 const windowHeight = window.innerHeight;
+
 class MainScene extends Phaser.Scene {
     roomId: string;
     socket?: Socket;
@@ -332,7 +333,12 @@ class MainScene extends Phaser.Scene {
 
         // this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
 
-        this.physics.world.setBounds(0, 0, 7500, windowHeight);
+        this.physics.world.setBounds(
+            0,
+            0,
+            this.gameToScreenMapper!.mapGameMeasurementToScreen(this.trackLength + 150),
+            windowHeight
+        );
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);

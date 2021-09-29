@@ -7,8 +7,8 @@ import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider'
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import oliverLobby from '../../images/characters/oliverLobby.svg';
-import game1Demo from '../../images/ui/gameDemo.png';
 import { MessageTypes } from '../../utils/constants';
+import { Game, games } from '../../utils/games';
 import { Routes, screenGameIntroRoute, screenGetReadyRoute } from '../../utils/routes';
 import { ScreenStates } from '../../utils/screenStates';
 import Button from '../common/Button';
@@ -27,22 +27,11 @@ import { LobbyContainer } from './Lobby.sc';
 import LobbyHeader from './LobbyHeader';
 
 const ChooseGame: React.FunctionComponent = () => {
-    const [selectedGame, setSelectedGame] = React.useState(0);
-    const { roomId, screenAdmin, screenState } = React.useContext(GameContext);
+    const [selectedGame, setSelectedGame] = React.useState<Game>(games[0]);
+    const { roomId, screenAdmin, screenState, setChosenGame } = React.useContext(GameContext);
     const tutorial = localStorage.getItem('tutorial') ? false : true;
     const { audioPermission, setAudioPermissionGranted } = React.useContext(AudioContext);
     const { screenSocket } = React.useContext(ScreenSocketContext);
-
-    const games = [
-        {
-            id: 1,
-            name: 'The Great Monster Escape',
-            image: game1Demo,
-        },
-        { id: 2, name: 'Game 2 - coming soon' },
-        { id: 3, name: 'Game 3 - coming soon' },
-        { id: 4, name: 'Game 4 - coming soon' },
-    ];
 
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
@@ -65,6 +54,11 @@ const ChooseGame: React.FunctionComponent = () => {
         }
     }, [screenState]);
 
+    function handleStartGameClick() {
+        setChosenGame(selectedGame.id);
+        tutorial ? history.push(screenGameIntroRoute(roomId)) : history.push(screenGetReadyRoute(roomId));
+    }
+
     return (
         <LobbyContainer>
             <Content>
@@ -75,9 +69,9 @@ const ChooseGame: React.FunctionComponent = () => {
                             {games.map((game, index) => (
                                 <Button
                                     key={game.name}
-                                    variant={index === selectedGame ? 'secondary' : 'primary'}
+                                    variant={game.id === selectedGame.id ? 'secondary' : 'primary'}
                                     disabled={index !== 0}
-                                    onClick={() => index === 0 && setSelectedGame(game.id)}
+                                    onClick={() => index === 0 && setSelectedGame(game)}
                                 >
                                     {game.name}
                                 </Button>
@@ -87,19 +81,15 @@ const ChooseGame: React.FunctionComponent = () => {
                     </LeftContainer>
                     <RightContainer>
                         <GamePreviewContainer>
-                            <PreviewImage src={games[selectedGame].image} />
+                            <PreviewImage src={selectedGame.image} />
                         </GamePreviewContainer>
                         <SelectGameButtonContainer>
                             {screenAdmin && (
                                 <Button
                                     variant="secondary"
-                                    onClick={() =>
-                                        tutorial
-                                            ? history.push(screenGameIntroRoute(roomId))
-                                            : history.push(screenGetReadyRoute(roomId))
-                                    }
+                                    onClick={handleStartGameClick}
                                     fullwidth
-                                >{`Start ${games[selectedGame].name}`}</Button>
+                                >{`Start ${selectedGame.name}`}</Button>
                             )}
                         </SelectGameButtonContainer>
                         <BackButtonContainer>

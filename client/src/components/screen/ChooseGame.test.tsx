@@ -6,6 +6,7 @@ import { ThemeProvider } from 'styled-components';
 
 import { defaultValue, GameContext } from '../../contexts/GameContextProvider';
 import theme from '../../styles/theme';
+import { games } from '../../utils/games';
 import ChooseGame from './ChooseGame';
 
 afterEach(cleanup);
@@ -41,12 +42,7 @@ describe('Screen GetReady', () => {
 
     it('renders game names', () => {
         const { container } = render(ChooseGameScreen);
-        const gameNames = [
-            'The Great Monster Escape',
-            'Game 2 - coming soon',
-            'Game 3 - coming soon',
-            'Game 4 - coming soon',
-        ];
+        const gameNames = games.map(game => game.name);
         gameNames.forEach(name => {
             expect(queryByText(container, name)).toBeTruthy();
         });
