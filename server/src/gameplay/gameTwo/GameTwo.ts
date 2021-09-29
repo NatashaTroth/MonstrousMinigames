@@ -11,6 +11,8 @@ import InitialParameters from './constants/InitialParameters';
 import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
 import { SheepStates } from './enums/SheepStates';
 import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
+import GameTwoPlayer from './GameTwoPlayer';
+import { GameStateInfo } from './interfaces';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
