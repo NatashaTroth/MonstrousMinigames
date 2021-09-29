@@ -6,7 +6,7 @@ import { designDevelopment } from '../../../../../utils/constants';
 import { depthDictionary } from '../../../../../utils/depthDictionary';
 import { getRandomInt } from '../../../../../utils/getRandomInt';
 import SheepGameScene from '../../../../game2/screen/components/SheepGameScene';
-import MainScene from '../../components/MainScene';
+import MainScene from '../../components/SheepGameScene';
 import * as colors from '../colors';
 import { gameLoadedWaitingMessages, gameLoadingMessages } from '../gameLoadingMessages';
 import { countdownTextStyleProperties, loadingTextStyleProperties } from '../textStyleProperties';
