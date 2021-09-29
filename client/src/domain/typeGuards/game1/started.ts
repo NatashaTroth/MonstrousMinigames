@@ -1,10 +1,10 @@
-import { MessageTypesGame1 } from '../../../utils/constants';
+import { MessageTypes } from '../../../utils/constants';
 import { MessageData } from '../MessageData';
 
 export interface GameHasStartedMessage {
-    type: MessageTypesGame1.started;
+    type: MessageTypes.gameHasStarted;
     countdownTime: number;
 }
 
 export const startedTypeGuard = (data: MessageData): data is GameHasStartedMessage =>
-    (data as GameHasStartedMessage).type === MessageTypesGame1.started;
+    (data as GameHasStartedMessage).type === MessageTypes.gameHasStarted;

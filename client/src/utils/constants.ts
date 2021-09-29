@@ -34,6 +34,7 @@ export enum MessageTypes {
     userReady = 'userReady',
     screenState = 'screenState',
 
+    gameHasStarted = 'gameHasStarted',
     gameHasFinished = 'gameHasFinished',
     gameHasReset = 'gameHasReset',
     gameHasStopped = 'gameHasStopped',
@@ -54,7 +55,6 @@ export enum MessageTypesGame1 {
     obstacleWillBeSolved = 'game1/obstacleWillBeSolved',
     obstacleSolved = 'game1/obstacleSolved',
     playerFinished = 'game1/playerFinished',
-    started = 'game1/hasStarted',
     phaserLoaded = 'game1/phaserGameLoaded',
     phaserLoadingTimedOut = 'game1/phaserLoadingTimedOut',
     allScreensPhaserGameLoaded = 'game1/allScreensPhaserGameLoaded',
