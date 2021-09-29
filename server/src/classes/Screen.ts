@@ -1,9 +1,10 @@
 import { Namespace, Socket } from 'socket.io';
-import { GameNames } from '../enums/gameNames';
 
+import { GameNames } from '../enums/gameNames';
 import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
 import Game from '../gameplay/Game';
+import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
 import { IMessage } from '../interfaces/messages';
 import RoomService from '../services/roomService';
 import Room from './room';
@@ -36,7 +37,11 @@ class Screen {
 
             this.emitter.sendConnectedUsers([this.screenNamespace], this.room);
             if (this.room.isAdminScreen(this.socket.id)) {
-                this.emitter.sendScreenAdmin(this.screenNamespace, this.socket.id, this.room.isAdminScreen(this.socket.id));
+                this.emitter.sendScreenAdmin(
+                    this.screenNamespace,
+                    this.socket.id,
+                    this.room.isAdminScreen(this.socket.id)
+                );
             }
             if (this.room?.isAdminScreen(this.socket.id)) {
                 this.emitter.sendScreenState(this.socket, this.room?.getScreenState());
@@ -45,7 +50,7 @@ class Screen {
             this.socket.on('message', this.onMessage.bind(this));
         } catch (e: any) {
             this.emitter.sendErrorMessage(this.socket, e);
-            console.error(this.roomId + ' | ' + e.name);
+            console.error(this.roomId + ' | Screen Error 1 | ' + e.name);
         }
     }
 
@@ -87,7 +92,7 @@ class Screen {
                     break;
                 case CatchFoodMsgType.CREATE:
                     if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
-                        this.room.setGame(GameNames.GAME2);
+                        this.room.setGame(GameNames.GAME1);
                         this.room.createNewGame();
                     }
                     break;
@@ -147,12 +152,19 @@ class Screen {
                         this.emitter.sendScreenState(this.screenNamespace, this.room?.getScreenState());
                     }
                     break;
+                case GameTwoMessageTypes.CREATE:
+                    if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
+                        this.room.setGame(GameNames.GAME2);
+                        this.room.createNewGame();
+                    }
+                    break;
                 default:
                     console.info(message);
             }
         } catch (e: any) {
             this.emitter.sendErrorMessage(this.socket, e);
-            console.error(this.roomId + ' | ' + e.name);
+            console.error(this.roomId + ' | Screen Error 2 |' + e.name);
+            console.log(e);
         }
     }
     private onDisconnect() {

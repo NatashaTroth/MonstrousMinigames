@@ -21,7 +21,7 @@ export const carouselOptions = {
     infinite: true,
     deviceType: 'mobile',
     responsive,
-    additionalTransfrom: 0,
+    additionalTransform: 0,
     arrows: true,
     autoPlaySpeed: 3000,
     centerMode: true,
@@ -38,5 +38,5 @@ export const carouselOptions = {
     showDots: false,
     sliderClass: '',
     slidesToSlide: 1,
-    swipeable: true,
+    swipeable: false,
 };

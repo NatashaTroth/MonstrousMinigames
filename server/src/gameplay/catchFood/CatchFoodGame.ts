@@ -19,7 +19,7 @@ import { CatchFoodMsgType, ObstacleType } from './enums';
 import {
     createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
 } from './helperFunctions/initiatePlayerState';
-import { GameStateInfo, Obstacle, PlayerRank } from './interfaces';
+import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from './interfaces';
 import { ObstacleReachedInfoController } from './interfaces/GameEvents';
 
 let pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
@@ -27,6 +27,7 @@ let pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
 interface CatchFoodGameInterface extends IGameInterface<CatchFoodPlayer, GameStateInfo> {
     trackLength: number;
     numberOfObstacles: number;
+    obstacleTypes: ObstacleTypeObject[];
 
     createNewGame(players: Array<User>, trackLength?: number, numberOfObstacles?: number): void;
     getGameStateInfo(): GameStateInfo;
@@ -49,9 +50,14 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     initialPlayerPositionX = InitialGameParameters.PLAYERS_POSITION_X;
     chasersPositionX = InitialGameParameters.CHASERS_POSITION_X;
     cameraPositionX = InitialGameParameters.CAMERA_POSITION_X;
+    obstacleTypes: ObstacleTypeObject[] = [];
 
     constructor(roomId: string, public leaderboard: Leaderboard /*, public usingChasers = false*/) {
         super(roomId);
+    }
+
+    protected beforeCreateNewGame() {
+        this.obstacleTypes = getObstacleTypes(this.numberOfObstacles);
     }
 
     protected mapUserToPlayer(user: User) {
@@ -59,12 +65,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             user.id,
             user.name,
             this.initialPlayerPositionX,
-            createObstacles(
-                getObstacleTypes(this.numberOfObstacles),
-                this.numberOfObstacles,
-                this.trackLength,
-                this.initialPlayerPositionX
-            ),
+            createObstacles(this.obstacleTypes, this.numberOfObstacles, this.trackLength, this.initialPlayerPositionX),
             user.characterNumber
         );
 
@@ -74,6 +75,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
         return player;
     }
+
     protected postProcessPlayers(playersIterable: IterableIterator<CatchFoodPlayer>) {
         const players = Array.from(playersIterable);
         const obstacles: Obstacle[] = [];
@@ -87,10 +89,9 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         );
 
         for (const player of players) {
-            player.obstacles = sortBy([...player.obstacles, ...stones], 'positionX');
+            player.obstacles = sortBy([...player.obstacles, ...stones.map(stone => ({ ...stone }))], 'positionX');
         }
     }
-
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
         if (this.cameraPositionX < this.trackLength)
             this.cameraPositionX += (timeElapsedSinceLastFrame / 33) * this.cameraSpeed;
@@ -318,6 +319,17 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             return;
         }
 
+        if (!player.obstacles[0].sentApproachingMessage) {
+            player.obstacles[0].sentApproachingMessage = true;
+            CatchFoodGameEventEmitter.emitApproachingSolvableObstacleEventOnce({
+                roomId: this.roomId,
+                userId: player.id,
+                obstacleType: player.obstacles[0].type,
+                obstacleId: player.obstacles[0].id,
+                distance: player.obstacles[0].positionX - player.positionX,
+            });
+        }
+
         CatchFoodGameEventEmitter.emitApproachingSolvableObstacleEvent({
             roomId: this.roomId,
             userId: player.id,
@@ -329,13 +341,18 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
     private handlePlayerReachedObstacle(userId: string): void {
         const player = this.players.get(userId)!;
-
+        //reset sentApproachingMessage for next optional obstacle
+        player.obstacles[0].sentApproachingMessage = false;
         // when already carrying a stone or not opt in automatically skip the stone obstacle
         if (
             (player.obstacles[0].type === ObstacleType.Stone && player.stonesCarrying > 0) ||
             player.obstacles[0].solvable
         ) {
             player.obstacles.shift();
+            CatchFoodGameEventEmitter.emitObstacleSkippedEvent({
+                roomId: this.roomId,
+                userId,
+            });
             return;
         }
 
@@ -428,6 +445,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         if (!obstacle) return;
 
         obstacle.solvable = false;
+        CatchFoodGameEventEmitter.emitPlayerWantsToSolveObstacle({ roomId: this.roomId, userId });
     }
 
     private playerHasCompletedObstacle(userId: string, obstacleId: number): void {

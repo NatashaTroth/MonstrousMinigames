@@ -1,4 +1,5 @@
 import { Namespace, Socket } from 'socket.io';
+
 import { MessageTypes } from '../enums/messageTypes';
 import Game from '../gameplay/Game';
 import { IMessage } from '../interfaces/messages';
@@ -39,7 +40,7 @@ class Controller {
             this.socket.on('message', this.onMessage.bind(this));
         } catch (e: any) {
             this.emitter.sendErrorMessage(this.socket, e);
-            console.error(this.roomId + ' | ' + e.name);
+            console.error(this.roomId + ' | Controller Error 1 | ' + e.name);
         }
     }
     private async onMessage(message: IMessage) {
@@ -67,7 +68,7 @@ class Controller {
             }
         } catch (e: any) {
             this.emitter.sendErrorMessage(this.socket, e);
-            console.error(this.roomId + ' | ' + e.name);
+            console.error(this.roomId + ' | Controller Error 2 | ' + e.name);
         }
     }
     private onDisconnect() {
@@ -77,7 +78,7 @@ class Controller {
             this.room?.userDisconnected(this.user!.id);
         } catch (e: any) {
             this.emitter.sendErrorMessage(this.socket, e);
-            console.error(this.roomId + ' | ' + e.name + ' | ' + this.user?.id);
+            console.error(this.roomId + ' | Controller Error 3 | ' + e.name + ' | ' + this.user?.id);
             return;
         }
 

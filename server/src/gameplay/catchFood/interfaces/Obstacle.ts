@@ -7,4 +7,5 @@ export interface Obstacle {
     solvable: boolean;
     numberTrashItems?: number;
     trashType?: TrashType;
+    sentApproachingMessage?: boolean;
 }
