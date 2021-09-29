@@ -35,20 +35,18 @@ import { audioFiles, characters, images } from './GameAssets';
 
 const windowHeight = window.innerHeight;
 class SheepGameScene extends Phaser.Scene {
+    windowWidth: number;
+    windowHeight: number;
     roomId: string;
     socket?: Socket;
     posX: number;
-    plusX: number;
     posY: number;
-    plusY: number;
     players: Array<Player>;
-    trackLength: number;
     gameStarted: boolean;
     paused: boolean;
     gameRenderer?: PhaserGameRenderer;
     gameAudio?: GameAudio;
     camera?: Phaser.Cameras.Scene2D.Camera;
-    cameraSpeed: number;
     gameEventEmitter: GameEventEmitter;
     screenAdmin: boolean;
     gameToScreenMapper?: GameToScreenMapper;
@@ -57,16 +55,14 @@ class SheepGameScene extends Phaser.Scene {
 
     constructor() {
         super('MainScene');
+        this.windowWidth = 0;
+        this.windowHeight = 0;
         this.roomId = sessionStorage.getItem('roomId') || '';
         this.posX = 50;
-        this.plusX = 40;
         this.posY = window.innerHeight / 2 - 50;
-        this.plusY = 110;
         this.players = [];
-        this.trackLength = 5000;
         this.gameStarted = false;
         this.paused = false;
-        this.cameraSpeed = 2;
         this.gameEventEmitter = GameEventEmitter.getInstance();
         this.screenAdmin = false;
         this.firstGameStateReceived = false;
@@ -74,6 +70,8 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
+        this.windowWidth = this.cameras.main.width;
+        this.windowHeight = this.cameras.main.height;
         this.camera = this.cameras.main;
         this.socket = data.socket;
         this.screenAdmin = data.screenAdmin;
@@ -220,7 +218,7 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     initiateGame(gameStateData: GameData) {
-        this.gameToScreenMapper = new GameToScreenMapper(gameStateData.playersState[0].positionX, 0);
+        this.gameToScreenMapper = new GameToScreenMapper(gameStateData.playersState[0].positionX, this.windowWidth, 0);
 
         // this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
 
