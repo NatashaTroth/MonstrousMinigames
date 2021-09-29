@@ -1,26 +1,26 @@
-import { localDevelopment, pushChasers } from '../../../constants';
-import User from '../../classes/user';
-import { IMessageObstacle } from '../../interfaces/messageObstacle';
-import { IMessage } from '../../interfaces/messages';
-import { GameState } from '../enums';
-import Game from '../Game';
-import { verifyGameState } from '../helperFunctions/verifyGameState';
-import { verifyUserId } from '../helperFunctions/verifyUserId';
-import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
-import { HashTable, IGameInterface } from '../interfaces';
-import { GameType } from '../leaderboard/enums/GameType';
-import Leaderboard from '../leaderboard/Leaderboard';
-import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
-import * as InitialGameParameters from './CatchFoodGameInitialParameters';
-import CatchFoodPlayer from './CatchFoodPlayer';
-import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
-import UserHasNoStones from './customErrors/UserHasNoStones';
-import { CatchFoodMsgType, ObstacleType } from './enums';
+import { localDevelopment, pushChasers } from "../../../constants";
+import User from "../../classes/user";
+import { IMessageObstacle } from "../../interfaces/messageObstacle";
+import { IMessage } from "../../interfaces/messages";
+import { GameState } from "../enums";
+import Game from "../Game";
+import { verifyGameState } from "../helperFunctions/verifyGameState";
+import { verifyUserId } from "../helperFunctions/verifyUserId";
+import { verifyUserIsActive } from "../helperFunctions/verifyUserIsActive";
+import { HashTable, IGameInterface } from "../interfaces";
+import { GameType } from "../leaderboard/enums/GameType";
+import Leaderboard from "../leaderboard/Leaderboard";
+import CatchFoodGameEventEmitter from "./CatchFoodGameEventEmitter";
+import * as InitialGameParameters from "./CatchFoodGameInitialParameters";
+import CatchFoodPlayer from "./CatchFoodPlayer";
+import { NotAtObstacleError, WrongObstacleIdError } from "./customErrors";
+import UserHasNoStones from "./customErrors/UserHasNoStones";
+import { CatchFoodMsgType, ObstacleType } from "./enums";
 import {
     createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
-} from './helperFunctions/initiatePlayerState';
-import { GameStateInfo, Obstacle, PlayerRank } from './interfaces';
-import { ObstacleReachedInfoController } from './interfaces/GameEvents';
+} from "./helperFunctions/initiatePlayerState";
+import { GameStateInfo, Obstacle, PlayerRank } from "./interfaces";
+import { ObstacleReachedInfoController } from "./interfaces/GameEvents";
 
 let pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
 
@@ -131,7 +131,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
                 if (!message.receivingUserId) {
                     break;
                 }
-                this.stunPlayer(message.receivingUserId, message.userId!, message.usingCollectedStone || false);
+                this.stunPlayer(message.receivingUserId, message.userId!);
                 break;
             case CatchFoodMsgType.CHASERS_WERE_PUSHED:
                 this.pushChasers(message.userId!);
@@ -376,7 +376,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         });
     }
 
-    private stunPlayer(userIdStunned: string, userIdThrown: string, usingCollectedStone = false) {
+    private stunPlayer(userIdStunned: string, userIdThrown: string) {
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.players, userIdStunned);
         verifyUserId(this.players, userIdThrown);
@@ -384,14 +384,11 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
 
         const playerThrown = this.players.get(userIdThrown)!;
 
-        if (usingCollectedStone) {
-            this.verifyUserCanThrowCollectedStone(playerThrown);
-        }
+        this.verifyUserCanThrowCollectedStone(playerThrown);
 
         const playerStunned = this.players.get(userIdStunned)!;
         if (this.playerIsNotAllowedToRun(userIdStunned)) return;
         if (playerStunned.stunned || playerStunned.atObstacle) return;
-        if (!usingCollectedStone) return;
         playerThrown.stonesCarrying--;
         playerStunned.stunned = true;
         playerStunned.stunnedSeconds = this.stunnedTime;

@@ -1,40 +1,23 @@
 /* eslint-disable simple-import-sort/imports */
-import * as React from 'react';
+import * as React from "react";
 
-import Button from '../../../../../components/common/Button';
-import { StyledParticles } from '../../../../../components/common/Particles.sc';
-import { stoneParticlesConfig } from '../../../../../config/particlesConfig';
-import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
-import { Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
-import { GameContext } from '../../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../../contexts/PlayerContextProvider';
-import pebble from '../../../../../images/obstacles/stone/pebble.svg';
-import stone from '../../../../../images/obstacles/stone/stone.svg';
-import { MessageTypesGame1 } from '../../../../../utils/constants';
-import { controllerGame1Route } from '../../../../../utils/routes';
-import history from '../../../../history/history';
-import { ObstacleInstructions } from './ObstacleStyles.sc';
+import Button from "../../../../../components/common/Button";
+import { StyledParticles } from "../../../../../components/common/Particles.sc";
+import { stoneParticlesConfig } from "../../../../../config/particlesConfig";
+import { ControllerSocketContext } from "../../../../../contexts/ControllerSocketContextProvider";
+import { Game1Context } from "../../../../../contexts/game1/Game1ContextProvider";
+import { GameContext } from "../../../../../contexts/GameContextProvider";
+import { PlayerContext } from "../../../../../contexts/PlayerContextProvider";
+import pebble from "../../../../../images/obstacles/stone/pebble.svg";
+import stone from "../../../../../images/obstacles/stone/stone.svg";
+import { MessageTypesGame1 } from "../../../../../utils/constants";
+import { controllerGame1Route } from "../../../../../utils/routes";
+import history from "../../../../history/history";
+import { ObstacleInstructions } from "./ObstacleStyles.sc";
 import {
-    PebbleContainer,
-    PlayerButtonContainer,
-    Ray1,
-    Ray10,
-    Ray2,
-    Ray3,
-    Ray4,
-    Ray5,
-    Ray6,
-    Ray7,
-    Ray8,
-    Ray9,
-    RayBox,
-    StoneContainer,
-    StyledPebbleImage,
-    StyledStone,
-    StyledStoneImage,
-    Sun,
-    UserButtons,
-} from './Stone.sc';
+    PebbleContainer, PlayerButtonContainer, Ray1, Ray10, Ray2, Ray3, Ray4, Ray5, Ray6, Ray7, Ray8,
+    Ray9, RayBox, StoneContainer, StyledPebbleImage, StyledStone, StyledStoneImage, Sun, UserButtons
+} from "./Stone.sc";
 
 const Stone: React.FunctionComponent = () => {
     const searchParams = new URLSearchParams(history.location.search);
@@ -45,7 +28,7 @@ const Stone: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { userId } = React.useContext(PlayerContext);
     const { connectedUsers, roomId } = React.useContext(GameContext);
-    const { obstacle, hasStone, setHasStone } = React.useContext(Game1Context);
+    const { obstacle, hasStone, setHasStone, setEarlySolvableObstacle } = React.useContext(Game1Context);
 
     React.useEffect(() => {
         document.body.style.overflow = 'visible';
@@ -67,6 +50,7 @@ const Stone: React.FunctionComponent = () => {
     }
 
     function handleThrow(receivingUserId: string) {
+        setEarlySolvableObstacle(undefined);
         controllerSocket.emit({
             type: MessageTypesGame1.obstacleSolved,
             obstacleId: obstacle?.id,
@@ -75,8 +59,8 @@ const Stone: React.FunctionComponent = () => {
             type: MessageTypesGame1.stunPlayer,
             userId,
             receivingUserId,
-            usingCollectedStone: searchParams.get('choosePlayer') ? true : false,
         });
+
         resetBodyStyles();
         history.push(controllerGame1Route(roomId));
     }
@@ -87,6 +71,7 @@ const Stone: React.FunctionComponent = () => {
             obstacleId: obstacle?.id,
         });
         setHasStone(true);
+        setEarlySolvableObstacle(undefined);
         history.push(controllerGame1Route(roomId));
     }
 
