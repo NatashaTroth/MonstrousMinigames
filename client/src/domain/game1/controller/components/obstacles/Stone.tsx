@@ -5,6 +5,7 @@ import Button from '../../../../../components/common/Button';
 import { StyledParticles } from '../../../../../components/common/Particles.sc';
 import { stoneParticlesConfig } from '../../../../../config/particlesConfig';
 import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
+import { Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
 import { GameContext } from '../../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../../contexts/PlayerContextProvider';
 import pebble from '../../../../../images/obstacles/stone/pebble.svg';
@@ -42,8 +43,9 @@ const Stone: React.FunctionComponent = () => {
     const [particles, setParticles] = React.useState(false);
     const [selectedUser, setSelectedUser] = React.useState<string | undefined>();
     const { controllerSocket } = React.useContext(ControllerSocketContext);
-    const { userId, obstacle, hasStone, setHasStone } = React.useContext(PlayerContext);
+    const { userId } = React.useContext(PlayerContext);
     const { connectedUsers, roomId } = React.useContext(GameContext);
+    const { obstacle, hasStone, setHasStone } = React.useContext(Game1Context);
 
     React.useEffect(() => {
         document.body.style.overflow = 'visible';

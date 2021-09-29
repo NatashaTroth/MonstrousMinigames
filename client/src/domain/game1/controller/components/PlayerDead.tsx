@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import Character from '../../../../components/common/Character';
 import FullScreenContainer from '../../../../components/common/FullScreenContainer';
+import { Game1Context } from '../../../../contexts/game1/Game1ContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import history from '../../../history/history';
@@ -13,8 +14,9 @@ import { PlayerDeadContainer } from './PlayerDead.sc';
 const PlayerDead: React.FC = () => {
     const { roomId } = React.useContext(GameContext);
 
-    const { character, exceededChaserPushes } = React.useContext(PlayerContext);
+    const { character } = React.useContext(PlayerContext);
     const [counter, setCounter] = React.useState(10);
+    const { exceededChaserPushes } = React.useContext(Game1Context);
 
     React.useEffect(() => {
         if (!exceededChaserPushes) {
