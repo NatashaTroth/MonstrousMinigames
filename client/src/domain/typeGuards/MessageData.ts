@@ -17,7 +17,6 @@ import { PlayerFinishedMessage } from './game1/playerFinished';
 import { PlayerStunnedMessage } from './game1/playerStunned';
 import { PlayerUnstunnedMessage } from './game1/playerUnstunned';
 import { GameHasStartedMessage } from './game1/started';
-import { Game2HasStartedMessage } from './game2/started';
 import { GameHasPausedMessage } from './paused';
 import { GameHasResetMessage } from './reset';
 import { GameHasResumedMessage } from './resumed';
@@ -57,5 +56,4 @@ export type MessageData =
     | ScreenStateMessage
     | ExceededMaxChaserPushesMessage
     | ChasersPushedMessage
-    | Game2HasStartedMessage
     | undefined;

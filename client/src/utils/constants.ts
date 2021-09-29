@@ -85,6 +85,8 @@ export enum MessageTypesGame2 {
     initialGameState = 'game2/initialGameState',
     gameState = 'game2/gameState',
     createGame = 'game2/create',
+    movePlayer = 'game2/move',
+    killSheep = 'game2/kill',
 }
 
 export const localDevelopment = false; //the one in constants.ts on the server

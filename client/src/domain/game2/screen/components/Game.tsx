@@ -9,7 +9,7 @@ import { GameContext } from '../../../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../../audio/handlePermission';
 import { AudioButton, Container, PauseButton } from '../../../game1/screen/components/Game.sc';
-import GameEventEmitter from '../../../game1/screen/phaser/GameEventEmitter';
+import GameEventEmitter from '../phaser/GameEventEmitter';
 import SheepGameScene from './SheepGameScene';
 
 const Game: React.FunctionComponent = () => {
@@ -28,7 +28,7 @@ const Game: React.FunctionComponent = () => {
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
 
     if (id && !screenSocket) {
-        handleSocketConnection(id, 'game1');
+        handleSocketConnection(id, 'game2');
     }
 
     React.useEffect(() => {

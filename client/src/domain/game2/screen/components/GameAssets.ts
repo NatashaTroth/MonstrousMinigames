@@ -36,10 +36,6 @@ export const characters: Character[] = characterFiles.map((file, idx) => {
         name: `${monsterName}_running`,
         frames: { start: 8, end: 11 },
     });
-    animationsMap.set(AnimationName.Stunned, {
-        name: `${monsterName}_stunned`,
-        frames: { start: 12, end: 15 },
-    });
     return {
         name: monsterName,
         file: file,

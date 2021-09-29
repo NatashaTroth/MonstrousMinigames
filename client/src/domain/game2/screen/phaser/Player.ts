@@ -1,9 +1,9 @@
 //import { designDevelopment } from '../../../../utils/constants';
 //import { depthDictionary } from '../../../../utils/depthDictionary';
-import { GameToScreenMapper } from '../../../game1/screen/phaser/GameToScreenMapper';
-import { Coordinates } from '../../../game1/screen/phaser/gameTypes';
 import { PhaserPlayerRenderer } from '../../../game1/screen/phaser/renderer/PhaserPlayerRenderer';
 import MainScene from '../components/SheepGameScene';
+import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
+import { Coordinates } from '../phaser/gameTypes/Coordinates';
 import { AnimationName } from './enums/AnimationNames';
 import { Character } from './gameInterfaces/Character';
 import { GameData } from './gameInterfaces/GameData';

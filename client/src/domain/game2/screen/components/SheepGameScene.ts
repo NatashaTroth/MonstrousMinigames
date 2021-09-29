@@ -2,13 +2,6 @@ import Phaser from 'phaser';
 
 import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2 } from '../../../../utils/constants';
 import { screenFinishedRoute } from '../../../../utils/routes';
-import { GameAudio } from '../../../game1/screen/phaser/GameAudio';
-import GameEventEmitter from '../../../game1/screen/phaser/GameEventEmitter';
-import { GameEventTypes } from '../../../game1/screen/phaser/GameEventTypes';
-import { GameData } from '../../../game1/screen/phaser/gameInterfaces';
-import { GameToScreenMapper } from '../../../game1/screen/phaser/GameToScreenMapper';
-import { initialGameInput } from '../../../game1/screen/phaser/initialGameInput';
-import { PhaserGameRenderer } from '../../../game1/screen/phaser/renderer/PhaserGameRenderer';
 import history from '../../../history/history';
 import { MessageSocket } from '../../../socket/MessageSocket';
 import { Socket } from '../../../socket/Socket';
@@ -16,21 +9,28 @@ import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/f
 import {
     AllScreensPhaserGameLoadedMessage,
     allScreensPhaserGameLoadedTypeGuard,
-} from '../../../typeGuards/game1/allScreensPhaserGameLoaded';
-import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../../typeGuards/game1/gameStateInfo';
+} from '../../../typeGuards/game2/allScreensPhaserGameLoaded';
+import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../../typeGuards/game2/gameStateInfo';
 import {
     InitialGameStateInfoMessage,
     initialGameStateInfoTypeGuard,
-} from '../../../typeGuards/game1/initialGameStateInfo';
+} from '../../../typeGuards/game2/initialGameStateInfo';
 import {
     PhaserLoadingTimedOutMessage,
     phaserLoadingTimedOutTypeGuard,
-} from '../../../typeGuards/game1/phaserLoadingTimedOut';
-import { GameHasStartedMessage, startedTypeGuard } from '../../../typeGuards/game1/started';
+} from '../../../typeGuards/game2/phaserLoadingTimedOut';
+import { Game2HasStartedMessage, startedTypeGuard } from '../../../typeGuards/game2/started';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
+import { GameAudio } from '../phaser/GameAudio';
+import GameEventEmitter from '../phaser/GameEventEmitter';
+import { GameEventTypes } from '../phaser/GameEventTypes';
+import { GameData } from '../phaser/gameInterfaces/GameData';
+import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
+import { initialGameInput } from '../phaser/initialGameInput';
 import { Player } from '../phaser/Player';
+import { PhaserGameRenderer } from '../phaser/renderer/PhaserGameRenderer';
 import { audioFiles, characters, images } from './GameAssets';
 
 const windowHeight = window.innerHeight;
@@ -58,8 +58,8 @@ class SheepGameScene extends Phaser.Scene {
         this.windowWidth = 0;
         this.windowHeight = 0;
         this.roomId = sessionStorage.getItem('roomId') || '';
-        this.posX = 50;
-        this.posY = window.innerHeight / 2 - 50;
+        this.posX = 0;
+        this.posY = 0; //TODO get from backend
         this.players = [];
         this.gameStarted = false;
         this.paused = false;
@@ -172,7 +172,7 @@ class SheepGameScene extends Phaser.Scene {
         });
 
         const startedGame = new MessageSocket(startedTypeGuard, this.socket);
-        startedGame.listen((data: GameHasStartedMessage) => {
+        startedGame.listen((data: Game2HasStartedMessage) => {
             this.createGameCountdown(data.countdownTime);
         });
 
@@ -227,9 +227,6 @@ class SheepGameScene extends Phaser.Scene {
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);
         }
-
-        if (this.camera)
-            this.camera.scrollX = this.gameToScreenMapper.mapGameMeasurementToScreen(gameStateData.cameraPositionX);
     }
 
     updateGameState(gameStateData: GameData) {
