@@ -7,7 +7,7 @@ import {
 import { GameNames } from '../enums/gameNames';
 import { Globals } from '../enums/globals';
 import { ScreenStates } from '../enums/screenStates';
-import { CatchFoodGame, Game2 } from '../gameplay';
+import { CatchFoodGame, GameTwo } from '../gameplay';
 import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
 import Game from '../gameplay/Game';
 // import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
@@ -131,7 +131,7 @@ class Room {
                 this.game = new CatchFoodGame(this.id, this.leaderboard);
                 break;
             case GameNames.GAME2:
-                this.game = new Game2(this.id, this.leaderboard);
+                this.game = new GameTwo(this.id, this.leaderboard);
                 break;
         }
     }

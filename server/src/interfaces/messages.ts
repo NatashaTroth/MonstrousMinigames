@@ -6,4 +6,5 @@ export interface IMessage {
     receivingUserId?: string;
     state?: string;
     usingCollectedStone?: boolean;
+    direction?: string;
 }

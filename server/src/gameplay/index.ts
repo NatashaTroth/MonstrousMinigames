@@ -1,4 +1,4 @@
 import CatchFoodGame from './catchFood/CatchFoodGame';
-import Game2 from './game2/Game2';
+import GameTwo from './gameTwo/GameTwo';
 
-export { CatchFoodGame, Game2 };
+export { CatchFoodGame, GameTwo };
