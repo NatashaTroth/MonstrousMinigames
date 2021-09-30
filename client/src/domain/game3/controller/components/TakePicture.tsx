@@ -8,7 +8,8 @@ import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import uploadFile from '../../../storage/uploadFile';
-import { ScreenContainer, StyledImg, StyledLabel, UploadWrapper } from './TakePhoto.sc';
+import { ScreenContainer } from './Game3Styles.sc';
+import { StyledImg, StyledLabel, UploadWrapper } from './TakePicture.sc';
 
 interface UploadProps {
     picture: File;
