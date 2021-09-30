@@ -6,4 +6,5 @@ export interface PlayersState {
     positionY: number;
     rank: number;
     characterNumber: number;
+    finished: boolean;
 }
