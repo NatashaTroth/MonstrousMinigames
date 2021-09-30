@@ -27,7 +27,7 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
         public roomId: string,
         public fps_ms: number = Globals.GAME_STATE_UPDATE_MS,
         public leaderboard?: Leaderboard,
-        protected maxNumberOfPlayers: number = Globals.MAX_PLAYER_NUMBER,
+        protected maxNumberOfPlayers: number = Globals.MAX_PLAYER_NUMBER
     ) {
         super();
         this.gameStateMessage = 'gameState';

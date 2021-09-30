@@ -2,8 +2,7 @@ import 'reflect-metadata';
 import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import DI from '../../../src/di';
 import { GameTwo } from '../../../src/gameplay';
-import { GameState } from '../../../src/gameplay/enums';
-import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED, GLOBAL_EVENT_MESSAGE__GAME_HAS_RESUMED, GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED, GLOBAL_EVENT_MESSAGE__GAME_HAS_STOPPED, GLOBAL_EVENT_MESSAGE__PLAYER_HAS_DISCONNECTED, GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
+import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED, GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
 import { leaderboard, roomId, users } from '../mockData';
 
 
@@ -23,7 +22,7 @@ describe('Event Emitter', () => {
 
     beforeEach(() => {
         beforeEachFunction();
-        });
+    });
 
 
     it('should create a new GameTwoEventEmitter instance (same object)', async () => {
@@ -86,12 +85,12 @@ describe('Start Game events ', () => {
         beforeAll(() => {
             gameEventEmitter = DI.resolve(GameEventEmitter);
         });
-    
+
         beforeEach(() => {
             beforeEachFunction();
         });
-    
-    
+
+
         it('should emit a GameHasPaused event when the game has been paused', async () => {
             let gameHasPaused = false;
             gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
@@ -99,7 +98,7 @@ describe('Start Game events ', () => {
                     gameHasPaused = true;
                 }
             });
-            
+
             gameTwo.createNewGame(users);
             gameTwo.startGame();
             jest.advanceTimersByTime(gameTwo.countdownTime);
@@ -108,7 +107,7 @@ describe('Start Game events ', () => {
             gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
             expect(gameHasPaused).toBeTruthy();
         });
-    
+
         it('should emit GameStateHasChanged data when the game has been paused', async () => {
             let eventData = {
                 roomId: '',
