@@ -1,40 +1,61 @@
-import { History } from 'history';
+import { History } from "history";
 
-import { Obstacle } from '../../../contexts/PlayerContextProvider';
-import { controllerChooseCharacterRoute } from '../../../utils/routes';
-import { handleConnectedUsersMessage } from '../../commonGameState/controller/handleConnectedUsersMessage';
-import { handleGameHasFinishedMessage } from '../../commonGameState/controller/handleGameHasFinishedMessage';
-import { handleGameHasResetMessage } from '../../commonGameState/controller/handleGameHasResetMessage';
-import { handleGameHasStoppedMessage } from '../../commonGameState/controller/handleGameHasStoppedMessage';
-import { handleGameStartedMessage } from '../../commonGameState/controller/handleGameStartedMessage';
-import { handlePlayerFinishedMessage } from '../../commonGameState/controller/handlePlayerFinishedMessage';
-import { handleUserInitMessage } from '../../commonGameState/controller/handleUserInitMessage';
-import { handleApproachingObstacleMessage } from '../../game1/controller/gameState/handleApproachingSolvableObstacleMessage';
-import { handleObstacleMessage } from '../../game1/controller/gameState/handleObstacleMessage';
-import { handlePlayerDied } from '../../game1/controller/gameState/handlePlayerDied';
-import { handlePlayerStunned } from '../../game1/controller/gameState/handlePlayerStunned';
-import { handlePlayerUnstunned } from '../../game1/controller/gameState/handlePlayerUnstunned';
-import { MessageSocket } from '../../socket/MessageSocket';
-import { Socket } from '../../socket/Socket';
-import { ConnectedUsersMessage, connectedUsersTypeGuard, User } from '../../typeGuards/connectedUsers';
-import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
-import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
+import { Obstacle } from "../../../contexts/PlayerContextProvider";
+import { controllerChooseCharacterRoute } from "../../../utils/routes";
 import {
-    ApproachingSolvableObstacleMessage,
-    approachingSolvableObstacleTypeGuard,
-} from '../../typeGuards/game1/approachingSolvableObstacleTypeGuard';
-import { exceededMaxChaserPushesTypeGuard } from '../../typeGuards/game1/exceededMaxChaserPushes';
-import { ObstacleMessage, obstacleTypeGuard } from '../../typeGuards/game1/obstacle';
-import { PlayerDiedMessage, playerDiedTypeGuard } from '../../typeGuards/game1/playerDied';
-import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../typeGuards/game1/playerFinished';
-import { playerStunnedTypeGuard } from '../../typeGuards/game1/playerStunned';
-import { playerUnstunnedTypeGuard } from '../../typeGuards/game1/playerUnstunned';
-import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/game1/started';
-import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
-import { GameHasResetMessage, resetTypeGuard } from '../../typeGuards/reset';
-import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
-import { GameHasStoppedMessage, stoppedTypeGuard } from '../../typeGuards/stopped';
-import { UserInitMessage, userInitTypeGuard } from '../../typeGuards/userInit';
+    handleConnectedUsersMessage
+} from "../../commonGameState/controller/handleConnectedUsersMessage";
+import {
+    handleGameHasFinishedMessage
+} from "../../commonGameState/controller/handleGameHasFinishedMessage";
+import {
+    handleGameHasResetMessage
+} from "../../commonGameState/controller/handleGameHasResetMessage";
+import {
+    handleGameHasStoppedMessage
+} from "../../commonGameState/controller/handleGameHasStoppedMessage";
+import {
+    handleGameStartedMessage
+} from "../../commonGameState/controller/handleGameStartedMessage";
+import {
+    handlePlayerFinishedMessage
+} from "../../commonGameState/controller/handlePlayerFinishedMessage";
+import { handleUserInitMessage } from "../../commonGameState/controller/handleUserInitMessage";
+import {
+    handleApproachingObstacleMessage
+} from "../../game1/controller/gameState/handleApproachingSolvableObstacleMessage";
+import { handleObstacleMessage } from "../../game1/controller/gameState/handleObstacleMessage";
+import { handlePlayerDied } from "../../game1/controller/gameState/handlePlayerDied";
+import { handlePlayerStunned } from "../../game1/controller/gameState/handlePlayerStunned";
+import { handlePlayerUnstunned } from "../../game1/controller/gameState/handlePlayerUnstunned";
+import { handleStunnablePlayers } from "../../game1/controller/gameState/handleStunnablePlayers";
+import { MessageSocket } from "../../socket/MessageSocket";
+import { Socket } from "../../socket/Socket";
+import {
+    ConnectedUsersMessage, connectedUsersTypeGuard, User
+} from "../../typeGuards/connectedUsers";
+import { ErrorMessage, errorTypeGuard } from "../../typeGuards/error";
+import { finishedTypeGuard, GameHasFinishedMessage } from "../../typeGuards/finished";
+import {
+    ApproachingSolvableObstacleMessage, approachingSolvableObstacleTypeGuard
+} from "../../typeGuards/game1/approachingSolvableObstacleTypeGuard";
+import { exceededMaxChaserPushesTypeGuard } from "../../typeGuards/game1/exceededMaxChaserPushes";
+import { ObstacleMessage, obstacleTypeGuard } from "../../typeGuards/game1/obstacle";
+import { PlayerDiedMessage, playerDiedTypeGuard } from "../../typeGuards/game1/playerDied";
+import {
+    PlayerFinishedMessage, playerFinishedTypeGuard
+} from "../../typeGuards/game1/playerFinished";
+import { playerStunnedTypeGuard } from "../../typeGuards/game1/playerStunned";
+import { playerUnstunnedTypeGuard } from "../../typeGuards/game1/playerUnstunned";
+import { GameHasStartedMessage, startedTypeGuard } from "../../typeGuards/game1/started";
+import {
+    StunnablePlayersMessage, stunnablePlayersTypeGuard
+} from "../../typeGuards/game1/stunnablePlayers";
+import { GameHasPausedMessage, pausedTypeGuard } from "../../typeGuards/paused";
+import { GameHasResetMessage, resetTypeGuard } from "../../typeGuards/reset";
+import { GameHasResumedMessage, resumedTypeGuard } from "../../typeGuards/resumed";
+import { GameHasStoppedMessage, stoppedTypeGuard } from "../../typeGuards/stopped";
+import { UserInitMessage, userInitTypeGuard } from "../../typeGuards/userInit";
 
 export interface HandleSetSocketDependencies {
     setControllerSocket: (socket: Socket) => void;
@@ -54,6 +75,7 @@ export interface HandleSetSocketDependencies {
     playerRank: undefined | number;
     setEarlySolvableObstacle: (val: Obstacle | undefined) => void;
     setExceededChaserPushes: (val: boolean) => void;
+    setStunnablePlayers: (val: string[]) => void;
 }
 
 export function handleSetSocket(
@@ -80,6 +102,7 @@ export function handleSetSocket(
         playerRank,
         setEarlySolvableObstacle,
         setExceededChaserPushes,
+        setStunnablePlayers,
     } = dependencies;
 
     setControllerSocket(socket);
@@ -100,6 +123,7 @@ export function handleSetSocket(
     const playerUnstunnedSocket = new MessageSocket(playerUnstunnedTypeGuard, socket);
     const approachingSolvableObstacleSocket = new MessageSocket(approachingSolvableObstacleTypeGuard, socket);
     const exceededMaxChaserPushesSocket = new MessageSocket(exceededMaxChaserPushesTypeGuard, socket);
+    const stunnablePlayersSocket = new MessageSocket(stunnablePlayersTypeGuard, socket);
 
     userInitSocket.listen((data: UserInitMessage) => {
         handleUserInitMessage({
@@ -203,7 +227,17 @@ export function handleSetSocket(
     approachingSolvableObstacleSocket.listen((data: ApproachingSolvableObstacleMessage) => {
         handleApproachingObstacleMessage({ data, setEarlySolvableObstacle });
     });
+
     exceededMaxChaserPushesSocket.listen(() => setExceededChaserPushes(true));
+
+    stunnablePlayersSocket.listen((data: StunnablePlayersMessage) =>
+        handleStunnablePlayers({
+            data,
+            dependencies: {
+                setStunnablePlayers,
+            },
+        })
+    );
 
     if (socket) {
         history.push(controllerChooseCharacterRoute(roomId));
