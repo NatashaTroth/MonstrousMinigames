@@ -63,6 +63,7 @@ Need to keep track of points
 
 1. Admin user creates and starts game
 2. Game sends start countdown
+
 3. Game sends topic and countdown timer
 4. Sync timer with backend periodically - but how??
 5. If no picture after time - no points

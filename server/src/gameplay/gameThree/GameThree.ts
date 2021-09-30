@@ -4,6 +4,7 @@ import Game from '../Game';
 import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
+import { RandomWordGenerator } from './classes/RandomWordGenerator';
 import InitialParameters from './constants/InitialParameters';
 import GameThreeEventEmitter from './GameThreeEventEmitter';
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
@@ -13,7 +14,10 @@ import { GameStateInfo } from './interfaces/GameStateInfo';
 type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
 
 export default class GameThree extends Game<GameThreePlayer, GameStateInfo> implements GameThreeGameInterface {
-    countdownTime = InitialParameters.COUNTDOWN_TIME;
+    private countdownTime = InitialParameters.COUNTDOWN_TIME;
+    private topics?: string[];
+    private randomWordGenerator = new RandomWordGenerator();
+    private numberTopics = InitialParameters.NUMBER_TOPICS;
 
     constructor(roomId: string, public leaderboard: Leaderboard) {
         super(roomId);
@@ -47,6 +51,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
+        this.topics = this.randomWordGenerator.generateRandomWords(this.numberTopics);
     }
 
     startGame(): void {
@@ -54,6 +59,11 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             super.startGame();
         }, this.countdownTime);
         GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime);
+        this.sendTopic();
+    }
+
+    sendTopic() {
+        //send to client
     }
 
     pauseGame(): void {
