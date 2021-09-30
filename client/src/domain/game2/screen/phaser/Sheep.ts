@@ -3,9 +3,6 @@
 import MainScene from '../components/SheepGameScene';
 import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
 import { Coordinates } from '../phaser/gameTypes/Coordinates';
-import { PhaserPlayerRenderer } from '../phaser/renderer/PhaserPlayerRenderer';
-import { AnimationName } from './enums/AnimationNames';
-import { Character } from './gameInterfaces/Character';
 import { GameData } from './gameInterfaces/GameData';
 import { PhaserSheepRenderer } from './renderer/PhaserSheepRenderer';
 
@@ -16,8 +13,6 @@ export enum SheepState {
 }
 
 export class Sheep {
-    posX: number;
-    posY: number;
     state: SheepState;
     id: string;
 
@@ -28,51 +23,21 @@ export class Sheep {
         private index: number,
         public coordinates: Coordinates,
         private gameStateData: GameData,
-        private character: Character,
-        private numberPlayers: number,
         private gameToScreenMapper: GameToScreenMapper
     ) {
-        this.posX = gameStateData.sheep[index].posX;
-        this.posY = gameStateData.sheep[index].posY;
         this.state = gameStateData.sheep[index].state;
         this.id = gameStateData.sheep[index].id;
+        this.coordinates = gameStateData.sheep[index].coordinates;
 
         this.renderer = new PhaserSheepRenderer(scene);
-        this.renderer.renderSheep({x: this.posX, y: this.posY}, this.state);
+        this.renderer.renderSheep({x: this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x), y: this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.y)}, this.state);
     }
 
-    moveForward(newXPosition: number, trackLength: number) {
-        //TODO
-
-        if (newXPosition == this.coordinates.x && this.playerRunning) {
-            this.stopRunning();
-        } else {
-            if (!this.playerRunning) {
-                this.startRunning();
-            }
-        }
-
-        this.coordinates.x = newXPosition;
-        this.renderer.movePlayerForward(this.gameToScreenMapper.mapGameMeasurementToScreen(newXPosition));
+    moveSheep(posX: number, posY: number){
+        this.renderer.moveSheep(posX, posY)
     }
 
-    private setPlayer() {
-        const screenCoordinates = {
-            x: this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
-            y: this.coordinates.y,
-        };
-
-        this.renderer.renderPlayer(screenCoordinates, this.character);
-    }
-
-    startRunning() {
-        const animationName = this.character.animations.get(AnimationName.Running)?.name;
-        if (animationName) this.renderer.startAnimation(animationName);
-        this.playerRunning = true;
-    }
-
-    stopRunning() {
+    stopMovingSheep() {
         this.renderer.stopAnimation();
-        this.playerRunning = false;
     }
 }
