@@ -1,23 +1,40 @@
 /* eslint-disable simple-import-sort/imports */
-import * as React from "react";
+import * as React from 'react';
 
-import Button from "../../../../../components/common/Button";
-import { StyledParticles } from "../../../../../components/common/Particles.sc";
-import { stoneParticlesConfig } from "../../../../../config/particlesConfig";
-import { ControllerSocketContext } from "../../../../../contexts/ControllerSocketContextProvider";
-import { Game1Context } from "../../../../../contexts/game1/Game1ContextProvider";
-import { GameContext } from "../../../../../contexts/GameContextProvider";
-import { PlayerContext } from "../../../../../contexts/PlayerContextProvider";
-import pebble from "../../../../../images/obstacles/stone/pebble.svg";
-import stone from "../../../../../images/obstacles/stone/stone.svg";
-import { MessageTypesGame1 } from "../../../../../utils/constants";
-import { controllerGame1Route } from "../../../../../utils/routes";
-import history from "../../../../history/history";
-import { ObstacleInstructions } from "./ObstacleStyles.sc";
+import Button from '../../../../../components/common/Button';
+import { StyledParticles } from '../../../../../components/common/Particles.sc';
+import { stoneParticlesConfig } from '../../../../../config/particlesConfig';
+import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
+import { Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
+import { GameContext } from '../../../../../contexts/GameContextProvider';
+import { PlayerContext } from '../../../../../contexts/PlayerContextProvider';
+import pebble from '../../../../../images/obstacles/stone/pebble.svg';
+import stone from '../../../../../images/obstacles/stone/stone.svg';
+import { MessageTypesGame1 } from '../../../../../utils/constants';
+import { controllerGame1Route } from '../../../../../utils/routes';
+import history from '../../../../history/history';
+import { ObstacleInstructions } from './ObstacleStyles.sc';
 import {
-    PebbleContainer, PlayerButtonContainer, Ray1, Ray10, Ray2, Ray3, Ray4, Ray5, Ray6, Ray7, Ray8,
-    Ray9, RayBox, StoneContainer, StyledPebbleImage, StyledStone, StyledStoneImage, Sun, UserButtons
-} from "./Stone.sc";
+    PebbleContainer,
+    PlayerButtonContainer,
+    Ray1,
+    Ray10,
+    Ray2,
+    Ray3,
+    Ray4,
+    Ray5,
+    Ray6,
+    Ray7,
+    Ray8,
+    Ray9,
+    RayBox,
+    StoneContainer,
+    StyledPebbleImage,
+    StyledStone,
+    StyledStoneImage,
+    Sun,
+    UserButtons,
+} from './Stone.sc';
 
 const Stone: React.FunctionComponent = () => {
     const searchParams = new URLSearchParams(history.location.search);
@@ -49,12 +66,16 @@ const Stone: React.FunctionComponent = () => {
         }
     }
 
-    function handleThrow(receivingUserId: string) {
-        setEarlySolvableObstacle(undefined);
+    function handleImmediateThrow(receivingUserId: string) {
         controllerSocket.emit({
             type: MessageTypesGame1.obstacleSolved,
             obstacleId: obstacle?.id,
         });
+        handleThrow(receivingUserId);
+    }
+
+    function handleThrow(receivingUserId: string) {
+        setEarlySolvableObstacle(undefined);
         controllerSocket.emit({
             type: MessageTypesGame1.stunPlayer,
             userId,
@@ -128,7 +149,11 @@ const Stone: React.FunctionComponent = () => {
                                         disabled={!selectedUser}
                                         onClick={() => {
                                             if (selectedUser) {
-                                                handleThrow(selectedUser);
+                                                if (searchParams.get('choosePlayer')) {
+                                                    handleThrow(selectedUser);
+                                                } else {
+                                                    handleImmediateThrow(selectedUser);
+                                                }
                                             }
                                         }}
                                         variant="secondary"
