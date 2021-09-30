@@ -35,8 +35,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.lengthY = InitialParameters.LENGTH_Y;
         this.sheep = [];
         this.currentSheepId = 0;
-        console.log('game2 created');
-        console.info(this);
+        //console.log('game2 created');
+        //console.info(this);
     }
 
     getGameStateInfo(): GameStateInfo {
@@ -59,7 +59,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     }
 
     protected beforeCreateNewGame() {
-        throw new Error('Method not implemented.');
+        return
     }
 
     protected mapUserToPlayer(user: User): GameTwoPlayer {
@@ -71,7 +71,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             InitialParameters.KILLS_PER_ROUND,
             user.characterNumber
         );
-        console.info(player);
+        //console.info(player);
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
@@ -86,7 +86,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         const seedrandom = require('seedrandom');
         random.use(seedrandom('sheep'));
 
-        for (let i = 0; i <= count; i++) {
+        for (let i = 0; i < count; i++) {
             let posX: number;
             let posY: number;
             do {
@@ -125,7 +125,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
         this.initSheep(InitialParameters.SHEEP_COUNT);
-        console.info(this.sheep);
+        //console.info(this.sheep);
         GameTwoEventEmitter.emitInitialGameStateInfoUpdate(
             this.roomId,
             this.getGameStateInfo()
@@ -203,7 +203,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     disconnectPlayer(userId: string) {
         if (super.disconnectPlayer(userId)) {
-            //.emitPlayerHasDisconnected(this.roomId, userId);
+            GameTwoEventEmitter.emitPlayerHasDisconnected(this.roomId, userId);
             return true;
         }
 
@@ -212,7 +212,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     reconnectPlayer(userId: string) {
         if (super.reconnectPlayer(userId)) {
-            //.emitPlayerHasReconnected(this.roomId, userId);
+            GameTwoEventEmitter.emitPlayerHasReconnected(this.roomId, userId);
 
             return true;
         }

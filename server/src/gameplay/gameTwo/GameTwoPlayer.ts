@@ -3,7 +3,7 @@ import Player from "../Player";
 class GameTwoPlayer extends Player {
     public direction: string;
     constructor(
-        id: string,
+        public id: string,
         name: string,
         public posX: number,
         public posY: number,
@@ -35,6 +35,9 @@ class GameTwoPlayer extends Player {
 
     public setDirection(direction: string) {
         this.direction = direction;
+    }
+    public setKillsLeft(killsLeft: number) {
+        this.killsLeft = killsLeft;
     }
 
 }
