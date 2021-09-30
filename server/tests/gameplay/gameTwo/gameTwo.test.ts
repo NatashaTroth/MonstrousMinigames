@@ -110,7 +110,7 @@ describe('GameTwo Tests', () => {
 
         setTimeout(() => {
             expect(gameTwo.getGameStateInfo().playersState[0].positionY).toBeGreaterThan(InitialParameters.PLAYERS_POSITIONS[0].y);
-        }, 1500);
+        }, 2000);
 
     });
 

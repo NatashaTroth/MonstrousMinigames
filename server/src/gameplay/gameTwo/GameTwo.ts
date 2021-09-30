@@ -141,14 +141,17 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     }
     pauseGame(): void {
         super.pauseGame();
+        GameTwoEventEmitter.emitGameHasPausedEvent(this.roomId);
     }
 
     resumeGame(): void {
         super.resumeGame();
+        GameTwoEventEmitter.emitGameHasResumedEvent(this.roomId);
     }
 
     stopGameUserClosed() {
         super.stopGameUserClosed();
+        GameTwoEventEmitter.emitGameHasStoppedEvent(this.roomId);
     }
 
     stopGameAllUsersDisconnected() {
