@@ -1,6 +1,6 @@
 import { History } from 'history';
 
-import { screenGame1Route } from '../../../utils/routes';
+import { screenGame1Route, screenGame2Route } from '../../../utils/routes';
 
 interface HandleStartPhaserGame {
     roomId: string;
@@ -16,4 +16,20 @@ export function handleStartGameMessage(props: HandleStartPhaserGame) {
 
     setGameStarted(true);
     history.push(screenGame1Route(roomId));
+}
+
+interface HandleStartSheepGame {
+    roomId: string;
+    dependencies: {
+        setSheepGameStarted: (val: boolean) => void;
+        history: History;
+    };
+}
+
+export function handleStartSheepGameMessage(props: HandleStartSheepGame) {
+    const { dependencies, roomId } = props;
+    const { setSheepGameStarted, history } = dependencies;
+
+    setSheepGameStarted(true);
+    history.push(screenGame2Route(roomId));
 }

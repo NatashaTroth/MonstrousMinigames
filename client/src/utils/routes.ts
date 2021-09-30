@@ -35,6 +35,7 @@ export enum Routes {
     trash = '/trash',
     stone = '/stone',
     game1 = '/game1',
+    game2 = '/game2',
     dead = '/dead',
     finished = '/finished',
     gameIntro = '/game-intro',
@@ -87,3 +88,5 @@ export const screenFinishedRoute = (roomId: undefined | string) => `${Routes.scr
 export const screenLobbyRoute = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.lobby}`;
 
 export const screenGame1Route = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.game1}`;
+
+export const screenGame2Route = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.game2}`;
