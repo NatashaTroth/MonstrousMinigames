@@ -4,6 +4,7 @@ import Room from '../classes/room';
 import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
+import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
 
 function sendUserInit(socket: Socket, user: User, room: Room): void {
     socket.emit('message', {
@@ -62,6 +63,14 @@ function sendStartPhaserGame(nsps: Array<Namespace>, room: Room): void {
     });
 }
 
+function sendStartPhaserGameTwo(nsps: Array<Namespace>, room: Room): void {
+    nsps.forEach(function (namespace: Namespace) {
+        namespace.to(room.id).emit('message', {
+            type: GameTwoMessageTypes.START_PHASER_GAME,
+        });
+    });
+}
+
 function sendConnectedUsers(nsps: Array<Namespace>, room: Room): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(room.id).emit('message', {
@@ -111,6 +120,7 @@ export default {
     sendAllScreensPhaserGameLoaded,
     sendScreenPhaserGameLoadedTimedOut,
     sendStartPhaserGame,
+    sendStartPhaserGameTwo,
     sendConnectedUsers,
     sendMessage,
     // sendPlayerExceededMaxNumberChaserPushes,

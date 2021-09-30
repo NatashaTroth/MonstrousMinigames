@@ -158,6 +158,10 @@ class Screen {
                         this.room.createNewGame();
                     }
                     break;
+
+                case GameTwoMessageTypes.START_PHASER_GAME:
+                    this.emitter.sendStartPhaserGameTwo([this.screenNamespace], this.room!);
+                    break;
                 default:
                     console.info(message);
             }
