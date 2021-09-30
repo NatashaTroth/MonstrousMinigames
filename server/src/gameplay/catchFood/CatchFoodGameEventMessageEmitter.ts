@@ -45,10 +45,10 @@ export class CatchFoodGameEventMessageEmitter implements EventMessageEmitter {
 
         switch (message.type) {
             // send to single user's controller
+            // case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED:
+            // case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED:
-            case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED:
-            case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES:
