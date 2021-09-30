@@ -1,8 +1,6 @@
 import {
-    CannotStartEmptyGameError,
-    CharacterNotAvailableError,
-    GameAlreadyStartedError,
-    UsersNotReadyError,
+    CannotStartEmptyGameError, CharacterNotAvailableError, GameAlreadyStartedError,
+    UsersNotReadyError
 } from '../customErrors';
 import { GameNames } from '../enums/gameNames';
 import { Globals } from '../enums/globals';
@@ -10,6 +8,7 @@ import { ScreenStates } from '../enums/screenStates';
 import { CatchFoodGame, GameTwo } from '../gameplay';
 import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
 import Game from '../gameplay/Game';
+import GameThree from '../gameplay/gameThree/GameThree';
 // import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
 import Leaderboard from '../gameplay/leaderboard/Leaderboard';
 import { ScreenInfo } from '../interfaces/interfaces';
@@ -132,6 +131,9 @@ class Room {
                 break;
             case GameNames.GAME2:
                 this.game = new GameTwo(this.id, this.leaderboard);
+                break;
+            case GameNames.GAME3:
+                this.game = new GameThree(this.id, this.leaderboard);
                 break;
         }
     }

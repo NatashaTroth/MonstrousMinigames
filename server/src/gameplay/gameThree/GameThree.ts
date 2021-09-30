@@ -120,5 +120,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             this.takingPhoto = false;
             GameThreeEventEmitter.emitTakePhotoCountdownOver(this.roomId);
         }
+
+        //TODO if time over or if all received - check what photos received and forward to screens
     }
 }
