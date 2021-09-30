@@ -6,6 +6,7 @@ import { leaderboard, roomId, users } from '../mockData';
 import { GameTwoMessageTypes } from '../../../src/gameplay/gameTwo/enums/GameTwoMessageTypes';
 import Sheep from '../../../src/gameplay/gameTwo/classes/Sheep';
 import { SheepStates } from '../../../src/gameplay/gameTwo/enums/SheepStates';
+import { Direction } from '../../../src/gameplay/gameTwo/enums/Direction';
 
 let gameTwo: GameTwo;
 
@@ -144,7 +145,6 @@ describe('GameTwo Tests', () => {
             userId: users[0].id
         }
         gameTwo.receiveInput(message);
-        console.log(gameTwo.sheep);
         expect(gameTwo.sheep[sheep3.id].state).toEqual(SheepStates.DECOY);
     });
 
@@ -200,19 +200,65 @@ describe('GameTwo Tests', () => {
         if (!posY){
             posY = 0;
         }
-        gameTwo.players.get(users[0].id)?.setDirection('E');
+        gameTwo.players.get(users[0].id)?.setDirection(Direction.RIGHT);
         gameTwo.players.get(users[0].id)?.update(0,1);
 
-        gameTwo.players.get(users[0].id)?.setDirection('S');
+        gameTwo.players.get(users[0].id)?.setDirection(Direction.DOWN);
         gameTwo.players.get(users[0].id)?.update(1,1);
 
-        gameTwo.players.get(users[0].id)?.setDirection('W');
+        gameTwo.players.get(users[0].id)?.setDirection(Direction.LEFT);
         gameTwo.players.get(users[0].id)?.update(2,1);
 
-        gameTwo.players.get(users[0].id)?.setDirection('N');
+        gameTwo.players.get(users[0].id)?.setDirection(Direction.UP);
         gameTwo.players.get(users[0].id)?.update(3,1);
 
         expect(gameTwo.players.get(users[0].id)?.posY).toEqual(posY);
         expect(gameTwo.players.get(users[0].id)?.posX).toEqual(posX);
+    });
+    it('should stop at the bottom of the screen', async () => {
+        gameTwo.stopGame();
+
+        gameTwo.players.get(users[0].id)?.setDirection(Direction.DOWN);
+
+        for(let i = 0; i < InitialParameters.LENGTH_Y + 10; i++){
+            gameTwo.players.get(users[0].id)?.update(i,1);
+
+        }
+        expect(gameTwo.players.get(users[0].id)?.posY).toEqual(InitialParameters.LENGTH_Y);
+    });
+
+    it('should stop at the top of the screen', async () => {
+        gameTwo.stopGame();
+
+        gameTwo.players.get(users[0].id)?.setDirection(Direction.UP);
+
+        for(let i = 0; i < 200; i++){
+            gameTwo.players.get(users[0].id)?.update(i,1);
+
+        }
+        expect(gameTwo.players.get(users[0].id)?.posY).toEqual(0);
+    });
+
+    it('should stop at the left edge of the screen', async () => {
+        gameTwo.stopGame();
+
+        gameTwo.players.get(users[0].id)?.setDirection(Direction.LEFT);
+
+        for(let i = 0; i < 200; i++){
+            gameTwo.players.get(users[0].id)?.update(i,1);
+
+        }
+        expect(gameTwo.players.get(users[0].id)?.posX).toEqual(0);
+    });
+    it('should stop at the right edge of the screen', async () => {
+        gameTwo.stopGame();
+
+        gameTwo.players.get(users[0].id)?.setDirection(Direction.RIGHT);
+
+        for(let i = 0; i < InitialParameters.LENGTH_X + 10; i++){
+            gameTwo.players.get(users[0].id)?.update(i,1);
+
+        }
+        expect(gameTwo.players.get(users[0].id)?.posX).toEqual(InitialParameters.LENGTH_X);
     });
 });

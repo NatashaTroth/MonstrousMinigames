@@ -185,7 +185,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         } else if (sheepInRadius.length === 1) {
             const sheepId = sheepInRadius[0].id;
             this.sheep[sheepId].state = SheepStates.DECOY;
-        /* find the closest sheep in radius */
+            /* find the closest sheep in radius */
         } else {
             let sheepId = sheepInRadius[0].id;
             let minDistance = 1 + InitialParameters.KILL_RADIUS * 2;
