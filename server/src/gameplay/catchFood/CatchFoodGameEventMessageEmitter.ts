@@ -58,6 +58,11 @@ export class CatchFoodGameEventMessageEmitter implements EventMessageEmitter {
                 }
                 controllerNameSpace.to(user.socketId).emit('message', message);
                 break;
+            //send to room's controllers
+            case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED:
+            case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD:
+                controllerNameSpace.to(room.id).emit('message', message);
+                break;
             // send to room's screens
             case CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE_ONCE:
