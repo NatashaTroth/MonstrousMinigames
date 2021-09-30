@@ -20,12 +20,12 @@ function sendUserInit(socket: Socket, user: User, room: Room): void {
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
     if (volatile) {
         nsp.to(room.id).volatile.emit('message', {
-            type: CatchFoodMsgType.GAME_STATE,
+            type: room.game.gameStateMessage,
             data: room.game?.getGameStateInfo(),
         });
     } else {
         nsp.to(room.id).emit('message', {
-            type: CatchFoodMsgType.GAME_STATE,
+            type: room.game.gameStateMessage,
             data: room.game?.getGameStateInfo(),
         });
     }

@@ -1,6 +1,6 @@
 import { GameState } from "../enums";
 
-export const GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED = 'game1/hasStarted';
+export const GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED = 'gameHasStarted';
 export const GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED = 'gameHasFinished';
 export const GLOBAL_EVENT_MESSAGE__GAME_HAS_STOPPED = 'gameHasStopped';
 export const GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED = 'gameHasPaused';
