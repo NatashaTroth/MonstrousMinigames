@@ -54,18 +54,18 @@ class Screen {
         }
     }
 
-    private trySendAllScreensPhaserGameLoaded(timedOut = false) {
+    private trySendAllScreensPhaserGameLoaded(game: string, timedOut = false) {
         if (!this.room!.sentAllScreensLoaded) {
             this.room!.sentAllScreensLoaded = true;
             if (this.room?.allScreensLoadedTimeout) clearTimeout(this.room.allScreensLoadedTimeout);
-            this.emitter.sendAllScreensPhaserGameLoaded([this.screenNamespace], this.room!);
+            this.emitter.sendAllScreensPhaserGameLoaded([this.screenNamespace], this.room!, game);
         }
 
         if (timedOut) {
             console.log('sending timed out');
             const notReadyScreens = this.room!.getScreensPhaserNotReady();
             notReadyScreens.forEach(screen => {
-                this.emitter.sendScreenPhaserGameLoadedTimedOut(this.screenNamespace, screen.id); //TODO natasha
+                this.emitter.sendScreenPhaserGameLoadedTimedOut(this.screenNamespace, screen.id, game); //TODO natasha
             });
         }
     }
@@ -78,17 +78,17 @@ class Screen {
                     if (this.room && !this.room?.firstPhaserScreenLoaded) {
                         this.room.firstPhaserScreenLoaded = true;
                         this.room.allScreensLoadedTimeout = setTimeout(() => {
-                            this.trySendAllScreensPhaserGameLoaded(true);
+                            this.trySendAllScreensPhaserGameLoaded(GameNames.GAME1, true);
                             ///TODO natasha - send timedout to other screens
                         }, 10000);
                     }
 
                     if (this.room?.allPhaserGamesReady()) {
-                        this.trySendAllScreensPhaserGameLoaded();
+                        this.trySendAllScreensPhaserGameLoaded(GameNames.GAME1);
                     }
                     break;
                 case CatchFoodMsgType.START_PHASER_GAME:
-                    this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!);
+                    this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!, GameNames.GAME1);
                     break;
                 case CatchFoodMsgType.CREATE:
                     if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
@@ -159,8 +159,26 @@ class Screen {
                     }
                     break;
 
+
+                case GameTwoMessageTypes.PHASER_GAME_LOADED:
+                    console.log(message);
+                    this.room?.setScreenPhaserGameReady(this.socket.id, true);
+                    if (this.room && !this.room?.firstPhaserScreenLoaded) {
+                        this.room.firstPhaserScreenLoaded = true;
+                        this.room.allScreensLoadedTimeout = setTimeout(() => {
+                            this.trySendAllScreensPhaserGameLoaded(GameNames.GAME2, true);
+                            ///TODO natasha - send timedout to other screens
+                        }, 10000);
+                    }
+
+                    if (this.room?.allPhaserGamesReady()) {
+                        this.trySendAllScreensPhaserGameLoaded(GameNames.GAME2);
+                    }
+                    break;
+
                 case GameTwoMessageTypes.START_PHASER_GAME:
-                    this.emitter.sendStartPhaserGameTwo([this.screenNamespace], this.room!);
+                    console.log(message);
+                    this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!, GameNames.GAME2);
                     break;
                 default:
                     console.info(message);

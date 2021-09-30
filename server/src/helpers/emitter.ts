@@ -2,6 +2,7 @@ import { Namespace, Socket } from 'socket.io';
 
 import Room from '../classes/room';
 import User from '../classes/user';
+import { GameNames } from '../enums/gameNames';
 import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
 import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
@@ -40,33 +41,54 @@ function sendErrorMessage(socket: Socket, e: Error): void {
     });
 }
 
-function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room): void {
+function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room, game: string): void {
+
+    let type = '';
+    switch (game) {
+        case (GameNames.GAME1):
+            type = CatchFoodMsgType.ALL_SCREENS_PHASER_GAME_LOADED;
+            break;
+        case (GameNames.GAME2):
+            type = GameTwoMessageTypes.ALL_SCREENS_PHASER_GAME_LOADED;
+            break;
+    }
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(room.id).emit('message', {
-            type: CatchFoodMsgType.ALL_SCREENS_PHASER_GAME_LOADED,
+            type: type,
         });
     });
 }
 
-function sendScreenPhaserGameLoadedTimedOut(nsp: Namespace, socketId: string): void {
+
+function sendScreenPhaserGameLoadedTimedOut(nsp: Namespace, socketId: string, game: string): void {
+    let type = '';
+    switch (game) {
+        case (GameNames.GAME1):
+            type = CatchFoodMsgType.PHASER_LOADING_TIMED_OUT;
+            break;
+        case (GameNames.GAME2):
+            type = GameTwoMessageTypes.PHASER_LOADING_TIMED_OUT;
+            break;
+    }
     //TODO
     nsp.to(socketId).emit('message', {
-        type: CatchFoodMsgType.PHASER_LOADING_TIMED_OUT,
+        type: type,
     });
 }
 
-function sendStartPhaserGame(nsps: Array<Namespace>, room: Room): void {
+function sendStartPhaserGame(nsps: Array<Namespace>, room: Room, game: string): void {
+    let type = '';
+    switch (game) {
+        case (GameNames.GAME1):
+            type = CatchFoodMsgType.START_PHASER_GAME;
+            break;
+        case (GameNames.GAME2):
+            type = GameTwoMessageTypes.START_PHASER_GAME;
+            break;
+    }
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(room.id).emit('message', {
-            type: CatchFoodMsgType.START_PHASER_GAME,
-        });
-    });
-}
-
-function sendStartPhaserGameTwo(nsps: Array<Namespace>, room: Room): void {
-    nsps.forEach(function (namespace: Namespace) {
-        namespace.to(room.id).emit('message', {
-            type: GameTwoMessageTypes.START_PHASER_GAME,
+            type: type,
         });
     });
 }
@@ -120,7 +142,6 @@ export default {
     sendAllScreensPhaserGameLoaded,
     sendScreenPhaserGameLoadedTimedOut,
     sendStartPhaserGame,
-    sendStartPhaserGameTwo,
     sendConnectedUsers,
     sendMessage,
     // sendPlayerExceededMaxNumberChaserPushes,
