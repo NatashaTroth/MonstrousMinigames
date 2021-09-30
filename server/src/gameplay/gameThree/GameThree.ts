@@ -14,10 +14,12 @@ import { GameStateInfo } from './interfaces/GameStateInfo';
 type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
 
 export default class GameThree extends Game<GameThreePlayer, GameStateInfo> implements GameThreeGameInterface {
-    private countdownTime = InitialParameters.COUNTDOWN_TIME;
-    private topics?: string[];
+    private countdownTimeGameStart = InitialParameters.COUNTDOWN_TIME_GAME_START;
+    private photoTopics?: string[];
+    private countdownTimeTakePhoto = InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO;
+    private countdownTimeVote = InitialParameters.COUNTDOWN_TIME_VOTE;
     private randomWordGenerator = new RandomWordGenerator();
-    private numberTopics = InitialParameters.NUMBER_TOPICS;
+    private numberPhotoTopics = InitialParameters.NUMBER_PHOTO_TOPICS;
 
     constructor(roomId: string, public leaderboard: Leaderboard) {
         super(roomId);
@@ -51,19 +53,22 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
-        this.topics = this.randomWordGenerator.generateRandomWords(this.numberTopics);
+        this.photoTopics = this.randomWordGenerator.generateRandomWords(this.numberPhotoTopics);
     }
 
     startGame(): void {
         setTimeout(() => {
             super.startGame();
-        }, this.countdownTime);
-        GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime);
-        this.sendTopic();
+        }, this.countdownTimeGameStart);
+        GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTimeGameStart);
+        this.sendPhotoTopic();
     }
 
-    sendTopic() {
-        //send to client
+    sendPhotoTopic() {
+        const topic = this.photoTopics?.shift();
+        if (topic)
+            //send to screen
+            GameThreeEventEmitter.emitNewTopic(this.roomId, topic, this.countdownTimeTakePhoto);
     }
 
     pauseGame(): void {

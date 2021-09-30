@@ -13,8 +13,10 @@ import {
 } from '../interfaces/GlobalEventMessages';
 import { GameThreeEventMessageEmitter } from './GameThreeEventMessageEmitter';
 import { InitialGameStateInfo, PlayerRank } from './interfaces';
-import { GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE } from './interfaces/GameThreeEventMessages';
-
+import {
+    GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
+    GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC,
+} from './interfaces/GameThreeEventMessages';
 // params: (data: GameEvents.ObstacleReachedInfo
 
 export default class GameThreeEventEmitter {
@@ -82,6 +84,16 @@ export default class GameThreeEventEmitter {
             type: GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED,
             roomId,
             userId,
+        });
+    }
+    // ----------------------------- Game Specific: -------------------------------
+
+    public static emitNewTopic(roomId: string, topic: string, countdownTime: number) {
+        this.GameThreeEventMessageEmitter.emit({
+            type: GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC,
+            roomId,
+            topic,
+            countdownTime,
         });
     }
 }
