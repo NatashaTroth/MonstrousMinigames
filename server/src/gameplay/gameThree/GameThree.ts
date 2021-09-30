@@ -5,6 +5,7 @@ import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
 import InitialParameters from './constants/InitialParameters';
+import GameThreeEventEmitter from './GameThreeEventEmitter';
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreePlayer from './GameThreePlayer';
 import { GameStateInfo } from './interfaces/GameStateInfo';
@@ -52,17 +53,22 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         setTimeout(() => {
             super.startGame();
         }, this.countdownTime);
+        GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime);
     }
+
     pauseGame(): void {
         super.pauseGame();
+        GameThreeEventEmitter.emitGameHasPausedEvent(this.roomId);
     }
 
     resumeGame(): void {
         super.resumeGame();
+        GameThreeEventEmitter.emitGameHasResumedEvent(this.roomId);
     }
 
     stopGameUserClosed() {
         super.stopGameUserClosed();
+        GameThreeEventEmitter.emitGameHasStoppedEvent(this.roomId);
     }
 
     stopGameAllUsersDisconnected() {
