@@ -1,26 +1,26 @@
-import { localDevelopment, pushChasers } from "../../../constants";
-import User from "../../classes/user";
-import { IMessageObstacle } from "../../interfaces/messageObstacle";
-import { IMessage } from "../../interfaces/messages";
-import { GameState } from "../enums";
-import Game from "../Game";
-import { verifyGameState } from "../helperFunctions/verifyGameState";
-import { verifyUserId } from "../helperFunctions/verifyUserId";
-import { verifyUserIsActive } from "../helperFunctions/verifyUserIsActive";
-import { HashTable, IGameInterface } from "../interfaces";
-import { GameType } from "../leaderboard/enums/GameType";
-import Leaderboard from "../leaderboard/Leaderboard";
-import CatchFoodGameEventEmitter from "./CatchFoodGameEventEmitter";
-import * as InitialGameParameters from "./CatchFoodGameInitialParameters";
-import CatchFoodPlayer from "./CatchFoodPlayer";
-import { NotAtObstacleError, WrongObstacleIdError } from "./customErrors";
-import UserHasNoStones from "./customErrors/UserHasNoStones";
-import { CatchFoodMsgType, ObstacleType } from "./enums";
+import { localDevelopment, pushChasers } from '../../../constants';
+import User from '../../classes/user';
+import { IMessageObstacle } from '../../interfaces/messageObstacle';
+import { IMessage } from '../../interfaces/messages';
+import { GameState } from '../enums';
+import Game from '../Game';
+import { verifyGameState } from '../helperFunctions/verifyGameState';
+import { verifyUserId } from '../helperFunctions/verifyUserId';
+import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
+import { HashTable, IGameInterface } from '../interfaces';
+import { GameType } from '../leaderboard/enums/GameType';
+import Leaderboard from '../leaderboard/Leaderboard';
+import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
+import * as InitialGameParameters from './CatchFoodGameInitialParameters';
+import CatchFoodPlayer from './CatchFoodPlayer';
+import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
+import UserHasNoStones from './customErrors/UserHasNoStones';
+import { CatchFoodMsgType, ObstacleType } from './enums';
 import {
     createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
-} from "./helperFunctions/initiatePlayerState";
-import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from "./interfaces";
-import { ObstacleReachedInfoController } from "./interfaces/GameEvents";
+} from './helperFunctions/initiatePlayerState';
+import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from './interfaces';
+import { ObstacleReachedInfoController } from './interfaces/GameEvents';
 
 let pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
 
@@ -168,6 +168,10 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             chasersPositionX: firstGameStateInfo.chasersPositionX,
             cameraPositionX: firstGameStateInfo.cameraPositionX,
         });
+        CatchFoodGameEventEmitter.emitStunnablePlayers(
+            this.roomId,
+            Array.from(this.players.values()).map(player => player.id)
+        );
     }
 
     startGame(): void {
