@@ -1,6 +1,6 @@
 import * as GameEvents from './GameEvents';
+import { GameNumberPlayerRank } from './GameNumberPlayerRank';
 import { GameStateInfo } from './GameStateInfo';
-import { GameThreePlayerRank } from './GameThreePlayerRank';
 import { InitialGameStateInfo } from './InitialGameStateInfo';
 import { PlayerState } from './PlayerState';
 import { PlayerStateForClient } from './PlayerStateForClient';
@@ -11,5 +11,5 @@ export {
     GameStateInfo,
     InitialGameStateInfo,
     GameEvents,
-    GameThreePlayerRank as PlayerRank,
+    GameNumberPlayerRank as PlayerRank,
 };

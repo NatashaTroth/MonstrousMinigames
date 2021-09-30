@@ -1,6 +1,6 @@
 import { IPlayerRank } from '../../interfaces/IPlayerRank';
 
-export interface GameThreePlayerRank extends IPlayerRank {
+export interface GameNumberPlayerRank extends IPlayerRank {
     id: string;
     name: string;
     rank: number;

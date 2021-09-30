@@ -5,20 +5,20 @@ import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
 import InitialParameters from './constants/InitialParameters';
-import GameThreeEventEmitter from './GameThreeEventEmitter';
-// import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
-import GameThreePlayer from './GameThreePlayer';
+import GameNumberEventEmitter from './GameNumberEventEmitter';
+// import { GameNumberMessageTypes } from './enums/GameNumberMessageTypes';
+import GameNumberPlayer from './GameNumberPlayer';
 import { GameStateInfo } from './interfaces/GameStateInfo';
 
-type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
+type GameNumberGameInterface = IGameInterface<GameNumberPlayer, GameStateInfo>;
 
-export default class GameThree extends Game<GameThreePlayer, GameStateInfo> implements GameThreeGameInterface {
+export default class GameNumber extends Game<GameNumberPlayer, GameStateInfo> implements GameNumberGameInterface {
     countdownTime = InitialParameters.COUNTDOWN_TIME;
 
     constructor(roomId: string, public leaderboard: Leaderboard) {
         super(roomId);
 
-        console.log('game3 created');
+        console.log('game created');
         console.info(this);
     }
 
@@ -33,8 +33,8 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         return;
     }
 
-    protected mapUserToPlayer(user: User): GameThreePlayer {
-        const player = new GameThreePlayer(user.id, user.name);
+    protected mapUserToPlayer(user: User): GameNumberPlayer {
+        const player = new GameNumberPlayer(user.id, user.name);
         console.info(player);
         return player;
     }
@@ -54,25 +54,25 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             super.startGame();
         }, this.countdownTime);
 
-        GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime);
+        GameNumberEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime);
     }
 
     pauseGame(): void {
         super.pauseGame();
 
-        GameThreeEventEmitter.emitGameHasPausedEvent(this.roomId);
+        GameNumberEventEmitter.emitGameHasPausedEvent(this.roomId);
     }
 
     resumeGame(): void {
         super.resumeGame();
 
-        GameThreeEventEmitter.emitGameHasResumedEvent(this.roomId);
+        GameNumberEventEmitter.emitGameHasResumedEvent(this.roomId);
     }
 
     stopGameUserClosed() {
         super.stopGameUserClosed();
 
-        GameThreeEventEmitter.emitGameHasStoppedEvent(this.roomId);
+        GameNumberEventEmitter.emitGameHasStoppedEvent(this.roomId);
     }
 
     stopGameAllUsersDisconnected() {
@@ -81,10 +81,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     protected handleInput(message: IMessage) {
         switch (message.type) {
-            // case GameThreeMessageTypes.MOVE:
+            // case GameNumberMessageTypes.MOVE:
             //     this.movePlayer(message.userId!, message.direction!);
             //     break;
-            // case GameThreeMessageTypes.KILL:
+            // case GameNumberMessageTypes.KILL:
             //     this.killSheep(message.userId!);
             //     break;
             default:

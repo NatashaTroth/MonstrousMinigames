@@ -1,4 +1,4 @@
-import './interfaces/GameThreeEventMessages';
+import './interfaces/GameNumberEventMessages';
 
 import DI from '../../di';
 import { GameState } from '../enums';
@@ -11,25 +11,25 @@ import {
     GLOBAL_EVENT_MESSAGE__PLAYER_HAS_DISCONNECTED,
     GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED,
 } from '../interfaces/GlobalEventMessages';
-import { GameThreeEventMessageEmitter } from './GameThreeEventMessageEmitter';
+import { GameNumberEventMessageEmitter } from './GameNumberEventMessageEmitter';
 import { InitialGameStateInfo, PlayerRank } from './interfaces';
-import { GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE } from './interfaces/GameThreeEventMessages';
+import { GAME_NUMBER_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE } from './interfaces/GameNumberEventMessages';
 
 // params: (data: GameEvents.ObstacleReachedInfo
 
-export default class GameThreeEventEmitter {
-    private static readonly GameThreeEventMessageEmitter = DI.resolve(GameThreeEventMessageEmitter);
+export default class GameNumberEventEmitter {
+    private static readonly GameNumberEventMessageEmitter = DI.resolve(GameNumberEventMessageEmitter);
 
     public static emitInitialGameStateInfoUpdate(roomId: string, gameState: InitialGameStateInfo) {
-        this.GameThreeEventMessageEmitter.emit({
-            type: GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
+        this.GameNumberEventMessageEmitter.emit({
+            type: GAME_NUMBER_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
             roomId,
             data: gameState,
         });
     }
 
     public static emitGameHasStartedEvent(roomId: string, countdownTime: number) {
-        this.GameThreeEventMessageEmitter.emit({
+        this.GameNumberEventMessageEmitter.emit({
             type: GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED,
             roomId,
             countdownTime,
@@ -37,21 +37,21 @@ export default class GameThreeEventEmitter {
     }
 
     public static emitGameHasPausedEvent(roomId: string) {
-        this.GameThreeEventMessageEmitter.emit({
+        this.GameNumberEventMessageEmitter.emit({
             type: GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED,
             roomId,
         });
     }
 
     public static emitGameHasResumedEvent(roomId: string) {
-        this.GameThreeEventMessageEmitter.emit({
+        this.GameNumberEventMessageEmitter.emit({
             type: GLOBAL_EVENT_MESSAGE__GAME_HAS_RESUMED,
             roomId,
         });
     }
 
     public static emitGameHasFinishedEvent(roomId: string, gameState: GameState, playerRanks: PlayerRank[]) {
-        this.GameThreeEventMessageEmitter.emit({
+        this.GameNumberEventMessageEmitter.emit({
             type: GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED,
             roomId,
             data: {
@@ -63,14 +63,14 @@ export default class GameThreeEventEmitter {
     }
 
     public static emitGameHasStoppedEvent(roomId: string) {
-        this.GameThreeEventMessageEmitter.emit({
+        this.GameNumberEventMessageEmitter.emit({
             type: GLOBAL_EVENT_MESSAGE__GAME_HAS_STOPPED,
             roomId,
         });
     }
 
     public static emitPlayerHasDisconnected(roomId: string, userId: string) {
-        this.GameThreeEventMessageEmitter.emit({
+        this.GameNumberEventMessageEmitter.emit({
             type: GLOBAL_EVENT_MESSAGE__PLAYER_HAS_DISCONNECTED,
             roomId,
             userId,
@@ -78,7 +78,7 @@ export default class GameThreeEventEmitter {
     }
 
     public static emitPlayerHasReconnected(roomId: string, userId: string) {
-        this.GameThreeEventMessageEmitter.emit({
+        this.GameNumberEventMessageEmitter.emit({
             type: GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED,
             roomId,
             userId,

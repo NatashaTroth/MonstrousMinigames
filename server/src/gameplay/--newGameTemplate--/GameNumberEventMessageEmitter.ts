@@ -11,31 +11,31 @@ import { GlobalEventMessage } from '../interfaces/GlobalEventMessages';
 import { IGameStateBase } from '../interfaces/IGameStateBase';
 import Player from '../Player';
 import {
-    GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, GAME_THREE_EVENT_MESSAGES,
-    GameThreeEventMessage
-} from './interfaces/GameThreeEventMessages';
+    GAME_NUMBER_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, GAME_NUMBER_EVENT_MESSAGES,
+    GameNumberEventMessage
+} from './interfaces/GameNumberEventMessages';
 
 @singleton()
-export class GameThreeEventMessageEmitter implements EventMessageEmitter {
+export class GameNumberEventMessageEmitter implements EventMessageEmitter {
     constructor(private readonly gameEventEmitter: GameEventEmitter) {}
 
-    emit(message: GameThreeEventMessage | GlobalEventMessage): void {
+    emit(message: GameNumberEventMessage | GlobalEventMessage): void {
         this.gameEventEmitter.emit(GameEventEmitter.EVENT_MESSAGE_EVENT, message);
     }
     canHandle(message: EventMessage, game: Game<Player, IGameStateBase>): boolean {
-        return GAME_THREE_EVENT_MESSAGES.includes(message.type);
+        return GAME_NUMBER_EVENT_MESSAGES.includes(message.type);
     }
     handle(
         controllerNameSpace: Namespace,
         screenNameSpace: Namespace,
         room: Room,
-        message: GameThreeEventMessage
+        message: GameNumberEventMessage
     ): void {
         // let user: User;
 
         switch (message.type) {
             // send to single user's controller
-            // case GAME_THREE_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE:
+            // case GAME_NUMBER_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE:
             //     user = room.getUserById(message.userId);
             //     if (!user) {
             //         break;
@@ -43,7 +43,7 @@ export class GameThreeEventMessageEmitter implements EventMessageEmitter {
             //     controllerNameSpace.to(user.socketId).emit('message', message);
             //     break;
             // send to room's screens
-            case GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE:
+            case GAME_NUMBER_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE:
                 screenNameSpace.to(room.id).emit('message', message);
                 break;
         }

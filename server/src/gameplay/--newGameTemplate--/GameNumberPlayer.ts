@@ -1,6 +1,6 @@
 import Player from '../Player';
 
-class GameThreePlayer extends Player {
+class GameNumberPlayer extends Player {
     constructor(id: string, name: string) {
         super(id, name);
     }
@@ -9,4 +9,4 @@ class GameThreePlayer extends Player {
         // do something
     }
 }
-export default GameThreePlayer;
+export default GameNumberPlayer;
