@@ -3,12 +3,12 @@ import * as React from 'react';
 import { Field, FieldRenderProps, Form } from 'react-final-form';
 
 import Button from '../../../../components/common/Button';
-import FullScreenContainer from '../../../../components/common/FullScreenContainer';
 import { FirebaseContext } from '../../../../contexts/FirebaseContextProvider';
+import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import uploadFile from '../../../storage/uploadFile';
-import { StyledImg, StyledLabel, UploadWrapper } from './TakePhoto.sc';
+import { ScreenContainer, StyledImg, StyledLabel, UploadWrapper } from './TakePhoto.sc';
 
 interface UploadProps {
     picture: File;
@@ -18,20 +18,21 @@ const TakePicture: React.FunctionComponent = () => {
     const { storage } = React.useContext(FirebaseContext);
     const { roomId } = React.useContext(GameContext);
     const { userId } = React.useContext(PlayerContext);
+    const { challengeId } = React.useContext(Game3Context);
 
-    // TODO Change
-    const challengeId = 1;
-
-    const upload = (values: UploadProps) => {
+    const upload = async (values: UploadProps) => {
         if (!values.picture) return;
 
         if (storage && roomId) {
-            uploadFile(storage, values.picture, roomId, userId, challengeId);
+            const success = await uploadFile(storage, values.picture, roomId, userId, challengeId);
+            if (success) {
+                // todo
+            }
         }
     };
 
     return (
-        <FullScreenContainer>
+        <ScreenContainer>
             <Form
                 mode="add"
                 onSubmit={upload}
@@ -50,7 +51,7 @@ const TakePicture: React.FunctionComponent = () => {
                     </form>
                 )}
             />
-        </FullScreenContainer>
+        </ScreenContainer>
     );
 };
 

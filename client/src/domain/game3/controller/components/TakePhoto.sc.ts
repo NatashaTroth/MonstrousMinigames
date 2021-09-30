@@ -1,5 +1,7 @@
-import { Typography } from "@material-ui/core";
-import styled from "styled-components";
+import { Typography } from '@material-ui/core';
+import styled from 'styled-components';
+
+import { StyledFullScreenContainer } from '../../../../components/controller/FullScreenContainer.sc';
 
 // https://stackoverflow.com/questions/21842274/cross-browser-custom-styling-for-file-upload-button
 export const StyledLabel = styled.label`
@@ -33,4 +35,10 @@ export const StyledImg = styled.img`
     display: flex;
     width: 60%;
     margin-bottom: 20px;
+`;
+
+export const ScreenContainer = styled(StyledFullScreenContainer)`
+    && {
+        flex-direction: column;
+    }
 `;
