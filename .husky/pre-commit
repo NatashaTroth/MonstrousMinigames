@@ -1,4 +1,6 @@
 cd client
 npm run test && npx lint-staged
 
-
+cd ..
+cd server
+npm run preCommitHook
