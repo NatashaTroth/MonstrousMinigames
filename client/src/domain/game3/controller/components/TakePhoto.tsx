@@ -1,14 +1,14 @@
-import { Typography } from "@material-ui/core";
-import * as React from "react";
-import { Field, FieldRenderProps, Form } from "react-final-form";
+import { Typography } from '@material-ui/core';
+import * as React from 'react';
+import { Field, FieldRenderProps, Form } from 'react-final-form';
 
-import Button from "../../../../components/common/Button";
-import FullScreenContainer from "../../../../components/common/FullScreenContainer";
-import { FirebaseContext } from "../../../../contexts/FirebaseContextProvider";
-import { GameContext } from "../../../../contexts/GameContextProvider";
-import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
-import uploadFile from "../../../storage/uploadFile";
-import { StyledImg, StyledLabel, UploadWrapper } from "./TakePhoto.sc";
+import Button from '../../../../components/common/Button';
+import FullScreenContainer from '../../../../components/common/FullScreenContainer';
+import { FirebaseContext } from '../../../../contexts/FirebaseContextProvider';
+import { GameContext } from '../../../../contexts/GameContextProvider';
+import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
+import uploadFile from '../../../storage/uploadFile';
+import { StyledImg, StyledLabel, UploadWrapper } from './TakePhoto.sc';
 
 interface UploadProps {
     picture: File;
@@ -67,7 +67,7 @@ const FileInput: React.FC<FieldRenderProps<string, HTMLElement>> = ({ input: { v
 
     return (
         <UploadWrapper>
-            {preview && <StyledImg id="blah" src={preview} alt="" />}
+            {preview && <StyledImg src={preview} alt="" />}
             <Button>
                 <StyledLabel>
                     <input type="file" accept="image/*" capture="camera" onChange={handleChange} />

@@ -1,4 +1,4 @@
-import { ObstacleTypes } from "./constants";
+import { ObstacleTypes } from './constants';
 
 export enum Routes {
     // Routes for router
@@ -22,6 +22,8 @@ export enum Routes {
     screenGameIntro = '/screen/:id/game-intro',
     screenGetReady = '/screen/:id/get-ready',
     screenGame1 = '/screen/:id/game1',
+    screenGame2 = '/screen/:id/game2',
+    screenGame3 = '/screen/:id/game3',
     screenFinished = '/screen/:id/finished',
     // Route pieces for history
     home = '/:id?',
