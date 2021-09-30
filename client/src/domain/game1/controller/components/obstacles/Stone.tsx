@@ -66,12 +66,16 @@ const Stone: React.FunctionComponent = () => {
         }
     }
 
-    function handleThrow(receivingUserId: string) {
-        setEarlySolvableObstacle(undefined);
+    function handleImmediateThrow(receivingUserId: string) {
         controllerSocket.emit({
             type: MessageTypesGame1.obstacleSolved,
             obstacleId: obstacle?.id,
         });
+        handleThrow(receivingUserId);
+    }
+
+    function handleThrow(receivingUserId: string) {
+        setEarlySolvableObstacle(undefined);
         controllerSocket.emit({
             type: MessageTypesGame1.stunPlayer,
             userId,
@@ -146,7 +150,11 @@ const Stone: React.FunctionComponent = () => {
                                         disabled={!selectedUser}
                                         onClick={() => {
                                             if (selectedUser) {
-                                                handleThrow(selectedUser);
+                                                if (searchParams.get('choosePlayer')) {
+                                                    handleThrow(selectedUser);
+                                                } else {
+                                                    handleImmediateThrow(selectedUser);
+                                                }
                                             }
                                         }}
                                         variant="secondary"
