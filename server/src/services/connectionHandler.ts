@@ -69,6 +69,7 @@ class ConnectionHandler {
             const game = room?.game;
 
             if (!room || !game) return;
+            console.log(message);
 
             this.eventMessageEmitters
                 .filter(emitter => emitter.canHandle(message, game))

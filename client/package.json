@@ -43,8 +43,7 @@
         "eject": "react-scripts eject",
         "lint": "eslint . --ext .ts",
         "lint-fix": "eslint . --ext .ts --fix",
-        "tsc": "tsc --project ./tsconfig.json && :",
-        "prepare": "cd .. && husky install client/.husky"
+        "tsc": "tsc --project ./tsconfig.json && :"
     },
     "eslintConfig": {
         "extends": [

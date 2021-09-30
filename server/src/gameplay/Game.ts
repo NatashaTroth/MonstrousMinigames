@@ -21,6 +21,7 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     // ********** Public *****************************
     public gameState = GameState.Initialised;
     public players = new Map<string, TPlayer>();
+    public gameStateMessage: string;
 
     constructor(
         public roomId: string,
@@ -29,6 +30,7 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
         protected maxNumberOfPlayers: number = Globals.MAX_PLAYER_NUMBER
     ) {
         super();
+        this.gameStateMessage = 'gameState';
     }
 
     createNewGame(users: User[]) {

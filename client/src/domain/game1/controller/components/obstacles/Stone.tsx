@@ -45,7 +45,7 @@ const Stone: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { userId } = React.useContext(PlayerContext);
     const { connectedUsers, roomId } = React.useContext(GameContext);
-    const { obstacle, hasStone, setHasStone } = React.useContext(Game1Context);
+    const { obstacle, hasStone, setHasStone, setEarlySolvableObstacle } = React.useContext(Game1Context);
 
     React.useEffect(() => {
         document.body.style.overflow = 'visible';
@@ -66,17 +66,22 @@ const Stone: React.FunctionComponent = () => {
         }
     }
 
-    function handleThrow(receivingUserId: string) {
+    function handleImmediateThrow(receivingUserId: string) {
         controllerSocket.emit({
             type: MessageTypesGame1.obstacleSolved,
             obstacleId: obstacle?.id,
         });
+        handleThrow(receivingUserId);
+    }
+
+    function handleThrow(receivingUserId: string) {
+        setEarlySolvableObstacle(undefined);
         controllerSocket.emit({
             type: MessageTypesGame1.stunPlayer,
             userId,
             receivingUserId,
-            usingCollectedStone: searchParams.get('choosePlayer') ? true : false,
         });
+
         resetBodyStyles();
         history.push(controllerGame1Route(roomId));
     }
@@ -87,6 +92,8 @@ const Stone: React.FunctionComponent = () => {
             obstacleId: obstacle?.id,
         });
         setHasStone(true);
+        setEarlySolvableObstacle(undefined);
+        resetBodyStyles();
         history.push(controllerGame1Route(roomId));
     }
 
@@ -143,7 +150,11 @@ const Stone: React.FunctionComponent = () => {
                                         disabled={!selectedUser}
                                         onClick={() => {
                                             if (selectedUser) {
-                                                handleThrow(selectedUser);
+                                                if (searchParams.get('choosePlayer')) {
+                                                    handleThrow(selectedUser);
+                                                } else {
+                                                    handleImmediateThrow(selectedUser);
+                                                }
                                             }
                                         }}
                                         variant="secondary"
