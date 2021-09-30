@@ -73,7 +73,7 @@ export enum MessageTypesGame1 {
     approachingSolvableObstacle = 'game1/approachingSolvableObstacle',
     approachingSolvableObstacleOnce = 'game1/approachingSolvableObstacleOnce',
     solveObstacle = 'game1/solveObstacle',
-    stunnablePlayers = "game1/stunnablePlayers"
+    stunnablePlayers = 'game1/stunnablePlayers',
 }
 
 export enum MessageTypesGame2 {
@@ -82,7 +82,7 @@ export enum MessageTypesGame2 {
     phaserLoaded = 'game2/phaserGameLoaded',
     phaserLoadingTimedOut = 'game2/phaserLoadingTimedOut',
     allScreensPhaserGameLoaded = 'game2/allScreensPhaserGameLoaded',
-    startPhaserGame = 'game2/startPhaserGame',
+    startSheepGame = 'game2/startPhaserGame',
     initialGameState = 'game2/initialGameState',
     gameState = 'game2/gameState',
     createGame = 'game2/create',

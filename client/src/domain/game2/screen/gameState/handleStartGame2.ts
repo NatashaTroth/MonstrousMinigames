@@ -3,7 +3,7 @@ import { Socket } from '../../../socket/Socket';
 
 export default function handleStartGame2(screenSocket: Socket) {
     screenSocket?.emit({
-        type: MessageTypesGame2.startPhaserGame,
+        type: MessageTypesGame2.startSheepGame,
         roomId: sessionStorage.getItem('roomId'),
         userId: sessionStorage.getItem('userId'),
     });
