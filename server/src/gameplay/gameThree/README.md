@@ -57,9 +57,17 @@ The shared screen shows a victory pedestal where the 1st, 2nd and 3rd place mons
 
 ---
 
-## Game run through
+## Game run through - backend
+
+Need to keep track of points
 
 1. Admin user creates and starts game
-2. todo
+2. Game sends start countdown
+3. Game sends topic and countdown timer
+4. Sync timer with backend periodically - but how??
+5. If no picture after time - no points
+6. Send all pictures to screen, send voting to controller, timer to vote
+7. Collect and tally votes, if not vote - player gets no points. 1 point per vote
+8. FINAL ROUND: TODO
 
 ## Connection: Controller - Server - Screen

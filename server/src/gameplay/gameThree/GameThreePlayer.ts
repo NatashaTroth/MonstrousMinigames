@@ -5,6 +5,8 @@ class GameThreePlayer extends Player {
         super(id, name);
     }
 
-    update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {}
+    update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
+        // do something
+    }
 }
 export default GameThreePlayer;

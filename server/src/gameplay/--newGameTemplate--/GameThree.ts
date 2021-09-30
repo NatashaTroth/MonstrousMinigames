@@ -5,11 +5,11 @@ import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
 import InitialParameters from './constants/InitialParameters';
-import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
+// import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreePlayer from './GameThreePlayer';
 import { GameStateInfo } from './interfaces/GameStateInfo';
 
-interface GameThreeGameInterface extends IGameInterface<GameThreePlayer, GameStateInfo> {}
+type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
 
 export default class GameThree extends Game<GameThreePlayer, GameStateInfo> implements GameThreeGameInterface {
     countdownTime = InitialParameters.COUNTDOWN_TIME;
@@ -29,7 +29,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     protected beforeCreateNewGame() {
-        console.error('Unimplemented Method');
+        return;
     }
 
     protected mapUserToPlayer(user: User): GameThreePlayer {
