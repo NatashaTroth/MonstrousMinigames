@@ -12,6 +12,7 @@ import spiderDemo from '../../images/ui/spiderDemo.png';
 import trashDemo from '../../images/ui/trashDemo.png';
 import treeDemo from '../../images/ui/treeDemo.png';
 import { MessageTypes } from '../../utils/constants';
+import { GameNames } from '../../utils/games';
 import { Routes, screenGetReadyRoute } from '../../utils/routes';
 import { ScreenStates } from '../../utils/screenStates';
 import Button from '../common/Button';
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const GameIntro: React.FunctionComponent = () => {
-    const { roomId, screenAdmin, screenState } = React.useContext(GameContext);
+    const { roomId, screenAdmin, screenState, chosenGame } = React.useContext(GameContext);
     const [showFirstIntro, setShowFirstIntro] = React.useState(true);
     const [doNotShowChecked, setDoNotShowChecked] = React.useState(false);
     const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
@@ -94,38 +95,42 @@ const GameIntro: React.FunctionComponent = () => {
                     </IntroText>
                 ) : (
                     <IntroContentWrapper>
-                        <PreviewImageContainer />
-                        {/* TODO make dynamic */}
-                        {/* <PreviewImage src={forest} /> */}
+                        {chosenGame === GameNames.game1 && (
+                            <>
+                                <PreviewImageContainer />
+                                {/* TODO make dynamic */}
+                                {/* <PreviewImage src={forest} /> */}
 
-                        <ImageDescription>
-                            Your goal is to be the first player to reach safety in the cave while conquering obstacles
-                            along the way!
-                        </ImageDescription>
-                        <ControlInstructionsContainer>
-                            <Wrapper>
-                                <ControlInstruction>Shake your phone to run!</ControlInstruction>
-                                <InstructionImg src={shakeInstructionsDemo} />
-                            </Wrapper>
-                            <Wrapper>
-                                <ControlInstruction>
-                                    Remove the tree trunk by cutting it along the line!
-                                </ControlInstruction>
-                                <InstructionImg src={treeDemo} />
-                            </Wrapper>
-                            <Wrapper>
-                                <ControlInstruction>
-                                    Blow into the microphone to get rid of the spider!
-                                </ControlInstruction>
-                                <InstructionImg src={spiderDemo} />
-                            </Wrapper>
-                            <Wrapper>
-                                <ControlInstruction>
-                                    Put the right trash in the garbage can to get the forest clean again!
-                                </ControlInstruction>
-                                <InstructionImg src={trashDemo} />
-                            </Wrapper>
-                        </ControlInstructionsContainer>
+                                <ImageDescription>
+                                    Your goal is to be the first player to reach safety in the cave while conquering
+                                    obstacles along the way!
+                                </ImageDescription>
+                                <ControlInstructionsContainer>
+                                    <Wrapper>
+                                        <ControlInstruction>Shake your phone to run!</ControlInstruction>
+                                        <InstructionImg src={shakeInstructionsDemo} />
+                                    </Wrapper>
+                                    <Wrapper>
+                                        <ControlInstruction>
+                                            Remove the tree trunk by cutting it along the line!
+                                        </ControlInstruction>
+                                        <InstructionImg src={treeDemo} />
+                                    </Wrapper>
+                                    <Wrapper>
+                                        <ControlInstruction>
+                                            Blow into the microphone to get rid of the spider!
+                                        </ControlInstruction>
+                                        <InstructionImg src={spiderDemo} />
+                                    </Wrapper>
+                                    <Wrapper>
+                                        <ControlInstruction>
+                                            Put the right trash in the garbage can to get the forest clean again!
+                                        </ControlInstruction>
+                                        <InstructionImg src={trashDemo} />
+                                    </Wrapper>
+                                </ControlInstructionsContainer>
+                            </>
+                        )}
                     </IntroContentWrapper>
                 )}
 
