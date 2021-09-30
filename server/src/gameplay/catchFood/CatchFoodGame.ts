@@ -10,6 +10,7 @@ import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
 import { HashTable, IGameInterface } from '../interfaces';
 import { GameType } from '../leaderboard/enums/GameType';
 import Leaderboard from '../leaderboard/Leaderboard';
+import Player from '../Player';
 import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
 import * as InitialGameParameters from './CatchFoodGameInitialParameters';
 import CatchFoodPlayer from './CatchFoodPlayer';
@@ -168,10 +169,16 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             chasersPositionX: firstGameStateInfo.chasersPositionX,
             cameraPositionX: firstGameStateInfo.cameraPositionX,
         });
-        CatchFoodGameEventEmitter.emitStunnablePlayers(
-            this.roomId,
-            Array.from(this.players.values()).map(player => player.id)
-        );
+        CatchFoodGameEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers()); // TODO test (test all times this emitter is called)
+    }
+
+    private getStunnablePlayers(): string[] {
+        return Array.from(this.players.values()).reduce(function (res: string[], option: Player) {
+            if (!option.finished && option.isActive) {
+                res.push(option.id);
+            }
+            return res;
+        }, []);
     }
 
     startGame(): void {
@@ -247,6 +254,8 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         this.updatePlayerStateFinished(playerState.id);
         playerState.rank = this.rankFailedUser(playerState.finishedTimeMs);
         CatchFoodGameEventEmitter.emitPlayerIsDead(this.roomId, playerState.id, playerState.rank);
+        CatchFoodGameEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
+
         //todo duplicate
         if (!localDevelopment) {
             const players = Array.from(this.players.values());
@@ -504,6 +513,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         player.positionX = this.trackLength;
 
         CatchFoodGameEventEmitter.emitPlayerHasFinishedEvent(this.roomId, userId, player.rank);
+        CatchFoodGameEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
 
         if (this.gameHasFinished()) {
             this.handleGameFinished();
@@ -563,6 +573,8 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     disconnectPlayer(userId: string) {
         if (super.disconnectPlayer(userId)) {
             CatchFoodGameEventEmitter.emitPlayerHasDisconnected(this.roomId, userId);
+            CatchFoodGameEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
+
             return true;
         }
 
@@ -572,7 +584,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     reconnectPlayer(userId: string) {
         if (super.reconnectPlayer(userId)) {
             CatchFoodGameEventEmitter.emitPlayerHasReconnected(this.roomId, userId);
-
+            CatchFoodGameEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
             return true;
         }
 
