@@ -20,6 +20,8 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     private countdownTimeVote = InitialParameters.COUNTDOWN_TIME_VOTE;
     private randomWordGenerator = new RandomWordGenerator();
     private numberPhotoTopics = InitialParameters.NUMBER_PHOTO_TOPICS;
+    private photoTimeSeconds = 0;
+    private takingPhoto = false;
 
     constructor(roomId: string, public leaderboard: Leaderboard) {
         super(roomId);
@@ -29,6 +31,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     getGameStateInfo(): GameStateInfo {
+        //TODO do i need to send this? think not
         return {
             gameState: this.gameState,
             roomId: this.roomId,
@@ -45,7 +48,8 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
-        console.error('Unimplemented Method');
+        // handle taking photo
+        if (this.takingPhoto) this.handleTakingPhoto(timeElapsedSinceLastFrame);
     }
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
         console.error('Unimplemented Method');
@@ -65,10 +69,16 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     sendPhotoTopic() {
+        //TODO verify game state
         const topic = this.photoTopics?.shift();
-        if (topic)
+        if (topic) {
+            this.photoTimeSeconds = this.countdownTimeTakePhoto;
+            this.takingPhoto = true;
             //send to screen
             GameThreeEventEmitter.emitNewTopic(this.roomId, topic, this.countdownTimeTakePhoto);
+        } else {
+            //TODO finished sending topics - now final round
+        }
     }
 
     pauseGame(): void {
@@ -100,6 +110,15 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             //     break;
             default:
                 console.info(message);
+        }
+    }
+
+    //********************** Helper Functions **********************/
+    protected handleTakingPhoto(timeElapsedSinceLastFrame: number) {
+        this.photoTimeSeconds -= timeElapsedSinceLastFrame;
+        if (this.photoTimeSeconds <= 0) {
+            this.takingPhoto = false;
+            GameThreeEventEmitter.emitTakePhotoCountdownOver(this.roomId);
         }
     }
 }
