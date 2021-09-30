@@ -37,6 +37,7 @@ import ShakeInstruction from './domain/game1/controller/components/ShakeInstruct
 import Windmill from './domain/game1/controller/components/Windmill';
 import Game from './domain/game1/screen/components/Game';
 import TakePicture from './domain/game3/controller/components/TakePhoto';
+import Game3 from './domain/game3/screen/components/Game3';
 import history from './domain/history/history';
 import { navigator } from './domain/navigator/NavigatorAdapter';
 import { sessionStorage } from './domain/storage/SessionStorage';
@@ -153,9 +154,20 @@ const App: React.FunctionComponent = () => {
                                                                     exact
                                                                 />
                                                                 {/*----------------- Game 2 -----------------*/}
-                                                                <Route
+                                                                {/* <Route
                                                                     path={Routes.controllerGame2}
+                                                                    component={...}
+                                                                    exact
+                                                                /> */}
+                                                                {/*----------------- Game 3 -----------------*/}
+                                                                <Route
+                                                                    path={Routes.controllerGame3}
                                                                     component={TakePicture}
+                                                                    exact
+                                                                />
+                                                                <Route
+                                                                    path={Routes.screenGame3}
+                                                                    component={Game3}
                                                                     exact
                                                                 />
                                                                 {/*----------------- General -----------------*/}

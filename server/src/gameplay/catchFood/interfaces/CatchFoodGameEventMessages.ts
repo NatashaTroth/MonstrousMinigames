@@ -9,6 +9,7 @@ export const CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE_ONCE =
     'game1/approachingSolvableObstacleOnce';
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED = 'game1/playerFinished';
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE = 'game1/initialGameState';
+export const CATCH_FOOD_GAME_EVENT_MESSAGE__STUNNABLE_PLAYERS = 'game1/stunnablePlayers';
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD = 'game1/playerDied';
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED = 'game1/playerStunned';
 export const CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED = 'game1/playerUnstunned';
@@ -28,6 +29,7 @@ export const CATCH_FOOD_GAME_EVENT_MESSAGES = [
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__CHASERS_WERE_PUSHED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__STUNNABLE_PLAYERS,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
 ];
 
@@ -79,6 +81,11 @@ export interface CatchFoodGameInitialGameState {
     roomId: string;
     data: GameStateInfo;
 }
+export interface CatchFoodGameStunnablePlayers {
+    type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__STUNNABLE_PLAYERS;
+    roomId: string;
+    stunnablePlayers: string[];
+}
 export interface CatchFoodGamePlayerIsDead {
     type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD;
     roomId: string;
@@ -114,6 +121,7 @@ export type CatchFoodGameEventMessage =
     | CatchFoodGameApproachingSolvableObstacleOnce
     | CatchFoodGamePlayerHasFinished
     | CatchFoodGameInitialGameState
+    | CatchFoodGameStunnablePlayers
     | CatchFoodGamePlayerIsDead
     | CatchFoodGamePlayerStunnedState
     | CatchFoodGamePlayerUnstunnedState

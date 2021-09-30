@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+
 import { CatchFoodGame } from '../../../src/gameplay';
 import { ObstacleType } from '../../../src/gameplay/catchFood/enums';
 import { GameState } from '../../../src/gameplay/enums';
@@ -63,7 +64,9 @@ describe('Run forward', () => {
 });
 
 const removeStonesFromObstacles = (game: CatchFoodGame) => () => {
-    game.players.get('1')!.obstacles = game.players.get('1')!.obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
+    game.players.get('1')!.obstacles = game.players
+        .get('1')!
+        .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
 };
 
 describe('Obstacles reached', () => {
@@ -121,7 +124,9 @@ describe('Obstacles reached', () => {
 
     it('removes a stone obstacle when a player arrives at it carrying one', async () => {
         startGameAndAdvanceCountdown(catchFoodGame, () => {
-            catchFoodGame.players.get('1')!.obstacles = catchFoodGame.players.get('1')!.obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
+            catchFoodGame.players.get('1')!.obstacles = catchFoodGame.players
+                .get('1')!
+                .obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
             catchFoodGame.players.get('1')!.stonesCarrying = 1;
         });
         const distanceToObstacle =
@@ -170,7 +175,9 @@ describe('Obstacles reached', () => {
     it('should remove a completed obstacle', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         completeNextObstacle(catchFoodGame, '1');
-        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(catchFoodGame.numberOfObstacles + catchFoodGame.numberOfStones - 1);
+        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(
+            catchFoodGame.numberOfObstacles + catchFoodGame.numberOfStones - 1
+        );
     });
 
     it('can move a player again when obstacle is completed', async () => {

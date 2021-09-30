@@ -7,8 +7,13 @@ import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext, User } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
+import handleStartGame1 from '../../domain/game1/screen/gameState/handleStartGame1';
+import handleStartGame2 from '../../domain/game2/screen/gameState/handleStartGame2';
+import handleStartGame3 from '../../domain/game3/screen/gameState/handleStartGame3';
 import history from '../../domain/history/history';
-import { MessageTypes, MessageTypesGame1 } from '../../utils/constants';
+import { Socket } from '../../domain/socket/Socket';
+import { MessageTypes } from '../../utils/constants';
+import { GameNames } from '../../utils/games';
 import { Routes } from '../../utils/routes';
 import { ScreenStates } from '../../utils/screenStates';
 import { getUserArray } from './Lobby';
@@ -27,7 +32,7 @@ import {
 const PlayersGetReady: React.FC = () => {
     const { screenSocket } = React.useContext(ScreenSocketContext);
     const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
-    const { roomId, connectedUsers, screenAdmin, screenState } = React.useContext(GameContext);
+    const { roomId, connectedUsers, screenAdmin, screenState, chosenGame } = React.useContext(GameContext);
 
     const emptyGame = !connectedUsers || connectedUsers.length === 0;
     const usersReady =
@@ -35,14 +40,6 @@ const PlayersGetReady: React.FC = () => {
         connectedUsers.filter((user: User) => {
             return user.ready;
         }).length === connectedUsers.length;
-
-    function startGame() {
-        screenSocket?.emit({
-            type: MessageTypesGame1.startPhaserGame,
-            roomId: sessionStorage.getItem('roomId'),
-            userId: sessionStorage.getItem('userId'),
-        });
-    }
 
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
@@ -88,8 +85,8 @@ const PlayersGetReady: React.FC = () => {
                         <Button
                             disabled={emptyGame || !usersReady}
                             onClick={() => {
-                                if (getUserArray(connectedUsers || []).length > 0) {
-                                    startGame();
+                                if (getUserArray(connectedUsers || []).length > 0 && chosenGame) {
+                                    startGame(chosenGame!, screenSocket!);
                                 }
                             }}
                         >
@@ -103,3 +100,17 @@ const PlayersGetReady: React.FC = () => {
 };
 
 export default PlayersGetReady;
+
+function startGame(gameId: GameNames, screenSocket: Socket) {
+    switch (gameId) {
+        case GameNames.game1:
+            handleStartGame1(screenSocket);
+            return;
+        case GameNames.game2:
+            handleStartGame2(screenSocket);
+            return;
+        case GameNames.game3:
+            handleStartGame3(screenSocket);
+            return;
+    }
+}
