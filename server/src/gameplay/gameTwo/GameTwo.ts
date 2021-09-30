@@ -35,8 +35,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.lengthY = InitialParameters.LENGTH_Y;
         this.sheep = [];
         this.currentSheepId = 0;
-        //console.log('game2 created');
-        //console.info(this);
     }
 
     getGameStateInfo(): GameStateInfo {
@@ -58,9 +56,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         };
     }
 
-    protected beforeCreateNewGame() {
-        return
-    }
 
     protected mapUserToPlayer(user: User): GameTwoPlayer {
         const player = new GameTwoPlayer(
@@ -71,7 +66,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             InitialParameters.KILLS_PER_ROUND,
             user.characterNumber
         );
-        //console.info(player);
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
@@ -122,10 +116,15 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
         return valid;
     }
+
+
+    protected beforeCreateNewGame() {
+        return
+    }
+
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
         this.initSheep(InitialParameters.SHEEP_COUNT);
-        //console.info(this.sheep);
         GameTwoEventEmitter.emitInitialGameStateInfoUpdate(
             this.roomId,
             this.getGameStateInfo()
@@ -183,12 +182,25 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
         if (sheepInRadius.length < 1) {
             return;
-        }
-        if (sheepInRadius.length >= 1) {
+        } else if (sheepInRadius.length === 1) {
             const sheepId = sheepInRadius[0].id;
             this.sheep[sheepId].state = SheepStates.DECOY;
-            //todo how to handle if multiple sheep
+        /* find the closest sheep in radius */
+        } else {
+            let sheepId = sheepInRadius[0].id;
+            let minDistance = 1 + InitialParameters.KILL_RADIUS * 2;
+            let currentDistance;
+            sheepInRadius.forEach(sheep => {
+                currentDistance = Math.abs(sheep.posX - player.posX) + Math.abs(sheep.posY - player.posY);
+                if (currentDistance < minDistance) {
+                    minDistance = currentDistance;
+                    sheepId = sheep.id;
+                }
+            });
+
+            this.sheep[sheepId].state = SheepStates.DECOY;
         }
+        player.killsLeft--;
     }
 
     protected handleInput(message: IMessage) {

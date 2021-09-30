@@ -127,6 +127,27 @@ describe('GameTwo Tests', () => {
         expect(gameTwo.sheep[sheep.id].state).toEqual(SheepStates.DECOY);
     });
 
+
+    it('should kill the closer sheep if two sheep are in radius', async () => {
+        const sheep = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x + InitialParameters.KILL_RADIUS -1, InitialParameters.PLAYERS_POSITIONS[0].y + InitialParameters.KILL_RADIUS -1, gameTwo.sheep.length);
+        gameTwo.sheep.push(sheep);
+
+        const sheep2 = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x + InitialParameters.KILL_RADIUS, InitialParameters.PLAYERS_POSITIONS[0].y + InitialParameters.KILL_RADIUS, gameTwo.sheep.length);
+        gameTwo.sheep.push(sheep2);
+
+        const sheep3 = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x + InitialParameters.KILL_RADIUS -2, InitialParameters.PLAYERS_POSITIONS[0].y + InitialParameters.KILL_RADIUS -2, gameTwo.sheep.length);
+        gameTwo.sheep.push(sheep3);
+
+        const message = {
+            type: GameTwoMessageTypes.KILL,
+            roomId: roomId,
+            userId: users[0].id
+        }
+        gameTwo.receiveInput(message);
+        console.log(gameTwo.sheep);
+        expect(gameTwo.sheep[sheep3.id].state).toEqual(SheepStates.DECOY);
+    });
+
     it('should kill sheep if user has no kills left', async () => {
         if (gameTwo.players.get(users[0].id)) {
             gameTwo.players.get(users[0].id)?.setKillsLeft(0);
@@ -157,6 +178,7 @@ describe('GameTwo Tests', () => {
         })
         expect(decoySheep.length).toEqual(0);
     });
+
     it('should log a message if it is not implemented', async () => {
         console.info = jest.fn();
         const message = {
@@ -167,7 +189,7 @@ describe('GameTwo Tests', () => {
     });
 
 
-    it('should log a message if it is not implemented', async () => {
+    it('should return to previous state if moving one step in every direction', async () => {
         gameTwo.stopGame();
         let posX = gameTwo.players.get(users[0].id)?.posX;
         if (!posX){
@@ -181,33 +203,16 @@ describe('GameTwo Tests', () => {
         gameTwo.players.get(users[0].id)?.setDirection('E');
         gameTwo.players.get(users[0].id)?.update(0,1);
 
-
-        expect(gameTwo.players.get(users[0].id)?.posX).toBeGreaterThan(posX);
-
         gameTwo.players.get(users[0].id)?.setDirection('S');
         gameTwo.players.get(users[0].id)?.update(1,1);
 
-        expect(gameTwo.players.get(users[0].id)?.posY).toBeGreaterThan(posY);
-
-        posX = gameTwo.players.get(users[0].id)?.posX;
-        if (!posX){
-            posX = 0;
-        }
-
-        posY = gameTwo.players.get(users[0].id)?.posY;
-        if (!posY){
-            posY = 0;
-        }
         gameTwo.players.get(users[0].id)?.setDirection('W');
-        gameTwo.players.get(users[0].id)?.update(0,1);
-
-
-        expect(gameTwo.players.get(users[0].id)?.posX).toBeLessThan(posX);
+        gameTwo.players.get(users[0].id)?.update(2,1);
 
         gameTwo.players.get(users[0].id)?.setDirection('N');
-        gameTwo.players.get(users[0].id)?.update(1,1);
+        gameTwo.players.get(users[0].id)?.update(3,1);
 
-        expect(gameTwo.players.get(users[0].id)?.posY).toBeLessThan(posY);
-
+        expect(gameTwo.players.get(users[0].id)?.posY).toEqual(posY);
+        expect(gameTwo.players.get(users[0].id)?.posX).toEqual(posX);
     });
 });
