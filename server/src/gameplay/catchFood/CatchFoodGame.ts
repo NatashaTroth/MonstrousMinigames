@@ -387,11 +387,11 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         const playerThrown = this.players.get(userIdThrown)!;
 
         this.verifyUserCanThrowCollectedStone(playerThrown);
+        playerThrown.stonesCarrying--;
 
         const playerStunned = this.players.get(userIdStunned)!;
         if (this.playerIsNotAllowedToRun(userIdStunned)) return;
         if (playerStunned.stunned || playerStunned.atObstacle) return;
-        playerThrown.stonesCarrying--;
         playerStunned.stunned = true;
         playerStunned.stunnedSeconds = this.stunnedTime;
 
