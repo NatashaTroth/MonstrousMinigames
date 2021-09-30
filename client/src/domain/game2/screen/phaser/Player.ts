@@ -1,9 +1,9 @@
 //import { designDevelopment } from '../../../../utils/constants';
 //import { depthDictionary } from '../../../../utils/depthDictionary';
-import { PhaserPlayerRenderer } from '../../../game1/screen/phaser/renderer/PhaserPlayerRenderer';
 import MainScene from '../components/SheepGameScene';
 import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
 import { Coordinates } from '../phaser/gameTypes/Coordinates';
+import { PhaserPlayerRenderer } from '../phaser/renderer/PhaserPlayerRenderer';
 import { AnimationName } from './enums/AnimationNames';
 import { Character } from './gameInterfaces/Character';
 import { GameData } from './gameInterfaces/GameData';
@@ -27,9 +27,9 @@ export class Player {
         this.userId = gameStateData.playersState[index].id;
         this.playerRunning = false;
 
-        this.renderer = new PhaserPlayerRenderer(scene, this.numberPlayers);
+        this.renderer = new PhaserPlayerRenderer(scene);
 
-        this.renderer.renderSheepBackground(window.innerWidth, window.innerHeight);
+        this.renderer.renderBackground();
         this.setPlayer();
     }
 
@@ -54,7 +54,7 @@ export class Player {
             y: this.coordinates.y,
         };
 
-        this.renderer.renderPlayer(this.index, screenCoordinates, this.character, this.username);
+        this.renderer.renderPlayer(screenCoordinates, this.character);
     }
 
     startRunning() {

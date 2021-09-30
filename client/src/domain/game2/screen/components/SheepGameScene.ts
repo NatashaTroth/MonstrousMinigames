@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 
+import sheepSpritesheet from '../../../../images/characters/spritesheets/sheep/sheepSpritesheet.png';
 import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2 } from '../../../../utils/constants';
 import { screenFinishedRoute } from '../../../../utils/routes';
 import history from '../../../history/history';
@@ -116,6 +117,13 @@ class SheepGameScene extends Phaser.Scene {
 
         images.forEach(image => {
             this.load.image(image.name, image.file);
+        });
+
+        this.load.spritesheet('sheepSpritesheet', sheepSpritesheet, {
+            frameWidth: 2480,
+            frameHeight: 2480,
+            startFrame: 0,
+            endFrame: 17,
         });
     }
 

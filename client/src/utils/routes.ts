@@ -8,6 +8,7 @@ export enum Routes {
     controllerLobby = '/controller/:id/lobby',
     controllerGame1 = '/controller/:id/game1',
     controllerGame2 = '/controller/:id/game2',
+    controllerGame3 = '/controller/:id/game3',
     controllerTreeStump = `/controller/:id/treestump`,
     controllerSpider = `/controller/:id/spider`,
     controllerTrash = `/controller/:id/trash`,
@@ -21,6 +22,8 @@ export enum Routes {
     screenGameIntro = '/screen/:id/game-intro',
     screenGetReady = '/screen/:id/get-ready',
     screenGame1 = '/screen/:id/game1',
+    screenGame2 = '/screen/:id/game2',
+    screenGame3 = '/screen/:id/game3',
     screenFinished = '/screen/:id/finished',
     // Route pieces for history
     home = '/:id?',
@@ -32,6 +35,7 @@ export enum Routes {
     trash = '/trash',
     stone = '/stone',
     game1 = '/game1',
+    game2 = '/game2',
     dead = '/dead',
     finished = '/finished',
     gameIntro = '/game-intro',
@@ -84,3 +88,5 @@ export const screenFinishedRoute = (roomId: undefined | string) => `${Routes.scr
 export const screenLobbyRoute = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.lobby}`;
 
 export const screenGame1Route = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.game1}`;
+
+export const screenGame2Route = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.game2}`;
