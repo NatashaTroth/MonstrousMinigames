@@ -4,7 +4,6 @@ export interface PlayersState {
     name: string;
     positionX: number;
     positionY: number;
-    rank: number;
     characterNumber: number;
     finished: boolean;
 }

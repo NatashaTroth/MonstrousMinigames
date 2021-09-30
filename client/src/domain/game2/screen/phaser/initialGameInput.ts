@@ -1,3 +1,5 @@
+import { SheepState } from './Sheep';
+
 export const initialGameInput = {
     roomId: 'ZVSH',
     playersState: [
@@ -8,10 +10,10 @@ export const initialGameInput = {
             positionY: 100,
             finished: false,
             isActive: true,
-            characterNumber: 1
-        }
+            characterNumber: 1,
+        },
     ],
-    sheep: [],
+    sheep: [{ state: SheepState.ALIVE, id: 'sheep1', coordinates: { x: 100, y: 150 } }],
     lengthX: 250,
     lengthY: 200,
     gameState: 'CREATED',
