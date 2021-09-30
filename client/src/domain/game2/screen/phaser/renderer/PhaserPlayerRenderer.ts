@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 import { depthDictionary } from '../../../../../utils/depthDictionary';
 import SheepGameScene from '../../components/SheepGameScene';
-import { Character, CharacterAnimation } from '../gameInterfaces/Character';
+import { Character } from '../gameInterfaces/Character';
 import { CharacterAnimationFrames } from '../gameInterfaces/Character';
 import { Coordinates } from '../gameTypes/Coordinates';
 
@@ -23,12 +23,15 @@ export class PhaserPlayerRenderer {
     renderPlayer(coordinates: Coordinates, character: Character): void {
         if (!this.player) {
             this.renderPlayerInitially(coordinates, character.name);
-
-            character.animations.forEach((animation: CharacterAnimation) => {
-                this.initiateAnimation(character.name, animation.name, animation.frames);
-            });
+            // frames:
+            // 0-3: forward
+            // 4-7: left
+            // 8-11: right
+            // TODO: missing walking back animation
+            this.initiateAnimation(character.name, character.name + +'_walkForward', { start: 0, end: 3 });
+            this.initiateAnimation(character.name, character.name + +'_walkLeft', { start: 4, end: 7 });
+            this.initiateAnimation(character.name, character.name + +'_walkRight', { start: 8, end: 11 });
         } else if (this.player) {
-            //only move player
             this.player.x = coordinates.x;
             this.player.y = coordinates.y;
         }
@@ -65,5 +68,26 @@ export class PhaserPlayerRenderer {
     }
     stopAnimation() {
         this.player?.anims.stop();
+    }
+
+    movePlayer(character: Character, plusX?: number, plusY?: number) {
+        if (plusY) {
+            if (plusY > 0) {
+                this.player?.play(`${character.name}_walkForward`);
+            }
+            if (plusY < 0) {
+                this.player?.play(`${character.name}_walkBack`);
+            }
+            this.player?.setY(this.player?.y + plusY);
+        }
+        if (plusX) {
+            if (plusX > 0) {
+                this.player?.play(`${character.name}_walkRight`);
+            }
+            if (plusX < 0) {
+                this.player?.play(`${character.name}_walkLeft`);
+            }
+            this.player?.setX(this.player?.x + plusX);
+        }
     }
 }

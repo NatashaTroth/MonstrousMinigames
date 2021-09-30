@@ -11,8 +11,6 @@ import sheepDecoy from '../../../../images/ui/sheep_decoy.png';
 import { AnimationName } from '../phaser/enums/AnimationNames';
 import { Character, CharacterAnimation, CharacterSpriteProperties } from '../phaser/gameInterfaces/Character';
 
-// import { characterDictionary } from '../../../utils/characterDictionary';
-
 //TODO types
 
 export const audioFiles = [
