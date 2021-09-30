@@ -1,7 +1,7 @@
 import { GameStateInfo } from './';
 
 export const GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE = 'game3/initialGameState';
-export const GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC = 'game3/photoTopicAndCountdown';
+export const GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC = 'game3/newPhotoTopic';
 
 export const GAME_THREE_EVENT_MESSAGES = [
     GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
