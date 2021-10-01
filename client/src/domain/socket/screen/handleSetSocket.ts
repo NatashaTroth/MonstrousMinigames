@@ -5,7 +5,10 @@ import { Routes } from '../../../utils/routes';
 import { handleConnectedUsersMessage } from '../../commonGameState/screen/handleConnectedUsersMessage';
 import { handleGameHasFinishedMessage } from '../../commonGameState/screen/handleGameHasFinishedMessage';
 import { handleGameHasResetMessage } from '../../commonGameState/screen/handleGameHasResetMessage';
-import { handleStartGameMessage } from '../../commonGameState/screen/handleGameHasStartedMessage';
+import {
+    handleStartGameMessage,
+    handleStartSheepGameMessage,
+} from '../../commonGameState/screen/handleGameHasStartedMessage';
 import { handleGameHasStoppedMessage } from '../../commonGameState/screen/handleGameHasStoppedMessage';
 import { MessageSocket } from '../../socket/MessageSocket';
 import ScreenSocket from '../../socket/screenSocket';
@@ -19,6 +22,7 @@ import { resumedTypeGuard } from '../../typeGuards/resumed';
 import { ScreenAdminMessage, screenAdminTypeGuard } from '../../typeGuards/screenAdmin';
 import { ScreenStateMessage, screenStateTypeGuard } from '../../typeGuards/screenState';
 import { StartPhaserGameMessage, startPhaserGameTypeGuard } from '../../typeGuards/startPhaserGame';
+import { StartSheepGameMessage, startSheepGameTypeGuard } from '../../typeGuards/startSheepGame';
 import { stoppedTypeGuard } from '../../typeGuards/stopped';
 
 export interface HandleSetSocketDependencies {
@@ -26,6 +30,7 @@ export interface HandleSetSocketDependencies {
     setConnectedUsers: (users: User[]) => void;
     setHasPaused: (val: boolean) => void;
     setGameStarted: (val: boolean) => void;
+    setSheepGameStarted: (val: boolean) => void;
     setCountdownTime: (val: number) => void;
     setFinished: (val: boolean) => void;
     setPlayerRanks: (val: PlayerRank[]) => void;
@@ -45,6 +50,7 @@ export function handleSetSocket(
         setConnectedUsers,
         setHasPaused,
         setGameStarted,
+        setSheepGameStarted,
         setPlayerRanks,
         setFinished,
         setScreenAdmin,
@@ -57,6 +63,7 @@ export function handleSetSocket(
 
     const connectedUsersSocket = new MessageSocket(connectedUsersTypeGuard, socket);
     const startPhaserGameSocket = new MessageSocket(startPhaserGameTypeGuard, socket);
+    const startSheepGameSocket = new MessageSocket(startSheepGameTypeGuard, socket);
     const finishedSocket = new MessageSocket(finishedTypeGuard, socket);
     const resetSocket = new MessageSocket(resetTypeGuard, socket);
     const pausedSocket = new MessageSocket(pausedTypeGuard, socket);
@@ -76,6 +83,10 @@ export function handleSetSocket(
 
     startPhaserGameSocket.listen((data: StartPhaserGameMessage) =>
         handleStartGameMessage({ roomId, dependencies: { setGameStarted, history } })
+    );
+
+    startSheepGameSocket.listen((data: StartSheepGameMessage) =>
+        handleStartSheepGameMessage({ roomId, dependencies: { setSheepGameStarted, history } })
     );
 
     pausedSocket.listen(() => setHasPaused(true));

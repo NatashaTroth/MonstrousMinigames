@@ -1,10 +1,10 @@
-import { MessageTypesGame2 } from '../../../utils/constants';
-import { MessageDataGame2 } from '../MessageDataGame2';
+import { MessageTypes } from '../../../utils/constants';
+import { MessageData } from '../MessageData';
 
-export interface Game2HasStartedMessage {
-    type: MessageTypesGame2.started;
+export interface SheepGameHasStartedMessage {
+    type: MessageTypes.gameHasStarted;
     countdownTime: number;
 }
 
-export const startedTypeGuard = (data: MessageDataGame2): data is Game2HasStartedMessage =>
-    (data as Game2HasStartedMessage).type === MessageTypesGame2.started;
+export const sheepGameStartedTypeGuard = (data: MessageData): data is SheepGameHasStartedMessage =>
+    (data as SheepGameHasStartedMessage).type === MessageTypes.gameHasStarted;

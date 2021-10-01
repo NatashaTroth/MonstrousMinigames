@@ -7,7 +7,7 @@ interface HandleSheepGameStarted {
     countdownTime: number;
     dependencies: { setSheepGameStarted: (val: boolean) => void; history: History };
 }
-export function handleGameStartedMessage(props: HandleSheepGameStarted) {
+export function handleSheepGameStartedMessage(props: HandleSheepGameStarted) {
     const { roomId, dependencies, countdownTime } = props;
     const { setSheepGameStarted, history } = dependencies;
 

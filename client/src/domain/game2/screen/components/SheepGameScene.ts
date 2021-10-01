@@ -21,7 +21,7 @@ import {
     PhaserLoadingTimedOutMessage,
     phaserLoadingTimedOutTypeGuard,
 } from '../../../typeGuards/game2/phaserLoadingTimedOut';
-import { Game2HasStartedMessage, startedTypeGuard } from '../../../typeGuards/game2/started';
+import { SheepGameHasStartedMessage, sheepGameStartedTypeGuard } from '../../../typeGuards/game2/started';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
@@ -193,8 +193,8 @@ class SheepGameScene extends Phaser.Scene {
             //TODO handle
         });
 
-        const startedGame = new MessageSocket(startedTypeGuard, this.socket);
-        startedGame.listen((data: Game2HasStartedMessage) => {
+        const startedGame = new MessageSocket(sheepGameStartedTypeGuard, this.socket);
+        startedGame.listen((data: SheepGameHasStartedMessage) => {
             this.createGameCountdown(data.countdownTime);
         });
 
