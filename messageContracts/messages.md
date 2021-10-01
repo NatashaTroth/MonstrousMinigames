@@ -220,7 +220,7 @@ example:
 }
 ```
 
-### game1/gameHasStarted
+### gameHasStarted
 
 -   on 'GameHasStarted' game event
 -   sent to all controllers & screens in the room
@@ -231,7 +231,8 @@ example:
 ```json
 {
     "type":"game1/gameHasStarted",
-    "countdownTime": 3
+    "countdownTime": 3,
+    "game": "game1"
 }
 ```
 ### gameHasReset
@@ -383,6 +384,21 @@ example:
 }
 ```
 
+
+### gameSet
+
+-   send the chosen game
+  
+example:
+
+```json
+{
+    "type": "gameSet",
+    "game": "game1'
+}
+```
+
+
 ### game1/runForward
 
 -   player on this controller moves forward
@@ -488,3 +504,15 @@ example:
 }
 ```
 
+### chooseGame
+
+-   send the game chosen by admin
+  
+example:
+
+```json
+{
+    "type": "chooseGame",
+    "game": "game1'
+}
+```

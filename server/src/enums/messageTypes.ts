@@ -19,4 +19,6 @@ export enum MessageTypes {
     PLAYER_HAS_RECONNECTED = 'playerHasReconnected',
     SEND_SCREEN_STATE = 'sendScreenState',
     SCREEN_STATE = 'screenState',
+    CHOOSE_GAME = 'chooseGame',
+    GAME_SET = 'gameSet',
 }
