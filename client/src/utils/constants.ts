@@ -81,5 +81,6 @@ export enum MessageTypesGame1 {
 
 export const localDevelopment = false; //the one in constants.ts on the server
 export const designDevelopment = false; //so that phaser game doesn't start, but loads
+export const stunnedAnimation = false; //renders stunned animation every so often
 
 export const localBackend = 'http://localhost:5000/';
