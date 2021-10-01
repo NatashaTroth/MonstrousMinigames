@@ -1,6 +1,7 @@
 import { History } from 'history';
 
 import { Obstacle } from '../../../contexts/PlayerContextProvider';
+import { GameNames } from '../../../utils/games';
 import { controllerChooseCharacterRoute } from '../../../utils/routes';
 import { handleConnectedUsersMessage } from '../../commonGameState/controller/handleConnectedUsersMessage';
 import { handleGameHasFinishedMessage } from '../../commonGameState/controller/handleGameHasFinishedMessage';
@@ -33,6 +34,7 @@ import { playerStunnedTypeGuard } from '../../typeGuards/game1/playerStunned';
 import { playerUnstunnedTypeGuard } from '../../typeGuards/game1/playerUnstunned';
 import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/game1/started';
 import { StunnablePlayersMessage, stunnablePlayersTypeGuard } from '../../typeGuards/game1/stunnablePlayers';
+import { GameSetMessage, gameSetTypeGuard } from '../../typeGuards/gameSet';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
 import { GameHasResetMessage, resetTypeGuard } from '../../typeGuards/reset';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
@@ -60,6 +62,7 @@ export interface HandleSetSocketDependencies {
     setEarlySolvableObstacle: (val: Obstacle | undefined) => void;
     setExceededChaserPushes: (val: boolean) => void;
     setStunnablePlayers: (val: string[]) => void;
+    setChosenGame: (val: GameNames) => void;
 }
 
 export function handleSetSocket(
@@ -88,6 +91,7 @@ export function handleSetSocket(
         setEarlySolvableObstacle,
         setExceededChaserPushes,
         setStunnablePlayers,
+        setChosenGame,
     } = dependencies;
 
     setControllerSocket(socket);
@@ -110,6 +114,7 @@ export function handleSetSocket(
     const approachingSolvableObstacleSocket = new MessageSocket(approachingSolvableObstacleTypeGuard, socket);
     const exceededMaxChaserPushesSocket = new MessageSocket(exceededMaxChaserPushesTypeGuard, socket);
     const stunnablePlayersSocket = new MessageSocket(stunnablePlayersTypeGuard, socket);
+    const gameSetSocket = new MessageSocket(gameSetTypeGuard, socket);
 
     userInitSocket.listen((data: UserInitMessage) => {
         handleUserInitMessage({
@@ -235,6 +240,8 @@ export function handleSetSocket(
             },
         })
     );
+
+    gameSetSocket.listen((data: GameSetMessage) => setChosenGame(data.game));
 
     if (socket) {
         history.push(controllerChooseCharacterRoute(roomId));

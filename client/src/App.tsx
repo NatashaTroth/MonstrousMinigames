@@ -37,7 +37,8 @@ import ShakeInstruction from './domain/game1/controller/components/ShakeInstruct
 import Windmill from './domain/game1/controller/components/Windmill';
 import Game from './domain/game1/screen/components/Game';
 import Game2 from './domain/game2/screen/components/Game2';
-import TakePicture from './domain/game3/controller/components/TakePhoto';
+import TakePicture from './domain/game3/controller/components/TakePicture';
+import Vote from './domain/game3/controller/components/Vote';
 import Game3 from './domain/game3/screen/components/Game3';
 import history from './domain/history/history';
 import { navigator } from './domain/navigator/NavigatorAdapter';
@@ -165,6 +166,11 @@ const App: React.FunctionComponent = () => {
                                                                 <Route
                                                                     path={Routes.controllerGame3}
                                                                     component={TakePicture}
+                                                                    exact
+                                                                />
+                                                                <Route
+                                                                    path={Routes.controllerVote}
+                                                                    component={Vote}
                                                                     exact
                                                                 />
                                                                 <Route

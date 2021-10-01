@@ -1,6 +1,7 @@
 import { History } from 'history';
 
 import { PlayerRank } from '../../../contexts/ScreenSocketContextProvider';
+import { GameNames } from '../../../utils/games';
 import { Routes } from '../../../utils/routes';
 import { handleConnectedUsersMessage } from '../../commonGameState/screen/handleConnectedUsersMessage';
 import { handleGameHasFinishedMessage } from '../../commonGameState/screen/handleGameHasFinishedMessage';
@@ -16,6 +17,7 @@ import { Socket } from '../../socket/Socket';
 import { ConnectedUsersMessage, connectedUsersTypeGuard, User } from '../../typeGuards/connectedUsers';
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
+import { GameSetMessage, gameSetTypeGuard } from '../../typeGuards/gameSet';
 import { pausedTypeGuard } from '../../typeGuards/paused';
 import { resetTypeGuard } from '../../typeGuards/reset';
 import { resumedTypeGuard } from '../../typeGuards/resumed';
@@ -36,6 +38,7 @@ export interface HandleSetSocketDependencies {
     setPlayerRanks: (val: PlayerRank[]) => void;
     setScreenAdmin: (val: boolean) => void;
     setScreenState: (val: string) => void;
+    setChosenGame: (val: GameNames) => void;
     history: History;
 }
 
@@ -55,6 +58,7 @@ export function handleSetSocket(
         setFinished,
         setScreenAdmin,
         setScreenState,
+        setChosenGame,
         history,
     } = dependencies;
 
@@ -72,6 +76,7 @@ export function handleSetSocket(
     const errorSocket = new MessageSocket(errorTypeGuard, socket);
     const screenAdminSocket = new MessageSocket(screenAdminTypeGuard, socket);
     const screenStateSocket = new MessageSocket(screenStateTypeGuard, socket);
+    const gameSetSocket = new MessageSocket(gameSetTypeGuard, socket);
 
     connectedUsersSocket.listen((data: ConnectedUsersMessage) =>
         handleConnectedUsersMessage({ data, dependencies: { setConnectedUsers } })
@@ -104,6 +109,8 @@ export function handleSetSocket(
     screenAdminSocket.listen((data: ScreenAdminMessage) => setScreenAdmin(data.isAdmin));
 
     screenStateSocket.listen((data: ScreenStateMessage) => setScreenState(data.state));
+
+    gameSetSocket.listen((data: GameSetMessage) => setChosenGame(data.game));
 
     if (socket) {
         history.push(`${Routes.screen}/${roomId}/${route || Routes.lobby}`);

@@ -42,11 +42,12 @@ export default class CatchFoodGameEventEmitter {
         });
     }
 
-    public static emitGameHasStartedEvent(roomId: string, countdownTime: number) {
+    public static emitGameHasStartedEvent(roomId: string, countdownTime: number, game: string) {
         this.catchFoodGameEventMessageEmitter.emit({
             type: GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED,
             roomId,
             countdownTime,
+            game,
         });
     }
 

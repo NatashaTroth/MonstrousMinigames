@@ -23,6 +23,13 @@
         <br />
         <br />
 
+        <input name="gameName" value='game1' id="gameName" />
+        <label for="gameName">gameName</label>
+        <button onclick="input('chooseGame')">chooseGame</button>
+
+        <br />
+        <br />
+
         <button onclick="input('start')">START</button>
         <button onclick="input('backToLobby')">BACK TO LOBBY</button>
         <button onclick="input('userReady')">READY</button>
@@ -30,14 +37,13 @@
         <br />
         <br />
 
-        <button onclick="input('game1/create')">game1/create</button>
+        <button onclick="input('createGame')">createGame</button>
 
         <br />
         <button onclick="input('move')">MOVE</button>
         <button onclick="input('obstacleSolved')">SOLVE OBSTACLE</button>
         <br />
 
-        <button onclick="input('game2/create')">game2/create</button>
         <button onclick="input('game2/move')">game2/move</button>
 
         <br />
@@ -76,14 +82,17 @@
                 ssocket.emit('message', {
                     type: 'startGame',
                 });
-            if (type == 'game1/create')
+            if (type == 'createGame')
             ssocket.emit('message', {
-                type: 'game1/create',
+                type: 'createGame',
             });
-            if (type == 'game2/create')
+
+            if (type == 'chooseGame')
             ssocket.emit('message', {
-                type: 'game2/create',
+                type: 'chooseGame',
+                game: document.getElementById('gameName').value,
             });
+
             if (type == 'game2/move')
             socket.emit('message', {
                 type: 'game2/move',

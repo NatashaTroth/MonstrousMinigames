@@ -1,7 +1,6 @@
-import { Typography } from "@material-ui/core";
-import styled from "styled-components";
+import { Typography } from '@material-ui/core';
+import styled from 'styled-components';
 
-// https://stackoverflow.com/questions/21842274/cross-browser-custom-styling-for-file-upload-button
 export const StyledLabel = styled.label`
     &:hover {
         cursor: pointer;

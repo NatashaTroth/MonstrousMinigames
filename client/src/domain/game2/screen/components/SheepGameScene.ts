@@ -140,7 +140,7 @@ class SheepGameScene extends Phaser.Scene {
 
     sendCreateNewGame() {
         this.socket?.emit({
-            type: MessageTypesGame2.createGame,
+            type: MessageTypes.createGame,
             roomId: this.roomId,
         });
     }

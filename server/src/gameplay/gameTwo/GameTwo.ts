@@ -13,6 +13,7 @@ import { SheepStates } from './enums/SheepStates';
 import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
 import GameTwoPlayer from './GameTwoPlayer';
 import { GameStateInfo } from './interfaces';
+import { GameNames } from '../../enums/gameNames';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -27,6 +28,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     countdownTime = InitialParameters.COUNTDOWN_TIME;
 
     initialPlayerPositions = InitialParameters.PLAYERS_POSITIONS;
+
+    gameName = GameNames.GAME2;
 
     constructor(roomId: string, public leaderboard: Leaderboard) {
         super(roomId);
@@ -135,7 +138,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         setTimeout(() => {
             super.startGame();
         }, this.countdownTime);
-        GameTwoEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime);
+        GameTwoEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime, this.gameName);
 
     }
     pauseGame(): void {

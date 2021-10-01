@@ -1,6 +1,6 @@
 import { localDevelopment, pushChasers } from '../../../constants';
 import User from '../../classes/user';
-import { IMessageObstacle } from '../../interfaces/messageObstacle';
+import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
 import { GameState } from '../enums';
 import Game from '../Game';
@@ -22,6 +22,8 @@ import {
 } from './helperFunctions/initiatePlayerState';
 import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from './interfaces';
 import { ObstacleReachedInfoController } from './interfaces/GameEvents';
+import { IMessageObstacle } from './interfaces/messageObstacle';
+import { IMessageStunPlayer } from './interfaces/messageStunPlayer';
 
 let pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
 
@@ -52,6 +54,8 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     chasersPositionX = InitialGameParameters.CHASERS_POSITION_X;
     cameraPositionX = InitialGameParameters.CAMERA_POSITION_X;
     obstacleTypes: ObstacleTypeObject[] = [];
+
+    gameName = GameNames.GAME1;
 
     constructor(roomId: string, public leaderboard: Leaderboard /*, public usingChasers = false*/) {
         super(roomId);
@@ -103,7 +107,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         if (localDevelopment) {
             for (const player of this.players.values()) {
                 if (player.positionX < this.trackLength) {
-                    this.runForward(player.id, ((this.speed / 10) * timeElapsedSinceLastFrame) / 1);
+                    this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
                 }
 
                 // push chasers
@@ -131,10 +135,10 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
                 this.playerWantsToSolveObstacle(message.userId!, (message as IMessageObstacle).obstacleId);
                 break;
             case CatchFoodMsgType.STUN_PLAYER:
-                if (!message.receivingUserId) {
+                if ((message as IMessageStunPlayer).receivingUserId) {
                     break;
                 }
-                this.stunPlayer(message.receivingUserId, message.userId!);
+                this.stunPlayer((message as IMessageStunPlayer).receivingUserId, message.userId!);
                 break;
             case CatchFoodMsgType.CHASERS_WERE_PUSHED:
                 this.pushChasers(message.userId!);
@@ -186,7 +190,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             super.startGame();
         }, this.countdownTime);
 
-        CatchFoodGameEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime);
+        CatchFoodGameEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime, this.gameName);
     }
 
     pauseGame(): void {
