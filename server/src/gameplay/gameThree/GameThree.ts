@@ -23,8 +23,9 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     private countdownTimeVote = InitialParameters.COUNTDOWN_TIME_VOTE;
     private randomWordGenerator = new RandomWordGenerator();
     private numberPhotoTopics = InitialParameters.NUMBER_PHOTO_TOPICS;
-    private photoTimeSeconds = 0;
-    private takingPhoto = false;
+    private countdownTimeElapsed = 0;
+    private takingPhoto = false; //TODO change to state
+    private voting = false;
     private roundIdx = 0;
     gameName = GameNames.GAME3;
 
@@ -78,7 +79,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         //TODO reset player has photo
         const topic = this.photoTopics?.shift();
         if (topic) {
-            this.photoTimeSeconds = this.countdownTimeTakePhoto;
+            this.countdownTimeElapsed = this.countdownTimeTakePhoto;
             this.takingPhoto = true;
             //send to screen
             GameThreeEventEmitter.emitNewTopic(this.roomId, topic, this.countdownTimeTakePhoto);
@@ -109,9 +110,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     protected handleInput(message: IMessage) {
         switch (message.type) {
             case GameThreeMessageTypes.PHOTO: {
-                //TODO handle received photo
-                const player = this.players.get(message.userId!);
-                player?.receivedPhoto((message as IMessagePhoto).url, this.roundIdx);
+                this.handleReceivedPhoto(message as IMessagePhoto);
                 break;
             }
             // case GameThreeMessageTypes.KILL:
@@ -123,13 +122,42 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     //********************** Helper Functions **********************/
-    protected handleTakingPhoto(timeElapsedSinceLastFrame: number) {
-        this.photoTimeSeconds -= timeElapsedSinceLastFrame;
-        if (this.photoTimeSeconds <= 0) {
+    private handleTakingPhoto(timeElapsedSinceLastFrame: number) {
+        this.countdownTimeElapsed -= timeElapsedSinceLastFrame;
+        if (this.countdownTimeElapsed <= 0) {
             this.takingPhoto = false;
             GameThreeEventEmitter.emitTakePhotoCountdownOver(this.roomId);
         }
 
         //TODO if time over or if all received - check what photos received and forward to screens
+    }
+
+    private handleReceivedPhoto(message: IMessagePhoto) {
+        const player = this.players.get(message.userId!);
+        player?.receivedPhoto(message.url, this.roundIdx);
+
+        if (this.allPhotosReceived()) {
+            this.handleAllPhotosReceived();
+            //Do something
+        }
+    }
+
+    private allPhotosReceived(): boolean {
+        return Array.from(this.players.values()).every(player => player.photos[this.roundIdx].received);
+    }
+
+    private handleAllPhotosReceived() {
+        //TODO
+        // send all photos, start voting
+        this.countdownTimeElapsed = 0;
+        this.takingPhoto = false;
+        this.sendPhotosToScreen();
+    }
+
+    private sendPhotosToScreen() {
+        const photoUrls = Array.from(this.players.values()).map(player => player.photos[this.roundIdx].url);
+        this.countdownTimeElapsed = this.countdownTimeVote;
+        this.voting = true;
+        GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, this.countdownTimeVote);
     }
 }

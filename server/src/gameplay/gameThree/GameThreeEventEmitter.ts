@@ -12,7 +12,8 @@ import { GameThreeEventMessageEmitter } from './GameThreeEventMessageEmitter';
 import { InitialGameStateInfo, PlayerRank } from './interfaces';
 import {
     GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
-    GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER
+    GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER,
+    GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS
 } from './interfaces/GameThreeEventMessages';
 
 // params: (data: GameEvents.ObstacleReachedInfo
@@ -100,6 +101,15 @@ export default class GameThreeEventEmitter {
         this.GameThreeEventMessageEmitter.emit({
             type: GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER,
             roomId,
+        });
+    }
+
+    public static emitVoteForPhotos(roomId: string, photoUrls: string[], countdownTime: number) {
+        this.GameThreeEventMessageEmitter.emit({
+            type: GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS,
+            roomId,
+            photoUrls,
+            countdownTime,
         });
     }
 }

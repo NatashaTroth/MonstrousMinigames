@@ -14,7 +14,7 @@ import Player from '../Player';
 import {
     GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER,
-    GAME_THREE_EVENT_MESSAGES, GameThreeEventMessage
+    GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS, GAME_THREE_EVENT_MESSAGES, GameThreeEventMessage
 } from './interfaces/GameThreeEventMessages';
 
 @singleton()
@@ -46,6 +46,7 @@ export class GameThreeEventMessageEmitter implements EventMessageEmitter {
             //     break;
             // send to room's screens
             case GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE:
+            case GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS:
                 this.sendToAll(message, screenNameSpace, room);
                 break;
             // send to room's screens and controllers
