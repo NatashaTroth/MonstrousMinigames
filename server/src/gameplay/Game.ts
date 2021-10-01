@@ -23,6 +23,7 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     public players = new Map<string, TPlayer>();
     public gameStateMessage: string;
     public gameName = '';
+    public sendGameStateUpdates: boolean;
 
     constructor(
         public roomId: string,
@@ -32,6 +33,7 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     ) {
         super();
         this.gameStateMessage = 'gameState';
+        this.sendGameStateUpdates = true;
     }
 
     createNewGame(users: User[]) {

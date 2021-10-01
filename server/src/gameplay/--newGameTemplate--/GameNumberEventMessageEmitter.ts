@@ -15,6 +15,7 @@ import {
     GameNumberEventMessage
 } from './interfaces/GameNumberEventMessages';
 
+//TODO !!!!: REGISTER IN app.ts (DEPENDENCY INJECTION)
 @singleton()
 export class GameNumberEventMessageEmitter implements EventMessageEmitter {
     constructor(private readonly gameEventEmitter: GameEventEmitter) {}

@@ -27,6 +27,7 @@ export class GameThreeEventMessageEmitter implements EventMessageEmitter {
     canHandle(message: EventMessage, game: Game<Player, IGameStateBase>): boolean {
         return GAME_THREE_EVENT_MESSAGES.includes(message.type);
     }
+
     handle(
         controllerNameSpace: Namespace,
         screenNameSpace: Namespace,
