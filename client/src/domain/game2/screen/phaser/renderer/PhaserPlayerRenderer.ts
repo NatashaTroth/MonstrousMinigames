@@ -17,7 +17,8 @@ export class PhaserPlayerRenderer {
     constructor(private scene: SheepGameScene) {}
 
     renderBackground() {
-        this.scene.add.image(0, 0, 'forest2'); //TODO: replace bg image
+        const bg = this.scene.add.image(0, 0, 'forest2'); //TODO: replace bg image
+        bg.setScale(0.4);
     }
 
     renderPlayer(coordinates: Coordinates, character: Character): void {
@@ -49,8 +50,8 @@ export class PhaserPlayerRenderer {
 
     private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
         this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
+        this.player.setScale(0.2);
         this.player.setDepth(depthDictionary.player);
-        this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
     }
 

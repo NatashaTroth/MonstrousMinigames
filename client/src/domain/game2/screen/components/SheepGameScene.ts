@@ -56,8 +56,6 @@ class SheepGameScene extends Phaser.Scene {
 
     constructor() {
         super('SheepGameScene');
-        // eslint-disable-next-line no-console
-        console.log('constructor sheep game');
         this.windowWidth = 0;
         this.windowHeight = 0;
         this.roomId = sessionStorage.getItem('roomId') || '';
@@ -73,8 +71,6 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
-        // eslint-disable-next-line no-console
-        console.log('init sheep game');
         this.windowWidth = this.cameras.main.width;
         this.windowHeight = this.cameras.main.height;
         this.camera = this.cameras.main;
@@ -91,12 +87,8 @@ class SheepGameScene extends Phaser.Scene {
 
     preload(): void {
         this.gameRenderer?.renderLoadingScreen();
-        // eslint-disable-next-line no-console
-        console.log('preload');
         // emitted every time a file has been loaded
         this.load.on('progress', (value: number) => {
-            // eslint-disable-next-line no-console
-            console.log('loading screen');
             this.gameRenderer?.updateLoadingScreenPercent(value);
         });
 
@@ -110,8 +102,6 @@ class SheepGameScene extends Phaser.Scene {
         //once all the files are done loading
         this.load.on('complete', () => {
             this.gameRenderer?.updateLoadingScreenFinishedPreloading();
-            // eslint-disable-next-line no-console
-            console.log('phaserLoaded');
             // first message sent
             this.socket?.emit({
                 type: MessageTypesGame2.phaserLoaded,
@@ -170,7 +160,6 @@ class SheepGameScene extends Phaser.Scene {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
                 this.gameRenderer?.destroyLoadingScreen();
-
                 this.gameStarted = true;
                 this.initiateGame(data.data);
                 this.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');
@@ -183,8 +172,6 @@ class SheepGameScene extends Phaser.Scene {
         // second message -> createGame
         const allScreensSheepGameLoaded = new MessageSocket(allScreensSheepGameLoadedTypeGuard, this.socket);
         allScreensSheepGameLoaded.listen((data: AllScreensSheepGameLoadedMessage) => {
-            // eslint-disable-next-line no-console
-            console.log('allLoaded');
             //this.allScreensLoaded = true
             if (this.screenAdmin) this.sendCreateNewGame();
         });

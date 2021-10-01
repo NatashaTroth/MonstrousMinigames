@@ -60,8 +60,6 @@ const Game2: React.FunctionComponent = () => {
                 },
             },
         });
-        // eslint-disable-next-line no-console
-        console.log('add sheepscene');
         game.scene.add('SheepGameScene', SheepGameScene, false); //socket: ScreenSocket.getInstance(socket)
         game.scene.start('SheepGameScene', { roomId, socket: screenSocket, screenAdmin });
 
