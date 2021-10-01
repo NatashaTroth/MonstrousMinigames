@@ -72,22 +72,21 @@ class Screen {
         try {
             switch (message.type) {
                 case MessageTypes.CHOOSE_GAME:
-                    if (this.room?.isAdminScreen(this.socket.id) && message.name) {
-                        console.info(this.room.id + ' | Choose Game' + ' | ' + message.name);
-                        this.room?.setGame(message.name);
+                    if (this.room?.isAdminScreen(this.socket.id) && message.game) {
+                        console.info(this.room.id + ' | Choose Game' + ' | ' + message.game);
+                        //todo error handling
+                        this.room?.setGame(message.game);
 
                         this.emitter.sendGameSet(
                             [this.controllerNamespace, this.screenNamespace],
                             this.room,
-                            message.name
+                            message.game
                         );
                     }
                     break;
                 case MessageTypes.START:
                     if (this.room?.isCreated() && this.room.isAdminScreen(this.socket.id)) {
-                        // this.room.createNewGame();
                         this.room.startGame();
-                        // this.emitter.sendGameState(this.screenNamespace, this.room);
 
                         this.room.game.addListener(Game.EVT_FRAME_READY, (game: Game) => {
                             if (this.room?.isPlaying()) {
