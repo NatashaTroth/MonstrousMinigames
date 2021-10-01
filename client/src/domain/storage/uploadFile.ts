@@ -1,4 +1,5 @@
 import { FirebaseStorage, ref, uploadBytes } from '@firebase/storage';
+import { getDownloadURL } from 'firebase/storage';
 
 export default async function uploadFile(
     storage: FirebaseStorage,
@@ -8,7 +9,8 @@ export default async function uploadFile(
     challengeId: number
 ) {
     const storageRef = ref(storage, `${roomId}/${challengeId}/${userId}.jpg`);
-    await uploadBytes(storageRef, image);
+    const uploadedImage = await uploadBytes(storageRef, image);
+    const imageUrl = await getDownloadURL(uploadedImage.ref);
 
-    return true;
+    return imageUrl;
 }
