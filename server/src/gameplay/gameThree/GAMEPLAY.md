@@ -72,4 +72,8 @@ Need to keep track of points
 7. Collect and tally votes, if not vote - player gets no points. 1 point per vote
 8. FINAL ROUND: TODO
 
+urls weiterschicken - von client bekommen
+
+storage hinten - nach spiel alles löschen
+
 ## Connection: Controller - Server - Screen
