@@ -103,7 +103,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         if (localDevelopment) {
             for (const player of this.players.values()) {
                 if (player.positionX < this.trackLength) {
-                    this.runForward(player.id, ((this.speed / 10) * timeElapsedSinceLastFrame) / 1);
+                    this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
                 }
 
                 // push chasers
