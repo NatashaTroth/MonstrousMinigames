@@ -21,4 +21,5 @@ export enum MessageTypes {
     SCREEN_STATE = 'screenState',
     CHOOSE_GAME = 'chooseGame',
     GAME_SET = 'gameSet',
+    CREATE = 'createGame',
 }

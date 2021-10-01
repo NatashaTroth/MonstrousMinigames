@@ -21,11 +21,10 @@ function sendGameSet(nsps: Namespace[], room: Room, game: string): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(room.id).emit('message', {
             type: MessageTypes.GAME_SET,
-            game: game
+            game: game,
         });
     });
 }
-
 
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
     if (volatile) {

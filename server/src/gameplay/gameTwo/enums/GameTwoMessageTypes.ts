@@ -1,5 +1,4 @@
 export enum GameTwoMessageTypes {
-    CREATE = 'game2/create',
     PHASER_GAME_LOADED = 'game2/phaserGameLoaded',
     PHASER_LOADING_TIMED_OUT = 'game2/phaserLoadingTimedOut',
     ALL_SCREENS_PHASER_GAME_LOADED = 'game2/allScreensPhaserGameLoaded',
