@@ -6,4 +6,5 @@ export interface IMessage {
     receivingUserId?: string;
     state?: string;
     direction?: string;
+    name?: string;
 }

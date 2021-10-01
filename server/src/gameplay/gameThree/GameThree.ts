@@ -1,4 +1,5 @@
 import User from '../../classes/user';
+import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
 import Game from '../Game';
 import { IGameInterface } from '../interfaces';
@@ -6,9 +7,11 @@ import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
 import { RandomWordGenerator } from './classes/RandomWordGenerator';
 import InitialParameters from './constants/InitialParameters';
+import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreeEventEmitter from './GameThreeEventEmitter';
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreePlayer from './GameThreePlayer';
+import { IMessagePhoto } from './interfaces';
 import { GameStateInfo } from './interfaces/GameStateInfo';
 
 type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
@@ -22,6 +25,8 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     private numberPhotoTopics = InitialParameters.NUMBER_PHOTO_TOPICS;
     private photoTimeSeconds = 0;
     private takingPhoto = false;
+    private roundIdx = 0;
+    gameName = GameNames.GAME3;
 
     constructor(roomId: string, public leaderboard: Leaderboard) {
         super(roomId);
@@ -52,7 +57,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         if (this.takingPhoto) this.handleTakingPhoto(timeElapsedSinceLastFrame);
     }
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
-        console.error('Unimplemented Method');
+        //TODO
     }
 
     createNewGame(users: Array<User>) {
@@ -64,12 +69,13 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         setTimeout(() => {
             super.startGame();
         }, this.countdownTimeGameStart);
-        GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTimeGameStart);
+        GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTimeGameStart, this.gameName);
         this.sendPhotoTopic();
     }
 
     sendPhotoTopic() {
         //TODO verify game state
+        //TODO reset player has photo
         const topic = this.photoTopics?.shift();
         if (topic) {
             this.photoTimeSeconds = this.countdownTimeTakePhoto;
@@ -102,9 +108,12 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     protected handleInput(message: IMessage) {
         switch (message.type) {
-            // case GameThreeMessageTypes.MOVE:
-            //     this.movePlayer(message.userId!, message.direction!);
-            //     break;
+            case GameThreeMessageTypes.PHOTO: {
+                //TODO handle received photo
+                const player = this.players.get(message.userId!);
+                player?.receivedPhoto((message as IMessagePhoto).url, this.roundIdx);
+                break;
+            }
             // case GameThreeMessageTypes.KILL:
             //     this.killSheep(message.userId!);
             //     break;

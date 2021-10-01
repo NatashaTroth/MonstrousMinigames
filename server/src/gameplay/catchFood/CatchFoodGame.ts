@@ -1,5 +1,6 @@
 import { localDevelopment, pushChasers } from '../../../constants';
 import User from '../../classes/user';
+import { GameNames } from '../../enums/gameNames';
 import { IMessageObstacle } from '../../interfaces/messageObstacle';
 import { IMessage } from '../../interfaces/messages';
 import { GameState } from '../enums';
@@ -53,6 +54,8 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
     cameraPositionX = InitialGameParameters.CAMERA_POSITION_X;
     obstacleTypes: ObstacleTypeObject[] = [];
 
+    gameName = GameNames.GAME1;
+
     constructor(roomId: string, public leaderboard: Leaderboard /*, public usingChasers = false*/) {
         super(roomId);
         this.gameStateMessage = CatchFoodMsgType.GAME_STATE;
@@ -103,7 +106,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
         if (localDevelopment) {
             for (const player of this.players.values()) {
                 if (player.positionX < this.trackLength) {
-                    this.runForward(player.id, ((this.speed / 10) * timeElapsedSinceLastFrame) / 1);
+                    this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
                 }
 
                 // push chasers
@@ -186,7 +189,7 @@ export default class CatchFoodGame extends Game<CatchFoodPlayer, GameStateInfo> 
             super.startGame();
         }, this.countdownTime);
 
-        CatchFoodGameEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime);
+        CatchFoodGameEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime, this.gameName);
     }
 
     pauseGame(): void {

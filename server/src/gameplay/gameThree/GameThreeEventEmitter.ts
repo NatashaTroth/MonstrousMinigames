@@ -28,11 +28,12 @@ export default class GameThreeEventEmitter {
         });
     }
 
-    public static emitGameHasStartedEvent(roomId: string, countdownTime: number) {
+    public static emitGameHasStartedEvent(roomId: string, countdownTime: number, game: string) {
         this.GameThreeEventMessageEmitter.emit({
             type: GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED,
             roomId,
             countdownTime,
+            game,
         });
     }
 
