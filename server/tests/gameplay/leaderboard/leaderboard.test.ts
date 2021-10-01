@@ -15,6 +15,7 @@ function createPlayerRanksArray(users: Array<User>, rankArray: Array<number>): A
             name: user.name,
             rank: rankArray[rankIndex++],
             finished: true,
+            isActive: true,
         };
     });
 }
