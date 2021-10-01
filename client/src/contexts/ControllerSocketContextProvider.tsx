@@ -1,14 +1,14 @@
-import * as React from "react";
+import * as React from 'react';
 
-import history from "../domain/history/history";
-import { handleSetSocket } from "../domain/socket/controller/handleSetSocket";
-import { handleSocketConnection } from "../domain/socket/controller/handleSocketConnection";
-import { InMemorySocketFake } from "../domain/socket/InMemorySocketFake";
-import { Socket } from "../domain/socket/Socket";
-import addMovementListener from "../domain/user/game1/addMovementListener";
-import { Game1Context } from "./game1/Game1ContextProvider";
-import { GameContext } from "./GameContextProvider";
-import { PlayerContext } from "./PlayerContextProvider";
+import history from '../domain/history/history';
+import { handleSetSocket } from '../domain/socket/controller/handleSetSocket';
+import { handleSocketConnection } from '../domain/socket/controller/handleSocketConnection';
+import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
+import { Socket } from '../domain/socket/Socket';
+import addMovementListener from '../domain/user/game1/addMovementListener';
+import { Game1Context } from './game1/Game1ContextProvider';
+import { GameContext } from './GameContextProvider';
+import { PlayerContext } from './PlayerContextProvider';
 
 export const defaultValue = {
     controllerSocket: new InMemorySocketFake(),
@@ -58,6 +58,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setAvailableCharacters,
         setConnectedUsers,
         hasPaused,
+        setChosenGame,
     } = React.useContext(GameContext);
 
     React.useEffect(() => {
@@ -86,6 +87,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         playerRank,
         setExceededChaserPushes,
         setStunnablePlayers,
+        setChosenGame,
     };
 
     const content = {
