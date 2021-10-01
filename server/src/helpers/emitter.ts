@@ -42,13 +42,12 @@ function sendErrorMessage(socket: Socket, e: Error): void {
 }
 
 function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room, game: string): void {
-
     let type = '';
     switch (game) {
-        case (GameNames.GAME1):
+        case GameNames.GAME1:
             type = CatchFoodMsgType.ALL_SCREENS_PHASER_GAME_LOADED;
             break;
-        case (GameNames.GAME2):
+        case GameNames.GAME2:
             type = GameTwoMessageTypes.ALL_SCREENS_PHASER_GAME_LOADED;
             break;
     }
@@ -59,14 +58,13 @@ function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room, game
     });
 }
 
-
 function sendScreenPhaserGameLoadedTimedOut(nsp: Namespace, socketId: string, game: string): void {
     let type = '';
     switch (game) {
-        case (GameNames.GAME1):
+        case GameNames.GAME1:
             type = CatchFoodMsgType.PHASER_LOADING_TIMED_OUT;
             break;
-        case (GameNames.GAME2):
+        case GameNames.GAME2:
             type = GameTwoMessageTypes.PHASER_LOADING_TIMED_OUT;
             break;
     }
@@ -79,10 +77,10 @@ function sendScreenPhaserGameLoadedTimedOut(nsp: Namespace, socketId: string, ga
 function sendStartPhaserGame(nsps: Array<Namespace>, room: Room, game: string): void {
     let type = '';
     switch (game) {
-        case (GameNames.GAME1):
+        case GameNames.GAME1:
             type = CatchFoodMsgType.START_PHASER_GAME;
             break;
-        case (GameNames.GAME2):
+        case GameNames.GAME2:
             type = GameTwoMessageTypes.START_PHASER_GAME;
             break;
     }

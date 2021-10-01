@@ -159,7 +159,6 @@ class Screen {
                     }
                     break;
 
-
                 case GameTwoMessageTypes.PHASER_GAME_LOADED:
                     console.log(message);
                     this.room?.setScreenPhaserGameReady(this.socket.id, true);
