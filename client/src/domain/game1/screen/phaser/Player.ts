@@ -1,4 +1,4 @@
-import { designDevelopment, ObstacleTypes } from '../../../../utils/constants';
+import { designDevelopment, localDevelopment, ObstacleTypes, stunnedAnimation } from '../../../../utils/constants';
 import { depthDictionary } from '../../../../utils/depthDictionary';
 import MainScene from '../components/MainScene';
 import { AnimationName } from './enums';
@@ -78,21 +78,18 @@ export class Player {
 
                 setTimeout(() => this.arrivedAtObstacle(), 1000);
             }, 5000);
+        }
 
-            // this.renderer.renderAttentionIcon();
-            // // test animation
-            // this.handlePlayerStunned();
-
-            // setInterval(() => {
-            //     this.stunned = false;
-            //     this.handlePlayerStunned();
-            // }, 4000);
-            // this.startRunning();
-            // setTimeout(() => this.handlePlayerStunned(), 3000);
-            // setTimeout(() => {
-            //     this.handlePlayerUnStunned();
-            //     this.startRunning();
-            // }, 6000);
+        if (localDevelopment && stunnedAnimation) {
+            setInterval(() => {
+                this.stunned = false;
+                this.handlePlayerStunned();
+                this.stunned = false;
+                setTimeout(() => {
+                    this.handlePlayerUnStunned();
+                    this.startRunning();
+                }, 4000);
+            }, 8000);
         }
     }
 
