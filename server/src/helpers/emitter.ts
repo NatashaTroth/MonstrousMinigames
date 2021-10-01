@@ -24,7 +24,7 @@ function sendGameSet(nsps: Namespace[], room: Room, game: string): void {
             game: game
         });
     });
-};
+}
 
 
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
