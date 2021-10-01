@@ -43,6 +43,7 @@ export enum MessageTypes {
 
     chooseGame = 'chooseGame',
     gameSet = 'gameSet',
+    createGame = 'createGame',
 
     pauseResume = 'pauseResume',
     startGame = 'startGame',
@@ -68,7 +69,6 @@ export enum MessageTypesGame1 {
     playerStunned = 'game1/playerStunned',
     playerUnstunned = 'game1/playerUnstunned',
     stunPlayer = 'game1/stunPlayer',
-    createGame = 'game1/create',
     chasersPushed = 'game1/chasersPushed',
 
     pushChasers = 'game1/chasersPushed',

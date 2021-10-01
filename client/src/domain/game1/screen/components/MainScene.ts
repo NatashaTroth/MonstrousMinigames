@@ -169,7 +169,7 @@ class MainScene extends Phaser.Scene {
 
     sendCreateNewGame() {
         this.socket?.emit({
-            type: MessageTypesGame1.createGame,
+            type: MessageTypes.createGame,
             roomId: this.roomId,
         });
     }

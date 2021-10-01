@@ -1,10 +1,8 @@
 import { Namespace, Socket } from 'socket.io';
 
-import { GameNames } from '../enums/gameNames';
 import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
 import Game from '../gameplay/Game';
-import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
 import { IMessage } from '../interfaces/messages';
 import RoomService from '../services/roomService';
 import Room from './room';
@@ -78,7 +76,9 @@ class Screen {
                         console.info(this.room.id + ' | Choose Game' + ' | ' + message.name);
                         this.room?.setGame(message.name);
 
-                        this.emitter.sendGameSet([this.controllerNamespace, this.screenNamespace], this.room,
+                        this.emitter.sendGameSet(
+                            [this.controllerNamespace, this.screenNamespace],
+                            this.room,
                             message.name
                         );
                     }
@@ -139,6 +139,11 @@ class Screen {
                         this.emitter.sendScreenState(this.screenNamespace, this.room?.getScreenState());
                     }
                     break;
+                case MessageTypes.CREATE:
+                    if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
+                        this.room.createNewGame();
+                    }
+                    break;
                 case CatchFoodMsgType.PHASER_GAME_LOADED:
                     this.room?.setScreenPhaserGameReady(this.socket.id, true);
                     if (this.room && !this.room?.firstPhaserScreenLoaded) {
@@ -155,18 +160,6 @@ class Screen {
                     break;
                 case CatchFoodMsgType.START_PHASER_GAME:
                     this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!);
-                    break;
-                case CatchFoodMsgType.CREATE:
-                    if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
-                        this.room.setGame(GameNames.GAME1);
-                        this.room.createNewGame();
-                    }
-                    break;
-                case GameTwoMessageTypes.CREATE:
-                    if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
-                        this.room.setGame(GameNames.GAME2);
-                        this.room.createNewGame();
-                    }
                     break;
                 default:
                     console.info(message);
