@@ -63,9 +63,10 @@ Need to keep track of points
 
 1. Admin user creates and starts game
 2. Game sends start countdown
-
 3. Game sends topic and countdown timer
-4. Sync timer with backend periodically - but how??
+
+4. Sync timer with backend periodically - but how?? TODO
+
 5. If no picture after time - no points
 6. Send all pictures to screen, send voting to controller, timer to vote
 7. Collect and tally votes, if not vote - player gets no points. 1 point per vote

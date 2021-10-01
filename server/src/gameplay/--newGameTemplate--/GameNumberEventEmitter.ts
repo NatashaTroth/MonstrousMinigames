@@ -1,19 +1,16 @@
-import './interfaces/GameNumberEventMessages';
-
 import DI from '../../di';
 import { GameState } from '../enums';
 import {
-    GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED,
-    GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED,
-    GLOBAL_EVENT_MESSAGE__GAME_HAS_RESUMED,
-    GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED,
-    GLOBAL_EVENT_MESSAGE__GAME_HAS_STOPPED,
-    GLOBAL_EVENT_MESSAGE__PLAYER_HAS_DISCONNECTED,
-    GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED,
+    GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED,
+    GLOBAL_EVENT_MESSAGE__GAME_HAS_RESUMED, GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED,
+    GLOBAL_EVENT_MESSAGE__GAME_HAS_STOPPED, GLOBAL_EVENT_MESSAGE__PLAYER_HAS_DISCONNECTED,
+    GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED
 } from '../interfaces/GlobalEventMessages';
 import { GameNumberEventMessageEmitter } from './GameNumberEventMessageEmitter';
 import { InitialGameStateInfo, PlayerRank } from './interfaces';
-import { GAME_NUMBER_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE } from './interfaces/GameNumberEventMessages';
+import {
+    GAME_NUMBER_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE
+} from './interfaces/GameNumberEventMessages';
 
 // params: (data: GameEvents.ObstacleReachedInfo
 
