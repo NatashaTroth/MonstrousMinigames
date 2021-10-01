@@ -1,7 +1,7 @@
 import { ConnectedUsersMessage } from './connectedUsers';
 import { ErrorMessage } from './error';
 import { GameHasFinishedMessage } from './finished';
-import { AllScreensPhaserGameLoadedMessage } from './game2/allScreensPhaserGameLoaded';
+import { AllScreensSheepGameLoadedMessage } from './game2/allScreensSheepGameLoaded';
 import { GameStateInfoMessage } from './game2/gameStateInfo';
 import { InitialGameStateInfoMessage } from './game2/initialGameStateInfo';
 import { PhaserLoadingTimedOutMessage } from './game2/phaserLoadingTimedOut';
@@ -21,7 +21,7 @@ export type MessageDataGame2 =
     | ErrorMessage
     | GameHasPausedMessage
     | StartSheepGameMessage
-    | AllScreensPhaserGameLoadedMessage
+    | AllScreensSheepGameLoadedMessage
     | GameHasResumedMessage
     | GameHasStoppedMessage
     | GameHasResetMessage

@@ -81,7 +81,7 @@ export enum MessageTypesGame2 {
     started = 'game2/hasStarted',
     phaserLoaded = 'game2/phaserGameLoaded',
     phaserLoadingTimedOut = 'game2/phaserLoadingTimedOut',
-    allScreensPhaserGameLoaded = 'game2/allScreensPhaserGameLoaded',
+    allScreensSheepGameLoaded = 'game2/allScreensPhaserGameLoaded',
     startSheepGame = 'game2/startPhaserGame',
     initialGameState = 'game2/initialGameState',
     gameState = 'game2/gameState',

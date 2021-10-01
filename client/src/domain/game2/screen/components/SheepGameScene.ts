@@ -9,9 +9,9 @@ import { MessageSocket } from '../../../socket/MessageSocket';
 import { Socket } from '../../../socket/Socket';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
 import {
-    AllScreensPhaserGameLoadedMessage,
-    allScreensPhaserGameLoadedTypeGuard,
-} from '../../../typeGuards/game2/allScreensPhaserGameLoaded';
+    AllScreensSheepGameLoadedMessage,
+    allScreensSheepGameLoadedTypeGuard,
+} from '../../../typeGuards/game2/allScreensSheepGameLoaded';
 import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../../typeGuards/game2/gameStateInfo';
 import {
     InitialGameStateInfoMessage,
@@ -181,10 +181,11 @@ class SheepGameScene extends Phaser.Scene {
         }
 
         // second message -> createGame
-        const allScreensPhaserGameLoaded = new MessageSocket(allScreensPhaserGameLoadedTypeGuard, this.socket);
-        allScreensPhaserGameLoaded.listen((data: AllScreensPhaserGameLoadedMessage) => {
+        const allScreensSheepGameLoaded = new MessageSocket(allScreensSheepGameLoadedTypeGuard, this.socket);
+        allScreensSheepGameLoaded.listen((data: AllScreensSheepGameLoadedMessage) => {
             // eslint-disable-next-line no-console
             console.log('allLoaded');
+            //this.allScreensLoaded = true
             if (this.screenAdmin) this.sendCreateNewGame();
         });
 
