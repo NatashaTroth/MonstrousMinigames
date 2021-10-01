@@ -9,7 +9,7 @@ import { ScreenSocketContext, User } from '../../contexts/ScreenSocketContextPro
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import handleStartGame1 from '../../domain/game1/screen/gameState/handleStartGame1';
 import handleStartGame2 from '../../domain/game2/screen/gameState/handleStartGame2';
-import handleStartGame3 from '../../domain/game3/screen/gameState/handleStartGame3';
+import handleStartClickedGame3 from '../../domain/game3/screen/gameState/handleStartClickedGame3';
 import history from '../../domain/history/history';
 import { Socket } from '../../domain/socket/Socket';
 import { MessageTypes } from '../../utils/constants';
@@ -101,8 +101,8 @@ const PlayersGetReady: React.FC = () => {
 
 export default PlayersGetReady;
 
-function startGame(gameId: GameNames, screenSocket: Socket) {
-    switch (gameId) {
+function startGame(game: GameNames, screenSocket: Socket) {
+    switch (game) {
         case GameNames.game1:
             handleStartGame1(screenSocket);
             return;
@@ -110,7 +110,7 @@ function startGame(gameId: GameNames, screenSocket: Socket) {
             handleStartGame2(screenSocket);
             return;
         case GameNames.game3:
-            handleStartGame3(screenSocket);
+            handleStartClickedGame3(screenSocket);
             return;
     }
 }

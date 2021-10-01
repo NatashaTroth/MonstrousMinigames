@@ -23,6 +23,13 @@
         <br />
         <br />
 
+        <input name="gameName" value='game1' id="gameName" />
+        <label for="gameName">gameName</label>
+        <button onclick="input('chooseGame')">chooseGame</button>
+
+        <br />
+        <br />
+
         <button onclick="input('start')">START</button>
         <button onclick="input('backToLobby')">BACK TO LOBBY</button>
         <button onclick="input('userReady')">READY</button>
@@ -79,6 +86,13 @@
             ssocket.emit('message', {
                 type: 'createGame',
             });
+
+            if (type == 'chooseGame')
+            ssocket.emit('message', {
+                type: 'chooseGame',
+                game: document.getElementById('gameName').value,
+            });
+
             if (type == 'game2/move')
             socket.emit('message', {
                 type: 'game2/move',

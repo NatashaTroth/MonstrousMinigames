@@ -58,6 +58,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setAvailableCharacters,
         setConnectedUsers,
         hasPaused,
+        setChosenGame,
     } = React.useContext(GameContext);
 
     React.useEffect(() => {
@@ -86,6 +87,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         playerRank,
         setExceededChaserPushes,
         setStunnablePlayers,
+        setChosenGame,
     };
 
     const content = {

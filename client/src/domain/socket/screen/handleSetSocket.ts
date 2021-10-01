@@ -1,18 +1,23 @@
 import { History } from 'history';
 
 import { PlayerRank } from '../../../contexts/ScreenSocketContextProvider';
+import { GameNames } from '../../../utils/games';
 import { Routes } from '../../../utils/routes';
 import { handleConnectedUsersMessage } from '../../commonGameState/screen/handleConnectedUsersMessage';
 import { handleGameHasFinishedMessage } from '../../commonGameState/screen/handleGameHasFinishedMessage';
 import { handleGameHasResetMessage } from '../../commonGameState/screen/handleGameHasResetMessage';
-import { handleStartGameMessage } from '../../commonGameState/screen/handleGameHasStartedMessage';
 import { handleGameHasStoppedMessage } from '../../commonGameState/screen/handleGameHasStoppedMessage';
+import { handleGameStartedMessage } from '../../commonGameState/screen/handleGameStartedMessage';
+import { handleStartPhaserGameMessage } from '../../commonGameState/screen/handleStartPhaserGameMessage';
+import { handleSetScreenSocketGame3 } from '../../game3/screen/socket/Sockets';
 import { MessageSocket } from '../../socket/MessageSocket';
 import ScreenSocket from '../../socket/screenSocket';
 import { Socket } from '../../socket/Socket';
 import { ConnectedUsersMessage, connectedUsersTypeGuard, User } from '../../typeGuards/connectedUsers';
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
+import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/game1/started';
+import { GameSetMessage, gameSetTypeGuard } from '../../typeGuards/gameSet';
 import { pausedTypeGuard } from '../../typeGuards/paused';
 import { resetTypeGuard } from '../../typeGuards/reset';
 import { resumedTypeGuard } from '../../typeGuards/resumed';
@@ -31,6 +36,7 @@ export interface HandleSetSocketDependencies {
     setPlayerRanks: (val: PlayerRank[]) => void;
     setScreenAdmin: (val: boolean) => void;
     setScreenState: (val: string) => void;
+    setChosenGame: (val: GameNames) => void;
     history: History;
 }
 
@@ -49,6 +55,7 @@ export function handleSetSocket(
         setFinished,
         setScreenAdmin,
         setScreenState,
+        setChosenGame,
         history,
     } = dependencies;
 
@@ -65,6 +72,8 @@ export function handleSetSocket(
     const errorSocket = new MessageSocket(errorTypeGuard, socket);
     const screenAdminSocket = new MessageSocket(screenAdminTypeGuard, socket);
     const screenStateSocket = new MessageSocket(screenStateTypeGuard, socket);
+    const startedSocket = new MessageSocket(startedTypeGuard, socket);
+    const gameSetSocket = new MessageSocket(gameSetTypeGuard, socket);
 
     connectedUsersSocket.listen((data: ConnectedUsersMessage) =>
         handleConnectedUsersMessage({ data, dependencies: { setConnectedUsers } })
@@ -75,7 +84,7 @@ export function handleSetSocket(
     );
 
     startPhaserGameSocket.listen((data: StartPhaserGameMessage) =>
-        handleStartGameMessage({ roomId, dependencies: { setGameStarted, history } })
+        handleStartPhaserGameMessage({ roomId, dependencies: { setGameStarted, history } })
     );
 
     pausedSocket.listen(() => setHasPaused(true));
@@ -93,6 +102,21 @@ export function handleSetSocket(
     screenAdminSocket.listen((data: ScreenAdminMessage) => setScreenAdmin(data.isAdmin));
 
     screenStateSocket.listen((data: ScreenStateMessage) => setScreenState(data.state));
+
+    startedSocket.listen((data: GameHasStartedMessage) => {
+        handleGameStartedMessage({
+            roomId,
+            game: data.game,
+            dependencies: {
+                setGameStarted,
+                history,
+            },
+        });
+    });
+
+    gameSetSocket.listen((data: GameSetMessage) => setChosenGame(data.game));
+
+    handleSetScreenSocketGame3(socket);
 
     if (socket) {
         history.push(`${Routes.screen}/${roomId}/${route || Routes.lobby}`);

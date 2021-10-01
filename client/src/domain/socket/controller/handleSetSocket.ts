@@ -1,6 +1,7 @@
 import { History } from 'history';
 
 import { Obstacle } from '../../../contexts/PlayerContextProvider';
+import { GameNames } from '../../../utils/games';
 import { controllerChooseCharacterRoute } from '../../../utils/routes';
 import { handleConnectedUsersMessage } from '../../commonGameState/controller/handleConnectedUsersMessage';
 import { handleGameHasFinishedMessage } from '../../commonGameState/controller/handleGameHasFinishedMessage';
@@ -9,29 +10,16 @@ import { handleGameHasStoppedMessage } from '../../commonGameState/controller/ha
 import { handleGameStartedMessage } from '../../commonGameState/controller/handleGameStartedMessage';
 import { handlePlayerFinishedMessage } from '../../commonGameState/controller/handlePlayerFinishedMessage';
 import { handleUserInitMessage } from '../../commonGameState/controller/handleUserInitMessage';
-import { handleApproachingObstacleMessage } from '../../game1/controller/gameState/handleApproachingSolvableObstacleMessage';
-import { handleObstacleMessage } from '../../game1/controller/gameState/handleObstacleMessage';
-import { handlePlayerDied } from '../../game1/controller/gameState/handlePlayerDied';
-import { handlePlayerStunned } from '../../game1/controller/gameState/handlePlayerStunned';
-import { handlePlayerUnstunned } from '../../game1/controller/gameState/handlePlayerUnstunned';
-import { handleStunnablePlayers } from '../../game1/controller/gameState/handleStunnablePlayers';
+import { handleSetControllerSocketGame1 } from '../../game1/controller/socket/Sockets';
+import { handleSetControllerSocketGame3 } from '../../game3/controller/socket/Sockets';
 import { MessageSocket } from '../../socket/MessageSocket';
 import { Socket } from '../../socket/Socket';
 import { ConnectedUsersMessage, connectedUsersTypeGuard, User } from '../../typeGuards/connectedUsers';
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
-import {
-    ApproachingSolvableObstacleMessage,
-    approachingSolvableObstacleTypeGuard,
-} from '../../typeGuards/game1/approachingSolvableObstacleTypeGuard';
-import { exceededMaxChaserPushesTypeGuard } from '../../typeGuards/game1/exceededMaxChaserPushes';
-import { ObstacleMessage, obstacleTypeGuard } from '../../typeGuards/game1/obstacle';
-import { PlayerDiedMessage, playerDiedTypeGuard } from '../../typeGuards/game1/playerDied';
 import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../typeGuards/game1/playerFinished';
-import { playerStunnedTypeGuard } from '../../typeGuards/game1/playerStunned';
-import { playerUnstunnedTypeGuard } from '../../typeGuards/game1/playerUnstunned';
 import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/game1/started';
-import { StunnablePlayersMessage, stunnablePlayersTypeGuard } from '../../typeGuards/game1/stunnablePlayers';
+import { GameSetMessage, gameSetTypeGuard } from '../../typeGuards/gameSet';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
 import { GameHasResetMessage, resetTypeGuard } from '../../typeGuards/reset';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
@@ -57,6 +45,7 @@ export interface HandleSetSocketDependencies {
     setEarlySolvableObstacle: (val: Obstacle | undefined) => void;
     setExceededChaserPushes: (val: boolean) => void;
     setStunnablePlayers: (val: string[]) => void;
+    setChosenGame: (val: GameNames) => void;
 }
 
 export function handleSetSocket(
@@ -69,7 +58,6 @@ export function handleSetSocket(
         setControllerSocket,
         setPlayerNumber,
         setPlayerFinished,
-        setObstacle,
         setPlayerRank,
         setHasPaused,
         setGameStarted,
@@ -77,19 +65,15 @@ export function handleSetSocket(
         setAvailableCharacters,
         setUserId,
         setReady,
-        setPlayerDead,
         history,
         setConnectedUsers,
         playerRank,
-        setEarlySolvableObstacle,
-        setExceededChaserPushes,
-        setStunnablePlayers,
+        setChosenGame,
     } = dependencies;
 
     setControllerSocket(socket);
 
     const userInitSocket = new MessageSocket(userInitTypeGuard, socket);
-    const obstacleSocket = new MessageSocket(obstacleTypeGuard, socket);
     const playerFinishedSocket = new MessageSocket(playerFinishedTypeGuard, socket);
     const startedSocket = new MessageSocket(startedTypeGuard, socket);
     const pausedSocket = new MessageSocket(pausedTypeGuard, socket);
@@ -98,13 +82,8 @@ export function handleSetSocket(
     const resetSocket = new MessageSocket(resetTypeGuard, socket);
     const errorSocket = new MessageSocket(errorTypeGuard, socket);
     const connectedUsersSocket = new MessageSocket(connectedUsersTypeGuard, socket);
-    const playerDiedSocket = new MessageSocket(playerDiedTypeGuard, socket);
-    const playerStunnedSocket = new MessageSocket(playerStunnedTypeGuard, socket);
     const gameFinishedSocket = new MessageSocket(finishedTypeGuard, socket);
-    const playerUnstunnedSocket = new MessageSocket(playerUnstunnedTypeGuard, socket);
-    const approachingSolvableObstacleSocket = new MessageSocket(approachingSolvableObstacleTypeGuard, socket);
-    const exceededMaxChaserPushesSocket = new MessageSocket(exceededMaxChaserPushesTypeGuard, socket);
-    const stunnablePlayersSocket = new MessageSocket(stunnablePlayersTypeGuard, socket);
+    const gameSetSocket = new MessageSocket(gameSetTypeGuard, socket);
 
     userInitSocket.listen((data: UserInitMessage) => {
         handleUserInitMessage({
@@ -115,14 +94,6 @@ export function handleSetSocket(
                 setUserId,
                 setReady,
             },
-        });
-    });
-
-    obstacleSocket.listen((data: ObstacleMessage) => {
-        handleObstacleMessage({
-            data,
-            roomId,
-            setObstacle,
         });
     });
 
@@ -138,16 +109,17 @@ export function handleSetSocket(
         });
     });
 
-    startedSocket.listen((data: GameHasStartedMessage) => {
+    startedSocket.listen((data: GameHasStartedMessage) =>
         handleGameStartedMessage({
             roomId,
+            game: data.game,
             countdownTime: data.countdownTime,
             dependencies: {
                 setGameStarted,
                 history,
             },
-        });
-    });
+        })
+    );
 
     // TODO remove when phaser is ready
     pausedSocket.listen((data: GameHasPausedMessage) => {
@@ -174,25 +146,6 @@ export function handleSetSocket(
         handleConnectedUsersMessage({ data, dependencies: { setAvailableCharacters, setConnectedUsers } });
     });
 
-    playerDiedSocket.listen((data: PlayerDiedMessage) => {
-        handlePlayerDied({
-            data,
-            roomId,
-            dependencies: {
-                setPlayerDead,
-                setPlayerRank,
-            },
-        });
-    });
-
-    playerStunnedSocket.listen(() => {
-        handlePlayerStunned(history, roomId);
-    });
-
-    playerUnstunnedSocket.listen(() => {
-        handlePlayerUnstunned(history, roomId);
-    });
-
     gameFinishedSocket.listen((data: GameHasFinishedMessage) => {
         handleGameHasFinishedMessage({
             roomId,
@@ -205,20 +158,10 @@ export function handleSetSocket(
         });
     });
 
-    approachingSolvableObstacleSocket.listen((data: ApproachingSolvableObstacleMessage) => {
-        handleApproachingObstacleMessage({ data, setEarlySolvableObstacle });
-    });
+    handleSetControllerSocketGame1(socket, roomId, playerFinished, dependencies);
+    handleSetControllerSocketGame3(socket);
 
-    exceededMaxChaserPushesSocket.listen(() => setExceededChaserPushes(true));
-
-    stunnablePlayersSocket.listen((data: StunnablePlayersMessage) =>
-        handleStunnablePlayers({
-            data,
-            dependencies: {
-                setStunnablePlayers,
-            },
-        })
-    );
+    gameSetSocket.listen((data: GameSetMessage) => setChosenGame(data.game));
 
     if (socket) {
         history.push(controllerChooseCharacterRoute(roomId));

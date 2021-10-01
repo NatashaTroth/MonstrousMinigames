@@ -1,4 +1,4 @@
-import { ObstacleTypes } from './constants';
+import { ObstacleTypes } from "./constants";
 
 export enum Routes {
     // Routes for router
@@ -37,6 +37,8 @@ export enum Routes {
     trash = '/trash',
     stone = '/stone',
     game1 = '/game1',
+    game2 = '/game2',
+    game3 = '/game3',
     dead = '/dead',
     finished = '/finished',
     gameIntro = '/game-intro',
@@ -58,6 +60,10 @@ export const controllerFinishedRoute = (roomId: undefined | string) =>
     `${Routes.controller}/${roomId}${Routes.finished}`;
 
 export const controllerGame1Route = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.game1}`;
+
+export const controllerGame2Route = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.game2}`;
+
+export const controllerGame3Route = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.game3}`;
 
 export const controllerPlayerStunnedRoute = (roomId: undefined | string) =>
     `${Routes.controller}/${roomId}${Routes.stunned}`;
@@ -89,3 +95,7 @@ export const screenFinishedRoute = (roomId: undefined | string) => `${Routes.scr
 export const screenLobbyRoute = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.lobby}`;
 
 export const screenGame1Route = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.game1}`;
+
+export const screenGame2Route = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.game2}`;
+
+export const screenGame3Route = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.game3}`;

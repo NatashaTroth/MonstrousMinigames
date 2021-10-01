@@ -1,8 +1,8 @@
-import { GameState, MessageTypesGame1 } from '../../../utils/constants';
-import { InitialGameStateInfoMessage, initialGameStateInfoTypeGuard } from './initialGameStateInfo';
+import { GameState, MessageTypesGame1 } from "../../../utils/constants";
+import { InitialGameStateInfoMessage, initialGameStateInfoTypeGuard } from "./initialGameStateInfo";
 
 describe('initial game state info TypeGuard', () => {
-    it('when type is paused, it should return true', () => {
+    it('when type is initial game state, it should return true', () => {
         const data: InitialGameStateInfoMessage = {
             type: MessageTypesGame1.initialGameState,
             data: {
