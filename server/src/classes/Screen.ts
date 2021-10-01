@@ -29,21 +29,11 @@ class Screen {
             this.room.addScreen(this.socket.id);
             this.socket.join(this.room.id);
             console.info(this.room.id + ' | Screen connected | ' + this.socket.id);
-            this.room.resetGame().then(() => {
-                this.emitter.sendScreenState(this.screenNamespace, this.room?.getScreenState());
-            });
+            this.emitter.sendScreenState(this.screenNamespace, this.room?.getScreenState());
 
             this.emitter.sendConnectedUsers([this.screenNamespace], this.room);
-            if (this.room.isAdminScreen(this.socket.id)) {
-                this.emitter.sendScreenAdmin(
-                    this.screenNamespace,
-                    this.socket.id,
-                    this.room.isAdminScreen(this.socket.id)
-                );
-            }
-            if (this.room?.isAdminScreen(this.socket.id)) {
-                this.emitter.sendScreenState(this.socket, this.room?.getScreenState());
-            }
+            this.emitter.sendScreenAdmin(this.screenNamespace, this.socket.id, this.room.isAdminScreen(this.socket.id));
+
             this.socket.on('disconnect', this.onDisconnect.bind(this));
             this.socket.on('message', this.onMessage.bind(this));
         } catch (e: any) {
