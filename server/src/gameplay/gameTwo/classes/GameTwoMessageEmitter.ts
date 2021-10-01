@@ -35,7 +35,8 @@ export class GameTwoMessageEmitter implements EventMessageEmitter {
         switch (message.type) {
             // send to room's screens
             case GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE:
-
+                screenNameSpace.to(room.id).emit('message', message);
+                break;
         }
     }
 }
