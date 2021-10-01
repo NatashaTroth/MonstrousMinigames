@@ -1,14 +1,18 @@
-import { History } from 'history';
+import { History } from "history";
 
-import { controllerGame1Route } from '../../../utils/routes';
+import { GameNames } from "../../../utils/games";
+import {
+    controllerGame1Route, controllerGame2Route, controllerGame3Route
+} from "../../../utils/routes";
 
 interface HandleGameStarted {
     roomId: string;
+    gameId: GameNames;
     countdownTime: number;
     dependencies: { setGameStarted: (val: boolean) => void; history: History };
 }
 export function handleGameStartedMessage(props: HandleGameStarted) {
-    const { roomId, dependencies, countdownTime } = props;
+    const { roomId, dependencies, countdownTime, gameId } = props;
     const { setGameStarted, history } = dependencies;
 
     document.body.style.overflow = 'hidden';
@@ -17,5 +21,15 @@ export function handleGameStartedMessage(props: HandleGameStarted) {
     setGameStarted(true);
     sessionStorage.setItem('countdownTime', String(countdownTime));
 
-    history.push(controllerGame1Route(roomId));
+    switch (gameId) {
+        case GameNames.game1:
+            history.push(controllerGame1Route(roomId));
+            return;
+        case GameNames.game2:
+            history.push(controllerGame2Route(roomId));
+            return;
+        case GameNames.game3:
+            history.push(controllerGame3Route(roomId));
+            return;
+    }
 }

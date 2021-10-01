@@ -73,7 +73,13 @@ export enum MessageTypesGame1 {
     approachingSolvableObstacle = 'game1/approachingSolvableObstacle',
     approachingSolvableObstacleOnce = 'game1/approachingSolvableObstacleOnce',
     solveObstacle = 'game1/solveObstacle',
-    stunnablePlayers = "game1/stunnablePlayers"
+    stunnablePlayers = 'game1/stunnablePlayers',
+}
+
+export const enum MessageTypesGame3 {
+    newPhotoTopic = 'game3/newPhotoTopic',
+    initialGameState = 'game3/initialGameState',
+    createGame = 'game3/create',
 }
 
 export const localDevelopment = false; //the one in constants.ts on the server

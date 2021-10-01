@@ -1,5 +1,18 @@
-import { Socket } from '../../../socket/Socket';
+import { GameNames } from "../../../../utils/games";
+import { screenGame3Route } from "../../../../utils/routes";
+import history from "../../../history/history";
 
-export default function handleStartGame3(screenSocket: Socket) {
-    // TODO
+interface HandleStartGameProps {
+    roomId: string;
+    data: {
+        gameId: GameNames;
+    };
+}
+
+export default function handleStartGame3({ roomId, data }: HandleStartGameProps) {
+    switch (data.gameId) {
+        case GameNames.game3:
+            history.push(screenGame3Route(roomId));
+            return;
+    }
 }

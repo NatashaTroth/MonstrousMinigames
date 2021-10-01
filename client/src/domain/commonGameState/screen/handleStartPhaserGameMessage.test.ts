@@ -1,16 +1,16 @@
-import { createMemoryHistory } from 'history';
+import { createMemoryHistory } from "history";
 
-import { screenGame1Route } from '../../../utils/routes';
-import { handleStartGameMessage } from './handleGameHasStartedMessage';
+import { screenGame1Route } from "../../../utils/routes";
+import { handleStartPhaserGameMessage } from "./handleStartPhaserGameMessage";
 
-describe('handleGameHasStartedMessage', () => {
+describe('handleStartPhaserGameMessage', () => {
     const roomId = '1234';
 
-    it('when message type is gameStarted, history push should be called', () => {
+    it('when phaser game has started, history push should be called', () => {
         const history = createMemoryHistory();
         const setGameStarted = jest.fn();
 
-        handleStartGameMessage({ roomId, dependencies: { history, setGameStarted } });
+        handleStartPhaserGameMessage({ roomId, dependencies: { history, setGameStarted } });
 
         expect(history.location).toHaveProperty('pathname', screenGame1Route(roomId));
     });
@@ -19,7 +19,7 @@ describe('handleGameHasStartedMessage', () => {
         const history = createMemoryHistory();
         const setGameStarted = jest.fn();
 
-        handleStartGameMessage({
+        handleStartPhaserGameMessage({
             roomId,
             dependencies: { history, setGameStarted },
         });
