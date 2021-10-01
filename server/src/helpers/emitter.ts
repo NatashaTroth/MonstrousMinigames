@@ -17,6 +17,16 @@ function sendUserInit(socket: Socket, user: User, room: Room): void {
     });
 }
 
+function sendGameSet(nsps: Namespace[], room: Room, game: string): void {
+    nsps.forEach(function (namespace: Namespace) {
+        namespace.to(room.id).emit('message', {
+            type: MessageTypes.GAME_SET,
+            game: game
+        });
+    });
+};
+
+
 function sendGameState(nsp: Namespace, room: Room, volatile = false): void {
     if (volatile) {
         nsp.to(room.id).volatile.emit('message', {
@@ -116,4 +126,5 @@ export default {
     // sendPlayerExceededMaxNumberChaserPushes,
     sendScreenAdmin,
     sendScreenState,
+    sendGameSet,
 };

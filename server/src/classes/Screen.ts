@@ -73,27 +73,14 @@ class Screen {
     private onMessage(message: IMessage) {
         try {
             switch (message.type) {
-                case CatchFoodMsgType.PHASER_GAME_LOADED:
-                    this.room?.setScreenPhaserGameReady(this.socket.id, true);
-                    if (this.room && !this.room?.firstPhaserScreenLoaded) {
-                        this.room.firstPhaserScreenLoaded = true;
-                        this.room.allScreensLoadedTimeout = setTimeout(() => {
-                            this.trySendAllScreensPhaserGameLoaded(true);
-                            ///TODO natasha - send timedout to other screens
-                        }, 10000);
-                    }
+                case MessageTypes.CHOOSE_GAME:
+                    if (this.room?.isAdminScreen(this.socket.id) && message.name) {
+                        console.info(this.room.id + ' | Choose Game' + ' | ' + message.name);
+                        this.room?.setGame(message.name);
 
-                    if (this.room?.allPhaserGamesReady()) {
-                        this.trySendAllScreensPhaserGameLoaded();
-                    }
-                    break;
-                case CatchFoodMsgType.START_PHASER_GAME:
-                    this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!);
-                    break;
-                case CatchFoodMsgType.CREATE:
-                    if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
-                        this.room.setGame(GameNames.GAME1);
-                        this.room.createNewGame();
+                        this.emitter.sendGameSet([this.controllerNamespace, this.screenNamespace], this.room,
+                            message.name
+                        );
                     }
                     break;
                 case MessageTypes.START:
@@ -150,6 +137,29 @@ class Screen {
                         console.info(this.room.id + ' | Send Screen State' + ' | ' + message.state);
                         this.room?.setScreenState(message.state);
                         this.emitter.sendScreenState(this.screenNamespace, this.room?.getScreenState());
+                    }
+                    break;
+                case CatchFoodMsgType.PHASER_GAME_LOADED:
+                    this.room?.setScreenPhaserGameReady(this.socket.id, true);
+                    if (this.room && !this.room?.firstPhaserScreenLoaded) {
+                        this.room.firstPhaserScreenLoaded = true;
+                        this.room.allScreensLoadedTimeout = setTimeout(() => {
+                            this.trySendAllScreensPhaserGameLoaded(true);
+                            ///TODO natasha - send timedout to other screens
+                        }, 10000);
+                    }
+
+                    if (this.room?.allPhaserGamesReady()) {
+                        this.trySendAllScreensPhaserGameLoaded();
+                    }
+                    break;
+                case CatchFoodMsgType.START_PHASER_GAME:
+                    this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!);
+                    break;
+                case CatchFoodMsgType.CREATE:
+                    if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
+                        this.room.setGame(GameNames.GAME1);
+                        this.room.createNewGame();
                     }
                     break;
                 case GameTwoMessageTypes.CREATE:
