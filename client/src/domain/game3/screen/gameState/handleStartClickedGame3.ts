@@ -1,11 +1,9 @@
-import { MessageTypes, MessageTypesGame3 } from "../../../../utils/constants";
-import { Socket } from "../../../socket/Socket";
+import { MessageTypes } from '../../../../utils/constants';
+import { Socket } from '../../../socket/Socket';
 
 export default function handleStartClickedGame3(screenSocket: Socket) {
-    // eslint-disable-next-line no-console
-    console.log('hier');
     screenSocket?.emit({
-        type: MessageTypesGame3.createGame,
+        type: MessageTypes.createGame,
         roomId: sessionStorage.getItem('roomId'),
     });
     screenSocket?.emit({

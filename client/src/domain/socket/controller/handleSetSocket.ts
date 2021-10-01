@@ -109,7 +109,7 @@ export function handleSetSocket(
         });
     });
 
-    startedSocket.listen((data: GameHasStartedMessage) => {
+    startedSocket.listen((data: GameHasStartedMessage) =>
         handleGameStartedMessage({
             roomId,
             game: data.game,
@@ -118,8 +118,8 @@ export function handleSetSocket(
                 setGameStarted,
                 history,
             },
-        });
-    });
+        })
+    );
 
     // TODO remove when phaser is ready
     pausedSocket.listen((data: GameHasPausedMessage) => {

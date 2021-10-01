@@ -1,7 +1,7 @@
 import { History } from 'history';
 
 import { GameNames } from '../../../utils/games';
-import { controllerGame3Route } from '../../../utils/routes';
+import { screenGame3Route } from '../../../utils/routes';
 
 interface HandleGameStarted {
     roomId: string;
@@ -15,7 +15,7 @@ export function handleGameStartedMessage(props: HandleGameStarted) {
     switch (game) {
         case GameNames.game3:
             setGameStarted(true);
-            history.push(controllerGame3Route(roomId));
+            history.push(screenGame3Route(roomId));
             return;
     }
 }

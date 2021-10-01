@@ -82,7 +82,6 @@ export enum MessageTypesGame1 {
 export const enum MessageTypesGame3 {
     newPhotoTopic = 'game3/newPhotoTopic',
     initialGameState = 'game3/initialGameState',
-    createGame = 'game3/create',
 }
 
 export const localDevelopment = false; //the one in constants.ts on the server
