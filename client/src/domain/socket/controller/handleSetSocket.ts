@@ -1,6 +1,7 @@
 import { History } from 'history';
 
 import { Obstacle } from '../../../contexts/PlayerContextProvider';
+import { GameNames } from '../../../utils/games';
 import { controllerChooseCharacterRoute } from '../../../utils/routes';
 import { handleConnectedUsersMessage } from '../../commonGameState/controller/handleConnectedUsersMessage';
 import { handleGameHasFinishedMessage } from '../../commonGameState/controller/handleGameHasFinishedMessage';
@@ -18,6 +19,7 @@ import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
 import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../typeGuards/game1/playerFinished';
 import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/game1/started';
+import { GameSetMessage, gameSetTypeGuard } from '../../typeGuards/gameSet';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
 import { GameHasResetMessage, resetTypeGuard } from '../../typeGuards/reset';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
@@ -43,6 +45,7 @@ export interface HandleSetSocketDependencies {
     setEarlySolvableObstacle: (val: Obstacle | undefined) => void;
     setExceededChaserPushes: (val: boolean) => void;
     setStunnablePlayers: (val: string[]) => void;
+    setChosenGame: (val: GameNames) => void;
 }
 
 export function handleSetSocket(
@@ -65,6 +68,7 @@ export function handleSetSocket(
         history,
         setConnectedUsers,
         playerRank,
+        setChosenGame,
     } = dependencies;
 
     setControllerSocket(socket);
@@ -79,6 +83,7 @@ export function handleSetSocket(
     const errorSocket = new MessageSocket(errorTypeGuard, socket);
     const connectedUsersSocket = new MessageSocket(connectedUsersTypeGuard, socket);
     const gameFinishedSocket = new MessageSocket(finishedTypeGuard, socket);
+    const gameSetSocket = new MessageSocket(gameSetTypeGuard, socket);
 
     userInitSocket.listen((data: UserInitMessage) => {
         handleUserInitMessage({
@@ -155,6 +160,8 @@ export function handleSetSocket(
 
     handleSetControllerSocketGame1(socket, roomId, playerFinished, dependencies);
     handleSetControllerSocketGame3(socket);
+
+    gameSetSocket.listen((data: GameSetMessage) => setChosenGame(data.game));
 
     if (socket) {
         history.push(controllerChooseCharacterRoute(roomId));

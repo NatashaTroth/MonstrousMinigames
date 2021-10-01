@@ -56,6 +56,12 @@ const ChooseGame: React.FunctionComponent = () => {
 
     function handleStartGameClick() {
         setChosenGame(selectedGame.id);
+        if (screenAdmin) {
+            screenSocket?.emit({
+                type: MessageTypes.chooseGame,
+                game: selectedGame.id,
+            });
+        }
         tutorial ? history.push(screenGameIntroRoute(roomId)) : history.push(screenGetReadyRoute(roomId));
     }
 

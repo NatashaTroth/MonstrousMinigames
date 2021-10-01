@@ -1,6 +1,7 @@
 import { History } from 'history';
 
 import { PlayerRank } from '../../../contexts/ScreenSocketContextProvider';
+import { GameNames } from '../../../utils/games';
 import { Routes } from '../../../utils/routes';
 import { handleConnectedUsersMessage } from '../../commonGameState/screen/handleConnectedUsersMessage';
 import { handleGameHasFinishedMessage } from '../../commonGameState/screen/handleGameHasFinishedMessage';
@@ -16,6 +17,7 @@ import { ConnectedUsersMessage, connectedUsersTypeGuard, User } from '../../type
 import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
 import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/game1/started';
+import { GameSetMessage, gameSetTypeGuard } from '../../typeGuards/gameSet';
 import { pausedTypeGuard } from '../../typeGuards/paused';
 import { resetTypeGuard } from '../../typeGuards/reset';
 import { resumedTypeGuard } from '../../typeGuards/resumed';
@@ -34,6 +36,7 @@ export interface HandleSetSocketDependencies {
     setPlayerRanks: (val: PlayerRank[]) => void;
     setScreenAdmin: (val: boolean) => void;
     setScreenState: (val: string) => void;
+    setChosenGame: (val: GameNames) => void;
     history: History;
 }
 
@@ -52,6 +55,7 @@ export function handleSetSocket(
         setFinished,
         setScreenAdmin,
         setScreenState,
+        setChosenGame,
         history,
     } = dependencies;
 
@@ -69,6 +73,7 @@ export function handleSetSocket(
     const screenAdminSocket = new MessageSocket(screenAdminTypeGuard, socket);
     const screenStateSocket = new MessageSocket(screenStateTypeGuard, socket);
     const startedSocket = new MessageSocket(startedTypeGuard, socket);
+    const gameSetSocket = new MessageSocket(gameSetTypeGuard, socket);
 
     connectedUsersSocket.listen((data: ConnectedUsersMessage) =>
         handleConnectedUsersMessage({ data, dependencies: { setConnectedUsers } })
@@ -108,6 +113,8 @@ export function handleSetSocket(
             },
         });
     });
+
+    gameSetSocket.listen((data: GameSetMessage) => setChosenGame(data.game));
 
     handleSetScreenSocketGame3(socket);
 
