@@ -21,7 +21,8 @@ import {
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED,
-    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED, CATCH_FOOD_GAME_EVENT_MESSAGES,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__STUNNABLE_PLAYERS, CATCH_FOOD_GAME_EVENT_MESSAGES,
     CatchFoodGameEventMessage
 } from './interfaces/CatchFoodGameEventMessages';
 
@@ -45,10 +46,10 @@ export class CatchFoodGameEventMessageEmitter implements EventMessageEmitter {
 
         switch (message.type) {
             // send to single user's controller
-            case CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE:
-            case CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD:
+            case CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE:
+            case CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES:
@@ -58,6 +59,12 @@ export class CatchFoodGameEventMessageEmitter implements EventMessageEmitter {
                 }
                 controllerNameSpace.to(user.socketId).emit('message', message);
                 break;
+
+            //send to room's controllers
+            case CATCH_FOOD_GAME_EVENT_MESSAGE__STUNNABLE_PLAYERS:
+                controllerNameSpace.to(room.id).emit('message', message);
+                break;
+
             // send to room's screens
             case CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE:
             case CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE_ONCE:
