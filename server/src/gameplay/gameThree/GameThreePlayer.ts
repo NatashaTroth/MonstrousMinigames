@@ -1,6 +1,6 @@
-import Player from '../Player';
-import InitialParameters from './constants/InitialParameters';
-import { Photo } from './interfaces';
+import Player from "../Player";
+import InitialParameters from "./constants/InitialParameters";
+import { Photo } from "./interfaces";
 
 class GameThreePlayer extends Player {
     photos: Photo[];

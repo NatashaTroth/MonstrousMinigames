@@ -3,10 +3,12 @@ import * as React from 'react';
 import { Field, FieldRenderProps, Form } from 'react-final-form';
 
 import Button from '../../../../components/common/Button';
+import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
 import { FirebaseContext } from '../../../../contexts/FirebaseContextProvider';
 import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
+import { MessageTypesGame3 } from '../../../../utils/constants';
 import uploadFile from '../../../storage/uploadFile';
 import { ScreenContainer } from './Game3Styles.sc';
 import { StyledImg, StyledLabel, UploadWrapper } from './TakePicture.sc';
@@ -20,14 +22,19 @@ const TakePicture: React.FunctionComponent = () => {
     const { roomId } = React.useContext(GameContext);
     const { userId } = React.useContext(PlayerContext);
     const { challengeId } = React.useContext(Game3Context);
+    const { controllerSocket } = React.useContext(ControllerSocketContext);
 
     const upload = async (values: UploadProps) => {
         if (!values.picture) return;
 
         if (storage && roomId) {
-            const success = await uploadFile(storage, values.picture, roomId, userId, challengeId);
-            if (success) {
-                // todo
+            const imageUrl = await uploadFile(storage, values.picture, roomId, userId, challengeId);
+            if (imageUrl) {
+                controllerSocket.emit({
+                    type: MessageTypesGame3.photo,
+                    userId,
+                    url: imageUrl,
+                });
             }
         }
     };
