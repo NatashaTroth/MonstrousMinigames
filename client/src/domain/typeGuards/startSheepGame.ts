@@ -1,9 +1,9 @@
 import { MessageTypesGame2 } from '../../utils/constants';
-import { MessageData } from './MessageData';
+import { MessageDataGame2 } from './MessageDataGame2';
 
 export interface StartSheepGameMessage {
     type: MessageTypesGame2.startSheepGame;
 }
 
-export const startSheepGameTypeGuard = (data: MessageData): data is StartSheepGameMessage =>
+export const startSheepGameTypeGuard = (data: MessageDataGame2): data is StartSheepGameMessage =>
     (data as StartSheepGameMessage).type === MessageTypesGame2.startSheepGame;

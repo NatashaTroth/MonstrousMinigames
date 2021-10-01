@@ -11,7 +11,7 @@ import { GameHasResetMessage } from './reset';
 import { GameHasResumedMessage } from './resumed';
 import { ScreenAdminMessage } from './screenAdmin';
 import { ScreenStateMessage } from './screenState';
-import { StartPhaserGameMessage } from './startPhaserGame';
+import { StartSheepGameMessage } from './startSheepGame';
 import { GameHasStoppedMessage } from './stopped';
 import { UserInitMessage } from './userInit';
 
@@ -20,7 +20,7 @@ export type MessageDataGame2 =
     | GameHasFinishedMessage
     | ErrorMessage
     | GameHasPausedMessage
-    | StartPhaserGameMessage
+    | StartSheepGameMessage
     | AllScreensPhaserGameLoadedMessage
     | GameHasResumedMessage
     | GameHasStoppedMessage

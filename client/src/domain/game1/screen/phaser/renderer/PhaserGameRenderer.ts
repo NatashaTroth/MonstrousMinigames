@@ -28,6 +28,8 @@ export class PhaserGameRenderer {
     assetText?: Phaser.GameObjects.Text; //only for local dev -> to see which assets take long to load
 
     constructor(private scene: MainScene | SheepGameScene) {
+        // eslint-disable-next-line no-console
+        console.log('renderer2');
         this.scene = scene;
         this.sceneWidth = this.scene.cameras.main.width;
         this.sceneHeight = this.scene.cameras.main.height;

@@ -1,6 +1,6 @@
 //import { designDevelopment } from '../../../../utils/constants';
 //import { depthDictionary } from '../../../../utils/depthDictionary';
-import MainScene from '../components/SheepGameScene';
+import SheepGameScene from '../components/SheepGameScene';
 import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
 import { Coordinates } from '../phaser/gameTypes/Coordinates';
 import { PhaserPlayerRenderer } from '../phaser/renderer/PhaserPlayerRenderer';
@@ -15,7 +15,7 @@ export class Player {
     renderer: PhaserPlayerRenderer;
 
     constructor(
-        scene: MainScene,
+        scene: SheepGameScene,
         private index: number,
         public coordinates: Coordinates,
         private gameStateData: GameData,

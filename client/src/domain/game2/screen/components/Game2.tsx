@@ -12,7 +12,7 @@ import { AudioButton, Container, PauseButton } from '../../../game1/screen/compo
 import GameEventEmitter from '../phaser/GameEventEmitter';
 import SheepGameScene from './SheepGameScene';
 
-const Game: React.FunctionComponent = () => {
+const Game2: React.FunctionComponent = () => {
     const { roomId, hasPaused, screenAdmin } = React.useContext(GameContext);
     const {
         pauseLobbyMusicNoMute,
@@ -60,6 +60,8 @@ const Game: React.FunctionComponent = () => {
                 },
             },
         });
+        // eslint-disable-next-line no-console
+        console.log('add sheepscene');
         game.scene.add('SheepGameScene', SheepGameScene, false); //socket: ScreenSocket.getInstance(socket)
         game.scene.start('SheepGameScene', { roomId, socket: screenSocket, screenAdmin });
 
@@ -97,10 +99,10 @@ const Game: React.FunctionComponent = () => {
     );
 };
 
-export default Game;
+export default Game2;
 
 const GameContent: React.FunctionComponent = () => (
     <div>
-        <div id="sheep-game" data-testid="game-container"></div>
+        <div id="sheep-game" data-testid="sheep-game"></div>
     </div>
 );

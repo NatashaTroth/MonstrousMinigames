@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-
 export const defaultValue = {
     playerFinished: false,
     setPlayerFinished: () => {
@@ -16,8 +15,6 @@ export const Game2Context = React.createContext<Game2ContextProps>(defaultValue)
 
 const Game2ContextProvider: React.FunctionComponent = ({ children }) => {
     const [playerFinished, setPlayerFinished] = React.useState<boolean>(false);
-
-    const reroute = true;
 
     const content = {
         playerFinished,

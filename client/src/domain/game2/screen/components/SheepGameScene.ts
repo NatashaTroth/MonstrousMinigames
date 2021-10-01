@@ -1,8 +1,9 @@
 import Phaser from 'phaser';
 
-import sheepSpritesheet from '../../../../images/characters/spritesheets/sheep/sheepSpritesheet.png';
+import sheepSpritesheet from '../../../../images/characters/spritesheets/sheep/sheep_spritesheet.png';
 import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2 } from '../../../../utils/constants';
 import { screenFinishedRoute } from '../../../../utils/routes';
+import { PhaserGameRenderer } from '../../../game1/screen/phaser/renderer/PhaserGameRenderer';
 import history from '../../../history/history';
 import { MessageSocket } from '../../../socket/MessageSocket';
 import { Socket } from '../../../socket/Socket';
@@ -31,7 +32,6 @@ import { GameData } from '../phaser/gameInterfaces/GameData';
 import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
 import { initialGameInput } from '../phaser/initialGameInput';
 import { Player } from '../phaser/Player';
-import { PhaserGameRenderer } from '../phaser/renderer/PhaserGameRenderer';
 import { audioFiles, characters, images } from './GameAssets';
 
 const windowHeight = window.innerHeight;
@@ -56,6 +56,8 @@ class SheepGameScene extends Phaser.Scene {
 
     constructor() {
         super('SheepGameScene');
+        // eslint-disable-next-line no-console
+        console.log('constructor sheep game');
         this.windowWidth = 0;
         this.windowHeight = 0;
         this.roomId = sessionStorage.getItem('roomId') || '';
@@ -71,6 +73,8 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
+        // eslint-disable-next-line no-console
+        console.log('init sheep game');
         this.windowWidth = this.cameras.main.width;
         this.windowHeight = this.cameras.main.height;
         this.camera = this.cameras.main;
@@ -87,9 +91,12 @@ class SheepGameScene extends Phaser.Scene {
 
     preload(): void {
         this.gameRenderer?.renderLoadingScreen();
-
+        // eslint-disable-next-line no-console
+        console.log('preload');
         // emitted every time a file has been loaded
         this.load.on('progress', (value: number) => {
+            // eslint-disable-next-line no-console
+            console.log('loading screen');
             this.gameRenderer?.updateLoadingScreenPercent(value);
         });
 
@@ -103,6 +110,9 @@ class SheepGameScene extends Phaser.Scene {
         //once all the files are done loading
         this.load.on('complete', () => {
             this.gameRenderer?.updateLoadingScreenFinishedPreloading();
+            // eslint-disable-next-line no-console
+            console.log('phaserLoaded');
+            // first message sent
             this.socket?.emit({
                 type: MessageTypesGame2.phaserLoaded,
                 roomId: this.roomId,
@@ -148,7 +158,7 @@ class SheepGameScene extends Phaser.Scene {
     sendStartGame() {
         //TODO!!!! - do not send when game is already started? - or is it just ignored - appears to work - maybe check if no game state updates?
         this.socket?.emit({
-            type: MessageTypes.startGame,
+            type: MessageTypesGame2.startSheepGame,
             roomId: this.roomId,
             // userId: sessionStorage.getItem('userId'), //TODO
         });
@@ -164,13 +174,17 @@ class SheepGameScene extends Phaser.Scene {
                 this.gameStarted = true;
                 this.initiateGame(data.data);
                 this.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');
+                // third message -> start Game
                 if (this.screenAdmin && !designDevelopment) this.sendStartGame();
             });
             // this.firstGameStateReceived = true;
         }
 
+        // second message -> createGame
         const allScreensPhaserGameLoaded = new MessageSocket(allScreensPhaserGameLoadedTypeGuard, this.socket);
         allScreensPhaserGameLoaded.listen((data: AllScreensPhaserGameLoadedMessage) => {
+            // eslint-disable-next-line no-console
+            console.log('allLoaded');
             if (this.screenAdmin) this.sendCreateNewGame();
         });
 
@@ -254,11 +268,6 @@ class SheepGameScene extends Phaser.Scene {
             this.gameToScreenMapper!
         );
         this.players.push(player);
-    }
-
-    //TODO duplicate, also in phaserPlayerRenderer.ts
-    private moveLanesToCenter(windowHeight: number, newHeight: number, index: number, numberPlayers: number) {
-        return (windowHeight - newHeight * numberPlayers) / 2 + newHeight * (index + 1);
     }
 
     private createGameCountdown(countdownTime: number) {
