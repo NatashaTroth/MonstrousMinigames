@@ -1,33 +1,32 @@
-import { ConnectedUsersMessage } from "./connectedUsers";
-import { ErrorMessage } from "./error";
-import { GameHasFinishedMessage } from "./finished";
-import { AllScreensPhaserGameLoadedMessage } from "./game1/allScreensPhaserGameLoaded";
-import {
-    ApproachingSolvableObstacleOnceMessage
-} from "./game1/approachingSolvableObstacleOnceTypeGuard";
-import { ApproachingSolvableObstacleMessage } from "./game1/approachingSolvableObstacleTypeGuard";
-import { ChasersPushedMessage } from "./game1/chasersPushed";
-import { ExceededMaxChaserPushesMessage } from "./game1/exceededMaxChaserPushes";
-import { GameStateInfoMessage } from "./game1/gameStateInfo";
-import { InitialGameStateInfoMessage } from "./game1/initialGameStateInfo";
-import { ObstacleMessage } from "./game1/obstacle";
-import { ObstacleSkippedMessage } from "./game1/obstacleSkipped";
-import { ObstacleWillBeSolvedMessage } from "./game1/obstacleWillBeSolved";
-import { PhaserLoadingTimedOutMessage } from "./game1/phaserLoadingTimedOut";
-import { PlayerDiedMessage } from "./game1/playerDied";
-import { PlayerFinishedMessage } from "./game1/playerFinished";
-import { PlayerStunnedMessage } from "./game1/playerStunned";
-import { PlayerUnstunnedMessage } from "./game1/playerUnstunned";
-import { GameHasStartedMessage } from "./game1/started";
-import { StunnablePlayersMessage } from "./game1/stunnablePlayers";
-import { GameHasPausedMessage } from "./paused";
-import { GameHasResetMessage } from "./reset";
-import { GameHasResumedMessage } from "./resumed";
-import { ScreenAdminMessage } from "./screenAdmin";
-import { ScreenStateMessage } from "./screenState";
-import { StartPhaserGameMessage } from "./startPhaserGame";
-import { GameHasStoppedMessage } from "./stopped";
-import { UserInitMessage } from "./userInit";
+import { ConnectedUsersMessage } from './connectedUsers';
+import { ErrorMessage } from './error';
+import { GameHasFinishedMessage } from './finished';
+import { AllScreensPhaserGameLoadedMessage } from './game1/allScreensPhaserGameLoaded';
+import { ApproachingSolvableObstacleOnceMessage } from './game1/approachingSolvableObstacleOnceTypeGuard';
+import { ApproachingSolvableObstacleMessage } from './game1/approachingSolvableObstacleTypeGuard';
+import { ChasersPushedMessage } from './game1/chasersPushed';
+import { ExceededMaxChaserPushesMessage } from './game1/exceededMaxChaserPushes';
+import { GameStateInfoMessage } from './game1/gameStateInfo';
+import { InitialGameStateInfoMessage } from './game1/initialGameStateInfo';
+import { ObstacleMessage } from './game1/obstacle';
+import { ObstacleSkippedMessage } from './game1/obstacleSkipped';
+import { ObstacleWillBeSolvedMessage } from './game1/obstacleWillBeSolved';
+import { PhaserLoadingTimedOutMessage } from './game1/phaserLoadingTimedOut';
+import { PlayerDiedMessage } from './game1/playerDied';
+import { PlayerFinishedMessage } from './game1/playerFinished';
+import { PlayerStunnedMessage } from './game1/playerStunned';
+import { PlayerUnstunnedMessage } from './game1/playerUnstunned';
+import { GameHasStartedMessage } from './game1/started';
+import { StunnablePlayersMessage } from './game1/stunnablePlayers';
+import { GameSetMessage } from './gameSet';
+import { GameHasPausedMessage } from './paused';
+import { GameHasResetMessage } from './reset';
+import { GameHasResumedMessage } from './resumed';
+import { ScreenAdminMessage } from './screenAdmin';
+import { ScreenStateMessage } from './screenState';
+import { StartPhaserGameMessage } from './startPhaserGame';
+import { GameHasStoppedMessage } from './stopped';
+import { UserInitMessage } from './userInit';
 
 export type MessageData =
     | UserInitMessage
@@ -60,4 +59,5 @@ export type MessageData =
     | ExceededMaxChaserPushesMessage
     | ChasersPushedMessage
     | StunnablePlayersMessage
+    | GameSetMessage
     | undefined;
