@@ -14,6 +14,7 @@ import { handleObstacleMessage } from '../../game1/controller/gameState/handleOb
 import { handlePlayerDied } from '../../game1/controller/gameState/handlePlayerDied';
 import { handlePlayerStunned } from '../../game1/controller/gameState/handlePlayerStunned';
 import { handlePlayerUnstunned } from '../../game1/controller/gameState/handlePlayerUnstunned';
+import { handleStunnablePlayers } from '../../game1/controller/gameState/handleStunnablePlayers';
 import { MessageSocket } from '../../socket/MessageSocket';
 import { Socket } from '../../socket/Socket';
 import { ConnectedUsersMessage, connectedUsersTypeGuard, User } from '../../typeGuards/connectedUsers';
@@ -30,6 +31,7 @@ import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../typeGuards
 import { playerStunnedTypeGuard } from '../../typeGuards/game1/playerStunned';
 import { playerUnstunnedTypeGuard } from '../../typeGuards/game1/playerUnstunned';
 import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/game1/started';
+import { StunnablePlayersMessage, stunnablePlayersTypeGuard } from '../../typeGuards/game1/stunnablePlayers';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
 import { GameHasResetMessage, resetTypeGuard } from '../../typeGuards/reset';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
@@ -54,6 +56,7 @@ export interface HandleSetSocketDependencies {
     playerRank: undefined | number;
     setEarlySolvableObstacle: (val: Obstacle | undefined) => void;
     setExceededChaserPushes: (val: boolean) => void;
+    setStunnablePlayers: (val: string[]) => void;
 }
 
 export function handleSetSocket(
@@ -80,6 +83,7 @@ export function handleSetSocket(
         playerRank,
         setEarlySolvableObstacle,
         setExceededChaserPushes,
+        setStunnablePlayers,
     } = dependencies;
 
     setControllerSocket(socket);
@@ -100,6 +104,7 @@ export function handleSetSocket(
     const playerUnstunnedSocket = new MessageSocket(playerUnstunnedTypeGuard, socket);
     const approachingSolvableObstacleSocket = new MessageSocket(approachingSolvableObstacleTypeGuard, socket);
     const exceededMaxChaserPushesSocket = new MessageSocket(exceededMaxChaserPushesTypeGuard, socket);
+    const stunnablePlayersSocket = new MessageSocket(stunnablePlayersTypeGuard, socket);
 
     userInitSocket.listen((data: UserInitMessage) => {
         handleUserInitMessage({
@@ -203,7 +208,17 @@ export function handleSetSocket(
     approachingSolvableObstacleSocket.listen((data: ApproachingSolvableObstacleMessage) => {
         handleApproachingObstacleMessage({ data, setEarlySolvableObstacle });
     });
+
     exceededMaxChaserPushesSocket.listen(() => setExceededChaserPushes(true));
+
+    stunnablePlayersSocket.listen((data: StunnablePlayersMessage) =>
+        handleStunnablePlayers({
+            data,
+            dependencies: {
+                setStunnablePlayers,
+            },
+        })
+    );
 
     if (socket) {
         history.push(controllerChooseCharacterRoute(roomId));

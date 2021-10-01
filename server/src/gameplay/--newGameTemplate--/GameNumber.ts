@@ -1,4 +1,5 @@
 import User from '../../classes/user';
+import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
 import Game from '../Game';
 import { IGameInterface } from '../interfaces';
@@ -14,7 +15,7 @@ type GameNumberGameInterface = IGameInterface<GameNumberPlayer, GameStateInfo>;
 
 export default class GameNumber extends Game<GameNumberPlayer, GameStateInfo> implements GameNumberGameInterface {
     countdownTime = InitialParameters.COUNTDOWN_TIME;
-
+    gameName = GameNames.GAMEX;
     constructor(roomId: string, public leaderboard: Leaderboard) {
         super(roomId);
 
@@ -54,7 +55,7 @@ export default class GameNumber extends Game<GameNumberPlayer, GameStateInfo> im
             super.startGame();
         }, this.countdownTime);
 
-        GameNumberEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime);
+        GameNumberEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime, this.gameName);
     }
 
     pauseGame(): void {

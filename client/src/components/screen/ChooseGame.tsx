@@ -70,8 +70,7 @@ const ChooseGame: React.FunctionComponent = () => {
                                 <Button
                                     key={game.name}
                                     variant={game.id === selectedGame.id ? 'secondary' : 'primary'}
-                                    disabled={index !== 0}
-                                    onClick={() => index === 0 && setSelectedGame(game)}
+                                    onClick={() => setSelectedGame(game)}
                                 >
                                     {game.name}
                                 </Button>

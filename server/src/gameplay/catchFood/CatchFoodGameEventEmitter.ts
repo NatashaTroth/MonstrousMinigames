@@ -19,7 +19,8 @@ import {
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED,
-    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED
+    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED,
+    CATCH_FOOD_GAME_EVENT_MESSAGE__STUNNABLE_PLAYERS
 } from './interfaces/CatchFoodGameEventMessages';
 
 export default class CatchFoodGameEventEmitter {
@@ -33,11 +34,20 @@ export default class CatchFoodGameEventEmitter {
         });
     }
 
-    public static emitGameHasStartedEvent(roomId: string, countdownTime: number) {
+    public static emitStunnablePlayers(roomId: string, stunnablePlayers: string[]) {
+        this.catchFoodGameEventMessageEmitter.emit({
+            type: CATCH_FOOD_GAME_EVENT_MESSAGE__STUNNABLE_PLAYERS,
+            roomId,
+            stunnablePlayers,
+        });
+    }
+
+    public static emitGameHasStartedEvent(roomId: string, countdownTime: number, game: string) {
         this.catchFoodGameEventMessageEmitter.emit({
             type: GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED,
             roomId,
             countdownTime,
+            game,
         });
     }
 

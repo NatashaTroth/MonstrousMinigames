@@ -1,4 +1,5 @@
 import User from '../../classes/user';
+import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
 import Game from '../Game';
 import { IGameInterface } from '../interfaces';
@@ -25,6 +26,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     private photoTimeSeconds = 0;
     private takingPhoto = false;
     private roundIdx = 0;
+    gameName = GameNames.GAME3;
 
     constructor(roomId: string, public leaderboard: Leaderboard) {
         super(roomId);
@@ -67,7 +69,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         setTimeout(() => {
             super.startGame();
         }, this.countdownTimeGameStart);
-        GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTimeGameStart);
+        GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTimeGameStart, this.gameName);
         this.sendPhotoTopic();
     }
 

@@ -29,6 +29,10 @@ export const defaultValue = {
     setExceededChaserPushes: () => {
         // do nothing
     },
+    stunnablePlayers: [],
+    setStunnablePlayers: () => {
+        // do nothing
+    },
 };
 export interface Obstacle {
     type: ObstacleTypes;
@@ -51,6 +55,8 @@ interface Game1ContextProps {
     setEarlySolvableObstacle: (val: Obstacle | undefined) => void;
     exceededChaserPushes: boolean;
     setExceededChaserPushes: (val: boolean) => void;
+    stunnablePlayers: string[];
+    setStunnablePlayers: (val: string[]) => void;
 }
 
 export const Game1Context = React.createContext<Game1ContextProps>(defaultValue);
@@ -62,6 +68,7 @@ const Game1ContextProvider: React.FunctionComponent = ({ children }) => {
     const [hasStone, setHasStone] = React.useState(false);
     const [earlySolvableObstacle, setEarlySolvableObstacle] = React.useState<Obstacle | undefined>();
     const [exceededChaserPushes, setExceededChaserPushes] = React.useState(false);
+    const [stunnablePlayers, setStunnablePlayers] = React.useState<string[]>([]);
 
     let reroute = true;
 
@@ -87,6 +94,8 @@ const Game1ContextProvider: React.FunctionComponent = ({ children }) => {
         setExceededChaserPushes,
         playerFinished,
         setPlayerFinished,
+        stunnablePlayers,
+        setStunnablePlayers,
     };
     return <Game1Context.Provider value={content}>{children}</Game1Context.Provider>;
 };

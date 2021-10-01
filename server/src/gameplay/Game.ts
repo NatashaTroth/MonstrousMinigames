@@ -22,6 +22,7 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     public gameState = GameState.Initialised;
     public players = new Map<string, TPlayer>();
     public gameStateMessage: string;
+    public gameName = '';
 
     constructor(
         public roomId: string,

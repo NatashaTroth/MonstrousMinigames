@@ -45,7 +45,10 @@ const Stone: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { userId } = React.useContext(PlayerContext);
     const { connectedUsers, roomId } = React.useContext(GameContext);
+    const { stunnablePlayers } = React.useContext(Game1Context);
     const { obstacle, hasStone, setHasStone, setEarlySolvableObstacle } = React.useContext(Game1Context);
+
+    const availableUsers = connectedUsers?.filter(user => stunnablePlayers.includes(user.id)) || [];
 
     React.useEffect(() => {
         document.body.style.overflow = 'visible';
@@ -66,12 +69,16 @@ const Stone: React.FunctionComponent = () => {
         }
     }
 
-    function handleThrow(receivingUserId: string) {
-        setEarlySolvableObstacle(undefined);
+    function handleImmediateThrow(receivingUserId: string) {
         controllerSocket.emit({
             type: MessageTypesGame1.obstacleSolved,
             obstacleId: obstacle?.id,
         });
+        handleThrow(receivingUserId);
+    }
+
+    function handleThrow(receivingUserId: string) {
+        setEarlySolvableObstacle(undefined);
         controllerSocket.emit({
             type: MessageTypesGame1.stunPlayer,
             userId,
@@ -128,7 +135,7 @@ const Stone: React.FunctionComponent = () => {
                         </PebbleContainer>
                         <UserButtons>
                             <div>
-                                {connectedUsers?.map(
+                                {availableUsers.map(
                                     (user, key) =>
                                         user.id !== userId && (
                                             <PlayerButtonContainer
@@ -146,7 +153,11 @@ const Stone: React.FunctionComponent = () => {
                                         disabled={!selectedUser}
                                         onClick={() => {
                                             if (selectedUser) {
-                                                handleThrow(selectedUser);
+                                                if (searchParams.get('choosePlayer')) {
+                                                    handleThrow(selectedUser);
+                                                } else {
+                                                    handleImmediateThrow(selectedUser);
+                                                }
                                             }
                                         }}
                                         variant="secondary"

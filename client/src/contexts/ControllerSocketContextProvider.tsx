@@ -44,6 +44,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setEarlySolvableObstacle,
         setExceededChaserPushes,
         setPlayerDead,
+        setStunnablePlayers,
     } = React.useContext(Game1Context);
     const { setPlayerRank, setPlayerNumber, setName, setUserId, setReady, playerRank } = React.useContext(
         PlayerContext
@@ -84,6 +85,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setEarlySolvableObstacle,
         playerRank,
         setExceededChaserPushes,
+        setStunnablePlayers,
     };
 
     const content = {

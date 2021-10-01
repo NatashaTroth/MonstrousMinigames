@@ -18,6 +18,6 @@ export const games: Game[] = [
         name: 'The Great Monster Escape',
         image: game1Demo,
     },
-    { id: GameNames.game2, name: 'Game 2 - coming soon', image: game1Demo },
-    { id: GameNames.game3, name: 'Game 3 - coming soon', image: game1Demo },
+    { id: GameNames.game2, name: 'Sheep World', image: game1Demo },
+    { id: GameNames.game3, name: 'Snapshot Marathon', image: game1Demo },
 ];

@@ -8,6 +8,7 @@ export enum Routes {
     controllerLobby = '/controller/:id/lobby',
     controllerGame1 = '/controller/:id/game1',
     controllerGame2 = '/controller/:id/game2',
+    controllerGame3 = '/controller/:id/game3',
     controllerTreeStump = `/controller/:id/treestump`,
     controllerSpider = `/controller/:id/spider`,
     controllerTrash = `/controller/:id/trash`,
@@ -16,11 +17,15 @@ export enum Routes {
     controllerPlayerStunned = '/controller/:id/stunned',
     controllerPlayerFinished = '/controller/:id/finished',
     controllerWindmill = '/controller/:id/windmill',
+    controllerVote = '/controller/:id/vote',
+
     screenLobby = '/screen/:id/lobby',
     screenChooseGame = '/screen/:id/choose-game',
     screenGameIntro = '/screen/:id/game-intro',
     screenGetReady = '/screen/:id/get-ready',
     screenGame1 = '/screen/:id/game1',
+    screenGame2 = '/screen/:id/game2',
+    screenGame3 = '/screen/:id/game3',
     screenFinished = '/screen/:id/finished',
     // Route pieces for history
     home = '/:id?',
