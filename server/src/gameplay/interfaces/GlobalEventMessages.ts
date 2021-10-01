@@ -22,6 +22,7 @@ export interface GlobalGameHasStarted {
     type: typeof GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED;
     roomId: string;
     countdownTime: number;
+    game: string;
 }
 export interface GlobalGameHasFinished {
     type: typeof GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED;
