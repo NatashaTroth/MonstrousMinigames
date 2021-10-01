@@ -45,6 +45,11 @@ const ChooseGame: React.FunctionComponent = () => {
                 state: ScreenStates.chooseGame,
                 game: selectedGame,
             });
+
+            screenSocket?.emit({
+                type: MessageTypes.chooseGame,
+                game: selectedGame.id,
+            });
         }
     }, [selectedGame]);
 
