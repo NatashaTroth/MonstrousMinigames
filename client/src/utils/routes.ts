@@ -58,6 +58,8 @@ export const controllerFinishedRoute = (roomId: undefined | string) =>
 
 export const controllerGame1Route = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.game1}`;
 
+export const controllerGame2Route = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.game2}`;
+
 export const controllerPlayerStunnedRoute = (roomId: undefined | string) =>
     `${Routes.controller}/${roomId}${Routes.stunned}`;
 

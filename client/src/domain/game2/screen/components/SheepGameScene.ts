@@ -55,7 +55,7 @@ class SheepGameScene extends Phaser.Scene {
     allScreensLoaded: boolean;
 
     constructor() {
-        super('MainScene');
+        super('SheepGameScene');
         this.windowWidth = 0;
         this.windowHeight = 0;
         this.roomId = sessionStorage.getItem('roomId') || '';
