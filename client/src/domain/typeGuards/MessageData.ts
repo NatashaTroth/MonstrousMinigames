@@ -18,14 +18,12 @@ import { PlayerStunnedMessage } from './game1/playerStunned';
 import { PlayerUnstunnedMessage } from './game1/playerUnstunned';
 import { GameHasStartedMessage } from './game1/started';
 import { StunnablePlayersMessage } from './game1/stunnablePlayers';
-import { AllScreensSheepGameLoadedMessage } from './game2/allScreensSheepGameLoaded';
 import { GameHasPausedMessage } from './paused';
 import { GameHasResetMessage } from './reset';
 import { GameHasResumedMessage } from './resumed';
 import { ScreenAdminMessage } from './screenAdmin';
 import { ScreenStateMessage } from './screenState';
 import { StartPhaserGameMessage } from './startPhaserGame';
-import { StartSheepGameMessage } from './startSheepGame';
 import { GameHasStoppedMessage } from './stopped';
 import { UserInitMessage } from './userInit';
 
@@ -38,9 +36,7 @@ export type MessageData =
     | PlayerFinishedMessage
     | GameHasPausedMessage
     | StartPhaserGameMessage
-    | StartSheepGameMessage
     | AllScreensPhaserGameLoadedMessage
-    | AllScreensSheepGameLoadedMessage
     | PhaserLoadingTimedOutMessage
     | GameHasStartedMessage
     | GameHasResumedMessage
