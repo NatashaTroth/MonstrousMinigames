@@ -46,7 +46,6 @@ export interface HandleSetSocketDependencies {
     setScreenAdmin: (val: boolean) => void;
     setScreenState: (val: string) => void;
     history: History;
-    gameId: GameNames;
 }
 
 export function handleSetSocket(
