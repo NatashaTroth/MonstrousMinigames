@@ -44,38 +44,7 @@ export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history 
                 }}
             >
                 <Frame>
-                    <div
-                        style={{
-                            ...wrapperStyles,
-                        }}
-                    >
-                        <label style={{ ...LabelStyles }}>Enter your name:</label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={formState?.name}
-                            onChange={e => setFormState({ ...formState, name: e.target.value })}
-                            placeholder="James P."
-                            required
-                            maxLength={10}
-                            style={{ ...inputStyles }}
-                        />
-                        {!roomId && (
-                            <>
-                                <label style={{ ...LabelStyles }}>Enter the roomCode:</label>
-                                <input
-                                    type="text"
-                                    name="roomId"
-                                    value={formState?.roomId}
-                                    onChange={e => setFormState({ ...formState, roomId: e.target.value })}
-                                    placeholder="ABCD"
-                                    required
-                                    maxLength={4}
-                                    style={{ ...inputStyles }}
-                                />
-                            </>
-                        )}
-                    </div>
+                    <IFrameContent roomId={roomId} formState={formState} setFormState={setFormState} />
                 </Frame>
 
                 <Button type="submit" disabled={!formState?.name}>
@@ -89,9 +58,50 @@ export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history 
 export function checkRoomCode(roomId: string) {
     if (roomId.length !== 4) {
         return null;
-    } else if (!roomId.match('[a-zA-Z]')) {
+    } else if (!roomId.match('^[a-zA-Z]+$')) {
         return null;
     }
 
     return roomId;
 }
+
+interface IFrameContentProps {
+    roomId: string | null;
+    formState: FormStateProps;
+    setFormState: (val: FormStateProps) => void;
+}
+
+export const IFrameContent: React.FunctionComponent<IFrameContentProps> = ({ roomId, formState, setFormState }) => (
+    <div
+        style={{
+            ...wrapperStyles,
+        }}
+    >
+        <label style={{ ...LabelStyles }}>Enter your name:</label>
+        <input
+            type="text"
+            name="name"
+            value={formState?.name}
+            onChange={e => setFormState({ ...formState, name: e.target.value })}
+            placeholder="James P."
+            required
+            maxLength={10}
+            style={{ ...inputStyles }}
+        />
+        {!roomId && (
+            <>
+                <label style={{ ...LabelStyles }}>Enter the roomCode:</label>
+                <input
+                    type="text"
+                    name="roomId"
+                    value={formState?.roomId}
+                    onChange={e => setFormState({ ...formState, roomId: e.target.value })}
+                    placeholder="ABCD"
+                    required
+                    maxLength={4}
+                    style={{ ...inputStyles }}
+                />
+            </>
+        )}
+    </div>
+);

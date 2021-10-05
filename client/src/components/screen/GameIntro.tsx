@@ -25,7 +25,6 @@ import {
     ImageDescription,
     InstructionImg,
     IntroContentWrapper,
-    IntroText,
     PaddingContainer,
     PreviewImageContainer,
     StyledFormGroup,
@@ -46,20 +45,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const GameIntro: React.FunctionComponent = () => {
     const { roomId, screenAdmin, screenState, chosenGame } = React.useContext(GameContext);
-    const [showFirstIntro, setShowFirstIntro] = React.useState(true);
     const [doNotShowChecked, setDoNotShowChecked] = React.useState(false);
     const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
     const { screenSocket } = React.useContext(ScreenSocketContext);
 
     function handleNext() {
-        if (showFirstIntro) {
-            setShowFirstIntro(false);
-        } else {
-            if (doNotShowChecked) {
-                localStorage.setItem('tutorial', 'seen');
-            }
-            history.push(screenGetReadyRoute(roomId));
+        if (doNotShowChecked) {
+            localStorage.setItem('tutorial', 'seen');
         }
+        history.push(screenGetReadyRoute(roomId));
     }
 
     const classes = useStyles();
@@ -87,52 +81,41 @@ const GameIntro: React.FunctionComponent = () => {
     return (
         <GameIntroContainer>
             <GameIntroBackground>
-                {showFirstIntro ? (
-                    <IntroText>
-                        {/* TODO remove and add content*/}
-                        Animation, die die Geschichte der Monster erklärt mit kurzen Animationen dazu. (entweder
-                        Voice-over oder mit Text)
-                    </IntroText>
-                ) : (
-                    <IntroContentWrapper>
-                        {chosenGame === GameNames.game1 && (
-                            <>
-                                <PreviewImageContainer />
-                                {/* TODO make dynamic */}
-                                {/* <PreviewImage src={forest} /> */}
-
-                                <ImageDescription>
-                                    Your goal is to be the first player to reach safety in the cave while conquering
-                                    obstacles along the way!
-                                </ImageDescription>
-                                <ControlInstructionsContainer>
-                                    <Wrapper>
-                                        <ControlInstruction>Shake your phone to run!</ControlInstruction>
-                                        <InstructionImg src={shakeInstructionsDemo} />
-                                    </Wrapper>
-                                    <Wrapper>
-                                        <ControlInstruction>
-                                            Remove the tree trunk by cutting it along the line!
-                                        </ControlInstruction>
-                                        <InstructionImg src={treeDemo} />
-                                    </Wrapper>
-                                    <Wrapper>
-                                        <ControlInstruction>
-                                            Blow into the microphone to get rid of the spider!
-                                        </ControlInstruction>
-                                        <InstructionImg src={spiderDemo} />
-                                    </Wrapper>
-                                    <Wrapper>
-                                        <ControlInstruction>
-                                            Put the right trash in the garbage can to get the forest clean again!
-                                        </ControlInstruction>
-                                        <InstructionImg src={trashDemo} />
-                                    </Wrapper>
-                                </ControlInstructionsContainer>
-                            </>
-                        )}
-                    </IntroContentWrapper>
-                )}
+                <IntroContentWrapper>
+                    {chosenGame === GameNames.game1 && (
+                        <>
+                            <PreviewImageContainer />
+                            <ImageDescription>
+                                Your goal is to be the first player to reach safety in the cave while conquering
+                                obstacles along the way!
+                            </ImageDescription>
+                            <ControlInstructionsContainer>
+                                <Wrapper>
+                                    <ControlInstruction>Shake your phone to run!</ControlInstruction>
+                                    <InstructionImg src={shakeInstructionsDemo} />
+                                </Wrapper>
+                                <Wrapper>
+                                    <ControlInstruction>
+                                        Remove the tree trunk by cutting it along the line!
+                                    </ControlInstruction>
+                                    <InstructionImg src={treeDemo} />
+                                </Wrapper>
+                                <Wrapper>
+                                    <ControlInstruction>
+                                        Blow into the microphone to get rid of the spider!
+                                    </ControlInstruction>
+                                    <InstructionImg src={spiderDemo} />
+                                </Wrapper>
+                                <Wrapper>
+                                    <ControlInstruction>
+                                        Put the right trash in the garbage can to get the forest clean again!
+                                    </ControlInstruction>
+                                    <InstructionImg src={trashDemo} />
+                                </Wrapper>
+                            </ControlInstructionsContainer>
+                        </>
+                    )}
+                </IntroContentWrapper>
 
                 <PaddingContainer>
                     <StyledFormGroup row>
@@ -154,11 +137,7 @@ const GameIntro: React.FunctionComponent = () => {
                         )}
                     </StyledFormGroup>
                     <BackButtonContainer>
-                        {!screenAdmin && !showFirstIntro ? (
-                            <Button onClick={handleNext}>Previous</Button>
-                        ) : (
-                            <Button onClick={handleNext}>Next</Button>
-                        )}
+                        <Button onClick={handleNext}>Next</Button>
                     </BackButtonContainer>
                 </PaddingContainer>
             </GameIntroBackground>
