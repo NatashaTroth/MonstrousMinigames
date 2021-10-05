@@ -1,7 +1,7 @@
 import { History } from 'history';
 
+import { GameNames } from '../../../config/games';
 import { Obstacle } from '../../../contexts/PlayerContextProvider';
-import { GameNames } from '../../../utils/games';
 import { controllerChooseCharacterRoute } from '../../../utils/routes';
 import { handleConnectedUsersMessage } from '../../commonGameState/controller/handleConnectedUsersMessage';
 import { handleGameHasFinishedMessage } from '../../commonGameState/controller/handleGameHasFinishedMessage';

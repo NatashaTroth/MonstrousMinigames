@@ -1,7 +1,7 @@
 import { History } from 'history';
 
+import { GameNames } from '../../../config/games';
 import { PlayerRank } from '../../../contexts/ScreenSocketContextProvider';
-import { GameNames } from '../../../utils/games';
 import { Routes } from '../../../utils/routes';
 import { handleConnectedUsersMessage } from '../../commonGameState/screen/handleConnectedUsersMessage';
 import { handleGameHasFinishedMessage } from '../../commonGameState/screen/handleGameHasFinishedMessage';

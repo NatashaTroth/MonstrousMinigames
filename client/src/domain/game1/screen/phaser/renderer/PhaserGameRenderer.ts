@@ -2,8 +2,8 @@
 
 import Phaser from 'phaser';
 
+import { depthDictionary } from '../../../../../config/depthDictionary';
 import { designDevelopment } from '../../../../../utils/constants';
-import { depthDictionary } from '../../../../../utils/depthDictionary';
 import { getRandomInt } from '../../../../../utils/getRandomInt';
 import MainScene from '../../components/MainScene';
 import * as colors from '../colors';

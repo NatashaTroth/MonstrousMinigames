@@ -2,6 +2,8 @@
 import { Checkbox, createStyles, FormControlLabel, makeStyles, Theme } from '@material-ui/core';
 import * as React from 'react';
 
+import { GameNames } from '../../config/games';
+import { ScreenStates } from '../../config/screenStates';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
@@ -12,9 +14,7 @@ import spiderDemo from '../../images/ui/spiderDemo.png';
 import trashDemo from '../../images/ui/trashDemo.png';
 import treeDemo from '../../images/ui/treeDemo.png';
 import { MessageTypes } from '../../utils/constants';
-import { GameNames } from '../../utils/games';
 import { Routes, screenGetReadyRoute } from '../../utils/routes';
-import { ScreenStates } from '../../utils/screenStates';
 import Button from '../common/Button';
 import {
     BackButtonContainer,

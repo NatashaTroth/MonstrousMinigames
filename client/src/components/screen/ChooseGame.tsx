@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 
+import { Game, games } from '../../config/games';
+import { ScreenStates } from '../../config/screenStates';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
@@ -8,9 +10,7 @@ import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import oliverLobby from '../../images/characters/oliverLobby.svg';
 import { MessageTypes } from '../../utils/constants';
-import { Game, games } from '../../utils/games';
 import { Routes, screenGameIntroRoute, screenGetReadyRoute } from '../../utils/routes';
-import { ScreenStates } from '../../utils/screenStates';
 import Button from '../common/Button';
 import {
     BackButtonContainer,

@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-import { depthDictionary } from '../../../../../utils/depthDictionary';
+import { depthDictionary } from '../../../../../config/depthDictionary';
 import { fireworkFlares } from '../../components/GameAssets';
 import MainScene from '../../components/MainScene';
 import * as colors from '../colors';

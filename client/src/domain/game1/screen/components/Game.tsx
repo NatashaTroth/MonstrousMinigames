@@ -51,7 +51,6 @@ const Game: React.FunctionComponent = () => {
             type: Phaser.WEBGL,
             width: '100%',
             height: '100%',
-            // backgroundColor: '#081919',
             backgroundColor: '#000b18',
             physics: {
                 default: 'arcade',
@@ -89,15 +88,11 @@ const Game: React.FunctionComponent = () => {
             <AudioButton onClick={handleAudio} variant="primary">
                 {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
             </AudioButton>
-            <GameContent />
+            <div>
+                <div id="game-root" data-testid="game-container"></div>
+            </div>
         </Container>
     );
 };
 
 export default Game;
-
-const GameContent: React.FunctionComponent = () => (
-    <div>
-        <div id="game-root" data-testid="game-container"></div>
-    </div>
-);

@@ -1,6 +1,6 @@
 import { History } from 'history';
 
-import { GameNames } from '../../../utils/games';
+import { GameNames } from '../../../config/games';
 import { controllerGame1Route, controllerGame2Route, controllerGame3Route } from '../../../utils/routes';
 
 interface HandleGameStarted {
