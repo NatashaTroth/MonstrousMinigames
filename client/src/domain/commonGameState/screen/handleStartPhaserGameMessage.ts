@@ -1,6 +1,6 @@
-import { History } from 'history';
+import { History } from "history";
 
-import { screenGame1Route } from '../../../utils/routes';
+import { screenGame1Route } from "../../../utils/routes";
 
 interface HandleStartPhaserGame {
     roomId: string;
@@ -10,7 +10,7 @@ interface HandleStartPhaserGame {
     };
 }
 
-export function handleStartGameMessage(props: HandleStartPhaserGame) {
+export function handleStartPhaserGameMessage(props: HandleStartPhaserGame) {
     const { dependencies, roomId } = props;
     const { setGameStarted, history } = dependencies;
 

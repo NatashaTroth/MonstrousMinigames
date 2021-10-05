@@ -3,6 +3,8 @@ import { Namespace, Socket } from 'socket.io';
 import { MessageTypes } from '../enums/messageTypes';
 import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
 import Game from '../gameplay/Game';
+// import { GameThreeMessageTypes } from '../gameplay/gameThree/enums/GameThreeMessageTypes';
+// import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
 import { IMessage } from '../interfaces/messages';
 import RoomService from '../services/roomService';
 import Room from './room';
@@ -79,7 +81,7 @@ class Screen {
                         this.room.startGame();
 
                         this.room.game.addListener(Game.EVT_FRAME_READY, (game: Game) => {
-                            if (this.room?.isPlaying()) {
+                            if (this.room?.isPlaying() && this.room?.game.sendGameStateUpdates) {
                                 this.emitter.sendGameState(this.screenNamespace, this.room, false);
                             }
                         });
@@ -133,6 +135,11 @@ class Screen {
                         this.room.createNewGame();
                     }
                     break;
+                // case GameThreeMessageTypes.CREATE:
+                //     if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
+                //         this.room.setGame(GameNames.GAME3);
+                //         this.room.createNewGame();
+                //     }
                 case CatchFoodMsgType.PHASER_GAME_LOADED:
                     this.room?.setScreenPhaserGameReady(this.socket.id, true);
                     if (this.room && !this.room?.firstPhaserScreenLoaded) {
