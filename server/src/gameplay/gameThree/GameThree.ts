@@ -149,11 +149,9 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private handleReceivedPhotoVote(message: IMessagePhotoVote) {
-        message.votes.forEach(vote => {
-            if (this.players.has(vote.photographerId)) {
-                this.players.get(vote.photographerId)!.addPoints(this.roundIdx, this.getPointsFromVote(vote.vote));
-            }
-        });
+        if (this.players.has(message.photographerId)) {
+            this.players.get(message.photographerId)!.addPoints(this.roundIdx, 1);
+        }
     }
 
     private allPhotosReceived(): boolean {
@@ -175,9 +173,5 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         this.countdownTimeElapsed = this.countdownTimeVote;
         this.voting = true;
         GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, this.countdownTimeVote);
-    }
-
-    private getPointsFromVote(vote: number) {
-        return this.players.size - (vote - 1);
     }
 }

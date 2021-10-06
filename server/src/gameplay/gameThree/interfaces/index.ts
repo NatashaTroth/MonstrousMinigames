@@ -7,7 +7,6 @@ import { IMessagePhotoVote } from './messagePhotoVote';
 import { Photo } from './Photo';
 import { PlayerState } from './PlayerState';
 import { PlayerStateForClient } from './PlayerStateForClient';
-import { Vote } from './Vote';
 
 export {
     PlayerState,
@@ -19,5 +18,4 @@ export {
     Photo,
     IMessagePhoto,
     IMessagePhotoVote,
-    Vote,
 };
