@@ -16,10 +16,12 @@ import { InitialGameStateInfo, PlayerRank } from './interfaces';
 import {
     GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC,
+    GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS,
     GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER,
     GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS,
 } from './interfaces/GameThreeEventMessages';
 import { photoPhotographerMapper } from './interfaces/photoPhotographerMapper';
+import { votingResultsPhotographerMapper } from './interfaces/votingResultsPhotographerMapper';
 
 // params: (data: GameEvents.ObstacleReachedInfo
 
@@ -115,6 +117,14 @@ export default class GameThreeEventEmitter {
             roomId,
             photoUrls,
             countdownTime,
+        });
+    }
+
+    public static emitPhotoVotingResults(roomId: string, results: votingResultsPhotographerMapper[]) {
+        this.GameThreeEventMessageEmitter.emit({
+            type: GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS,
+            roomId,
+            results,
         });
     }
 }

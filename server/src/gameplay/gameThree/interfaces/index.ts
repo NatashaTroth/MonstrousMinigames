@@ -5,8 +5,10 @@ import { InitialGameStateInfo } from './InitialGameStateInfo';
 import { IMessagePhoto } from './messagePhoto';
 import { IMessagePhotoVote } from './messagePhotoVote';
 import { Photo } from './Photo';
+import { photoPhotographerMapper } from './photoPhotographerMapper';
 import { PlayerState } from './PlayerState';
 import { PlayerStateForClient } from './PlayerStateForClient';
+import { votingResultsPhotographerMapper } from './votingResultsPhotographerMapper';
 
 export {
     PlayerState,
@@ -18,4 +20,6 @@ export {
     Photo,
     IMessagePhoto,
     IMessagePhotoVote,
+    votingResultsPhotographerMapper,
+    photoPhotographerMapper,
 };

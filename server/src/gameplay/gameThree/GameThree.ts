@@ -11,9 +11,13 @@ import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreeEventEmitter from './GameThreeEventEmitter';
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreePlayer from './GameThreePlayer';
-import { IMessagePhoto, IMessagePhotoVote } from './interfaces';
+import {
+    IMessagePhoto,
+    IMessagePhotoVote,
+    photoPhotographerMapper,
+    votingResultsPhotographerMapper,
+} from './interfaces';
 import { GameStateInfo } from './interfaces/GameStateInfo';
-import { photoPhotographerMapper } from './interfaces/photoPhotographerMapper';
 
 type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
 
@@ -57,6 +61,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
         // handle taking photo
         if (this.takingPhoto) this.handleTakingPhoto(timeElapsedSinceLastFrame);
+        if (this.voting) this.handleVoting(timeElapsedSinceLastFrame);
     }
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
         //TODO
@@ -133,6 +138,20 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         if (this.countdownTimeElapsed <= 0) {
             this.takingPhoto = false;
             GameThreeEventEmitter.emitTakePhotoCountdownOver(this.roomId);
+        }
+
+        //TODO if time over or if all received - check what photos received and forward to screens
+    }
+    private handleVoting(timeElapsedSinceLastFrame: number) {
+        this.countdownTimeElapsed -= timeElapsedSinceLastFrame;
+        if (this.countdownTimeElapsed <= 0) {
+            this.voting = false;
+            //TODO new round??
+            const votingResults: votingResultsPhotographerMapper[] = Array.from(this.players.values()).map(player => {
+                return { photographerId: player.id, points: player.photos[this.roundIdx].points };
+            });
+
+            GameThreeEventEmitter.emitPhotoVotingResults(this.roomId, votingResults);
         }
 
         //TODO if time over or if all received - check what photos received and forward to screens
