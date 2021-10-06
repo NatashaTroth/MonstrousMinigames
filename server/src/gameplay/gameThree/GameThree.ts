@@ -155,21 +155,6 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         }
     }
 
-    private handleReceivedPhotoVote(message: IMessagePhotoVote) {
-        const player = this.players.get(message.photographerId!);
-        const voter = this.players.get(message.voterId);
-        if (player && voter && !voter.roundInfo[this.roundIdx].voted) {
-            player?.addPoints(this.roundIdx, 1);
-            if (voter) voter.roundInfo[this.roundIdx].voted = true;
-        }
-        // this.players.get(message.voterId)?.roundInfo[this.roundIdx].voted = true
-
-        if (this.allVotesReceived()) {
-            this.handleAllVotesReceived();
-            //Do something
-        }
-    }
-
     private allPhotosReceived(): boolean {
         return Array.from(this.players.values()).every(player => player.roundInfo[this.roundIdx].received);
     }
@@ -183,9 +168,13 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private sendPhotosToScreen() {
-        const photoUrls: photoPhotographerMapper[] = Array.from(this.players.values()).map(player => {
-            return { photographerId: player.id, url: player.roundInfo[this.roundIdx].url };
-        });
+        const photoUrls: photoPhotographerMapper[] = Array.from(this.players.values())
+            .filter(player => player.roundInfo[this.roundIdx].url)
+            .map(player => {
+                return { photographerId: player.id, url: player.roundInfo[this.roundIdx].url };
+            });
+
+        // todo only send where photos received
         this.countdownTimeElapsed = this.countdownTimeVote;
         this.voting = true;
         GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, this.countdownTimeVote);
@@ -193,15 +182,42 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     // *** Voting ***
 
+    private handleReceivedPhotoVote(message: IMessagePhotoVote) {
+        const player = this.players.get(message.photographerId!);
+        const voter = this.players.get(message.voterId);
+        if (player && voter && !voter.roundInfo[this.roundIdx].voted) {
+            player?.addPoints(this.roundIdx, 1);
+            if (voter) {
+                voter.roundInfo[this.roundIdx].voted = true;
+                // voter.roundInfo[this.roundIdx].points += 1; //point for voting //TODO???
+            }
+        }
+        // this.players.get(message.voterId)?.roundInfo[this.roundIdx].voted = true
+
+        if (this.allVotesReceived()) {
+            this.handleAllVotesReceived();
+            //Do something
+        }
+    }
+
     private handleVoting(timeElapsedSinceLastFrame: number) {
         this.countdownTimeElapsed -= timeElapsedSinceLastFrame;
         if (this.countdownTimeElapsed <= 0) {
             this.voting = false;
             //TODO new round??
+            this.removeVotingPointsNotVoted();
             this.sendPhotoVotingResultsToScreen();
         }
 
         //TODO if time over or if all received - check what photos received and forward to screens
+    }
+
+    private removeVotingPointsNotVoted() {
+        Array.from(this.players.values()).forEach(player => {
+            if (!player.roundInfo[this.roundIdx].voted) {
+                player.roundInfo[this.roundIdx].points = 0;
+            }
+        });
     }
 
     private allVotesReceived(): boolean {
