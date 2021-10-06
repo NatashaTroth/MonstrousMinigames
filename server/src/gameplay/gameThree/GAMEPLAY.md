@@ -67,10 +67,7 @@ Need to keep track of points
 
 4. Sync timer with backend periodically - but how?? TODO
 
-5. If no picture after time - no points
-6. Send all pictures to screen, send voting to controller, timer to vote
-7. Collect and tally votes, if not vote - player gets no points. 1 point per vote
-8. FINAL ROUND: TODO
+//TODO make sure all results are refused that come afterwards - same with photos 5. If no picture after time - no points 6. Send all pictures to screen, send voting to controller, timer to vote 7. Collect and tally votes, if not vote - player gets no points. 1 point per vote 8. FINAL ROUND: TODO
 
 urls weiterschicken - von client bekommen
 
