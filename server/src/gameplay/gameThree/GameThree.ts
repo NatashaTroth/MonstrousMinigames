@@ -11,8 +11,9 @@ import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreeEventEmitter from './GameThreeEventEmitter';
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreePlayer from './GameThreePlayer';
-import { IMessagePhoto } from './interfaces';
+import { IMessagePhoto, IMessagePhotoVote } from './interfaces';
 import { GameStateInfo } from './interfaces/GameStateInfo';
+import { photoPhotographerMapper } from './interfaces/photoPhotographerMapper';
 
 type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
 
@@ -113,6 +114,11 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                 this.handleReceivedPhoto(message as IMessagePhoto);
                 break;
             }
+            case GameThreeMessageTypes.PHOTO_VOTE: {
+                //TODO handle countdown over..
+                this.handleReceivedPhotoVote(message as IMessagePhotoVote);
+                break;
+            }
             // case GameThreeMessageTypes.KILL:
             //     this.killSheep(message.userId!);
             //     break;
@@ -142,6 +148,14 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         }
     }
 
+    private handleReceivedPhotoVote(message: IMessagePhotoVote) {
+        message.votes.forEach(vote => {
+            if (this.players.has(vote.photographerId)) {
+                this.players.get(vote.photographerId)!.addPoints(this.roundIdx, this.getPointsFromVote(vote.vote));
+            }
+        });
+    }
+
     private allPhotosReceived(): boolean {
         return Array.from(this.players.values()).every(player => player.photos[this.roundIdx].received);
     }
@@ -155,9 +169,15 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private sendPhotosToScreen() {
-        const photoUrls = Array.from(this.players.values()).map(player => player.photos[this.roundIdx].url);
+        const photoUrls: photoPhotographerMapper[] = Array.from(this.players.values()).map(player => {
+            return { photographerId: player.id, url: player.photos[this.roundIdx].url };
+        });
         this.countdownTimeElapsed = this.countdownTimeVote;
         this.voting = true;
         GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, this.countdownTimeVote);
+    }
+
+    private getPointsFromVote(vote: number) {
+        return this.players.size - (vote - 1);
     }
 }
