@@ -133,6 +133,8 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     //********************** Helper Functions **********************/
+
+    // *** Taking Photos ***
     private handleTakingPhoto(timeElapsedSinceLastFrame: number) {
         this.countdownTimeElapsed -= timeElapsedSinceLastFrame;
         if (this.countdownTimeElapsed <= 0) {
@@ -142,24 +144,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
         //TODO if time over or if all received - check what photos received and forward to screens
     }
-    private handleVoting(timeElapsedSinceLastFrame: number) {
-        this.countdownTimeElapsed -= timeElapsedSinceLastFrame;
-        if (this.countdownTimeElapsed <= 0) {
-            this.voting = false;
-            //TODO new round??
-            const votingResults: votingResultsPhotographerMapper[] = Array.from(this.players.values()).map(player => {
-                return { photographerId: player.id, points: player.photos[this.roundIdx].points };
-            });
-
-            GameThreeEventEmitter.emitPhotoVotingResults(this.roomId, votingResults);
-        }
-
-        //TODO if time over or if all received - check what photos received and forward to screens
-    }
 
     private handleReceivedPhoto(message: IMessagePhoto) {
         const player = this.players.get(message.userId!);
-        player?.receivedPhoto(message.url, this.roundIdx);
+        if (player && !player.roundInfo[this.roundIdx].received) player.receivedPhoto(message.url, this.roundIdx);
 
         if (this.allPhotosReceived()) {
             this.handleAllPhotosReceived();
@@ -168,13 +156,22 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private handleReceivedPhotoVote(message: IMessagePhotoVote) {
-        if (this.players.has(message.photographerId)) {
-            this.players.get(message.photographerId)!.addPoints(this.roundIdx, 1);
+        const player = this.players.get(message.photographerId!);
+        const voter = this.players.get(message.voterId);
+        if (player && voter && !voter.roundInfo[this.roundIdx].voted) {
+            player?.addPoints(this.roundIdx, 1);
+            if (voter) voter.roundInfo[this.roundIdx].voted = true;
+        }
+        // this.players.get(message.voterId)?.roundInfo[this.roundIdx].voted = true
+
+        if (this.allVotesReceived()) {
+            this.handleAllVotesReceived();
+            //Do something
         }
     }
 
     private allPhotosReceived(): boolean {
-        return Array.from(this.players.values()).every(player => player.photos[this.roundIdx].received);
+        return Array.from(this.players.values()).every(player => player.roundInfo[this.roundIdx].received);
     }
 
     private handleAllPhotosReceived() {
@@ -187,10 +184,43 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     private sendPhotosToScreen() {
         const photoUrls: photoPhotographerMapper[] = Array.from(this.players.values()).map(player => {
-            return { photographerId: player.id, url: player.photos[this.roundIdx].url };
+            return { photographerId: player.id, url: player.roundInfo[this.roundIdx].url };
         });
         this.countdownTimeElapsed = this.countdownTimeVote;
         this.voting = true;
         GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, this.countdownTimeVote);
+    }
+
+    // *** Voting ***
+
+    private handleVoting(timeElapsedSinceLastFrame: number) {
+        this.countdownTimeElapsed -= timeElapsedSinceLastFrame;
+        if (this.countdownTimeElapsed <= 0) {
+            this.voting = false;
+            //TODO new round??
+            this.sendPhotoVotingResultsToScreen();
+        }
+
+        //TODO if time over or if all received - check what photos received and forward to screens
+    }
+
+    private allVotesReceived(): boolean {
+        return Array.from(this.players.values()).every(player => player.roundInfo[this.roundIdx].voted);
+    }
+
+    private handleAllVotesReceived() {
+        //TODO
+        // send all photos, start voting
+        this.countdownTimeElapsed = 0;
+        this.voting = false; //TODO state instead
+        this.sendPhotoVotingResultsToScreen();
+    }
+
+    private sendPhotoVotingResultsToScreen() {
+        const votingResults: votingResultsPhotographerMapper[] = Array.from(this.players.values()).map(player => {
+            return { photographerId: player.id, points: player.roundInfo[this.roundIdx].points };
+        });
+
+        GameThreeEventEmitter.emitPhotoVotingResults(this.roomId, votingResults);
     }
 }
