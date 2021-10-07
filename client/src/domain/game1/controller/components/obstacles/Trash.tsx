@@ -1,19 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import interact from 'interactjs';
-import * as React from 'react';
+import interact from "interactjs";
+import * as React from "react";
 
-import Button from '../../../../../components/common/Button';
-import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
-import { Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
-import { GameContext } from '../../../../../contexts/GameContextProvider';
-import food from '../../../../../images/obstacles/trash/food.svg';
-import paper from '../../../../../images/obstacles/trash/paper.svg';
-import plastic from '../../../../../images/obstacles/trash/plastic.svg';
-import { MessageTypesGame1, TrashType } from '../../../../../utils/constants';
-import { dragMoveListener, initializeInteractListeners, itemCounter } from './Draggable';
-import LinearProgressBar from './LinearProgressBar';
-import { ObstacleContainer, ObstacleInstructions } from './ObstacleStyles.sc';
-import { Container, Draggable, DropZone, StyledImage, StyledSkipButton } from './Trash.sc';
+import Button from "../../../../../components/common/Button";
+import { ControllerSocketContext } from "../../../../../contexts/ControllerSocketContextProvider";
+import { Game1Context, Obstacle } from "../../../../../contexts/game1/Game1ContextProvider";
+import { GameContext } from "../../../../../contexts/GameContextProvider";
+import food from "../../../../../images/obstacles/trash/food.svg";
+import paper from "../../../../../images/obstacles/trash/paper.svg";
+import plastic from "../../../../../images/obstacles/trash/plastic.svg";
+import { MessageTypesGame1, TrashType } from "../../../../../utils/constants";
+import { dragMoveListener, initializeInteractListeners, itemCounter } from "./Draggable";
+import LinearProgressBar from "./LinearProgressBar";
+import { ObstacleContainer, ObstacleInstructions } from "./ObstacleStyles.sc";
+import { Container, Draggable, DropZone, StyledImage, StyledSkipButton } from "./Trash.sc";
 
 interface WindowProps extends Window {
     dragMoveListener?: unknown;
@@ -26,8 +26,6 @@ const Trash: React.FunctionComponent = () => {
     const { roomId } = React.useContext(GameContext);
     const [randomArray, setRandomArray] = React.useState<TrashType[]>([]);
     const [progress, setProgress] = React.useState(0);
-
-    const items: TrashType[] = [TrashType.Paper, TrashType.Food, TrashType.Plastic];
 
     let handleSkip: ReturnType<typeof setTimeout>;
 
@@ -43,34 +41,27 @@ const Trash: React.FunctionComponent = () => {
         let mounted = true;
         const w = window as WindowProps;
         w.dragMoveListener = dragMoveListener;
-        const remainingTypes = items.filter(item => item !== obstacle?.trashType);
 
-        const generatedRandomArray = [
-            ...Array.from(
-                { length: 5 - (obstacle?.numberTrashItems || 0) },
-                () => remainingTypes[Math.floor(Math.random() * 2)]
-            ),
-            ...Array(obstacle?.numberTrashItems).fill(obstacle?.trashType),
-        ].sort(() => 0.5 - Math.random());
+        if (obstacle && obstacle.trashType && obstacle.numberTrashItems) {
+            setRandomArray(generateRandomArray(obstacle));
 
-        setRandomArray(generatedRandomArray);
+            initializeSkip();
 
-        initializeSkip();
-
-        initializeInteractListeners(
-            obstacle!.trashType!,
-            obstacle!.numberTrashItems!,
-            () => {
-                if (mounted) {
-                    solveObstacle();
+            initializeInteractListeners(
+                obstacle.trashType,
+                obstacle.numberTrashItems,
+                () => {
+                    if (mounted) {
+                        solveObstacle();
+                    }
+                },
+                p => {
+                    if (mounted) {
+                        setProgress(p);
+                    }
                 }
-            },
-            p => {
-                if (mounted) {
-                    setProgress(p);
-                }
-            }
-        );
+            );
+        }
 
         return () => {
             mounted = false;
@@ -144,3 +135,17 @@ const Trash: React.FunctionComponent = () => {
 };
 
 export default Trash;
+
+export function generateRandomArray(obstacle: Obstacle) {
+    const items: TrashType[] = [TrashType.Paper, TrashType.Food, TrashType.Plastic];
+
+    const remainingTypes = items.filter(item => item !== obstacle.trashType);
+
+    return [
+        ...Array.from(
+            { length: 5 - (obstacle.numberTrashItems || 0) },
+            () => remainingTypes[Math.floor(Math.random() * 2)]
+        ),
+        ...Array(obstacle.numberTrashItems).fill(obstacle.trashType),
+    ].sort(() => 0.5 - Math.random());
+}
