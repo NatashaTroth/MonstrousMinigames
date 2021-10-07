@@ -17,6 +17,7 @@ import {
     GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC,
     GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS,
+    GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
     GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER,
     GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS,
 } from './interfaces/GameThreeEventMessages';
@@ -125,6 +126,13 @@ export default class GameThreeEventEmitter {
             type: GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS,
             roomId,
             results,
+        });
+    }
+    public static emitTakeFinalPhotosCountdown(roomId: string, countdownTime: number) {
+        this.GameThreeEventMessageEmitter.emit({
+            type: GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
+            roomId,
+            countdownTime,
         });
     }
 }

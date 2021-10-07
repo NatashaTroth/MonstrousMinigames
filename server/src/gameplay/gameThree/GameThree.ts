@@ -25,6 +25,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     private countdownTimeGameStart = InitialParameters.COUNTDOWN_TIME_GAME_START;
     private photoTopics?: string[];
     private countdownTimeTakePhoto = InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO;
+    private countdownTimeTakeFinalPhotos = InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS;
     private countdownTimeVote = InitialParameters.COUNTDOWN_TIME_VOTE;
     private randomWordGenerator = new RandomWordGenerator();
     private numberPhotoTopics = InitialParameters.NUMBER_PHOTO_TOPICS;
@@ -32,6 +33,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     private takingPhoto = false; //TODO change to state
     private voting = false;
     private roundIdx = 0;
+    private finalRound = false;
     gameName = GameNames.GAME3;
 
     constructor(roomId: string, public leaderboard: Leaderboard) {
@@ -141,8 +143,6 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             this.takingPhoto = false;
             GameThreeEventEmitter.emitTakePhotoCountdownOver(this.roomId);
         }
-
-        //TODO if time over or if all received - check what photos received and forward to screens
     }
 
     private handleReceivedPhoto(message: IMessagePhoto) {
@@ -160,8 +160,6 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private handleAllPhotosReceived() {
-        //TODO
-        // send all photos, start voting
         this.countdownTimeElapsed = 0;
         this.takingPhoto = false;
         this.sendPhotosToScreen();
@@ -174,7 +172,6 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                 return { photographerId: player.id, url: player.roundInfo[this.roundIdx].url };
             });
 
-        // todo only send where photos received
         this.countdownTimeElapsed = this.countdownTimeVote;
         this.voting = true;
         GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, this.countdownTimeVote);
@@ -238,5 +235,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         });
 
         GameThreeEventEmitter.emitPhotoVotingResults(this.roomId, votingResults);
+    }
+
+    // *** Final round ***
+    private sendTakeFinalPhotosCountdown() {
+        GameThreeEventEmitter.emitTakeFinalPhotosCountdown(this.roomId, this.countdownTimeTakeFinalPhotos);
     }
 }
