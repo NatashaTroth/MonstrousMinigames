@@ -30,7 +30,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     private countdownTimeViewResults = InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS;
     private countdownTimeTakeFinalPhotos = InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS;
     private randomWordGenerator = new RandomWordGenerator();
-    private numberPhotoTopics = InitialParameters.NUMBER_PHOTO_TOPICS;
+    private numberRounds = InitialParameters.NUMBER_ROUNDS;
     private gameThreeGameState = GameThreeGameState.BeforeStart;
     private countdownTimeElapsed = 0;
     private countdownRunning = false;
@@ -75,6 +75,9 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                 case GameThreeGameState.Voting:
                     this.handleVoting();
                     break;
+                case GameThreeGameState.ViewingResults:
+                    this.handleNewRound();
+                    break;
             }
         }
     }
@@ -88,7 +91,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
-        this.photoTopics = this.randomWordGenerator.generateRandomWords(this.numberPhotoTopics);
+        this.photoTopics = this.randomWordGenerator.generateRandomWords(this.numberRounds);
     }
 
     startGame(): void {
@@ -259,8 +262,23 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             return { photographerId: player.id, points: player.roundInfo[this.roundIdx].points };
         });
         this.gameThreeGameState = GameThreeGameState.ViewingResults;
+        this.initiateCountdown(this.countdownTimeViewResults);
 
         GameThreeEventEmitter.emitPhotoVotingResults(this.roomId, votingResults, this.countdownTimeViewResults);
+    }
+
+    // *** Round Change ***
+    private handleNewRound() {
+        this.roundIdx++;
+        if (!this.isFinalRound()) {
+            this.sendPhotoTopic();
+        } else {
+            this.sendTakeFinalPhotosCountdown();
+        }
+    }
+
+    private isFinalRound() {
+        return this.roundIdx >= this.numberRounds - 1;
     }
 
     // *** Final round ***
