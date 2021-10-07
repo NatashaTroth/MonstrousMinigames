@@ -39,7 +39,7 @@ Once the players join in the game, they will all be presented with a topic (e.g.
 
 -   In the final round the player can take up to 3 pictures, while the timer's duration is 180 seconds. This time there is no featured topic.
 -   If the player takes only 1 or 2 pictures until the timer runs out, they will just have to work with them.
--   If a player takes no pictures, they get auto filled 3 pictures of our database.
+-   If a player takes no pictures, they get auto filled 3 pictures of our database. -??? NO POINTS??
 
 **Picture reveal phase:**
 
@@ -64,10 +64,18 @@ Need to keep track of points
 1. Admin user creates and starts game
 2. Game sends start countdown
 3. Game sends topic and countdown timer
+4. Send all pictures to screen, send voting to controller, timer to vote
+5. Collect and tally votes, if not vote - player gets no points.
 
-4. Sync timer with backend periodically - but how?? TODO
+6. Sync timer with backend periodically - but how?? TODO
 
-//TODO make sure all results are refused that come afterwards - same with photos 5. If no picture after time - no points 6. Send all pictures to screen, send voting to controller, timer to vote 7. Collect and tally votes, if not vote - player gets no points. 1 point per vote 8. FINAL ROUND: TODO
+7. FINAL ROUND: TODO
+   9:take up to 3 pictures, while the timer's duration is 180 seconds - no topic
+   10: If a player takes no pictures, they get auto filled 3 pictures of our database
+   11: each player has 30 seconds duration showcase, where only their pictures are being revealed.
+   12: can also skip their showcase if they don't have anything to add any more,
+   13: After each player had their turn every player needs to choose one story within 30 seconds - 3 points per vote
+   12: return final points
 
 urls weiterschicken - von client bekommen
 
