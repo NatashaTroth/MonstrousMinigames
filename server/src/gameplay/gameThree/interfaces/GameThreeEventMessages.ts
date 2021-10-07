@@ -48,6 +48,7 @@ export interface PhotoVotingResults {
     type: typeof GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS;
     roomId: string;
     results: votingResultsPhotographerMapper[];
+    countdownTime: number;
 }
 
 export interface TakeFinalPhotosCountdown {

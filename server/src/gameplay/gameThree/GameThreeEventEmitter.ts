@@ -121,11 +121,16 @@ export default class GameThreeEventEmitter {
         });
     }
 
-    public static emitPhotoVotingResults(roomId: string, results: votingResultsPhotographerMapper[]) {
+    public static emitPhotoVotingResults(
+        roomId: string,
+        results: votingResultsPhotographerMapper[],
+        countdownTime: number
+    ) {
         this.GameThreeEventMessageEmitter.emit({
             type: GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS,
             roomId,
             results,
+            countdownTime,
         });
     }
     public static emitTakeFinalPhotosCountdown(roomId: string, countdownTime: number) {

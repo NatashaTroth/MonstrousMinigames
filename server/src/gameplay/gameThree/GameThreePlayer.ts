@@ -4,7 +4,7 @@ import { Photo } from './interfaces';
 
 class GameThreePlayer extends Player {
     roundInfo: Photo[];
-    private totalPoints: number;
+    // private totalPoints: number;
 
     constructor(id: string, name: string) {
         super(id, name);
@@ -14,7 +14,7 @@ class GameThreePlayer extends Player {
             points: 0,
             voted: false,
         });
-        this.totalPoints = 0;
+        // this.totalPoints = 0;
     }
 
     update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
@@ -28,11 +28,14 @@ class GameThreePlayer extends Player {
 
     addPoints(roundIdx: number, points: number) {
         this.roundInfo[roundIdx].points = points;
-        this.totalPoints += points;
+        // this.totalPoints += points;
     }
 
     getTotalPoints() {
-        return this.totalPoints;
+        // return this.totalPoints;
+        let totalPoints = 0;
+        this.roundInfo.forEach(round => (totalPoints += round.points));
+        return totalPoints;
     }
 }
 export default GameThreePlayer;
