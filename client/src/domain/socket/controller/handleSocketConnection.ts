@@ -15,5 +15,5 @@ export async function handleSocketConnection(
 
     setRoomId(roomId);
 
-    handleSetSocket(new SocketIOAdapter(roomId, 'controller', name), roomId || '', playerFinished, dependencies);
+    handleSetSocket(new SocketIOAdapter(roomId, 'controller', name), roomId, playerFinished, dependencies);
 }

@@ -3,6 +3,8 @@ import * as React from 'react';
 
 import Button from '../../components/common/Button';
 import { characters } from '../../config/characters';
+import { GameNames } from '../../config/games';
+import { ScreenStates } from '../../config/screenStates';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext, User } from '../../contexts/ScreenSocketContextProvider';
@@ -13,9 +15,7 @@ import handleStartClickedGame3 from '../../domain/game3/screen/gameState/handleS
 import history from '../../domain/history/history';
 import { Socket } from '../../domain/socket/Socket';
 import { MessageTypes } from '../../utils/constants';
-import { GameNames } from '../../utils/games';
 import { Routes } from '../../utils/routes';
-import { ScreenStates } from '../../utils/screenStates';
 import { getUserArray } from './Lobby';
 import {
     Character,

@@ -1,6 +1,6 @@
-import { Navigator, UserMediaProps } from '../navigator/Navigator';
-import { Window } from '../window/Window';
-import { ClickRequestDeviceMotion, getMicrophoneStream } from './permissions';
+import { Navigator, UserMediaProps } from "../navigator/Navigator";
+import { Window } from "../window/Window";
+import { ClickRequestDeviceMotion, getMicrophoneStream } from "./permissions";
 
 describe('test ClickRequestDeviceMotion function', () => {
     it('ClickRequestDeviceMotion should return true, when access is granted on ios', async () => {
@@ -17,12 +17,24 @@ describe('test ClickRequestDeviceMotion function', () => {
 });
 
 describe('test getMicrophoneStream function', () => {
-    it('getMicrophoneStream should return true', async () => {
+    it('getMicrophoneStream should return true if access is granted', async () => {
         expect(await getMicrophoneStream(new NavigatorFake('granted'))).toBe(true);
     });
 
-    it('getMicrophoneStream should return true', async () => {
+    it('getMicrophoneStream should return false if access is denied', async () => {
         expect(await getMicrophoneStream(new NavigatorFake('denied'))).toBe(false);
+    });
+
+    it('getMicrophoneStream should return false if error occurs', async () => {
+        expect(await getMicrophoneStream(new NavigatorFake('error'))).toBe(false);
+    });
+
+    it('getMicrophoneStream should return false mediaDevices does not exist', async () => {
+        expect(await getMicrophoneStream(new NavigatorFake('', false))).toBe(false);
+    });
+
+    it('getMicrophoneStream should return false getUserMedia does not exist', async () => {
+        expect(await getMicrophoneStream(new NavigatorFake('', true, false))).toBe(false);
     });
 });
 
@@ -51,34 +63,40 @@ class WindowFake implements Window {
 
 class NavigatorFake implements Navigator {
     public mediaDevices?: {
-        getUserMedia?: (val: UserMediaProps) => Promise<MediaStream | null>;
+        getUserMedia?: (val: UserMediaProps) => Promise<MediaStream | null | Error> | undefined;
     } = {};
 
-    constructor(public val: string) {
-        this.mediaDevices = {
-            getUserMedia: (values: UserMediaProps) =>
-                new Promise<MediaStream | null>(resolve => {
-                    if (val === 'granted') {
-                        resolve({
-                            active: false,
-                            id: '1',
-                            onaddtrack: jest.fn(),
-                            onremovetrack: jest.fn(),
-                            addTrack: jest.fn(),
-                            clone: jest.fn(),
-                            getAudioTracks: jest.fn(),
-                            getTrackById: jest.fn(),
-                            getTracks: () => [],
-                            getVideoTracks: jest.fn(),
-                            removeTrack: jest.fn(),
-                            addEventListener: jest.fn(),
-                            removeEventListener: jest.fn(),
-                            dispatchEvent: jest.fn(),
-                        });
-                    } else if (val === 'denied') {
-                        resolve(null);
-                    }
-                }),
-        };
+    constructor(public val: string, public existingMediaDevices = true, public existingGetUserMedia = true) {
+        this.mediaDevices = existingMediaDevices
+            ? {
+                  getUserMedia: (values: UserMediaProps) =>
+                      existingGetUserMedia
+                          ? new Promise<MediaStream | null | Error>(resolve => {
+                                if (val === 'granted') {
+                                    resolve({
+                                        active: false,
+                                        id: '1',
+                                        onaddtrack: jest.fn(),
+                                        onremovetrack: jest.fn(),
+                                        addTrack: jest.fn(),
+                                        clone: jest.fn(),
+                                        getAudioTracks: jest.fn(),
+                                        getTrackById: jest.fn(),
+                                        getTracks: () => [],
+                                        getVideoTracks: jest.fn(),
+                                        removeTrack: jest.fn(),
+                                        addEventListener: jest.fn(),
+                                        removeEventListener: jest.fn(),
+                                        dispatchEvent: jest.fn(),
+                                    });
+                                } else if (val === 'denied') {
+                                    resolve(null);
+                                } else if (val === 'error') {
+                                    resolve(new Error('getUserMedia does not exist'));
+                                }
+                            })
+                          : undefined,
+              }
+            : undefined;
     }
 }

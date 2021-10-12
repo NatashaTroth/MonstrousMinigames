@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { RouteParams } from '../../App';
 import Button from '../../components/common/Button';
 import { characters } from '../../config/characters';
+import { ScreenStates } from '../../config/screenStates';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
@@ -14,7 +15,6 @@ import history from '../../domain/history/history';
 import { localDevelopment, MessageTypes } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';
 import { Routes, screenChooseGameRoute } from '../../utils/routes';
-import { ScreenStates } from '../../utils/screenStates';
 import {
     Character,
     CharacterContainer,

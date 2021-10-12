@@ -5,7 +5,7 @@ export interface UserMediaProps {
 export interface Navigator {
     mediaDevices?:
         | {
-              getUserMedia?: (val: UserMediaProps) => Promise<MediaStream | null>;
+              getUserMedia?: (val: UserMediaProps) => Promise<MediaStream | null | Error> | undefined;
           }
         | undefined;
 }

@@ -1,11 +1,11 @@
 import * as React from 'react';
 
 import { defaultAvailableCharacters } from '../config/characters';
+import { GameNames } from '../config/games';
+import { ScreenStates } from '../config/screenStates';
 import { handleSetGameFinished } from '../domain/commonGameState/controller/handleSetGameFinished';
 import { handleSetGameStarted } from '../domain/commonGameState/controller/handleSetGameStarted';
 import { User } from '../domain/typeGuards/connectedUsers';
-import { GameNames } from '../utils/games';
-import { ScreenStates } from '../utils/screenStates';
 import { PlayerRank } from './ScreenSocketContextProvider';
 
 export const defaultValue = {

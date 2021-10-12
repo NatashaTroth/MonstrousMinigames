@@ -2,14 +2,10 @@ import { History } from "history";
 
 import { Obstacle } from "../../../../contexts/PlayerContextProvider";
 import {
-    handleGameHasFinishedMessage
-} from "../../../commonGameState/controller/handleGameHasFinishedMessage";
-import {
     handlePlayerFinishedMessage
 } from "../../../commonGameState/controller/handlePlayerFinishedMessage";
 import { MessageSocket } from "../../../socket/MessageSocket";
 import { Socket } from "../../../socket/Socket";
-import { finishedTypeGuard, GameHasFinishedMessage } from "../../../typeGuards/finished";
 import {
     ApproachingSolvableObstacleMessage, approachingSolvableObstacleTypeGuard
 } from "../../../typeGuards/game1/approachingSolvableObstacleTypeGuard";
@@ -41,7 +37,6 @@ export interface HandleSetControllerSocketGame1Dependencies {
     setPlayerRank: (val: number) => void;
     setPlayerDead: (val: boolean) => void;
     history: History;
-    playerRank: undefined | number;
     setEarlySolvableObstacle: (val: Obstacle | undefined) => void;
     setExceededChaserPushes: (val: boolean) => void;
     setStunnablePlayers: (val: string[]) => void;
@@ -59,7 +54,6 @@ export function handleSetControllerSocketGame1(
         setPlayerRank,
         setPlayerDead,
         history,
-        playerRank,
         setEarlySolvableObstacle,
         setExceededChaserPushes,
         setStunnablePlayers,
@@ -69,7 +63,6 @@ export function handleSetControllerSocketGame1(
     const playerFinishedSocket = new MessageSocket(playerFinishedTypeGuard, socket);
     const playerDiedSocket = new MessageSocket(playerDiedTypeGuard, socket);
     const playerStunnedSocket = new MessageSocket(playerStunnedTypeGuard, socket);
-    const gameFinishedSocket = new MessageSocket(finishedTypeGuard, socket);
     const playerUnstunnedSocket = new MessageSocket(playerUnstunnedTypeGuard, socket);
     const approachingSolvableObstacleSocket = new MessageSocket(approachingSolvableObstacleTypeGuard, socket);
     const exceededMaxChaserPushesSocket = new MessageSocket(exceededMaxChaserPushesTypeGuard, socket);
@@ -112,18 +105,6 @@ export function handleSetControllerSocketGame1(
 
     playerUnstunnedSocket.listen(() => {
         handlePlayerUnstunned(history, roomId);
-    });
-
-    gameFinishedSocket.listen((data: GameHasFinishedMessage) => {
-        handleGameHasFinishedMessage({
-            roomId,
-            playerRank,
-            playerRanks: data.data.playerRanks,
-            dependencies: {
-                setPlayerRank,
-            },
-            history,
-        });
     });
 
     approachingSolvableObstacleSocket.listen((data: ApproachingSolvableObstacleMessage) => {

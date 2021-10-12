@@ -4,9 +4,9 @@ import { cleanup, fireEvent, queryByText, render } from '@testing-library/react'
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 
+import { games } from '../../config/games';
 import { defaultValue, GameContext } from '../../contexts/GameContextProvider';
 import theme from '../../styles/theme';
-import { games } from '../../utils/games';
 import ChooseGame from './ChooseGame';
 
 afterEach(cleanup);

@@ -1,6 +1,6 @@
 import { createMemoryHistory } from 'history';
 
-import { GameNames } from '../../../utils/games';
+import { GameNames } from '../../../config/games';
 import { handleGameStartedMessage } from './handleGameStartedMessage';
 
 describe('gameHasStarted function', () => {

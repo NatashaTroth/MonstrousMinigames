@@ -76,11 +76,23 @@ export const ConnectScreen: React.FunctionComponent = () => {
             />
             <LeftContainer>
                 <LeftButtonContainer>
-                    <Button type="button" name="new" onClick={handleCreateNewRoom} title="Create new room">
+                    <Button
+                        type="button"
+                        id="new-room"
+                        name="new"
+                        onClick={handleCreateNewRoom}
+                        title="Create new room"
+                    >
                         Create New Room
                     </Button>
 
-                    <Button type="button" name="join" onClick={handleJoinRoom} title="Join an already existing room">
+                    <Button
+                        type="button"
+                        id="join"
+                        name="join"
+                        onClick={handleJoinRoom}
+                        title="Join an already existing room"
+                    >
                         Join Room
                     </Button>
 

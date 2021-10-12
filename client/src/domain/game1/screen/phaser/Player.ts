@@ -1,5 +1,5 @@
+import { depthDictionary } from '../../../../config/depthDictionary';
 import { designDevelopment, localDevelopment, ObstacleTypes, stunnedAnimation } from '../../../../utils/constants';
-import { depthDictionary } from '../../../../utils/depthDictionary';
 import MainScene from '../components/MainScene';
 import { AnimationName } from './enums';
 import { Character, GameData } from './gameInterfaces';

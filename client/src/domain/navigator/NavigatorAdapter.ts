@@ -6,7 +6,7 @@ export class NavigatorAdapter implements Navigator {
     };
 
     constructor() {
-        this.mediaDevices = global.navigator.mediaDevices;
+        this.mediaDevices = (global.navigator as any).mediaDevices;
     }
 }
 

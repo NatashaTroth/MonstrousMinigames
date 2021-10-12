@@ -37,7 +37,7 @@ const PlayerDead: React.FC = () => {
                     Oh no! Unfortunately the mosquitoes got you.
                     {!exceededChaserPushes && (
                         <>
-                            <div>A windmill will appear in {counter} seconds.</div>Rotate it to speed up the mosquitos.
+                            <p>A windmill will appear in {counter} seconds.</p>Rotate it to speed up the mosquitos.
                         </>
                     )}
                 </ObstacleInstructions>

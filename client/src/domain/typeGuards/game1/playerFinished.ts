@@ -1,10 +1,10 @@
-import { MessageTypesGame1 } from '../../../utils/constants';
-import { MessageData } from '../MessageData';
+import { MessageTypesGame1 } from "../../../utils/constants";
+import { MessageData } from "../MessageData";
 
 export interface PlayerFinishedMessage {
     type: MessageTypesGame1.playerFinished;
     rank: number;
-    userId: number;
+    userId: string;
 }
 
 export const playerFinishedTypeGuard = (data: MessageData): data is PlayerFinishedMessage =>

@@ -34,11 +34,6 @@ export const BackButtonContainer = styled.div`
     justify-content: flex-end;
 `;
 
-export const IntroText = styled.div`
-    padding: 20px;
-    padding: 20px;
-`;
-
 export const PaddingContainer = styled.div`
     display: flex;
     padding: 30px;

@@ -1,6 +1,6 @@
-import { MessageTypesGame1 } from '../../../utils/constants';
-import { PlayerFinishedMessage } from '../../typeGuards/game1/playerFinished';
-import { handlePlayerFinishedMessage } from './handlePlayerFinishedMessage';
+import { MessageTypesGame1 } from "../../../utils/constants";
+import { PlayerFinishedMessage } from "../../typeGuards/game1/playerFinished";
+import { handlePlayerFinishedMessage } from "./handlePlayerFinishedMessage";
 
 describe('playerHasFinished function', () => {
     let setPlayerFinished: jest.Mock<any, any>;
@@ -10,7 +10,7 @@ describe('playerHasFinished function', () => {
     const mockData: PlayerFinishedMessage = {
         type: MessageTypesGame1.playerFinished,
         rank: 1,
-        userId: 1,
+        userId: '1',
     };
 
     beforeEach(() => {

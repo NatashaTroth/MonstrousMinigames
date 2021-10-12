@@ -1,5 +1,5 @@
+import { GameNames } from '../../config/games';
 import { MessageTypes } from '../../utils/constants';
-import { GameNames } from '../../utils/games';
 import { GameSetMessage, gameSetTypeGuard } from './gameSet';
 
 describe('game set TypeGuard', () => {
