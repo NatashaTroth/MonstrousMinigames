@@ -131,7 +131,7 @@ const App: React.FunctionComponent = () => {
                                                                 />
                                                                 <Route
                                                                     path={Routes.controllerStone}
-                                                                    component={Stone}
+                                                                    component={() => <Stone history={history} />}
                                                                     exact
                                                                 />
                                                                 <Route

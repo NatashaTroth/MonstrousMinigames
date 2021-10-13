@@ -118,7 +118,5 @@ export function handleSetSocket(
 
     handleSetScreenSocketGame3(socket);
 
-    if (socket) {
-        history.push(`${Routes.screen}/${roomId}/${route || Routes.lobby}`);
-    }
+    history.push(`${Routes.screen}/${roomId}/${route || Routes.lobby}`);
 }

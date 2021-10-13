@@ -1,20 +1,19 @@
 /* eslint-disable simple-import-sort/imports */
-import "jest-styled-components";
-import { cleanup } from "@testing-library/react";
-import React from "react";
-import { ThemeProvider } from "styled-components";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure, mount } from "enzyme";
+import 'jest-styled-components';
+import { cleanup } from '@testing-library/react';
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure, mount } from 'enzyme';
 
-import { defaultValue, Game1Context } from "../../../../../contexts/game1/Game1ContextProvider";
-import food from "../../../../../images/obstacles/trash/food.svg";
-import paper from "../../../../../images/obstacles/trash/paper.svg";
-import plastic from "../../../../../images/obstacles/trash/plastic.svg";
-import theme from "../../../../../styles/theme";
-import { ObstacleTypes, TrashType } from "../../../../../utils/constants";
-import LinearProgressBar from "./LinearProgressBar";
-import Trash, { generateRandomArray } from "./Trash";
-import { StyledImage } from "./Trash.sc";
+import { defaultValue, Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
+import food from '../../../../../images/obstacles/trash/food.svg';
+import paper from '../../../../../images/obstacles/trash/paper.svg';
+import plastic from '../../../../../images/obstacles/trash/plastic.svg';
+import theme from '../../../../../styles/theme';
+import { ObstacleTypes, TrashType } from '../../../../../utils/constants';
+import LinearProgressBar from './LinearProgressBar';
+import Trash, { generateRandomArray } from './Trash';
 
 configure({ adapter: new Adapter() });
 
