@@ -166,3 +166,5 @@ export enum GameThreeGameState {
 ```
 
 Soll ich dir den Countdown schicken - also wie lange man hat um die Voting Ergebnisse anzuschauen? Vermutlich schon oder?
+
+Ich kann dir auch die Rundenzahl mitschicken - soll ich das in eine eigene Message - oder beim photoTopic message dazu?
