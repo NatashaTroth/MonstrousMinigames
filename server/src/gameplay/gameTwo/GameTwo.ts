@@ -25,7 +25,12 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     public lengthY: number;
     public sheep: Sheep[];
     private currentSheepId: number;
+    private roundTime: number;
+    private roundCount: number;
+    private currentRound: number;
     countdownTime = InitialParameters.COUNTDOWN_TIME;
+
+
 
     initialPlayerPositions = InitialParameters.PLAYERS_POSITIONS;
 
@@ -38,6 +43,9 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.lengthY = InitialParameters.LENGTH_Y;
         this.sheep = [];
         this.currentSheepId = 0;
+        this.roundTime = InitialParameters.ROUND_TIME;
+        this.roundCount = InitialParameters.ROUNDS;
+        this.currentRound = 1;
     }
 
     getGameStateInfo(): GameStateInfo {
@@ -56,6 +64,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             sheep: this.sheep,
             lengthX: this.lengthX,
             lengthY: this.lengthY,
+            currentRound: this.currentRound,
         };
     }
 
