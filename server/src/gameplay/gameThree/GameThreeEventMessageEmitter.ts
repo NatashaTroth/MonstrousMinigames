@@ -13,13 +13,10 @@ import { IGameStateBase } from '../interfaces/IGameStateBase';
 import Player from '../Player';
 import {
     GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
-    GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC,
-    GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS,
+    GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS,
     GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
-    GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER,
-    GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS,
-    GAME_THREE_EVENT_MESSAGES,
-    GameThreeEventMessage,
+    GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER, GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS,
+    GAME_THREE_EVENT_MESSAGES, GameThreeEventMessage
 } from './interfaces/GameThreeEventMessages';
 
 @singleton()
@@ -52,12 +49,12 @@ export class GameThreeEventMessageEmitter implements EventMessageEmitter {
             //     break;
             // send to room's screens
             case GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE:
-            case GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS:
                 this.sendToAll(message, screenNameSpace, room);
                 break;
             // send to room's screens and controllers
             case GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC:
             case GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER:
+            case GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS:
             case GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS:
             case GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN:
                 this.sendToAll(message, screenNameSpace, room);

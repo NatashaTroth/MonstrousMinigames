@@ -13,10 +13,7 @@ import GameThreeEventEmitter from './GameThreeEventEmitter';
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreePlayer from './GameThreePlayer';
 import {
-    IMessagePhoto,
-    IMessagePhotoVote,
-    photoPhotographerMapper,
-    votingResultsPhotographerMapper,
+    IMessagePhoto, IMessagePhotoVote, photoPhotographerMapper, votingResultsPhotographerMapper
 } from './interfaces';
 import { GameStateInfo } from './interfaces/GameStateInfo';
 
@@ -269,11 +266,13 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     // *** Round Change ***
     private handleNewRound() {
-        this.roundIdx++;
-        if (!this.isFinalRound()) {
-            this.sendPhotoTopic();
-        } else {
-            this.sendTakeFinalPhotosCountdown();
+        if (this.countdownOver()) {
+            this.roundIdx++;
+            if (!this.isFinalRound()) {
+                this.sendPhotoTopic();
+            } else {
+                this.sendTakeFinalPhotosCountdown();
+            }
         }
     }
 
