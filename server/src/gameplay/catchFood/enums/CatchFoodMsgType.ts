@@ -12,4 +12,5 @@ export enum CatchFoodMsgType {
     // PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES = 'game1/playerHasExceededMaxNumberChaserPushes',
     PLAYER_UNSTUNNED = 'game1/playerUnstunned',
     STUN_PLAYER = 'game1/stunPlayer',
+    CREATE = "CREATE"
 }
