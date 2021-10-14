@@ -82,3 +82,89 @@ urls weiterschicken - von client bekommen
 storage hinten - nach spiel alles löschen
 
 ## Connection: Controller - Server - Screen
+
+1.) Game is started (screen admin creates and starts, server sends initial game state and start countdown)
+2.) Server sends the first game Topic and countdown to take photos to client (SCREEN + CONTROLLER): 'game3/newPhotoTopic'
+
+```typescript
+{
+    roomId: string;
+    topic: string;
+    countdownTime: number; //ms
+}
+```
+
+3.) Controller takes a photo and sends to server: 'game3/photo'
+
+```typescript
+{
+    url: string;
+}
+```
+
+4.) When the take photos timer runs out or all photos have been sent (whichever is first), server sends the photo urls and photographerId to client (SCREEN + CONTROLLER): 'game3/voteForPhotos'
+
+```typescript
+{
+    roomId: string;
+    photoUrls: photoPhotographerMapper[];
+    countdownTime: number;
+}
+
+//photoPhotographerMapper:
+export interface photoPhotographerMapper {
+    photographerId: string;
+    url: string;
+}
+```
+
+5.) Controllers send votes to server: 'game3/photoVote'
+
+```typescript
+{
+    oterId: string;
+    photographerId: string;
+}
+```
+
+6.) When the voting timer runs out or all votes have been sent (whichever is first), the server sends the results to the client (SCREEN + CONTROLLER): 'game3/photoVotingResults'
+
+```typescript
+ {
+    roomId: string;
+    results: votingResultsPhotographerMapper[];
+    countdownTime: number;
+}
+
+//votingResultsPhotographerMapper:
+export interface votingResultsPhotographerMapper {
+    photographerId: string;
+    points: number;
+}
+```
+
+7.) After the viewing voting results countdown is over, the server changes the round and either sends a new photo topic (see step 2), or if it is the final round, the server sends 'game3/takeFinalPhotosCountdown':
+
+```typescript
+roomId: string;
+countdownTime: number;
+```
+
+8.) TODO
+
+---------MAGDA FRAGEN----------
+Soll ich dir den GameThreeGameState schicken:
+
+```typescript
+export enum GameThreeGameState {
+    BeforeStart = 'BEFORE_START',
+    TakingPhoto = 'TAKING_PHOTO',
+    Voting = 'VOTING',
+    ViewingResults = 'VIEWING_RESULTS',
+    WaitingForClientAction = 'WAITING_FOR_CLIENT_ACTION',
+}
+```
+
+Soll ich dir den Countdown schicken - also wie lange man hat um die Voting Ergebnisse anzuschauen? Vermutlich schon oder?
+
+Ich kann dir auch die Rundenzahl mitschicken - soll ich das in eine eigene Message - oder beim photoTopic message dazu?
