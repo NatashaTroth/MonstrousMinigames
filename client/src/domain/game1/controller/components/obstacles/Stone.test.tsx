@@ -20,6 +20,7 @@ import { MessageTypesGame1, ObstacleTypes } from '../../../../../utils/constants
 import { controllerObstacleRoute } from '../../../../../utils/routes';
 import { InMemorySocketFake } from '../../../../socket/InMemorySocketFake';
 import Stone from './Stone';
+import { StyledStone } from './Stone.sc';
 
 configure({ adapter: new Adapter() });
 
@@ -124,5 +125,177 @@ describe('Stone', () => {
                 receivingUserId,
             },
         ]);
+    });
+
+    it('if no obstacle is given, nothing should be emmited to the socket', () => {
+        const userName = 'Max';
+        const receivingUserId = '2';
+        const connectedUsers = [
+            {
+                id: receivingUserId,
+                name: userName,
+                roomId,
+                number: 1,
+                ready: true,
+                active: true,
+                characterNumber: 1,
+            },
+        ];
+        const stunnablePlayers = ['2'];
+        const history = createMemoryHistory();
+        const controllerSocket = new InMemorySocketFake();
+        const userId = '1';
+
+        const container = mount(
+            <ThemeProvider theme={theme}>
+                <ControllerSocketContext.Provider value={{ ...socketDefaultValue, controllerSocket }}>
+                    <PlayerContext.Provider value={{ ...playerDefaultValue, userId }}>
+                        <GameContext.Provider value={{ ...gameDefaultValue, connectedUsers }}>
+                            <Game1Context.Provider
+                                value={{ ...game1DefaultValue, stunnablePlayers, obstacle: undefined }}
+                            >
+                                <Stone history={history} />
+                            </Game1Context.Provider>
+                        </GameContext.Provider>
+                    </PlayerContext.Provider>
+                </ControllerSocketContext.Provider>
+            </ThemeProvider>
+        );
+
+        const touchContainer = container.find(StyledStone).first();
+
+        for (let i = 0; i <= 10; i++) {
+            touchContainer.simulate('touchStart');
+        }
+
+        container
+            .findWhere(node => node.text() === userName)
+            .first()
+            .simulate('click');
+
+        container
+            .findWhere(node => node.type() === 'button' && node.text() === 'Throw Stone')
+            .first()
+            .simulate('click');
+
+        expect(controllerSocket.emitedVals).toStrictEqual([]);
+    });
+
+    it('if obstacle is given, obstacleSolved should be emmited to the socket', () => {
+        const userName = 'Max';
+        const receivingUserId = '2';
+        const connectedUsers = [
+            {
+                id: receivingUserId,
+                name: userName,
+                roomId,
+                number: 1,
+                ready: true,
+                active: true,
+                characterNumber: 1,
+            },
+        ];
+        const stunnablePlayers = ['2'];
+        const history = createMemoryHistory();
+        const controllerSocket = new InMemorySocketFake();
+        const userId = '1';
+        const obstacle = {
+            id: 1,
+            type: ObstacleTypes.stone,
+        };
+
+        const container = mount(
+            <ThemeProvider theme={theme}>
+                <ControllerSocketContext.Provider value={{ ...socketDefaultValue, controllerSocket }}>
+                    <PlayerContext.Provider value={{ ...playerDefaultValue, userId }}>
+                        <GameContext.Provider value={{ ...gameDefaultValue, connectedUsers }}>
+                            <Game1Context.Provider value={{ ...game1DefaultValue, stunnablePlayers, obstacle }}>
+                                <Stone history={history} />
+                            </Game1Context.Provider>
+                        </GameContext.Provider>
+                    </PlayerContext.Provider>
+                </ControllerSocketContext.Provider>
+            </ThemeProvider>
+        );
+
+        const touchContainer = container.find(StyledStone).first();
+
+        for (let i = 0; i <= 10; i++) {
+            touchContainer.simulate('touchStart');
+        }
+
+        container
+            .findWhere(node => node.text() === userName)
+            .first()
+            .simulate('click');
+
+        container
+            .findWhere(node => node.type() === 'button' && node.text() === 'Throw Stone')
+            .first()
+            .simulate('click');
+
+        expect(controllerSocket.emitedVals[0]).toEqual({
+            type: MessageTypesGame1.obstacleSolved,
+            obstacleId: obstacle.id,
+        });
+    });
+
+    it('if obstacle is given and stone gets collected, obstacleSolved should be emmited to the socket', () => {
+        const userName = 'Max';
+        const receivingUserId = '2';
+        const connectedUsers = [
+            {
+                id: receivingUserId,
+                name: userName,
+                roomId,
+                number: 1,
+                ready: true,
+                active: true,
+                characterNumber: 1,
+            },
+        ];
+        const stunnablePlayers = ['2'];
+        const history = createMemoryHistory();
+        const controllerSocket = new InMemorySocketFake();
+        const userId = '1';
+        const obstacle = {
+            id: 1,
+            type: ObstacleTypes.stone,
+        };
+
+        const container = mount(
+            <ThemeProvider theme={theme}>
+                <ControllerSocketContext.Provider value={{ ...socketDefaultValue, controllerSocket }}>
+                    <PlayerContext.Provider value={{ ...playerDefaultValue, userId }}>
+                        <GameContext.Provider value={{ ...gameDefaultValue, connectedUsers }}>
+                            <Game1Context.Provider value={{ ...game1DefaultValue, stunnablePlayers, obstacle }}>
+                                <Stone history={history} />
+                            </Game1Context.Provider>
+                        </GameContext.Provider>
+                    </PlayerContext.Provider>
+                </ControllerSocketContext.Provider>
+            </ThemeProvider>
+        );
+
+        const touchContainer = container.find(StyledStone).first();
+
+        for (let i = 0; i <= 10; i++) {
+            touchContainer.simulate('touchStart');
+        }
+
+        container
+            .findWhere(node => node.text() === userName)
+            .first()
+            .simulate('click');
+
+        container
+            .findWhere(node => node.type() === 'button' && node.text() === 'Collect Stone')
+            .first()
+            .simulate('click');
+
+        expect(controllerSocket.emitedVals[0]).toEqual({
+            type: MessageTypesGame1.obstacleSolved,
+            obstacleId: obstacle.id,
+        });
     });
 });
