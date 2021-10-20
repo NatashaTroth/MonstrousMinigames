@@ -42,6 +42,7 @@
         "build": "react-scripts build",
         "test": "jest --maxWorkers=50%",
         "test:watch": "jest --watchAll --coverage --config ./jest.config.js",
+        "test:watch:actual": "jest --watch",
         "eject": "react-scripts eject",
         "lint": "eslint . --ext .ts",
         "lint-fix": "eslint . --ext .ts --fix",

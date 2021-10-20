@@ -43,6 +43,7 @@ import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
 import { initialGameInput } from '../phaser/initialGameInput';
 import { Player } from '../phaser/Player';
 import { PhaserGameRenderer } from '../phaser/renderer/PhaserGameRenderer';
+import { PhaserPlayerRenderer } from '../phaser/renderer/PhaserPlayerRenderer';
 import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
 class MainScene extends Phaser.Scene {
@@ -325,7 +326,7 @@ class MainScene extends Phaser.Scene {
                     this.players[i].handlePlayerUnStunned();
                 }
 
-                this.players[i].moveForward(gameStateData.playersState[i].positionX, this.trackLength);
+                this.players[i].moveForward(gameStateData.playersState[i].positionX);
                 this.players[i].checkAtObstacle(gameStateData.playersState[i].atObstacle);
             }
             this.players[i].setChasers(gameStateData.chasersPositionX);
@@ -355,14 +356,14 @@ class MainScene extends Phaser.Scene {
 
         const player = new Player(
             this,
-            laneHeightsPerNumberPlayers,
             laneHeight,
             index,
             { x: gameStateData.playersState[index].positionX, y: posY },
             gameStateData,
             character,
             numberPlayers,
-            this.gameToScreenMapper!
+            this.gameToScreenMapper!,
+            new PhaserPlayerRenderer(this, numberPlayers, laneHeightsPerNumberPlayers)
         );
         this.players.push(player);
     }
