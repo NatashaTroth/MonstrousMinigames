@@ -24,15 +24,4 @@ describe('TakePicture', () => {
 
         expect(container.find('form')).toHaveLength(1);
     });
-
-    it('renders instructions', () => {
-        const givenText = 'Choose the picture you like the most';
-        const container = shallow(
-            <ThemeProvider theme={theme}>
-                <TakePicture />
-            </ThemeProvider>
-        );
-
-        expect(container.findWhere(node => node.text() === givenText)).toBeTruthy();
-    });
 });

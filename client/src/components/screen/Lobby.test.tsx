@@ -1,12 +1,12 @@
-import { cleanup, queryByText, render } from '@testing-library/react';
-import React from 'react';
-import { Router } from 'react-router-dom';
-import { ThemeProvider } from 'styled-components';
+import { cleanup, queryByText, render } from "@testing-library/react";
+import React from "react";
+import { Router } from "react-router-dom";
+import { ThemeProvider } from "styled-components";
 
-import { defaultValue, GameContext } from '../../contexts/GameContextProvider';
-import history from '../../domain/history/history';
-import theme from '../../styles/theme';
-import { Lobby } from './Lobby';
+import { defaultValue, GameContext } from "../../contexts/GameContextProvider";
+import history from "../../domain/history/history";
+import theme from "../../styles/theme";
+import { Lobby } from "./Lobby";
 
 // window.HTMLMediaElement.prototype.load = () => { /* do nothing */ };
 // window.HTMLMediaElement.prototype.play = () => { /* do nothing */ };
@@ -28,18 +28,6 @@ describe('Screen Lobby', () => {
                     <GameContext.Provider value={{ ...defaultValue, roomId }}>
                         <Lobby />
                     </GameContext.Provider>
-                </Router>
-            </ThemeProvider>
-        );
-        expect(queryByText(container, givenText)).toBeTruthy();
-    });
-
-    it('renders copy to clipboard button', () => {
-        const givenText = 'Copy to Clipboard';
-        const { container } = render(
-            <ThemeProvider theme={theme}>
-                <Router history={history}>
-                    <Lobby />
                 </Router>
             </ThemeProvider>
         );

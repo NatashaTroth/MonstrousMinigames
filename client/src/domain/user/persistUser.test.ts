@@ -1,9 +1,9 @@
-import { MessageTypes } from '../../utils/constants';
-import { Storage } from '../storage/Storage';
-import { UserInitMessage } from '../typeGuards/userInit';
-import { persistUser } from './persistUser';
+import { MessageTypes } from "../../utils/constants";
+import { Storage } from "../storage/Storage";
+import { UserInitMessage } from "../typeGuards/userInit";
+import { persistUser } from "./persistUser";
 
-beforeAll(() => {
+beforeEach(() => {
     global.sessionStorage = new LocalStorageFake();
     global.localStorage = new LocalStorageFake();
 });
@@ -38,7 +38,6 @@ describe('persistUser function', () => {
     });
 
     it('handed userName should be persisted to local storage', () => {
-        global.localStorage.clear();
         persistUser(mockData, {
             setPlayerNumber,
             localStorage: new LocalStorageFake(),
@@ -51,8 +50,6 @@ describe('persistUser function', () => {
     });
 
     it('handed userId should be persisted to session storage', () => {
-        global.sessionStorage.clear();
-
         persistUser(mockData, {
             setPlayerNumber,
             localStorage: new LocalStorageFake(),
@@ -65,8 +62,6 @@ describe('persistUser function', () => {
     });
 
     it('handed roomId should be persisted to session storage', () => {
-        global.sessionStorage.clear();
-
         persistUser(mockData, {
             setPlayerNumber,
             localStorage: new LocalStorageFake(),

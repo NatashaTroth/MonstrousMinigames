@@ -1,20 +1,26 @@
 // eslint-disable-next-line simple-import-sort/imports
-import 'jest-styled-components';
-import { cleanup } from '@testing-library/react';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount, shallow } from 'enzyme';
-import * as React from 'react';
-import { ThemeProvider } from 'styled-components';
-import { createMemoryHistory } from 'history';
+import "jest-styled-components";
+import { cleanup } from "@testing-library/react";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
+import { configure, mount, shallow } from "enzyme";
+import * as React from "react";
+import { ThemeProvider } from "styled-components";
+import { createMemoryHistory } from "history";
 
-import { ControllerSocketContext, defaultValue } from '../../contexts/ControllerSocketContextProvider';
-import history from '../../domain/history/history';
-import theme from '../../styles/theme';
-import { checkRoomCode, ConnectScreen, IFrameContent } from './ConnectScreen';
+import {
+    ControllerSocketContext, defaultValue
+} from "../../contexts/ControllerSocketContextProvider";
+import history from "../../domain/history/history";
+import theme from "../../styles/theme";
+import { checkRoomCode, ConnectScreen, IFrameContent } from "./ConnectScreen";
 
 configure({ adapter: new Adapter() });
 
 afterEach(cleanup);
+
+beforeEach(() => {
+    global.sessionStorage.clear();
+});
 
 describe('ConnectScreen', () => {
     it('renders an iframe', () => {
@@ -25,17 +31,6 @@ describe('ConnectScreen', () => {
         );
 
         expect(container.find('iframe')).toBeTruthy();
-    });
-
-    it('renders a button with text "Enter"', () => {
-        const givenText = 'Enter';
-        const container = shallow(
-            <ThemeProvider theme={theme}>
-                <ConnectScreen history={history} />
-            </ThemeProvider>
-        );
-
-        expect(container.find(givenText)).toBeTruthy();
     });
 
     it('roomId from history should be persisted to storage', () => {

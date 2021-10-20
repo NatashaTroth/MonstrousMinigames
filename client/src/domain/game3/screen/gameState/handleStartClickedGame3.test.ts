@@ -1,6 +1,10 @@
-import { MessageTypes } from '../../../../utils/constants';
-import { InMemorySocketFake } from '../../../socket/InMemorySocketFake';
-import handleStartClickedGame3 from './handleStartClickedGame3';
+import { MessageTypes } from "../../../../utils/constants";
+import { InMemorySocketFake } from "../../../socket/InMemorySocketFake";
+import handleStartClickedGame3 from "./handleStartClickedGame3";
+
+beforeEach(() => {
+    global.sessionStorage.clear();
+});
 
 describe('handleStartClickedGame3 function', () => {
     it('createGame should be emitted first', () => {

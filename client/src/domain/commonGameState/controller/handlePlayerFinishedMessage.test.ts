@@ -2,6 +2,10 @@ import { MessageTypesGame1 } from "../../../utils/constants";
 import { PlayerFinishedMessage } from "../../typeGuards/game1/playerFinished";
 import { handlePlayerFinishedMessage } from "./handlePlayerFinishedMessage";
 
+beforeEach(() => {
+    global.sessionStorage.clear();
+});
+
 describe('playerHasFinished function', () => {
     let setPlayerFinished: jest.Mock<any, any>;
     let setPlayerRank: jest.Mock<any, any>;

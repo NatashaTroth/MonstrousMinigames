@@ -14,17 +14,6 @@ configure({ adapter: new Adapter() });
 afterEach(cleanup);
 
 describe('Vote', () => {
-    it('renders instruction', () => {
-        const givenText = 'Choose the picture you like the most';
-        const container = shallow(
-            <ThemeProvider theme={theme}>
-                <Vote />
-            </ThemeProvider>
-        );
-
-        expect(container.findWhere(node => node.text() === givenText)).toBeTruthy();
-    });
-
     it('renders as much buttons as images', () => {
         const container = mount(
             <ThemeProvider theme={theme}>

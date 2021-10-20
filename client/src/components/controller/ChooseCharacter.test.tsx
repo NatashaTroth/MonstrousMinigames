@@ -1,32 +1,26 @@
 /* eslint-disable simple-import-sort/imports */
-import 'jest-styled-components';
-import { cleanup, queryByText, render } from '@testing-library/react';
-import React from 'react';
-import { ThemeProvider } from 'styled-components';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount } from 'enzyme';
-import Carousel from 'react-multi-carousel';
-import { ArrowBackIos, ArrowForwardIos } from '@material-ui/icons';
+import "jest-styled-components";
+import { cleanup } from "@testing-library/react";
+import React from "react";
+import { ThemeProvider } from "styled-components";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
+import { configure, mount } from "enzyme";
+import Carousel from "react-multi-carousel";
+import { createMemoryHistory } from "history";
 
-import theme from '../../styles/theme';
-import ChooseCharacter, { CustomLeftArrow, CustomRightArrow } from './ChooseCharacter';
+import { InMemorySocketFake } from "../../domain/socket/InMemorySocketFake";
+import theme from "../../styles/theme";
+import { MessageTypes } from "../../utils/constants";
+import { controllerChooseCharacterRoute, controllerLobbyRoute } from "../../utils/routes";
+import ChooseCharacter, {
+    chooseCharacterClick, CustomLeftArrow, CustomRightArrow
+} from "./ChooseCharacter";
 
 configure({ adapter: new Adapter() });
 
 afterEach(cleanup);
 
 describe('Choose Character', () => {
-    it('renders a button with text "Choose Character"', () => {
-        const givenText = 'Choose Character';
-        const { container } = render(
-            <ThemeProvider theme={theme}>
-                <ChooseCharacter />
-            </ThemeProvider>
-        );
-
-        expect(queryByText(container, givenText)).toBeTruthy();
-    });
-
     it('renders as a carousel', () => {
         const container = mount(
             <ThemeProvider theme={theme}>
@@ -39,17 +33,6 @@ describe('Choose Character', () => {
 });
 
 describe('CustomRightArrow', () => {
-    it('renders an ArrowForwardIos Icon', () => {
-        const handleOnClick = jest.fn();
-        const container = mount(
-            <ThemeProvider theme={theme}>
-                <CustomRightArrow handleOnClick={handleOnClick} />
-            </ThemeProvider>
-        );
-
-        expect(container.find(ArrowForwardIos)).toBeTruthy();
-    });
-
     it('handed handleOnClick should be called when button gets clicked', () => {
         const handleOnClick = jest.fn();
         const container = mount(
@@ -79,17 +62,6 @@ describe('CustomRightArrow', () => {
 });
 
 describe('CustomLeftArrow', () => {
-    it('renders an ArrowBackIos Icon', () => {
-        const handleOnClick = jest.fn();
-        const container = mount(
-            <ThemeProvider theme={theme}>
-                <CustomLeftArrow handleOnClick={handleOnClick} />
-            </ThemeProvider>
-        );
-
-        expect(container.find(ArrowBackIos)).toBeTruthy();
-    });
-
     it('handed handleOnClick should be called when button gets clicked', () => {
         const handleOnClick = jest.fn();
         const container = mount(
@@ -115,5 +87,29 @@ describe('CustomLeftArrow', () => {
         container.find('button').simulate('click');
 
         expect(onClick).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('chooseCharacterClick', () => {
+    const props = {
+        controllerSocket: new InMemorySocketFake(),
+        setCharacter: jest.fn(),
+        roomId: 'EDFS',
+        actualCharacter: 0,
+        history: createMemoryHistory(),
+        characterIndex: -1,
+    };
+
+    it('should emit new character number to socket', () => {
+        const controllerSocket = new InMemorySocketFake();
+
+        chooseCharacterClick({ ...props, controllerSocket });
+
+        expect(controllerSocket.emitedVals).toStrictEqual([
+            {
+                type: MessageTypes.selectCharacter,
+                characterNumber: props.actualCharacter,
+            },
+        ]);
     });
 });

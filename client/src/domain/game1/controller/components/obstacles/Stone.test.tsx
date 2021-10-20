@@ -1,26 +1,31 @@
 /* eslint-disable simple-import-sort/imports */
-import 'jest-styled-components';
-import { cleanup } from '@testing-library/react';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount } from 'enzyme';
-import { createMemoryHistory } from 'history';
-import { ThemeProvider } from 'styled-components';
-import React from 'react';
-import { Router } from 'react-router-dom';
+import "jest-styled-components";
+import { cleanup } from "@testing-library/react";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
+import { configure, mount } from "enzyme";
+import { createMemoryHistory } from "history";
+import { ThemeProvider } from "styled-components";
+import React from "react";
+import { Router } from "react-router-dom";
 
 import {
-    ControllerSocketContext,
-    defaultValue as socketDefaultValue,
-} from '../../../../../contexts/ControllerSocketContextProvider';
-import { defaultValue as game1DefaultValue, Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
-import { defaultValue as gameDefaultValue, GameContext } from '../../../../../contexts/GameContextProvider';
-import { defaultValue as playerDefaultValue, PlayerContext } from '../../../../../contexts/PlayerContextProvider';
-import theme from '../../../../../styles/theme';
-import { MessageTypesGame1, ObstacleTypes } from '../../../../../utils/constants';
-import { controllerObstacleRoute } from '../../../../../utils/routes';
-import { InMemorySocketFake } from '../../../../socket/InMemorySocketFake';
-import Stone from './Stone';
-import { StyledStone } from './Stone.sc';
+    ControllerSocketContext, defaultValue as socketDefaultValue
+} from "../../../../../contexts/ControllerSocketContextProvider";
+import {
+    defaultValue as game1DefaultValue, Game1Context
+} from "../../../../../contexts/game1/Game1ContextProvider";
+import {
+    defaultValue as gameDefaultValue, GameContext
+} from "../../../../../contexts/GameContextProvider";
+import {
+    defaultValue as playerDefaultValue, PlayerContext
+} from "../../../../../contexts/PlayerContextProvider";
+import theme from "../../../../../styles/theme";
+import { MessageTypesGame1, ObstacleTypes } from "../../../../../utils/constants";
+import { controllerObstacleRoute } from "../../../../../utils/routes";
+import { InMemorySocketFake } from "../../../../socket/InMemorySocketFake";
+import Stone from "./Stone";
+import { StyledStone } from "./Stone.sc";
 
 configure({ adapter: new Adapter() });
 
@@ -28,18 +33,6 @@ afterEach(cleanup);
 
 describe('Stone', () => {
     const roomId = 'ABCD';
-    const history = createMemoryHistory();
-
-    it('renders given instruction', () => {
-        const givenText =
-            'Tap on this rock several times to get a stone. Throw it at a fellow player to freeze their movement for a few seconds or collect it for later.';
-        const container = mount(
-            <ThemeProvider theme={theme}>
-                <Stone history={history} />
-            </ThemeProvider>
-        );
-        expect(container.findWhere(node => node.text() === givenText)).toBeTruthy();
-    });
 
     it('renders availableUsers', () => {
         const userName = 'Max';
