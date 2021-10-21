@@ -1,14 +1,14 @@
 /* eslint-disable simple-import-sort/imports */
-import 'jest-styled-components';
-import { cleanup, queryByText, render } from '@testing-library/react';
-import * as React from 'react';
-import { ThemeProvider } from 'styled-components';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount } from 'enzyme';
+import "jest-styled-components";
+import { cleanup, render } from "@testing-library/react";
+import * as React from "react";
+import { ThemeProvider } from "styled-components";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
+import { configure, mount } from "enzyme";
 
-import theme from '../../../../styles/theme';
-import LinearProgressBar from './obstacles/LinearProgressBar';
-import Windmill from './Windmill';
+import theme from "../../../../styles/theme";
+import LinearProgressBar from "./obstacles/LinearProgressBar";
+import Windmill from "./Windmill";
 
 configure({ adapter: new Adapter() });
 
@@ -23,18 +23,6 @@ describe('Windmill', () => {
         );
 
         expect(container.querySelectorAll('img')).toHaveProperty('length', 2);
-    });
-
-    it('renders an instruction', () => {
-        const givenText = 'Rotate the windmill clockwise to speed up the mosquitos';
-
-        const { container } = render(
-            <ThemeProvider theme={theme}>
-                <Windmill />
-            </ThemeProvider>
-        );
-
-        expect(queryByText(container, givenText)).toBeTruthy();
     });
 
     it('renders a LinearProgressBar', () => {

@@ -1,19 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import interact from "interactjs";
-import * as React from "react";
+import interact from 'interactjs';
+import * as React from 'react';
 
-import Button from "../../../../../components/common/Button";
-import { ControllerSocketContext } from "../../../../../contexts/ControllerSocketContextProvider";
-import { Game1Context, Obstacle } from "../../../../../contexts/game1/Game1ContextProvider";
-import { GameContext } from "../../../../../contexts/GameContextProvider";
-import food from "../../../../../images/obstacles/trash/food.svg";
-import paper from "../../../../../images/obstacles/trash/paper.svg";
-import plastic from "../../../../../images/obstacles/trash/plastic.svg";
-import { MessageTypesGame1, TrashType } from "../../../../../utils/constants";
-import { dragMoveListener, initializeInteractListeners, itemCounter } from "./Draggable";
-import LinearProgressBar from "./LinearProgressBar";
-import { ObstacleContainer, ObstacleInstructions } from "./ObstacleStyles.sc";
-import { Container, Draggable, DropZone, StyledImage, StyledSkipButton } from "./Trash.sc";
+import Button from '../../../../../components/common/Button';
+import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
+import { Game1Context, Obstacle } from '../../../../../contexts/game1/Game1ContextProvider';
+import { GameContext } from '../../../../../contexts/GameContextProvider';
+import food from '../../../../../images/obstacles/trash/food.svg';
+import paper from '../../../../../images/obstacles/trash/paper.svg';
+import plastic from '../../../../../images/obstacles/trash/plastic.svg';
+import { MessageTypesGame1, TrashType } from '../../../../../utils/constants';
+import { Socket } from '../../../../socket/Socket';
+import { dragMoveListener, initializeInteractListeners, itemCounter } from './Draggable';
+import LinearProgressBar from './LinearProgressBar';
+import { ObstacleContainer, ObstacleInstructions } from './ObstacleStyles.sc';
+import { Container, Draggable, DropZone, StyledImage, StyledSkipButton } from './Trash.sc';
 
 interface WindowProps extends Window {
     dragMoveListener?: unknown;
@@ -28,14 +29,6 @@ const Trash: React.FunctionComponent = () => {
     const [progress, setProgress] = React.useState(0);
 
     let handleSkip: ReturnType<typeof setTimeout>;
-
-    const solveObstacle = () => {
-        controllerSocket.emit({ type: MessageTypesGame1.obstacleSolved, obstacleId: obstacle?.id });
-        setObstacle(roomId, undefined);
-        interact('.dropzone').unset();
-        interact('.drag-drop').unset();
-        clearTimeout(handleSkip);
-    };
 
     React.useEffect(() => {
         let mounted = true;
@@ -52,7 +45,14 @@ const Trash: React.FunctionComponent = () => {
                 obstacle.numberTrashItems,
                 () => {
                     if (mounted) {
-                        solveObstacle();
+                        solveObstacle({
+                            controllerSocket,
+                            obstacle,
+                            setObstacle,
+                            roomId,
+                            clearTimeout,
+                            handleSkip,
+                        });
                     }
                 },
                 p => {
@@ -75,6 +75,17 @@ const Trash: React.FunctionComponent = () => {
             }
         }, 10000);
     }
+
+    const handleSolveObstacle = () => {
+        solveObstacle({
+            controllerSocket,
+            obstacle,
+            setObstacle,
+            roomId,
+            clearTimeout,
+            handleSkip,
+        });
+    };
 
     return (
         <>
@@ -126,7 +137,7 @@ const Trash: React.FunctionComponent = () => {
                 </Container>
                 {skip && (
                     <StyledSkipButton>
-                        <Button onClick={solveObstacle}>Skip</Button>
+                        <Button onClick={handleSolveObstacle}>Skip</Button>
                     </StyledSkipButton>
                 )}
             </ObstacleContainer>
@@ -149,3 +160,21 @@ export function generateRandomArray(obstacle: Obstacle) {
         ...Array(obstacle.numberTrashItems).fill(obstacle.trashType),
     ].sort(() => 0.5 - Math.random());
 }
+
+interface SolveObstacle {
+    controllerSocket: Socket;
+    obstacle: Obstacle | undefined;
+    roomId: string | undefined;
+    setObstacle: (roomId: string | undefined, obstacle: Obstacle | undefined) => void;
+    clearTimeout: (val: ReturnType<typeof setTimeout>) => void;
+    handleSkip: ReturnType<typeof setTimeout>;
+}
+export const solveObstacle = (props: SolveObstacle) => {
+    const { controllerSocket, obstacle, setObstacle, roomId, clearTimeout, handleSkip } = props;
+
+    controllerSocket.emit({ type: MessageTypesGame1.obstacleSolved, obstacleId: obstacle?.id });
+    setObstacle(roomId, undefined);
+    interact('.dropzone').unset();
+    interact('.drag-drop').unset();
+    clearTimeout(handleSkip);
+};

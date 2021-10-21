@@ -2,10 +2,11 @@ import * as React from 'react';
 
 import Button from '../../../../../components/common/Button';
 import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
-import { Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
+import { Game1Context, Obstacle } from '../../../../../contexts/game1/Game1ContextProvider';
 import { GameContext } from '../../../../../contexts/GameContextProvider';
 import { MessageTypesGame1 } from '../../../../../utils/constants';
 import { Navigator } from '../../../../navigator/Navigator';
+import { Socket } from '../../../../socket/Socket';
 import { currentCount, getAudioInput, resetCurrentCount } from './getAudioInput';
 import LinearProgressBar from './LinearProgressBar';
 import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from './ObstacleStyles.sc';
@@ -33,14 +34,6 @@ const Spider: React.FunctionComponent<SpiderProps> = ({ navigator }) => {
         }, 10000);
     }
 
-    const solveObstacle = () => {
-        if (obstacle) {
-            controllerSocket.emit({ type: MessageTypesGame1.obstacleSolved, obstacleId: obstacle.id });
-            setObstacle(roomId, undefined);
-            clearTimeout(handleSkip);
-        }
-    };
-
     React.useEffect(() => {
         let mounted = true;
         resetCurrentCount();
@@ -51,7 +44,14 @@ const Spider: React.FunctionComponent<SpiderProps> = ({ navigator }) => {
             {
                 solveObstacle: () => {
                     if (mounted) {
-                        solveObstacle();
+                        solveObstacle({
+                            obstacle,
+                            controllerSocket,
+                            setObstacle,
+                            clearTimeout,
+                            roomId,
+                            handleSkip,
+                        });
                     }
                 },
                 setProgress,
@@ -65,6 +65,17 @@ const Spider: React.FunctionComponent<SpiderProps> = ({ navigator }) => {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const handleSolveObstacle = () => {
+        solveObstacle({
+            obstacle,
+            controllerSocket,
+            setObstacle,
+            clearTimeout,
+            roomId,
+            handleSkip,
+        });
+    };
 
     return (
         <ObstacleContainer>
@@ -83,7 +94,7 @@ const Spider: React.FunctionComponent<SpiderProps> = ({ navigator }) => {
             </ObstacleContent>
             {skip && (
                 <StyledSkipButton>
-                    <Button onClick={solveObstacle}>Skip</Button>
+                    <Button onClick={handleSolveObstacle}>Skip</Button>
                 </StyledSkipButton>
             )}
         </ObstacleContainer>
@@ -91,3 +102,21 @@ const Spider: React.FunctionComponent<SpiderProps> = ({ navigator }) => {
 };
 
 export default Spider;
+
+interface SolveObstacle {
+    obstacle: Obstacle | undefined;
+    controllerSocket: Socket;
+    setObstacle: (roomId: string | undefined, val: Obstacle | undefined) => void;
+    clearTimeout: (val: ReturnType<typeof setTimeout>) => void;
+    roomId: string | undefined;
+    handleSkip: ReturnType<typeof setTimeout>;
+}
+export const solveObstacle = (props: SolveObstacle) => {
+    const { obstacle, setObstacle, controllerSocket, roomId, clearTimeout, handleSkip } = props;
+
+    if (obstacle) {
+        controllerSocket.emit({ type: MessageTypesGame1.obstacleSolved, obstacleId: obstacle.id });
+        setObstacle(roomId, undefined);
+        clearTimeout(handleSkip);
+    }
+};

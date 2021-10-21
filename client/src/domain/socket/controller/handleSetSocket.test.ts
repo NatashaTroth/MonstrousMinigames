@@ -190,6 +190,7 @@ describe('handleSetSocket', () => {
             },
         };
 
+        global.sessionStorage.clear();
         global.sessionStorage.setItem('userId', '1');
 
         const socket = new InMemorySocketFake();

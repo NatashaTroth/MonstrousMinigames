@@ -1,5 +1,6 @@
 /* eslint-disable simple-import-sort/imports */
 import * as React from 'react';
+import { History } from 'history';
 
 import Button from '../../../../../components/common/Button';
 import { StyledParticles } from '../../../../../components/common/Particles.sc';
@@ -10,9 +11,7 @@ import { GameContext } from '../../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../../contexts/PlayerContextProvider';
 import pebble from '../../../../../images/obstacles/stone/pebble.svg';
 import stone from '../../../../../images/obstacles/stone/stone.svg';
-import { MessageTypesGame1 } from '../../../../../utils/constants';
-import { controllerGame1Route } from '../../../../../utils/routes';
-import history from '../../../../history/history';
+import { handleCollectStone, handleImmediateThrow, handleThrow } from '../../gameState/handleStoneObstacle';
 import { ObstacleInstructions } from './ObstacleStyles.sc';
 import {
     PebbleContainer,
@@ -36,7 +35,11 @@ import {
     UserButtons,
 } from './Stone.sc';
 
-const Stone: React.FunctionComponent = () => {
+interface StoneProps {
+    history: History;
+}
+
+const Stone: React.FunctionComponent<StoneProps> = ({ history }) => {
     const searchParams = new URLSearchParams(history.location.search);
     const limit = 10;
     const [counter, setCounter] = React.useState(searchParams.get('choosePlayer') ? limit + 1 : 0);
@@ -48,7 +51,8 @@ const Stone: React.FunctionComponent = () => {
     const { stunnablePlayers } = React.useContext(Game1Context);
     const { obstacle, hasStone, setHasStone, setEarlySolvableObstacle } = React.useContext(Game1Context);
 
-    const availableUsers = connectedUsers?.filter(user => stunnablePlayers.includes(user.id)) || [];
+    const availableUsers =
+        connectedUsers?.filter(user => stunnablePlayers.includes(user.id) && user.id !== userId) || [];
 
     React.useEffect(() => {
         document.body.style.overflow = 'visible';
@@ -69,36 +73,44 @@ const Stone: React.FunctionComponent = () => {
         }
     }
 
-    function handleImmediateThrow(receivingUserId: string) {
-        controllerSocket.emit({
-            type: MessageTypesGame1.obstacleSolved,
-            obstacleId: obstacle?.id,
-        });
-        handleThrow(receivingUserId);
-    }
+    const handleCollected = () => {
+        if (obstacle) {
+            handleCollectStone({
+                controllerSocket,
+                obstacle,
+                setHasStone,
+                setEarlySolvableObstacle,
+                resetBodyStyles,
+                history,
+                roomId,
+            });
+        }
+    };
 
-    function handleThrow(receivingUserId: string) {
-        setEarlySolvableObstacle(undefined);
-        controllerSocket.emit({
-            type: MessageTypesGame1.stunPlayer,
-            userId,
-            receivingUserId,
-        });
-
-        resetBodyStyles();
-        history.push(controllerGame1Route(roomId));
-    }
-
-    function handleCollectStone() {
-        controllerSocket.emit({
-            type: MessageTypesGame1.obstacleSolved,
-            obstacleId: obstacle?.id,
-        });
-        setHasStone(true);
-        setEarlySolvableObstacle(undefined);
-        resetBodyStyles();
-        history.push(controllerGame1Route(roomId));
-    }
+    const handleOnClick = () => {
+        if (searchParams.get('choosePlayer')) {
+            handleThrow({
+                controllerSocket,
+                setEarlySolvableObstacle,
+                resetBodyStyles,
+                history,
+                roomId,
+                receivingUserId: selectedUser!,
+                userId,
+            });
+        } else if (obstacle) {
+            handleImmediateThrow({
+                controllerSocket,
+                setEarlySolvableObstacle,
+                resetBodyStyles,
+                history,
+                roomId,
+                receivingUserId: selectedUser!,
+                userId,
+                obstacle,
+            });
+        }
+    };
 
     return (
         <>
@@ -135,40 +147,28 @@ const Stone: React.FunctionComponent = () => {
                         </PebbleContainer>
                         <UserButtons>
                             <div>
-                                {availableUsers.map(
-                                    (user, key) =>
-                                        user.id !== userId && (
-                                            <PlayerButtonContainer
-                                                key={key}
-                                                characterNumber={user.characterNumber}
-                                                onClick={() => setSelectedUser(user.id)}
-                                                selected={selectedUser === user.id}
-                                            >
-                                                {user.name}
-                                            </PlayerButtonContainer>
-                                        )
-                                )}
-                                {
-                                    <Button
-                                        disabled={!selectedUser}
-                                        onClick={() => {
-                                            if (selectedUser) {
-                                                if (searchParams.get('choosePlayer')) {
-                                                    handleThrow(selectedUser);
-                                                } else {
-                                                    handleImmediateThrow(selectedUser);
-                                                }
-                                            }
-                                        }}
-                                        variant="secondary"
-                                        size="large"
+                                {availableUsers.map((user, key) => (
+                                    <PlayerButtonContainer
+                                        key={key}
+                                        characterNumber={user.characterNumber}
+                                        onClick={() => setSelectedUser(user.id)}
+                                        selected={selectedUser === user.id}
                                     >
-                                        Throw Stone
-                                    </Button>
-                                }
+                                        {user.name}
+                                    </PlayerButtonContainer>
+                                ))}
+
+                                <Button
+                                    disabled={!selectedUser}
+                                    onClick={handleOnClick}
+                                    variant="secondary"
+                                    size="large"
+                                >
+                                    Throw Stone
+                                </Button>
                             </div>
                             {!hasStone && (
-                                <Button onClick={handleCollectStone} size="small">
+                                <Button onClick={handleCollected} size="small">
                                     Collect Stone
                                 </Button>
                             )}

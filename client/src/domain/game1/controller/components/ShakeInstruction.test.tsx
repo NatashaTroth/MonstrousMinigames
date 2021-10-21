@@ -1,13 +1,13 @@
 /* eslint-disable simple-import-sort/imports */
-import 'jest-styled-components';
-import { cleanup, render } from '@testing-library/react';
-import * as React from 'react';
-import { ThemeProvider } from 'styled-components';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure } from 'enzyme';
+import "jest-styled-components";
+import { cleanup, render } from "@testing-library/react";
+import * as React from "react";
+import { ThemeProvider } from "styled-components";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
+import { configure } from "enzyme";
 
-import theme from '../../../../styles/theme';
-import ShakeInstruction from './ShakeInstruction';
+import theme from "../../../../styles/theme";
+import ShakeInstruction from "./ShakeInstruction";
 
 configure({ adapter: new Adapter() });
 
@@ -20,6 +20,7 @@ beforeAll(() => {
 describe('Shake Instruction', () => {
     it('renders an image', () => {
         const sessionStorage = new LocalStorageFake();
+
         const { container } = render(
             <ThemeProvider theme={theme}>
                 <ShakeInstruction sessionStorage={sessionStorage} />
@@ -30,7 +31,6 @@ describe('Shake Instruction', () => {
     });
 
     it('renders no image when countdown is in session Storage', () => {
-        global.sessionStorage.clear();
         const sessionStorage = new LocalStorageFake();
 
         sessionStorage.setItem('countdownTime', 3000);
@@ -44,10 +44,9 @@ describe('Shake Instruction', () => {
     });
 
     it('countodwn should be removed from session storage after timeout', () => {
-        global.sessionStorage.clear();
         const sessionStorage = new LocalStorageFake();
-
         sessionStorage.setItem('countdownTime', 3000);
+
         render(
             <ThemeProvider theme={theme}>
                 <ShakeInstruction sessionStorage={sessionStorage} />

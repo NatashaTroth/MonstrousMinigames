@@ -1,20 +1,20 @@
 /* eslint-disable simple-import-sort/imports */
-import "jest-styled-components";
-import { cleanup } from "@testing-library/react";
-import React from "react";
-import { ThemeProvider } from "styled-components";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure, mount } from "enzyme";
+import 'jest-styled-components';
+import { act, cleanup, fireEvent, render } from '@testing-library/react';
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure, mount } from 'enzyme';
 
-import { defaultValue, Game1Context } from "../../../../../contexts/game1/Game1ContextProvider";
-import food from "../../../../../images/obstacles/trash/food.svg";
-import paper from "../../../../../images/obstacles/trash/paper.svg";
-import plastic from "../../../../../images/obstacles/trash/plastic.svg";
-import theme from "../../../../../styles/theme";
-import { ObstacleTypes, TrashType } from "../../../../../utils/constants";
-import LinearProgressBar from "./LinearProgressBar";
-import Trash, { generateRandomArray } from "./Trash";
-import { StyledImage } from "./Trash.sc";
+import { defaultValue, Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
+import food from '../../../../../images/obstacles/trash/food.svg';
+import paper from '../../../../../images/obstacles/trash/paper.svg';
+import plastic from '../../../../../images/obstacles/trash/plastic.svg';
+import theme from '../../../../../styles/theme';
+import { MessageTypesGame1, ObstacleTypes, TrashType } from '../../../../../utils/constants';
+import { InMemorySocketFake } from '../../../../socket/InMemorySocketFake';
+import LinearProgressBar from './LinearProgressBar';
+import Trash, { generateRandomArray, solveObstacle } from './Trash';
 
 configure({ adapter: new Adapter() });
 
@@ -84,6 +84,30 @@ describe('Trash', () => {
         );
         expect(container.findWhere(node => node.prop('src') === food)).toBeTruthy();
     });
+
+    it('when SkipButton is clicked, solveObstacle should be called', () => {
+        const setObstacle = jest.fn();
+        jest.useFakeTimers(); // mock timers
+        const obstacle = { id: 1, type: ObstacleTypes.trash };
+        const { container } = render(
+            <ThemeProvider theme={theme}>
+                <Game1Context.Provider value={{ ...defaultValue, setObstacle, obstacle }}>
+                    <Trash />
+                </Game1Context.Provider>
+            </ThemeProvider>
+        );
+
+        act(() => {
+            jest.runAllTimers(); // trigger setTimeout
+        });
+
+        const button = container.querySelector('button');
+
+        if (button) {
+            fireEvent.click(button);
+            expect(setObstacle).toHaveBeenCalledTimes(1);
+        }
+    });
 });
 
 describe('generateRandomArray', () => {
@@ -98,5 +122,30 @@ describe('generateRandomArray', () => {
         });
 
         expect(randomArray.filter(item => item === trashType).length).toBe(numberTrashItems);
+    });
+});
+
+describe('solveObstacle', () => {
+    it('obstacleSolved should be emitted to socket', () => {
+        const controllerSocket = new InMemorySocketFake();
+        const obstacle = { id: 1, type: ObstacleTypes.trash };
+
+        solveObstacle({
+            controllerSocket,
+            obstacle,
+            setObstacle: jest.fn(),
+            clearTimeout: jest.fn(),
+            handleSkip: setTimeout(() => {
+                // do nothing
+            }, 1000),
+            roomId: 'ABCD',
+        });
+
+        expect(controllerSocket.emitedVals).toStrictEqual([
+            {
+                type: MessageTypesGame1.obstacleSolved,
+                obstacleId: obstacle.id,
+            },
+        ]);
     });
 });

@@ -1,7 +1,11 @@
-import { createMemoryHistory } from 'history';
+import { createMemoryHistory } from "history";
 
-import { controllerFinishedRoute } from '../../../utils/routes';
-import { handleGameHasFinishedMessage } from './handleGameHasFinishedMessage';
+import { controllerFinishedRoute } from "../../../utils/routes";
+import { handleGameHasFinishedMessage } from "./handleGameHasFinishedMessage";
+
+beforeEach(() => {
+    global.sessionStorage.clear();
+});
 
 describe('handleGameHasFinishedMessage', () => {
     const roomId = '1234';

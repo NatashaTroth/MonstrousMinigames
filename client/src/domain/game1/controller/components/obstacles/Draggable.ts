@@ -1,7 +1,20 @@
-import { InteractEvent } from '@interactjs/types';
 import interact from 'interactjs';
 
 import { TrashType } from '../../../../../utils/constants';
+
+interface InteractEvent {
+    target:
+        | {
+              style: {
+                  transform: string;
+              };
+              getAttribute: (qualifiedName: string) => string | null;
+              setAttribute: (qualifiedName: string, val: string) => void;
+          }
+        | undefined;
+    dx: number;
+    dy: number;
+}
 
 export function dragMoveListener(event: InteractEvent) {
     const target = event.target;
@@ -9,12 +22,14 @@ export function dragMoveListener(event: InteractEvent) {
     const x = parseFloat(target?.getAttribute('data-x') || '0') + event.dx;
     const y = parseFloat(target?.getAttribute('data-y') || '0') + event.dy;
 
-    // translate the element
-    target.style.transform = `translate(${x}px, ${y}px)`;
+    if (target) {
+        // translate the element
+        target.style.transform = `translate(${x}px, ${y}px)`;
+    }
 
     // update the posiion attributes
-    target.setAttribute('data-x', String(x));
-    target.setAttribute('data-y', String(y));
+    target?.setAttribute('data-x', String(x));
+    target?.setAttribute('data-y', String(y));
 }
 
 export let itemCounter = 0;
