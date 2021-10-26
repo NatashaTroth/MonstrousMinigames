@@ -26,6 +26,8 @@ const Game3: React.FunctionComponent = () => {
     const [timeIsUp, setTimeIsUp] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
 
+    const { topicMessage } = React.useContext(Game3Context);
+
     const { storage } = React.useContext(FirebaseContext);
 
     async function listAllFiles() {
@@ -50,8 +52,6 @@ const Game3: React.FunctionComponent = () => {
         }
     }, [timeIsUp]);
 
-    const randomWord = 'tree'.toUpperCase();
-
     return (
         <ScreenContainer>
             <InstructionContainer>
@@ -60,12 +60,12 @@ const Game3: React.FunctionComponent = () => {
                         <PictureInstruction>
                             Vote on your smartphone for the picture that looks most like
                         </PictureInstruction>
-                        <RandomWord>{randomWord}</RandomWord>
+                        <RandomWord>{topicMessage}</RandomWord>
                     </>
                 ) : (
                     <>
                         <PictureInstruction>Take a picture that represents the word</PictureInstruction>
-                        <RandomWord>{randomWord}</RandomWord>
+                        <RandomWord>{topicMessage}</RandomWord>
                     </>
                 )}
             </InstructionContainer>

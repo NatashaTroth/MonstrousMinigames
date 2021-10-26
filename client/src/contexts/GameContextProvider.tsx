@@ -64,6 +64,10 @@ export const defaultValue = {
     setAvailableCharacters: () => {
         // do nothing
     },
+    topicMessage: '',
+    setTopicMessage: () => {
+        // do nothing
+    },
 };
 interface GameContextProps {
     finished: boolean;
@@ -85,6 +89,8 @@ interface GameContextProps {
     setHasPaused: (val: boolean) => void;
     chosenGame: undefined | GameNames;
     setChosenGame: (val: undefined | GameNames) => void;
+    topicMessage: string;
+    setTopicMessage: (val: string) => void;
     tutorial: boolean;
     setTutorial: (val: boolean) => void;
     screenAdmin: boolean;
@@ -109,6 +115,7 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     // TODO use data from socket
     const [chosenGame, setChosenGame] = React.useState<undefined | GameNames>();
     const [tutorial, setTutorial] = React.useState(true);
+    const [topicMessage, setTopicMessage] = React.useState('');
     const [screenAdmin, setScreenAdmin] = React.useState<boolean>(false);
     const [screenState, setScreenState] = React.useState<string>(ScreenStates.lobby);
     const [availableCharacters, setAvailableCharacters] = React.useState<number[]>(defaultAvailableCharacters);
@@ -144,6 +151,8 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setScreenState,
         availableCharacters,
         setAvailableCharacters,
+        topicMessage,
+        setTopicMessage,
     };
     return <GameContext.Provider value={content}>{children}</GameContext.Provider>;
 };

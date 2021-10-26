@@ -37,6 +37,7 @@ export interface HandleSetSocketDependencies {
     setScreenAdmin: (val: boolean) => void;
     setScreenState: (val: string) => void;
     setChosenGame: (val: GameNames) => void;
+    setTopicMessage: (val: string) => void;
     history: History;
 }
 
@@ -56,6 +57,7 @@ export function handleSetSocket(
         setScreenAdmin,
         setScreenState,
         setChosenGame,
+        setTopicMessage,
         history,
     } = dependencies;
 
@@ -116,7 +118,7 @@ export function handleSetSocket(
 
     gameSetSocket.listen((data: GameSetMessage) => setChosenGame(data.game));
 
-    handleSetScreenSocketGame3(socket);
+    handleSetScreenSocketGame3(socket, { setTopicMessage });
 
     history.push(`${Routes.screen}/${roomId}/${route || Routes.lobby}`);
 }
