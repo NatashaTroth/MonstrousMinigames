@@ -47,7 +47,7 @@ export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history 
                     <IFrameContent roomId={roomId} formState={formState} setFormState={setFormState} />
                 </Frame>
 
-                <Button type="submit" disabled={!formState?.name}>
+                <Button type="submit" disabled={!formState?.name || formState.roomId === ''}>
                     Enter
                 </Button>
             </FormContainer>

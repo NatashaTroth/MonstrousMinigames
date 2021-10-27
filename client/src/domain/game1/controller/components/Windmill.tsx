@@ -33,6 +33,7 @@ const Windmill: React.FunctionComponent = () => {
 
             const touchContainer = document.getElementById('touchContainer');
             touchContainer?.addEventListener('touchmove', e => {
+                e.preventDefault();
                 const touches = e.touches[0];
                 const angle = Math.atan2(touches.pageX - boxCenter.x, -(touches.pageY - boxCenter.y)) * (180 / Math.PI);
 

@@ -35,6 +35,7 @@ import { GameHasStartedMessage, startedTypeGuard } from '../../../typeGuards/gam
 import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
+import { moveLanesToCenter } from '../gameState/moveLanesToCenter';
 import { GameAudio } from '../phaser/GameAudio';
 import GameEventEmitter from '../phaser/GameEventEmitter';
 import { GameEventTypes } from '../phaser/GameEventTypes';
@@ -176,10 +177,7 @@ class MainScene extends Phaser.Scene {
     }
 
     sendStartGame() {
-        this.socket?.emit({
-            type: MessageTypes.startGame,
-            roomId: this.roomId,
-        });
+        handleStartGame(this.socket, this.roomId);
     }
 
     initSockets() {
@@ -352,7 +350,7 @@ class MainScene extends Phaser.Scene {
         const numberPlayers = gameStateData.playersState.length;
         const laneHeightsPerNumberPlayers = [1 / 3, 2 / 3, 1, 1];
         const laneHeight = (this.windowHeight / numberPlayers) * laneHeightsPerNumberPlayers[numberPlayers - 1];
-        const posY = this.moveLanesToCenter(this.windowHeight, laneHeight, index, numberPlayers);
+        const posY = moveLanesToCenter(this.windowHeight, laneHeight, index, numberPlayers);
 
         const player = new Player(
             this,
@@ -366,11 +364,6 @@ class MainScene extends Phaser.Scene {
             new PhaserPlayerRenderer(this, numberPlayers, laneHeightsPerNumberPlayers)
         );
         this.players.push(player);
-    }
-
-    //TODO duplicate, also in phaserPlayerRenderer.ts
-    private moveLanesToCenter(windowHeight: number, newHeight: number, index: number, numberPlayers: number) {
-        return (windowHeight - newHeight * numberPlayers) / 2 + newHeight * (index + 1);
     }
 
     private createGameCountdown(countdownTime: number) {
@@ -414,7 +407,7 @@ class MainScene extends Phaser.Scene {
     }
 
     handlePauseResumeButton() {
-        this.socket?.emit({ type: MessageTypes.pauseResume });
+        handleResume(this.socket);
     }
 
     //TODO stop game button
@@ -424,3 +417,14 @@ class MainScene extends Phaser.Scene {
 }
 
 export default MainScene;
+
+export function handleResume(socket: Socket | undefined) {
+    socket?.emit({ type: MessageTypes.pauseResume });
+}
+
+export function handleStartGame(socket: Socket | undefined, roomId: string | undefined) {
+    socket?.emit({
+        type: MessageTypes.startGame,
+        roomId,
+    });
+}
