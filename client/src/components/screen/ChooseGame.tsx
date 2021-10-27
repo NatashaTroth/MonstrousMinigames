@@ -77,6 +77,7 @@ const ChooseGame: React.FunctionComponent = () => {
                                     key={game.name}
                                     variant={game.id === selectedGame.id ? 'secondary' : 'primary'}
                                     onClick={() => setSelectedGame(game)}
+                                    fullwidth
                                 >
                                     {game.name}
                                 </Button>

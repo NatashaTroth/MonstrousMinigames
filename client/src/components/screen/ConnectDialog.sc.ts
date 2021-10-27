@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-const boxShadowDepth = 8;
 const fontSize = 1;
 
 export const StyledInput = styled.input`
@@ -59,6 +58,6 @@ export const DialogContent = styled.div`
     padding: 40px 100px;
     background-color: ${({ theme }) => theme.palette.secondary.main};
     border-radius: 10px;
-    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
+    box-shadow: calc(${({ theme }) => theme.boxShadowDepth} * 1px) calc(${({ theme }) => theme.boxShadowDepth} * 1px) 0
         ${({ theme }) => theme.palette.secondary.dark};
 `;

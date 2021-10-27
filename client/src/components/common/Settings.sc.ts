@@ -3,8 +3,6 @@ import styled from 'styled-components';
 
 import forest from '../../images/ui/forest.svg';
 
-const boxShadowDepth = 7;
-
 export const SettingsContainer = styled.div`
     background-repeat: no-repeat;
     background-size: cover;
@@ -37,7 +35,7 @@ export const ContentContainer = styled.div`
     padding: 20px;
     border-radius: 40px;
     flex-direction: column;
-    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
+    box-shadow: calc(${({ theme }) => theme.boxShadowDepth} * 1px) calc(${({ theme }) => theme.boxShadowDepth} * 1px) 0
         ${({ theme }) => theme.palette.secondary.dark};
 `;
 

@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import forest from '../../images/ui/forest.svg';
 import gameDemo from '../../images/ui/gameDemo.png';
 
-const boxShadowDepth = 7;
-
 export const GameIntroContainer = styled.div`
     background-image: url(${forest});
     background-size: cover;
@@ -19,7 +17,7 @@ export const GameIntroContainer = styled.div`
 export const GameIntroBackground = styled.div`
     background-color: ${({ theme }) => theme.palette.secondary.main};
     border-radius: 40px;
-    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
+    box-shadow: calc(${({ theme }) => theme.boxShadowDepth} * 1px) calc(${({ theme }) => theme.boxShadowDepth} * 1px) 0
         ${({ theme }) => theme.palette.secondary.dark};
     display: flex;
     width: 80%;
