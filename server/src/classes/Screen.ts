@@ -136,7 +136,6 @@ class Screen {
                     }
                     break;
 
-
                 case CatchFoodMsgType.PHASER_GAME_LOADED:
                     this.room?.setScreenPhaserGameReady(this.socket.id, true);
                     if (this.room && !this.room?.firstPhaserScreenLoaded) {

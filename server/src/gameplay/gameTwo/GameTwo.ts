@@ -215,6 +215,18 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         player.killsLeft--;
     }
 
+
+    protected handleGuess(userId: string, guess: number) {
+        const player = this.players.get(userId)!;
+
+        // todo handle if player not found
+
+        // todo handle if guess exists for round
+
+        player.guesses.push({round: this.currentRound, guess: guess});
+    
+    }
+
     protected handleInput(message: IMessage) {
         switch (message.type) {
             case GameTwoMessageTypes.MOVE:
@@ -222,6 +234,9 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 break;
             case GameTwoMessageTypes.KILL:
                 this.killSheep(message.userId!);
+                break;
+            case GameTwoMessageTypes.GUESS:
+                this.handleGuess(message.userId!, message.guess!);
                 break;
             default:
                 console.info(message);

@@ -6,4 +6,5 @@ export interface IMessage {
     state?: string;
     direction?: string;
     game?: string;
+    guess?: number;
 }
