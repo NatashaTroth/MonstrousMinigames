@@ -13,7 +13,7 @@ import { GameAlreadyStartedError, InvalidRoomCodeError } from '../../src/customE
 import { MessageTypes } from '../../src/enums/messageTypes';
 import {
     CatchFoodGameEventMessageEmitter
-} from '../../src/gameplay/catchFood/CatchFoodGameEventMessageEmitter';
+} from '../../src/gameplay/gameOne/CatchFoodGameEventMessageEmitter';
 import emitter from '../../src/helpers/emitter';
 import ConnectionHandler from '../../src/services/connectionHandler';
 import RoomService from '../../src/services/roomService';

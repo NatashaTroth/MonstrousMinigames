@@ -1,11 +1,16 @@
 import 'reflect-metadata';
+
 import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import DI from '../../../src/di';
 import { CatchFoodGame } from '../../../src/gameplay';
-import { PlayerRank } from '../../../src/gameplay/catchFood/interfaces';
-import { CatchFoodGameEventMessage, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD } from '../../../src/gameplay/catchFood/interfaces/CatchFoodGameEventMessages';
 import { GameState } from '../../../src/gameplay/enums';
-import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
+import { PlayerRank } from '../../../src/gameplay/gameOne/interfaces';
+import {
+    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD, CatchFoodGameEventMessage
+} from '../../../src/gameplay/gameOne/interfaces/CatchFoodGameEventMessages';
+import {
+    GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
+} from '../../../src/gameplay/interfaces/GlobalEventMessages';
 import { leaderboard, roomId } from '../mockData';
 import {
     advanceCountdown, clearTimersAndIntervals, getToCreatedGameState, releaseThreadN,

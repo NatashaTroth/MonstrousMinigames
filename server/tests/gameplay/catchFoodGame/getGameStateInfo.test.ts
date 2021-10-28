@@ -1,7 +1,8 @@
 import 'reflect-metadata';
+
 import { CatchFoodGame } from '../../../src/gameplay';
-import { GameStateInfo } from '../../../src/gameplay/catchFood/interfaces';
 import { GameState } from '../../../src/gameplay/enums';
+import { GameStateInfo } from '../../../src/gameplay/gameOne/interfaces';
 import { leaderboard, roomId, users } from '../mockData';
 import { clearTimersAndIntervals } from './gameHelperFunctions';
 

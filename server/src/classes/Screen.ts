@@ -1,8 +1,8 @@
 import { Namespace, Socket } from 'socket.io';
 
 import { MessageTypes } from '../enums/messageTypes';
-import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
 import Game from '../gameplay/Game';
+import { CatchFoodMsgType } from '../gameplay/gameOne/enums';
 // import { GameThreeMessageTypes } from '../gameplay/gameThree/enums/GameThreeMessageTypes';
 // import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
 import { IMessage } from '../interfaces/messages';

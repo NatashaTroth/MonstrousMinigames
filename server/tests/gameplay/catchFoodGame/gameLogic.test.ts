@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 
 import { CatchFoodGame } from '../../../src/gameplay';
-import { ObstacleType } from '../../../src/gameplay/catchFood/enums';
 import { GameState } from '../../../src/gameplay/enums';
+import { ObstacleType } from '../../../src/gameplay/gameOne/enums';
 import { leaderboard, roomId } from '../mockData';
 import {
     clearTimersAndIntervals, completeNextObstacle, completePlayersObstacles, finishPlayer,

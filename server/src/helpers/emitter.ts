@@ -3,7 +3,7 @@ import { Namespace, Socket } from 'socket.io';
 import Room from '../classes/room';
 import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
-import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
+import { CatchFoodMsgType } from '../gameplay/gameOne/enums';
 
 function sendUserInit(socket: Socket, user: User, room: Room): void {
     socket.emit('message', {

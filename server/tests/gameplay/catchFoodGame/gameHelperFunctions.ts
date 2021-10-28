@@ -1,10 +1,12 @@
 import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import DI from '../../../src/di';
 import { CatchFoodGame } from '../../../src/gameplay';
-import { PlayerRank } from '../../../src/gameplay/catchFood/interfaces';
 import { GameState } from '../../../src/gameplay/enums';
 import Game from '../../../src/gameplay/Game';
-import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
+import { PlayerRank } from '../../../src/gameplay/gameOne/interfaces';
+import {
+    GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
+} from '../../../src/gameplay/interfaces/GlobalEventMessages';
 import { users } from '../mockData';
 
 const TRACK_LENGTH = 5000;
@@ -75,14 +77,13 @@ export function completePlayersObstacles(catchFoodGame: CatchFoodGame, userId: s
 
     while (player.obstacles.length) {
         catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
-        if (player.atObstacle)
-            catchFoodGame['playerHasCompletedObstacle'](userId, player.obstacles[0].id);
+        if (player.atObstacle) catchFoodGame['playerHasCompletedObstacle'](userId, player.obstacles[0].id);
     }
 }
 
 export function goToNextUnsolvableObstacle(catchFoodGame: CatchFoodGame, userId: string) {
     const player = catchFoodGame.players.get(userId)!;
-    
+
     while (player.obstacles.length && !player.atObstacle) {
         catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
     }
@@ -130,9 +131,7 @@ export async function startAndFinishGameDifferentTimes(catchFoodGame: CatchFoodG
     return catchFoodGame;
 }
 
-export async function getGameFinishedDataDifferentTimes(
-    catchFoodGame: CatchFoodGame
-) {
+export async function getGameFinishedDataDifferentTimes(catchFoodGame: CatchFoodGame) {
     let eventData = {
         roomId: '',
         gameState: GameState.Started,
@@ -175,9 +174,7 @@ export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
     return eventData;
 }
 
-export async function getGameFinishedDataWithSomeDead(
-    catchFoodGame: CatchFoodGame
-) {
+export async function getGameFinishedDataWithSomeDead(catchFoodGame: CatchFoodGame) {
     let eventData = {
         roomId: '',
         gameState: GameState.Started,

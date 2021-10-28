@@ -10,7 +10,7 @@ import DI, {
 import { Globals } from './enums/globals';
 import {
     CatchFoodGameEventMessageEmitter
-} from './gameplay/catchFood/CatchFoodGameEventMessageEmitter';
+} from './gameplay/gameOne/CatchFoodGameEventMessageEmitter';
 import { GameThreeEventMessageEmitter } from './gameplay/gameThree/GameThreeEventMessageEmitter';
 import { GameTwoMessageEmitter } from './gameplay/gameTwo/classes/GameTwoMessageEmitter';
 

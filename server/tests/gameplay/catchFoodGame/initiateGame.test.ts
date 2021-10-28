@@ -1,10 +1,11 @@
 import 'reflect-metadata';
+
 import { CatchFoodGame } from '../../../src/gameplay';
+import { GameState } from '../../../src/gameplay/enums';
 import {
     ObstacleType, regularObstacleTypes
-} from '../../../src/gameplay/catchFood/enums/ObstacleType';
-import { Obstacle } from '../../../src/gameplay/catchFood/interfaces';
-import { GameState } from '../../../src/gameplay/enums';
+} from '../../../src/gameplay/gameOne/enums/ObstacleType';
+import { Obstacle } from '../../../src/gameplay/gameOne/interfaces';
 import { leaderboard, roomId, users } from '../mockData';
 import { clearTimersAndIntervals } from './gameHelperFunctions';
 
@@ -105,7 +106,7 @@ describe('Initiate CatchFoodGame correctly', () => {
             }
             if (i > 0) {
                 // try {
-                    expect(obstacles[i].positionX).toBeGreaterThan(obstacles[i - 1].positionX + 100);
+                expect(obstacles[i].positionX).toBeGreaterThan(obstacles[i - 1].positionX + 100);
                 // } catch (e: any) {
                 //     console.table(obstacles.map((obstacle, idx) => ({ ...obstacle, distanceToPrevious: idx > 0 ? obstacle.positionX - obstacles[idx - 1].positionX : obstacle.positionX })));
                 //     throw e;
@@ -113,7 +114,7 @@ describe('Initiate CatchFoodGame correctly', () => {
             }
             if (i < obstacles.length - 1) {
                 // try {
-                    expect(obstacles[i].positionX).toBeLessThan(obstacles[i + 1].positionX - 100);
+                expect(obstacles[i].positionX).toBeLessThan(obstacles[i + 1].positionX - 100);
                 // } catch (e: any) {
                 //     console.table(obstacles.map((obstacle, idx) => ({ ...obstacle, distanceToNext: idx < obstacles.length - 1 ? obstacles[idx + 1].positionX - obstacle.positionX : TRACK_LENGTH - obstacle.positionX })));
                 //     throw e;

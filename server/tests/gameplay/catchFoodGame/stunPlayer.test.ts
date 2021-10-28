@@ -1,12 +1,12 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
-import { CatchFoodGame } from "../../../src/gameplay";
-import { ObstacleType } from "../../../src/gameplay/catchFood/enums";
-import { leaderboard, roomId } from "../mockData";
+import { CatchFoodGame } from '../../../src/gameplay';
+import { ObstacleType } from '../../../src/gameplay/gameOne/enums';
+import { leaderboard, roomId } from '../mockData';
 import {
     advanceCountdown, clearTimersAndIntervals, finishPlayer, releaseThread, releaseThreadN,
     startGameAndAdvanceCountdown
-} from "./gameHelperFunctions";
+} from './gameHelperFunctions';
 
 let catchFoodGame: CatchFoodGame;
 // let gameEventEmitter: CatchFoodGameEventEmitter;
