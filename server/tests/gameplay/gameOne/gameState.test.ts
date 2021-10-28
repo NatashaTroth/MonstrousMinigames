@@ -1,23 +1,21 @@
 import 'reflect-metadata';
-import { CatchFoodGame } from '../../../src/gameplay';
+
+import { GameOne } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/enums';
 import { verifyGameState } from '../../../src/gameplay/helperFunctions/verifyGameState';
 import { leaderboard, roomId, users } from '../mockData';
 import {
-    clearTimersAndIntervals,
-    completeNextObstacle,
-    finishGame,
-    finishPlayer,
-    startGameAndAdvanceCountdown,
+    clearTimersAndIntervals, completeNextObstacle, finishGame, finishPlayer,
+    startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
 const TRACK_LENGTH = 5000; // has to be bigger than initial player position
 const NUMBER_OF_OBSTACLES = 4;
-let catchFoodGame: CatchFoodGame;
+let catchFoodGame: GameOne;
 
 describe('Change and verify game state', () => {
     beforeEach(async () => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
 

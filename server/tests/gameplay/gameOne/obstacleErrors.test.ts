@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { CatchFoodGame } from '../../../src/gameplay';
+import { GameOne } from '../../../src/gameplay';
 import {
     NotAtObstacleError, WrongObstacleIdError
 } from '../../../src/gameplay/gameOne/customErrors';
@@ -9,7 +9,7 @@ import {
     clearTimersAndIntervals, goToNextUnsolvableObstacle, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
-let catchFoodGame: CatchFoodGame;
+let catchFoodGame: GameOne;
 const USER_ID = '1';
 const OBSTACLE_ID_THAT_IS_NEXT = 0;
 const OBSTACLE_ID_THAT_IS_NOT_NEXT = 1;
@@ -18,7 +18,7 @@ const OBSTACLE_ID_THAT_DOES_NOT_EXIST = 50;
 describe('NotAtObstacleError handling tests', () => {
     beforeEach(() => {
         jest.useFakeTimers();
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         startGameAndAdvanceCountdown(catchFoodGame);
     });
 
@@ -44,7 +44,7 @@ describe('NotAtObstacleError handling tests', () => {
 describe('WrongObstacleIdError handling tests', () => {
     beforeEach(() => {
         jest.useFakeTimers();
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         startGameAndAdvanceCountdown(catchFoodGame);
         goToNextUnsolvableObstacle(catchFoodGame, USER_ID);
     });

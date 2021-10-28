@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { CatchFoodGame } from '../../../src/gameplay';
+import { GameOne } from '../../../src/gameplay';
 import { Obstacle } from '../../../src/gameplay/gameOne/interfaces';
 import { HashTable } from '../../../src/gameplay/interfaces';
 import { leaderboard, roomId, users } from '../mockData';
@@ -9,13 +9,13 @@ import { clearTimersAndIntervals } from './gameHelperFunctions';
 const TRACK_LENGTH = 5000; // has to be bigger than initial player position
 const NUMBER_OF_OBSTACLES = 4;
 const NUMBER_OF_STONES = 3;
-let catchFoodGame: CatchFoodGame;
+let catchFoodGame: GameOne;
 let obstacles: HashTable<Array<Obstacle>>;
 
 describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         catchFoodGame.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, NUMBER_OF_STONES);
         obstacles = catchFoodGame.getObstaclePositions();
     });

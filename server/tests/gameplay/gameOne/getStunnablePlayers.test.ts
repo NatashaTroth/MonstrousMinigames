@@ -1,17 +1,17 @@
 import 'reflect-metadata';
 
-import { CatchFoodGame } from '../../../src/gameplay';
+import { GameOne } from '../../../src/gameplay';
 import { ObstacleType } from '../../../src/gameplay/gameOne/enums';
 import { leaderboard, roomId } from '../mockData';
 import { clearTimersAndIntervals, startGameAndAdvanceCountdown } from './gameHelperFunctions';
 
-let catchFoodGame: CatchFoodGame;
-// let gameEventEmitter: CatchFoodGameEventEmitter;
+let catchFoodGame: GameOne;
+// let gameEventEmitter: GameOneEventEmitter;
 
 describe('Stun player tests', () => {
     beforeEach(() => {
-        // gameEventEmitter = CatchFoodGameEventEmitter.getInstance();
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        // gameEventEmitter = GameOneEventEmitter.getInstance();
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
         startGameAndAdvanceCountdown(catchFoodGame, () => {
             catchFoodGame.players.get('2')!.obstacles = catchFoodGame.players
@@ -31,7 +31,7 @@ describe('Stun player tests', () => {
 
     it('getStunnablePlayers returns players that can be stunned', async () => {
         //TODO test
-        // const stunnablePlayersSpy = jest.spyOn(CatchFoodGame.prototype as any, 'getStunnablePlayers');
+        // const stunnablePlayersSpy = jest.spyOn(GameOne.prototype as any, 'getStunnablePlayers');
         // console.log('-----here');
         // catchFoodGame.players.get('2')!.finished = true;
         // console.log(catchFoodGame['getStunnablePlayers']());

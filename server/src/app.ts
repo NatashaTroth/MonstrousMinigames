@@ -8,7 +8,7 @@ import DI, {
     DI_CRON_JOB_CLEANUP, DI_EVENT_MESSAGE_EMITTERS, DI_EXPRESS_PORT, DI_ROOM_NUMBER
 } from './di';
 import { Globals } from './enums/globals';
-import { CatchFoodGameEventMessageEmitter } from './gameplay/gameOne/GameOneEventMessageEmitter';
+import { GameOneEventMessageEmitter } from './gameplay/gameOne/GameOneEventMessageEmitter';
 import { GameThreeEventMessageEmitter } from './gameplay/gameThree/GameThreeEventMessageEmitter';
 import { GameTwoMessageEmitter } from './gameplay/gameTwo/classes/GameTwoMessageEmitter';
 
@@ -28,7 +28,7 @@ DI.register(DI_CRON_JOB_CLEANUP, { useValue: Globals.CRON_JOB_CLEANUP });
 
 // *************** Event Messengers *******
 DI.register(DI_EVENT_MESSAGE_EMITTERS, { useToken: GlobalEventMessageEmitter });
-DI.register(DI_EVENT_MESSAGE_EMITTERS, { useToken: CatchFoodGameEventMessageEmitter });
+DI.register(DI_EVENT_MESSAGE_EMITTERS, { useToken: GameOneEventMessageEmitter });
 DI.register(DI_EVENT_MESSAGE_EMITTERS, { useToken: GameTwoMessageEmitter });
 DI.register(DI_EVENT_MESSAGE_EMITTERS, { useToken: GameThreeEventMessageEmitter });
 

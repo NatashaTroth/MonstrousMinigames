@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import DI from '../../../src/di';
-import { CatchFoodGame } from '../../../src/gameplay';
+import { GameOne } from '../../../src/gameplay';
 // ..
 import { GameState } from '../../../src/gameplay/enums';
 import { PlayerRank } from '../../../src/gameplay/gameOne/interfaces';
@@ -17,7 +17,7 @@ import {
 
 // const TRACK_LENGTH = 500;
 
-let catchFoodGame: CatchFoodGame;
+let catchFoodGame: GameOne;
 let gameEventEmitter: GameEventEmitter;
 
 describe('Disconnect Player tests', () => {
@@ -26,7 +26,7 @@ describe('Disconnect Player tests', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
 

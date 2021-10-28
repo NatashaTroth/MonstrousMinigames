@@ -1,5 +1,6 @@
 import 'reflect-metadata';
-import { CatchFoodGame } from '../../../src/gameplay';
+
+import { GameOne } from '../../../src/gameplay';
 import { leaderboard, roomId } from '../mockData';
 import {
     clearTimersAndIntervals, finishGame, getGameFinishedDataDifferentTimes,
@@ -8,12 +9,12 @@ import {
 
 // const TRACK_LENGTH = 5000;  // has to be bigger than initial player position
 
-let catchFoodGame: CatchFoodGame;
+let catchFoodGame: GameOne;
 const dateNow = 1618665766156;
 
 describe('Game logic tests', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
 

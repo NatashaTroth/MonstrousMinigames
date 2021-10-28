@@ -1,6 +1,6 @@
 import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import DI from '../../../src/di';
-import { CatchFoodGame } from '../../../src/gameplay';
+import { GameOne } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/enums';
 import Game from '../../../src/gameplay/Game';
 import { PlayerRank } from '../../../src/gameplay/gameOne/interfaces';
@@ -22,7 +22,7 @@ export const releaseThreadN = async (n: number) => {
 
 export function clearTimersAndIntervals(game: Game) {
     //to clear intervals
-    jest.advanceTimersByTime((game as CatchFoodGame).countdownTime || 0);
+    jest.advanceTimersByTime((game as GameOne).countdownTime || 0);
     // jest.advanceTimersByTime(catchFoodGame.timeOutLimit);
     try {
         game.stopGameUserClosed();
@@ -33,7 +33,7 @@ export function clearTimersAndIntervals(game: Game) {
     jest.clearAllMocks();
 }
 
-export function startGameAndAdvanceCountdown(catchFoodGame: CatchFoodGame, afterCreate: () => any = () => void 0) {
+export function startGameAndAdvanceCountdown(catchFoodGame: GameOne, afterCreate: () => any = () => void 0) {
     Date.now = () => dateNow;
     catchFoodGame.createNewGame(users, TRACK_LENGTH, 4);
     afterCreate();
@@ -47,19 +47,19 @@ export function advanceCountdown(time: number) {
     jest.advanceTimersByTime(time);
 }
 
-export function finishCreatedGame(catchFoodGame: CatchFoodGame) {
+export function finishCreatedGame(catchFoodGame: GameOne) {
     advanceCountdown(catchFoodGame.countdownTime);
     return finishGame(catchFoodGame);
 }
 
-export function startAndFinishGame(catchFoodGame: CatchFoodGame): CatchFoodGame {
+export function startAndFinishGame(catchFoodGame: GameOne): GameOne {
     startGameAndAdvanceCountdown(catchFoodGame);
     catchFoodGame = finishGame(catchFoodGame);
 
     return catchFoodGame;
 }
 
-export function finishGame(catchFoodGame: CatchFoodGame): CatchFoodGame {
+export function finishGame(catchFoodGame: GameOne): GameOne {
     const numberOfUsers = catchFoodGame.players.size;
     for (let i = 1; i <= numberOfUsers; i++) {
         finishPlayer(catchFoodGame, i.toString());
@@ -67,12 +67,12 @@ export function finishGame(catchFoodGame: CatchFoodGame): CatchFoodGame {
     return catchFoodGame;
 }
 
-export function finishPlayer(catchFoodGame: CatchFoodGame, userId: string) {
+export function finishPlayer(catchFoodGame: GameOne, userId: string) {
     completePlayersObstacles(catchFoodGame, userId);
     catchFoodGame['runForward'](userId, catchFoodGame.trackLength - catchFoodGame.players.get(userId)!.positionX);
 }
 
-export function completePlayersObstacles(catchFoodGame: CatchFoodGame, userId: string) {
+export function completePlayersObstacles(catchFoodGame: GameOne, userId: string) {
     const player = catchFoodGame.players.get(userId)!;
 
     while (player.obstacles.length) {
@@ -81,7 +81,7 @@ export function completePlayersObstacles(catchFoodGame: CatchFoodGame, userId: s
     }
 }
 
-export function goToNextUnsolvableObstacle(catchFoodGame: CatchFoodGame, userId: string) {
+export function goToNextUnsolvableObstacle(catchFoodGame: GameOne, userId: string) {
     const player = catchFoodGame.players.get(userId)!;
 
     while (player.obstacles.length && !player.atObstacle) {
@@ -89,21 +89,21 @@ export function goToNextUnsolvableObstacle(catchFoodGame: CatchFoodGame, userId:
     }
 }
 
-export function completeNextObstacle(catchFoodGame: CatchFoodGame, userId: string) {
+export function completeNextObstacle(catchFoodGame: GameOne, userId: string) {
     catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
     if (catchFoodGame['playerHasReachedObstacle'](userId))
         catchFoodGame['playerHasCompletedObstacle'](userId, catchFoodGame.players.get(userId)!.obstacles[0].id);
 }
 
-export function distanceToNextObstacle(catchFoodGame: CatchFoodGame, userId: string) {
+export function distanceToNextObstacle(catchFoodGame: GameOne, userId: string) {
     return catchFoodGame.players.get(userId)!.obstacles[0].positionX - catchFoodGame.players.get(userId)!.positionX;
 }
 
-export function runToNextObstacle(catchFoodGame: CatchFoodGame, userId: string) {
+export function runToNextObstacle(catchFoodGame: GameOne, userId: string) {
     catchFoodGame['runForward']('1', distanceToNextObstacle(catchFoodGame, userId));
 }
 
-export async function startAndFinishGameDifferentTimes(catchFoodGame: CatchFoodGame) {
+export async function startAndFinishGameDifferentTimes(catchFoodGame: GameOne) {
     const dateNow = 1618665766156;
     Date.now = jest.fn(() => dateNow);
     startGameAndAdvanceCountdown(catchFoodGame);
@@ -131,7 +131,7 @@ export async function startAndFinishGameDifferentTimes(catchFoodGame: CatchFoodG
     return catchFoodGame;
 }
 
-export async function getGameFinishedDataDifferentTimes(catchFoodGame: CatchFoodGame) {
+export async function getGameFinishedDataDifferentTimes(catchFoodGame: GameOne) {
     let eventData = {
         roomId: '',
         gameState: GameState.Started,
@@ -146,7 +146,7 @@ export async function getGameFinishedDataDifferentTimes(catchFoodGame: CatchFood
     return eventData;
 }
 
-export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
+export function getGameFinishedDataSameRanks(catchFoodGame: GameOne) {
     let eventData = {
         roomId: '',
         gameState: GameState.Started,
@@ -174,7 +174,7 @@ export function getGameFinishedDataSameRanks(catchFoodGame: CatchFoodGame) {
     return eventData;
 }
 
-export async function getGameFinishedDataWithSomeDead(catchFoodGame: CatchFoodGame) {
+export async function getGameFinishedDataWithSomeDead(catchFoodGame: GameOne) {
     let eventData = {
         roomId: '',
         gameState: GameState.Started,
@@ -189,29 +189,29 @@ export async function getGameFinishedDataWithSomeDead(catchFoodGame: CatchFoodGa
     return eventData;
 }
 
-export function getToCreatedGameState(catchFoodGame: CatchFoodGame) {
+export function getToCreatedGameState(catchFoodGame: GameOne) {
     catchFoodGame.createNewGame(users);
     expect(catchFoodGame.gameState).toBe(GameState.Created);
 }
 
-export function getToStartedGameState(catchFoodGame: CatchFoodGame) {
+export function getToStartedGameState(catchFoodGame: GameOne) {
     startGameAndAdvanceCountdown(catchFoodGame);
     expect(catchFoodGame.gameState).toBe(GameState.Started);
 }
 
-export function getToPausedGameState(catchFoodGame: CatchFoodGame) {
+export function getToPausedGameState(catchFoodGame: GameOne) {
     startGameAndAdvanceCountdown(catchFoodGame);
     catchFoodGame.pauseGame();
     expect(catchFoodGame.gameState).toBe(GameState.Paused);
 }
 
-export function getToStoppedGameState(catchFoodGame: CatchFoodGame) {
+export function getToStoppedGameState(catchFoodGame: GameOne) {
     startGameAndAdvanceCountdown(catchFoodGame);
     catchFoodGame.stopGameUserClosed();
     expect(catchFoodGame.gameState).toBe(GameState.Stopped);
 }
 
-export function getToFinishedGameState(catchFoodGame: CatchFoodGame) {
+export function getToFinishedGameState(catchFoodGame: GameOne) {
     startGameAndAdvanceCountdown(catchFoodGame);
     finishGame(catchFoodGame);
     expect(catchFoodGame.gameState).toBe(GameState.Finished);

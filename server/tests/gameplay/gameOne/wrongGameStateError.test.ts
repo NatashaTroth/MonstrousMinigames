@@ -1,5 +1,6 @@
 import 'reflect-metadata';
-import { CatchFoodGame } from '../../../src/gameplay';
+
+import { GameOne } from '../../../src/gameplay';
 import { WrongGameStateError } from '../../../src/gameplay/customErrors';
 import { GameState } from '../../../src/gameplay/enums';
 import { leaderboard, roomId, users } from '../mockData';
@@ -8,12 +9,12 @@ import {
     getToStartedGameState, getToStoppedGameState, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
-let catchFoodGame: CatchFoodGame;
+let catchFoodGame: GameOne;
 
 describe('Create new game', () => {
     beforeEach(() => {
         jest.useFakeTimers();
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
     });
 
     afterEach(async () => {
@@ -52,7 +53,7 @@ describe('Create new game', () => {
 
 describe('Pause game', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -95,7 +96,7 @@ describe('Pause game', () => {
 
 describe('Resume game', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -139,7 +140,7 @@ describe('Resume game', () => {
 
 describe('Stop game', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -177,7 +178,7 @@ describe('Stop game', () => {
 
 describe('Run forward', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -219,7 +220,7 @@ describe('Run forward', () => {
 
 describe('Player has completed obstacle', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
@@ -261,7 +262,7 @@ describe('Player has completed obstacle', () => {
 
 describe('Disconnect player', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
 

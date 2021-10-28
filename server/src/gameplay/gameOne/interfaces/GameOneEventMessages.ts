@@ -33,7 +33,7 @@ export const CATCH_FOOD_GAME_EVENT_MESSAGES = [
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
 ];
 
-export interface CatchFoodGameObstacleReachedInfo {
+export interface GameOneObstacleReachedInfo {
     type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED;
     roomId: string;
     userId: string;
@@ -43,18 +43,18 @@ export interface CatchFoodGameObstacleReachedInfo {
     trashType?: TrashType;
 }
 
-export interface CatchFoodGameObstacleSkippedInfo {
+export interface GameOneObstacleSkippedInfo {
     type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_SKIPPED;
     roomId: string;
     userId: string;
 }
 
-export interface CatchFoodGameSolveObstacleInfo {
+export interface GameOneSolveObstacleInfo {
     type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_WILL_BE_SOLVED;
     roomId: string;
     userId: string;
 }
-export interface CatchFoodGameApproachingSolvableObstacle {
+export interface GameOneApproachingSolvableObstacle {
     type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE;
     roomId: string;
     userId: string;
@@ -62,7 +62,7 @@ export interface CatchFoodGameApproachingSolvableObstacle {
     obstacleType: ObstacleType;
     distance: number;
 }
-export interface CatchFoodGameApproachingSolvableObstacleOnce {
+export interface GameOneApproachingSolvableObstacleOnce {
     type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE_ONCE;
     roomId: string;
     userId: string;
@@ -70,60 +70,60 @@ export interface CatchFoodGameApproachingSolvableObstacleOnce {
     obstacleType: ObstacleType;
     distance: number;
 }
-export interface CatchFoodGamePlayerHasFinished {
+export interface GameOnePlayerHasFinished {
     type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED;
     roomId: string;
     userId: string;
     rank: number;
 }
-export interface CatchFoodGameInitialGameState {
+export interface GameOneInitialGameState {
     type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE;
     roomId: string;
     data: GameStateInfo;
 }
-export interface CatchFoodGameStunnablePlayers {
+export interface GameOneStunnablePlayers {
     type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__STUNNABLE_PLAYERS;
     roomId: string;
     stunnablePlayers: string[];
 }
-export interface CatchFoodGamePlayerIsDead {
+export interface GameOnePlayerIsDead {
     type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD;
     roomId: string;
     userId: string;
     rank: number;
 }
-export interface CatchFoodGamePlayerStunnedState {
+export interface GameOnePlayerStunnedState {
     type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED;
     roomId: string;
     userId: string;
 }
-export interface CatchFoodGamePlayerUnstunnedState {
+export interface GameOnePlayerUnstunnedState {
     type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED;
     roomId: string;
     userId: string;
 }
-export interface CatchFoodGameChasersWerePushed {
+export interface GameOneChasersWerePushed {
     type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__CHASERS_WERE_PUSHED;
     roomId: string;
     amount: number;
 }
-export interface CatchFoodGamePlayerHasExceededMaxNumberChaserPushes {
+export interface GameOnePlayerHasExceededMaxNumberChaserPushes {
     type: typeof CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES;
     roomId: string;
     userId: string;
 }
 
-export type CatchFoodGameEventMessage =
-    | CatchFoodGameObstacleReachedInfo
-    | CatchFoodGameObstacleSkippedInfo
-    | CatchFoodGameSolveObstacleInfo
-    | CatchFoodGameApproachingSolvableObstacle
-    | CatchFoodGameApproachingSolvableObstacleOnce
-    | CatchFoodGamePlayerHasFinished
-    | CatchFoodGameInitialGameState
-    | CatchFoodGameStunnablePlayers
-    | CatchFoodGamePlayerIsDead
-    | CatchFoodGamePlayerStunnedState
-    | CatchFoodGamePlayerUnstunnedState
-    | CatchFoodGameChasersWerePushed
-    | CatchFoodGamePlayerHasExceededMaxNumberChaserPushes;
+export type GameOneEventMessage =
+    | GameOneObstacleReachedInfo
+    | GameOneObstacleSkippedInfo
+    | GameOneSolveObstacleInfo
+    | GameOneApproachingSolvableObstacle
+    | GameOneApproachingSolvableObstacleOnce
+    | GameOnePlayerHasFinished
+    | GameOneInitialGameState
+    | GameOneStunnablePlayers
+    | GameOnePlayerIsDead
+    | GameOnePlayerStunnedState
+    | GameOnePlayerUnstunnedState
+    | GameOneChasersWerePushed
+    | GameOnePlayerHasExceededMaxNumberChaserPushes;

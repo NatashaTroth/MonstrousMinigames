@@ -2,14 +2,14 @@ import 'reflect-metadata';
 
 import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import DI from '../../../src/di';
-import { CatchFoodGame } from '../../../src/gameplay';
+import { GameOne } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/enums';
 import { ObstacleType } from '../../../src/gameplay/gameOne/enums';
 import { GameEvents } from '../../../src/gameplay/gameOne/interfaces';
 import {
     CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED,
-    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD, CatchFoodGameEventMessage
+    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD, GameOneEventMessage
 } from '../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED,
@@ -23,11 +23,11 @@ import {
     startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
-let catchFoodGame: CatchFoodGame;
+let catchFoodGame: GameOne;
 let gameEventEmitter: GameEventEmitter;
 
 const beforeEachFunction = () => {
-    catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+    catchFoodGame = new GameOne(roomId, leaderboard);
     jest.useFakeTimers();
 };
 
@@ -48,7 +48,7 @@ describe('Event Emitter', () => {
         afterEachFunction();
     });
 
-    it('should create a new CatchFoodGameEventEmitter instance (same object)', async () => {
+    it('should create a new GameOneEventEmitter instance (same object)', async () => {
         const gameEventEmitterNew = DI.resolve(GameEventEmitter);
         expect(gameEventEmitterNew).toBe(gameEventEmitter);
     });
@@ -119,7 +119,7 @@ describe('Obstacle reached events', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
 
         let obstacleEventReceived = false;
-        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: CatchFoodGameEventMessage) => {
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
             if (message.type === CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED) {
                 obstacleEventReceived = true;
             }
@@ -137,7 +137,7 @@ describe('Obstacle reached events', () => {
             obstacleId: 1,
             obstacleType: ObstacleType.TreeStump, //null not possible
         };
-        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: CatchFoodGameEventMessage) => {
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
             if (message.type === CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED) {
                 eventData = message as any;
             }
@@ -428,7 +428,7 @@ describe('Player has finished events', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
 
         let playerFinished = false;
-        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: CatchFoodGameEventMessage) => {
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
             if (message.type === CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED) {
                 playerFinished = true;
             }
@@ -446,7 +446,7 @@ describe('Player has finished events', () => {
             userId: '',
             rank: 0,
         };
-        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: CatchFoodGameEventMessage) => {
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
             if (message.type === CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED) {
                 eventData = message as any;
             }
@@ -547,7 +547,7 @@ describe('Chaser event', () => {
 
     it.skip('should emit a PlayerIsDead event when a chaser catches a player', async () => {
         let playerIsDeadEvent = false;
-        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: CatchFoodGameEventMessage) => {
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
             if (message.type === CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD) {
                 playerIsDeadEvent = true;
             }
@@ -565,7 +565,7 @@ describe('Chaser event', () => {
             rank: 0,
         };
         const userId = '1';
-        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: CatchFoodGameEventMessage) => {
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
             if (message.type === CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD) {
                 eventData = message as any;
             }

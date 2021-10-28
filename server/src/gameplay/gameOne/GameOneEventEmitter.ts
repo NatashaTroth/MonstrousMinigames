@@ -6,7 +6,7 @@ import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_STOPPED, GLOBAL_EVENT_MESSAGE__PLAYER_HAS_DISCONNECTED,
     GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED
 } from '../interfaces/GlobalEventMessages';
-import { CatchFoodGameEventMessageEmitter } from './GameOneEventMessageEmitter';
+import { GameOneEventMessageEmitter } from './GameOneEventMessageEmitter';
 import { GameEvents, InitialGameStateInfo, PlayerRank } from './interfaces';
 import {
     CATCH_FOOD_GAME_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE,
@@ -23,8 +23,8 @@ import {
     CATCH_FOOD_GAME_EVENT_MESSAGE__STUNNABLE_PLAYERS
 } from './interfaces/GameOneEventMessages';
 
-export default class CatchFoodGameEventEmitter {
-    private static readonly catchFoodGameEventMessageEmitter = DI.resolve(CatchFoodGameEventMessageEmitter);
+export default class GameOneEventEmitter {
+    private static readonly catchFoodGameEventMessageEmitter = DI.resolve(GameOneEventMessageEmitter);
 
     public static emitInitialGameStateInfoUpdate(roomId: string, gameState: InitialGameStateInfo) {
         this.catchFoodGameEventMessageEmitter.emit({

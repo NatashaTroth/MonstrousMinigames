@@ -11,9 +11,7 @@ import Server from '../../src/classes/Server';
 import SocketIOServer from '../../src/classes/SocketIOServer';
 import { GameAlreadyStartedError, InvalidRoomCodeError } from '../../src/customErrors/';
 import { MessageTypes } from '../../src/enums/messageTypes';
-import {
-    CatchFoodGameEventMessageEmitter
-} from '../../src/gameplay/gameOne/GameOneEventMessageEmitter';
+import { GameOneEventMessageEmitter } from '../../src/gameplay/gameOne/GameOneEventMessageEmitter';
 import emitter from '../../src/helpers/emitter';
 import ConnectionHandler from '../../src/services/connectionHandler';
 import RoomService from '../../src/services/roomService';
@@ -54,10 +52,7 @@ describe('connectionHandler', () => {
                 } as Server),
                 rs,
                 gameEventEmitter,
-                [
-                    new GlobalEventMessageEmitter(gameEventEmitter),
-                    new CatchFoodGameEventMessageEmitter(gameEventEmitter),
-                ]
+                [new GlobalEventMessageEmitter(gameEventEmitter), new GameOneEventMessageEmitter(gameEventEmitter)]
             );
             ch.handle();
             done();

@@ -1,16 +1,17 @@
 import 'reflect-metadata';
-import { CatchFoodGame } from '../../../src/gameplay';
+
+import { GameOne } from '../../../src/gameplay';
 import { leaderboard, roomId, users } from '../mockData';
 import { clearTimersAndIntervals, releaseThreadN, startAndFinishGame } from './gameHelperFunctions';
 
 const NEW_TRACKLENGTH = 1000;
 const NEW_NUMBER_OF_OBSTACLES = 6;
 const NEW_STONE_COUNT = 1;
-let catchFoodGame: CatchFoodGame;
+let catchFoodGame: GameOne;
 
 describe('Create new game tests', () => {
     beforeEach(async () => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
         // console.log(catchFoodGame.players.get('1'));
 

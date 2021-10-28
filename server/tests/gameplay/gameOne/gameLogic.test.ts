@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { CatchFoodGame } from '../../../src/gameplay';
+import { GameOne } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/enums';
 import { ObstacleType } from '../../../src/gameplay/gameOne/enums';
 import { leaderboard, roomId } from '../mockData';
@@ -12,12 +12,12 @@ import {
 
 const TRACK_LENGTH = 5000; // has to be bigger than initial player position
 
-let catchFoodGame: CatchFoodGame;
+let catchFoodGame: GameOne;
 const dateNow = 1618665766156;
 
 describe('Start game', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
     afterEach(async () => {
@@ -41,7 +41,7 @@ describe('Start game', () => {
 
 describe('Run forward', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
     afterEach(() => {
@@ -63,7 +63,7 @@ describe('Run forward', () => {
     });
 });
 
-const removeStonesFromObstacles = (game: CatchFoodGame) => () => {
+const removeStonesFromObstacles = (game: GameOne) => () => {
     game.players.get('1')!.obstacles = game.players
         .get('1')!
         .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
@@ -71,7 +71,7 @@ const removeStonesFromObstacles = (game: CatchFoodGame) => () => {
 
 describe('Obstacles reached', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
     afterEach(() => {
@@ -80,7 +80,7 @@ describe('Obstacles reached', () => {
 
     it('playerHasReachedObstacle is called and returns false', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const playerHasReachedObstacleSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasReachedObstacle');
+        const playerHasReachedObstacleSpy = jest.spyOn(GameOne.prototype as any, 'playerHasReachedObstacle');
         catchFoodGame['runForward']('1', catchFoodGame.players.get('1')!.obstacles[0].positionX / 2);
         expect(playerHasReachedObstacleSpy).toHaveBeenCalled();
         expect(playerHasReachedObstacleSpy).toHaveReturnedWith(false);
@@ -96,7 +96,7 @@ describe('Obstacles reached', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const distanceToObstacle =
             catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        const playerHasReachedObstacleSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasReachedObstacle');
+        const playerHasReachedObstacleSpy = jest.spyOn(GameOne.prototype as any, 'playerHasReachedObstacle');
         catchFoodGame['runForward']('1', distanceToObstacle);
         expect(playerHasReachedObstacleSpy).toHaveBeenCalled();
         expect(playerHasReachedObstacleSpy).toHaveReturnedWith(true);
@@ -106,10 +106,7 @@ describe('Obstacles reached', () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         const distanceToObstacle =
             catchFoodGame.players.get('1')!.obstacles[0].positionX - catchFoodGame.players.get('1')!.positionX;
-        const handlePlayerReachedObstacleSpy = jest.spyOn(
-            CatchFoodGame.prototype as any,
-            'handlePlayerReachedObstacle'
-        );
+        const handlePlayerReachedObstacleSpy = jest.spyOn(GameOne.prototype as any, 'handlePlayerReachedObstacle');
         catchFoodGame['runForward']('1', distanceToObstacle);
         expect(handlePlayerReachedObstacleSpy).toHaveBeenCalled();
     });
@@ -197,7 +194,7 @@ describe('Obstacles reached', () => {
 
 describe('Player has finished race', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
     afterEach(() => {
@@ -233,7 +230,7 @@ describe('Player has finished race', () => {
 
     it('playerHasPassedGoal is called and returns false', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const playerHasPassedGoalSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasPassedGoal');
+        const playerHasPassedGoalSpy = jest.spyOn(GameOne.prototype as any, 'playerHasPassedGoal');
         catchFoodGame['runForward']('1', 5);
         expect(playerHasPassedGoalSpy).toHaveBeenCalled();
         expect(playerHasPassedGoalSpy).toHaveReturnedWith(false);
@@ -242,7 +239,7 @@ describe('Player has finished race', () => {
     it('playerHasPassedGoal is called and returns true', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
         // finish player 1
-        const playerHasPassedGoalSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasPassedGoal');
+        const playerHasPassedGoalSpy = jest.spyOn(GameOne.prototype as any, 'playerHasPassedGoal');
         finishPlayer(catchFoodGame, '1');
         expect(playerHasPassedGoalSpy).toHaveBeenCalled();
         expect(playerHasPassedGoalSpy).toHaveReturnedWith(true);
@@ -250,7 +247,7 @@ describe('Player has finished race', () => {
 
     it('playerHasFinishedGame is called', async () => {
         startGameAndAdvanceCountdown(catchFoodGame);
-        const playerHasFinishedGameSpy = jest.spyOn(CatchFoodGame.prototype as any, 'playerHasFinishedGame');
+        const playerHasFinishedGameSpy = jest.spyOn(GameOne.prototype as any, 'playerHasFinishedGame');
         finishPlayer(catchFoodGame, '1');
         expect(playerHasFinishedGameSpy).toHaveBeenCalled();
     });
@@ -264,7 +261,7 @@ describe('Player has finished race', () => {
 
 describe('Game finished', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
     afterEach(() => {

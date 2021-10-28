@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { CatchFoodGame } from '../../../src/gameplay';
+import { GameOne } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/enums';
 import {
     ObstacleType, regularObstacleTypes
@@ -12,14 +12,14 @@ import { clearTimersAndIntervals } from './gameHelperFunctions';
 const TRACK_LENGTH = 5000;
 const NUMBER_OF_OBSTACLES = 4;
 const NUMBER_OF_STONES = 2;
-let catchFoodGame: CatchFoodGame;
+let catchFoodGame: GameOne;
 // const OBSTACLE_RANGE = 70;
 const REGULAR_OBSTACLE_TYPE_KEYS = regularObstacleTypes;
 
-describe('Initiate CatchFoodGame correctly', () => {
+describe('Initiate GameOne correctly', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         catchFoodGame.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, NUMBER_OF_STONES);
     });
     afterEach(async () => {
@@ -39,7 +39,7 @@ describe('Initiate CatchFoodGame correctly', () => {
     });
 
     it('initiates gameStartedTime with 0', async () => {
-        const catchFoodGameInit = new CatchFoodGame(roomId, leaderboard);
+        const catchFoodGameInit = new GameOne(roomId, leaderboard);
         expect(catchFoodGameInit['_gameStartedAt']).toBe(0);
     });
 
@@ -143,7 +143,7 @@ describe('Initiate CatchFoodGame correctly', () => {
         expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(NUMBER_OF_OBSTACLES + NUMBER_OF_STONES);
     });
 
-    function getObstacleRange(catchFoodGame: CatchFoodGame): number {
+    function getObstacleRange(catchFoodGame: GameOne): number {
         return (
             Math.floor(
                 (catchFoodGame.trackLength - catchFoodGame.initialPlayerPositionX) /

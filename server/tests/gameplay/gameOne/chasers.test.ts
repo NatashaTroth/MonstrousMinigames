@@ -2,11 +2,11 @@ import 'reflect-metadata';
 
 import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import DI from '../../../src/di';
-import { CatchFoodGame } from '../../../src/gameplay';
+import { GameOne } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/enums';
 import { PlayerRank } from '../../../src/gameplay/gameOne/interfaces';
 import {
-    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD, CatchFoodGameEventMessage
+    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD, GameOneEventMessage
 } from '../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
@@ -17,7 +17,7 @@ import {
     startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
-let catchFoodGame: CatchFoodGame;
+let catchFoodGame: GameOne;
 const dateNow = 1618665766156;
 let chasersStartPosX: number;
 let gameEventEmitter: GameEventEmitter;
@@ -27,7 +27,7 @@ describe('Chasers', () => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         catchFoodGame.chasersPositionX = 50;
         jest.useFakeTimers();
         Date.now = jest.fn(() => dateNow);
@@ -39,7 +39,7 @@ describe('Chasers', () => {
     });
 
     it.skip('starts chasers at initial positionX', async () => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         catchFoodGame.chasersPositionX = 50;
         getToCreatedGameState(catchFoodGame);
         expect(catchFoodGame.chasersPositionX).toBe(chasersStartPosX);
@@ -70,7 +70,7 @@ describe('Chasers', () => {
             rank: 0,
         };
         const userId = '1';
-        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: CatchFoodGameEventMessage) => {
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
             if (message.type === CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD) {
                 eventData = message as any;
             }

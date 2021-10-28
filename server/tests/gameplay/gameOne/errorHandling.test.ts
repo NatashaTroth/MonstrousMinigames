@@ -1,16 +1,17 @@
 import 'reflect-metadata';
+
 import User from '../../../src/classes/user';
-import { CatchFoodGame } from '../../../src/gameplay';
+import { GameOne } from '../../../src/gameplay';
 import { MaxNumberUsersExceededError } from '../../../src/gameplay/customErrors';
 import { leaderboard, roomId, users } from '../mockData';
 import { clearTimersAndIntervals } from './gameHelperFunctions';
 
-let catchFoodGame: CatchFoodGame;
+let catchFoodGame: GameOne;
 const longerUsers = [...users, new User('xxx', 'iii', 'Lavender', 1, '5')];
 
 describe('Error handling tests', () => {
     beforeEach(() => {
-        catchFoodGame = new CatchFoodGame(roomId, leaderboard);
+        catchFoodGame = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
 

@@ -23,25 +23,20 @@ import {
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD, CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_STUNNED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__STUNNABLE_PLAYERS, CATCH_FOOD_GAME_EVENT_MESSAGES,
-    CatchFoodGameEventMessage
+    GameOneEventMessage
 } from './interfaces/GameOneEventMessages';
 
 @singleton()
-export class CatchFoodGameEventMessageEmitter implements EventMessageEmitter {
+export class GameOneEventMessageEmitter implements EventMessageEmitter {
     constructor(private readonly gameEventEmitter: GameEventEmitter) {}
 
-    emit(message: CatchFoodGameEventMessage | GlobalEventMessage): void {
+    emit(message: GameOneEventMessage | GlobalEventMessage): void {
         this.gameEventEmitter.emit(GameEventEmitter.EVENT_MESSAGE_EVENT, message);
     }
     canHandle(message: EventMessage, game: Game<Player, IGameStateBase>): boolean {
         return CATCH_FOOD_GAME_EVENT_MESSAGES.includes(message.type);
     }
-    handle(
-        controllerNameSpace: Namespace,
-        screenNameSpace: Namespace,
-        room: Room,
-        message: CatchFoodGameEventMessage
-    ): void {
+    handle(controllerNameSpace: Namespace, screenNameSpace: Namespace, room: Room, message: GameOneEventMessage): void {
         let user: User;
 
         switch (message.type) {

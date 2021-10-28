@@ -1,6 +1,6 @@
 import { Chaser } from './Chaser';
 import * as GameEvents from './GameEvents';
-import { CatchFoodGamePlayerRank } from './GameOnePlayerRank';
+import { GameOnePlayerRank } from './GameOnePlayerRank';
 import { GameStateInfo } from './GameStateInfo';
 import { InitialGameStateInfo } from './InitialGameStateInfo';
 import { IMessageObstacle } from './messageObstacle';
@@ -16,7 +16,7 @@ export {
     GameStateInfo,
     InitialGameStateInfo,
     GameEvents,
-    CatchFoodGamePlayerRank as PlayerRank,
+    GameOnePlayerRank as PlayerRank,
     Chaser,
     ObstacleTypeObject,
     IMessageObstacle,
