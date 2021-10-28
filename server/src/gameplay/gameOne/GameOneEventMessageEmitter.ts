@@ -24,7 +24,7 @@ import {
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED,
     CATCH_FOOD_GAME_EVENT_MESSAGE__STUNNABLE_PLAYERS, CATCH_FOOD_GAME_EVENT_MESSAGES,
     CatchFoodGameEventMessage
-} from './interfaces/CatchFoodGameEventMessages';
+} from './interfaces/GameOneEventMessages';
 
 @singleton()
 export class CatchFoodGameEventMessageEmitter implements EventMessageEmitter {

@@ -1,6 +1,6 @@
-import { CatchFoodGamePlayerRank } from './CatchFoodGamePlayerRank';
 import { Chaser } from './Chaser';
 import * as GameEvents from './GameEvents';
+import { CatchFoodGamePlayerRank } from './GameOnePlayerRank';
 import { GameStateInfo } from './GameStateInfo';
 import { InitialGameStateInfo } from './InitialGameStateInfo';
 import { IMessageObstacle } from './messageObstacle';

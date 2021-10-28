@@ -7,7 +7,7 @@ import { GameState } from '../../../src/gameplay/enums';
 import { PlayerRank } from '../../../src/gameplay/gameOne/interfaces';
 import {
     CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD, CatchFoodGameEventMessage
-} from '../../../src/gameplay/gameOne/interfaces/CatchFoodGameEventMessages';
+} from '../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
 } from '../../../src/gameplay/interfaces/GlobalEventMessages';

@@ -11,12 +11,12 @@ import { HashTable, IGameInterface } from '../interfaces';
 import { GameType } from '../leaderboard/enums/GameType';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
-import CatchFoodGameEventEmitter from './CatchFoodGameEventEmitter';
-import * as InitialGameParameters from './CatchFoodGameInitialParameters';
-import CatchFoodPlayer from './CatchFoodPlayer';
 import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
 import UserHasNoStones from './customErrors/UserHasNoStones';
 import { CatchFoodMsgType, ObstacleType } from './enums';
+import CatchFoodGameEventEmitter from './GameOneEventEmitter';
+import * as InitialGameParameters from './GameOneInitialParameters';
+import CatchFoodPlayer from './GameOnePlayer';
 import {
     createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
 } from './helperFunctions/initiatePlayerState';

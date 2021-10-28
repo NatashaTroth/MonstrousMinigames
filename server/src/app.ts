@@ -8,9 +8,7 @@ import DI, {
     DI_CRON_JOB_CLEANUP, DI_EVENT_MESSAGE_EMITTERS, DI_EXPRESS_PORT, DI_ROOM_NUMBER
 } from './di';
 import { Globals } from './enums/globals';
-import {
-    CatchFoodGameEventMessageEmitter
-} from './gameplay/gameOne/CatchFoodGameEventMessageEmitter';
+import { CatchFoodGameEventMessageEmitter } from './gameplay/gameOne/GameOneEventMessageEmitter';
 import { GameThreeEventMessageEmitter } from './gameplay/gameThree/GameThreeEventMessageEmitter';
 import { GameTwoMessageEmitter } from './gameplay/gameTwo/classes/GameTwoMessageEmitter';
 
