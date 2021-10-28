@@ -9,19 +9,19 @@ import { clearTimersAndIntervals } from './gameHelperFunctions';
 const TRACK_LENGTH = 5000; // has to be bigger than initial player position
 const NUMBER_OF_OBSTACLES = 4;
 const NUMBER_OF_STONES = 2;
-let catchFoodGame: GameOne;
+let gameOne: GameOne;
 let gameStateInfo: GameStateInfo;
 
 describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
-        catchFoodGame = new GameOne(roomId, leaderboard);
-        catchFoodGame.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, NUMBER_OF_STONES);
-        gameStateInfo = catchFoodGame.getGameStateInfo();
+        gameOne = new GameOne(roomId, leaderboard);
+        gameOne.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, NUMBER_OF_STONES);
+        gameStateInfo = gameOne.getGameStateInfo();
     });
 
     afterEach(async () => {
-        clearTimersAndIntervals(catchFoodGame);
+        clearTimersAndIntervals(gameOne);
     });
 
     it('should return the game state', async () => {
@@ -50,7 +50,7 @@ describe('Get Obstacle Positions test', () => {
     });
 
     it('returns player positionX with initial position', async () => {
-        expect(gameStateInfo.playersState[0].positionX).toBe(catchFoodGame.initialPlayerPositionX);
+        expect(gameStateInfo.playersState[0].positionX).toBe(gameOne.initialPlayerPositionX);
     });
 
     it('returns player not at an obstacle', async () => {
@@ -74,6 +74,6 @@ describe('Get Obstacle Positions test', () => {
     });
 
     it('returns chaser position', async () => {
-        expect(gameStateInfo.chasersPositionX).toBe(catchFoodGame.chasersPositionX);
+        expect(gameStateInfo.chasersPositionX).toBe(gameOne.chasersPositionX);
     });
 });

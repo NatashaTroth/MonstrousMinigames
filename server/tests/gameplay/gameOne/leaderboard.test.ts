@@ -12,7 +12,7 @@ import Leaderboard from '../../../src/gameplay/leaderboard/Leaderboard';
 import { roomId } from '../mockData';
 import { clearTimersAndIntervals, startAndFinishGame } from './gameHelperFunctions';
 
-let catchFoodGame: GameOne;
+let gameOne: GameOne;
 
 describe('Leaderboard tests for Catch Food Game', () => {
     let leaderboard: Leaderboard;
@@ -25,21 +25,21 @@ describe('Leaderboard tests for Catch Food Game', () => {
     beforeEach(() => {
         jest.useFakeTimers();
         leaderboard = new Leaderboard(roomId);
-        catchFoodGame = new GameOne(roomId, leaderboard);
+        gameOne = new GameOne(roomId, leaderboard);
     });
 
     afterEach(async () => {
-        clearTimersAndIntervals(catchFoodGame);
+        clearTimersAndIntervals(gameOne);
     });
 
     it('should call addGameToHistory on leaderboard', async () => {
         const addGameToHistorySpy = jest.spyOn(Leaderboard.prototype as any, 'addGameToHistory');
-        startAndFinishGame(catchFoodGame);
+        startAndFinishGame(gameOne);
         expect(addGameToHistorySpy).toHaveBeenCalledTimes(1);
     });
 
     it('should save the correct game type to leaderboard game history', async () => {
-        startAndFinishGame(catchFoodGame);
+        startAndFinishGame(gameOne);
 
         expect(leaderboard.gameHistory[0].game).toBe(GameType.GameOne);
     });
@@ -57,7 +57,7 @@ describe('Leaderboard tests for Catch Food Game', () => {
             }
         });
 
-        startAndFinishGame(catchFoodGame);
+        startAndFinishGame(gameOne);
 
         expect(leaderboard.gameHistory[0].playerRanks).toMatchObject(eventData.playerRanks);
     });

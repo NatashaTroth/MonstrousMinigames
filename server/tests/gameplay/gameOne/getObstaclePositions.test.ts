@@ -9,18 +9,18 @@ import { clearTimersAndIntervals } from './gameHelperFunctions';
 const TRACK_LENGTH = 5000; // has to be bigger than initial player position
 const NUMBER_OF_OBSTACLES = 4;
 const NUMBER_OF_STONES = 3;
-let catchFoodGame: GameOne;
+let gameOne: GameOne;
 let obstacles: HashTable<Array<Obstacle>>;
 
 describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
-        catchFoodGame = new GameOne(roomId, leaderboard);
-        catchFoodGame.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, NUMBER_OF_STONES);
-        obstacles = catchFoodGame.getObstaclePositions();
+        gameOne = new GameOne(roomId, leaderboard);
+        gameOne.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, NUMBER_OF_STONES);
+        obstacles = gameOne.getObstaclePositions();
     });
     afterEach(async () => {
-        clearTimersAndIntervals(catchFoodGame);
+        clearTimersAndIntervals(gameOne);
     });
 
     it('should return the correct number of users', async () => {

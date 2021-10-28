@@ -17,7 +17,7 @@ import {
 
 // const TRACK_LENGTH = 500;
 
-let catchFoodGame: GameOne;
+let gameOne: GameOne;
 let gameEventEmitter: GameEventEmitter;
 
 describe('Disconnect Player tests', () => {
@@ -26,77 +26,77 @@ describe('Disconnect Player tests', () => {
     });
 
     beforeEach(() => {
-        catchFoodGame = new GameOne(roomId, leaderboard);
+        gameOne = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
     });
 
     afterEach(async () => {
-        clearTimersAndIntervals(catchFoodGame);
+        clearTimersAndIntervals(gameOne);
     });
 
     it('disconnectPlayer should initialise player isActive as true', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
-        expect(catchFoodGame.players.get('1')?.isActive).toBeTruthy();
+        startGameAndAdvanceCountdown(gameOne);
+        expect(gameOne.players.get('1')?.isActive).toBeTruthy();
     });
 
     it('disconnectPlayer should set player isActive to false', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.disconnectPlayer('1');
-        expect(catchFoodGame.players.get('1')?.isActive).toBeFalsy();
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.disconnectPlayer('1');
+        expect(gameOne.players.get('1')?.isActive).toBeFalsy();
     });
 
     it('cannot disconnect player when game has stopped', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.stopGameUserClosed();
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.stopGameUserClosed();
         try {
-            catchFoodGame.disconnectPlayer('1');
+            gameOne.disconnectPlayer('1');
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.players.get('1')?.isActive).toBeTruthy();
+        expect(gameOne.players.get('1')?.isActive).toBeTruthy();
     });
 
     it('cannot disconnect player when game has finished', async () => {
-        await startAndFinishGameDifferentTimes(catchFoodGame);
+        await startAndFinishGameDifferentTimes(gameOne);
         try {
-            catchFoodGame.disconnectPlayer('1');
+            gameOne.disconnectPlayer('1');
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.players.get('1')?.isActive).toBeTruthy();
+        expect(gameOne.players.get('1')?.isActive).toBeTruthy();
     });
 
     it('cannot run forward when disconnected', async () => {
         const SPEED = 50;
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame['runForward']('1', SPEED);
-        catchFoodGame.disconnectPlayer('1');
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne['runForward']('1', SPEED);
+        gameOne.disconnectPlayer('1');
         try {
-            catchFoodGame['runForward']('1');
+            gameOne['runForward']('1');
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.players.get('1')?.positionX).toBe(catchFoodGame.initialPlayerPositionX + SPEED);
+        expect(gameOne.players.get('1')?.positionX).toBe(gameOne.initialPlayerPositionX + SPEED);
     });
 
     it('cannot complete an obstacle when disconnected', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
-        const obstaclesLength = catchFoodGame.players.get('1')!.obstacles.length;
-        completeNextObstacle(catchFoodGame, '1');
-        catchFoodGame.disconnectPlayer('1');
+        startGameAndAdvanceCountdown(gameOne);
+        const obstaclesLength = gameOne.players.get('1')!.obstacles.length;
+        completeNextObstacle(gameOne, '1');
+        gameOne.disconnectPlayer('1');
 
         try {
-            catchFoodGame['playerHasCompletedObstacle']('1', catchFoodGame.players.get('1')!.obstacles[0].id);
+            gameOne['playerHasCompletedObstacle']('1', gameOne.players.get('1')!.obstacles[0].id);
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(obstaclesLength - 1);
+        expect(gameOne.players.get('1')!.obstacles.length).toBe(obstaclesLength - 1);
     });
 
     it('should emit isActive is false when a player was disconnected and the game has finished', async () => {
         const dateNow = 1618665766156;
         Date.now = jest.fn(() => dateNow);
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(gameOne);
         let eventData = {
             roomId: '',
             gameState: GameState.Started,
@@ -109,10 +109,10 @@ describe('Disconnect Player tests', () => {
         });
         // finish game
         Date.now = jest.fn(() => dateNow + 10000);
-        catchFoodGame.disconnectPlayer('3');
-        catchFoodGame.disconnectPlayer('4');
-        finishPlayer(catchFoodGame, '1');
-        finishPlayer(catchFoodGame, '2');
+        gameOne.disconnectPlayer('3');
+        gameOne.disconnectPlayer('4');
+        finishPlayer(gameOne, '1');
+        finishPlayer(gameOne, '2');
 
         expect(eventData.playerRanks[0].isActive).toBeTruthy();
         expect(eventData.playerRanks[1].isActive).toBeTruthy();
@@ -123,7 +123,7 @@ describe('Disconnect Player tests', () => {
     it('should have the correct ranks for a player was disconnected and the game has finished (disconnected players should share the last place)', async () => {
         const dateNow = 1618665766156;
         Date.now = jest.fn(() => dateNow);
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(gameOne);
         let eventData = {
             roomId: '',
             gameState: GameState.Started,
@@ -136,13 +136,13 @@ describe('Disconnect Player tests', () => {
         });
         // finish game
         Date.now = jest.fn(() => dateNow + 10000);
-        catchFoodGame.disconnectPlayer('3');
-        catchFoodGame.disconnectPlayer('4');
+        gameOne.disconnectPlayer('3');
+        gameOne.disconnectPlayer('4');
         Date.now = jest.fn(() => dateNow + 15000);
 
-        finishPlayer(catchFoodGame, '1');
+        finishPlayer(gameOne, '1');
         Date.now = jest.fn(() => dateNow + 20000);
-        finishPlayer(catchFoodGame, '2');
+        finishPlayer(gameOne, '2');
 
         expect(eventData.playerRanks[0].rank).toBe(1);
         expect(eventData.playerRanks[1].rank).toBe(2);
@@ -151,8 +151,8 @@ describe('Disconnect Player tests', () => {
     });
 
     it('should stop the game when all players have disconnected', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
-        users.forEach(user => catchFoodGame.disconnectPlayer(user.id));
-        expect(catchFoodGame.gameState).toBe(GameState.Stopped);
+        startGameAndAdvanceCountdown(gameOne);
+        users.forEach(user => gameOne.disconnectPlayer(user.id));
+        expect(gameOne.gameState).toBe(GameState.Stopped);
     });
 });

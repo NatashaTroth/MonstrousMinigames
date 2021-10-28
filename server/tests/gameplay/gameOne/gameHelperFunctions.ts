@@ -23,7 +23,7 @@ export const releaseThreadN = async (n: number) => {
 export function clearTimersAndIntervals(game: Game) {
     //to clear intervals
     jest.advanceTimersByTime((game as GameOne).countdownTime || 0);
-    // jest.advanceTimersByTime(catchFoodGame.timeOutLimit);
+    // jest.advanceTimersByTime(gameOne.timeOutLimit);
     try {
         game.stopGameUserClosed();
     } catch (e) {
@@ -33,12 +33,12 @@ export function clearTimersAndIntervals(game: Game) {
     jest.clearAllMocks();
 }
 
-export function startGameAndAdvanceCountdown(catchFoodGame: GameOne, afterCreate: () => any = () => void 0) {
+export function startGameAndAdvanceCountdown(gameOne: GameOne, afterCreate: () => any = () => void 0) {
     Date.now = () => dateNow;
-    catchFoodGame.createNewGame(users, TRACK_LENGTH, 4);
+    gameOne.createNewGame(users, TRACK_LENGTH, 4);
     afterCreate();
-    catchFoodGame.startGame();
-    advanceCountdown(catchFoodGame.countdownTime);
+    gameOne.startGame();
+    advanceCountdown(gameOne.countdownTime);
 }
 export function advanceCountdown(time: number) {
     //run countdown
@@ -47,91 +47,91 @@ export function advanceCountdown(time: number) {
     jest.advanceTimersByTime(time);
 }
 
-export function finishCreatedGame(catchFoodGame: GameOne) {
-    advanceCountdown(catchFoodGame.countdownTime);
-    return finishGame(catchFoodGame);
+export function finishCreatedGame(gameOne: GameOne) {
+    advanceCountdown(gameOne.countdownTime);
+    return finishGame(gameOne);
 }
 
-export function startAndFinishGame(catchFoodGame: GameOne): GameOne {
-    startGameAndAdvanceCountdown(catchFoodGame);
-    catchFoodGame = finishGame(catchFoodGame);
+export function startAndFinishGame(gameOne: GameOne): GameOne {
+    startGameAndAdvanceCountdown(gameOne);
+    gameOne = finishGame(gameOne);
 
-    return catchFoodGame;
+    return gameOne;
 }
 
-export function finishGame(catchFoodGame: GameOne): GameOne {
-    const numberOfUsers = catchFoodGame.players.size;
+export function finishGame(gameOne: GameOne): GameOne {
+    const numberOfUsers = gameOne.players.size;
     for (let i = 1; i <= numberOfUsers; i++) {
-        finishPlayer(catchFoodGame, i.toString());
+        finishPlayer(gameOne, i.toString());
     }
-    return catchFoodGame;
+    return gameOne;
 }
 
-export function finishPlayer(catchFoodGame: GameOne, userId: string) {
-    completePlayersObstacles(catchFoodGame, userId);
-    catchFoodGame['runForward'](userId, catchFoodGame.trackLength - catchFoodGame.players.get(userId)!.positionX);
+export function finishPlayer(gameOne: GameOne, userId: string) {
+    completePlayersObstacles(gameOne, userId);
+    gameOne['runForward'](userId, gameOne.trackLength - gameOne.players.get(userId)!.positionX);
 }
 
-export function completePlayersObstacles(catchFoodGame: GameOne, userId: string) {
-    const player = catchFoodGame.players.get(userId)!;
+export function completePlayersObstacles(gameOne: GameOne, userId: string) {
+    const player = gameOne.players.get(userId)!;
 
     while (player.obstacles.length) {
-        catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
-        if (player.atObstacle) catchFoodGame['playerHasCompletedObstacle'](userId, player.obstacles[0].id);
+        gameOne['runForward'](userId, distanceToNextObstacle(gameOne, userId));
+        if (player.atObstacle) gameOne['playerHasCompletedObstacle'](userId, player.obstacles[0].id);
     }
 }
 
-export function goToNextUnsolvableObstacle(catchFoodGame: GameOne, userId: string) {
-    const player = catchFoodGame.players.get(userId)!;
+export function goToNextUnsolvableObstacle(gameOne: GameOne, userId: string) {
+    const player = gameOne.players.get(userId)!;
 
     while (player.obstacles.length && !player.atObstacle) {
-        catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
+        gameOne['runForward'](userId, distanceToNextObstacle(gameOne, userId));
     }
 }
 
-export function completeNextObstacle(catchFoodGame: GameOne, userId: string) {
-    catchFoodGame['runForward'](userId, distanceToNextObstacle(catchFoodGame, userId));
-    if (catchFoodGame['playerHasReachedObstacle'](userId))
-        catchFoodGame['playerHasCompletedObstacle'](userId, catchFoodGame.players.get(userId)!.obstacles[0].id);
+export function completeNextObstacle(gameOne: GameOne, userId: string) {
+    gameOne['runForward'](userId, distanceToNextObstacle(gameOne, userId));
+    if (gameOne['playerHasReachedObstacle'](userId))
+        gameOne['playerHasCompletedObstacle'](userId, gameOne.players.get(userId)!.obstacles[0].id);
 }
 
-export function distanceToNextObstacle(catchFoodGame: GameOne, userId: string) {
-    return catchFoodGame.players.get(userId)!.obstacles[0].positionX - catchFoodGame.players.get(userId)!.positionX;
+export function distanceToNextObstacle(gameOne: GameOne, userId: string) {
+    return gameOne.players.get(userId)!.obstacles[0].positionX - gameOne.players.get(userId)!.positionX;
 }
 
-export function runToNextObstacle(catchFoodGame: GameOne, userId: string) {
-    catchFoodGame['runForward']('1', distanceToNextObstacle(catchFoodGame, userId));
+export function runToNextObstacle(gameOne: GameOne, userId: string) {
+    gameOne['runForward']('1', distanceToNextObstacle(gameOne, userId));
 }
 
-export async function startAndFinishGameDifferentTimes(catchFoodGame: GameOne) {
+export async function startAndFinishGameDifferentTimes(gameOne: GameOne) {
     const dateNow = 1618665766156;
     Date.now = jest.fn(() => dateNow);
-    startGameAndAdvanceCountdown(catchFoodGame);
+    startGameAndAdvanceCountdown(gameOne);
     // finish game
-    for (let i = 1; i <= catchFoodGame.numberOfObstacles; i++) {
-        completePlayersObstacles(catchFoodGame, i.toString());
+    for (let i = 1; i <= gameOne.numberOfObstacles; i++) {
+        completePlayersObstacles(gameOne, i.toString());
     }
 
     advanceCountdown(1000);
     await releaseThreadN(3);
-    catchFoodGame['runForward']('1', TRACK_LENGTH);
+    gameOne['runForward']('1', TRACK_LENGTH);
     await releaseThreadN(3);
     advanceCountdown(4000);
     await releaseThreadN(3);
-    catchFoodGame['runForward']('2', TRACK_LENGTH);
+    gameOne['runForward']('2', TRACK_LENGTH);
     await releaseThreadN(3);
     advanceCountdown(5000);
     await releaseThreadN(3);
-    catchFoodGame['runForward']('3', TRACK_LENGTH);
+    gameOne['runForward']('3', TRACK_LENGTH);
     await releaseThreadN(3);
     advanceCountdown(5000);
     await releaseThreadN(3);
-    catchFoodGame['runForward']('4', TRACK_LENGTH);
+    gameOne['runForward']('4', TRACK_LENGTH);
     await releaseThreadN(3);
-    return catchFoodGame;
+    return gameOne;
 }
 
-export async function getGameFinishedDataDifferentTimes(catchFoodGame: GameOne) {
+export async function getGameFinishedDataDifferentTimes(gameOne: GameOne) {
     let eventData = {
         roomId: '',
         gameState: GameState.Started,
@@ -142,11 +142,11 @@ export async function getGameFinishedDataDifferentTimes(catchFoodGame: GameOne) 
             eventData = message.data as any;
         }
     });
-    catchFoodGame = await startAndFinishGameDifferentTimes(catchFoodGame);
+    gameOne = await startAndFinishGameDifferentTimes(gameOne);
     return eventData;
 }
 
-export function getGameFinishedDataSameRanks(catchFoodGame: GameOne) {
+export function getGameFinishedDataSameRanks(gameOne: GameOne) {
     let eventData = {
         roomId: '',
         gameState: GameState.Started,
@@ -159,22 +159,22 @@ export function getGameFinishedDataSameRanks(catchFoodGame: GameOne) {
         }
     });
 
-    startGameAndAdvanceCountdown(catchFoodGame);
+    startGameAndAdvanceCountdown(gameOne);
     // finish game
-    for (let i = 1; i <= catchFoodGame.numberOfObstacles; i++) {
-        completePlayersObstacles(catchFoodGame, i.toString());
+    for (let i = 1; i <= gameOne.numberOfObstacles; i++) {
+        completePlayersObstacles(gameOne, i.toString());
     }
 
-    catchFoodGame['runForward']('1', TRACK_LENGTH);
-    catchFoodGame['runForward']('2', TRACK_LENGTH);
-    catchFoodGame['runForward']('3', TRACK_LENGTH);
+    gameOne['runForward']('1', TRACK_LENGTH);
+    gameOne['runForward']('2', TRACK_LENGTH);
+    gameOne['runForward']('3', TRACK_LENGTH);
     Date.now = jest.fn(() => dateNow + 15000);
-    catchFoodGame['runForward']('4', TRACK_LENGTH);
+    gameOne['runForward']('4', TRACK_LENGTH);
 
     return eventData;
 }
 
-export async function getGameFinishedDataWithSomeDead(catchFoodGame: GameOne) {
+export async function getGameFinishedDataWithSomeDead(gameOne: GameOne) {
     let eventData = {
         roomId: '',
         gameState: GameState.Started,
@@ -185,34 +185,34 @@ export async function getGameFinishedDataWithSomeDead(catchFoodGame: GameOne) {
             eventData = message.data as any;
         }
     });
-    catchFoodGame = await startAndFinishGameDifferentTimes(catchFoodGame);
+    gameOne = await startAndFinishGameDifferentTimes(gameOne);
     return eventData;
 }
 
-export function getToCreatedGameState(catchFoodGame: GameOne) {
-    catchFoodGame.createNewGame(users);
-    expect(catchFoodGame.gameState).toBe(GameState.Created);
+export function getToCreatedGameState(gameOne: GameOne) {
+    gameOne.createNewGame(users);
+    expect(gameOne.gameState).toBe(GameState.Created);
 }
 
-export function getToStartedGameState(catchFoodGame: GameOne) {
-    startGameAndAdvanceCountdown(catchFoodGame);
-    expect(catchFoodGame.gameState).toBe(GameState.Started);
+export function getToStartedGameState(gameOne: GameOne) {
+    startGameAndAdvanceCountdown(gameOne);
+    expect(gameOne.gameState).toBe(GameState.Started);
 }
 
-export function getToPausedGameState(catchFoodGame: GameOne) {
-    startGameAndAdvanceCountdown(catchFoodGame);
-    catchFoodGame.pauseGame();
-    expect(catchFoodGame.gameState).toBe(GameState.Paused);
+export function getToPausedGameState(gameOne: GameOne) {
+    startGameAndAdvanceCountdown(gameOne);
+    gameOne.pauseGame();
+    expect(gameOne.gameState).toBe(GameState.Paused);
 }
 
-export function getToStoppedGameState(catchFoodGame: GameOne) {
-    startGameAndAdvanceCountdown(catchFoodGame);
-    catchFoodGame.stopGameUserClosed();
-    expect(catchFoodGame.gameState).toBe(GameState.Stopped);
+export function getToStoppedGameState(gameOne: GameOne) {
+    startGameAndAdvanceCountdown(gameOne);
+    gameOne.stopGameUserClosed();
+    expect(gameOne.gameState).toBe(GameState.Stopped);
 }
 
-export function getToFinishedGameState(catchFoodGame: GameOne) {
-    startGameAndAdvanceCountdown(catchFoodGame);
-    finishGame(catchFoodGame);
-    expect(catchFoodGame.gameState).toBe(GameState.Finished);
+export function getToFinishedGameState(gameOne: GameOne) {
+    startGameAndAdvanceCountdown(gameOne);
+    finishGame(gameOne);
+    expect(gameOne.gameState).toBe(GameState.Finished);
 }

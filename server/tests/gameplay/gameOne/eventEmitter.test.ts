@@ -7,9 +7,8 @@ import { GameState } from '../../../src/gameplay/enums';
 import { ObstacleType } from '../../../src/gameplay/gameOne/enums';
 import { GameEvents } from '../../../src/gameplay/gameOne/interfaces';
 import {
-    CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED,
-    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED,
-    CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD, GameOneEventMessage
+    GAME_ONE_EVENT_MESSAGE__OBSTACLE_REACHED, GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_FINISHED,
+    GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD, GameOneEventMessage
 } from '../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED,
@@ -23,16 +22,16 @@ import {
     startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
-let catchFoodGame: GameOne;
+let gameOne: GameOne;
 let gameEventEmitter: GameEventEmitter;
 
 const beforeEachFunction = () => {
-    catchFoodGame = new GameOne(roomId, leaderboard);
+    gameOne = new GameOne(roomId, leaderboard);
     jest.useFakeTimers();
 };
 
 const afterEachFunction = () => {
-    clearTimersAndIntervals(catchFoodGame);
+    clearTimersAndIntervals(gameOne);
 };
 
 describe('Event Emitter', () => {
@@ -76,7 +75,7 @@ describe('Start Game events ', () => {
             }
         });
         expect(gameStartedEvent).toBeFalsy();
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(gameOne);
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(gameStartedEvent).toBeTruthy();
     });
@@ -92,12 +91,12 @@ describe('Start Game events ', () => {
             }
         });
 
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(gameOne);
 
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(eventData).toMatchObject({
-            roomId: catchFoodGame.roomId,
-            countdownTime: catchFoodGame.countdownTime,
+            roomId: gameOne.roomId,
+            countdownTime: gameOne.countdownTime,
         });
     });
 });
@@ -116,16 +115,16 @@ describe('Obstacle reached events', () => {
     });
 
     it('should emit an ObstacleReached event when an obstacle is reached', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(gameOne);
 
         let obstacleEventReceived = false;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
-            if (message.type === CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED) {
+            if (message.type === GAME_ONE_EVENT_MESSAGE__OBSTACLE_REACHED) {
                 obstacleEventReceived = true;
             }
         });
 
-        goToNextUnsolvableObstacle(catchFoodGame, '1');
+        goToNextUnsolvableObstacle(gameOne, '1');
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(obstacleEventReceived).toBeTruthy();
     });
@@ -138,20 +137,20 @@ describe('Obstacle reached events', () => {
             obstacleType: ObstacleType.TreeStump, //null not possible
         };
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
-            if (message.type === CATCH_FOOD_GAME_EVENT_MESSAGE__OBSTACLE_REACHED) {
+            if (message.type === GAME_ONE_EVENT_MESSAGE__OBSTACLE_REACHED) {
                 eventData = message as any;
             }
         });
 
-        startGameAndAdvanceCountdown(catchFoodGame);
-        goToNextUnsolvableObstacle(catchFoodGame, '1');
+        startGameAndAdvanceCountdown(gameOne);
+        goToNextUnsolvableObstacle(gameOne, '1');
 
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(eventData).toMatchObject({
-            roomId: catchFoodGame.roomId,
+            roomId: gameOne.roomId,
             userId: '1',
-            obstacleId: catchFoodGame.players.get('1')!.obstacles[0].id,
-            obstacleType: catchFoodGame.players.get('1')!.obstacles[0].type,
+            obstacleId: gameOne.players.get('1')!.obstacles[0].id,
+            obstacleType: gameOne.players.get('1')!.obstacles[0].type,
         });
     });
 });
@@ -176,8 +175,8 @@ describe('Game has paused events', () => {
                 gameHasPaused = true;
             }
         });
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.pauseGame();
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.pauseGame();
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(gameHasPaused).toBeTruthy();
     });
@@ -191,11 +190,11 @@ describe('Game has paused events', () => {
                 eventData = message as any;
             }
         });
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.pauseGame();
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.pauseGame();
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(eventData).toMatchObject({
-            roomId: catchFoodGame.roomId,
+            roomId: gameOne.roomId,
         });
     });
 });
@@ -220,9 +219,9 @@ describe('Game has resumed events', () => {
                 gameHasResumed = true;
             }
         });
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.pauseGame();
-        catchFoodGame.resumeGame();
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.pauseGame();
+        gameOne.resumeGame();
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(gameHasResumed).toBeTruthy();
     });
@@ -236,12 +235,12 @@ describe('Game has resumed events', () => {
                 eventData = message as any;
             }
         });
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.pauseGame();
-        catchFoodGame.resumeGame();
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.pauseGame();
+        gameOne.resumeGame();
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(eventData).toMatchObject({
-            roomId: catchFoodGame.roomId,
+            roomId: gameOne.roomId,
         });
     });
 });
@@ -266,8 +265,8 @@ describe('Game has stopped events', () => {
                 gameHasStopped = true;
             }
         });
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.stopGameUserClosed();
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.stopGameUserClosed();
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(gameHasStopped).toBeTruthy();
     });
@@ -281,11 +280,11 @@ describe('Game has stopped events', () => {
                 eventData = message as any;
             }
         });
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.stopGameUserClosed();
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.stopGameUserClosed();
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(eventData).toMatchObject({
-            roomId: catchFoodGame.roomId,
+            roomId: gameOne.roomId,
         });
     });
 });
@@ -310,8 +309,8 @@ describe('Player has disconnected events', () => {
                 playerHasDisconnectedEvent = true;
             }
         });
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.disconnectPlayer('1');
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.disconnectPlayer('1');
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(playerHasDisconnectedEvent).toBeTruthy();
     });
@@ -326,8 +325,8 @@ describe('Player has disconnected events', () => {
                 eventData = message as any;
             }
         });
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.disconnectPlayer('1');
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.disconnectPlayer('1');
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(eventData).toMatchObject({
             roomId: 'xxx',
@@ -336,15 +335,15 @@ describe('Player has disconnected events', () => {
     });
 
     it('should not emit a PlayerHasDisconnected event when an inactive player is disconnected', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.disconnectPlayer('1');
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.disconnectPlayer('1');
         let playerHasDisconnectedEvent = false;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
             if (message.type === GLOBAL_EVENT_MESSAGE__PLAYER_HAS_DISCONNECTED) {
                 playerHasDisconnectedEvent = true;
             }
         });
-        catchFoodGame.disconnectPlayer('1');
+        gameOne.disconnectPlayer('1');
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(playerHasDisconnectedEvent).toBeFalsy();
     });
@@ -370,9 +369,9 @@ describe('Player has reconnected events', () => {
                 playerHasReconnectedEvent = true;
             }
         });
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.disconnectPlayer('1');
-        catchFoodGame.reconnectPlayer('1');
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.disconnectPlayer('1');
+        gameOne.reconnectPlayer('1');
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(playerHasReconnectedEvent).toBeTruthy();
     });
@@ -387,9 +386,9 @@ describe('Player has reconnected events', () => {
                 eventData = message as any;
             }
         });
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.disconnectPlayer('1');
-        catchFoodGame.reconnectPlayer('1');
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.disconnectPlayer('1');
+        gameOne.reconnectPlayer('1');
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(eventData).toMatchObject({
             roomId: 'xxx',
@@ -404,8 +403,8 @@ describe('Player has reconnected events', () => {
                 playerHasReconnectedEvent = true;
             }
         });
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.reconnectPlayer('1');
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.reconnectPlayer('1');
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(playerHasReconnectedEvent).toBeFalsy();
     });
@@ -425,21 +424,21 @@ describe('Player has finished events', () => {
     });
 
     it('should emit a PlayerHasFinished event when a player has reached the end of the race', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(gameOne);
 
         let playerFinished = false;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
-            if (message.type === CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED) {
+            if (message.type === GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_FINISHED) {
                 playerFinished = true;
             }
         });
-        finishPlayer(catchFoodGame, '1');
+        finishPlayer(gameOne, '1');
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(playerFinished).toBeTruthy();
     });
 
     it('should emit a PlayerHasFinished data when a player has reached the end of the race', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(gameOne);
 
         let eventData = {
             roomId: '',
@@ -447,16 +446,16 @@ describe('Player has finished events', () => {
             rank: 0,
         };
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
-            if (message.type === CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_HAS_FINISHED) {
+            if (message.type === GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_FINISHED) {
                 eventData = message as any;
             }
         });
-        finishPlayer(catchFoodGame, '1');
+        finishPlayer(gameOne, '1');
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(eventData).toMatchObject({
-            roomId: catchFoodGame.roomId,
+            roomId: gameOne.roomId,
             userId: '1',
-            rank: catchFoodGame.players.get('1')?.rank,
+            rank: gameOne.players.get('1')?.rank,
         });
     });
 });
@@ -475,7 +474,7 @@ describe('Game has finished events', () => {
     });
 
     it('should emit a GameHasFinished event when a all the players have finished race', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(gameOne);
         let gameFinishedEvent = false;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
             if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
@@ -483,7 +482,7 @@ describe('Game has finished events', () => {
             }
         });
         // finish game
-        finishGame(catchFoodGame);
+        finishGame(gameOne);
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(gameFinishedEvent).toBeTruthy();
     });
@@ -491,7 +490,7 @@ describe('Game has finished events', () => {
     it('should emit a GameHasFinished data when a all the players have finished race', async () => {
         const dateNow = 1618665766156;
         Date.now = jest.fn(() => dateNow);
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(gameOne);
         let eventData = {
             roomId: '',
             gameState: GameState.Started,
@@ -504,23 +503,23 @@ describe('Game has finished events', () => {
         });
         // finish game
         Date.now = jest.fn(() => dateNow + 10000);
-        finishGame(catchFoodGame);
+        finishGame(gameOne);
 
         expect(eventData).toMatchObject({
-            roomId: catchFoodGame.roomId,
-            gameState: catchFoodGame.gameState,
+            roomId: gameOne.roomId,
+            gameState: gameOne.gameState,
         });
 
-        const playerOneTotalTime = dateNow + 10000 - catchFoodGame['gameStartedAt'];
+        const playerOneTotalTime = dateNow + 10000 - gameOne['gameStartedAt'];
 
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(eventData.playerRanks[0]).toMatchObject({
             id: '1',
-            name: catchFoodGame.players.get('1')?.name,
-            rank: catchFoodGame.players.get('1')?.rank,
+            name: gameOne.players.get('1')?.name,
+            rank: gameOne.players.get('1')?.rank,
             finished: true,
             totalTimeInMs: playerOneTotalTime,
-            positionX: catchFoodGame.players.get('1')?.positionX,
+            positionX: gameOne.players.get('1')?.positionX,
             isActive: true,
         });
     });
@@ -536,9 +535,9 @@ describe('Chaser event', () => {
     beforeEach(() => {
         beforeEachFunction();
         Date.now = jest.fn(() => dateNow);
-        catchFoodGame.chasersPositionX = 50;
-        startGameAndAdvanceCountdown(catchFoodGame);
-        chasersStartPosX = catchFoodGame.chasersPositionX;
+        gameOne.chasersPositionX = 50;
+        startGameAndAdvanceCountdown(gameOne);
+        chasersStartPosX = gameOne.chasersPositionX;
     });
 
     afterEach(() => {
@@ -548,11 +547,11 @@ describe('Chaser event', () => {
     it.skip('should emit a PlayerIsDead event when a chaser catches a player', async () => {
         let playerIsDeadEvent = false;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
-            if (message.type === CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD) {
+            if (message.type === GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD) {
                 playerIsDeadEvent = true;
             }
         });
-        // catchFoodGame['runForward']('1', chasersStartPosX);
+        // gameOne['runForward']('1', chasersStartPosX);
         jest.advanceTimersByTime(1000);
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(playerIsDeadEvent).toBeTruthy();
@@ -566,22 +565,22 @@ describe('Chaser event', () => {
         };
         const userId = '1';
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
-            if (message.type === CATCH_FOOD_GAME_EVENT_MESSAGE__PLAYER_IS_DEAD) {
+            if (message.type === GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD) {
                 eventData = message as any;
             }
         });
 
-        catchFoodGame['runForward'](userId, chasersStartPosX + 20);
-        catchFoodGame.players.get('2')!.positionX = chasersStartPosX + 2000;
-        catchFoodGame.players.get('3')!.positionX = chasersStartPosX + 2000;
-        catchFoodGame.players.get('4')!.positionX = chasersStartPosX + 2000;
+        gameOne['runForward'](userId, chasersStartPosX + 20);
+        gameOne.players.get('2')!.positionX = chasersStartPosX + 2000;
+        gameOne.players.get('3')!.positionX = chasersStartPosX + 2000;
+        gameOne.players.get('4')!.positionX = chasersStartPosX + 2000;
 
         // should catch the other three players
         jest.advanceTimersByTime(2000); //move 1 every 100ms -> 2000/100 = 20. move 20 to get to player
 
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(eventData).toMatchObject({
-            roomId: catchFoodGame.roomId,
+            roomId: gameOne.roomId,
             userId: userId,
             rank: 4,
         });

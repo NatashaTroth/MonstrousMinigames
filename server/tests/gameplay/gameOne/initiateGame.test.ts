@@ -12,93 +12,93 @@ import { clearTimersAndIntervals } from './gameHelperFunctions';
 const TRACK_LENGTH = 5000;
 const NUMBER_OF_OBSTACLES = 4;
 const NUMBER_OF_STONES = 2;
-let catchFoodGame: GameOne;
+let gameOne: GameOne;
 // const OBSTACLE_RANGE = 70;
 const REGULAR_OBSTACLE_TYPE_KEYS = regularObstacleTypes;
 
 describe('Initiate GameOne correctly', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
-        catchFoodGame = new GameOne(roomId, leaderboard);
-        catchFoodGame.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, NUMBER_OF_STONES);
+        gameOne = new GameOne(roomId, leaderboard);
+        gameOne.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, NUMBER_OF_STONES);
     });
     afterEach(async () => {
-        clearTimersAndIntervals(catchFoodGame);
+        clearTimersAndIntervals(gameOne);
     });
 
     it('initiates players state with correct number of players', async () => {
-        expect(catchFoodGame.players.size).toBe(users.length);
+        expect(gameOne.players.size).toBe(users.length);
     });
 
     it('initiates trackLength with correct length', async () => {
-        expect(catchFoodGame.trackLength).toBe(TRACK_LENGTH);
+        expect(gameOne.trackLength).toBe(TRACK_LENGTH);
     });
 
     it('initiates roomId with correct room', async () => {
-        expect(catchFoodGame.roomId).toBe(users[0].roomId);
+        expect(gameOne.roomId).toBe(users[0].roomId);
     });
 
     it('initiates gameStartedTime with 0', async () => {
-        const catchFoodGameInit = new GameOne(roomId, leaderboard);
-        expect(catchFoodGameInit['_gameStartedAt']).toBe(0);
+        const gameOneInit = new GameOne(roomId, leaderboard);
+        expect(gameOneInit['_gameStartedAt']).toBe(0);
     });
 
     it('initiates correct number of obstacles', async () => {
-        expect(catchFoodGame.numberOfObstacles).toBe(NUMBER_OF_OBSTACLES);
+        expect(gameOne.numberOfObstacles).toBe(NUMBER_OF_OBSTACLES);
     });
 
     it('initiates current rank as 1', async () => {
-        expect(catchFoodGame['currentRank']).toBe(1);
+        expect(gameOne['currentRank']).toBe(1);
     });
 
     it('initiates current rank as 1', async () => {
-        expect(catchFoodGame['currentRank']).toBe(1);
+        expect(gameOne['currentRank']).toBe(1);
     });
 
     it('initiates first player with the correct name', async () => {
-        expect(catchFoodGame.players.get('1')!.name).toBe(users[0].name);
+        expect(gameOne.players.get('1')!.name).toBe(users[0].name);
     });
 
     it('initiates player positionX with initial position', async () => {
-        expect(catchFoodGame.players.get('1')!.positionX).toBe(catchFoodGame.initialPlayerPositionX);
+        expect(gameOne.players.get('1')!.positionX).toBe(gameOne.initialPlayerPositionX);
     });
 
     it('initiates player not at an obstacle', async () => {
-        expect(catchFoodGame.players.get('1')!.atObstacle).toBeFalsy();
+        expect(gameOne.players.get('1')!.atObstacle).toBeFalsy();
     });
 
     it('initiates player as not finished', async () => {
-        expect(catchFoodGame.players.get('1')!.finished).toBeFalsy();
+        expect(gameOne.players.get('1')!.finished).toBeFalsy();
     });
 
     it('initiates player as not dead', async () => {
-        expect(catchFoodGame.players.get('1')!.dead).toBeFalsy();
+        expect(gameOne.players.get('1')!.dead).toBeFalsy();
     });
 
     it('initiates player as not stunned', async () => {
-        expect(catchFoodGame.players.get('1')!.stunned).toBeFalsy();
+        expect(gameOne.players.get('1')!.stunned).toBeFalsy();
     });
 
     it('initiates character number', async () => {
-        expect(catchFoodGame.players.get('1')!.characterNumber).toBe(users[0].characterNumber);
+        expect(gameOne.players.get('1')!.characterNumber).toBe(users[0].characterNumber);
     });
 
     it('initiates player with correct number of obstacles', () => {
-        const obstacles: Array<Obstacle> = catchFoodGame.players
+        const obstacles: Array<Obstacle> = gameOne.players
             .get('1')!
             .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
         expect(obstacles.length).toBe(NUMBER_OF_OBSTACLES);
     });
 
     it('initiates player with correct number of stones', () => {
-        const stones: Array<Obstacle> = catchFoodGame.players
+        const stones: Array<Obstacle> = gameOne.players
             .get('1')!
             .obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
         expect(stones.length).toBe(NUMBER_OF_STONES);
     });
 
     it('initiates player with stones not overlapping with other obstacles', () => {
-        const obstacles = catchFoodGame.players.get('1')!.obstacles;
+        const obstacles = gameOne.players.get('1')!.obstacles;
 
         for (let i = 0; i < obstacles.length; i++) {
             if (obstacles[i].type !== ObstacleType.Stone) {
@@ -124,7 +124,7 @@ describe('Initiate GameOne correctly', () => {
     });
 
     it("initiates all players' stones at the same position", () => {
-        const playersWithStonesOnly = Array.from(catchFoodGame.players.values()).map(player => {
+        const playersWithStonesOnly = Array.from(gameOne.players.values()).map(player => {
             player.obstacles = player.obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
             return player;
         });
@@ -140,85 +140,82 @@ describe('Initiate GameOne correctly', () => {
     });
 
     it('initiates player with correct number of obstacles (all)', async () => {
-        expect(catchFoodGame.players.get('1')!.obstacles.length).toBe(NUMBER_OF_OBSTACLES + NUMBER_OF_STONES);
+        expect(gameOne.players.get('1')!.obstacles.length).toBe(NUMBER_OF_OBSTACLES + NUMBER_OF_STONES);
     });
 
-    function getObstacleRange(catchFoodGame: GameOne): number {
+    function getObstacleRange(gameOne: GameOne): number {
         return (
-            Math.floor(
-                (catchFoodGame.trackLength - catchFoodGame.initialPlayerPositionX) /
-                    (catchFoodGame.numberOfObstacles + 1)
-            ) - 100
+            Math.floor((gameOne.trackLength - gameOne.initialPlayerPositionX) / (gameOne.numberOfObstacles + 1)) - 100
         );
     }
 
     it('initiates the first obstacle in the correct range', async () => {
-        const obstacleRange = getObstacleRange(catchFoodGame);
-        const obstacles: Array<Obstacle> = catchFoodGame.players
+        const obstacleRange = getObstacleRange(gameOne);
+        const obstacles: Array<Obstacle> = gameOne.players
             .get('1')!
             .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
-        expect(obstacles[0].positionX).toBeGreaterThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange);
-        expect(obstacles[0].positionX).toBeLessThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange * 2);
+        expect(obstacles[0].positionX).toBeGreaterThanOrEqual(gameOne.initialPlayerPositionX + obstacleRange);
+        expect(obstacles[0].positionX).toBeLessThanOrEqual(gameOne.initialPlayerPositionX + obstacleRange * 2);
     });
 
     it('initiates the second obstacle in the correct range', async () => {
-        const obstacleRange = getObstacleRange(catchFoodGame);
-        const obstacles: Array<Obstacle> = catchFoodGame.players
+        const obstacleRange = getObstacleRange(gameOne);
+        const obstacles: Array<Obstacle> = gameOne.players
             .get('1')!
             .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
-        expect(obstacles[1].positionX).toBeGreaterThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange * 2);
-        expect(obstacles[1].positionX).toBeLessThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange * 3);
+        expect(obstacles[1].positionX).toBeGreaterThanOrEqual(gameOne.initialPlayerPositionX + obstacleRange * 2);
+        expect(obstacles[1].positionX).toBeLessThanOrEqual(gameOne.initialPlayerPositionX + obstacleRange * 3);
     });
 
     it('initiates the third obstacle in the correct range', async () => {
-        const obstacleRange = getObstacleRange(catchFoodGame);
+        const obstacleRange = getObstacleRange(gameOne);
 
-        const obstacles: Array<Obstacle> = catchFoodGame.players
+        const obstacles: Array<Obstacle> = gameOne.players
             .get('1')!
             .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
-        expect(obstacles[2].positionX).toBeGreaterThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange * 3);
-        expect(obstacles[2].positionX).toBeLessThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange * 4);
+        expect(obstacles[2].positionX).toBeGreaterThanOrEqual(gameOne.initialPlayerPositionX + obstacleRange * 3);
+        expect(obstacles[2].positionX).toBeLessThanOrEqual(gameOne.initialPlayerPositionX + obstacleRange * 4);
     });
 
     it('initiates the fourth obstacle in the correct range', async () => {
-        const obstacleRange = getObstacleRange(catchFoodGame);
+        const obstacleRange = getObstacleRange(gameOne);
 
-        const obstacles: Array<Obstacle> = catchFoodGame.players
+        const obstacles: Array<Obstacle> = gameOne.players
             .get('1')!
             .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
-        expect(obstacles[3].positionX).toBeGreaterThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange * 4);
-        expect(obstacles[3].positionX).toBeLessThanOrEqual(catchFoodGame.initialPlayerPositionX + obstacleRange * 5);
+        expect(obstacles[3].positionX).toBeGreaterThanOrEqual(gameOne.initialPlayerPositionX + obstacleRange * 4);
+        expect(obstacles[3].positionX).toBeLessThanOrEqual(gameOne.initialPlayerPositionX + obstacleRange * 5);
     });
 
     it('initiates the first obstacle with the correct obstacle type', async () => {
-        const obstacles: Array<Obstacle> = catchFoodGame.players
+        const obstacles: Array<Obstacle> = gameOne.players
             .get('1')!
             .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
         expect(REGULAR_OBSTACLE_TYPE_KEYS).toContain(obstacles[0].type);
     });
 
     it('initiates the second obstacle with the correct obstacle type', async () => {
-        const obstacles: Array<Obstacle> = catchFoodGame.players
+        const obstacles: Array<Obstacle> = gameOne.players
             .get('1')!
             .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
         expect(REGULAR_OBSTACLE_TYPE_KEYS).toContain(obstacles[1].type);
     });
 
     it('initiates the third obstacle with the correct obstacle type', async () => {
-        const obstacles: Array<Obstacle> = catchFoodGame.players
+        const obstacles: Array<Obstacle> = gameOne.players
             .get('1')!
             .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
         expect(REGULAR_OBSTACLE_TYPE_KEYS).toContain(obstacles[2].type);
     });
 
     it('initiates the fourth obstacle with the correct obstacle type', async () => {
-        const obstacles: Array<Obstacle> = catchFoodGame.players
+        const obstacles: Array<Obstacle> = gameOne.players
             .get('1')!
             .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
         expect(REGULAR_OBSTACLE_TYPE_KEYS).toContain(obstacles[3].type);
     });
 
     it('initiates gameState as Created', async () => {
-        expect(catchFoodGame.gameState).toBe(GameState.Created);
+        expect(gameOne.gameState).toBe(GameState.Created);
     });
 });

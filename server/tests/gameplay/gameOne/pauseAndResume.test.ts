@@ -7,7 +7,7 @@ import {
     clearTimersAndIntervals, releaseThreadN, startGameAndAdvanceCountdown
 } from './gameHelperFunctions';
 
-let catchFoodGame: GameOne;
+let gameOne: GameOne;
 const dateNow = 1618665766156;
 
 describe('Pause tests', () => {
@@ -15,32 +15,32 @@ describe('Pause tests', () => {
         // global.Date.now = jest.fn(() => new Date('2019-04-07T10:20:30Z').getTime())
         jest.useFakeTimers();
         Date.now = jest.fn(() => dateNow);
-        catchFoodGame = new GameOne(roomId, leaderboard);
+        gameOne = new GameOne(roomId, leaderboard);
     });
     afterEach(async () => {
-        clearTimersAndIntervals(catchFoodGame);
+        clearTimersAndIntervals(gameOne);
     });
 
     it('Can pause game when game has started', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.pauseGame();
-        expect(catchFoodGame.gameState).toBe(GameState.Paused);
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.pauseGame();
+        expect(gameOne.gameState).toBe(GameState.Paused);
     });
 
     it('Cannot pause game when game has not started', async () => {
         try {
-            catchFoodGame.pauseGame();
+            gameOne.pauseGame();
         } catch (e) {
             // ignore in this test
         }
-        expect(catchFoodGame.gameState).toBe(GameState.Initialised);
+        expect(gameOne.gameState).toBe(GameState.Initialised);
     });
 
     it('sets pause time to now', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(gameOne);
         Date.now = jest.fn(() => dateNow + 5000);
-        catchFoodGame.pauseGame();
-        expect(catchFoodGame['_gamePausedAt']).toBe(dateNow + 5000);
+        gameOne.pauseGame();
+        expect(gameOne['_gamePausedAt']).toBe(dateNow + 5000);
     });
 
     // function trimMsTime(time: number) {
@@ -55,40 +55,40 @@ describe('Resume tests', () => {
         // global.Date.now = jest.fn(() => new Date('2019-04-07T10:20:30Z').getTime())
         jest.useFakeTimers();
         Date.now = jest.fn(() => dateNow);
-        catchFoodGame = new GameOne(roomId, leaderboard);
+        gameOne = new GameOne(roomId, leaderboard);
     });
     afterEach(() => {
         jest.clearAllMocks();
     });
 
     it('Can resume game when game has been paused', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
-        catchFoodGame.pauseGame();
-        catchFoodGame.resumeGame();
-        expect(catchFoodGame.gameState).toBe(GameState.Started);
+        startGameAndAdvanceCountdown(gameOne);
+        gameOne.pauseGame();
+        gameOne.resumeGame();
+        expect(gameOne.gameState).toBe(GameState.Started);
     });
 
     it('Cannot resume game when game has not started', async () => {
         try {
-            catchFoodGame.resumeGame();
+            gameOne.resumeGame();
         } catch (e) {
             //ignore in this test
         }
-        expect(catchFoodGame.gameState).toBe(GameState.Initialised);
+        expect(gameOne.gameState).toBe(GameState.Initialised);
     });
 
     it('Cannot resume game when game has not been paused', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(gameOne);
         try {
-            catchFoodGame.resumeGame();
+            gameOne.resumeGame();
         } catch (e) {
             //ignore for this test
         }
-        expect(catchFoodGame.gameState).toBe(GameState.Started);
+        expect(gameOne.gameState).toBe(GameState.Started);
     });
 
     it('updates gameStartedTime correctly to accommodate pause', async () => {
-        startGameAndAdvanceCountdown(catchFoodGame);
+        startGameAndAdvanceCountdown(gameOne);
         await releaseThreadN(3);
 
         const gameStartTime = Date.now();
@@ -98,11 +98,11 @@ describe('Resume tests', () => {
         const newGameStartedTime = gameResumeTime - gameTimePassed;
 
         Date.now = jest.fn(() => gamePauseTime);
-        catchFoodGame.pauseGame();
+        gameOne.pauseGame();
         Date.now = jest.fn(() => gameResumeTime);
-        catchFoodGame.resumeGame();
+        gameOne.resumeGame();
 
-        expect(catchFoodGame['gameTime']).toBe(gameTimePassed);
-        expect(catchFoodGame['gameStartedAt']).toBe(newGameStartedTime);
+        expect(gameOne['gameTime']).toBe(gameTimePassed);
+        expect(gameOne['gameStartedAt']).toBe(newGameStartedTime);
     });
 });
