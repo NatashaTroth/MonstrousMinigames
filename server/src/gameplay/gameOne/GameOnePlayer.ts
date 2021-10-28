@@ -1,7 +1,7 @@
 import Player from '../Player';
 import { Obstacle, PlayerState } from './interfaces';
 
-class CatchFoodPlayer extends Player implements PlayerState {
+class GameOnePlayer extends Player implements PlayerState {
     static readonly EVT_UNSTUNNED = 'unstunned';
 
     finishedTimeMs = 0;
@@ -27,10 +27,10 @@ class CatchFoodPlayer extends Player implements PlayerState {
             this.stunnedSeconds -= timeElapsedSinceLastFrame;
             if (this.stunnedSeconds <= 0) {
                 this.stunned = false;
-                this.emit(CatchFoodPlayer.EVT_UNSTUNNED, this);
+                this.emit(GameOnePlayer.EVT_UNSTUNNED, this);
             }
         }
     }
 }
 
-export default CatchFoodPlayer;
+export default GameOnePlayer;

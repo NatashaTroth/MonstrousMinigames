@@ -3,7 +3,7 @@ import { Namespace, Socket } from 'socket.io';
 import Room from '../classes/room';
 import User from '../classes/user';
 import { MessageTypes } from '../enums/messageTypes';
-import { CatchFoodMsgType } from '../gameplay/gameOne/enums';
+import { GameOneMsgType } from '../gameplay/gameOne/enums';
 
 function sendUserInit(socket: Socket, user: User, room: Room): void {
     socket.emit('message', {
@@ -51,7 +51,7 @@ function sendErrorMessage(socket: Socket, e: Error): void {
 function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(room.id).emit('message', {
-            type: CatchFoodMsgType.ALL_SCREENS_PHASER_GAME_LOADED,
+            type: GameOneMsgType.ALL_SCREENS_PHASER_GAME_LOADED,
         });
     });
 }
@@ -59,14 +59,14 @@ function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room): voi
 function sendScreenPhaserGameLoadedTimedOut(nsp: Namespace, socketId: string): void {
     //TODO
     nsp.to(socketId).emit('message', {
-        type: CatchFoodMsgType.PHASER_LOADING_TIMED_OUT,
+        type: GameOneMsgType.PHASER_LOADING_TIMED_OUT,
     });
 }
 
 function sendStartPhaserGame(nsps: Array<Namespace>, room: Room): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(room.id).emit('message', {
-            type: CatchFoodMsgType.START_PHASER_GAME,
+            type: GameOneMsgType.START_PHASER_GAME,
         });
     });
 }
@@ -94,7 +94,7 @@ function sendScreenState(nsp: Namespace | Socket, state: string | undefined): vo
     });
 }
 
-function sendMessage(type: MessageTypes | CatchFoodMsgType, nsps: Array<Namespace>, recipient: string): void {
+function sendMessage(type: MessageTypes | GameOneMsgType, nsps: Array<Namespace>, recipient: string): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(recipient).emit('message', {
             type: type,
@@ -109,7 +109,7 @@ function sendMessage(type: MessageTypes | CatchFoodMsgType, nsps: Array<Namespac
 // ): void {
 //     console.log('SEENDING YEES');
 //     nsp.to(user.socketId).emit('message', {
-//         type: CatchFoodMsgType.PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
+//         type: GameOneMsgType.PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
 //     });
 // }
 

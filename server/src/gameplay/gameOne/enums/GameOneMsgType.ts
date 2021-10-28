@@ -1,4 +1,4 @@
-export enum CatchFoodMsgType {
+export enum GameOneMsgType {
     CREATE = 'game1/create',
     // INITIAL_GAME_STATE_INFO = 'game1/initialGameState',
     PHASER_GAME_LOADED = 'game1/phaserGameLoaded',

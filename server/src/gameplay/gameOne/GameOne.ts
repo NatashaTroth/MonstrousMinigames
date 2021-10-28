@@ -13,10 +13,10 @@ import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
 import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
 import UserHasNoStones from './customErrors/UserHasNoStones';
-import { CatchFoodMsgType, ObstacleType } from './enums';
+import { GameOneMsgType, ObstacleType } from './enums';
 import GameOneEventEmitter from './GameOneEventEmitter';
 import * as InitialGameParameters from './GameOneInitialParameters';
-import CatchFoodPlayer from './GameOnePlayer';
+import GameOnePlayer from './GameOnePlayer';
 import {
     createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
 } from './helperFunctions/initiatePlayerState';
@@ -27,7 +27,7 @@ import { IMessageStunPlayer } from './interfaces/messageStunPlayer';
 
 let pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
 
-interface GameOneInterface extends IGameInterface<CatchFoodPlayer, GameStateInfo> {
+interface GameOneInterface extends IGameInterface<GameOnePlayer, GameStateInfo> {
     trackLength: number;
     numberOfObstacles: number;
     obstacleTypes: ObstacleTypeObject[];
@@ -37,7 +37,7 @@ interface GameOneInterface extends IGameInterface<CatchFoodPlayer, GameStateInfo
     getObstaclePositions(): HashTable<Array<Obstacle>>;
 }
 
-export default class GameOne extends Game<CatchFoodPlayer, GameStateInfo> implements GameOneInterface {
+export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implements GameOneInterface {
     trackLength = InitialGameParameters.TRACK_LENGTH;
     numberOfObstacles = InitialGameParameters.NUMBER_OBSTACLES;
     maxNumberOfChaserPushes = InitialGameParameters.MAX_NUMBER_CHASER_PUSHES;
@@ -59,7 +59,7 @@ export default class GameOne extends Game<CatchFoodPlayer, GameStateInfo> implem
 
     constructor(roomId: string, public leaderboard: Leaderboard /*, public usingChasers = false*/) {
         super(roomId);
-        this.gameStateMessage = CatchFoodMsgType.GAME_STATE;
+        this.gameStateMessage = GameOneMsgType.GAME_STATE;
     }
 
     protected beforeCreateNewGame() {
@@ -67,7 +67,7 @@ export default class GameOne extends Game<CatchFoodPlayer, GameStateInfo> implem
     }
 
     protected mapUserToPlayer(user: User) {
-        const player = new CatchFoodPlayer(
+        const player = new GameOnePlayer(
             user.id,
             user.name,
             this.initialPlayerPositionX,
@@ -75,14 +75,14 @@ export default class GameOne extends Game<CatchFoodPlayer, GameStateInfo> implem
             user.characterNumber
         );
 
-        player.on(CatchFoodPlayer.EVT_UNSTUNNED, () => {
+        player.on(GameOnePlayer.EVT_UNSTUNNED, () => {
             this.onPlayerUnstunned(player.id);
         });
 
         return player;
     }
 
-    protected postProcessPlayers(playersIterable: IterableIterator<CatchFoodPlayer>) {
+    protected postProcessPlayers(playersIterable: IterableIterator<GameOnePlayer>) {
         const players = Array.from(playersIterable);
         const obstacles: Obstacle[] = [];
         players.forEach(player => obstacles.push(...player.obstacles));
@@ -125,22 +125,22 @@ export default class GameOne extends Game<CatchFoodPlayer, GameStateInfo> implem
 
     protected handleInput(message: IMessage) {
         switch (message.type) {
-            case CatchFoodMsgType.MOVE:
+            case GameOneMsgType.MOVE:
                 this.runForward(message.userId!, parseInt(`${process.env.SPEED}`, 10) || 2);
                 break;
-            case CatchFoodMsgType.OBSTACLE_SOLVED:
+            case GameOneMsgType.OBSTACLE_SOLVED:
                 this.playerHasCompletedObstacle(message.userId!, (message as IMessageObstacle).obstacleId);
                 break;
-            case CatchFoodMsgType.SOLVE_OBSTACLE:
+            case GameOneMsgType.SOLVE_OBSTACLE:
                 this.playerWantsToSolveObstacle(message.userId!, (message as IMessageObstacle).obstacleId);
                 break;
-            case CatchFoodMsgType.STUN_PLAYER:
+            case GameOneMsgType.STUN_PLAYER:
                 if ((message as IMessageStunPlayer).receivingUserId) {
                     break;
                 }
                 this.stunPlayer((message as IMessageStunPlayer).receivingUserId, message.userId!);
                 break;
-            case CatchFoodMsgType.CHASERS_WERE_PUSHED:
+            case GameOneMsgType.CHASERS_WERE_PUSHED:
                 this.pushChasers(message.userId!);
                 break;
             default:
@@ -253,7 +253,7 @@ export default class GameOne extends Game<CatchFoodPlayer, GameStateInfo> implem
         }
     }
 
-    private handlePlayerCaught(playerState: CatchFoodPlayer) {
+    private handlePlayerCaught(playerState: GameOnePlayer) {
         playerState.dead = true;
         this.updatePlayerStateFinished(playerState.id);
         playerState.rank = this.rankFailedUser(playerState.finishedTimeMs);
@@ -270,7 +270,7 @@ export default class GameOne extends Game<CatchFoodPlayer, GameStateInfo> implem
         }
     }
 
-    private chaserCaughtPlayer(player: CatchFoodPlayer) {
+    private chaserCaughtPlayer(player: GameOnePlayer) {
         return player.positionX <= this.chasersPositionX;
     }
 
@@ -305,7 +305,7 @@ export default class GameOne extends Game<CatchFoodPlayer, GameStateInfo> implem
         return player.finished || player.dead || player.atObstacle;
     }
 
-    private playerIsApproachingSolvableObstacle(player: CatchFoodPlayer): boolean {
+    private playerIsApproachingSolvableObstacle(player: GameOnePlayer): boolean {
         return (
             !player.atObstacle &&
             (player.obstacles.length || 0) > 0 &&
@@ -331,7 +331,7 @@ export default class GameOne extends Game<CatchFoodPlayer, GameStateInfo> implem
         return player.positionX >= this.trackLength && player.obstacles.length === 0;
     }
 
-    private handlePlayerApproachingSolvableObstacle(player: CatchFoodPlayer): void {
+    private handlePlayerApproachingSolvableObstacle(player: GameOnePlayer): void {
         // when already carrying a stone, no action is required
         if (player.obstacles[0].type === ObstacleType.Stone && player.stonesCarrying > 0) {
             return;
@@ -440,7 +440,7 @@ export default class GameOne extends Game<CatchFoodPlayer, GameStateInfo> implem
         GameOneEventEmitter.emitChasersWerePushed(this.roomId, this.chaserPushAmount);
     }
 
-    private maxNumberPushChasersExceeded(player: CatchFoodPlayer) {
+    private maxNumberPushChasersExceeded(player: GameOnePlayer) {
         return player.chaserPushesUsed >= this.maxNumberOfChaserPushes;
     }
 
@@ -499,7 +499,7 @@ export default class GameOne extends Game<CatchFoodPlayer, GameStateInfo> implem
         }
     }
 
-    private verifyUserCanThrowCollectedStone(userId: string | CatchFoodPlayer) {
+    private verifyUserCanThrowCollectedStone(userId: string | GameOnePlayer) {
         const player = typeof userId === 'string' ? this.players.get(userId)! : userId;
 
         if (player.stonesCarrying < 1) {

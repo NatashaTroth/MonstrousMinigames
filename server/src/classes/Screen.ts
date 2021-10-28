@@ -2,7 +2,7 @@ import { Namespace, Socket } from 'socket.io';
 
 import { MessageTypes } from '../enums/messageTypes';
 import Game from '../gameplay/Game';
-import { CatchFoodMsgType } from '../gameplay/gameOne/enums';
+import { GameOneMsgType } from '../gameplay/gameOne/enums';
 // import { GameThreeMessageTypes } from '../gameplay/gameThree/enums/GameThreeMessageTypes';
 // import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
 import { IMessage } from '../interfaces/messages';
@@ -140,7 +140,7 @@ class Screen {
                 //         this.room.setGame(GameNames.GAME3);
                 //         this.room.createNewGame();
                 //     }
-                case CatchFoodMsgType.PHASER_GAME_LOADED:
+                case GameOneMsgType.PHASER_GAME_LOADED:
                     this.room?.setScreenPhaserGameReady(this.socket.id, true);
                     if (this.room && !this.room?.firstPhaserScreenLoaded) {
                         this.room.firstPhaserScreenLoaded = true;
@@ -154,7 +154,7 @@ class Screen {
                         this.trySendAllScreensPhaserGameLoaded();
                     }
                     break;
-                case CatchFoodMsgType.START_PHASER_GAME:
+                case GameOneMsgType.START_PHASER_GAME:
                     this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!);
                     break;
                 default:
