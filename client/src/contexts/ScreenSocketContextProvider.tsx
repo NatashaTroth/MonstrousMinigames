@@ -7,7 +7,7 @@ import { Socket } from '../domain/socket/Socket';
 import { GameState } from '../utils/constants';
 import { GameContext } from './GameContextProvider';
 import { Obstacle } from './PlayerContextProvider';
-import {Game3Context} from './game3/Game3ContexftProvider';
+import {Game3Context} from './game3/Game3ContextProvider';
 
 interface ScreenSocketContextProps {
     screenSocket: Socket | undefined;
