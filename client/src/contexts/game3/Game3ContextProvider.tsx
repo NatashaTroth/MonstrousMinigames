@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { GameContext } from '../GameContextProvider';
 
 export const defaultValue = {
     challengeId: 1,
@@ -24,7 +23,7 @@ export const Game3Context = React.createContext<Game3ContextProps>(defaultValue)
 
 const Game3ContextProvider: React.FunctionComponent = ({ children }) => {
     const [challengeId, setChallengeId] = React.useState<number>(1);
-    const { topicMessage, setTopicMessage } = React.useContext(GameContext);
+    const [topicMessage, setTopicMessage] = React.useState('');
 
     const content = {
         challengeId,
@@ -36,3 +35,4 @@ const Game3ContextProvider: React.FunctionComponent = ({ children }) => {
 };
 
 export default Game3ContextProvider;
+//asdas
