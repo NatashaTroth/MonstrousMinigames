@@ -18,6 +18,8 @@ const FirebaseContextProvider: React.FunctionComponent = ({ children }) => {
     const [storage, setStorage] = React.useState<FirebaseStorage | undefined>();
 
     React.useEffect(() => {
+        // eslint-disable-next-line
+        console.log(storage)
         const firebaseApp = initializeApp(firebaseConfig);
 
         setStorage(getStorage(firebaseApp));

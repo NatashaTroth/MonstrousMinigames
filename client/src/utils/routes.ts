@@ -47,6 +47,7 @@ export enum Routes {
     stunned = '/stunned',
     chooseCharacter = '/choose-character',
     windmill = '/windmill',
+    vote = '/vote',
 }
 
 export const controllerChooseCharacterRoute = (roomId: undefined | string) =>
@@ -64,6 +65,9 @@ export const controllerGame1Route = (roomId: undefined | string) => `${Routes.co
 export const controllerGame2Route = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.game2}`;
 
 export const controllerGame3Route = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.game3}`;
+
+
+export const controllerVoteRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.vote}`;
 
 export const controllerPlayerStunnedRoute = (roomId: undefined | string) =>
     `${Routes.controller}/${roomId}${Routes.stunned}`;
@@ -99,3 +103,5 @@ export const screenGame1Route = (roomId: undefined | string) => `${Routes.screen
 export const screenGame2Route = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.game2}`;
 
 export const screenGame3Route = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.game3}`;
+
+export const screenGame3Vote = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.game3}`;

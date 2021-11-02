@@ -66,7 +66,7 @@ export interface User {
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenSocket, setScreenSocket] = React.useState<Socket>();
     const history = useHistory();
-    const { setTopicMessage } = React.useContext(Game3Context)
+    const { setTopicMessage, setTimeIsUp } = React.useContext(Game3Context)
     const {
         setGameStarted,
         setRoomId,
@@ -98,6 +98,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     setScreenState,
                     setChosenGame,
                     setTopicMessage,
+                    setTimeIsUp,
                     history,
                 },
                 route
@@ -117,6 +118,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 setScreenState,
                 setChosenGame,
                 setTopicMessage,
+                setTimeIsUp,
                 history,
             });
         },

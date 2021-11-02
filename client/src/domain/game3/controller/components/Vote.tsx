@@ -9,6 +9,8 @@ const Vote: React.FunctionComponent = () => {
 
     function handleVote(picture: number) {
         // TODO
+        // eslint-disable-next-line
+        console.log(picture)
     }
 
     return (
