@@ -63,13 +63,42 @@ describe('Verify when game state can change', () => {
 
     it('should be able to stop game when started', async () => {
         game.gameState = GameState.Started;
-        game.stopGameUserClosed();
+        game.stopGame();
         expect(game.gameState).toBe(GameState.Stopped);
     });
 
     it('should be able to stop game when paused', async () => {
         game.gameState = GameState.Paused;
-        game.stopGameUserClosed();
+        game.stopGame();
         expect(game.gameState).toBe(GameState.Stopped);
+    });
+
+    it('Cannot pause game when game has not started', async () => {
+        try {
+            game.pauseGame();
+        } catch (e) {
+            // ignore in this test
+        }
+        expect(game.gameState).toBe(GameState.Initialised);
+    });
+
+    it('Cannot resume game when game has not started', async () => {
+        game.gameState = GameState.Initialised;
+        try {
+            game.resumeGame();
+        } catch (e) {
+            //ignore in this test
+        }
+        expect(game.gameState).toBe(GameState.Initialised);
+    });
+
+    it('Cannot resume game when game has not been paused', async () => {
+        game.gameState = GameState.Started;
+        try {
+            game.resumeGame();
+        } catch (e) {
+            //ignore for this test
+        }
+        expect(game.gameState).toBe(GameState.Started);
     });
 });

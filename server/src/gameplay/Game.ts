@@ -94,7 +94,7 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
         this.gameState = GameState.Started;
         this._lastFrameAt = this._lastFrameAt - this._gameStartedAt;
         this._gameStartedAt = Date.now() - gameTime;
-        this._lastFrameAt = this._lastFrameAt + this._gameStartedAt;
+        this._lastFrameAt = this._lastFrameAt + this._gameStartedAt; //update the last frame time
 
         this._gameLoop();
     }
