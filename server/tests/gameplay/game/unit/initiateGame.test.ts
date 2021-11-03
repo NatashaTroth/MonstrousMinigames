@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
-import { leaderboard, roomId, users } from '../mockData';
-import { MockGameClass } from '../mockGameClass';
+import { leaderboard, roomId, users } from '../../mockData';
+import { MockGameClass } from '../../mockGameClass';
 
 let game: MockGameClass;
 

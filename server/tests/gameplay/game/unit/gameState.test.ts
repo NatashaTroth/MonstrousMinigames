@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 
-import { GameState } from '../../../src/gameplay/enums';
-import { leaderboard, roomId, users } from '../mockData';
-import { MockGameClass } from '../mockGameClass';
+import { GameState } from '../../../../src/gameplay/enums';
+import { leaderboard, roomId, users } from '../../mockData';
+import { MockGameClass } from '../../mockGameClass';
 
 let game: MockGameClass;
 

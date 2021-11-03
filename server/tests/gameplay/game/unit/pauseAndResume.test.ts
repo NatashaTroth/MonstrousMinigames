@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 
-import { GameState } from '../../../src/gameplay/enums';
-import { leaderboard, roomId, users } from '../mockData';
-import { MockGameClass } from '../mockGameClass';
+import { GameState } from '../../../../src/gameplay/enums';
+import { leaderboard, roomId, users } from '../../mockData';
+import { MockGameClass } from '../../mockGameClass';
 
 let game: MockGameClass;
 const dateNow = 2;
@@ -25,7 +25,6 @@ describe('Pause tests', () => {
 
 describe('Resume tests', () => {
     beforeEach(() => {
-        // global.Date.now = jest.fn(() => new Date('2019-04-07T10:20:30Z').getTime())
         jest.useFakeTimers();
         Date.now = jest.fn(() => dateNow);
         game = new MockGameClass(roomId, leaderboard);
