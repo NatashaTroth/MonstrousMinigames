@@ -1,13 +1,13 @@
-import GameEventEmitter from '../../../src/classes/GameEventEmitter';
-import DI from '../../../src/di';
-import { GameOne } from '../../../src/gameplay';
-import { GameState } from '../../../src/gameplay/enums';
-import Game from '../../../src/gameplay/Game';
-import { PlayerRank } from '../../../src/gameplay/gameOne/interfaces';
+import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
+import DI from '../../../../src/di';
+import { GameOne } from '../../../../src/gameplay';
+import { GameState } from '../../../../src/gameplay/enums';
+import Game from '../../../../src/gameplay/Game';
+import { PlayerRank } from '../../../../src/gameplay/gameOne/interfaces';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
-} from '../../../src/gameplay/interfaces/GlobalEventMessages';
-import { users } from '../mockData';
+} from '../../../../src/gameplay/interfaces/GlobalEventMessages';
+import { users } from '../../mockData';
 
 const TRACK_LENGTH = 5000;
 const gameEventEmitter = DI.resolve(GameEventEmitter);

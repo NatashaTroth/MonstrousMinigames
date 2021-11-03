@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../src/gameplay';
-import { GameState } from '../../../src/gameplay/enums';
+import { GameOne } from '../../../../src/gameplay';
+import { GameState } from '../../../../src/gameplay/enums';
 import {
     ObstacleType, regularObstacleTypes
-} from '../../../src/gameplay/gameOne/enums/ObstacleType';
-import { Obstacle } from '../../../src/gameplay/gameOne/interfaces';
-import { leaderboard, roomId, users } from '../mockData';
-import { clearTimersAndIntervals } from './gameHelperFunctions';
+} from '../../../../src/gameplay/gameOne/enums/ObstacleType';
+import { Obstacle } from '../../../../src/gameplay/gameOne/interfaces';
+import { leaderboard, roomId, users } from '../../mockData';
+import { clearTimersAndIntervals } from './gameOneHelperFunctions';
 
 const TRACK_LENGTH = 5000;
 const NUMBER_OF_OBSTACLES = 4;

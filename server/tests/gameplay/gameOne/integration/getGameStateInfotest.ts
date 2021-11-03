@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../src/gameplay';
-import { GameState } from '../../../src/gameplay/enums';
-import { GameStateInfo } from '../../../src/gameplay/gameOne/interfaces';
-import { leaderboard, roomId, users } from '../mockData';
-import { clearTimersAndIntervals } from './gameHelperFunctions';
+import { GameOne } from '../../../../src/gameplay';
+import { GameState } from '../../../../src/gameplay/enums';
+import { GameStateInfo } from '../../../../src/gameplay/gameOne/interfaces';
+import { leaderboard, roomId, users } from '../../mockData';
+import { clearTimersAndIntervals } from './gameOneHelperFunctions';
 
 const TRACK_LENGTH = 5000; // has to be bigger than initial player position
 const NUMBER_OF_OBSTACLES = 4;

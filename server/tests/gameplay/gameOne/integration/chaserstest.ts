@@ -1,21 +1,21 @@
 import 'reflect-metadata';
 
-import GameEventEmitter from '../../../src/classes/GameEventEmitter';
-import DI from '../../../src/di';
-import { GameOne } from '../../../src/gameplay';
-import { GameState } from '../../../src/gameplay/enums';
-import { PlayerRank } from '../../../src/gameplay/gameOne/interfaces';
+import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
+import DI from '../../../../src/di';
+import { GameOne } from '../../../../src/gameplay';
+import { GameState } from '../../../../src/gameplay/enums';
+import { PlayerRank } from '../../../../src/gameplay/gameOne/interfaces';
 import {
     GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD, GameOneEventMessage
-} from '../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
+} from '../../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
-} from '../../../src/gameplay/interfaces/GlobalEventMessages';
-import { leaderboard, roomId } from '../mockData';
+} from '../../../../src/gameplay/interfaces/GlobalEventMessages';
+import { leaderboard, roomId } from '../../mockData';
 import {
     advanceCountdown, clearTimersAndIntervals, getToCreatedGameState, releaseThreadN,
     startGameAndAdvanceCountdown
-} from './gameHelperFunctions';
+} from './gameOneHelperFunctions';
 
 let gameOne: GameOne;
 const dateNow = 1618665766156;

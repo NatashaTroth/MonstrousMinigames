@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../src/gameplay';
+import { GameOne } from '../../../../src/gameplay';
 import {
     NotAtObstacleError, WrongObstacleIdError
-} from '../../../src/gameplay/gameOne/customErrors';
-import { leaderboard, roomId } from '../mockData';
+} from '../../../../src/gameplay/gameOne/customErrors';
+import { leaderboard, roomId } from '../../mockData';
 import {
     clearTimersAndIntervals, goToNextUnsolvableObstacle, startGameAndAdvanceCountdown
-} from './gameHelperFunctions';
+} from './gameOneHelperFunctions';
 
 let gameOne: GameOne;
 const USER_ID = '1';

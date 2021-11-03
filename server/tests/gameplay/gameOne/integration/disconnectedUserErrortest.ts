@@ -1,11 +1,11 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../src/gameplay';
-import { DisconnectedUserError } from '../../../src/gameplay/customErrors';
-import { leaderboard, roomId } from '../mockData';
+import { GameOne } from '../../../../src/gameplay';
+import { DisconnectedUserError } from '../../../../src/gameplay/customErrors';
+import { leaderboard, roomId } from '../../mockData';
 import {
     clearTimersAndIntervals, completeNextObstacle, startGameAndAdvanceCountdown
-} from './gameHelperFunctions';
+} from './gameOneHelperFunctions';
 
 let gameOne: GameOne;
 

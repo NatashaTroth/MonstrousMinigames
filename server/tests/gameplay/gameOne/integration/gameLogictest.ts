@@ -1,14 +1,14 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../src/gameplay';
-import { GameState } from '../../../src/gameplay/enums';
-import { ObstacleType } from '../../../src/gameplay/gameOne/enums';
-import { leaderboard, roomId } from '../mockData';
+import { GameOne } from '../../../../src/gameplay';
+import { GameState } from '../../../../src/gameplay/enums';
+import { ObstacleType } from '../../../../src/gameplay/gameOne/enums';
+import { leaderboard, roomId } from '../../mockData';
 import {
     clearTimersAndIntervals, completeNextObstacle, completePlayersObstacles, finishPlayer,
     getGameFinishedDataDifferentTimes, goToNextUnsolvableObstacle, startAndFinishGameDifferentTimes,
     startGameAndAdvanceCountdown
-} from './gameHelperFunctions';
+} from './gameOneHelperFunctions';
 
 const TRACK_LENGTH = 5000; // has to be bigger than initial player position
 

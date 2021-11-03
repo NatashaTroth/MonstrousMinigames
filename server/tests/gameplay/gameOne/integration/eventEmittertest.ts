@@ -1,26 +1,26 @@
 import 'reflect-metadata';
 
-import GameEventEmitter from '../../../src/classes/GameEventEmitter';
-import DI from '../../../src/di';
-import { GameOne } from '../../../src/gameplay';
-import { GameState } from '../../../src/gameplay/enums';
-import { ObstacleType } from '../../../src/gameplay/gameOne/enums';
-import { GameEvents } from '../../../src/gameplay/gameOne/interfaces';
+import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
+import DI from '../../../../src/di';
+import { GameOne } from '../../../../src/gameplay';
+import { GameState } from '../../../../src/gameplay/enums';
+import { ObstacleType } from '../../../../src/gameplay/gameOne/enums';
+import { GameEvents } from '../../../../src/gameplay/gameOne/interfaces';
 import {
     GAME_ONE_EVENT_MESSAGE__OBSTACLE_REACHED, GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_FINISHED,
     GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD, GameOneEventMessage
-} from '../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
+} from '../../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED,
     GLOBAL_EVENT_MESSAGE__GAME_HAS_RESUMED, GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED,
     GLOBAL_EVENT_MESSAGE__GAME_HAS_STOPPED, GLOBAL_EVENT_MESSAGE__PLAYER_HAS_DISCONNECTED,
     GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED, GlobalEventMessage
-} from '../../../src/gameplay/interfaces/GlobalEventMessages';
-import { leaderboard, roomId } from '../mockData';
+} from '../../../../src/gameplay/interfaces/GlobalEventMessages';
+import { leaderboard, roomId } from '../../mockData';
 import {
     clearTimersAndIntervals, finishGame, finishPlayer, goToNextUnsolvableObstacle,
     startGameAndAdvanceCountdown
-} from './gameHelperFunctions';
+} from './gameOneHelperFunctions';
 
 let gameOne: GameOne;
 let gameEventEmitter: GameEventEmitter;

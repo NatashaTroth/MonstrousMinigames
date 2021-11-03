@@ -1,11 +1,11 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../src/gameplay';
-import { GameState } from '../../../src/gameplay/enums/GameState';
-import { leaderboard, roomId } from '../mockData';
+import { GameOne } from '../../../../src/gameplay';
+import { GameState } from '../../../../src/gameplay/enums/GameState';
+import { leaderboard, roomId } from '../../mockData';
 import {
     clearTimersAndIntervals, releaseThreadN, startGameAndAdvanceCountdown
-} from './gameHelperFunctions';
+} from './gameOneHelperFunctions';
 
 let gameOne: GameOne;
 const dateNow = 1618665766156;

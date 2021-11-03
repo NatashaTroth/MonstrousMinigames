@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 
-import User from '../../../src/classes/user';
-import { GameOne } from '../../../src/gameplay';
-import { MaxNumberUsersExceededError } from '../../../src/gameplay/customErrors';
-import { leaderboard, roomId, users } from '../mockData';
-import { clearTimersAndIntervals } from './gameHelperFunctions';
+import User from '../../../../src/classes/user';
+import { GameOne } from '../../../../src/gameplay';
+import { MaxNumberUsersExceededError } from '../../../../src/gameplay/customErrors';
+import { leaderboard, roomId, users } from '../../mockData';
+import { clearTimersAndIntervals } from './gameOneHelperFunctions';
 
 let gameOne: GameOne;
 const longerUsers = [...users, new User('xxx', 'iii', 'Lavender', 1, '5')];

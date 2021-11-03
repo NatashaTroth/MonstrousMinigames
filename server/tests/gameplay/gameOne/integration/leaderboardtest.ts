@@ -1,16 +1,16 @@
 import 'reflect-metadata';
 
-import GameEventEmitter from '../../../src/classes/GameEventEmitter';
-import DI from '../../../src/di';
-import { GameOne } from '../../../src/gameplay';
-import { GameState } from '../../../src/gameplay/enums';
+import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
+import DI from '../../../../src/di';
+import { GameOne } from '../../../../src/gameplay';
+import { GameState } from '../../../../src/gameplay/enums';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
-} from '../../../src/gameplay/interfaces/GlobalEventMessages';
-import { GameType } from '../../../src/gameplay/leaderboard/enums/GameType';
-import Leaderboard from '../../../src/gameplay/leaderboard/Leaderboard';
-import { roomId } from '../mockData';
-import { clearTimersAndIntervals, startAndFinishGame } from './gameHelperFunctions';
+} from '../../../../src/gameplay/interfaces/GlobalEventMessages';
+import { GameType } from '../../../../src/gameplay/leaderboard/enums/GameType';
+import Leaderboard from '../../../../src/gameplay/leaderboard/Leaderboard';
+import { roomId } from '../../mockData';
+import { clearTimersAndIntervals, startAndFinishGame } from './gameOneHelperFunctions';
 
 let gameOne: GameOne;
 

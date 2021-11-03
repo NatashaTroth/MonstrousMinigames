@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../src/gameplay';
-import { WrongGameStateError } from '../../../src/gameplay/customErrors';
-import { GameState } from '../../../src/gameplay/enums';
-import { leaderboard, roomId, users } from '../mockData';
+import { GameOne } from '../../../../src/gameplay';
+import { WrongGameStateError } from '../../../../src/gameplay/customErrors';
+import { GameState } from '../../../../src/gameplay/enums';
+import { leaderboard, roomId, users } from '../../mockData';
 import {
     clearTimersAndIntervals, getToCreatedGameState, getToFinishedGameState, getToPausedGameState,
     getToStartedGameState, getToStoppedGameState, startGameAndAdvanceCountdown
-} from './gameHelperFunctions';
+} from './gameOneHelperFunctions';
 
 let gameOne: GameOne;
 

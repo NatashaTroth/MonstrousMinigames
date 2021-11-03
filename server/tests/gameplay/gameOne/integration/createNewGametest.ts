@@ -1,8 +1,10 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../src/gameplay';
-import { leaderboard, roomId, users } from '../mockData';
-import { clearTimersAndIntervals, releaseThreadN, startAndFinishGame } from './gameHelperFunctions';
+import { GameOne } from '../../../../src/gameplay';
+import { leaderboard, roomId, users } from '../../mockData';
+import {
+    clearTimersAndIntervals, releaseThreadN, startAndFinishGame
+} from './gameOneHelperFunctions';
 
 const NEW_TRACKLENGTH = 1000;
 const NEW_NUMBER_OF_OBSTACLES = 6;

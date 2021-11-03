@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../src/gameplay';
-import { ObstacleType } from '../../../src/gameplay/gameOne/enums';
-import { leaderboard, roomId } from '../mockData';
-import { clearTimersAndIntervals, startGameAndAdvanceCountdown } from './gameHelperFunctions';
+import { GameOne } from '../../../../src/gameplay';
+import { ObstacleType } from '../../../../src/gameplay/gameOne/enums';
+import { leaderboard, roomId } from '../../mockData';
+import { clearTimersAndIntervals, startGameAndAdvanceCountdown } from './gameOneHelperFunctions';
 
 let gameOne: GameOne;
 // let gameEventEmitter: GameOneEventEmitter;

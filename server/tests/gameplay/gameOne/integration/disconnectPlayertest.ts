@@ -1,19 +1,19 @@
 import 'reflect-metadata';
 
-import GameEventEmitter from '../../../src/classes/GameEventEmitter';
-import DI from '../../../src/di';
-import { GameOne } from '../../../src/gameplay';
+import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
+import DI from '../../../../src/di';
+import { GameOne } from '../../../../src/gameplay';
 // ..
-import { GameState } from '../../../src/gameplay/enums';
-import { PlayerRank } from '../../../src/gameplay/gameOne/interfaces';
+import { GameState } from '../../../../src/gameplay/enums';
+import { PlayerRank } from '../../../../src/gameplay/gameOne/interfaces';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
-} from '../../../src/gameplay/interfaces/GlobalEventMessages';
-import { leaderboard, roomId, users } from '../mockData';
+} from '../../../../src/gameplay/interfaces/GlobalEventMessages';
+import { leaderboard, roomId, users } from '../../mockData';
 import {
     clearTimersAndIntervals, completeNextObstacle, finishPlayer, startAndFinishGameDifferentTimes,
     startGameAndAdvanceCountdown
-} from './gameHelperFunctions';
+} from './gameOneHelperFunctions';
 
 // const TRACK_LENGTH = 500;
 
