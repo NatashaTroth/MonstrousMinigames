@@ -75,16 +75,6 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     stopGameAllUsersDisconnected() {
         this.stopGame();
     }
-    resumeGame() {
-        verifyGameState(this.gameState, [GameState.Paused]);
-        const gameTime = this.gameTime;
-        this.gameState = GameState.Started;
-        this._lastFrameAt = this._lastFrameAt - this._gameStartedAt;
-        this._gameStartedAt = Date.now() - gameTime;
-        this._lastFrameAt = this._lastFrameAt + this._gameStartedAt;
-
-        this._gameLoop();
-    }
     startGame() {
         this._gameStartedAt = Date.now();
         this._lastFrameAt = Date.now();
@@ -97,6 +87,16 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
         this.gameState = GameState.Paused;
 
         this._gamePausedAt = Date.now();
+    }
+    resumeGame() {
+        verifyGameState(this.gameState, [GameState.Paused]);
+        const gameTime = this.gameTime;
+        this.gameState = GameState.Started;
+        this._lastFrameAt = this._lastFrameAt - this._gameStartedAt;
+        this._gameStartedAt = Date.now() - gameTime;
+        this._lastFrameAt = this._lastFrameAt + this._gameStartedAt;
+
+        this._gameLoop();
     }
     stopGame() {
         verifyGameState(this.gameState, [GameState.Started, GameState.Paused]);

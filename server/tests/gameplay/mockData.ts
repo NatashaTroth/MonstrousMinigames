@@ -20,6 +20,3 @@ export const users: Array<User> = [
 export const roomId = 'xxx';
 
 export const leaderboard = new Leaderboard(roomId);
-
-export const trackLength = 5000; // has to be bigger than initial player position
-export const numberOfObstacles = 4;

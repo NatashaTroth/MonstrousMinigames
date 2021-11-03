@@ -7,8 +7,8 @@ import Player from '../../src/gameplay/Player';
 import { IMessage } from '../../src/interfaces/messages';
 
 export class MockPlayer extends Player {
-    constructor(id: string, name: string) {
-        super(id, name);
+    constructor(id: string, name: string, characterNumber: number) {
+        super(id, name, characterNumber);
     }
 
     update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
@@ -30,7 +30,7 @@ export class MockGameClass extends Game<MockPlayer, MockGameStateInfo> {
     }
     mapUserToPlayer(user: User): MockPlayer {
         //mock
-        return new MockPlayer(user.id, user.name);
+        return new MockPlayer(user.id, user.name, user.characterNumber);
     }
     update(timeElapsed: number, timeElapsedSinceLastFrame: number): Promise<void> | void {
         //mock

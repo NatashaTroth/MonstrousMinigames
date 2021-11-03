@@ -4,4 +4,5 @@ export interface IPlayerState {
     finished?: boolean;
     rank?: number;
     isActive: boolean;
+    characterNumber: number;
 }
