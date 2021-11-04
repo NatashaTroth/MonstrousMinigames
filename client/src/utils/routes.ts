@@ -1,9 +1,10 @@
-import { ObstacleTypes } from './constants';
+import { ObstacleTypes } from "./constants";
 
 export enum Routes {
     // Routes for router
     credits = '/credits',
     settings = '/settings',
+    controllerTutorial = '/controller/:id/tutorial',
     controllerChooseCharacter = '/controller/:id/choose-character',
     controllerLobby = '/controller/:id/lobby',
     controllerGame1 = '/controller/:id/game1',
@@ -35,6 +36,7 @@ export enum Routes {
     spider = '/spider',
     trash = '/trash',
     stone = '/stone',
+    tutorial = '/tutorial',
     game1 = '/game1',
     game2 = '/game2',
     game3 = '/game3',
@@ -56,6 +58,9 @@ export const controllerPlayerDeadRoute = (roomId: undefined | string) => `${Rout
 
 export const controllerFinishedRoute = (roomId: undefined | string) =>
     `${Routes.controller}/${roomId}${Routes.finished}`;
+
+export const controllerTutorialRoute = (roomId: undefined | string) =>
+    `${Routes.controller}/${roomId}${Routes.tutorial}`;
 
 export const controllerGame1Route = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.game1}`;
 

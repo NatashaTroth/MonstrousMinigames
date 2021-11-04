@@ -1,27 +1,22 @@
-import * as React from 'react';
+import * as React from "react";
 
-import Button from '../../../../../components/common/Button';
-import { StyledParticles } from '../../../../../components/common/Particles.sc';
-import { treeParticlesConfig } from '../../../../../config/particlesConfig';
-import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
-import { Game1Context, Obstacle } from '../../../../../contexts/game1/Game1ContextProvider';
-import { GameContext } from '../../../../../contexts/GameContextProvider';
-import wood from '../../../../../images/obstacles/wood/wood.svg';
-import { MessageTypesGame1 } from '../../../../../utils/constants';
-import { Socket } from '../../../../socket/Socket';
-import LinearProgressBar from './LinearProgressBar';
-import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from './ObstacleStyles.sc';
+import Button from "../../../../../components/common/Button";
+import { StyledParticles } from "../../../../../components/common/Particles.sc";
+import { ComponentToTest } from "../../../../../components/controller/Tutorial";
+import { treeParticlesConfig } from "../../../../../config/particlesConfig";
+import { ControllerSocketContext } from "../../../../../contexts/ControllerSocketContextProvider";
+import { Game1Context, Obstacle } from "../../../../../contexts/game1/Game1ContextProvider";
+import { GameContext } from "../../../../../contexts/GameContextProvider";
+import wood from "../../../../../images/obstacles/wood/wood.svg";
+import { MessageTypesGame1, ObstacleTypes } from "../../../../../utils/constants";
+import { Socket } from "../../../../socket/Socket";
+import LinearProgressBar from "./LinearProgressBar";
+import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from "./ObstacleStyles.sc";
 import {
-    DragItem,
-    Line,
-    ObstacleItem,
-    ProgressBarContainer,
-    StyledObstacleImage,
-    StyledSkipButton,
-    StyledTouchAppIcon,
-    TouchContainer,
-} from './TreeTrunk.sc';
-import { handleTouchEnd, handleTouchStart, newTrunk, setTranslate } from './TreeTrunkFunctions';
+    DragItem, Line, ObstacleItem, ProgressBarContainer, StyledObstacleImage, StyledSkipButton,
+    StyledTouchAppIcon, TouchContainer
+} from "./TreeTrunk.sc";
+import { handleTouchEnd, handleTouchStart, newTrunk, setTranslate } from "./TreeTrunkFunctions";
 
 export type Orientation = 'vertical' | 'horizontal';
 
@@ -37,7 +32,17 @@ export interface TouchStart {
     clientY: number;
 }
 
-const TreeTrunk: React.FunctionComponent = () => {
+interface TreeTrunkProps {
+    tutorial?: boolean;
+    handleTutorialFinished?: (val: ComponentToTest) => void;
+}
+
+const TreeTrunk: React.FunctionComponent<TreeTrunkProps> = ({
+    tutorial = false,
+    handleTutorialFinished = () => {
+        // do nothing
+    },
+}) => {
     const orientationOptions: Orientation[] = ['vertical', 'horizontal'];
     const tolerance = 10;
     const distance = 80;
@@ -65,9 +70,7 @@ const TreeTrunk: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         setTimeout(() => {
-            if (progress === 0) {
-                setSkip(true);
-            }
+            setSkip(true);
         }, 10000);
 
         newTrunk(orientationOptions, setOrientation);
@@ -138,6 +141,8 @@ const TreeTrunk: React.FunctionComponent = () => {
                     setShowInstructions,
                 }),
             trunksToFinish,
+            tutorial,
+            handleTutorialFinished,
         });
     };
 

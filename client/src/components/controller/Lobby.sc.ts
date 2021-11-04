@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const LobbyContainer = styled.div`
     display: flex;
@@ -21,7 +21,7 @@ export const Content = styled.div`
 
 export const PlayerName = styled.div`
     color: ${({ theme }) => theme.colors.playerName};
-    font-size: 45px;
+    font-size: 30px;
     letter-spacing: 0.1em;
     font-style: italic;
     margin-bottom: 10px;
@@ -29,7 +29,7 @@ export const PlayerName = styled.div`
 
 export const Character = styled.img`
     display: flex;
-    height: 200px;
+    width: 45%;
     max-width: 200px;
 `;
 
@@ -56,7 +56,7 @@ export const ReadyButton = styled.div<Props>`
     color: ${({ ready }) => (ready ? 'black' : 'white')};
     font-style: italic;
     text-transform: uppercase;
-    font-size: 26px;
+    font-size: 20px;
     padding: 20px 25px;
     border-radius: 20px;
     letter-spacing: 4px;
