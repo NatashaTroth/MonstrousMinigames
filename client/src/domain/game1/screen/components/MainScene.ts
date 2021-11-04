@@ -286,6 +286,10 @@ class MainScene extends Phaser.Scene {
         this.gameEventEmitter.on(GameEventTypes.PauseResume, () => {
             this.handlePauseResumeButton();
         });
+
+        this.gameEventEmitter.on(GameEventTypes.Stop, () => {
+            this.handleStopGame();
+        });
     }
 
     initiateGame(gameStateData: GameData) {
@@ -410,10 +414,9 @@ class MainScene extends Phaser.Scene {
         handleResume(this.socket);
     }
 
-    //TODO stop game button
-    // function handleStopGame() {
-    //     screenSocket?.emit({ type: MessageTypes.stopGame });
-    // }
+    handleStopGame() {
+        handleStop(this.socket);
+    }
 }
 
 export default MainScene;
@@ -427,4 +430,8 @@ export function handleStartGame(socket: Socket | undefined, roomId: string | und
         type: MessageTypes.startGame,
         roomId,
     });
+}
+
+export function handleStop(socket: Socket | undefined) {
+    socket?.emit({ type: MessageTypes.stopGame });
 }
