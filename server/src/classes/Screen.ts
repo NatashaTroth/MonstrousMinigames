@@ -1,13 +1,13 @@
-import { Namespace, Socket } from "socket.io";
+import { Namespace, Socket } from 'socket.io';
 
-import { MessageTypes } from "../enums/messageTypes";
-import Game from "../gameplay/Game";
-import { GameOneMsgType } from "../gameplay/gameOne/enums";
+import { MessageTypes } from '../enums/messageTypes';
+import Game from '../gameplay/Game';
+import { GameOneMsgType } from '../gameplay/gameOne/enums';
 // import { GameThreeMessageTypes } from '../gameplay/gameThree/enums/GameThreeMessageTypes';
 // import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
-import { IMessage } from "../interfaces/messages";
-import RoomService from "../services/roomService";
-import Room from "./room";
+import { IMessage } from '../interfaces/messages';
+import RoomService from '../services/roomService';
+import Room from './room';
 
 class Screen {
     protected roomId?: string;
