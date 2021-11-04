@@ -18,7 +18,6 @@ import { NoPermissions } from './components/controller/NoPermissions';
 import ChooseGame from './components/screen/ChooseGame';
 import { ConnectScreen as ScreenConnectScreen } from './components/screen/ConnectScreen';
 import { FinishedScreen as ScreenFinishedScreen } from './components/screen/FinishedScreen';
-import GameIntro from './components/screen/GameIntro';
 import { Lobby as ScreenLobbyScreen } from './components/screen/Lobby';
 import PlayersGetReady from './components/screen/PlayersGetReady';
 import ScreenWrapper from './components/screen/ScreenWrapper';
@@ -191,11 +190,6 @@ const App: React.FunctionComponent = () => {
                                                                 <Route
                                                                     path={Routes.screenChooseGame}
                                                                     component={ChooseGame}
-                                                                    exact
-                                                                />
-                                                                <Route
-                                                                    path={Routes.screenGameIntro}
-                                                                    component={GameIntro}
                                                                     exact
                                                                 />
                                                                 <Route

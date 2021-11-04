@@ -118,8 +118,8 @@ export const Lobby: React.FunctionComponent = () => {
                                     handleAudioPermission(audioPermission, { setAudioPermissionGranted });
                                     history.push(screenChooseGameRoute(roomId));
                                 }}
-                                disabled={!screenAdmin || !connectedUsers || connectedUsers?.length === 0}
-                                variant="secondary"
+                                // disabled={!screenAdmin || !connectedUsers || connectedUsers?.length === 0}
+                                // variant="secondary"
                                 title={
                                     screenAdmin
                                         ? !connectedUsers || connectedUsers?.length === 0
