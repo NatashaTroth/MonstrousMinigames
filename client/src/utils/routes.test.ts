@@ -11,7 +11,6 @@ import {
     screenChooseGameRoute,
     screenFinishedRoute,
     screenGame1Route,
-    screenGameIntroRoute,
     screenGetReadyRoute,
     screenLobbyRoute,
 } from './routes';
@@ -57,10 +56,6 @@ describe('test routing functions', () => {
 
     it('controllerObstacleRoute should return /controller/${roomId}/stone', () => {
         expect(controllerObstacleRoute(roomId, ObstacleTypes.stone)).toBe(`/controller/${roomId}/stone`);
-    });
-
-    it('screenGameIntroRoute should return /screen/${roomId}/game-intro', () => {
-        expect(screenGameIntroRoute(roomId)).toBe(`/screen/${roomId}/game-intro`);
     });
 
     it('screenGetReadyRoute should return /screen/${roomId}/get-ready', () => {
@@ -141,10 +136,6 @@ describe('test Routes enum', () => {
         expect(Routes.screenChooseGame).toBe('/screen/:id/choose-game');
     });
 
-    it('Routes.screenGameIntro should return /screen/:id/game-intro', () => {
-        expect(Routes.screenGameIntro).toBe('/screen/:id/game-intro');
-    });
-
     it('Routes.screenGetReady should return /screen/:id/get-ready', () => {
         expect(Routes.screenGetReady).toBe('/screen/:id/get-ready');
     });
@@ -199,10 +190,6 @@ describe('test Routes enum', () => {
 
     it('Routes.finished should return /finished', () => {
         expect(Routes.finished).toBe('/finished');
-    });
-
-    it('Routes.gameIntro should return /game-intro', () => {
-        expect(Routes.gameIntro).toBe('/game-intro');
     });
 
     it('Routes.chooseGame should return /choose-game', () => {

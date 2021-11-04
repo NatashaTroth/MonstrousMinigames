@@ -1,45 +1,33 @@
 /* eslint-disable simple-import-sort/imports */
-import * as React from 'react';
-import { History } from 'history';
+import * as React from "react";
+import { History } from "history";
 
-import Button from '../../../../../components/common/Button';
-import { StyledParticles } from '../../../../../components/common/Particles.sc';
-import { stoneParticlesConfig } from '../../../../../config/particlesConfig';
-import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
-import { Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
-import { GameContext } from '../../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../../contexts/PlayerContextProvider';
-import pebble from '../../../../../images/obstacles/stone/pebble.svg';
-import stone from '../../../../../images/obstacles/stone/stone.svg';
-import { handleCollectStone, handleImmediateThrow, handleThrow } from '../../gameState/handleStoneObstacle';
-import { ObstacleInstructions } from './ObstacleStyles.sc';
+import Button from "../../../../../components/common/Button";
+import { StyledParticles } from "../../../../../components/common/Particles.sc";
+import { ComponentToTest } from "../../../../../components/controller/Tutorial";
+import { stoneParticlesConfig } from "../../../../../config/particlesConfig";
+import { ControllerSocketContext } from "../../../../../contexts/ControllerSocketContextProvider";
+import { Game1Context } from "../../../../../contexts/game1/Game1ContextProvider";
+import { GameContext } from "../../../../../contexts/GameContextProvider";
+import { PlayerContext } from "../../../../../contexts/PlayerContextProvider";
+import pebble from "../../../../../images/obstacles/stone/pebble.svg";
+import stone from "../../../../../images/obstacles/stone/stone.svg";
 import {
-    PebbleContainer,
-    PlayerButtonContainer,
-    Ray1,
-    Ray10,
-    Ray2,
-    Ray3,
-    Ray4,
-    Ray5,
-    Ray6,
-    Ray7,
-    Ray8,
-    Ray9,
-    RayBox,
-    StoneContainer,
-    StyledPebbleImage,
-    StyledStone,
-    StyledStoneImage,
-    Sun,
-    UserButtons,
-} from './Stone.sc';
+    handleCollectStone, handleImmediateThrow, handleThrow
+} from "../../gameState/handleStoneObstacle";
+import { ObstacleInstructions } from "./ObstacleStyles.sc";
+import {
+    PebbleContainer, PlayerButtonContainer, Ray1, Ray10, Ray2, Ray3, Ray4, Ray5, Ray6, Ray7, Ray8,
+    Ray9, RayBox, StoneContainer, StyledPebbleImage, StyledStone, StyledStoneImage, Sun, UserButtons
+} from "./Stone.sc";
 
 interface StoneProps {
     history: History;
+    tutorial?: boolean;
+    handleTutorialFinished?: (val: ComponentToTest) => void;
 }
 
-const Stone: React.FunctionComponent<StoneProps> = ({ history }) => {
+const Stone: React.FunctionComponent<StoneProps> = ({ history, tutorial, handleTutorialFinished }) => {
     const searchParams = new URLSearchParams(history.location.search);
     const limit = 10;
     const [counter, setCounter] = React.useState(searchParams.get('choosePlayer') ? limit + 1 : 0);
@@ -72,6 +60,12 @@ const Stone: React.FunctionComponent<StoneProps> = ({ history }) => {
             setCounter(counter + 1);
         }
     }
+
+    React.useEffect(() => {
+        if (counter === limit && tutorial) {
+            handleTutorialFinished?.('windmill');
+        }
+    }, [counter]);
 
     const handleCollected = () => {
         if (obstacle) {

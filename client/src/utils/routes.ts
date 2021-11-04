@@ -4,6 +4,7 @@ export enum Routes {
     // Routes for router
     credits = '/credits',
     settings = '/settings',
+    controllerTutorial = '/controller/:id/tutorial',
     controllerChooseCharacter = '/controller/:id/choose-character',
     controllerLobby = '/controller/:id/lobby',
     controllerGame1 = '/controller/:id/game1',
@@ -21,7 +22,6 @@ export enum Routes {
 
     screenLobby = '/screen/:id/lobby',
     screenChooseGame = '/screen/:id/choose-game',
-    screenGameIntro = '/screen/:id/game-intro',
     screenGetReady = '/screen/:id/get-ready',
     screenGame1 = '/screen/:id/game1',
     screenGame2 = '/screen/:id/game2',
@@ -36,12 +36,12 @@ export enum Routes {
     spider = '/spider',
     trash = '/trash',
     stone = '/stone',
+    tutorial = '/tutorial',
     game1 = '/game1',
     game2 = '/game2',
     game3 = '/game3',
     dead = '/dead',
     finished = '/finished',
-    gameIntro = '/game-intro',
     chooseGame = '/choose-game',
     getReady = '/get-ready',
     stunned = '/stunned',
@@ -58,6 +58,9 @@ export const controllerPlayerDeadRoute = (roomId: undefined | string) => `${Rout
 
 export const controllerFinishedRoute = (roomId: undefined | string) =>
     `${Routes.controller}/${roomId}${Routes.finished}`;
+
+export const controllerTutorialRoute = (roomId: undefined | string) =>
+    `${Routes.controller}/${roomId}${Routes.tutorial}`;
 
 export const controllerGame1Route = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.game1}`;
 
@@ -83,8 +86,6 @@ export const controllerObstacleRoute = (roomId: undefined | string, obstacle: Ob
 
 export const controllerWindmillRoute = (roomId: undefined | string) =>
     `${Routes.controller}/${roomId}${Routes.windmill}`;
-
-export const screenGameIntroRoute = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.gameIntro}`;
 
 export const screenGetReadyRoute = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.getReady}`;
 

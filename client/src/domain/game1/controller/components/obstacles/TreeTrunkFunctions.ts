@@ -1,3 +1,5 @@
+import { ComponentToTest } from '../../../../../components/controller/Tutorial';
+import { ObstacleTypes } from '../../../../../utils/constants';
 import { Coordinates, Orientation, TouchStart } from './TreeTrunk';
 
 export const isInContainer = (touches: TouchStart, coordinates: Coordinates) =>
@@ -41,11 +43,13 @@ interface HandleTouchEnd extends HandleTouchEvent {
     progress: number;
     orientationOptions: Orientation[];
     trunksToFinish: number;
+    tutorial?: boolean;
     solveObstacle: () => void;
     setProgress: (val: number) => void;
     setOrientation: (orientation: Orientation) => void;
     setTouchStart: (val: undefined | TouchStart) => void;
     setParticles: (val: boolean) => void;
+    handleTutorialFinished?: (val: ComponentToTest) => void;
 }
 
 export function handleTouchEnd(props: HandleTouchEnd) {
@@ -64,6 +68,8 @@ export function handleTouchEnd(props: HandleTouchEnd) {
         trunksToFinish,
         setTouchStart,
         setParticles,
+        tutorial,
+        handleTutorialFinished,
     } = props;
 
     e.preventDefault();
@@ -78,7 +84,11 @@ export function handleTouchEnd(props: HandleTouchEnd) {
                 (orientation === 'horizontal' && endX >= touchStart.clientX + distance))
         ) {
             if (trunksToFinish - 1 === progress) {
-                solveObstacle();
+                if (tutorial) {
+                    handleTutorialFinished?.(ObstacleTypes.spider);
+                } else {
+                    solveObstacle();
+                }
             } else {
                 setProgress(progress + 1);
                 newTrunk(orientationOptions, setOrientation);
