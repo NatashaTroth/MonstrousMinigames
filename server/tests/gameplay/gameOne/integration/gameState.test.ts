@@ -7,7 +7,7 @@ import { leaderboard, roomId, users } from '../../mockData';
 import {
     clearTimersAndIntervals, completeNextObstacle, finishGame, finishPlayer,
     startGameAndAdvanceCountdown
-} from './gameOneHelperFunctions';
+} from '../gameOneHelperFunctions';
 
 let gameOne: GameOne;
 

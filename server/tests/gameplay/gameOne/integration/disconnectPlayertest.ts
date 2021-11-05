@@ -13,7 +13,7 @@ import { leaderboard, roomId, users } from '../../mockData';
 import {
     clearTimersAndIntervals, completeNextObstacle, finishPlayer, startAndFinishGameDifferentTimes,
     startGameAndAdvanceCountdown
-} from './gameOneHelperFunctions';
+} from '../gameOneHelperFunctions';
 
 // const TRACK_LENGTH = 500;
 

@@ -8,7 +8,7 @@ import {
     clearTimersAndIntervals, completeNextObstacle, completePlayersObstacles, finishPlayer,
     getGameFinishedDataDifferentTimes, goToNextUnsolvableObstacle, startAndFinishGameDifferentTimes,
     startGameAndAdvanceCountdown
-} from './gameOneHelperFunctions';
+} from '../gameOneHelperFunctions';
 
 const TRACK_LENGTH = 5000; // has to be bigger than initial player position
 

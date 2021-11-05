@@ -6,7 +6,7 @@ import { leaderboard, roomId } from '../../mockData';
 import {
     advanceCountdown, clearTimersAndIntervals, finishPlayer, releaseThread, releaseThreadN,
     startGameAndAdvanceCountdown
-} from './gameOneHelperFunctions';
+} from '../gameOneHelperFunctions';
 
 let gameOne: GameOne;
 // let gameEventEmitter: GameOneEventEmitter;

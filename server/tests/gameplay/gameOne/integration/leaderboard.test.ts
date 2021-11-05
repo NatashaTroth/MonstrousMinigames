@@ -10,7 +10,7 @@ import {
 import { GameType } from '../../../../src/gameplay/leaderboard/enums/GameType';
 import Leaderboard from '../../../../src/gameplay/leaderboard/Leaderboard';
 import { roomId } from '../../mockData';
-import { clearTimersAndIntervals, startAndFinishGame } from './gameOneHelperFunctions';
+import { clearTimersAndIntervals, startAndFinishGame } from '../gameOneHelperFunctions';
 
 let gameOne: GameOne;
 

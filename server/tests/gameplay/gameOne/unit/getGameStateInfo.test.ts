@@ -2,13 +2,11 @@ import 'reflect-metadata';
 
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
+import * as InitialGameParameters from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import { GameStateInfo } from '../../../../src/gameplay/gameOne/interfaces';
 import { leaderboard, roomId, users } from '../../mockData';
-import { clearTimersAndIntervals } from './gameOneHelperFunctions';
+import { clearTimersAndIntervals } from '../gameOneHelperFunctions';
 
-const TRACK_LENGTH = 5000; // has to be bigger than initial player position
-const NUMBER_OF_OBSTACLES = 4;
-const NUMBER_OF_STONES = 2;
 let gameOne: GameOne;
 let gameStateInfo: GameStateInfo;
 
@@ -16,7 +14,12 @@ describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         gameOne = new GameOne(roomId, leaderboard);
-        gameOne.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, NUMBER_OF_STONES);
+        gameOne.createNewGame(
+            users,
+            InitialGameParameters.TRACK_LENGTH,
+            InitialGameParameters.NUMBER_OBSTACLES,
+            InitialGameParameters.NUMBER_STONES
+        );
         gameStateInfo = gameOne.getGameStateInfo();
     });
 
@@ -70,7 +73,9 @@ describe('Get Obstacle Positions test', () => {
     });
 
     it('returns player with correct number of obstacles (all)', async () => {
-        expect(gameStateInfo.playersState[0].obstacles.length).toBe(NUMBER_OF_OBSTACLES + NUMBER_OF_STONES);
+        expect(gameStateInfo.playersState[0].obstacles.length).toBe(
+            InitialGameParameters.NUMBER_OBSTACLES + InitialGameParameters.NUMBER_STONES
+        );
     });
 
     it('returns chaser position', async () => {

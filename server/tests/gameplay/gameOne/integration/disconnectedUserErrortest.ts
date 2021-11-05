@@ -5,7 +5,7 @@ import { DisconnectedUserError } from '../../../../src/gameplay/customErrors';
 import { leaderboard, roomId } from '../../mockData';
 import {
     clearTimersAndIntervals, completeNextObstacle, startGameAndAdvanceCountdown
-} from './gameOneHelperFunctions';
+} from '../gameOneHelperFunctions';
 
 let gameOne: GameOne;
 

@@ -1,14 +1,12 @@
 import 'reflect-metadata';
 
 import { GameOne } from '../../../../src/gameplay';
+import * as InitialGameParameters from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import { Obstacle } from '../../../../src/gameplay/gameOne/interfaces';
 import { HashTable } from '../../../../src/gameplay/interfaces';
 import { leaderboard, roomId, users } from '../../mockData';
-import { clearTimersAndIntervals } from './gameOneHelperFunctions';
+import { clearTimersAndIntervals } from '../gameOneHelperFunctions';
 
-const TRACK_LENGTH = 5000; // has to be bigger than initial player position
-const NUMBER_OF_OBSTACLES = 4;
-const NUMBER_OF_STONES = 3;
 let gameOne: GameOne;
 let obstacles: HashTable<Array<Obstacle>>;
 
@@ -16,7 +14,12 @@ describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         gameOne = new GameOne(roomId, leaderboard);
-        gameOne.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, NUMBER_OF_STONES);
+        gameOne.createNewGame(
+            users,
+            InitialGameParameters.TRACK_LENGTH,
+            InitialGameParameters.NUMBER_OBSTACLES,
+            InitialGameParameters.NUMBER_STONES
+        );
         obstacles = gameOne.getObstaclePositions();
     });
     afterEach(async () => {
@@ -29,7 +32,9 @@ describe('Get Obstacle Positions test', () => {
     });
 
     it('should return the correct number of obstacles', async () => {
-        expect(obstacles['1'].length).toBe(NUMBER_OF_OBSTACLES + NUMBER_OF_STONES);
+        expect(obstacles['1'].length).toBe(
+            InitialGameParameters.NUMBER_OBSTACLES + InitialGameParameters.NUMBER_STONES
+        );
     });
 
     it('should contain the key obstacle positionX', async () => {

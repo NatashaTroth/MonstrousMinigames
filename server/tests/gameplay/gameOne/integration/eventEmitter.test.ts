@@ -20,7 +20,7 @@ import { leaderboard, roomId } from '../../mockData';
 import {
     clearTimersAndIntervals, finishGame, finishPlayer, goToNextUnsolvableObstacle,
     startGameAndAdvanceCountdown
-} from './gameOneHelperFunctions';
+} from '../gameOneHelperFunctions';
 
 let gameOne: GameOne;
 let gameEventEmitter: GameEventEmitter;

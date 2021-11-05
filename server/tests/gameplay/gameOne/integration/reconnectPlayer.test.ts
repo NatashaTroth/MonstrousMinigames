@@ -9,7 +9,7 @@ import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
 } from '../../../../src/gameplay/interfaces/GlobalEventMessages';
 import { leaderboard, roomId, users } from '../../mockData';
-import { finishPlayer } from './gameOneHelperFunctions';
+import { finishPlayer } from '../gameOneHelperFunctions';
 
 let gameOne: GameOne;
 let gameEventEmitter: GameEventEmitter;

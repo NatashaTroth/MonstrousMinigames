@@ -15,7 +15,7 @@ import { leaderboard, roomId } from '../../mockData';
 import {
     advanceCountdown, clearTimersAndIntervals, getToCreatedGameState, releaseThreadN,
     startGameAndAdvanceCountdown
-} from './gameOneHelperFunctions';
+} from '../gameOneHelperFunctions';
 
 let gameOne: GameOne;
 const dateNow = 1618665766156;

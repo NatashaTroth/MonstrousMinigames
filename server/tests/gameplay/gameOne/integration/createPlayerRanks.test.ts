@@ -5,7 +5,7 @@ import { leaderboard, roomId } from '../../mockData';
 import {
     clearTimersAndIntervals, finishGame, getGameFinishedDataDifferentTimes,
     getGameFinishedDataSameRanks, startGameAndAdvanceCountdown
-} from './gameOneHelperFunctions';
+} from '../gameOneHelperFunctions';
 
 // const TRACK_LENGTH = 5000;  // has to be bigger than initial player position
 
