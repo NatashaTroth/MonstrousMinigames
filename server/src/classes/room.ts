@@ -7,9 +7,10 @@ import {
 import { GameNames } from '../enums/gameNames';
 import { Globals } from '../enums/globals';
 import { ScreenStates } from '../enums/screenStates';
-import { CatchFoodGame, Game2 } from '../gameplay';
+import { GameOne, GameTwo } from '../gameplay';
 import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
 import Game from '../gameplay/Game';
+import GameThree from '../gameplay/gameThree/GameThree';
 // import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
 import Leaderboard from '../gameplay/leaderboard/Leaderboard';
 import { ScreenInfo } from '../interfaces/interfaces';
@@ -33,7 +34,7 @@ class Room {
         this.users = [];
         this.timestamp = Date.now();
         this.leaderboard = new Leaderboard(this.id);
-        this.game = game || new CatchFoodGame(this.id, this.leaderboard);
+        this.game = game || new GameOne(this.id, this.leaderboard);
         this.game.leaderboard = this.leaderboard;
         this.state = RoomStates.OPEN;
         this.screens = [];
@@ -128,10 +129,13 @@ class Room {
     public setGame(gameName: string): void {
         switch (gameName) {
             case GameNames.GAME1:
-                this.game = new CatchFoodGame(this.id, this.leaderboard);
+                this.game = new GameOne(this.id, this.leaderboard);
                 break;
             case GameNames.GAME2:
-                this.game = new Game2(this.id, this.leaderboard);
+                this.game = new GameTwo(this.id, this.leaderboard);
+                break;
+            case GameNames.GAME3:
+                this.game = new GameThree(this.id, this.leaderboard);
                 break;
         }
     }

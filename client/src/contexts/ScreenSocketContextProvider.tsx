@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { handleSetSocket } from '../domain/screen/socket/handleSetSocket';
-import { handleSocketConnection } from '../domain/screen/socket/handleSocketConnection';
+import { handleSetSocket } from '../domain/socket/screen/handleSetSocket';
+import { handleSocketConnection } from '../domain/socket/screen/handleSocketConnection';
 import { Socket } from '../domain/socket/Socket';
 import { GameState } from '../utils/constants';
 import { GameContext } from './GameContextProvider';
@@ -76,6 +76,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setPlayerRanks,
         setScreenAdmin,
         setScreenState,
+        setChosenGame,
     } = React.useContext(GameContext);
 
     const content = {
@@ -94,6 +95,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     setPlayerRanks,
                     setScreenAdmin,
                     setScreenState,
+                    setChosenGame,
                     history,
                 },
                 route
@@ -111,6 +113,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 setPlayerRanks,
                 setScreenAdmin,
                 setScreenState,
+                setChosenGame,
                 history,
             });
         },

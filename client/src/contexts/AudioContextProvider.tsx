@@ -131,12 +131,10 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     };
 
     const changeVolume = (value: number) => {
-        // lobbyMusic.volume = value;
-        // finishedMusic.volume = value;
         allAudio.forEach(audio => {
             audio.volume = value;
         });
-        woodSounds.volume = Math.min(woodSounds.volume + 0.3, 1); //TODO improve
+        woodSounds.volume = Math.min(woodSounds.volume + 0.3, 1);
         campfireSounds.volume = Math.min(woodSounds.volume + 0.15, 1);
         owlSounds.volume = Math.min(woodSounds.volume + 0.15, 1);
         setVolume(value);
@@ -191,8 +189,6 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     };
 
     const pauseLobbyMusic = async () => {
-        // lobbyMusic.pause();
-        // setPlaying(false);
         pauseLobbyMusicAndSfx();
         if (volume > 0) muteVolumeEverywhere();
     };
@@ -200,7 +196,6 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
     const pauseLobbyMusicAndSfx = () => {
         lobbyMusicAndSfx.forEach(audio => {
             audio.pause();
-            // audio.loop = true;
         });
         owlSounds.pause();
         clearTimeout(owlSoundsTimeout);

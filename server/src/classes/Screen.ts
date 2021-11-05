@@ -1,9 +1,10 @@
 import { Namespace, Socket } from 'socket.io';
-import { GameNames } from '../enums/gameNames';
 
 import { MessageTypes } from '../enums/messageTypes';
-import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
 import Game from '../gameplay/Game';
+import { GameOneMsgType } from '../gameplay/gameOne/enums';
+// import { GameThreeMessageTypes } from '../gameplay/gameThree/enums/GameThreeMessageTypes';
+// import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
 import { IMessage } from '../interfaces/messages';
 import RoomService from '../services/roomService';
 import Room from './room';
@@ -30,22 +31,16 @@ class Screen {
             this.room.addScreen(this.socket.id);
             this.socket.join(this.room.id);
             console.info(this.room.id + ' | Screen connected | ' + this.socket.id);
-            this.room.resetGame().then(() => {
-                this.emitter.sendScreenState(this.screenNamespace, this.room?.getScreenState());
-            });
+            this.emitter.sendScreenState(this.screenNamespace, this.room?.getScreenState());
 
             this.emitter.sendConnectedUsers([this.screenNamespace], this.room);
-            if (this.room.isAdminScreen(this.socket.id)) {
-                this.emitter.sendScreenAdmin(this.screenNamespace, this.socket.id, this.room.isAdminScreen(this.socket.id));
-            }
-            if (this.room?.isAdminScreen(this.socket.id)) {
-                this.emitter.sendScreenState(this.socket, this.room?.getScreenState());
-            }
+            this.emitter.sendScreenAdmin(this.screenNamespace, this.socket.id, this.room.isAdminScreen(this.socket.id));
+
             this.socket.on('disconnect', this.onDisconnect.bind(this));
             this.socket.on('message', this.onMessage.bind(this));
         } catch (e: any) {
             this.emitter.sendErrorMessage(this.socket, e);
-            console.error(this.roomId + ' | ' + e.name);
+            console.error(this.roomId + ' | Screen Error 1 | ' + e.name);
         }
     }
 
@@ -68,38 +63,26 @@ class Screen {
     private onMessage(message: IMessage) {
         try {
             switch (message.type) {
-                case CatchFoodMsgType.PHASER_GAME_LOADED:
-                    this.room?.setScreenPhaserGameReady(this.socket.id, true);
-                    if (this.room && !this.room?.firstPhaserScreenLoaded) {
-                        this.room.firstPhaserScreenLoaded = true;
-                        this.room.allScreensLoadedTimeout = setTimeout(() => {
-                            this.trySendAllScreensPhaserGameLoaded(true);
-                            ///TODO natasha - send timedout to other screens
-                        }, 10000);
-                    }
+                case MessageTypes.CHOOSE_GAME:
+                    if (this.room?.isAdminScreen(this.socket.id) && message.game) {
+                        console.info(this.room.id + ' | Choose Game' + ' | ' + message.game);
+                        //todo error handling
+                        this.room?.setGame(message.game);
 
-                    if (this.room?.allPhaserGamesReady()) {
-                        this.trySendAllScreensPhaserGameLoaded();
-                    }
-                    break;
-                case CatchFoodMsgType.START_PHASER_GAME:
-                    this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!);
-                    break;
-                case CatchFoodMsgType.CREATE:
-                    if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
-                        this.room.setGame(GameNames.GAME2);
-                        this.room.createNewGame();
+                        this.emitter.sendGameSet(
+                            [this.controllerNamespace, this.screenNamespace],
+                            this.room,
+                            message.game
+                        );
                     }
                     break;
                 case MessageTypes.START:
                     if (this.room?.isCreated() && this.room.isAdminScreen(this.socket.id)) {
-                        // this.room.createNewGame();
                         this.room.startGame();
-                        // this.emitter.sendGameState(this.screenNamespace, this.room);
 
                         this.room.game.addListener(Game.EVT_FRAME_READY, (game: Game) => {
-                            if (this.room?.isPlaying()) {
-                                this.emitter.sendGameState(this.screenNamespace, this.room, true);
+                            if (this.room?.isPlaying() && this.room?.game.sendGameStateUpdates) {
+                                this.emitter.sendGameState(this.screenNamespace, this.room, false);
                             }
                         });
                     }
@@ -147,12 +130,40 @@ class Screen {
                         this.emitter.sendScreenState(this.screenNamespace, this.room?.getScreenState());
                     }
                     break;
+                case MessageTypes.CREATE:
+                    if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
+                        this.room.createNewGame();
+                    }
+                    break;
+                // case GameThreeMessageTypes.CREATE:
+                //     if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
+                //         this.room.setGame(GameNames.GAME3);
+                //         this.room.createNewGame();
+                //     }
+                case GameOneMsgType.PHASER_GAME_LOADED:
+                    this.room?.setScreenPhaserGameReady(this.socket.id, true);
+                    if (this.room && !this.room?.firstPhaserScreenLoaded) {
+                        this.room.firstPhaserScreenLoaded = true;
+                        this.room.allScreensLoadedTimeout = setTimeout(() => {
+                            this.trySendAllScreensPhaserGameLoaded(true);
+                            ///TODO natasha - send timedout to other screens
+                        }, 10000);
+                    }
+
+                    if (this.room?.allPhaserGamesReady()) {
+                        this.trySendAllScreensPhaserGameLoaded();
+                    }
+                    break;
+                case GameOneMsgType.START_PHASER_GAME:
+                    this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!);
+                    break;
                 default:
                     console.info(message);
             }
         } catch (e: any) {
             this.emitter.sendErrorMessage(this.socket, e);
-            console.error(this.roomId + ' | ' + e.name);
+            console.error(this.roomId + ' | Screen Error 2 |' + e.name);
+            console.log(e);
         }
     }
     private onDisconnect() {

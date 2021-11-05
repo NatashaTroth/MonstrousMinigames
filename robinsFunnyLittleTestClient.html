@@ -23,14 +23,31 @@
         <br />
         <br />
 
+        <input name="gameName" value='game1' id="gameName" />
+        <label for="gameName">gameName</label>
+        <button onclick="input('chooseGame')">chooseGame</button>
+
+        <br />
+        <br />
+
         <button onclick="input('start')">START</button>
         <button onclick="input('backToLobby')">BACK TO LOBBY</button>
         <button onclick="input('userReady')">READY</button>
 
         <br />
+        <br />
+
+        <button onclick="input('createGame')">createGame</button>
+
+        <br />
         <button onclick="input('move')">MOVE</button>
         <button onclick="input('obstacleSolved')">SOLVE OBSTACLE</button>
         <br />
+
+        <button onclick="input('game2/move')">game2/move</button>
+
+        <br />
+
         <button onclick="input('stop')">STOP</button>
         <button onclick="input('pause')">PAUSE/RESUME</button>
         <br />
@@ -65,6 +82,23 @@
                 ssocket.emit('message', {
                     type: 'startGame',
                 });
+            if (type == 'createGame')
+            ssocket.emit('message', {
+                type: 'createGame',
+            });
+
+            if (type == 'chooseGame')
+            ssocket.emit('message', {
+                type: 'chooseGame',
+                game: document.getElementById('gameName').value,
+            });
+
+            if (type == 'game2/move')
+            socket.emit('message', {
+                type: 'game2/move',
+                userId: document.getElementById('userId').value,
+                direction: 'E',
+            });
             if (type == 'move')
                 socket.emit('message', {
                     type: 'game1/runForward',
@@ -179,6 +213,7 @@
 
                 if (msg.type == 'userInit') {
                     userId = msg.userId;
+                    document.getElementById('userId').value = msg.userId;
                 }
             }
 

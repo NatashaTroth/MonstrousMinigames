@@ -1,5 +1,5 @@
+import { ScreenStates } from '../../config/screenStates';
 import { MessageTypes } from '../../utils/constants';
-import { ScreenStates } from '../../utils/screenStates';
 import { ScreenStateMessage, screenStateTypeGuard } from './screenState';
 
 describe('paused TypeGuard', () => {

@@ -34,23 +34,31 @@ export enum MessageTypes {
     userReady = 'userReady',
     screenState = 'screenState',
 
+    gameHasStarted = 'gameHasStarted',
     gameHasFinished = 'gameHasFinished',
     gameHasReset = 'gameHasReset',
     gameHasStopped = 'gameHasStopped',
     gameHasPaused = 'gameHasPaused',
     gameHasResumed = 'gameHasResumed',
 
+    chooseGame = 'chooseGame',
+    gameSet = 'gameSet',
+    createGame = 'createGame',
+
     pauseResume = 'pauseResume',
     startGame = 'startGame',
     stopGame = 'stopGame',
 
     error = 'error',
+}
 
+export enum MessageTypesGame1 {
     runForward = 'game1/runForward',
     obstacle = 'game1/obstacle', //obstacle reached
+    obstacleSkipped = 'game1/obstacleSkipped',
+    obstacleWillBeSolved = 'game1/obstacleWillBeSolved',
     obstacleSolved = 'game1/obstacleSolved',
     playerFinished = 'game1/playerFinished',
-    started = 'game1/hasStarted',
     phaserLoaded = 'game1/phaserGameLoaded',
     phaserLoadingTimedOut = 'game1/phaserLoadingTimedOut',
     allScreensPhaserGameLoaded = 'game1/allScreensPhaserGameLoaded',
@@ -61,15 +69,24 @@ export enum MessageTypes {
     playerStunned = 'game1/playerStunned',
     playerUnstunned = 'game1/playerUnstunned',
     stunPlayer = 'game1/stunPlayer',
-    createGame = 'game1/create',
+    chasersPushed = 'game1/chasersPushed',
 
     pushChasers = 'game1/chasersPushed',
     exceededNumberOfChaserPushes = 'game1/playerHasExceededMaxNumberChaserPushes',
     approachingSolvableObstacle = 'game1/approachingSolvableObstacle',
+    approachingSolvableObstacleOnce = 'game1/approachingSolvableObstacleOnce',
     solveObstacle = 'game1/solveObstacle',
+    stunnablePlayers = 'game1/stunnablePlayers',
+}
+
+export const enum MessageTypesGame3 {
+    newPhotoTopic = 'game3/newPhotoTopic',
+    initialGameState = 'game3/initialGameState',
+    photo = 'game3/photo',
 }
 
 export const localDevelopment = false; //the one in constants.ts on the server
 export const designDevelopment = false; //so that phaser game doesn't start, but loads
+export const stunnedAnimation = false; //renders stunned animation every so often
 
 export const localBackend = 'http://localhost:5000/';

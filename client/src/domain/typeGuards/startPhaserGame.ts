@@ -1,9 +1,9 @@
-import { MessageTypes } from '../../utils/constants';
+import { MessageTypesGame1 } from '../../utils/constants';
 import { MessageData } from './MessageData';
 
 export interface StartPhaserGameMessage {
-    type: MessageTypes.startPhaserGame;
+    type: MessageTypesGame1.startPhaserGame;
 }
 
 export const startPhaserGameTypeGuard = (data: MessageData): data is StartPhaserGameMessage =>
-    (data as StartPhaserGameMessage).type === MessageTypes.startPhaserGame;
+    (data as StartPhaserGameMessage).type === MessageTypesGame1.startPhaserGame;

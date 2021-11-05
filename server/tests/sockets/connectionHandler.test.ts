@@ -1,19 +1,20 @@
 import 'reflect-metadata';
+
 import dotenv from 'dotenv';
 import express from 'express';
 import client from 'socket.io-client';
 import { Server as HttpServer } from 'http';
 
+import GameEventEmitter from '../../src/classes/GameEventEmitter';
+import { GlobalEventMessageEmitter } from '../../src/classes/GlobalEventMessageEmitter';
+import Server from '../../src/classes/Server';
 import SocketIOServer from '../../src/classes/SocketIOServer';
 import { GameAlreadyStartedError, InvalidRoomCodeError } from '../../src/customErrors/';
 import { MessageTypes } from '../../src/enums/messageTypes';
+import { GameOneEventMessageEmitter } from '../../src/gameplay/gameOne/GameOneEventMessageEmitter';
 import emitter from '../../src/helpers/emitter';
 import ConnectionHandler from '../../src/services/connectionHandler';
 import RoomService from '../../src/services/roomService';
-import Server from '../../src/classes/Server';
-import GameEventEmitter from '../../src/classes/GameEventEmitter';
-import { GlobalEventMessageEmitter } from '../../src/classes/GlobalEventMessageEmitter';
-import { CatchFoodGameEventMessageEmitter } from '../../src/gameplay/catchFood/CatchFoodGameEventMessageEmitter';
 
 dotenv.config({
     path: '.env',
@@ -45,13 +46,13 @@ describe('connectionHandler', () => {
             roomCode = rs.createRoom()?.id;
 
             ch = new ConnectionHandler(
-                    new SocketIOServer({
+                new SocketIOServer({
                     httpServer: server,
                     app: app,
                 } as Server),
                 rs,
                 gameEventEmitter,
-                [new GlobalEventMessageEmitter(gameEventEmitter), new CatchFoodGameEventMessageEmitter(gameEventEmitter)],
+                [new GlobalEventMessageEmitter(gameEventEmitter), new GameOneEventMessageEmitter(gameEventEmitter)]
             );
             ch.handle();
             done();
@@ -124,7 +125,7 @@ describe('connectionHandler', () => {
         controller.on('message', (msg: any) => {
             expect(msg.type).toEqual('error');
             expect(msg.name).toEqual(InvalidRoomCodeError.name);
-            expect(consoleSpy).toHaveBeenCalledWith(`${roomCode} | ${InvalidRoomCodeError.name}`);
+            expect(consoleSpy).toHaveBeenCalledWith(`${roomCode} | Controller Error 1 | ${InvalidRoomCodeError.name}`);
             done();
         });
     });
@@ -226,7 +227,9 @@ describe('connectionHandler', () => {
             expect(msg.type).toEqual('error');
             expect(msg.name).toEqual(GameAlreadyStartedError.name);
             expect(emitterSpy).toHaveBeenCalledTimes(1);
-            expect(consoleSpy).toHaveBeenCalledWith(`${roomCode} | ${GameAlreadyStartedError.name}`);
+            expect(consoleSpy).toHaveBeenCalledWith(
+                `${roomCode} | Controller Error 1 | ${GameAlreadyStartedError.name}`
+            );
             done();
         });
     });
@@ -247,7 +250,9 @@ describe('connectionHandler', () => {
         });
         controller.on('message', (msg: any) => {
             expect(emitterSpy).toHaveBeenCalledTimes(1);
-            expect(consoleSpy).toHaveBeenCalledWith(`${roomCode} | ${GameAlreadyStartedError.name}`);
+            expect(consoleSpy).toHaveBeenCalledWith(
+                `${roomCode} | Controller Error 1 | ${GameAlreadyStartedError.name}`
+            );
             done();
         });
     });

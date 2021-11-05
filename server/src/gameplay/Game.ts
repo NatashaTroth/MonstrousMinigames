@@ -21,6 +21,9 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     // ********** Public *****************************
     public gameState = GameState.Initialised;
     public players = new Map<string, TPlayer>();
+    public gameStateMessage: string;
+    public gameName = '';
+    public sendGameStateUpdates: boolean;
 
     constructor(
         public roomId: string,
@@ -29,10 +32,13 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
         protected maxNumberOfPlayers: number = Globals.MAX_PLAYER_NUMBER
     ) {
         super();
+        this.gameStateMessage = 'gameState';
+        this.sendGameStateUpdates = true;
     }
 
     createNewGame(users: User[]) {
         verifyGameState(this.gameState, [GameState.Initialised, GameState.Finished, GameState.Stopped]);
+        this.beforeCreateNewGame();
         if (users.length > this.maxNumberOfPlayers) {
             throw new MaxNumberUsersExceededError(
                 `Too many players. Max ${this.maxNumberOfPlayers} Players`,
@@ -147,6 +153,7 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     protected users: User[] = [];
     protected currentRank = 1;
 
+    protected abstract beforeCreateNewGame(): void;
     protected abstract mapUserToPlayer(user: User): TPlayer;
     protected abstract update(timeElapsed: number, timeElapsedSinceLastFrame: number): Promise<void> | void;
     protected abstract handleInput(message: IMessage): Promise<void> | void;

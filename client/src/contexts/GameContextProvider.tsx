@@ -1,10 +1,11 @@
 import * as React from 'react';
 
 import { defaultAvailableCharacters } from '../config/characters';
-import { handleSetGameFinished } from '../domain/controller/gameState/handleSetGameFinished';
-import { handleSetGameStarted } from '../domain/controller/gameState/handleSetGameStarted';
+import { GameNames } from '../config/games';
+import { ScreenStates } from '../config/screenStates';
+import { handleSetGameFinished } from '../domain/commonGameState/controller/handleSetGameFinished';
+import { handleSetGameStarted } from '../domain/commonGameState/controller/handleSetGameStarted';
 import { User } from '../domain/typeGuards/connectedUsers';
-import { ScreenStates } from '../utils/screenStates';
 import { PlayerRank } from './ScreenSocketContextProvider';
 
 export const defaultValue = {
@@ -43,8 +44,8 @@ export const defaultValue = {
     setHasPaused: () => {
         // do nothing
     },
-    gameChosen: false,
-    setGameChosen: () => {
+    chosenGame: undefined,
+    setChosenGame: () => {
         // do nothing
     },
     tutorial: false,
@@ -82,8 +83,8 @@ interface GameContextProps {
     setPlayerRanks: (val: PlayerRank[]) => void;
     hasPaused: boolean;
     setHasPaused: (val: boolean) => void;
-    gameChosen: boolean;
-    setGameChosen: (val: boolean) => void;
+    chosenGame: undefined | GameNames;
+    setChosenGame: (val: undefined | GameNames) => void;
     tutorial: boolean;
     setTutorial: (val: boolean) => void;
     screenAdmin: boolean;
@@ -106,7 +107,7 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [countdownTime, setCountdownTime] = React.useState<number>(0);
     const [hasPaused, setHasPaused] = React.useState<boolean>(false);
     // TODO use data from socket
-    const [gameChosen, setGameChosen] = React.useState(false);
+    const [chosenGame, setChosenGame] = React.useState<undefined | GameNames>();
     const [tutorial, setTutorial] = React.useState(true);
     const [screenAdmin, setScreenAdmin] = React.useState<boolean>(false);
     const [screenState, setScreenState] = React.useState<string>(ScreenStates.lobby);
@@ -133,8 +134,8 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setPlayerRanks,
         hasPaused,
         setHasPaused,
-        gameChosen,
-        setGameChosen,
+        chosenGame,
+        setChosenGame,
         tutorial,
         setTutorial,
         screenAdmin,

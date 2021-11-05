@@ -1,11 +1,12 @@
 import * as React from 'react';
 
-import { handleSetSocket } from '../domain/controller/socket/handleSetSocket';
-import { handleSocketConnection } from '../domain/controller/socket/handleSocketConnection';
 import history from '../domain/history/history';
+import { handleSetSocket } from '../domain/socket/controller/handleSetSocket';
+import { handleSocketConnection } from '../domain/socket/controller/handleSocketConnection';
 import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
 import { Socket } from '../domain/socket/Socket';
-import addMovementListener from '../domain/user/addMovementListener';
+import addMovementListener from '../domain/user/game1/addMovementListener';
+import { Game1Context } from './game1/Game1ContextProvider';
 import { GameContext } from './GameContextProvider';
 import { PlayerContext } from './PlayerContextProvider';
 
@@ -39,18 +40,15 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
     const {
         setObstacle,
         setPlayerFinished,
-        setPlayerRank,
-        setPlayerNumber,
         playerFinished,
-        resetPlayer,
-        setName,
-        setUserId,
-        setReady,
-        setPlayerDead,
-        playerRank,
         setEarlySolvableObstacle,
         setExceededChaserPushes,
-    } = React.useContext(PlayerContext);
+        setPlayerDead,
+        setStunnablePlayers,
+    } = React.useContext(Game1Context);
+    const { setPlayerRank, setPlayerNumber, setName, setUserId, setReady, playerRank } = React.useContext(
+        PlayerContext
+    );
 
     const {
         setGameStarted,
@@ -60,6 +58,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setAvailableCharacters,
         setConnectedUsers,
         hasPaused,
+        setChosenGame,
     } = React.useContext(GameContext);
 
     React.useEffect(() => {
@@ -79,7 +78,6 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setAvailableCharacters,
         history,
         resetGame,
-        resetPlayer,
         setHasPaused,
         setUserId,
         setReady,
@@ -88,6 +86,8 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setEarlySolvableObstacle,
         playerRank,
         setExceededChaserPushes,
+        setStunnablePlayers,
+        setChosenGame,
     };
 
     const content = {
