@@ -9,6 +9,11 @@ let game: MockGameClass;
 describe('Verify game state', () => {
     beforeEach(async () => {
         game = new MockGameClass(roomId, leaderboard);
+        jest.useFakeTimers();
+    });
+
+    afterAll(async () => {
+        jest.clearAllTimers();
     });
 
     it('initialises state as initialised', async () => {

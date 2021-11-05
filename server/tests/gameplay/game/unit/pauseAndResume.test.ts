@@ -14,6 +14,11 @@ describe('Pause tests', () => {
         game = new MockGameClass(roomId, leaderboard);
         game.createNewGame(users);
         game.gameState = GameState.Started;
+        jest.useFakeTimers();
+    });
+
+    afterAll(async () => {
+        jest.clearAllTimers();
     });
 
     it('sets pause time to now', async () => {

@@ -10,6 +10,11 @@ describe('Rank failed user', () => {
         game = new MockGameClass(roomId, leaderboard);
         game.createNewGame(users);
         game.startGame();
+        jest.useFakeTimers();
+    });
+
+    afterAll(async () => {
+        jest.clearAllTimers();
     });
 
     it('should reduce current back rank by 1', async () => {
