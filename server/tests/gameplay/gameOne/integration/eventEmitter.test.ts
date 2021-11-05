@@ -5,10 +5,13 @@ import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
 import { ObstacleType } from '../../../../src/gameplay/gameOne/enums';
+import * as InitialGameParameters from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import { GameEvents } from '../../../../src/gameplay/gameOne/interfaces';
 import {
-    GAME_ONE_EVENT_MESSAGE__OBSTACLE_REACHED, GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_FINISHED,
-    GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD, GameOneEventMessage
+    GAME_ONE_EVENT_MESSAGE__CHASERS_WERE_PUSHED, GAME_ONE_EVENT_MESSAGE__OBSTACLE_REACHED,
+    GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
+    GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_FINISHED, GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD,
+    GameOneEventMessage
 } from '../../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED,
@@ -16,7 +19,7 @@ import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_STOPPED, GLOBAL_EVENT_MESSAGE__PLAYER_HAS_DISCONNECTED,
     GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED, GlobalEventMessage
 } from '../../../../src/gameplay/interfaces/GlobalEventMessages';
-import { leaderboard, roomId } from '../../mockData';
+import { leaderboard, roomId, users } from '../../mockData';
 import {
     clearTimersAndIntervals, finishGame, finishPlayer, goToNextUnsolvableObstacle,
     startGameAndAdvanceCountdown
@@ -527,7 +530,7 @@ describe('Game has finished events', () => {
 
 describe('Chaser event', () => {
     const dateNow = 1618665766156;
-    let chasersStartPosX = 0;
+
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
@@ -537,11 +540,41 @@ describe('Chaser event', () => {
         Date.now = jest.fn(() => dateNow);
         gameOne.chasersPositionX = 50;
         startGameAndAdvanceCountdown(gameOne);
-        chasersStartPosX = gameOne.chasersPositionX;
     });
 
     afterEach(() => {
         afterEachFunction();
+    });
+
+    it('should emit a ChasersWerePushed event when chasers are pushed', async () => {
+        let chasersEvent = false;
+
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
+            if (message.type === GAME_ONE_EVENT_MESSAGE__CHASERS_WERE_PUSHED) {
+                chasersEvent = true;
+            }
+        });
+        // gameOne['runForward']('1', chasersStartPosX);
+        gameOne.players.get(users[0].id)!.finished = true;
+        gameOne['pushChasers'](users[0].id);
+        gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
+        expect(chasersEvent).toBeTruthy();
+    });
+
+    it('should emit a PlayerHasExceededMaxNumberChaserPushes event when a player has exceeded their max number of chaser pushes', async () => {
+        let maxNrChasersEvent = false;
+
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
+            if (message.type === GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES) {
+                maxNrChasersEvent = true;
+            }
+        });
+        // gameOne['runForward']('1', chasersStartPosX);
+        gameOne.players.get(users[0].id)!.finished = true;
+        gameOne.players.get(users[0].id)!.chaserPushesUsed = InitialGameParameters.MAX_NUMBER_CHASER_PUSHES - 1;
+        gameOne['pushChasers'](users[0].id);
+        gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
+        expect(maxNrChasersEvent).toBeTruthy();
     });
 
     it.skip('should emit a PlayerIsDead event when a chaser catches a player', async () => {
@@ -557,32 +590,20 @@ describe('Chaser event', () => {
         expect(playerIsDeadEvent).toBeTruthy();
     });
 
-    it.skip('should emit a PlayerIsDead data when a chaser catches a player', async () => {
-        let eventData = {
-            roomId: '',
-            userId: '',
-            rank: 0,
-        };
-        const userId = '1';
-        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
-            if (message.type === GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD) {
-                eventData = message as any;
+    it('emit game finished event when all but one player caught', async () => {
+        let eventData = false;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+            if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+                eventData = true;
             }
         });
 
-        gameOne['runForward'](userId, chasersStartPosX + 20);
-        gameOne.players.get('2')!.positionX = chasersStartPosX + 2000;
-        gameOne.players.get('3')!.positionX = chasersStartPosX + 2000;
-        gameOne.players.get('4')!.positionX = chasersStartPosX + 2000;
-
-        // should catch the other three players
-        jest.advanceTimersByTime(2000); //move 1 every 100ms -> 2000/100 = 20. move 20 to get to player
-
-        gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
-        expect(eventData).toMatchObject({
-            roomId: gameOne.roomId,
-            userId: userId,
-            rank: 4,
+        users.forEach(user => {
+            gameOne.players.get(user.id)!.positionX = 0;
         });
+
+        gameOne['updateChasersPosition'](100);
+
+        expect(eventData).toBeTruthy();
     });
 });
