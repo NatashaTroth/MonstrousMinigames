@@ -30,6 +30,7 @@ describe('Leaderboard tests for Catch Food Game', () => {
 
     afterEach(async () => {
         clearTimersAndIntervals(gameOne);
+        jest.clearAllMocks();
     });
 
     it('should call addGameToHistory on leaderboard', async () => {

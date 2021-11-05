@@ -79,6 +79,7 @@ describe('Push Chasers', () => {
 
     afterEach(async () => {
         clearTimersAndIntervals(gameOne);
+        jest.clearAllMocks();
     });
 
     it('should not push chasers when pushing user has not finished', async () => {

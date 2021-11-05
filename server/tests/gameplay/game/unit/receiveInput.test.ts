@@ -9,6 +9,10 @@ describe('Receive Input', () => {
         game = new MockGameClass(roomId, leaderboard);
     });
 
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it('should return if the game state is not started', async () => {
         const handleInputSpy = jest.spyOn(MockGameClass.prototype as any, 'handleInput');
         game.receiveInput(mockMessage);

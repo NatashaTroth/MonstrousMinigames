@@ -22,6 +22,7 @@ describe('Start game', () => {
     });
     afterEach(async () => {
         clearTimersAndIntervals(gameOne);
+        jest.clearAllMocks();
     });
 
     it('starts players at initial positionX', async () => {
@@ -46,6 +47,7 @@ describe('Run forward', () => {
     });
     afterEach(() => {
         clearTimersAndIntervals(gameOne);
+        jest.clearAllMocks();
     });
 
     it('moves players forward when runForward is called', async () => {
@@ -76,6 +78,7 @@ describe('Obstacles reached', () => {
     });
     afterEach(() => {
         clearTimersAndIntervals(gameOne);
+        jest.clearAllMocks();
     });
 
     it('playerHasReachedObstacle is called and returns false', async () => {
@@ -197,6 +200,7 @@ describe('Player has finished race', () => {
     });
     afterEach(() => {
         clearTimersAndIntervals(gameOne);
+        jest.clearAllMocks();
     });
 
     it('should set a player as finished when they have reached the end of the race', async () => {
@@ -264,6 +268,7 @@ describe('Game finished', () => {
     });
     afterEach(() => {
         clearTimersAndIntervals(gameOne);
+        jest.clearAllMocks();
     });
 
     it('all players should be marked as finished', async () => {

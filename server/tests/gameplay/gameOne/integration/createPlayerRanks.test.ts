@@ -20,6 +20,7 @@ describe('createPlayerRanks test', () => {
 
     afterEach(async () => {
         clearTimersAndIntervals(gameOne);
+        jest.clearAllMocks();
     });
 
     it('createPlayerRanks is called when the game is finished', async () => {

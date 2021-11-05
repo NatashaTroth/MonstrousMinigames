@@ -25,7 +25,7 @@ import { ObstacleReachedInfoController } from './interfaces/GameEvents';
 import { IMessageObstacle } from './interfaces/messageObstacle';
 import { IMessageStunPlayer } from './interfaces/messageStunPlayer';
 
-let pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
+// const pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
 
 interface GameOneInterface extends IGameInterface<GameOnePlayer, GameStateInfo> {
     trackLength: number;
@@ -109,15 +109,14 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
                 if (player.positionX < this.trackLength) {
                     this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
                 }
-
-                // push chasers
-                if (pushChasers) {
-                    if (pushChasersPeriodicallyCounter >= 100) {
-                        pushChasersPeriodicallyCounter = 0;
-                        this.pushChasers(player.id!);
-                    }
-                    pushChasersPeriodicallyCounter++;
-                }
+                // // push chasers
+                // if (pushChasers) {
+                //     if (pushChasersPeriodicallyCounter >= 100) {
+                //         pushChasersPeriodicallyCounter = 0;
+                //         this.pushChasers(player.id!);
+                //     }
+                //     pushChasersPeriodicallyCounter++;
+                // }
             }
         }
     }
