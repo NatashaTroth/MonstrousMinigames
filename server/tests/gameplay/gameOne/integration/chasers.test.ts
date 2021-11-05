@@ -1,26 +1,16 @@
 import 'reflect-metadata';
 
-import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
-import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
 import * as InitialGameParameters from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
-import {
-    GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD, GameOneEventMessage
-} from '../../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
 import {
     advanceCountdown, clearTimersAndIntervals, releaseThreadN
 } from '../gameOneHelperFunctions';
 
 let gameOne: GameOne;
-let gameEventEmitter: GameEventEmitter;
 
 describe('Chasers', () => {
-    beforeAll(() => {
-        gameEventEmitter = DI.resolve(GameEventEmitter);
-    });
-
     beforeEach(() => {
         jest.useFakeTimers();
         gameOne = new GameOne(roomId, leaderboard);

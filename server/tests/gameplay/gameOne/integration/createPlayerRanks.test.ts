@@ -1,12 +1,7 @@
 import 'reflect-metadata';
 
-import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import { GameOne } from '../../../../src/gameplay';
-import * as InitialGameParameters from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
-import {
-    GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD, GameOneEventMessage
-} from '../../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
-import { leaderboard, roomId, users } from '../../mockData';
+import { leaderboard, roomId } from '../../mockData';
 import {
     clearTimersAndIntervals, finishGame, getGameFinishedDataDifferentTimes,
     getGameFinishedDataSameRanks, startGameAndAdvanceCountdown
