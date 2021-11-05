@@ -83,4 +83,10 @@ describe('Handle Input Method', () => {
         gameOne['handleInput'](message);
         expect(spy).toBeCalledTimes(1);
     });
+
+    it('should output the message to the console if none of the above message types', async () => {
+        console.info = jest.fn();
+        gameOne['handleInput']({ type: 'WRONG' });
+        expect(console.info).toHaveBeenCalledTimes(1);
+    });
 });
