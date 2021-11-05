@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import gameDemo from '../../images/ui/gameDemo.png';
+import { OrangeBase } from '../common/CommonStyles.sc';
 
 export const CloseButtonContainer = styled.div`
     width: 100%;
@@ -57,13 +58,10 @@ export const RightContainer = styled.div`
         width: 75%;
     }
 `;
-export const GamePreviewContainer = styled.div`
+export const GamePreviewContainer = styled(OrangeBase)`
     width: 100%;
     height: 90%;
-    background-color: ${({ theme }) => theme.palette.secondary.main};
     border-radius: 10px;
-    box-shadow: calc(${({ theme }) => theme.boxShadowDepth} * 1px) calc(${({ theme }) => theme.boxShadowDepth} * 1px) 0
-        ${({ theme }) => theme.palette.secondary.dark};
 `;
 
 export const SelectGameButtonContainer = styled.div`
