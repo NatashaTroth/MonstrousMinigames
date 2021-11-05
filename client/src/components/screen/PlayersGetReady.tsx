@@ -16,6 +16,7 @@ import history from '../../domain/history/history';
 import { Socket } from '../../domain/socket/Socket';
 import { MessageTypes } from '../../utils/constants';
 import { Routes } from '../../utils/routes';
+import { BackButtonContainer, FullScreenContainer } from '../common/FullScreenStyles.sc';
 import { getUserArray } from './Lobby';
 import {
     Character,
@@ -26,7 +27,6 @@ import {
     ConnectedUserStatus,
     Content,
     GetReadyBackground,
-    GetReadyContainer,
 } from './PlayersGetReady.sc';
 
 const PlayersGetReady: React.FC = () => {
@@ -59,7 +59,7 @@ const PlayersGetReady: React.FC = () => {
     }, [screenState]);
 
     return (
-        <GetReadyContainer>
+        <FullScreenContainer>
             <GetReadyBackground>
                 <Content>
                     <ConnectedUsers>
@@ -95,7 +95,10 @@ const PlayersGetReady: React.FC = () => {
                     )}
                 </Content>
             </GetReadyBackground>
-        </GetReadyContainer>
+            <BackButtonContainer>
+                <Button onClick={history.goBack}>Back</Button>
+            </BackButtonContainer>
+        </FullScreenContainer>
     );
 };
 

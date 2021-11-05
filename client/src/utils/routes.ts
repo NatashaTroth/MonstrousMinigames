@@ -1,4 +1,4 @@
-import { ObstacleTypes } from "./constants";
+import { ObstacleTypes } from './constants';
 
 export enum Routes {
     // Routes for router
@@ -21,6 +21,7 @@ export enum Routes {
     controllerVote = '/controller/:id/vote',
 
     screenLobby = '/screen/:id/lobby',
+    screenLeaderboard = '/screen/:id/leaderboard',
     screenChooseGame = '/screen/:id/choose-game',
     screenGetReady = '/screen/:id/get-ready',
     screenGame1 = '/screen/:id/game1',
@@ -31,6 +32,7 @@ export enum Routes {
     home = '/:id?',
     controller = '/controller',
     screen = '/screen',
+    leaderboard = '/leaderboard',
     lobby = '/lobby',
     treeStump = '/treestump',
     spider = '/spider',
@@ -94,6 +96,8 @@ export const screenChooseGameRoute = (roomId: undefined | string) => `${Routes.s
 export const screenFinishedRoute = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.finished}`;
 
 export const screenLobbyRoute = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.lobby}`;
+
+export const screenLeaderboardRoute = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.leaderboard}`;
 
 export const screenGame1Route = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.game1}`;
 
