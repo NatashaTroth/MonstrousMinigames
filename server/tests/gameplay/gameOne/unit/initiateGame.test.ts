@@ -5,6 +5,9 @@ import {
     ObstacleType, regularObstacleTypes
 } from '../../../../src/gameplay/gameOne/enums/ObstacleType';
 import * as InitialGameParameters from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
+import {
+    createObstacles
+} from '../../../../src/gameplay/gameOne/helperFunctions/initiatePlayerState';
 import { Obstacle } from '../../../../src/gameplay/gameOne/interfaces';
 import { leaderboard, roomId, users } from '../../mockData';
 
@@ -14,15 +17,6 @@ import { leaderboard, roomId, users } from '../../mockData';
 
 let gameOne: GameOne;
 const REGULAR_OBSTACLE_TYPE_KEYS = regularObstacleTypes;
-
-// maxNumberOfChaserPushes = InitialGameParameters.MAX_NUMBER_CHASER_PUSHES;
-// chaserPushAmount = InitialGameParameters.CHASER_PUSH_AMOUNT;
-// speed = InitialGameParameters.SPEED;
-// countdownTime = InitialGameParameters.COUNTDOWN_TIME; //should be 1 second more than client - TODO: make sure it is
-// cameraSpeed = InitialGameParameters.CAMERA_SPEED;
-// chasersSpeed = InitialGameParameters.CHASERS_SPEED;
-// stunnedTime = InitialGameParameters.STUNNED_TIME;
-// approachSolvableObstacleDistance = InitialGameParameters.APPROACH_SOLVABLE_OBSTACLE_DISTANCE;
 
 describe('Change and verify game state', () => {
     beforeEach(async () => {
@@ -44,6 +38,10 @@ describe('Change and verify game state', () => {
 
     it('initiates trackLength with correct length', async () => {
         expect(gameOne.trackLength).toBe(InitialGameParameters.TRACK_LENGTH);
+    });
+
+    it('throws an error if the track length is too short', async () => {
+        expect(() => createObstacles([{ type: ObstacleType.Spider }], 4, 3, 1)).toThrowError();
     });
 
     it('initiates correct number of obstacles', async () => {
