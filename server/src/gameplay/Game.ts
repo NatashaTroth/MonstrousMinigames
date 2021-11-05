@@ -189,10 +189,10 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     protected get gameTime() {
         switch (this.gameState) {
             case GameState.Started:
-                return Date.now() - this._gameStartedAt;
-            case GameState.Paused:
             case GameState.Stopped:
             case GameState.Finished:
+                return Date.now() - this._gameStartedAt;
+            case GameState.Paused:
                 return this._gamePausedAt - this._gameStartedAt;
             default:
                 return 0;

@@ -17,3 +17,5 @@ export const leaderboard = new Leaderboard(roomId);
 export const mockMessage: IMessage = {
     type: 'test',
 };
+
+export const dateNow = 1618665766156;
