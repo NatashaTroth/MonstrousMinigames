@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { MockGameClass } from './mockGameClass';
 
 export function clearTimersAndIntervals(game: MockGameClass) {

@@ -170,9 +170,8 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     }
     protected rankFailedUser(rankingMetric: number) {
         const currentRank = this._currentBackRank--;
-
         if (this._backRankDictionary.has(rankingMetric)) {
-            const previousRank = this._rankDictionary.get(rankingMetric)!;
+            const previousRank = this._backRankDictionary.get(rankingMetric)!;
             const newRank = previousRank - 1;
             this._backRankDictionary.set(rankingMetric, newRank);
             for (const player of this.players.values()) {

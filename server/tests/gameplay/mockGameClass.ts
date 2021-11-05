@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import User from '../../src/classes/user';
 import { GameState } from '../../src/gameplay/enums';
 import Game from '../../src/gameplay/Game';

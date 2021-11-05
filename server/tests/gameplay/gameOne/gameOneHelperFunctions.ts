@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import DI from '../../../src/di';
 import { GameOne } from '../../../src/gameplay';
