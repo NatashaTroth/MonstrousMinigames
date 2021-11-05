@@ -9,10 +9,9 @@ import { PlayerRank } from '../../../../src/gameplay/gameOne/interfaces';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
 } from '../../../../src/gameplay/interfaces/GlobalEventMessages';
-import { leaderboard, roomId, users } from '../../mockData';
+import { leaderboard, roomId } from '../../mockData';
 import {
-    clearTimersAndIntervals, completeNextObstacle, finishPlayer, startAndFinishGameDifferentTimes,
-    startGameAndAdvanceCountdown
+    clearTimersAndIntervals, completeNextObstacle, finishPlayer, startGameAndAdvanceCountdown
 } from '../gameOneHelperFunctions';
 
 // const TRACK_LENGTH = 500;
@@ -32,38 +31,6 @@ describe('Disconnect Player tests', () => {
 
     afterEach(async () => {
         clearTimersAndIntervals(gameOne);
-    });
-
-    it('disconnectPlayer should initialise player isActive as true', async () => {
-        startGameAndAdvanceCountdown(gameOne);
-        expect(gameOne.players.get('1')?.isActive).toBeTruthy();
-    });
-
-    it('disconnectPlayer should set player isActive to false', async () => {
-        startGameAndAdvanceCountdown(gameOne);
-        gameOne.disconnectPlayer('1');
-        expect(gameOne.players.get('1')?.isActive).toBeFalsy();
-    });
-
-    it('cannot disconnect player when game has stopped', async () => {
-        startGameAndAdvanceCountdown(gameOne);
-        gameOne.stopGameUserClosed();
-        try {
-            gameOne.disconnectPlayer('1');
-        } catch (e) {
-            //ignore for this test
-        }
-        expect(gameOne.players.get('1')?.isActive).toBeTruthy();
-    });
-
-    it('cannot disconnect player when game has finished', async () => {
-        await startAndFinishGameDifferentTimes(gameOne);
-        try {
-            gameOne.disconnectPlayer('1');
-        } catch (e) {
-            //ignore for this test
-        }
-        expect(gameOne.players.get('1')?.isActive).toBeTruthy();
     });
 
     it('cannot run forward when disconnected', async () => {
@@ -148,11 +115,5 @@ describe('Disconnect Player tests', () => {
         expect(eventData.playerRanks[1].rank).toBe(2);
         expect(eventData.playerRanks[2].rank).toBe(3);
         expect(eventData.playerRanks[3].rank).toBe(3);
-    });
-
-    it('should stop the game when all players have disconnected', async () => {
-        startGameAndAdvanceCountdown(gameOne);
-        users.forEach(user => gameOne.disconnectPlayer(user.id));
-        expect(gameOne.gameState).toBe(GameState.Stopped);
     });
 });
