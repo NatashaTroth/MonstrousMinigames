@@ -30,8 +30,8 @@ lint:client:
         - /^backend-.*$/
         - staging
 
-test:client:
-    stage: test
+test-integration:client:
+    stage: test-integration
     tags:
         - node
     script:
