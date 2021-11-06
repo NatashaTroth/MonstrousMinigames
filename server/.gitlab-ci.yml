@@ -29,7 +29,7 @@ lint:server:
         - /^frontend-.*$/
         - staging
 
-test-unit:server:
+testUnit:server:
     stage: test
     tags:
         - node
@@ -41,7 +41,7 @@ test-unit:server:
         - /^frontend-.*$/
         - staging
 
-test-integration:server:
+testIntegration:server:
     stage: test
     tags:
         - node
@@ -54,7 +54,7 @@ test-integration:server:
         - /^frontend-.*$/
         - staging
 
-test-other:server:
+testOther:server:
     stage: test
     tags:
         - node
