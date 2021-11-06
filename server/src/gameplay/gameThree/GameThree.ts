@@ -82,13 +82,9 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         //TODO
     }
 
-    private isThisGameState(gameState: GameThreeGameState): boolean {
-        return this.gameThreeGameState === gameState;
-    }
-
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
-        this.photoTopics = this.randomWordGenerator.generateRandomWords(this.numberRounds);
+        this.photoTopics = this.randomWordGenerator.generateRandomWords(this.numberRounds - 1);
     }
 
     startGame(): void {
