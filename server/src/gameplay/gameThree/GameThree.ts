@@ -29,7 +29,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     private randomWordGenerator = new RandomWordGenerator();
     private numberRounds = InitialParameters.NUMBER_ROUNDS;
     private gameThreeGameState = GameThreeGameState.BeforeStart;
-    private countdownTimeElapsed = 0;
+    private countdownTimeLeft = 0;
     private countdownRunning = false;
     private roundIdx = 0;
 
@@ -147,20 +147,20 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     //********************** Helper Functions **********************/
 
     private initiateCountdown(time: number) {
-        this.countdownTimeElapsed = time;
+        this.countdownTimeLeft = time;
         this.countdownRunning = true;
     }
 
     private reduceCountdown(time: number) {
-        this.countdownTimeElapsed -= time;
+        this.countdownTimeLeft -= time;
     }
 
     private stopCountdown() {
-        this.countdownTimeElapsed = 0;
+        this.countdownTimeLeft = 0;
         this.countdownRunning = false;
     }
     private countdownOver() {
-        return this.countdownTimeElapsed <= 0;
+        return this.countdownTimeLeft <= 0;
     }
 
     // *** Taking Photos ***
