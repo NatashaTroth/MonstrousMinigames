@@ -355,12 +355,13 @@ export class PhaserPlayerRenderer {
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
-        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
-        this.player.setDepth(depthDictionary.player);
-        this.player.setBounce(0.2);
-        this.player.setCollideWorldBounds(true);
-        this.player.setScale((0.66 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
-        this.player.y = this.player.y - this.player.displayHeight / 2; //set correct y pos according to player height
+        this.player = handleRenderPlayer(
+            this.scene,
+            this.numberPlayers,
+            this.laneHeightsPerNumberPlayers,
+            coordinates,
+            monsterSpriteSheetName
+        );
     }
 
     private initiateAnimation(spritesheetName: string, animationName: string, frames: CharacterAnimationFrames) {
@@ -384,6 +385,23 @@ export class PhaserPlayerRenderer {
     }
 }
 
+export function handleRenderPlayer(
+    scene: Scene,
+    numberPlayers: number,
+    laneHeightsPerNumberPlayers: number[],
+    coordinates: Coordinates,
+    monsterSpriteSheetName: string
+) {
+    const player = scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
+    player.setDepth(depthDictionary.player);
+    player.setBounce(0.2);
+    player.setCollideWorldBounds(true);
+    player.setScale((0.66 / numberPlayers) * laneHeightsPerNumberPlayers[numberPlayers - 1]);
+    player.y = player.y - player.displayHeight / 2; //set correct y pos according to player height
+
+    return player as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+}
+
 export function handleRenderWind(
     chaser: SpriteWithDynamicBody | undefined,
     scene: Scene,
@@ -398,9 +416,7 @@ export function handleRenderWind(
             repeat: 0,
         });
         const wind = scene.physics.add.sprite(chaser.x - 50, chaser.y + 30, 'windSpritesheet');
-        if (wind) {
-            handleWindAnimation(wind, numberPlayers, laneHeightsPerNumberPlayers);
-        }
+        handleWindAnimation(wind, numberPlayers, laneHeightsPerNumberPlayers);
         return wind as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     }
 }

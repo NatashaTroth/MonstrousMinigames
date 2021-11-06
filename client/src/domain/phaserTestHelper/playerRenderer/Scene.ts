@@ -7,7 +7,7 @@ export interface Scene {
     };
     physics: {
         add: {
-            sprite: (x: number, y: number, name: string) => SpriteWithDynamicBody | undefined;
+            sprite: (x: number, y: number, name: string, z?: number) => SpriteWithDynamicBody;
         };
     };
 }

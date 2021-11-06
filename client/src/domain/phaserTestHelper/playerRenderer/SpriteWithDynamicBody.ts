@@ -7,4 +7,6 @@ export interface SpriteWithDynamicBody {
     play: (val: string) => void;
     on: (val: string, method: () => void) => void;
     destroy: () => void;
+    setBounce: (val: number) => void;
+    setCollideWorldBounds: (val: boolean) => void;
 }
