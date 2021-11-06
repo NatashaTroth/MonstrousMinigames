@@ -29,14 +29,40 @@ lint:server:
         - /^frontend-.*$/
         - staging
 
-test:server:
+test-unit:server:
     stage: test
     tags:
         - node
     script:
         - cd server/
         - echo "Testing.."
-        - ./node_modules/.bin/jest ./
+        - npm run test:unit
+    except:
+        - /^frontend-.*$/
+        - staging
+
+test-integration:server:
+    stage: test
+    tags:
+        - node
+    script:
+        - cd server/
+        - echo "Testing.."
+        - npm run test:integration
+        # - ./node_modules/.bin/jest ./
+    except:
+        - /^frontend-.*$/
+        - staging
+
+test-other:server:
+    stage: test
+    tags:
+        - node
+    script:
+        - cd server/
+        - echo "Testing.."
+        - npm run test:other
+        # - ./node_modules/.bin/jest ./
     except:
         - /^frontend-.*$/
         - staging

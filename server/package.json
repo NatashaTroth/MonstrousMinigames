@@ -8,7 +8,10 @@
     },
     "scripts": {
         "test": "rm -rf dist/ && jest --watchAll",
-        "testGameplay": "jest --watchAll ./tests/gameplay",
+        "test:gameplay": "jest --watchAll ./tests/gameplay",
+        "test:unit": "jest --watchAll /unit/",
+        "test:integration": "jest --watchAll /integration/",
+        "test:other": "jest --watchAll --testPathIgnorePatterns /unit/ /integration/",
         "dev": "nodemon src/app.ts",
         "prettier": "prettier --write src/**/*.ts",
         "lint": "eslint \"**/*.ts\" --fix && npm run tsc && rm -rf dist/",
