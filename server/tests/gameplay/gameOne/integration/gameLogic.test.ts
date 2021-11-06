@@ -1,14 +1,14 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../src/gameplay';
-import { GameState } from '../../../src/gameplay/enums';
-import { ObstacleType } from '../../../src/gameplay/gameOne/enums';
-import { leaderboard, roomId } from '../mockData';
+import { GameOne } from '../../../../src/gameplay';
+import { GameState } from '../../../../src/gameplay/enums';
+import { ObstacleType } from '../../../../src/gameplay/gameOne/enums';
+import { leaderboard, roomId } from '../../mockData';
 import {
     clearTimersAndIntervals, completeNextObstacle, completePlayersObstacles, finishPlayer,
     getGameFinishedDataDifferentTimes, goToNextUnsolvableObstacle, startAndFinishGameDifferentTimes,
     startGameAndAdvanceCountdown
-} from './gameHelperFunctions';
+} from '../gameOneHelperFunctions';
 
 const TRACK_LENGTH = 5000; // has to be bigger than initial player position
 
@@ -22,6 +22,7 @@ describe('Start game', () => {
     });
     afterEach(async () => {
         clearTimersAndIntervals(gameOne);
+        jest.clearAllMocks();
     });
 
     it('starts players at initial positionX', async () => {
@@ -46,6 +47,7 @@ describe('Run forward', () => {
     });
     afterEach(() => {
         clearTimersAndIntervals(gameOne);
+        jest.clearAllMocks();
     });
 
     it('moves players forward when runForward is called', async () => {
@@ -76,6 +78,7 @@ describe('Obstacles reached', () => {
     });
     afterEach(() => {
         clearTimersAndIntervals(gameOne);
+        jest.clearAllMocks();
     });
 
     it('playerHasReachedObstacle is called and returns false', async () => {
@@ -197,6 +200,7 @@ describe('Player has finished race', () => {
     });
     afterEach(() => {
         clearTimersAndIntervals(gameOne);
+        jest.clearAllMocks();
     });
 
     it('should set a player as finished when they have reached the end of the race', async () => {
@@ -264,6 +268,7 @@ describe('Game finished', () => {
     });
     afterEach(() => {
         clearTimersAndIntervals(gameOne);
+        jest.clearAllMocks();
     });
 
     it('all players should be marked as finished', async () => {

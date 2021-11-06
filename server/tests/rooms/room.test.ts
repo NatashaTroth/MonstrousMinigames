@@ -7,7 +7,7 @@ import CannotStartEmptyGameError from '../../src/customErrors/CannotStartEmptyGa
 import { Globals } from '../../src/enums/globals';
 import { GameOne } from '../../src/gameplay';
 import { MaxNumberUsersExceededError } from '../../src/gameplay/customErrors';
-import { clearTimersAndIntervals } from '../gameplay/gameOne/gameHelperFunctions';
+import { clearTimersAndIntervals } from '../gameplay/gameOne/gameOneHelperFunctions';
 
 describe('Room ID', () => {
     it("creates a room with id 'ABCD'", () => {

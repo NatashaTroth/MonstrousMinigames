@@ -6,8 +6,8 @@ class GameThreePlayer extends Player {
     roundInfo: Photo[];
     // private totalPoints: number;
 
-    constructor(id: string, name: string) {
-        super(id, name);
+    constructor(id: string, name: string, characterNumber: number) {
+        super(id, name, characterNumber);
         this.roundInfo = new Array(InitialParameters.NUMBER_ROUNDS).fill({
             url: '',
             received: false,

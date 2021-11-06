@@ -58,7 +58,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     protected mapUserToPlayer(user: User): GameThreePlayer {
-        const player = new GameThreePlayer(user.id, user.name);
+        const player = new GameThreePlayer(user.id, user.name, user.characterNumber);
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {

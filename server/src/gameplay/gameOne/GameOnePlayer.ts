@@ -19,7 +19,7 @@ class GameOnePlayer extends Player implements PlayerState {
         public obstacles: Obstacle[],
         public characterNumber: number
     ) {
-        super(id, name);
+        super(id, name, characterNumber);
     }
 
     async update(timeElapsed: number, timeElapsedSinceLastFrame: number): Promise<void> {

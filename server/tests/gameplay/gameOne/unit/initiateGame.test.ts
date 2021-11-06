@@ -1,74 +1,101 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../src/gameplay';
-import { GameState } from '../../../src/gameplay/enums';
+import { GameOne } from '../../../../src/gameplay';
 import {
     ObstacleType, regularObstacleTypes
-} from '../../../src/gameplay/gameOne/enums/ObstacleType';
-import { Obstacle } from '../../../src/gameplay/gameOne/interfaces';
-import { leaderboard, roomId, users } from '../mockData';
-import { clearTimersAndIntervals } from './gameHelperFunctions';
+} from '../../../../src/gameplay/gameOne/enums/ObstacleType';
+import * as InitialGameParameters from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
+import {
+    createObstacles
+} from '../../../../src/gameplay/gameOne/helperFunctions/initiatePlayerState';
+import { Obstacle } from '../../../../src/gameplay/gameOne/interfaces';
+import { leaderboard, roomId, users } from '../../mockData';
 
-const TRACK_LENGTH = 5000;
-const NUMBER_OF_OBSTACLES = 4;
-const NUMBER_OF_STONES = 2;
+// import {
+//     numberOfObstacles, numberOfStones, TRACK_LENGTH, trackLength as InitialGameParameters
+// } from '../mockDataGameOne';
+
 let gameOne: GameOne;
-// const OBSTACLE_RANGE = 70;
 const REGULAR_OBSTACLE_TYPE_KEYS = regularObstacleTypes;
 
-describe('Initiate GameOne correctly', () => {
+describe('Change and verify game state', () => {
     beforeEach(async () => {
-        jest.useFakeTimers();
         gameOne = new GameOne(roomId, leaderboard);
-        gameOne.createNewGame(users, TRACK_LENGTH, NUMBER_OF_OBSTACLES, NUMBER_OF_STONES);
-    });
-    afterEach(async () => {
-        clearTimersAndIntervals(gameOne);
-    });
-
-    it('initiates players state with correct number of players', async () => {
-        expect(gameOne.players.size).toBe(users.length);
-    });
-
-    it('initiates trackLength with correct length', async () => {
-        expect(gameOne.trackLength).toBe(TRACK_LENGTH);
-    });
-
-    it('initiates roomId with correct room', async () => {
-        expect(gameOne.roomId).toBe(users[0].roomId);
+        gameOne.createNewGame(users);
     });
 
     it('initiates gameStartedTime with 0', async () => {
-        const gameOneInit = new GameOne(roomId, leaderboard);
-        expect(gameOneInit['_gameStartedAt']).toBe(0);
+        expect(gameOne['_gameStartedAt']).toBe(0);
+    });
+
+    it('initiates chasersPositionX with correct value', async () => {
+        expect(gameOne['chasersPositionX']).toBe(InitialGameParameters.CHASERS_POSITION_X);
+    });
+
+    it('initiates cameraPositionX with correct value', async () => {
+        expect(gameOne['cameraPositionX']).toBe(InitialGameParameters.CAMERA_POSITION_X);
+    });
+
+    it('initiates trackLength with correct length', async () => {
+        expect(gameOne.trackLength).toBe(InitialGameParameters.TRACK_LENGTH);
+    });
+
+    it('throws an error if the track length is too short', async () => {
+        expect(() => createObstacles([{ type: ObstacleType.Spider }], 4, 3, 1)).toThrowError();
     });
 
     it('initiates correct number of obstacles', async () => {
-        expect(gameOne.numberOfObstacles).toBe(NUMBER_OF_OBSTACLES);
+        expect(gameOne.numberOfObstacles).toBe(InitialGameParameters.NUMBER_OBSTACLES);
     });
 
-    it('initiates current rank as 1', async () => {
-        expect(gameOne['currentRank']).toBe(1);
+    it('initiates maxNumberOfChaserPushes with the correct value', async () => {
+        expect(gameOne.maxNumberOfChaserPushes).toBe(InitialGameParameters.MAX_NUMBER_CHASER_PUSHES);
     });
 
-    it('initiates current rank as 1', async () => {
-        expect(gameOne['currentRank']).toBe(1);
+    it('initiates chaserPushAmount with the correct value', async () => {
+        expect(gameOne.chaserPushAmount).toBe(InitialGameParameters.CHASER_PUSH_AMOUNT);
     });
 
-    it('initiates first player with the correct name', async () => {
-        expect(gameOne.players.get('1')!.name).toBe(users[0].name);
+    it('initiates speed with the correct value', async () => {
+        expect(gameOne.speed).toBe(InitialGameParameters.SPEED);
+    });
+
+    it('initiates countdownTime with the correct value', async () => {
+        expect(gameOne.countdownTime).toBe(InitialGameParameters.COUNTDOWN_TIME);
+    });
+
+    it('initiates cameraSpeed with the correct value', async () => {
+        expect(gameOne.cameraSpeed).toBe(InitialGameParameters.CAMERA_SPEED);
+    });
+
+    it('initiates chasersSpeed with the correct value', async () => {
+        expect(gameOne.chasersSpeed).toBe(InitialGameParameters.CHASERS_SPEED);
+    });
+
+    it('initiates stunnedTime with the correct value', async () => {
+        expect(gameOne.stunnedTime).toBe(InitialGameParameters.STUNNED_TIME);
+    });
+
+    it('initiates approachSolvableObstacleDistance with the correct value', async () => {
+        expect(gameOne.approachSolvableObstacleDistance).toBe(
+            InitialGameParameters.APPROACH_SOLVABLE_OBSTACLE_DISTANCE
+        );
+    });
+
+    it('initiates player with correct number of stones', () => {
+        // console.log(gameOne.players);
+        const stones: Array<Obstacle> = gameOne.players
+            .get('1')!
+            .obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
+        expect(stones.length).toBe(InitialGameParameters.NUMBER_STONES);
     });
 
     it('initiates player positionX with initial position', async () => {
         expect(gameOne.players.get('1')!.positionX).toBe(gameOne.initialPlayerPositionX);
     });
 
-    it('initiates player not at an obstacle', async () => {
+    it('initiates player not atObstacle as false', async () => {
         expect(gameOne.players.get('1')!.atObstacle).toBeFalsy();
-    });
-
-    it('initiates player as not finished', async () => {
-        expect(gameOne.players.get('1')!.finished).toBeFalsy();
     });
 
     it('initiates player as not dead', async () => {
@@ -79,22 +106,11 @@ describe('Initiate GameOne correctly', () => {
         expect(gameOne.players.get('1')!.stunned).toBeFalsy();
     });
 
-    it('initiates character number', async () => {
-        expect(gameOne.players.get('1')!.characterNumber).toBe(users[0].characterNumber);
-    });
-
     it('initiates player with correct number of obstacles', () => {
         const obstacles: Array<Obstacle> = gameOne.players
             .get('1')!
             .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
-        expect(obstacles.length).toBe(NUMBER_OF_OBSTACLES);
-    });
-
-    it('initiates player with correct number of stones', () => {
-        const stones: Array<Obstacle> = gameOne.players
-            .get('1')!
-            .obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
-        expect(stones.length).toBe(NUMBER_OF_STONES);
+        expect(obstacles.length).toBe(InitialGameParameters.NUMBER_OBSTACLES);
     });
 
     it('initiates player with stones not overlapping with other obstacles', () => {
@@ -105,20 +121,10 @@ describe('Initiate GameOne correctly', () => {
                 continue;
             }
             if (i > 0) {
-                // try {
                 expect(obstacles[i].positionX).toBeGreaterThan(obstacles[i - 1].positionX + 100);
-                // } catch (e: any) {
-                //     console.table(obstacles.map((obstacle, idx) => ({ ...obstacle, distanceToPrevious: idx > 0 ? obstacle.positionX - obstacles[idx - 1].positionX : obstacle.positionX })));
-                //     throw e;
-                // }
             }
             if (i < obstacles.length - 1) {
-                // try {
                 expect(obstacles[i].positionX).toBeLessThan(obstacles[i + 1].positionX - 100);
-                // } catch (e: any) {
-                //     console.table(obstacles.map((obstacle, idx) => ({ ...obstacle, distanceToNext: idx < obstacles.length - 1 ? obstacles[idx + 1].positionX - obstacle.positionX : TRACK_LENGTH - obstacle.positionX })));
-                //     throw e;
-                // }
             }
         }
     });
@@ -140,7 +146,9 @@ describe('Initiate GameOne correctly', () => {
     });
 
     it('initiates player with correct number of obstacles (all)', async () => {
-        expect(gameOne.players.get('1')!.obstacles.length).toBe(NUMBER_OF_OBSTACLES + NUMBER_OF_STONES);
+        expect(gameOne.players.get('1')!.obstacles.length).toBe(
+            InitialGameParameters.NUMBER_OBSTACLES + InitialGameParameters.NUMBER_STONES
+        );
     });
 
     function getObstacleRange(gameOne: GameOne): number {
@@ -213,9 +221,5 @@ describe('Initiate GameOne correctly', () => {
             .get('1')!
             .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
         expect(REGULAR_OBSTACLE_TYPE_KEYS).toContain(obstacles[3].type);
-    });
-
-    it('initiates gameState as Created', async () => {
-        expect(gameOne.gameState).toBe(GameState.Created);
     });
 });

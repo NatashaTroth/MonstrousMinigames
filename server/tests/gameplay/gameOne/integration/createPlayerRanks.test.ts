@@ -1,18 +1,18 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../src/gameplay';
-import { leaderboard, roomId } from '../mockData';
+import { GameOne } from '../../../../src/gameplay';
+import { leaderboard, roomId } from '../../mockData';
 import {
     clearTimersAndIntervals, finishGame, getGameFinishedDataDifferentTimes,
     getGameFinishedDataSameRanks, startGameAndAdvanceCountdown
-} from './gameHelperFunctions';
+} from '../gameOneHelperFunctions';
 
 // const TRACK_LENGTH = 5000;  // has to be bigger than initial player position
 
 let gameOne: GameOne;
 const dateNow = 1618665766156;
 
-describe('Game logic tests', () => {
+describe('createPlayerRanks test', () => {
     beforeEach(() => {
         gameOne = new GameOne(roomId, leaderboard);
         jest.useFakeTimers();
@@ -20,6 +20,7 @@ describe('Game logic tests', () => {
 
     afterEach(async () => {
         clearTimersAndIntervals(gameOne);
+        jest.clearAllMocks();
     });
 
     it('createPlayerRanks is called when the game is finished', async () => {

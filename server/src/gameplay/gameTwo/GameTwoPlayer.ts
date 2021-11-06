@@ -1,4 +1,4 @@
-import Player from "../Player";
+import Player from '../Player';
 
 class GameTwoPlayer extends Player {
     public direction: string;
@@ -8,10 +8,10 @@ class GameTwoPlayer extends Player {
         public posX: number,
         public posY: number,
         public killsLeft: number,
-        public characterNumber: number,
+        public characterNumber: number
     ) {
-        super(id, name);
-        this.direction = 'C'
+        super(id, name, characterNumber);
+        this.direction = 'C';
     }
 
     update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
@@ -36,6 +36,5 @@ class GameTwoPlayer extends Player {
     public setDirection(direction: string) {
         this.direction = direction;
     }
-
 }
 export default GameTwoPlayer;

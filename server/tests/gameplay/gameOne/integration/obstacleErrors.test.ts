@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../src/gameplay';
+import { GameOne } from '../../../../src/gameplay';
 import {
     NotAtObstacleError, WrongObstacleIdError
-} from '../../../src/gameplay/gameOne/customErrors';
-import { leaderboard, roomId } from '../mockData';
+} from '../../../../src/gameplay/gameOne/customErrors';
+import { leaderboard, roomId } from '../../mockData';
 import {
     clearTimersAndIntervals, goToNextUnsolvableObstacle, startGameAndAdvanceCountdown
-} from './gameHelperFunctions';
+} from '../gameOneHelperFunctions';
 
 let gameOne: GameOne;
 const USER_ID = '1';
@@ -34,7 +34,7 @@ describe('NotAtObstacleError handling tests', () => {
         }
     });
 
-    it('throws a NotAtObstacleError when trying complete an obstacle an the user is not at an obstacle', async () => {
+    it('throws a NotAtObstacleError when trying complete an obstacle and the user is not at an obstacle', async () => {
         expect(() => gameOne['playerHasCompletedObstacle'](USER_ID, OBSTACLE_ID_THAT_IS_NEXT)).toThrow(
             NotAtObstacleError
         );

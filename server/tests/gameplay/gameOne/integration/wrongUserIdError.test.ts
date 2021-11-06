@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../src/gameplay';
-import { WrongUserIdError } from '../../../src/gameplay/customErrors';
-import { leaderboard, roomId } from '../mockData';
-import { clearTimersAndIntervals, startGameAndAdvanceCountdown } from './gameHelperFunctions';
+import { GameOne } from '../../../../src/gameplay';
+import { WrongUserIdError } from '../../../../src/gameplay/customErrors';
+import { leaderboard, roomId } from '../../mockData';
+import { clearTimersAndIntervals, startGameAndAdvanceCountdown } from '../gameOneHelperFunctions';
 
 let gameOne: GameOne;
 const USER_ID_THAT_DOES_NOT_EXIST = '50';

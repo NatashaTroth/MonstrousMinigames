@@ -1,4 +1,5 @@
 import EventEmitter from 'events';
+
 import { IPlayerState } from './interfaces';
 
 abstract class Player extends EventEmitter implements IPlayerState {
@@ -6,7 +7,7 @@ abstract class Player extends EventEmitter implements IPlayerState {
     rank = 0;
     isActive = true;
 
-    constructor(public id: string, public name: string) {
+    constructor(public id: string, public name: string, public characterNumber: number) {
         super();
     }
 
