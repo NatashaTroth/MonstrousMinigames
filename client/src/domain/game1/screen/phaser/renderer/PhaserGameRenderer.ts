@@ -5,6 +5,8 @@ import Phaser from 'phaser';
 import { depthDictionary } from '../../../../../config/depthDictionary';
 import { designDevelopment } from '../../../../../utils/constants';
 import { getRandomInt } from '../../../../../utils/getRandomInt';
+import { GameObjectText } from '../../../../phaserTestHelper/GameObjects/Text';
+import { Scene } from '../../../../phaserTestHelper/playerRenderer/Scene';
 import MainScene from '../../components/MainScene';
 import * as colors from '../colors';
 import { gameLoadedWaitingMessages, gameLoadingMessages } from '../gameLoadingMessages';
@@ -35,29 +37,7 @@ export class PhaserGameRenderer {
     }
 
     renderCountdown(text: string) {
-        const fixedWidth = 800;
-        const fixedHeight = 200;
-        const x = this.scene.windowWidth / 2 - fixedWidth / 2;
-        const y = this.scene.windowHeight / 2 - fixedHeight / 2;
-
-        if (this.countdownText) {
-            this.countdownText.setText(text);
-        } else {
-            this.countdownText = this.scene.make.text({
-                x,
-                y,
-                text,
-                style: {
-                    ...countdownTextStyleProperties,
-                    fontSize: `${fixedHeight}px`,
-                    fixedWidth,
-                    fixedHeight,
-                },
-                add: true,
-            });
-            this.countdownText.scrollFactorX = 0;
-            this.countdownText.setDepth(depthDictionary.countdown);
-        }
+        handleRenderCountdown(this.scene, this.countdownText, text);
     }
 
     renderLoadingScreen() {
@@ -150,4 +130,32 @@ export class PhaserGameRenderer {
     destroyCountdown() {
         this.countdownText?.destroy();
     }
+}
+
+export function handleRenderCountdown(scene: Scene, countdownText: GameObjectText | undefined, text: string) {
+    const fixedWidth = 800;
+    const fixedHeight = 200;
+    const x = scene.windowWidth / 2 - fixedWidth / 2;
+    const y = scene.windowHeight / 2 - fixedHeight / 2;
+
+    if (countdownText) {
+        countdownText.setText(text);
+    } else {
+        countdownText = scene.make.text({
+            x,
+            y,
+            text,
+            style: {
+                ...countdownTextStyleProperties,
+                fontSize: `${fixedHeight}px`,
+                fixedWidth,
+                fixedHeight,
+            },
+            add: true,
+        });
+        countdownText.scrollFactorX = 0;
+        countdownText.setDepth(depthDictionary.countdown);
+    }
+
+    return countdownText;
 }

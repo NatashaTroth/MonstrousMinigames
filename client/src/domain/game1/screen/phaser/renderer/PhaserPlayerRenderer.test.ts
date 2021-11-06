@@ -14,6 +14,8 @@ describe('handleRenderWind', () => {
         setCollideWorldBounds: jest.fn(),
     };
     const scene = {
+        windowHeight: 100,
+        windowWidth: 100,
         anims: {
             create: jest.fn(),
             generateFrameNumbers: jest.fn(),
@@ -22,6 +24,9 @@ describe('handleRenderWind', () => {
             add: {
                 sprite: jest.fn(),
             },
+        },
+        make: {
+            text: jest.fn(),
         },
     };
 
@@ -70,6 +75,8 @@ describe('handleWindAnimation', () => {
 
 describe('handleRenderPlayer', () => {
     const scene = {
+        windowHeight: 100,
+        windowWidth: 100,
         anims: {
             create: jest.fn(),
             generateFrameNumbers: jest.fn(),
@@ -78,6 +85,9 @@ describe('handleRenderPlayer', () => {
             add: {
                 sprite: jest.fn(),
             },
+        },
+        make: {
+            text: jest.fn(),
         },
     };
     const numberPlayers = 2;
