@@ -9,6 +9,7 @@
     "scripts": {
         "test": "rm -rf dist/ && jest --watchAll",
         "testGameplay": "jest --watchAll ./tests/gameplay",
+        "test:gameThree": "jest --watch /gameThree/",
         "dev": "nodemon src/app.ts",
         "prettier": "prettier --write src/**/*.ts",
         "lint": "eslint \"**/*.ts\" --fix && npm run tsc && rm -rf dist/",
