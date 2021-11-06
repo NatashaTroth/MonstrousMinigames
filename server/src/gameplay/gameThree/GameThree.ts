@@ -95,7 +95,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         this.sendPhotoTopic();
     }
 
-    sendPhotoTopic() {
+    private sendPhotoTopic() {
         //TODO verify game state
         //TODO reset player has photo
         const topic = this.photoTopics?.shift();
