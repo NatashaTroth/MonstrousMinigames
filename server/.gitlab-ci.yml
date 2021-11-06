@@ -29,7 +29,7 @@ lint:server:
         - /^frontend-.*$/
         - staging
 
-testUnit:server:
+unitTests:server:
     stage: test
     tags:
         - node
