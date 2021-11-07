@@ -90,9 +90,9 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     startGame(): void {
         setTimeout(() => {
             super.startGame();
+            this.sendPhotoTopic();
         }, this.countdownTimeGameStart);
         GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTimeGameStart, this.gameName);
-        this.sendPhotoTopic();
     }
 
     private sendPhotoTopic() {
@@ -203,7 +203,6 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     // *** Voting ***
-
     private handleReceivedPhotoVote(message: IMessagePhotoVote) {
         const player = this.players.get(message.photographerId!);
         const voter = this.players.get(message.voterId);
