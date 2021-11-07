@@ -122,7 +122,7 @@ export interface photoPhotographerMapper {
 
 ```typescript
 {
-    oterId: string;
+    voterId: string;
     photographerId: string;
 }
 ```

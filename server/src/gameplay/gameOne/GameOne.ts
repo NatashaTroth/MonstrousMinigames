@@ -175,7 +175,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     }
 
     private getStunnablePlayers(): string[] {
-        return Array.from(this.players.values()).reduce(function (res: string[], option: Player) {
+        return Array.from(this.players.values()).reduce((res: string[], option: Player) => {
             if (!option.finished && option.isActive) {
                 res.push(option.id);
             }
@@ -209,6 +209,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         GameOneEventEmitter.emitGameHasStoppedEvent(this.roomId);
     }
 
+    // TODO Test
     stopGameAllUsersDisconnected() {
         super.stopGameAllUsersDisconnected();
     }

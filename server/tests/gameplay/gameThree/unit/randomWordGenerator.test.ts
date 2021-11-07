@@ -1,6 +1,8 @@
 import 'reflect-metadata';
 
-import { RandomWordGenerator } from '../../../src/gameplay/gameThree/classes/RandomWordGenerator';
+import {
+    RandomWordGenerator
+} from '../../../../src/gameplay/gameThree/classes/RandomWordGenerator';
 
 let randomWordsGenerator: RandomWordGenerator;
 // const uniqueWords = ['hat', 'car', 'bus', 'blue', 'cat', 'dog'];
