@@ -3,6 +3,7 @@ import 'reflect-metadata';
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
+import { InvalidUrlError } from '../../../../src/gameplay/gameThree/customErrors';
 import { GameThreeGameState } from '../../../../src/gameplay/gameThree/enums/GameState';
 import {
     GameThreeMessageTypes
@@ -15,7 +16,7 @@ import {
 import { leaderboard, roomId, users } from '../../mockData';
 
 let gameThree: GameThree;
-const mockPhotoUrl = 'https://mockPhoto.12345';
+const mockPhotoUrl = 'https://mockPhoto.com';
 
 describe('Handle taking photo', () => {
     beforeEach(() => {
@@ -63,6 +64,29 @@ describe('Handle received photo', () => {
         };
         gameThree['handleReceivedPhoto'](message);
         expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']].url).toBe(message.url);
+    });
+
+    it('should throw an InvalidUrlError when url is not valid', async () => {
+        const message: IMessagePhoto = {
+            type: GameThreeMessageTypes.PHOTO,
+            userId: users[0].id,
+            url: 'notAUrl',
+        };
+        expect(() => gameThree['handleReceivedPhoto'](message)).toThrowError(InvalidUrlError);
+    });
+
+    it('should add the userId in the InvalidUrlError', async () => {
+        const message: IMessagePhoto = {
+            type: GameThreeMessageTypes.PHOTO,
+            userId: users[0].id,
+            url: 'notAUrl',
+        };
+
+        try {
+            gameThree['handleReceivedPhoto'](message);
+        } catch (e: any) {
+            expect(e.userId).toBe(message.userId);
+        }
     });
 
     it('should call handleAllPhotosReceived if all photos have been received', async () => {

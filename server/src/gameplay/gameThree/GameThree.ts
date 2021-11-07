@@ -1,3 +1,5 @@
+import isUrl from 'validator/lib/isUrl';
+
 import User from '../../classes/user';
 import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
@@ -7,6 +9,7 @@ import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
 import { RandomWordGenerator } from './classes/RandomWordGenerator';
 import InitialParameters from './constants/InitialParameters';
+import { InvalidUrlError } from './customErrors';
 import { GameThreeGameState } from './enums/GameState';
 import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreeEventEmitter from './GameThreeEventEmitter';
@@ -172,6 +175,8 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private handleReceivedPhoto(message: IMessagePhoto) {
+        if (!isUrl(message.url))
+            throw new InvalidUrlError('The received value for the URL is not valid.', message.userId);
         const player = this.players.get(message.userId!);
         if (player && !player.roundInfo[this.roundIdx].received) player.receivedPhoto(message.url, this.roundIdx);
 
@@ -222,13 +227,13 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private handleVoting() {
-        this.removeVotingPointsNotVoted();
+        this.removeVotingPointsFromPlayersNoParticipation();
         this.sendPhotoVotingResultsToScreen();
 
         //TODO if time over or if all received - check what photos received and forward to screens
     }
 
-    private removeVotingPointsNotVoted() {
+    private removeVotingPointsFromPlayersNoParticipation() {
         Array.from(this.players.values()).forEach(player => {
             if (!player.roundInfo[this.roundIdx].voted || !player.roundInfo[this.roundIdx].url) {
                 player.roundInfo[this.roundIdx].points = 0;
