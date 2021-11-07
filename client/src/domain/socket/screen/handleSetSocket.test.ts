@@ -31,6 +31,7 @@ describe('handleSetSocket', () => {
         setScreenState: jest.fn(),
         setChosenGame: jest.fn(),
         setTopicMessage: jest.fn(),
+        setTimeIsUp: jest.fn(),
         history,
     };
 
@@ -179,6 +180,7 @@ describe('handleSetSocket', () => {
     it('when NewPhotoTopicMessage was written and game is game3, handed setTopicMessage should be executed', async () => {
         const message: NewPhotoTopicMessage = {
             type: MessageTypesGame3.newPhotoTopic,
+            roomId: '123123asd',
             countdownTime: 10000,
             topic: 'Test-topic',
         };
@@ -190,6 +192,6 @@ describe('handleSetSocket', () => {
 
         await socket.emit(message);
 
-        expect(setTopicMessage).toHaveBeenCalledWith('Test-topic');
+        expect(setTopicMessage).toHaveBeenCalledWith({"countdownTime": 10000, "topic": "Test-topic"});
     });
 });

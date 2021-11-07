@@ -28,6 +28,7 @@ describe('Controller Socket Connection', () => {
             setExceededChaserPushes: jest.fn(),
             setStunnablePlayers: jest.fn(),
             setChosenGame: jest.fn(),
+            setVoteForPhotoMessage: jest.fn()
         };
 
         handleSocketConnection(roomId, 'Test', false, dependencies);

@@ -140,6 +140,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             }
             case GameThreeMessageTypes.PHOTO_VOTE: {
                 //TODO handle countdown over..
+                console.log(message);
                 this.handleReceivedPhotoVote(message as IMessagePhotoVote);
                 break;
             }

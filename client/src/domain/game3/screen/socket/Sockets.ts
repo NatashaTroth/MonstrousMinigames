@@ -24,6 +24,7 @@ export function handleSetScreenSocketGame3(socket: Socket, dependencies: HandleS
 
     newPhotoTopicSocket.listen((data: NewPhotoTopicMessage) => {
         setTopicMessage({topic: data.topic, countdownTime: data.countdownTime});
+        setTimeIsUp(false);
     });
     voteForPhotoSocket.listen((data: VoteForPhotoMessage) => {
         const { roomId , countdownTime, photoUrls} = data;

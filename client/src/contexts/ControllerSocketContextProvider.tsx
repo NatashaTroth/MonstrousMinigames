@@ -52,7 +52,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
     );
 
     const {
-        setPhotos
+        setPhotos, setVoteForPhotoMessage
     } = React.useContext(Game3Context);
     const {
         setGameStarted,
@@ -93,6 +93,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setStunnablePlayers,
         setChosenGame,
         setPhotos,
+        setVoteForPhotoMessage
     };
 
     const content = {
