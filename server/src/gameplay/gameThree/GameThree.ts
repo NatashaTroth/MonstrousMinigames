@@ -1,4 +1,4 @@
-import isUrl from 'validator/lib/isUrl';
+import validator from 'validator';
 
 import User from '../../classes/user';
 import { GameNames } from '../../enums/gameNames';
@@ -175,7 +175,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private handleReceivedPhoto(message: IMessagePhoto) {
-        if (!isUrl(message.url))
+        if (!validator.isURL(message.url))
             throw new InvalidUrlError('The received value for the URL is not valid.', message.userId);
         const player = this.players.get(message.userId!);
         if (player && !player.roundInfo[this.roundIdx].received) player.receivedPhoto(message.url, this.roundIdx);
