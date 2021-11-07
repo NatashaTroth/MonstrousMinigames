@@ -62,6 +62,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     protected mapUserToPlayer(user: User): GameThreePlayer {
         const player = new GameThreePlayer(user.id, user.name, user.characterNumber);
+
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
@@ -213,10 +214,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         const voter = this.players.get(message.voterId);
         if (player && voter && !voter.roundInfo[this.roundIdx].voted) {
             player?.addPoints(this.roundIdx, 1);
-            if (voter) {
-                voter.roundInfo[this.roundIdx].voted = true;
-                // voter.roundInfo[this.roundIdx].points += 1; //point for voting //TODO???
-            }
+            // if (voter) {
+            voter.roundInfo[this.roundIdx].voted = true;
+            // voter.roundInfo[this.roundIdx].points += 1; //point for voting //TODO???
+            // }
         }
         // this.players.get(message.voterId)?.roundInfo[this.roundIdx].voted = true
 
@@ -235,7 +236,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     private removeVotingPointsFromPlayersNoParticipation() {
         Array.from(this.players.values()).forEach(player => {
-            if (!player.roundInfo[this.roundIdx].voted || !player.roundInfo[this.roundIdx].url) {
+            if (!player.roundInfo[this.roundIdx].voted || !player.roundInfo[this.roundIdx].received) {
                 player.roundInfo[this.roundIdx].points = 0;
             }
         });

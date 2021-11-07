@@ -81,7 +81,6 @@ describe('Handle received photo', () => {
             userId: users[0].id,
             url: 'notAUrl',
         };
-
         try {
             gameThree['handleReceivedPhoto'](message);
         } catch (e: any) {
@@ -97,7 +96,7 @@ describe('Handle received photo', () => {
         };
 
         //set the other players received photo to true
-        const otherPlayers = Array.from(gameThree.players.values()).filter(player => (player.id = users[0].id));
+        const otherPlayers = Array.from(gameThree.players.values()).filter(player => player.id !== users[0].id);
         otherPlayers.forEach(player => {
             player.roundInfo[gameThree['roundIdx']].received = true;
         });
@@ -230,7 +229,7 @@ describe('Send Photos to screen', () => {
 
         const photoUrls = 'a';
         const photographerIds: string[] = [];
-        const otherPlayers = Array.from(gameThree.players.values()).filter(player => (player.id = users[0].id));
+        const otherPlayers = Array.from(gameThree.players.values()).filter(player => player.id !== users[0].id);
         otherPlayers.forEach((player, idx) => {
             player.roundInfo[gameThree['roundIdx']].received = true;
             player.roundInfo[gameThree['roundIdx']].url = photoUrls;
