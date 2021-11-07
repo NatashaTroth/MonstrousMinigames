@@ -23,16 +23,6 @@ describe('Handle taking photo', () => {
         gameThree['handleTakingPhoto']();
         expect(spy).toBeCalledTimes(1);
     });
-
-    it('should not call sendPhotosToScreen when countdown is still running', async () => {
-        const spy = jest.spyOn(GameThree.prototype as any, 'sendPhotosToScreen').mockImplementation(() => {
-            Promise.resolve();
-        });
-
-        gameThree['countdownTimeLeft'] = 50;
-        gameThree['handleTakingPhoto']();
-        expect(spy).toBeCalledTimes(0);
-    });
 });
 
 describe('Handle received photo', () => {

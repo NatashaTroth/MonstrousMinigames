@@ -65,16 +65,18 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         // handle taking photo
         if (this.countdownRunning) {
             this.reduceCountdown(timeElapsedSinceLastFrame);
-            switch (this.gameThreeGameState) {
-                case GameThreeGameState.TakingPhoto:
-                    this.handleTakingPhoto();
-                    break;
-                case GameThreeGameState.Voting:
-                    this.handleVoting();
-                    break;
-                case GameThreeGameState.ViewingResults:
-                    this.handleNewRound();
-                    break;
+            if (this.countdownOver()) {
+                switch (this.gameThreeGameState) {
+                    case GameThreeGameState.TakingPhoto:
+                        this.handleTakingPhoto();
+                        break;
+                    case GameThreeGameState.Voting:
+                        this.handleVoting();
+                        break;
+                    case GameThreeGameState.ViewingResults:
+                        this.handleNewRound();
+                        break;
+                }
             }
         }
     }
@@ -165,10 +167,8 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     // *** Taking Photos ***
     private handleTakingPhoto() {
-        if (this.countdownOver()) {
-            // GameThreeEventEmitter.emitTakePhotoCountdownOver(this.roomId); //TODO??
-            this.sendPhotosToScreen();
-        }
+        // GameThreeEventEmitter.emitTakePhotoCountdownOver(this.roomId); //TODO??
+        this.sendPhotosToScreen();
     }
 
     private handleReceivedPhoto(message: IMessagePhoto) {
@@ -222,10 +222,8 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private handleVoting() {
-        if (this.countdownOver()) {
-            this.removeVotingPointsNotVoted();
-            this.sendPhotoVotingResultsToScreen();
-        }
+        this.removeVotingPointsNotVoted();
+        this.sendPhotoVotingResultsToScreen();
 
         //TODO if time over or if all received - check what photos received and forward to screens
     }
@@ -261,13 +259,11 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     // *** Round Change ***
     private handleNewRound() {
-        if (this.countdownOver()) {
-            this.roundIdx++;
-            if (!this.isFinalRound()) {
-                this.sendPhotoTopic();
-            } else {
-                this.sendTakeFinalPhotosCountdown();
-            }
+        this.roundIdx++;
+        if (!this.isFinalRound()) {
+            this.sendPhotoTopic();
+        } else {
+            this.sendTakeFinalPhotosCountdown();
         }
     }
 
