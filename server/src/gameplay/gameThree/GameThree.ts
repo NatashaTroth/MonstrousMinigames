@@ -282,6 +282,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     // *** Final round ***
     private sendTakeFinalPhotosCountdown() {
+        this.gameThreeGameState = GameThreeGameState.TakingFinalPhotos;
         GameThreeEventEmitter.emitTakeFinalPhotosCountdown(this.roomId, this.countdownTimeTakeFinalPhotos);
     }
 }
