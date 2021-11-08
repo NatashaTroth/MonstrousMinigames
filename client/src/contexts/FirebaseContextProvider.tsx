@@ -1,8 +1,8 @@
-import { initializeApp } from "firebase/app";
-import { FirebaseStorage, getStorage } from "firebase/storage";
-import * as React from "react";
+import { initializeApp } from 'firebase/app';
+import { FirebaseStorage, getStorage } from 'firebase/storage';
+import * as React from 'react';
 
-import { firebaseConfig } from "../config/firebaseConfig";
+import { firebaseConfig } from '../config/firebaseConfig';
 
 export const defaultValue = {
     storage: undefined,
@@ -18,8 +18,6 @@ const FirebaseContextProvider: React.FunctionComponent = ({ children }) => {
     const [storage, setStorage] = React.useState<FirebaseStorage | undefined>();
 
     React.useEffect(() => {
-        // eslint-disable-next-line
-        console.log(storage)
         const firebaseApp = initializeApp(firebaseConfig);
 
         setStorage(getStorage(firebaseApp));
