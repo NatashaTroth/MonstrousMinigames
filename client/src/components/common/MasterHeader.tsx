@@ -1,12 +1,12 @@
 import { Settings, VolumeOff, VolumeUp } from '@material-ui/icons';
 import { History } from 'history';
 import * as React from 'react';
+import styled from 'styled-components';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { handleAudio } from '../../domain/audio/handleAudio';
 import { Routes } from '../../utils/routes';
 import IconButton from '../common/IconButton';
-import { InnerContainer, StyledContainer } from './MasterHeader.sc';
 
 interface MasterHeaderProps {
     history: History;
@@ -50,3 +50,18 @@ const MasterHeader: React.FC<MasterHeaderProps> = ({ history }) => {
     );
 };
 export default MasterHeader;
+
+const StyledContainer = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+`;
+
+const InnerContainer = styled.div`
+    padding: 10px;
+
+    button:not(:last-child) {
+        margin-right: 20px;
+    }
+`;
