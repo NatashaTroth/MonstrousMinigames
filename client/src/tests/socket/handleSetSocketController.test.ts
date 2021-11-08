@@ -40,6 +40,7 @@ describe('handleSetSocket', () => {
         setStunnablePlayers: jest.fn(),
         setChosenGame: jest.fn(),
         setVoteForPhotoMessage: jest.fn(),
+        setSheepGameStarted: jest.fn(),
     } as HandleSetSocketDependencies;
 
     it('when UserInitMessage was written, handed setPlayerNumber is executed', async () => {
