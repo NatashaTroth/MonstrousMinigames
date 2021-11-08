@@ -69,6 +69,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         // handle taking photo
         if (this.countdownRunning) {
             this.reduceCountdown(timeElapsedSinceLastFrame);
+
             if (this.countdownOver()) {
                 switch (this.gameThreeGameState) {
                     case GameThreeGameState.TakingPhoto:
@@ -175,6 +176,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private handleReceivedPhoto(message: IMessagePhoto) {
+        if (this.gameThreeGameState !== GameThreeGameState.TakingPhoto) return;
         if (!validator.isURL(message.url))
             throw new InvalidUrlError('The received value for the URL is not valid.', message.userId);
         const player = this.players.get(message.userId!);
@@ -209,6 +211,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     // *** Voting ***
     private handleReceivedPhotoVote(message: IMessagePhotoVote) {
+        if (this.gameThreeGameState !== GameThreeGameState.Voting) return;
         const player = this.players.get(message.photographerId!);
         const voter = this.players.get(message.voterId);
         if (player && voter && !voter.roundInfo[this.roundIdx].voted) {
@@ -278,6 +281,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     // *** Final round ***
     private sendTakeFinalPhotosCountdown() {
+        this.gameThreeGameState = GameThreeGameState.TakingFinalPhotos;
         GameThreeEventEmitter.emitTakeFinalPhotosCountdown(this.roomId, this.countdownTimeTakeFinalPhotos);
     }
 }

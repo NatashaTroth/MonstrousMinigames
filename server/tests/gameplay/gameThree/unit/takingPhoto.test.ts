@@ -18,6 +18,12 @@ import { leaderboard, roomId, users } from '../../mockData';
 let gameThree: GameThree;
 const mockPhotoUrl = 'https://mockPhoto.com';
 
+const message: IMessagePhoto = {
+    type: GameThreeMessageTypes.PHOTO,
+    userId: users[0].id,
+    url: mockPhotoUrl,
+};
+
 describe('Handle taking photo', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
@@ -40,6 +46,7 @@ describe('Handle received photo', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
+        gameThree['gameThreeGameState'] = GameThreeGameState.TakingPhoto;
     });
 
     afterEach(() => {
@@ -47,54 +54,39 @@ describe('Handle received photo', () => {
     });
 
     it('should set the photo received property on the player to true', async () => {
-        const message: IMessagePhoto = {
-            type: GameThreeMessageTypes.PHOTO,
-            userId: users[0].id,
-            url: mockPhotoUrl,
-        };
         gameThree['handleReceivedPhoto'](message);
         expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']].received).toBeTruthy();
     });
 
+    it('should not set the received property to true, if gameThreeGameState is not TakingPhoto', async () => {
+        gameThree['gameThreeGameState'] = GameThreeGameState.BeforeStart;
+        gameThree['handleReceivedPhoto'](message);
+        expect(gameThree.players.get(message.userId)!.roundInfo[gameThree['roundIdx']].received).toBeFalsy();
+    });
+
     it('should save the photo url to the player', async () => {
-        const message: IMessagePhoto = {
-            type: GameThreeMessageTypes.PHOTO,
-            userId: users[0].id,
-            url: mockPhotoUrl,
-        };
         gameThree['handleReceivedPhoto'](message);
         expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']].url).toBe(message.url);
     });
 
     it('should throw an InvalidUrlError when url is not valid', async () => {
-        const message: IMessagePhoto = {
-            type: GameThreeMessageTypes.PHOTO,
-            userId: users[0].id,
-            url: 'notAUrl',
-        };
-        expect(() => gameThree['handleReceivedPhoto'](message)).toThrowError(InvalidUrlError);
+        const newMessage = { ...message };
+        newMessage.url = 'notAUrl';
+        expect(() => gameThree['handleReceivedPhoto'](newMessage)).toThrowError(InvalidUrlError);
     });
 
     it('should add the userId in the InvalidUrlError', async () => {
-        const message: IMessagePhoto = {
-            type: GameThreeMessageTypes.PHOTO,
-            userId: users[0].id,
-            url: 'notAUrl',
-        };
+        const newMessage = { ...message };
+        newMessage.url = 'notAUrl';
+
         try {
-            gameThree['handleReceivedPhoto'](message);
+            gameThree['handleReceivedPhoto'](newMessage);
         } catch (e: any) {
-            expect(e.userId).toBe(message.userId);
+            expect(e.userId).toBe(newMessage.userId);
         }
     });
 
     it('should call handleAllPhotosReceived if all photos have been received', async () => {
-        const message: IMessagePhoto = {
-            type: GameThreeMessageTypes.PHOTO,
-            userId: users[0].id,
-            url: mockPhotoUrl,
-        };
-
         //set the other players received photo to true
         const otherPlayers = Array.from(gameThree.players.values()).filter(player => player.id !== users[0].id);
         otherPlayers.forEach(player => {
@@ -110,12 +102,6 @@ describe('Handle received photo', () => {
     });
 
     it('should not call handleAllPhotosReceived if not all photos have been received', async () => {
-        const message: IMessagePhoto = {
-            type: GameThreeMessageTypes.PHOTO,
-            userId: users[0].id,
-            url: mockPhotoUrl,
-        };
-
         const spy = jest.spyOn(GameThree.prototype as any, 'handleAllPhotosReceived').mockImplementation(() => {
             Promise.resolve();
         });
