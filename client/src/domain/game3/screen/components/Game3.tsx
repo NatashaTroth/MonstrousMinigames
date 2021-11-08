@@ -23,8 +23,10 @@ const Game3: React.FunctionComponent = () => {
     const [images, setImages] = React.useState<string[]>([]);
     const { roomId } = React.useContext(GameContext);
     const { challengeId } = React.useContext(Game3Context);
-    const [timeIsUp, setTimeIsUp] = React.useState(false);
+    const { setTimeIsUp, timeIsUp } = React.useContext(Game3Context);
     const [loading, setLoading] = React.useState(false);
+
+    const { topicMessage } = React.useContext(Game3Context);
 
     const { storage } = React.useContext(FirebaseContext);
 
@@ -50,8 +52,6 @@ const Game3: React.FunctionComponent = () => {
         }
     }, [timeIsUp]);
 
-    const randomWord = 'tree'.toUpperCase();
-
     return (
         <ScreenContainer>
             <InstructionContainer>
@@ -60,19 +60,19 @@ const Game3: React.FunctionComponent = () => {
                         <PictureInstruction>
                             Vote on your smartphone for the picture that looks most like
                         </PictureInstruction>
-                        <RandomWord>{randomWord}</RandomWord>
+                        <RandomWord>{topicMessage.topic}</RandomWord>
                     </>
                 ) : (
                     <>
                         <PictureInstruction>Take a picture that represents the word</PictureInstruction>
-                        <RandomWord>{randomWord}</RandomWord>
+                        <RandomWord>{topicMessage.topic}</RandomWord>
                     </>
                 )}
             </InstructionContainer>
-            {!timeIsUp && (
+            {!timeIsUp && topicMessage.countdownTime > 0 && (
                 <CountdownCircleTimer
                     isPlaying
-                    duration={10}
+                    duration={topicMessage.countdownTime / 1000}
                     colors={[
                         [theme.palette.primary.main, 0.5],
                         [theme.palette.secondary.main, 0.5],

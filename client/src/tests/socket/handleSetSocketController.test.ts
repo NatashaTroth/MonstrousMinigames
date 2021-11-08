@@ -1,18 +1,18 @@
-import { createMemoryHistory } from "history";
+import { createMemoryHistory } from 'history';
 
-import { GameNames } from "../../config/games";
-import { handleSetSocket } from "../../domain/socket/controller/handleSetSocket";
-import { InMemorySocketFake } from "../../domain/socket/InMemorySocketFake";
-import { ConnectedUsersMessage } from "../../domain/typeGuards/connectedUsers";
-import { GameHasFinishedMessage } from "../../domain/typeGuards/finished";
-import { GameHasStartedMessage } from "../../domain/typeGuards/game1/started";
-import { GameHasPausedMessage } from "../../domain/typeGuards/paused";
-import { GameHasResetMessage } from "../../domain/typeGuards/reset";
-import { GameHasResumedMessage } from "../../domain/typeGuards/resumed";
-import { GameHasStoppedMessage } from "../../domain/typeGuards/stopped";
-import { UserInitMessage } from "../../domain/typeGuards/userInit";
-import { GameState, MessageTypes } from "../../utils/constants";
-import { controllerChooseCharacterRoute, controllerLobbyRoute } from "../../utils/routes";
+import { GameNames } from '../../config/games';
+import { handleSetSocket, HandleSetSocketDependencies } from '../../domain/socket/controller/handleSetSocket';
+import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
+import { ConnectedUsersMessage } from '../../domain/typeGuards/connectedUsers';
+import { GameHasFinishedMessage } from '../../domain/typeGuards/finished';
+import { GameHasStartedMessage } from '../../domain/typeGuards/game1/started';
+import { GameHasPausedMessage } from '../../domain/typeGuards/paused';
+import { GameHasResetMessage } from '../../domain/typeGuards/reset';
+import { GameHasResumedMessage } from '../../domain/typeGuards/resumed';
+import { GameHasStoppedMessage } from '../../domain/typeGuards/stopped';
+import { UserInitMessage } from '../../domain/typeGuards/userInit';
+import { GameState, MessageTypes } from '../../utils/constants';
+import { controllerChooseCharacterRoute, controllerLobbyRoute } from '../../utils/routes';
 
 describe('handleSetSocket', () => {
     const history = createMemoryHistory();
@@ -39,7 +39,8 @@ describe('handleSetSocket', () => {
         setExceededChaserPushes: jest.fn(),
         setStunnablePlayers: jest.fn(),
         setChosenGame: jest.fn(),
-    };
+        setVoteForPhotoMessage: jest.fn(),
+    } as HandleSetSocketDependencies;
 
     it('when UserInitMessage was written, handed setPlayerNumber is executed', async () => {
         const message: UserInitMessage = {

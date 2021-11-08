@@ -14,13 +14,14 @@ configure({ adapter: new Adapter() });
 afterEach(cleanup);
 
 describe('Vote', () => {
-    it('renders as much buttons as images', () => {
+    it('renders the heading', () => {
         const container = mount(
             <ThemeProvider theme={theme}>
                 <Vote />
             </ThemeProvider>
         );
 
-        expect(container.find('button')).toHaveLength(3);
+        expect(container.find('p')).toHaveLength(1);
     });
+    // TODO: test the ui after a statechange has happened
 });

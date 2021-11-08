@@ -6,12 +6,13 @@ import { handleSetSocket } from '../../domain/socket/screen/handleSetSocket';
 import { ConnectedUsersMessage } from '../../domain/typeGuards/connectedUsers';
 import { GameHasFinishedMessage } from '../../domain/typeGuards/finished';
 import { GameHasStartedMessage } from '../../domain/typeGuards/game1/started';
+import { NewPhotoTopicMessage } from '../../domain/typeGuards/game3/newPhotoTopic';
 import { GameHasPausedMessage } from '../../domain/typeGuards/paused';
 import { GameHasResetMessage } from '../../domain/typeGuards/reset';
 import { GameHasResumedMessage } from '../../domain/typeGuards/resumed';
 import { StartPhaserGameMessage } from '../../domain/typeGuards/startPhaserGame';
 import { GameHasStoppedMessage } from '../../domain/typeGuards/stopped';
-import { GameState, MessageTypes, MessageTypesGame1 } from '../../utils/constants';
+import { GameState, MessageTypes, MessageTypesGame1, MessageTypesGame3 } from '../../utils/constants';
 import { screenLobbyRoute } from '../../utils/routes';
 
 describe('handleSetSocket', () => {
@@ -29,6 +30,8 @@ describe('handleSetSocket', () => {
         setScreenAdmin: jest.fn(),
         setScreenState: jest.fn(),
         setChosenGame: jest.fn(),
+        setTopicMessage: jest.fn(),
+        setTimeIsUp: jest.fn(),
         history,
     };
 
@@ -173,5 +176,22 @@ describe('handleSetSocket', () => {
         await socket.emit(message);
 
         expect(setGameStarted).toHaveBeenCalledWith(true);
+    });
+    it('when NewPhotoTopicMessage was written and game is game3, handed setTopicMessage should be executed', async () => {
+        const message: NewPhotoTopicMessage = {
+            type: MessageTypesGame3.newPhotoTopic,
+            roomId: '123123asd',
+            countdownTime: 10000,
+            topic: 'Test-topic',
+        };
+
+        const socket = new InMemorySocketFake();
+        const setTopicMessage = jest.fn();
+
+        handleSetSocket(socket, roomId, { ...dependencies, setTopicMessage });
+
+        await socket.emit(message);
+
+        expect(setTopicMessage).toHaveBeenCalledWith({ countdownTime: 10000, topic: 'Test-topic' });
     });
 });

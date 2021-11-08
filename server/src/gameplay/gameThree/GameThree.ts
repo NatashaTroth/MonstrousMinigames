@@ -1,24 +1,24 @@
-import validator from 'validator';
+import validator from "validator";
 
-import User from '../../classes/user';
-import { GameNames } from '../../enums/gameNames';
-import { IMessage } from '../../interfaces/messages';
-import Game from '../Game';
-import { IGameInterface } from '../interfaces';
-import Leaderboard from '../leaderboard/Leaderboard';
-import Player from '../Player';
-import { RandomWordGenerator } from './classes/RandomWordGenerator';
-import InitialParameters from './constants/InitialParameters';
-import { InvalidUrlError } from './customErrors';
-import { GameThreeGameState } from './enums/GameState';
-import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
-import GameThreeEventEmitter from './GameThreeEventEmitter';
+import User from "../../classes/user";
+import { GameNames } from "../../enums/gameNames";
+import { IMessage } from "../../interfaces/messages";
+import Game from "../Game";
+import { IGameInterface } from "../interfaces";
+import Leaderboard from "../leaderboard/Leaderboard";
+import Player from "../Player";
+import { RandomWordGenerator } from "./classes/RandomWordGenerator";
+import InitialParameters from "./constants/InitialParameters";
+import { InvalidUrlError } from "./customErrors";
+import { GameThreeGameState } from "./enums/GameState";
+import { GameThreeMessageTypes } from "./enums/GameThreeMessageTypes";
+import GameThreeEventEmitter from "./GameThreeEventEmitter";
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
-import GameThreePlayer from './GameThreePlayer';
+import GameThreePlayer from "./GameThreePlayer";
 import {
     IMessagePhoto, IMessagePhotoVote, photoPhotographerMapper, votingResultsPhotographerMapper
-} from './interfaces';
-import { GameStateInfo } from './interfaces/GameStateInfo';
+} from "./interfaces";
+import { GameStateInfo } from "./interfaces/GameStateInfo";
 
 type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
 
@@ -141,7 +141,6 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                 break;
             }
             case GameThreeMessageTypes.PHOTO_VOTE: {
-                //TODO handle countdown over..
                 this.handleReceivedPhotoVote(message as IMessagePhotoVote);
                 break;
             }
