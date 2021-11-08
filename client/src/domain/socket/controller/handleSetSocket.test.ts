@@ -12,7 +12,7 @@ import { GameHasResumedMessage } from "../../typeGuards/resumed";
 import { GameHasStoppedMessage } from "../../typeGuards/stopped";
 import { UserInitMessage } from "../../typeGuards/userInit";
 import { InMemorySocketFake } from "../InMemorySocketFake";
-import { handleSetSocket } from "./handleSetSocket";
+import {handleSetSocket, HandleSetSocketDependencies} from "./handleSetSocket";
 
 describe('handleSetSocket', () => {
     const history = createMemoryHistory();
@@ -39,7 +39,8 @@ describe('handleSetSocket', () => {
         setExceededChaserPushes: jest.fn(),
         setStunnablePlayers: jest.fn(),
         setChosenGame: jest.fn(),
-    };
+        setVoteForPhotoMessage: jest.fn()
+    } as HandleSetSocketDependencies;
 
     it('when UserInitMessage was written, handed setPlayerNumber is executed', async () => {
         const message: UserInitMessage = {

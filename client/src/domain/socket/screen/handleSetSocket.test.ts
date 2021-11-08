@@ -1,18 +1,19 @@
-import { createMemoryHistory } from "history";
+import { createMemoryHistory } from 'history';
 
-import { GameNames } from "../../../config/games";
-import { GameState, MessageTypes, MessageTypesGame1 } from "../../../utils/constants";
-import { screenLobbyRoute } from "../../../utils/routes";
-import { ConnectedUsersMessage } from "../../typeGuards/connectedUsers";
-import { GameHasFinishedMessage } from "../../typeGuards/finished";
-import { GameHasStartedMessage } from "../../typeGuards/game1/started";
-import { GameHasPausedMessage } from "../../typeGuards/paused";
-import { GameHasResetMessage } from "../../typeGuards/reset";
-import { GameHasResumedMessage } from "../../typeGuards/resumed";
-import { StartPhaserGameMessage } from "../../typeGuards/startPhaserGame";
-import { GameHasStoppedMessage } from "../../typeGuards/stopped";
-import { InMemorySocketFake } from "../InMemorySocketFake";
-import { handleSetSocket } from "./handleSetSocket";
+import { GameNames } from '../../../config/games';
+import { GameState, MessageTypes, MessageTypesGame1, MessageTypesGame3 } from '../../../utils/constants';
+import { screenLobbyRoute } from '../../../utils/routes';
+import { ConnectedUsersMessage } from '../../typeGuards/connectedUsers';
+import { GameHasFinishedMessage } from '../../typeGuards/finished';
+import { GameHasStartedMessage } from '../../typeGuards/game1/started';
+import { NewPhotoTopicMessage } from '../../typeGuards/game3/newPhotoTopic';
+import { GameHasPausedMessage } from '../../typeGuards/paused';
+import { GameHasResetMessage } from '../../typeGuards/reset';
+import { GameHasResumedMessage } from '../../typeGuards/resumed';
+import { StartPhaserGameMessage } from '../../typeGuards/startPhaserGame';
+import { GameHasStoppedMessage } from '../../typeGuards/stopped';
+import { InMemorySocketFake } from '../InMemorySocketFake';
+import { handleSetSocket } from './handleSetSocket';
 
 describe('handleSetSocket', () => {
     const history = createMemoryHistory();
@@ -29,6 +30,8 @@ describe('handleSetSocket', () => {
         setScreenAdmin: jest.fn(),
         setScreenState: jest.fn(),
         setChosenGame: jest.fn(),
+        setTopicMessage: jest.fn(),
+        setTimeIsUp: jest.fn(),
         history,
     };
 
@@ -173,5 +176,22 @@ describe('handleSetSocket', () => {
         await socket.emit(message);
 
         expect(setGameStarted).toHaveBeenCalledWith(true);
+    });
+    it('when NewPhotoTopicMessage was written and game is game3, handed setTopicMessage should be executed', async () => {
+        const message: NewPhotoTopicMessage = {
+            type: MessageTypesGame3.newPhotoTopic,
+            roomId: '123123asd',
+            countdownTime: 10000,
+            topic: 'Test-topic',
+        };
+
+        const socket = new InMemorySocketFake();
+        const setTopicMessage = jest.fn();
+
+        handleSetSocket(socket, roomId, { ...dependencies, setTopicMessage });
+
+        await socket.emit(message);
+
+        expect(setTopicMessage).toHaveBeenCalledWith({"countdownTime": 10000, "topic": "Test-topic"});
     });
 });

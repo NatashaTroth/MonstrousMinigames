@@ -1,17 +1,17 @@
 // eslint-disable-next-line simple-import-sort/imports
-import * as React from "react";
+import * as React from 'react';
 
-import { ComponentToTest } from "../../../../components/controller/Tutorial";
-import { ControllerSocketContext } from "../../../../contexts/ControllerSocketContextProvider";
-import { GameContext } from "../../../../contexts/GameContextProvider";
-import windmill from "../../../../images/ui/pinwheel.svg";
-import windmillWood from "../../../../images/ui/pinwheel2.svg";
-import { MessageTypesGame1 } from "../../../../utils/constants";
-import { controllerPlayerDeadRoute } from "../../../../utils/routes";
-import history from "../../../history/history";
-import LinearProgressBar from "./obstacles/LinearProgressBar";
-import { ObstacleContainer, ObstacleInstructions } from "./obstacles/ObstacleStyles.sc";
-import { ProgressBarContainer, TouchContainer, WindmillImage, WindmillWood } from "./Windmill.sc";
+import { ComponentToTest } from '../../../../components/controller/Tutorial';
+import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
+import { GameContext } from '../../../../contexts/GameContextProvider';
+import windmill from '../../../../images/ui/pinwheel.svg';
+import windmillWood from '../../../../images/ui/pinwheel2.svg';
+import { MessageTypesGame1 } from '../../../../utils/constants';
+import { controllerPlayerDeadRoute } from '../../../../utils/routes';
+import history from '../../../history/history';
+import LinearProgressBar from './obstacles/LinearProgressBar';
+import { ObstacleContainer, ObstacleInstructions } from './obstacles/ObstacleStyles.sc';
+import { ProgressBarContainer, TouchContainer, WindmillImage, WindmillWood } from './Windmill.sc';
 
 interface WindmillProps {
     tutorial?: boolean;

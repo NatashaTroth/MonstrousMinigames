@@ -1,5 +1,5 @@
-import { Character } from "../../game1/screen/phaser/gameInterfaces";
-import { PlayerRenderer } from "./PlayerRenderer";
+import { Character } from '../../game1/screen/phaser/gameInterfaces';
+import { PlayerRenderer } from './PlayerRenderer';
 
 export class InMemoryPlayerRenderer implements PlayerRenderer {
     constructor(

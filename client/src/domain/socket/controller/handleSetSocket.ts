@@ -29,6 +29,7 @@ import {
 import { ErrorMessage, errorTypeGuard } from "../../typeGuards/error";
 import { finishedTypeGuard, GameHasFinishedMessage } from "../../typeGuards/finished";
 import { GameHasStartedMessage, startedTypeGuard } from "../../typeGuards/game1/started";
+import { photoPhotographerMapper } from "../../typeGuards/game3/voteForPhotos";
 import { GameSetMessage, gameSetTypeGuard } from "../../typeGuards/gameSet";
 import { GameHasPausedMessage, pausedTypeGuard } from "../../typeGuards/paused";
 import { GameHasResetMessage, resetTypeGuard } from "../../typeGuards/reset";
@@ -56,6 +57,7 @@ export interface HandleSetSocketDependencies {
     setExceededChaserPushes: (val: boolean) => void;
     setStunnablePlayers: (val: string[]) => void;
     setChosenGame: (val: GameNames) => void;
+    setVoteForPhotoMessage: (val: {photoUrls: photoPhotographerMapper[], countdownTime: number}) => void;
 }
 
 export function handleSetSocket(
@@ -78,6 +80,7 @@ export function handleSetSocket(
         setConnectedUsers,
         playerRank,
         setChosenGame,
+        setVoteForPhotoMessage
     } = dependencies;
 
     setControllerSocket(socket);
@@ -155,7 +158,7 @@ export function handleSetSocket(
     });
 
     handleSetControllerSocketGame1(socket, roomId, playerFinished, dependencies);
-    handleSetControllerSocketGame3(socket);
+    handleSetControllerSocketGame3(socket, { setVoteForPhotoMessage });
 
     gameSetSocket.listen((data: GameSetMessage) => setChosenGame(data.game));
 

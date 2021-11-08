@@ -1,4 +1,4 @@
-import { Character } from "../../game1/screen/phaser/gameInterfaces";
+import { Character } from '../../game1/screen/phaser/gameInterfaces';
 
 export interface PlayerRenderer {
     renderBackground: (

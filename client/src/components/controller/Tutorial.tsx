@@ -1,16 +1,16 @@
-import { History } from "history";
-import React from "react";
+import { History } from 'history';
+import React from 'react';
 
-import { GameNames } from "../../config/games";
-import { GameContext } from "../../contexts/GameContextProvider";
-import Spider from "../../domain/game1/controller/components/obstacles/Spider";
-import Stone from "../../domain/game1/controller/components/obstacles/Stone";
-import Trash from "../../domain/game1/controller/components/obstacles/Trash";
-import TreeTrunk from "../../domain/game1/controller/components/obstacles/TreeTrunk";
-import Windmill from "../../domain/game1/controller/components/Windmill";
-import { navigator } from "../../domain/navigator/NavigatorAdapter";
-import { ObstacleTypes } from "../../utils/constants";
-import { controllerLobbyRoute } from "../../utils/routes";
+import { GameNames } from '../../config/games';
+import { GameContext } from '../../contexts/GameContextProvider';
+import Spider from '../../domain/game1/controller/components/obstacles/Spider';
+import Stone from '../../domain/game1/controller/components/obstacles/Stone';
+import Trash from '../../domain/game1/controller/components/obstacles/Trash';
+import TreeTrunk from '../../domain/game1/controller/components/obstacles/TreeTrunk';
+import Windmill from '../../domain/game1/controller/components/Windmill';
+import { navigator } from '../../domain/navigator/NavigatorAdapter';
+import { ObstacleTypes } from '../../utils/constants';
+import { controllerLobbyRoute } from '../../utils/routes';
 
 export type ComponentToTest = ObstacleTypes | 'windmill' | 'finished';
 
