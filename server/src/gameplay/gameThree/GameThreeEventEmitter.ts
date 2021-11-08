@@ -12,7 +12,8 @@ import { GameThreeEventMessageEmitter } from './GameThreeEventMessageEmitter';
 import { InitialGameStateInfo, PlayerRank } from './interfaces';
 import {
     GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
-    GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS,
+    GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
+    GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS,
     GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
     GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER, GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS
 } from './interfaces/GameThreeEventMessages';
@@ -92,6 +93,14 @@ export default class GameThreeEventEmitter {
     }
     // ----------------------------- Game Specific: -------------------------------
 
+    public static emitNewRound(roomId: string, roundIdx: number) {
+        this.GameThreeEventMessageEmitter.emit({
+            type: GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
+            roomId,
+            roundIdx,
+        });
+    }
+
     public static emitNewTopic(roomId: string, topic: string, countdownTime: number) {
         this.GameThreeEventMessageEmitter.emit({
             type: GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC,
@@ -129,6 +138,7 @@ export default class GameThreeEventEmitter {
             countdownTime,
         });
     }
+
     public static emitTakeFinalPhotosCountdown(roomId: string, countdownTime: number) {
         this.GameThreeEventMessageEmitter.emit({
             type: GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
