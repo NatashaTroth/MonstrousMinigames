@@ -140,6 +140,9 @@ describe('All photos received', () => {
 
 let gameEventEmitter: GameEventEmitter;
 describe('Send Photos to screen', () => {
+    beforeAll(() => {
+        gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
@@ -147,10 +150,6 @@ describe('Send Photos to screen', () => {
 
     afterEach(() => {
         jest.clearAllMocks();
-    });
-
-    beforeAll(() => {
-        gameEventEmitter = DI.resolve(GameEventEmitter);
     });
 
     it('should emit a VoteForPhotosEvent', async () => {
