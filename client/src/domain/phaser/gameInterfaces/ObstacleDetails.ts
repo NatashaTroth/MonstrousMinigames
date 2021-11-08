@@ -1,4 +1,4 @@
-import { TrashType } from '../../../../../utils/constants';
+import { TrashType } from '../../../utils/constants';
 
 export interface ObstacleDetails {
     id: number;

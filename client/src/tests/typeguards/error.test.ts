@@ -1,5 +1,5 @@
+import { ErrorMessage, errorTypeGuard } from '../../domain/typeGuards/error';
 import { MessageTypes } from '../../utils/constants';
-import { ErrorMessage, errorTypeGuard } from './error';
 
 describe('error TypeGuard', () => {
     it('when type is error, it should return true', () => {

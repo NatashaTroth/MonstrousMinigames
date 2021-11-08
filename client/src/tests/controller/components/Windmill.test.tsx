@@ -1,14 +1,14 @@
 /* eslint-disable simple-import-sort/imports */
-import "jest-styled-components";
-import { cleanup, render } from "@testing-library/react";
-import * as React from "react";
-import { ThemeProvider } from "styled-components";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure, mount } from "enzyme";
+import 'jest-styled-components';
+import { cleanup, render } from '@testing-library/react';
+import * as React from 'react';
+import { ThemeProvider } from 'styled-components';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure, mount } from 'enzyme';
 
-import theme from "../../../../styles/theme";
-import LinearProgressBar from "./obstacles/LinearProgressBar";
-import Windmill from "./Windmill";
+import LinearProgressBar from '../../../domain/game1/controller/components/obstacles/LinearProgressBar';
+import Windmill from '../../../domain/game1/controller/components/Windmill';
+import theme from '../../../styles/theme';
 
 configure({ adapter: new Adapter() });
 

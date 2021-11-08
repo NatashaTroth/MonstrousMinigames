@@ -5,9 +5,13 @@ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure } from 'enzyme';
 import { createMemoryHistory } from 'history';
 
-import { MessageTypesGame1, ObstacleTypes } from '../../../../utils/constants';
-import { InMemorySocketFake } from '../../../socket/InMemorySocketFake';
-import { handleCollectStone, handleImmediateThrow, handleThrow } from './handleStoneObstacle';
+import {
+    handleCollectStone,
+    handleImmediateThrow,
+    handleThrow,
+} from '../../../domain/game1/controller/gameState/handleStoneObstacle';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
 
 configure({ adapter: new Adapter() });
 

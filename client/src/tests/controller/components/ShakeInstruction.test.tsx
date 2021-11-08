@@ -1,13 +1,13 @@
 /* eslint-disable simple-import-sort/imports */
-import "jest-styled-components";
-import { cleanup, render } from "@testing-library/react";
-import * as React from "react";
-import { ThemeProvider } from "styled-components";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure } from "enzyme";
+import 'jest-styled-components';
+import { cleanup, render } from '@testing-library/react';
+import * as React from 'react';
+import { ThemeProvider } from 'styled-components';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure } from 'enzyme';
 
-import theme from "../../../../styles/theme";
-import ShakeInstruction from "./ShakeInstruction";
+import ShakeInstruction from '../../../domain/game1/controller/components/ShakeInstruction';
+import theme from '../../../styles/theme';
 
 configure({ adapter: new Adapter() });
 

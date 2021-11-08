@@ -6,10 +6,10 @@ import { ThemeProvider } from 'styled-components';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount } from 'enzyme';
 
-import { characters } from '../../../../config/characters';
-import { defaultValue, PlayerContext } from '../../../../contexts/PlayerContextProvider';
-import theme from '../../../../styles/theme';
-import PlayerStunned from './PlayerStunned';
+import { characters } from '../../../config/characters';
+import { defaultValue, PlayerContext } from '../../../contexts/PlayerContextProvider';
+import PlayerStunned from '../../../domain/game1/controller/components/PlayerStunned';
+import theme from '../../../styles/theme';
 
 configure({ adapter: new Adapter() });
 

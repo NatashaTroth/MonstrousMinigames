@@ -6,15 +6,15 @@ import { ThemeProvider } from 'styled-components';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount } from 'enzyme';
 
-import { defaultValue, Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
-import food from '../../../../../images/obstacles/trash/food.svg';
-import paper from '../../../../../images/obstacles/trash/paper.svg';
 import plastic from '../../../../../images/obstacles/trash/plastic.svg';
-import theme from '../../../../../styles/theme';
-import { MessageTypesGame1, ObstacleTypes, TrashType } from '../../../../../utils/constants';
-import { InMemorySocketFake } from '../../../../socket/InMemorySocketFake';
-import LinearProgressBar from './LinearProgressBar';
-import Trash, { generateRandomArray, solveObstacle } from './Trash';
+import { defaultValue, Game1Context } from '../../../contexts/game1/Game1ContextProvider';
+import LinearProgressBar from '../../../domain/game1/controller/components/obstacles/LinearProgressBar';
+import Trash, { generateRandomArray, solveObstacle } from '../../../domain/game1/controller/components/obstacles/Trash';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import food from '../../../images/obstacles/trash/food.svg';
+import paper from '../../../images/obstacles/trash/paper.svg';
+import theme from '../../../styles/theme';
+import { MessageTypesGame1, ObstacleTypes, TrashType } from '../../../utils/constants';
 
 configure({ adapter: new Adapter() });
 

@@ -1,11 +1,11 @@
 /* eslint-disable simple-import-sort/imports */
 
-import "jest-styled-components";
-import { cleanup } from "@testing-library/react";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure } from "enzyme";
+import 'jest-styled-components';
+import { cleanup } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure } from 'enzyme';
 
-import { LocalStorage } from "./LocalStorage";
+import { LocalStorage } from '../../domain/storage/LocalStorage';
 
 configure({ adapter: new Adapter() });
 

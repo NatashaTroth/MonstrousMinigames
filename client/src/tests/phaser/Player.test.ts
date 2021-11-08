@@ -1,11 +1,11 @@
-import { depthDictionary } from "../../config/depthDictionary";
-import MainScene from "../../domain/game1/screen/components/MainScene";
-import { AnimationName } from "../../domain/game1/screen/phaser/enums";
-import { CharacterAnimation } from "../../domain/game1/screen/phaser/gameInterfaces";
-import { GameToScreenMapper } from "../../domain/game1/screen/phaser/GameToScreenMapper";
-import { Player } from "../../domain/game1/screen/phaser/Player";
-import { GameState, ObstacleTypes } from "../../utils/constants";
-import { InMemoryPlayerRenderer } from "./InMemoryPlayerRenderer";
+import { depthDictionary } from '../../config/depthDictionary';
+import MainScene from '../../domain/game1/screen/components/MainScene';
+import { AnimationName } from '../../domain/phaser/enums';
+import { CharacterAnimation } from '../../domain/phaser/gameInterfaces';
+import { GameToScreenMapper } from '../../domain/phaser/GameToScreenMapper';
+import { InMemoryPlayerRenderer } from '../../domain/phaser/InMemoryPlayerRenderer';
+import { Player } from '../../domain/phaser/Player';
+import { GameState, ObstacleTypes } from '../../utils/constants';
 
 describe('Player Renderer Initial', () => {
     const numberPlayers = 1;

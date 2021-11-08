@@ -1,18 +1,18 @@
-import { createMemoryHistory } from "history";
+import { createMemoryHistory } from 'history';
 
-import { GameNames } from "../../../config/games";
-import { GameState, MessageTypes, MessageTypesGame1 } from "../../../utils/constants";
-import { screenLobbyRoute } from "../../../utils/routes";
-import { ConnectedUsersMessage } from "../../typeGuards/connectedUsers";
-import { GameHasFinishedMessage } from "../../typeGuards/finished";
-import { GameHasStartedMessage } from "../../typeGuards/game1/started";
-import { GameHasPausedMessage } from "../../typeGuards/paused";
-import { GameHasResetMessage } from "../../typeGuards/reset";
-import { GameHasResumedMessage } from "../../typeGuards/resumed";
-import { StartPhaserGameMessage } from "../../typeGuards/startPhaserGame";
-import { GameHasStoppedMessage } from "../../typeGuards/stopped";
-import { InMemorySocketFake } from "../InMemorySocketFake";
-import { handleSetSocket } from "./handleSetSocket";
+import { GameNames } from '../../config/games';
+import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
+import { handleSetSocket } from '../../domain/socket/screen/handleSetSocket';
+import { ConnectedUsersMessage } from '../../domain/typeGuards/connectedUsers';
+import { GameHasFinishedMessage } from '../../domain/typeGuards/finished';
+import { GameHasStartedMessage } from '../../domain/typeGuards/game1/started';
+import { GameHasPausedMessage } from '../../domain/typeGuards/paused';
+import { GameHasResetMessage } from '../../domain/typeGuards/reset';
+import { GameHasResumedMessage } from '../../domain/typeGuards/resumed';
+import { StartPhaserGameMessage } from '../../domain/typeGuards/startPhaserGame';
+import { GameHasStoppedMessage } from '../../domain/typeGuards/stopped';
+import { GameState, MessageTypes, MessageTypesGame1 } from '../../utils/constants';
+import { screenLobbyRoute } from '../../utils/routes';
 
 describe('handleSetSocket', () => {
     const history = createMemoryHistory();

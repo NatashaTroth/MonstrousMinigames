@@ -1,13 +1,11 @@
-import { depthDictionary } from "../../../../config/depthDictionary";
-import {
-    designDevelopment, localDevelopment, ObstacleTypes, stunnedAnimation
-} from "../../../../utils/constants";
-import { PlayerRenderer } from "../../../phaserTestHelper/playerRenderer/PlayerRenderer";
-import MainScene from "../components/MainScene";
-import { AnimationName } from "./enums";
-import { Character, GameData } from "./gameInterfaces";
-import { GameToScreenMapper } from "./GameToScreenMapper";
-import { Coordinates } from "./gameTypes";
+import { depthDictionary } from '../../config/depthDictionary';
+import { designDevelopment, localDevelopment, ObstacleTypes, stunnedAnimation } from '../../utils/constants';
+import MainScene from '../game1/screen/components/MainScene';
+import { AnimationName } from './enums';
+import { Character, GameData } from './gameInterfaces';
+import { GameToScreenMapper } from './GameToScreenMapper';
+import { Coordinates } from './gameTypes';
+import { PlayerRenderer } from './PlayerRenderer';
 
 /**
  * This is the main player class where all the business functionality should be implemented (eg. what happens when a

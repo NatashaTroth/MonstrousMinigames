@@ -1,4 +1,4 @@
-import { handleSetGameFinished } from './handleSetGameFinished';
+import { handleSetGameFinished } from '../../../domain/commonGameState/controller/handleSetGameFinished';
 
 describe('handleSetGameFinished', () => {
     it('handed setFinished function should be called with finished value', () => {

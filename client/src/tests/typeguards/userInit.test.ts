@@ -1,5 +1,5 @@
+import { UserInitMessage, userInitTypeGuard } from '../../domain/typeGuards/userInit';
 import { MessageTypes } from '../../utils/constants';
-import { UserInitMessage, userInitTypeGuard } from './userInit';
 
 describe('userInit TypeGuard', () => {
     it('when type is userInit, it should return true', () => {

@@ -1,13 +1,14 @@
-import "jest-styled-components";
-import { cleanup, queryByText, render } from "@testing-library/react";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure } from "enzyme";
-import * as React from "react";
-import { ThemeProvider } from "styled-components";
+import 'jest-styled-components';
 
-import { defaultValue, GameContext } from "../../contexts/GameContextProvider";
-import theme from "../../styles/theme";
-import PausedDialog from "./PausedDialog";
+import { cleanup, queryByText, render } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure } from 'enzyme';
+import * as React from 'react';
+import { ThemeProvider } from 'styled-components';
+
+import PausedDialog from '../../components/common/PausedDialog';
+import { defaultValue, GameContext } from '../../contexts/GameContextProvider';
+import theme from '../../styles/theme';
 
 configure({ adapter: new Adapter() });
 

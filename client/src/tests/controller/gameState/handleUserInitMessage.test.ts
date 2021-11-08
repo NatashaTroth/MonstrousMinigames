@@ -1,6 +1,6 @@
+import { handleUserInitMessage } from '../../../domain/commonGameState/controller/handleUserInitMessage';
+import { UserInitMessage } from '../../../domain/typeGuards/userInit';
 import { MessageTypes } from '../../../utils/constants';
-import { UserInitMessage } from '../../typeGuards/userInit';
-import { handleUserInitMessage } from './handleUserInitMessage';
 
 describe('handleUserInitMessage', () => {
     const mockData: UserInitMessage = {
@@ -12,26 +12,6 @@ describe('handleUserInitMessage', () => {
         roomId: '1',
         ready: false,
     };
-    /*
-    it('when message type is user init, handed setPlayerAdmin should be called', () => {
-        const setPlayerAdmin = jest.fn();
-        const setPlayerNumber = jest.fn();
-        const setName = jest.fn();
-        const setUserId = jest.fn();
-
-        handleUserInitMessage({
-            data: mockData,
-            dependencies: {
-                setPlayerAdmin,
-                setPlayerNumber,
-                setName,
-                setUserId,
-            },
-        });
-
-        expect(setPlayerAdmin).toHaveBeenCalledTimes(1);
-    });
-    */
 
     it('when message type is user init, handed setPlayerNumber should be called', () => {
         const setPlayerNumber = jest.fn();

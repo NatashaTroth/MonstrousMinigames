@@ -6,8 +6,8 @@ import { configure, mount } from 'enzyme';
 import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 
-import theme from '../../styles/theme';
-import { SkipButton } from './SkipButton.sc';
+import { SkipButton } from '../../../components/controller/SkipButton.sc';
+import theme from '../../../styles/theme';
 
 configure({ adapter: new Adapter() });
 

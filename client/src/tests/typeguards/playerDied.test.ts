@@ -1,5 +1,5 @@
-import { MessageTypesGame1 } from '../../../utils/constants';
-import { PlayerDiedMessage, playerDiedTypeGuard } from './playerDied';
+import { PlayerDiedMessage, playerDiedTypeGuard } from '../../domain/typeGuards/game1/playerDied';
+import { MessageTypesGame1 } from '../../utils/constants';
 
 describe('playerDied TypeGuard', () => {
     it('when type is playerDied, it should return true', () => {

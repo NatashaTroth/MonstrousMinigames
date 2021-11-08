@@ -1,5 +1,5 @@
+import { GameHasResumedMessage, resumedTypeGuard } from '../../domain/typeGuards/resumed';
 import { MessageTypes } from '../../utils/constants';
-import { GameHasResumedMessage, resumedTypeGuard } from './resumed';
 
 describe('resumed TypeGuard', () => {
     it('when type is resumed, it should return true', () => {

@@ -1,19 +1,18 @@
-import { cleanup, fireEvent, queryByText, render } from "@testing-library/react";
-import React from "react";
-import { Router } from "react-router-dom";
-import { ThemeProvider } from "styled-components";
+import { cleanup, fireEvent, queryByText, render } from '@testing-library/react';
+import React from 'react';
+import { Router } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
 
+import { FinishedScreen } from '../../../components/controller/FinishedScreen';
 import {
-    ControllerSocketContext, defaultValue as controllerDefaultValue
-} from "../../contexts/ControllerSocketContextProvider";
-import {
-    defaultValue as gameContextDefaultValue, GameContext
-} from "../../contexts/GameContextProvider";
-import { defaultValue, PlayerContext } from "../../contexts/PlayerContextProvider";
-import history from "../../domain/history/history";
-import { InMemorySocketFake } from "../../domain/socket/InMemorySocketFake";
-import theme from "../../styles/theme";
-import { FinishedScreen } from "./FinishedScreen";
+    ControllerSocketContext,
+    defaultValue as controllerDefaultValue,
+} from '../../../contexts/ControllerSocketContextProvider';
+import { defaultValue as gameContextDefaultValue, GameContext } from '../../../contexts/GameContextProvider';
+import { defaultValue, PlayerContext } from '../../../contexts/PlayerContextProvider';
+import history from '../../../domain/history/history';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import theme from '../../../styles/theme';
 
 afterEach(cleanup);
 

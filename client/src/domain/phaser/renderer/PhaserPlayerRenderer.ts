@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 
-import { depthDictionary } from '../../../../../config/depthDictionary';
-import { fireworkFlares } from '../../components/GameAssets';
-import MainScene from '../../components/MainScene';
-import { moveLanesToCenter } from '../../gameState/moveLanesToCenter';
+import { depthDictionary } from '../../../config/depthDictionary';
+import { fireworkFlares } from '../../game1/screen/components/GameAssets';
+import MainScene from '../../game1/screen/components/MainScene';
+import { moveLanesToCenter } from '../../game1/screen/gameState/moveLanesToCenter';
 import * as colors from '../colors';
 import { Character, CharacterAnimation } from '../gameInterfaces';
 import { CharacterAnimationFrames } from '../gameInterfaces/Character';

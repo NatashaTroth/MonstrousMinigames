@@ -7,15 +7,15 @@ import { configure, mount, shallow } from 'enzyme';
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 
-import { characters } from '../../config/characters';
-import { GameNames } from '../../config/games';
-import { defaultValue as defaultGameValue, GameContext } from '../../contexts/GameContextProvider';
-import { defaultValue, PlayerContext } from '../../contexts/PlayerContextProvider';
-import history from '../../domain/history/history';
-import theme from '../../styles/theme';
-import { controllerChooseCharacterRoute } from '../../utils/routes';
-import { Lobby } from './Lobby';
-import { ReadyButton } from './Lobby.sc';
+import { Lobby } from '../../../components/controller/Lobby';
+import { ReadyButton } from '../../../components/controller/Lobby.sc';
+import { characters } from '../../../config/characters';
+import { GameNames } from '../../../config/games';
+import { defaultValue as defaultGameValue, GameContext } from '../../../contexts/GameContextProvider';
+import { defaultValue, PlayerContext } from '../../../contexts/PlayerContextProvider';
+import history from '../../../domain/history/history';
+import theme from '../../../styles/theme';
+import { controllerChooseCharacterRoute } from '../../../utils/routes';
 
 configure({ adapter: new Adapter() });
 

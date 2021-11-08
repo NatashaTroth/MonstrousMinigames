@@ -1,7 +1,7 @@
 import { cleanup, queryByText, render } from '@testing-library/react';
 import React from 'react';
 
-import GameWrapper from './GameWrapper';
+import GameWrapper from '../../components/common/GameWrapper';
 
 afterEach(cleanup);
 

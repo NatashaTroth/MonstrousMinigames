@@ -6,8 +6,8 @@ import { configure, mount } from 'enzyme';
 import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 
+import { StyledParticles } from '../../components/common/Particles.sc';
 import theme from '../../styles/theme';
-import { StyledParticles } from './Particles.sc';
 
 configure({ adapter: new Adapter() });
 

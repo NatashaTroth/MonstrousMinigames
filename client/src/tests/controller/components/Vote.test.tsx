@@ -1,13 +1,13 @@
 /* eslint-disable simple-import-sort/imports */
-import "jest-styled-components";
-import { cleanup } from "@testing-library/react";
-import { ThemeProvider } from "styled-components";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure, mount, shallow } from "enzyme";
-import React from "react";
+import 'jest-styled-components';
+import { cleanup } from '@testing-library/react';
+import { ThemeProvider } from 'styled-components';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure, mount } from 'enzyme';
+import React from 'react';
 
-import theme from "../../../../styles/theme";
-import Vote from "./Vote";
+import Vote from '../../../domain/game3/controller/components/Vote';
+import theme from '../../../styles/theme';
 
 configure({ adapter: new Adapter() });
 

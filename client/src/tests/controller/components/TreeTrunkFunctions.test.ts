@@ -3,8 +3,12 @@ import { cleanup } from '@testing-library/react';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure } from 'enzyme';
 
-import { Orientation } from './TreeTrunk';
-import { handleTouchEnd, handleTouchStart, setTranslate } from './TreeTrunkFunctions';
+import { Orientation } from '../../../domain/game1/controller/components/obstacles/TreeTrunk';
+import {
+    handleTouchEnd,
+    handleTouchStart,
+    setTranslate,
+} from '../../../domain/game1/controller/components/obstacles/TreeTrunkFunctions';
 
 configure({ adapter: new Adapter() });
 

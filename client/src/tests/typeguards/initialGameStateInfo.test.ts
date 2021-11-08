@@ -1,5 +1,8 @@
-import { GameState, MessageTypesGame1 } from "../../../utils/constants";
-import { InitialGameStateInfoMessage, initialGameStateInfoTypeGuard } from "./initialGameStateInfo";
+import {
+    InitialGameStateInfoMessage,
+    initialGameStateInfoTypeGuard,
+} from '../../domain/typeGuards/game1/initialGameStateInfo';
+import { GameState, MessageTypesGame1 } from '../../utils/constants';
 
 describe('initial game state info TypeGuard', () => {
     it('when type is initial game state, it should return true', () => {

@@ -1,5 +1,5 @@
-import { GameState, MessageTypesGame1 } from '../../../utils/constants';
-import { GameStateInfoMessage, gameStateInfoTypeGuard } from './gameStateInfo';
+import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../domain/typeGuards/game1/gameStateInfo';
+import { GameState, MessageTypesGame1 } from '../../utils/constants';
 
 describe('game state info TypeGuard', () => {
     it('when type is paused, it should return true', () => {

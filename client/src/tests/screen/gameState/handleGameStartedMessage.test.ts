@@ -1,7 +1,7 @@
 import { createMemoryHistory } from 'history';
 
 import { GameNames } from '../../../config/games';
-import { handleGameStartedMessage } from './handleGameStartedMessage';
+import { handleGameStartedMessage } from '../../../domain/commonGameState/screen/handleGameStartedMessage';
 
 describe('gameHasStarted function', () => {
     const setGameStarted = jest.fn();

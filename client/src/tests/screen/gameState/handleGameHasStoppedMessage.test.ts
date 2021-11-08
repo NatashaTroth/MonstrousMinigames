@@ -1,7 +1,7 @@
 import { createMemoryHistory } from 'history';
 
+import { handleGameHasStoppedMessage } from '../../../domain/commonGameState/screen/handleGameHasStoppedMessage';
 import { screenLobbyRoute } from '../../../utils/routes';
-import { handleGameHasStoppedMessage } from './handleGameHasStoppedMessage';
 
 describe('handleGameHasStoppedMessage', () => {
     const roomId = '1234';

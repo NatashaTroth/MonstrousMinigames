@@ -1,5 +1,5 @@
+import { GameHasResetMessage, resetTypeGuard } from '../../domain/typeGuards/reset';
 import { MessageTypes } from '../../utils/constants';
-import { GameHasResetMessage, resetTypeGuard } from './reset';
 
 describe('reset TypeGuard', () => {
     it('when type is reset, it should return true', () => {

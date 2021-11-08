@@ -1,9 +1,9 @@
 import { createMemoryHistory } from 'history';
 
+import { handleGameHasFinishedMessage } from '../../../domain/commonGameState/screen/handleGameHasFinishedMessage';
+import { GameHasFinishedMessage } from '../../../domain/typeGuards/finished';
 import { GameState, MessageTypes } from '../../../utils/constants';
 import { screenFinishedRoute } from '../../../utils/routes';
-import { GameHasFinishedMessage } from '../../typeGuards/finished';
-import { handleGameHasFinishedMessage } from './handleGameHasFinishedMessage';
 
 describe('handleGameHasFinishedMessage', () => {
     const roomId = '1234';

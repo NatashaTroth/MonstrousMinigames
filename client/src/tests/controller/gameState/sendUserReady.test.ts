@@ -1,6 +1,6 @@
+import { sendUserReady } from '../../../domain/commonGameState/controller/sendUserReady';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
 import { MessageTypes } from '../../../utils/constants';
-import { InMemorySocketFake } from '../../socket/InMemorySocketFake';
-import { sendUserReady } from './sendUserReady';
 
 describe('sendUserReady function', () => {
     it('userReady should be emitted', () => {

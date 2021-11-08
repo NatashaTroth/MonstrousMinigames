@@ -1,4 +1,4 @@
-import { handleAudioPermission } from './handlePermission';
+import { handleAudioPermission } from '../../domain/audio/handlePermission';
 
 describe('handlePermission function', () => {
     it('handed pauseLobbyMusic should not be called if permissions already granted', () => {

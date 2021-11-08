@@ -4,8 +4,8 @@ import { cleanup, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 
+import IconButton from '../../components/common/IconButton';
 import theme from '../../styles/theme';
-import IconButton from '../common/IconButton';
 
 afterEach(cleanup);
 describe('IconButton', () => {

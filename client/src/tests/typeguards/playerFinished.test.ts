@@ -1,5 +1,5 @@
-import { MessageTypesGame1 } from "../../../utils/constants";
-import { PlayerFinishedMessage, playerFinishedTypeGuard } from "./playerFinished";
+import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../domain/typeGuards/game1/playerFinished';
+import { MessageTypesGame1 } from '../../utils/constants';
 
 describe('playerFinished TypeGuard', () => {
     it('when type is playerFinished, it should return true', () => {

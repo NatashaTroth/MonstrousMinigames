@@ -1,7 +1,7 @@
-import { createMemoryHistory } from "history";
+import { createMemoryHistory } from 'history';
 
-import { controllerFinishedRoute } from "../../../utils/routes";
-import { handleGameHasFinishedMessage } from "./handleGameHasFinishedMessage";
+import { handleGameHasFinishedMessage } from '../../../domain/commonGameState/controller/handleGameHasFinishedMessage';
+import { controllerFinishedRoute } from '../../../utils/routes';
 
 beforeEach(() => {
     global.sessionStorage.clear();

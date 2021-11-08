@@ -1,6 +1,6 @@
-import { Navigator, UserMediaProps } from "../navigator/Navigator";
-import { Window } from "../window/Window";
-import { ClickRequestDeviceMotion, getMicrophoneStream } from "./permissions";
+import { Navigator, UserMediaProps } from '../../domain/navigator/Navigator';
+import { ClickRequestDeviceMotion, getMicrophoneStream } from '../../domain/user/permissions';
+import { Window } from '../../domain/window/Window';
 
 describe('test ClickRequestDeviceMotion function', () => {
     it('ClickRequestDeviceMotion should return true, when access is granted on ios', async () => {

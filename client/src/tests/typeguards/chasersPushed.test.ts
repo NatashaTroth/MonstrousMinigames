@@ -1,5 +1,5 @@
-import { MessageTypesGame1 } from '../../../utils/constants';
-import { ChasersPushedMessage, ChasersPushedTypeGuard } from './chasersPushed';
+import { ChasersPushedMessage, ChasersPushedTypeGuard } from '../../domain/typeGuards/game1/chasersPushed';
+import { MessageTypesGame1 } from '../../utils/constants';
 
 describe('chasersPushed TypeGuard', () => {
     it('when type is chasersPushed, it should return true', () => {

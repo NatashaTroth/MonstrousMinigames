@@ -1,6 +1,6 @@
 import { GameNames } from '../../config/games';
+import { GameSetMessage, gameSetTypeGuard } from '../../domain/typeGuards/gameSet';
 import { MessageTypes } from '../../utils/constants';
-import { GameSetMessage, gameSetTypeGuard } from './gameSet';
 
 describe('game set TypeGuard', () => {
     it('when game is set it should return true', () => {

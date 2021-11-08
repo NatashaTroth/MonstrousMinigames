@@ -1,6 +1,6 @@
-import { MessageTypesGame1 } from '../../../../utils/constants';
-import { InMemorySocketFake } from '../../../socket/InMemorySocketFake';
-import { sendMovement } from './sendMovement';
+import { sendMovement } from '../../../domain/game1/controller/gameState/sendMovement';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { MessageTypesGame1 } from '../../../utils/constants';
 
 describe('sendMovement function', () => {
     it('when game is running, runForward should be emitted', () => {

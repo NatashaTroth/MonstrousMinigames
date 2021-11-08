@@ -1,5 +1,5 @@
+import { ScreenAdminMessage, screenAdminTypeGuard } from '../../domain/typeGuards/screenAdmin';
 import { MessageTypes } from '../../utils/constants';
-import { ScreenAdminMessage, screenAdminTypeGuard } from './screenAdmin';
 
 describe('screen admin TypeGuard', () => {
     it('when type is paused, it should return true', () => {

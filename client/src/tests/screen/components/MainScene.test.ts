@@ -1,6 +1,6 @@
-import { MessageTypes } from '../../../../utils/constants';
-import { InMemorySocketFake } from '../../../socket/InMemorySocketFake';
-import { handleResume, handleStartGame } from './MainScene';
+import { handleResume, handleStartGame } from '../../../domain/game1/screen/components/MainScene';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { MessageTypes } from '../../../utils/constants';
 
 describe('handleResume', () => {
     it('handleResume should emit pauseResume to socket', () => {

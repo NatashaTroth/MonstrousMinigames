@@ -1,6 +1,6 @@
-import { GameNames } from '../../../config/games';
-import { MessageTypes } from '../../../utils/constants';
-import { GameHasStartedMessage, startedTypeGuard } from './started';
+import { GameNames } from '../../config/games';
+import { GameHasStartedMessage, startedTypeGuard } from '../../domain/typeGuards/game1/started';
+import { MessageTypes } from '../../utils/constants';
 
 describe('started TypeGuard', () => {
     it('when type is started, it should return true', () => {

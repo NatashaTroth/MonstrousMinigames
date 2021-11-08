@@ -1,4 +1,4 @@
-import { handleSetGameStarted } from './handleSetGameStarted';
+import { handleSetGameStarted } from '../../../domain/commonGameState/controller/handleSetGameStarted';
 
 describe('handleSetGameStarted', () => {
     it('handed setGameStarted function should be called with started value', () => {

@@ -1,5 +1,5 @@
+import { StartPhaserGameMessage, startPhaserGameTypeGuard } from '../../domain/typeGuards/startPhaserGame';
 import { MessageTypesGame1 } from '../../utils/constants';
-import { StartPhaserGameMessage, startPhaserGameTypeGuard } from './startPhaserGame';
 
 describe('startPhaserGame TypeGuard', () => {
     it('when type is started, it should return true', () => {

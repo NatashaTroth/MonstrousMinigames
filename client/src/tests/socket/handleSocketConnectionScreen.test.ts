@@ -1,6 +1,6 @@
 import { createMemoryHistory } from 'history';
 
-import { handleSocketConnection } from './handleSocketConnection';
+import { handleSocketConnection } from '../../domain/socket/screen/handleSocketConnection';
 
 describe('Screen Socket Connection', () => {
     it('handed setRoomId function should be called with handed roomId', () => {

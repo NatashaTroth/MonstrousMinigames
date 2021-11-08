@@ -1,8 +1,8 @@
-import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
 import {
     ApproachingSolvableObstacleOnceMessage,
     approachingSolvableObstacleOnceTypeGuard,
-} from './approachingSolvableObstacleOnceTypeGuard';
+} from '../../domain/typeGuards/game1/approachingSolvableObstacleOnceTypeGuard';
+import { MessageTypesGame1, ObstacleTypes } from '../../utils/constants';
 
 describe('approachingSolvableObstacle TypeGuard', () => {
     it('when type is approachingSolvableObstacleOnce, it should return true', () => {

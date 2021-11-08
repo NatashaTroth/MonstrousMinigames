@@ -1,6 +1,6 @@
+import { handleConnectedUsersMessage } from '../../../domain/commonGameState/screen/handleConnectedUsersMessage';
+import { ConnectedUsersMessage } from '../../../domain/typeGuards/connectedUsers';
 import { MessageTypes } from '../../../utils/constants';
-import { ConnectedUsersMessage } from '../../typeGuards/connectedUsers';
-import { handleConnectedUsersMessage } from './handleConnectedUsersMessage';
 
 describe('handleConnectedUsersMessage', () => {
     it('handed setConnectedUsers should be called with handed data', () => {

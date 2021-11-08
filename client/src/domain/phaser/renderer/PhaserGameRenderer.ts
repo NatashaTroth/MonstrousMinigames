@@ -2,10 +2,10 @@
 
 import Phaser from 'phaser';
 
-import { depthDictionary } from '../../../../../config/depthDictionary';
-import { designDevelopment } from '../../../../../utils/constants';
-import { getRandomInt } from '../../../../../utils/getRandomInt';
-import MainScene from '../../components/MainScene';
+import { depthDictionary } from '../../../config/depthDictionary';
+import { designDevelopment } from '../../../utils/constants';
+import { getRandomInt } from '../../../utils/getRandomInt';
+import MainScene from '../../game1/screen/components/MainScene';
 import * as colors from '../colors';
 import { gameLoadedWaitingMessages, gameLoadingMessages } from '../gameLoadingMessages';
 import { countdownTextStyleProperties, loadingTextStyleProperties } from '../textStyleProperties';

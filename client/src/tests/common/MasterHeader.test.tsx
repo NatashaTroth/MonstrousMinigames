@@ -7,10 +7,10 @@ import { configure, mount } from 'enzyme';
 import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 
+import MasterHeader from '../../components/common/MasterHeader';
 import { AudioContext, defaultValue } from '../../contexts/AudioContextProvider';
 import history from '../../domain/history/history';
 import theme from '../../styles/theme';
-import MasterHeader from './MasterHeader';
 
 configure({ adapter: new Adapter() });
 

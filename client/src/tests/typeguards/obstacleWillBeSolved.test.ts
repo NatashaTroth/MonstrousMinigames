@@ -1,5 +1,8 @@
-import { MessageTypesGame1 } from '../../../utils/constants';
-import { ObstacleWillBeSolvedMessage, obstacleWillBeSolvedTypeGuard } from './obstacleWillBeSolved';
+import {
+    ObstacleWillBeSolvedMessage,
+    obstacleWillBeSolvedTypeGuard,
+} from '../../domain/typeGuards/game1/obstacleWillBeSolved';
+import { MessageTypesGame1 } from '../../utils/constants';
 
 describe('obstacle will be solved TypeGuard', () => {
     it('when type is obstacle, it should return true', () => {

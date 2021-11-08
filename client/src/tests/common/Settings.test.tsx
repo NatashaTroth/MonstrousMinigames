@@ -6,8 +6,8 @@ import { configure } from 'enzyme';
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 
+import Settings, { updateVolume, volumeHasBeenUnmuted } from '../../components/common/Settings';
 import theme from '../../styles/theme';
-import Settings, { updateVolume, volumeHasBeenUnmuted } from './Settings';
 
 configure({ adapter: new Adapter() });
 

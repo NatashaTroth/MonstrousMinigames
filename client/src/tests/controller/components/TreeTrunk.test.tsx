@@ -6,13 +6,18 @@ import { configure, mount } from 'enzyme';
 import { ThemeProvider } from 'styled-components';
 import React from 'react';
 
-import { defaultValue, Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
-import theme from '../../../../../styles/theme';
-import { MessageTypesGame1, ObstacleTypes } from '../../../../../utils/constants';
-import { InMemorySocketFake } from '../../../../socket/InMemorySocketFake';
-import LinearProgressBar from './LinearProgressBar';
-import TreeTrunk, { solveObstacle } from './TreeTrunk';
-import { DragItem, Line, ObstacleItem, TouchContainer } from './TreeTrunk.sc';
+import { defaultValue, Game1Context } from '../../../contexts/game1/Game1ContextProvider';
+import LinearProgressBar from '../../../domain/game1/controller/components/obstacles/LinearProgressBar';
+import TreeTrunk, { solveObstacle } from '../../../domain/game1/controller/components/obstacles/TreeTrunk';
+import {
+    DragItem,
+    Line,
+    ObstacleItem,
+    TouchContainer,
+} from '../../../domain/game1/controller/components/obstacles/TreeTrunk.sc';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import theme from '../../../styles/theme';
+import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
 
 configure({ adapter: new Adapter() });
 

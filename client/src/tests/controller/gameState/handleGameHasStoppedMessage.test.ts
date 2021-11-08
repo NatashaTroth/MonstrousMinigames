@@ -1,7 +1,7 @@
 import { createMemoryHistory } from 'history';
 
-import { InMemorySocketFake } from '../../socket/InMemorySocketFake';
-import { handleGameHasStoppedMessage } from './handleGameHasStoppedMessage';
+import { handleGameHasStoppedMessage } from '../../../domain/commonGameState/controller/handleGameHasStoppedMessage';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
 
 describe('handleGameHasStoppedMessage', () => {
     const roomId = '1234';

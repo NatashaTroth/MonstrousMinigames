@@ -1,6 +1,6 @@
 import { createMemoryHistory } from 'history';
 
-import { handlePlayerStunned } from './handlePlayerStunned';
+import { handlePlayerStunned } from '../../../domain/game1/controller/gameState/handlePlayerStunned';
 
 describe('handlePlayerStunned', () => {
     const roomId = '1234';

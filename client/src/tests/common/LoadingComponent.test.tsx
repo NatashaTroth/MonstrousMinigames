@@ -7,8 +7,8 @@ import { configure, mount } from 'enzyme';
 import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 
+import LoadingComponent from '../../components/common/LoadingComponent';
 import theme from '../../styles/theme';
-import LoadingComponent from './LoadingComponent';
 
 configure({ adapter: new Adapter() });
 

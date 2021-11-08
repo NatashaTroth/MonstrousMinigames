@@ -1,5 +1,5 @@
+import { finishedTypeGuard, GameHasFinishedMessage } from '../../domain/typeGuards/finished';
 import { GameState, MessageTypes } from '../../utils/constants';
-import { finishedTypeGuard, GameHasFinishedMessage } from './finished';
 
 describe('finished TypeGuard', () => {
     it('when type is gameHasFinished, it should return true', () => {

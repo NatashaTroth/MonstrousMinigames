@@ -6,13 +6,13 @@ import { ThemeProvider } from 'styled-components';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount } from 'enzyme';
 
-import { defaultValue, Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
-import theme from '../../../../../styles/theme';
-import { MessageTypesGame1, ObstacleTypes } from '../../../../../utils/constants';
-import { Navigator, UserMediaProps } from '../../../../navigator/Navigator';
-import { InMemorySocketFake } from '../../../../socket/InMemorySocketFake';
-import LinearProgressBar from './LinearProgressBar';
-import Spider, { solveObstacle } from './Spider';
+import { defaultValue, Game1Context } from '../../../contexts/game1/Game1ContextProvider';
+import LinearProgressBar from '../../../domain/game1/controller/components/obstacles/LinearProgressBar';
+import Spider, { solveObstacle } from '../../../domain/game1/controller/components/obstacles/Spider';
+import { Navigator, UserMediaProps } from '../../../domain/navigator/Navigator';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import theme from '../../../styles/theme';
+import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
 
 configure({ adapter: new Adapter() });
 

@@ -6,9 +6,9 @@ import { ThemeProvider } from 'styled-components';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount } from 'enzyme';
 
-import theme from '../../../../../styles/theme';
-import LinearProgressBar, { normalise } from './LinearProgressBar';
-import { StyledLinearProgress } from './LinearProgressBar.sc';
+import LinearProgressBar, { normalise } from '../../../domain/game1/controller/components/obstacles/LinearProgressBar';
+import { StyledLinearProgress } from '../../../domain/game1/controller/components/obstacles/LinearProgressBar.sc';
+import theme from '../../../styles/theme';
 
 configure({ adapter: new Adapter() });
 

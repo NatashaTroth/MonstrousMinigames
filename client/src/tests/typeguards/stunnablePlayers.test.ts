@@ -1,5 +1,5 @@
-import { MessageTypesGame1 } from '../../../utils/constants';
-import { StunnablePlayersMessage, stunnablePlayersTypeGuard } from './stunnablePlayers';
+import { StunnablePlayersMessage, stunnablePlayersTypeGuard } from '../../domain/typeGuards/game1/stunnablePlayers';
+import { MessageTypesGame1 } from '../../utils/constants';
 
 describe('stunnablePlayers TypeGuard', () => {
     it('when type is stunnablePlayers, it should return true', () => {

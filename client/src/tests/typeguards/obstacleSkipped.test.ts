@@ -1,5 +1,5 @@
-import { MessageTypesGame1 } from '../../../utils/constants';
-import { ObstacleSkippedMessage, obstacleSkippedTypeGuard } from './obstacleSkipped';
+import { ObstacleSkippedMessage, obstacleSkippedTypeGuard } from '../../domain/typeGuards/game1/obstacleSkipped';
+import { MessageTypesGame1 } from '../../utils/constants';
 
 describe('obstacle TypeGuard', () => {
     it('when type is obstacle, it should return true', () => {

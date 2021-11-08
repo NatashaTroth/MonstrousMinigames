@@ -1,7 +1,7 @@
 import { cleanup, queryByText, render } from '@testing-library/react';
 import React from 'react';
 
-import FullScreenContainer from '../common/FullScreenContainer';
+import FullScreenContainer from '../../../components/common/FullScreenContainer';
 
 afterEach(cleanup);
 describe('FullScreenContainer', () => {

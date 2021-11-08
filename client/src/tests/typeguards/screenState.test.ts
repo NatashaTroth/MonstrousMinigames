@@ -1,6 +1,6 @@
 import { ScreenStates } from '../../config/screenStates';
+import { ScreenStateMessage, screenStateTypeGuard } from '../../domain/typeGuards/screenState';
 import { MessageTypes } from '../../utils/constants';
-import { ScreenStateMessage, screenStateTypeGuard } from './screenState';
 
 describe('paused TypeGuard', () => {
     it('when type is paused, it should return true', () => {
