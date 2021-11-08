@@ -1,6 +1,6 @@
 //TODO can be used by all phaser games!!
 
-import Phaser from 'phaser';
+import Phaser, { GameObjects } from 'phaser';
 
 import { depthDictionary } from '../../../config/depthDictionary';
 import { designDevelopment } from '../../../utils/constants';
@@ -37,7 +37,7 @@ export class PhaserGameRenderer {
     }
 
     renderCountdown(text: string) {
-        handleRenderCountdown(this.scene, this.countdownText, text);
+        this.countdownText = handleRenderCountdown(this.scene, this.countdownText, text);
     }
 
     renderLoadingScreen() {
@@ -157,5 +157,5 @@ export function handleRenderCountdown(scene: Scene, countdownText: GameObjectTex
         countdownText.setDepth(depthDictionary.countdown);
     }
 
-    return countdownText;
+    return countdownText as GameObjects.Text;
 }
