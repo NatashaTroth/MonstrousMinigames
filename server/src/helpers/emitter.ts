@@ -1,11 +1,11 @@
-import { Namespace, Socket } from "socket.io";
+import { Namespace, Socket } from 'socket.io';
 
-import Room from "../classes/room";
-import User from "../classes/user";
-import { GameNames } from "../enums/gameNames";
-import { MessageTypes } from "../enums/messageTypes";
-import { GameOneMsgType } from "../gameplay/gameOne/enums";
-import { GameTwoMessageTypes } from "../gameplay/gameTwo/enums/GameTwoMessageTypes";
+import Room from '../classes/room';
+import User from '../classes/user';
+import { GameNames } from '../enums/gameNames';
+import { MessageTypes } from '../enums/messageTypes';
+import { GameOneMsgType } from '../gameplay/gameOne/enums';
+import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
 
 function sendUserInit(socket: Socket, user: User, room: Room): void {
     socket.emit('message', {
