@@ -8,6 +8,7 @@ import React from 'react';
 import { ThemeProvider } from 'styled-components';
 
 import { characters } from '../../config/characters';
+import { GameNames } from '../../config/games';
 import { defaultValue as defaultGameValue, GameContext } from '../../contexts/GameContextProvider';
 import { defaultValue, PlayerContext } from '../../contexts/PlayerContextProvider';
 import history from '../../domain/history/history';
@@ -24,7 +25,7 @@ describe('Lobby', () => {
     it('when data is loading, a CircularProgress is rendered', () => {
         const container = shallow(
             <ThemeProvider theme={theme}>
-                <GameContext.Provider value={{ ...defaultGameValue }}>
+                <GameContext.Provider value={{ ...defaultGameValue, chosenGame: GameNames.game1 }}>
                     <PlayerContext.Provider value={{ ...defaultValue }}>
                         <Lobby history={history} />
                     </PlayerContext.Provider>
@@ -37,7 +38,7 @@ describe('Lobby', () => {
     it('when data is loaded, an ready instruction is rendered', () => {
         const container = shallow(
             <ThemeProvider theme={theme}>
-                <GameContext.Provider value={{ ...defaultGameValue }}>
+                <GameContext.Provider value={{ ...defaultGameValue, chosenGame: GameNames.game1 }}>
                     <PlayerContext.Provider value={{ ...defaultValue, playerNumber: 1 }}>
                         <Lobby history={history} />
                     </PlayerContext.Provider>
@@ -66,7 +67,7 @@ describe('Lobby', () => {
         const location = `${controllerChooseCharacterRoute(roomId)}`;
         const container = mount(
             <ThemeProvider theme={theme}>
-                <GameContext.Provider value={{ ...defaultGameValue, roomId }}>
+                <GameContext.Provider value={{ ...defaultGameValue, roomId, chosenGame: GameNames.game1 }}>
                     <PlayerContext.Provider value={{ ...defaultValue, playerNumber: 1 }}>
                         <Lobby history={history} />
                     </PlayerContext.Provider>
@@ -74,7 +75,7 @@ describe('Lobby', () => {
             </ThemeProvider>
         );
 
-        container.find('button').simulate('click');
+        container.find('button').at(1).simulate('click');
 
         expect(history.location).toHaveProperty('pathname', location);
     });
@@ -83,7 +84,7 @@ describe('Lobby', () => {
         const setReady = jest.fn();
         const container = mount(
             <ThemeProvider theme={theme}>
-                <GameContext.Provider value={{ ...defaultGameValue }}>
+                <GameContext.Provider value={{ ...defaultGameValue, chosenGame: GameNames.game1 }}>
                     <PlayerContext.Provider value={{ ...defaultValue, playerNumber: 1, setReady }}>
                         <Lobby history={history} />
                     </PlayerContext.Provider>
@@ -100,7 +101,7 @@ describe('Lobby', () => {
         const setReady = jest.fn();
         const container = mount(
             <ThemeProvider theme={theme}>
-                <GameContext.Provider value={{ ...defaultGameValue }}>
+                <GameContext.Provider value={{ ...defaultGameValue, chosenGame: GameNames.game1 }}>
                     <PlayerContext.Provider value={{ ...defaultValue, playerNumber: 1, setReady }}>
                         <Lobby history={history} />
                     </PlayerContext.Provider>
@@ -117,7 +118,7 @@ describe('Lobby', () => {
         const character = characters[0];
         const container = mount(
             <ThemeProvider theme={theme}>
-                <GameContext.Provider value={{ ...defaultGameValue }}>
+                <GameContext.Provider value={{ ...defaultGameValue, chosenGame: GameNames.game1 }}>
                     <PlayerContext.Provider value={{ ...defaultValue, playerNumber: 1, character }}>
                         <Lobby history={history} />
                     </PlayerContext.Provider>

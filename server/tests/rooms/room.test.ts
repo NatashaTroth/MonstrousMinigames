@@ -1,12 +1,13 @@
 import 'reflect-metadata';
+
 import Room from '../../src/classes/room';
 import User from '../../src/classes/user';
 import { GameAlreadyStartedError } from '../../src/customErrors';
 import CannotStartEmptyGameError from '../../src/customErrors/CannotStartEmptyGameError';
 import { Globals } from '../../src/enums/globals';
-import { CatchFoodGame } from '../../src/gameplay';
+import { GameOne } from '../../src/gameplay';
 import { MaxNumberUsersExceededError } from '../../src/gameplay/customErrors';
-import { clearTimersAndIntervals } from '../gameplay/catchFoodGame/gameHelperFunctions';
+import { clearTimersAndIntervals } from '../gameplay/gameOne/gameOneHelperFunctions';
 
 describe('Room ID', () => {
     it("creates a room with id 'ABCD'", () => {
@@ -48,7 +49,7 @@ describe('Room: Users', () => {
             expect(room.isClosed()).toEqual(false);
             room.userDisconnected(user2.id);
             expect(room.isClosed()).toEqual(true);
-        }, (room.game as CatchFoodGame).countdownTime || 0);
+        }, (room.game as GameOne).countdownTime || 0);
         clearTimersAndIntervals(room.game);
         jest.runAllTimers();
     });

@@ -1,4 +1,4 @@
-import { Pause, PlayArrow, VolumeOff, VolumeUp } from '@material-ui/icons';
+import { Pause, PlayArrow, Stop, VolumeOff, VolumeUp } from '@material-ui/icons';
 import Phaser from 'phaser';
 import * as React from 'react';
 import { useParams } from 'react-router';
@@ -9,7 +9,7 @@ import { GameContext } from '../../../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../../audio/handlePermission';
 import GameEventEmitter from '../phaser/GameEventEmitter';
-import { AudioButton, Container, PauseButton } from './Game.sc';
+import { AudioButton, Container, PauseButton, StopButton } from './Game.sc';
 import MainScene from './MainScene';
 
 const Game: React.FunctionComponent = () => {
@@ -51,7 +51,6 @@ const Game: React.FunctionComponent = () => {
             type: Phaser.WEBGL,
             width: '100%',
             height: '100%',
-            // backgroundColor: '#081919',
             backgroundColor: '#000b18',
             physics: {
                 default: 'arcade',
@@ -81,23 +80,26 @@ const Game: React.FunctionComponent = () => {
         GameEventEmitter.emitPauseResumeEvent();
     }
 
+    async function handleStop() {
+        GameEventEmitter.emitStopEvent();
+    }
+
     return (
         <Container>
             <PauseButton onClick={handlePause} variant="primary">
                 {hasPaused ? <PlayArrow /> : <Pause />}
             </PauseButton>
+            <StopButton onClick={handleStop} variant="primary">
+                {<Stop />}
+            </StopButton>
             <AudioButton onClick={handleAudio} variant="primary">
                 {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
             </AudioButton>
-            <GameContent />
+            <div>
+                <div id="game-root" data-testid="game-container"></div>
+            </div>
         </Container>
     );
 };
 
 export default Game;
-
-const GameContent: React.FunctionComponent = () => (
-    <div>
-        <div id="game-root" data-testid="game-container"></div>
-    </div>
-);

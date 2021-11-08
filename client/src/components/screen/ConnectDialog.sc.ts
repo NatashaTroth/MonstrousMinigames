@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
-const boxShadowDepth = 8;
+import { OrangeBase } from '../common/CommonStyles.sc';
+
 const fontSize = 1;
 
 export const StyledInput = styled.input`
@@ -55,10 +56,7 @@ export const InputContainer = styled.div`
     flex-direction: column;
 `;
 
-export const DialogContent = styled.div`
+export const DialogContent = styled(OrangeBase)`
     padding: 40px 100px;
-    background-color: ${({ theme }) => theme.palette.secondary.main};
     border-radius: 10px;
-    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
-        ${({ theme }) => theme.palette.secondary.dark};
 `;

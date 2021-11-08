@@ -1,30 +1,20 @@
-import 'jest-styled-components';
+import "jest-styled-components";
 
-import { cleanup, fireEvent, queryByText, render } from '@testing-library/react';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount } from 'enzyme';
-import * as React from 'react';
-import { ThemeProvider } from 'styled-components';
+import { cleanup, fireEvent, render } from "@testing-library/react";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
+import { configure, mount } from "enzyme";
+import * as React from "react";
+import { ThemeProvider } from "styled-components";
 
-import theme from '../../styles/theme';
-import Button from './Button';
-import { StyledButtonBase } from './Button.sc';
+import theme from "../../styles/theme";
+import Button from "./Button";
+import { StyledButtonBase } from "./Button.sc";
 
 configure({ adapter: new Adapter() });
 
 afterEach(cleanup);
 
 describe('Button', () => {
-    it('renders given text', () => {
-        const givenText = 'A Button';
-        const { container } = render(
-            <ThemeProvider theme={theme}>
-                <Button>{givenText}</Button>
-            </ThemeProvider>
-        );
-        expect(queryByText(container, givenText)).toBeTruthy();
-    });
-
     it('when disabled prop is given, a disabled button is rendered', () => {
         const givenText = 'A Button';
         const { getByText } = render(

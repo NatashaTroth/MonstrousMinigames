@@ -92,6 +92,14 @@ export enum MessageTypesGame2 {
     killSheep = 'game2/kill',
 }
 
+export const enum MessageTypesGame3 {
+    newPhotoTopic = 'game3/newPhotoTopic',
+    initialGameState = 'game3/initialGameState',
+    photo = 'game3/photo',
+    voteForPhotos = 'game3/voteForPhotos',
+    photoVote = 'game3/photoVote',
+}
+
 export const localDevelopment = false; //the one in constants.ts on the server
 export const designDevelopment = false; //so that phaser game doesn't start, but loads
 export const stunnedAnimation = false; //renders stunned animation every so often

@@ -11,11 +11,11 @@ class GameTwoPlayer extends Player {
         public posX: number,
         public posY: number,
         public killsLeft: number,
-        public characterNumber: number,
+        public characterNumber: number
     ) {
-        super(id, name);
+        super(id, name, characterNumber);
         this.direction = 'C';
-        this.speed = InitialParameters.SPEED;
+        this.speed = 0; // Bitte ändern wenn es nicht passt sonst löschen
     }
 
     update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
@@ -51,6 +51,5 @@ class GameTwoPlayer extends Player {
     public setKillsLeft(killsLeft: number) {
         this.killsLeft = killsLeft;
     }
-
 }
 export default GameTwoPlayer;

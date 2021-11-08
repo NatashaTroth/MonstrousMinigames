@@ -1,6 +1,6 @@
-import { MessageTypesGame1 } from "../../../../utils/constants";
-import { StunnablePlayersMessage } from "../../../typeGuards/game1/stunnablePlayers";
-import { handleStunnablePlayers } from "./handleStunnablePlayers";
+import { MessageTypesGame1 } from '../../../../utils/constants';
+import { StunnablePlayersMessage } from '../../../typeGuards/game1/stunnablePlayers';
+import { handleStunnablePlayers } from './handleStunnablePlayers';
 
 describe('handleStunnablePlayers function', () => {
     const mockData: StunnablePlayersMessage = {

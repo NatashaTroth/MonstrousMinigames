@@ -1,6 +1,7 @@
 // eslint-disable-next-line simple-import-sort/imports
 import * as React from 'react';
 
+import { ComponentToTest } from '../../../../components/controller/Tutorial';
 import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import windmill from '../../../../images/ui/pinwheel.svg';
@@ -12,7 +13,12 @@ import LinearProgressBar from './obstacles/LinearProgressBar';
 import { ObstacleContainer, ObstacleInstructions } from './obstacles/ObstacleStyles.sc';
 import { ProgressBarContainer, TouchContainer, WindmillImage, WindmillWood } from './Windmill.sc';
 
-const Windmill: React.FunctionComponent = () => {
+interface WindmillProps {
+    tutorial?: boolean;
+    handleTutorialFinished?: (val: ComponentToTest) => void;
+}
+
+const Windmill: React.FunctionComponent<WindmillProps> = ({ tutorial = false, handleTutorialFinished }) => {
     const MAX = 5;
     const [distance, setDistance] = React.useState(0);
     const [rounds, setRounds] = React.useState(0);
@@ -21,48 +27,64 @@ const Windmill: React.FunctionComponent = () => {
     const { roomId } = React.useContext(GameContext);
 
     React.useEffect(() => {
+        let mounted = true;
         const box = document.getElementById('box');
+        const boxBoundingRect = box?.getBoundingClientRect();
+        const boxCenter = boxBoundingRect
+            ? {
+                  x: boxBoundingRect.left + boxBoundingRect.width / 2,
+                  y: boxBoundingRect.top + boxBoundingRect.height / 2,
+              }
+            : { x: 0, y: 0 };
         let lastAngle = 0;
+        const touchContainer = document.getElementById('touchContainer');
+        touchContainer?.addEventListener('touchmove', handleTouchMove);
 
-        if (box) {
-            const boxBoundingRect = box.getBoundingClientRect();
-            const boxCenter = {
-                x: boxBoundingRect.left + boxBoundingRect.width / 2,
-                y: boxBoundingRect.top + boxBoundingRect.height / 2,
-            };
+        function handleTouchMove(e: any) {
+            e.preventDefault();
 
-            const touchContainer = document.getElementById('touchContainer');
-            touchContainer?.addEventListener('touchmove', e => {
-                const touches = e.touches[0];
-                const angle = Math.atan2(touches.pageX - boxCenter.x, -(touches.pageY - boxCenter.y)) * (180 / Math.PI);
+            const touches = e.touches[0];
+            const angle = Math.atan2(touches.pageX - boxCenter.x, -(touches.pageY - boxCenter.y)) * (180 / Math.PI);
 
-                if (lastAngle != 0 || angle > 0) {
-                    if (angle < 0) {
-                        lastAngle += 360 - Math.abs(angle) - lastAngle;
-                        setDistance(lastAngle);
-                    } else {
-                        lastAngle += angle - lastAngle;
-                        setDistance(lastAngle);
-                    }
-
-                    if (lastAngle >= 350 && angle < 10) {
-                        lastAngle = 0;
-                    }
+            if (lastAngle != 0 || angle > 0) {
+                if (angle < 0) {
+                    lastAngle += 360 - Math.abs(angle) - lastAngle;
+                    if (mounted) setDistance(lastAngle);
+                } else {
+                    lastAngle += angle - lastAngle;
+                    if (mounted) setDistance(lastAngle);
                 }
 
+                if (lastAngle >= 350 && angle < 10) {
+                    lastAngle = 0;
+                }
+            }
+
+            if (box) {
                 box.style.transform = `rotate(${angle}deg)`;
-            });
+            }
         }
+
+        return () => {
+            mounted = false;
+            touchContainer?.removeEventListener('touchmove', handleTouchMove);
+        };
     }, []);
 
-    if (distance >= 350) {
-        if (rounds + 1 === MAX) {
-            controllerSocket.emit({ type: MessageTypesGame1.pushChasers });
-            history.push(controllerPlayerDeadRoute(roomId));
+    React.useEffect(() => {
+        if (distance >= 350) {
+            if (rounds + 1 === MAX) {
+                if (tutorial) {
+                    handleTutorialFinished?.('finished');
+                } else {
+                    controllerSocket.emit({ type: MessageTypesGame1.pushChasers });
+                    history.push(controllerPlayerDeadRoute(roomId));
+                }
+            }
+            setRounds(rounds + 1);
+            setDistance(0);
         }
-        setRounds(rounds + 1);
-        setDistance(0);
-    }
+    });
 
     return (
         <ObstacleContainer>

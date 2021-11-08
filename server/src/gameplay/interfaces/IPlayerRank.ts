@@ -3,4 +3,5 @@ export interface IPlayerRank {
     name: string;
     rank: number;
     finished: boolean;
+    isActive: boolean;
 }

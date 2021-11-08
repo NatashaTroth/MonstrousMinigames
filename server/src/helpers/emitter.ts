@@ -1,11 +1,11 @@
-import { Namespace, Socket } from 'socket.io';
+import { Namespace, Socket } from "socket.io";
 
-import Room from '../classes/room';
-import User from '../classes/user';
-import { GameNames } from '../enums/gameNames';
-import { MessageTypes } from '../enums/messageTypes';
-import { CatchFoodMsgType } from '../gameplay/catchFood/enums';
-import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
+import Room from "../classes/room";
+import User from "../classes/user";
+import { GameNames } from "../enums/gameNames";
+import { MessageTypes } from "../enums/messageTypes";
+import { GameOneMsgType } from "../gameplay/gameOne/enums";
+import { GameTwoMessageTypes } from "../gameplay/gameTwo/enums/GameTwoMessageTypes";
 
 function sendUserInit(socket: Socket, user: User, room: Room): void {
     socket.emit('message', {
@@ -54,7 +54,7 @@ function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room, game
     let type = '';
     switch (game) {
         case GameNames.GAME1:
-            type = CatchFoodMsgType.ALL_SCREENS_PHASER_GAME_LOADED;
+            type = GameOneMsgType.ALL_SCREENS_PHASER_GAME_LOADED;
             break;
         case GameNames.GAME2:
             type = GameTwoMessageTypes.ALL_SCREENS_PHASER_GAME_LOADED;
@@ -62,7 +62,7 @@ function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room, game
     }
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(room.id).emit('message', {
-            type: type,
+            type,
         });
     });
 }
@@ -71,7 +71,7 @@ function sendScreenPhaserGameLoadedTimedOut(nsp: Namespace, socketId: string, ga
     let type = '';
     switch (game) {
         case GameNames.GAME1:
-            type = CatchFoodMsgType.PHASER_LOADING_TIMED_OUT;
+            type = GameOneMsgType.PHASER_LOADING_TIMED_OUT;
             break;
         case GameNames.GAME2:
             type = GameTwoMessageTypes.PHASER_LOADING_TIMED_OUT;
@@ -79,7 +79,7 @@ function sendScreenPhaserGameLoadedTimedOut(nsp: Namespace, socketId: string, ga
     }
     //TODO
     nsp.to(socketId).emit('message', {
-        type: type,
+        type,
     });
 }
 
@@ -87,7 +87,7 @@ function sendStartPhaserGame(nsps: Array<Namespace>, room: Room, game: string): 
     let type = '';
     switch (game) {
         case GameNames.GAME1:
-            type = CatchFoodMsgType.START_PHASER_GAME;
+            type = GameOneMsgType.START_PHASER_GAME;
             break;
         case GameNames.GAME2:
             type = GameTwoMessageTypes.START_PHASER_GAME;
@@ -95,7 +95,7 @@ function sendStartPhaserGame(nsps: Array<Namespace>, room: Room, game: string): 
     }
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(room.id).emit('message', {
-            type: type,
+            type,
         });
     });
 }
@@ -123,7 +123,7 @@ function sendScreenState(nsp: Namespace | Socket, state: string | undefined): vo
     });
 }
 
-function sendMessage(type: MessageTypes | CatchFoodMsgType, nsps: Array<Namespace>, recipient: string): void {
+function sendMessage(type: MessageTypes | GameOneMsgType, nsps: Array<Namespace>, recipient: string): void {
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(recipient).emit('message', {
             type: type,
@@ -138,7 +138,7 @@ function sendMessage(type: MessageTypes | CatchFoodMsgType, nsps: Array<Namespac
 // ): void {
 //     console.log('SEENDING YEES');
 //     nsp.to(user.socketId).emit('message', {
-//         type: CatchFoodMsgType.PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
+//         type: GameOneMsgType.PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
 //     });
 // }
 
