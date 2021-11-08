@@ -1,7 +1,5 @@
-import {
-    ConnectedUsersMessage, connectedUsersTypeGuard
-} from "../../domain/typeGuards/connectedUsers";
-import { MessageTypes } from "../../utils/constants";
+import { ConnectedUsersMessage, connectedUsersTypeGuard } from '../../domain/typeGuards/connectedUsers';
+import { MessageTypes } from '../../utils/constants';
 
 describe('finished TypeGuard', () => {
     it('when type is gameHasFinished, it should return true', () => {

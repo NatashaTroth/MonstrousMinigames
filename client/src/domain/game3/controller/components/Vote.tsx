@@ -8,7 +8,7 @@ import theme from '../../../../styles/theme';
 import { StyledImg, TimeWrapper } from '../../screen/components/Game.sc';
 import sendVote from '../gameState/sendVote';
 import { ScreenContainer } from './Game3Styles.sc';
-import { MediumImageContainer,VoteForPictureContainer, VoteInstructions } from './Vote.sc';
+import { MediumImageContainer, VoteForPictureContainer, VoteInstructions } from './Vote.sc';
 const Vote: React.FunctionComponent = () => {
     const { voteForPhotoMessage } = React.useContext(Game3Context);
     const [timeIsUp, setTimeIsUp] = React.useState(false);

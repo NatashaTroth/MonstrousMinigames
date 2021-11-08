@@ -1,4 +1,4 @@
-import { NavigatorAdapter } from "../../domain/navigator/NavigatorAdapter";
+import { NavigatorAdapter } from '../../domain/navigator/NavigatorAdapter';
 
 describe('NavigatorAdapter function', () => {
     it('mediaDevices should be navigator mediaDevices', () => {

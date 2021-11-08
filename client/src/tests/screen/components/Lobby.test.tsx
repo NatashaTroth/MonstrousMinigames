@@ -1,12 +1,12 @@
-import { cleanup, queryByText, render } from "@testing-library/react";
-import React from "react";
-import { Router } from "react-router-dom";
-import { ThemeProvider } from "styled-components";
+import { cleanup, queryByText, render } from '@testing-library/react';
+import React from 'react';
+import { Router } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
 
-import { Lobby } from "../../../components/screen/Lobby";
-import { defaultValue, GameContext } from "../../../contexts/GameContextProvider";
-import history from "../../../domain/history/history";
-import theme from "../../../styles/theme";
+import { Lobby } from '../../../components/screen/Lobby';
+import { defaultValue, GameContext } from '../../../contexts/GameContextProvider';
+import history from '../../../domain/history/history';
+import theme from '../../../styles/theme';
 
 // window.HTMLMediaElement.prototype.load = () => { /* do nothing */ };
 // window.HTMLMediaElement.prototype.play = () => { /* do nothing */ };
