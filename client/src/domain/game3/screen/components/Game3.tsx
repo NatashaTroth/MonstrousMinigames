@@ -23,9 +23,9 @@ const Game3: React.FunctionComponent = () => {
     const [images, setImages] = React.useState<string[]>([]);
     const { roomId } = React.useContext(GameContext);
     const { challengeId } = React.useContext(Game3Context);
-    const {setTimeIsUp,timeIsUp} = React.useContext(Game3Context);
+    const { setTimeIsUp, timeIsUp } = React.useContext(Game3Context);
     const [loading, setLoading] = React.useState(false);
-    
+
     const { topicMessage } = React.useContext(Game3Context);
 
     const { storage } = React.useContext(FirebaseContext);

@@ -1,11 +1,11 @@
 import * as React from 'react';
 
+import addMovementListener from '../domain/game1/controller/gameState/addMovementListener';
 import history from '../domain/history/history';
 import { handleSetSocket } from '../domain/socket/controller/handleSetSocket';
 import { handleSocketConnection } from '../domain/socket/controller/handleSocketConnection';
 import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
 import { Socket } from '../domain/socket/Socket';
-import addMovementListener from '../domain/user/game1/addMovementListener';
 import { Game1Context } from './game1/Game1ContextProvider';
 import { Game3Context } from './game3/Game3ContextProvider';
 import { GameContext } from './GameContextProvider';
@@ -51,9 +51,8 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         PlayerContext
     );
 
-    const {
-        setPhotos, setVoteForPhotoMessage
-    } = React.useContext(Game3Context);
+    const { setPhotos, setVoteForPhotoMessage } = React.useContext(Game3Context);
+
     const {
         setGameStarted,
         setSheepGameStarted,
@@ -95,7 +94,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setStunnablePlayers,
         setChosenGame,
         setPhotos,
-        setVoteForPhotoMessage
+        setVoteForPhotoMessage,
     };
 
     const content = {
