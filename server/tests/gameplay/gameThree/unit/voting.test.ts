@@ -25,6 +25,7 @@ describe('Handle Received Photo Vote', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
+        gameThree['gameThreeGameState'] = GameThreeGameState.Voting;
     });
 
     afterEach(() => {
@@ -42,6 +43,12 @@ describe('Handle Received Photo Vote', () => {
         expect(gameThree.players.get(message.photographerId)!.roundInfo[gameThree['roundIdx']].points).toBe(
             currentPoints + 1
         );
+    });
+
+    it("should not set the voter's voted property to true, if gameThreeGameState is not Voting", async () => {
+        gameThree['gameThreeGameState'] = GameThreeGameState.BeforeStart;
+        gameThree['handleReceivedPhotoVote'](message);
+        expect(gameThree.players.get(message.voterId)!.roundInfo[gameThree['roundIdx']].voted).toBeFalsy();
     });
 });
 

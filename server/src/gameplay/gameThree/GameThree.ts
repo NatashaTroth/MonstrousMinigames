@@ -212,6 +212,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     // *** Voting ***
     private handleReceivedPhotoVote(message: IMessagePhotoVote) {
+        if (this.gameThreeGameState !== GameThreeGameState.Voting) return;
         const player = this.players.get(message.photographerId!);
         const voter = this.players.get(message.voterId);
         if (player && voter && !voter.roundInfo[this.roundIdx].voted) {
