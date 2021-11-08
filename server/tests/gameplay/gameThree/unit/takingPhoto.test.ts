@@ -40,6 +40,7 @@ describe('Handle received photo', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
+        gameThree['gameThreeGameState'] = GameThreeGameState.TakingPhoto;
     });
 
     afterEach(() => {
