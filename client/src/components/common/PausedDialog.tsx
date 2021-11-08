@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { GameContext } from '../../contexts/GameContextProvider';
-import GameEventEmitter from '../../domain/game1/screen/phaser/GameEventEmitter';
+import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
 import Button from './Button';
 import { DialogContent, StyledDialog } from './PausedDialog.sc';
 
@@ -11,6 +11,7 @@ const PausedDialog: React.FunctionComponent = ({ children }) => {
     async function handleResume() {
         GameEventEmitter.emitPauseResumeEvent();
     }
+
     return (
         <>
             <StyledDialog

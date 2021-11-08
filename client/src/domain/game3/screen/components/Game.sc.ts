@@ -10,7 +10,6 @@ export const StyledImg = styled.img`
     margin-top: 2px;
 `;
 
-
 export const TimeWrapper = styled.div`
     position: relative;
     width: 80px;
@@ -57,7 +56,6 @@ export const ImageContainer = styled.div`
     width: 100%;
     justify-content: space-around;
 `;
-
 
 export const Frame = styled.div`
     width: 18%;

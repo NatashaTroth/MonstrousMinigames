@@ -5,6 +5,15 @@ import windSpritesheet from '../../../../images/characters/spritesheets/chasers/
 import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1 } from '../../../../utils/constants';
 import { screenFinishedRoute } from '../../../../utils/routes';
 import history from '../../../history/history';
+import { GameAudio } from '../../../phaser/GameAudio';
+import GameEventEmitter from '../../../phaser/GameEventEmitter';
+import { GameEventTypes } from '../../../phaser/GameEventTypes';
+import { GameData } from '../../../phaser/gameInterfaces';
+import { GameToScreenMapper } from '../../../phaser/GameToScreenMapper';
+import { initialGameInput } from '../../../phaser/initialGameInput';
+import { Player } from '../../../phaser/Player';
+import { PhaserGameRenderer } from '../../../phaser/renderer/PhaserGameRenderer';
+import { PhaserPlayerRenderer } from '../../../phaser/renderer/PhaserPlayerRenderer';
 import { MessageSocket } from '../../../socket/MessageSocket';
 import { Socket } from '../../../socket/Socket';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
@@ -36,15 +45,6 @@ import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/pause
 import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
 import { moveLanesToCenter } from '../gameState/moveLanesToCenter';
-import { GameAudio } from '../phaser/GameAudio';
-import GameEventEmitter from '../phaser/GameEventEmitter';
-import { GameEventTypes } from '../phaser/GameEventTypes';
-import { GameData } from '../phaser/gameInterfaces';
-import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
-import { initialGameInput } from '../phaser/initialGameInput';
-import { Player } from '../phaser/Player';
-import { PhaserGameRenderer } from '../phaser/renderer/PhaserGameRenderer';
-import { PhaserPlayerRenderer } from '../phaser/renderer/PhaserPlayerRenderer';
 import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
 class MainScene extends Phaser.Scene {

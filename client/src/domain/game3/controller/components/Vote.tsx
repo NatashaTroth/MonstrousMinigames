@@ -1,29 +1,22 @@
 import * as React from 'react';
+import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
-import Button from '../../../../components/common/Button';
-import { ScreenContainer } from './Game3Styles.sc';
-import {ButtonContainer, VoteForPictureContainer, VoteInstructions, MediumImageContainer} from './Vote.sc';
+import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
 import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
-import {Frame, ImageContainer, StyledImg, TimeWrapper} from "../../screen/components/Game.sc";
-import {CountdownCircleTimer} from "react-countdown-circle-timer";
-import theme from "../../../../styles/theme";
-import {ControllerSocketContext} from "../../../../contexts/ControllerSocketContextProvider";
-import {PlayerContext} from "../../../../contexts/PlayerContextProvider";
-import sendVote from "../gameState/sendVote";
+import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
+import theme from '../../../../styles/theme';
+import { StyledImg, TimeWrapper } from '../../screen/components/Game.sc';
+import sendVote from '../gameState/sendVote';
+import { ScreenContainer } from './Game3Styles.sc';
+import { MediumImageContainer,VoteForPictureContainer, VoteInstructions } from './Vote.sc';
 const Vote: React.FunctionComponent = () => {
-    
-    const { voteForPhotoMessage  } = React.useContext(Game3Context);
+    const { voteForPhotoMessage } = React.useContext(Game3Context);
     const [timeIsUp, setTimeIsUp] = React.useState(false);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { userId } = React.useContext(PlayerContext);
 
-
     function handleVote(photographerId: string) {
-        sendVote(
-            userId,
-            photographerId,
-            controllerSocket
-        );
+        sendVote(userId, photographerId, controllerSocket);
         setTimeIsUp(true);
     }
 
@@ -34,20 +27,19 @@ const Vote: React.FunctionComponent = () => {
                     <VoteInstructions>Choose the picture you like the most</VoteInstructions>
                     <VoteForPictureContainer>
                         {voteForPhotoMessage.photoUrls
-                            .filter((picture) => picture.photographerId !== userId)
+                            .filter(picture => picture.photographerId !== userId)
                             .map((picture, index) => (
                                 <MediumImageContainer
                                     onClick={() => handleVote(picture.photographerId)}
-                                    key={`button${index}` }>
+                                    key={`button${index}`}
+                                >
                                     <StyledImg src={picture.url} />
                                 </MediumImageContainer>
                             ))}
                     </VoteForPictureContainer>
                 </>
             )}
-            {timeIsUp && (
-                <VoteInstructions>Your vote has been submitted, waiting for the others...</VoteInstructions>
-            )}
+            {timeIsUp && <VoteInstructions>Your vote has been submitted, waiting for the others...</VoteInstructions>}
             {!timeIsUp && voteForPhotoMessage.countdownTime > 0 && (
                 <CountdownCircleTimer
                     isPlaying

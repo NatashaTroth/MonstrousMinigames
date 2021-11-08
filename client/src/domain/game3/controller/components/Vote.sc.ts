@@ -15,14 +15,14 @@ export const ButtonContainer = styled.div`
 `;
 export const VoteForPictureContainer = styled.div`
     display: flex;
-  justify-content: center;
+    justify-content: center;
     flex-wrap: wrap;
     margin-bottom: 30px;
     width: 100%;
-  align-self: stretch;
+    align-self: stretch;
 `;
 export const MediumImageContainer = styled.div`
     display: flex;
     width: 45%;
-  padding: 0.5rem;
+    padding: 0.5rem;
 `;

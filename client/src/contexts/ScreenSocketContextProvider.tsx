@@ -5,9 +5,9 @@ import { handleSetSocket } from '../domain/socket/screen/handleSetSocket';
 import { handleSocketConnection } from '../domain/socket/screen/handleSocketConnection';
 import { Socket } from '../domain/socket/Socket';
 import { GameState } from '../utils/constants';
+import { Game3Context } from './game3/Game3ContextProvider';
 import { GameContext } from './GameContextProvider';
 import { Obstacle } from './PlayerContextProvider';
-import {Game3Context} from './game3/Game3ContextProvider';
 
 interface ScreenSocketContextProps {
     screenSocket: Socket | undefined;
@@ -66,7 +66,7 @@ export interface User {
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenSocket, setScreenSocket] = React.useState<Socket>();
     const history = useHistory();
-    const { setTopicMessage, setTimeIsUp } = React.useContext(Game3Context)
+    const { setTopicMessage, setTimeIsUp } = React.useContext(Game3Context);
     const {
         setGameStarted,
         setRoomId,

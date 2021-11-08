@@ -37,7 +37,7 @@ export interface HandleSetSocketDependencies {
     setScreenAdmin: (val: boolean) => void;
     setScreenState: (val: string) => void;
     setChosenGame: (val: GameNames) => void;
-    setTopicMessage: (val: {topic: string, countdownTime: number}) => void;
+    setTopicMessage: (val: { topic: string; countdownTime: number }) => void;
     setTimeIsUp: (val: boolean) => void;
     history: History;
 }

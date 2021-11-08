@@ -8,7 +8,7 @@ import { AudioContext } from '../../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../../audio/handlePermission';
-import GameEventEmitter from '../phaser/GameEventEmitter';
+import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import { AudioButton, Container, PauseButton, StopButton } from './Game.sc';
 import MainScene from './MainScene';
 
