@@ -97,8 +97,8 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     startGame(): void {
         setTimeout(() => {
             super.startGame();
-            this.sendPhotoTopic();
         }, this.countdownTimeGameStart);
+        this.sendPhotoTopic();
         GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTimeGameStart, this.gameName);
     }
 

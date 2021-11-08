@@ -51,9 +51,8 @@ describe('Start', () => {
     });
 
     it('should start TakingPhoto stage', async () => {
-        gameThree['startGame']();
         gameThree['photoTopics'] = ['topic1', 'topic2'];
-        jest.advanceTimersByTime(InitialParameters.COUNTDOWN_TIME_GAME_START);
+        gameThree['startGame']();
         expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.TakingPhoto);
     });
 });
