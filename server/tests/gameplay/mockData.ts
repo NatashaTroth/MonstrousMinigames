@@ -1,14 +1,7 @@
+/* istanbul ignore file */
 import User from '../../src/classes/user';
 import Leaderboard from '../../src/gameplay/leaderboard/Leaderboard';
-
-// public id: string;
-// public roomId: string;
-// public socketId: string;
-// public name: string;
-// public timestamp: number;
-// public active: boolean;
-// public number: number;
-// constructor(roomId: string, socketId: string, name: string, id: string = shortid.generate(), number = 0)
+import { IMessage } from '../../src/interfaces/messages';
 
 export const users: Array<User> = [
     new User('xxx', 'iii', 'Harry', 2, '1'),
@@ -20,3 +13,9 @@ export const users: Array<User> = [
 export const roomId = 'xxx';
 
 export const leaderboard = new Leaderboard(roomId);
+
+export const mockMessage: IMessage = {
+    type: 'test',
+};
+
+export const dateNow = 1618665766156;

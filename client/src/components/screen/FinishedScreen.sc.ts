@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import forest from '../../images/ui/forest.svg';
 import { Label } from '../common/Label.sc';
 
 export const RankTable = styled.div`
@@ -8,16 +7,6 @@ export const RankTable = styled.div`
     display: flex;
     flex-direction: column;
     margin-top: 60px;
-`;
-
-export const FinishedScreenContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    background-image: url(${forest});
-    background-size: cover;
 `;
 
 export const Headline = styled(Label)`

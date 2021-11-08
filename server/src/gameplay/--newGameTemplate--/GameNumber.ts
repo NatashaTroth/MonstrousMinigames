@@ -35,7 +35,7 @@ export default class GameNumber extends Game<GameNumberPlayer, GameStateInfo> im
     }
 
     protected mapUserToPlayer(user: User): GameNumberPlayer {
-        const player = new GameNumberPlayer(user.id, user.name);
+        const player = new GameNumberPlayer(user.id, user.name, user.characterNumber);
         console.info(player);
         return player;
     }

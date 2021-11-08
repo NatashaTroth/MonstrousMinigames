@@ -3,8 +3,6 @@ import styled, { keyframes } from 'styled-components';
 
 import theme from '../../../../styles/theme';
 
-const boxShadowDepth = 7;
-
 const glowing = keyframes`{
   0% { background-color: ${theme.palette.primary.main}; box-shadow: 0 0 3px  ${theme.palette.primary.dark}; transform: scale(1);  }
   50% { background-color: ${theme.palette.secondary.light}; box-shadow: 0 0 40px  ${theme.palette.secondary.dark}; transform: scale(1.2); }
@@ -40,17 +38,21 @@ export const PebbleButton = styled.div`
     border-radius: 10px;
     background-color: ${({ theme }) => theme.colors.playerName};
     box-shadow: ${({ theme }) =>
-        `calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${darken(theme.colors.playerName, 0.5)}}`};
+        `calc(${theme.boxShadowDepth} * 1px) calc(${theme.boxShadowDepth} * 1px) 0 ${darken(
+            theme.colors.playerName,
+            0.5
+        )}}`};
 
     &:hover {
-        box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
-            ${({ theme }) => darken(theme.colors.playerName, 0.5)};
+        box-shadow: calc(${({ theme }) => theme.boxShadowDepth} * 1px)
+            calc(${({ theme }) => theme.boxShadowDepth} * 1px) 0 ${({ theme }) => darken(theme.colors.playerName, 0.5)};
         background: ${({ theme }) => theme.colors.playerName};
     }
 
     &:active {
         transform: translateY(4px);
-        box-shadow: calc(${boxShadowDepth} * 1px - 4px) calc(${boxShadowDepth} * 1px - 4px) 0
+        box-shadow: calc(${({ theme }) => theme.boxShadowDepth} * 1px - 4px)
+            calc(${({ theme }) => theme.boxShadowDepth} * 1px - 4px) 0
             ${({ theme }) => darken(theme.colors.playerName, 0.5)};
         background: ${({ theme }) => theme.colors.playerName};
     }

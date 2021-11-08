@@ -15,10 +15,11 @@ import { ConnectScreen as ControllerConnectScreen } from './components/controlle
 import { FinishedScreen as ControllerFinishedScreen } from './components/controller/FinishedScreen';
 import { Lobby as ControllerLobbyScreen } from './components/controller/Lobby';
 import { NoPermissions } from './components/controller/NoPermissions';
+import Tutorial from './components/controller/Tutorial';
 import ChooseGame from './components/screen/ChooseGame';
 import { ConnectScreen as ScreenConnectScreen } from './components/screen/ConnectScreen';
 import { FinishedScreen as ScreenFinishedScreen } from './components/screen/FinishedScreen';
-import GameIntro from './components/screen/GameIntro';
+import Leaderboard from './components/screen/Leaderboard';
 import { Lobby as ScreenLobbyScreen } from './components/screen/Lobby';
 import PlayersGetReady from './components/screen/PlayersGetReady';
 import ScreenWrapper from './components/screen/ScreenWrapper';
@@ -104,6 +105,11 @@ const App: React.FunctionComponent = () => {
                                                                     )}
                                                                     exact
                                                                 />
+                                                                <Route
+                                                                    path={Routes.controllerTutorial}
+                                                                    component={() => <Tutorial history={history} />}
+                                                                    exact
+                                                                />
                                                                 {/*----------------- Game 1 -----------------*/}
                                                                 <Route
                                                                     path={Routes.controllerGame1}
@@ -182,20 +188,19 @@ const App: React.FunctionComponent = () => {
                                                                     component={ControllerFinishedScreen}
                                                                     exact
                                                                 />
-
                                                                 <Route
                                                                     path={Routes.screenLobby}
                                                                     component={ScreenLobbyScreen}
                                                                     exact
                                                                 />
                                                                 <Route
-                                                                    path={Routes.screenChooseGame}
-                                                                    component={ChooseGame}
+                                                                    path={Routes.screenLeaderboard}
+                                                                    component={Leaderboard}
                                                                     exact
                                                                 />
                                                                 <Route
-                                                                    path={Routes.screenGameIntro}
-                                                                    component={GameIntro}
+                                                                    path={Routes.screenChooseGame}
+                                                                    component={ChooseGame}
                                                                     exact
                                                                 />
                                                                 <Route

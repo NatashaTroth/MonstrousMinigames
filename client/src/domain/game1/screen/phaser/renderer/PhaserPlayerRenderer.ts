@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 import { depthDictionary } from '../../../../../config/depthDictionary';
 import { fireworkFlares } from '../../components/GameAssets';
 import MainScene from '../../components/MainScene';
+import { moveLanesToCenter } from '../../gameState/moveLanesToCenter';
 import * as colors from '../colors';
 import { Character, CharacterAnimation } from '../gameInterfaces';
 import { CharacterAnimationFrames } from '../gameInterfaces/Character';
@@ -18,7 +19,7 @@ interface RendererObstacle {
     phaserInstance: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 }
 export class PhaserPlayerRenderer {
-    private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    public player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private chaser?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private wind?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private obstacles: RendererObstacle[];
@@ -90,7 +91,8 @@ export class PhaserPlayerRenderer {
 
                 // set new positions, based on size of image
                 element.x = i * element.displayWidth;
-                if (this.numberPlayers <= 2) element.y = this.moveLanesToCenter(windowHeight, laneHeight, index);
+                if (this.numberPlayers <= 2)
+                    element.y = moveLanesToCenter(windowHeight, laneHeight, index, this.numberPlayers);
                 this.backgroundElements?.push(element);
             });
 
@@ -110,10 +112,6 @@ export class PhaserPlayerRenderer {
         const backgroundScalingFactor = (100 / oldHeight) * laneHeight;
         const newWidth = (bg.displayWidth / 100) * backgroundScalingFactor;
         return newWidth;
-    }
-
-    private moveLanesToCenter(windowHeight: number, newHeight: number, index: number) {
-        return (windowHeight - newHeight * this.numberPlayers) / 2 + newHeight * (index + 1);
     }
 
     renderPlayer(idx: number, coordinates: Coordinates, character: Character, username?: string): void {

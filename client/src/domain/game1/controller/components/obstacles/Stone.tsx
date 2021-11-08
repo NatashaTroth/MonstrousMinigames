@@ -4,6 +4,7 @@ import { History } from 'history';
 
 import Button from '../../../../../components/common/Button';
 import { StyledParticles } from '../../../../../components/common/Particles.sc';
+import { ComponentToTest } from '../../../../../components/controller/Tutorial';
 import { stoneParticlesConfig } from '../../../../../config/particlesConfig';
 import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
 import { Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
@@ -37,9 +38,11 @@ import {
 
 interface StoneProps {
     history: History;
+    tutorial?: boolean;
+    handleTutorialFinished?: (val: ComponentToTest) => void;
 }
 
-const Stone: React.FunctionComponent<StoneProps> = ({ history }) => {
+const Stone: React.FunctionComponent<StoneProps> = ({ history, tutorial, handleTutorialFinished }) => {
     const searchParams = new URLSearchParams(history.location.search);
     const limit = 10;
     const [counter, setCounter] = React.useState(searchParams.get('choosePlayer') ? limit + 1 : 0);
@@ -72,6 +75,12 @@ const Stone: React.FunctionComponent<StoneProps> = ({ history }) => {
             setCounter(counter + 1);
         }
     }
+
+    React.useEffect(() => {
+        if (counter === limit && tutorial) {
+            handleTutorialFinished?.('windmill');
+        }
+    }, [counter]);
 
     const handleCollected = () => {
         if (obstacle) {

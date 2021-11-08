@@ -1,5 +1,5 @@
 import User from '../../classes/user';
-// import { PlayerRank as CatchFoodPlayerRank } from '../catchFood/interfaces';
+// import { PlayerRank as GameOnePlayerRank } from '../GameOne/interfaces';
 import { HashTable } from '../interfaces';
 import { IPlayerRank } from '../interfaces/IPlayerRank';
 import { GameType } from './enums/GameType';

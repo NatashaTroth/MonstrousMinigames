@@ -2,19 +2,19 @@ import * as React from 'react';
 
 import history from '../../domain/history/history';
 import Button from './Button';
+import { TextContainer } from './Credits.sc';
 import {
     BackButtonContainer,
-    Content,
+    ContentBase,
     ContentContainer,
-    CreditsContainer,
+    FullScreenContainer,
     Headline,
-    TextContainer,
-} from './Credits.sc';
+} from './FullScreenStyles.sc';
 
 const Credits: React.FunctionComponent = () => (
-    <CreditsContainer>
+    <FullScreenContainer>
         <ContentContainer>
-            <Content>
+            <ContentBase>
                 <Headline>Credits</Headline>
                 <TextContainer>
                     This project was developed as part of the MultiMediaTechnology Master's degree programme at the
@@ -23,12 +23,12 @@ const Credits: React.FunctionComponent = () => (
                     elements and the design for the user interface were created by MultiMediaArt student Kerstin
                     Schaumberger. The music and sound elements were created by the MultiMediaArt artist Tobias Türk.
                 </TextContainer>
-            </Content>
-            <BackButtonContainer>
-                <Button onClick={history.goBack}>Back</Button>
-            </BackButtonContainer>
+            </ContentBase>
         </ContentContainer>
-    </CreditsContainer>
+        <BackButtonContainer>
+            <Button onClick={history.goBack}>Back</Button>
+        </BackButtonContainer>
+    </FullScreenContainer>
 );
 
 export default Credits;

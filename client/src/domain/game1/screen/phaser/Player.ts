@@ -1,11 +1,11 @@
 import { depthDictionary } from '../../../../config/depthDictionary';
 import { designDevelopment, localDevelopment, ObstacleTypes, stunnedAnimation } from '../../../../utils/constants';
+import { PlayerRenderer } from '../../../phaserTestHelper/playerRenderer/PlayerRenderer';
 import MainScene from '../components/MainScene';
 import { AnimationName } from './enums';
 import { Character, GameData } from './gameInterfaces';
 import { GameToScreenMapper } from './GameToScreenMapper';
 import { Coordinates } from './gameTypes';
-import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
 
 /**
  * This is the main player class where all the business functionality should be implemented (eg. what happens when a
@@ -22,20 +22,20 @@ export class Player {
     dead: boolean;
     finished: boolean;
     stunned: boolean;
-    renderer: PhaserPlayerRenderer;
+    renderer: PlayerRenderer;
     windowWidth: number;
     windowHeight: number;
 
     constructor(
         scene: MainScene,
-        private laneHeightsPerNumberPlayers: number[],
         private laneHeight: number,
         private index: number,
         public coordinates: Coordinates,
         private gameStateData: GameData,
         private character: Character,
         private numberPlayers: number,
-        private gameToScreenMapper: GameToScreenMapper
+        private gameToScreenMapper: GameToScreenMapper,
+        public playerRenderer: PlayerRenderer
     ) {
         this.username = gameStateData.playersState[index].name;
         this.userId = gameStateData.playersState[index].id;
@@ -48,7 +48,7 @@ export class Player {
         this.windowWidth = scene.windowWidth;
         this.windowHeight = scene.windowHeight;
 
-        this.renderer = new PhaserPlayerRenderer(scene, this.numberPlayers, this.laneHeightsPerNumberPlayers);
+        this.renderer = playerRenderer;
 
         this.renderer.renderBackground(
             this.windowWidth,
@@ -93,7 +93,7 @@ export class Player {
         }
     }
 
-    moveForward(newXPosition: number, trackLength: number) {
+    moveForward(newXPosition: number) {
         if (this.finished) return;
 
         if (newXPosition == this.coordinates.x && this.playerRunning) {

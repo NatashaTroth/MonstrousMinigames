@@ -1,3 +1,5 @@
+import validator from "validator";
+
 import User from "../../classes/user";
 import { GameNames } from "../../enums/gameNames";
 import { IMessage } from "../../interfaces/messages";
@@ -7,6 +9,7 @@ import Leaderboard from "../leaderboard/Leaderboard";
 import Player from "../Player";
 import { RandomWordGenerator } from "./classes/RandomWordGenerator";
 import InitialParameters from "./constants/InitialParameters";
+import { InvalidUrlError } from "./customErrors";
 import { GameThreeGameState } from "./enums/GameState";
 import { GameThreeMessageTypes } from "./enums/GameThreeMessageTypes";
 import GameThreeEventEmitter from "./GameThreeEventEmitter";
@@ -29,7 +32,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     private randomWordGenerator = new RandomWordGenerator();
     private numberRounds = InitialParameters.NUMBER_ROUNDS;
     private gameThreeGameState = GameThreeGameState.BeforeStart;
-    private countdownTimeElapsed = 0;
+    private countdownTimeLeft = 0;
     private countdownRunning = false;
     private roundIdx = 0;
 
@@ -58,23 +61,26 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     protected mapUserToPlayer(user: User): GameThreePlayer {
-        const player = new GameThreePlayer(user.id, user.name);
+        const player = new GameThreePlayer(user.id, user.name, user.characterNumber);
+
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
         // handle taking photo
         if (this.countdownRunning) {
             this.reduceCountdown(timeElapsedSinceLastFrame);
-            switch (this.gameThreeGameState) {
-                case GameThreeGameState.TakingPhoto:
-                    this.handleTakingPhoto();
-                    break;
-                case GameThreeGameState.Voting:
-                    this.handleVoting();
-                    break;
-                case GameThreeGameState.ViewingResults:
-                    this.handleNewRound();
-                    break;
+            if (this.countdownOver()) {
+                switch (this.gameThreeGameState) {
+                    case GameThreeGameState.TakingPhoto:
+                        this.handleTakingPhoto();
+                        break;
+                    case GameThreeGameState.Voting:
+                        this.handleVoting();
+                        break;
+                    case GameThreeGameState.ViewingResults:
+                        this.handleNewRound();
+                        break;
+                }
             }
         }
     }
@@ -82,24 +88,20 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         //TODO
     }
 
-    private isThisGameState(gameState: GameThreeGameState): boolean {
-        return this.gameThreeGameState === gameState;
-    }
-
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
-        this.photoTopics = this.randomWordGenerator.generateRandomWords(this.numberRounds);
+        this.photoTopics = this.randomWordGenerator.generateRandomWords(this.numberRounds - 1);
     }
 
     startGame(): void {
         setTimeout(() => {
             super.startGame();
+            this.sendPhotoTopic();
         }, this.countdownTimeGameStart);
         GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTimeGameStart, this.gameName);
-        this.sendPhotoTopic();
     }
 
-    sendPhotoTopic() {
+    private sendPhotoTopic() {
         //TODO verify game state
         //TODO reset player has photo
         const topic = this.photoTopics?.shift();
@@ -150,31 +152,31 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     //********************** Helper Functions **********************/
 
     private initiateCountdown(time: number) {
-        this.countdownTimeElapsed = time;
+        this.countdownTimeLeft = time;
         this.countdownRunning = true;
     }
 
     private reduceCountdown(time: number) {
-        this.countdownTimeElapsed -= time;
+        this.countdownTimeLeft -= time;
     }
 
     private stopCountdown() {
-        this.countdownTimeElapsed = 0;
+        this.countdownTimeLeft = 0;
         this.countdownRunning = false;
     }
     private countdownOver() {
-        return this.countdownTimeElapsed <= 0;
+        return this.countdownTimeLeft <= 0;
     }
 
     // *** Taking Photos ***
     private handleTakingPhoto() {
-        if (this.countdownOver()) {
-            // GameThreeEventEmitter.emitTakePhotoCountdownOver(this.roomId); //TODO??
-            this.sendPhotosToScreen();
-        }
+        // GameThreeEventEmitter.emitTakePhotoCountdownOver(this.roomId); //TODO??
+        this.sendPhotosToScreen();
     }
 
     private handleReceivedPhoto(message: IMessagePhoto) {
+        if (!validator.isURL(message.url))
+            throw new InvalidUrlError('The received value for the URL is not valid.', message.userId);
         const player = this.players.get(message.userId!);
         if (player && !player.roundInfo[this.roundIdx].received) player.receivedPhoto(message.url, this.roundIdx);
 
@@ -206,16 +208,15 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     // *** Voting ***
-
     private handleReceivedPhotoVote(message: IMessagePhotoVote) {
         const player = this.players.get(message.photographerId!);
         const voter = this.players.get(message.voterId);
         if (player && voter && !voter.roundInfo[this.roundIdx].voted) {
             player?.addPoints(this.roundIdx, 1);
-            if (voter) {
-                voter.roundInfo[this.roundIdx].voted = true;
-                // voter.roundInfo[this.roundIdx].points += 1; //point for voting //TODO???
-            }
+            // if (voter) {
+            voter.roundInfo[this.roundIdx].voted = true;
+            // voter.roundInfo[this.roundIdx].points += 1; //point for voting //TODO???
+            // }
         }
         // this.players.get(message.voterId)?.roundInfo[this.roundIdx].voted = true
 
@@ -226,17 +227,15 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private handleVoting() {
-        if (this.countdownOver()) {
-            this.removeVotingPointsNotVoted();
-            this.sendPhotoVotingResultsToScreen();
-        }
+        this.removeVotingPointsFromPlayersNoParticipation();
+        this.sendPhotoVotingResultsToScreen();
 
         //TODO if time over or if all received - check what photos received and forward to screens
     }
 
-    private removeVotingPointsNotVoted() {
+    private removeVotingPointsFromPlayersNoParticipation() {
         Array.from(this.players.values()).forEach(player => {
-            if (!player.roundInfo[this.roundIdx].voted || !player.roundInfo[this.roundIdx].url) {
+            if (!player.roundInfo[this.roundIdx].voted || !player.roundInfo[this.roundIdx].received) {
                 player.roundInfo[this.roundIdx].points = 0;
             }
         });
@@ -265,13 +264,11 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     // *** Round Change ***
     private handleNewRound() {
-        if (this.countdownOver()) {
-            this.roundIdx++;
-            if (!this.isFinalRound()) {
-                this.sendPhotoTopic();
-            } else {
-                this.sendTakeFinalPhotosCountdown();
-            }
+        this.roundIdx++;
+        if (!this.isFinalRound()) {
+            this.sendPhotoTopic();
+        } else {
+            this.sendTakeFinalPhotosCountdown();
         }
     }
 

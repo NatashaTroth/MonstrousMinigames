@@ -3,24 +3,36 @@ import interact from 'interactjs';
 import * as React from 'react';
 
 import Button from '../../../../../components/common/Button';
+import { ComponentToTest } from '../../../../../components/controller/Tutorial';
 import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
 import { Game1Context, Obstacle } from '../../../../../contexts/game1/Game1ContextProvider';
 import { GameContext } from '../../../../../contexts/GameContextProvider';
 import food from '../../../../../images/obstacles/trash/food.svg';
 import paper from '../../../../../images/obstacles/trash/paper.svg';
 import plastic from '../../../../../images/obstacles/trash/plastic.svg';
-import { MessageTypesGame1, TrashType } from '../../../../../utils/constants';
+import { MessageTypesGame1, ObstacleTypes, TrashType } from '../../../../../utils/constants';
 import { Socket } from '../../../../socket/Socket';
 import { dragMoveListener, initializeInteractListeners, itemCounter } from './Draggable';
 import LinearProgressBar from './LinearProgressBar';
 import { ObstacleContainer, ObstacleInstructions } from './ObstacleStyles.sc';
 import { Container, Draggable, DropZone, StyledImage, StyledSkipButton } from './Trash.sc';
 
+const tutorialObstacle = {
+    id: 1,
+    type: ObstacleTypes.trash,
+    trashType: TrashType.Plastic,
+    numberTrashItems: 3,
+};
 interface WindowProps extends Window {
     dragMoveListener?: unknown;
 }
 
-const Trash: React.FunctionComponent = () => {
+interface TrashProps {
+    tutorial?: boolean;
+    handleTutorialFinished?: (val: ComponentToTest) => void;
+}
+
+const Trash: React.FunctionComponent<TrashProps> = ({ tutorial = false, handleTutorialFinished }) => {
     const [skip, setSkip] = React.useState(false);
     const { obstacle, setObstacle } = React.useContext(Game1Context);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
@@ -30,29 +42,35 @@ const Trash: React.FunctionComponent = () => {
 
     let handleSkip: ReturnType<typeof setTimeout>;
 
+    const obstacleToUse = tutorial ? tutorialObstacle : obstacle;
+
     React.useEffect(() => {
         let mounted = true;
         const w = window as WindowProps;
         w.dragMoveListener = dragMoveListener;
 
-        if (obstacle && obstacle.trashType && obstacle.numberTrashItems) {
-            setRandomArray(generateRandomArray(obstacle));
+        if (obstacleToUse && obstacleToUse.trashType && obstacleToUse.numberTrashItems) {
+            setRandomArray(generateRandomArray(obstacleToUse));
 
             initializeSkip();
 
             initializeInteractListeners(
-                obstacle.trashType,
-                obstacle.numberTrashItems,
+                obstacleToUse.trashType!,
+                obstacleToUse.numberTrashItems!,
                 () => {
                     if (mounted) {
-                        solveObstacle({
-                            controllerSocket,
-                            obstacle,
-                            setObstacle,
-                            roomId,
-                            clearTimeout,
-                            handleSkip,
-                        });
+                        if (tutorial) {
+                            handleTutorialFinished?.(ObstacleTypes.stone);
+                        } else {
+                            solveObstacle({
+                                controllerSocket,
+                                obstacle: obstacleToUse,
+                                setObstacle,
+                                roomId,
+                                clearTimeout,
+                                handleSkip,
+                            });
+                        }
                     }
                 },
                 p => {
@@ -79,7 +97,7 @@ const Trash: React.FunctionComponent = () => {
     const handleSolveObstacle = () => {
         solveObstacle({
             controllerSocket,
-            obstacle,
+            obstacle: obstacleToUse,
             setObstacle,
             roomId,
             clearTimeout,
@@ -90,7 +108,7 @@ const Trash: React.FunctionComponent = () => {
     return (
         <>
             <ObstacleContainer>
-                <LinearProgressBar MAX={obstacle?.numberTrashItems} progress={progress} />
+                <LinearProgressBar MAX={obstacleToUse?.numberTrashItems} progress={progress} />
                 <ObstacleInstructions>
                     Put the right trash in the garbage can to get the forest clean again
                 </ObstacleInstructions>
@@ -132,8 +150,7 @@ const Trash: React.FunctionComponent = () => {
                                 );
                         }
                     })}
-
-                    {obstacle?.trashType && <DropZone className="dropzone" variant={obstacle.trashType} />}
+                    {obstacleToUse?.trashType && <DropZone className="dropzone" variant={obstacleToUse.trashType} />}
                 </Container>
                 {skip && (
                     <StyledSkipButton>
