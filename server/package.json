@@ -8,7 +8,11 @@
     },
     "scripts": {
         "test": "rm -rf dist/ && jest --watchAll",
-        "testGameplay": "jest --watchAll ./tests/gameplay",
+        "test:gameThree": "jest --watch /gameThree/",
+        "test:gameplay": "jest --watchAll ./tests/gameplay",
+        "test:unit": "jest /unit/",
+        "test:integration": "jest /integration/",
+        "test:other": "jest --testPathIgnorePatterns /unit/ /integration/",
         "dev": "nodemon src/app.ts",
         "prettier": "prettier --write src/**/*.ts",
         "lint": "eslint \"**/*.ts\" --fix && npm run tsc && rm -rf dist/",
@@ -31,6 +35,7 @@
         "@types/seedrandom": "^3.0.1",
         "@types/socket.io": "^2.1.13",
         "@types/socket.io-client": "^1.4.36",
+        "@types/validator": "^13.6.6",
         "ansi-styles": "^5.1.0",
         "cors": "^2.8.5",
         "cron": "^1.8.2",
@@ -48,7 +53,8 @@
         "seedrandom": "^3.0.5",
         "socket.io": "^3.1.0",
         "socket.io-client": "^4.0.0",
-        "tsyringe": "^4.6.0"
+        "tsyringe": "^4.6.0",
+        "validator": "^13.7.0"
     },
     "devDependencies": {
         "@types/cors": "^2.8.10",

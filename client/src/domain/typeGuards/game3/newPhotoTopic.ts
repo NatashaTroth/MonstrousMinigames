@@ -3,6 +3,7 @@ import { MessageDataGame3 } from './MessageDataGame3';
 
 export interface NewPhotoTopicMessage {
     type: MessageTypesGame3.newPhotoTopic;
+    roomId: string;
     topic: string;
     countdownTime: number;
 }

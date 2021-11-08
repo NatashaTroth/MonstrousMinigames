@@ -1,5 +1,6 @@
-import { IMessage } from "../../../interfaces/messages";
+import { IMessage } from '../../../interfaces/messages';
 
 export interface IMessagePhoto extends IMessage {
     url: string;
+    userId: string;
 }

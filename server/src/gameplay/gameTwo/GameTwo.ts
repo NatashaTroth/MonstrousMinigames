@@ -1,19 +1,19 @@
 import random from 'random';
 
 import User from '../../classes/user';
+import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
 import Game from '../Game';
 import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
+import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
 import Sheep from './classes/Sheep';
 import InitialParameters from './constants/InitialParameters';
 import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
 import { SheepStates } from './enums/SheepStates';
-import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
 import GameTwoPlayer from './GameTwoPlayer';
 import { GameStateInfo } from './interfaces';
-import { GameNames } from '../../enums/gameNames';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -53,7 +53,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 positionY: player.posY,
                 finished: player.finished,
                 isActive: player.isActive,
-                characterNumber: player.characterNumber
+                characterNumber: player.characterNumber,
             })),
             sheep: this.sheep,
             lengthX: this.lengthX,
@@ -78,11 +78,10 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
-        return
-
+        return;
     }
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
-        return
+        return;
     }
 
     protected initSheep(count: number): void {
@@ -129,10 +128,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         super.createNewGame(users);
         this.initSheep(InitialParameters.SHEEP_COUNT);
         console.info(this.sheep);
-        GameTwoEventEmitter.emitInitialGameStateInfoUpdate(
-            this.roomId,
-            this.getGameStateInfo()
-        )
+        GameTwoEventEmitter.emitInitialGameStateInfoUpdate(this.roomId, this.getGameStateInfo());
     }
 
     startGame(): void {
@@ -140,7 +136,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             super.startGame();
         }, this.countdownTime);
         GameTwoEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime, this.gameName);
-
     }
     pauseGame(): void {
         super.pauseGame();
@@ -222,5 +217,4 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
         return false;
     }
-
 }
