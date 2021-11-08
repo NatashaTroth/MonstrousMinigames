@@ -1,8 +1,8 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
 import history from '../../domain/history/history';
 import Button from './Button';
-import { TextContainer } from './Credits.sc';
 import {
     BackButtonContainer,
     ContentBase,
@@ -32,3 +32,9 @@ const Credits: React.FunctionComponent = () => (
 );
 
 export default Credits;
+
+const TextContainer = styled.div`
+    padding: 40px;
+    line-height: 24px;
+    letter-spacing: 1px;
+`;
