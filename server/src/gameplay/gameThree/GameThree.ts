@@ -94,8 +94,8 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                     case GameThreeGameState.TakingFinalPhotos:
                         this.handleFinishedTakingFinalPhotos();
                         break;
-                    case GameThreeGameState.FinalVoting:
-                        this.handleFinishedTakingFinalPhotos();
+                    case GameThreeGameState.PresentingFinalPhotos:
+                        this.handlePresentingRoundFinished();
                         break;
                 }
             }
@@ -329,7 +329,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                 .map(player => player.id)
         );
         this.gameThreeGameState = GameThreeGameState.FinalVoting;
-        this.sendFinalPhotosToScreen();
+        this.handlePresentingRoundFinished();
     }
 
     private handlePresentingRoundFinished() {
