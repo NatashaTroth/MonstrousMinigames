@@ -3,6 +3,7 @@ import 'reflect-metadata';
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
+import { GameThreeGameState } from '../../../../src/gameplay/gameThree/enums/GameState';
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
 import {
     GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN, GameThreeEventMessage,
@@ -43,5 +44,18 @@ describe('Send take final photos countdown', () => {
         });
         gameThree['sendTakeFinalPhotosCountdown']();
         expect(eventData?.countdownTime).toBe(InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS);
+    });
+
+    it('should initiate the takingFinalPhotos countdown', async () => {
+        const spy = jest.spyOn(GameThree.prototype as any, 'initiateCountdown');
+
+        gameThree['sendTakeFinalPhotosCountdown']();
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalledWith(InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS);
+    });
+
+    it('should set gameThreeGameState to TakingFinalPhotos', async () => {
+        gameThree['sendTakeFinalPhotosCountdown']();
+        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.TakingFinalPhotos);
     });
 });

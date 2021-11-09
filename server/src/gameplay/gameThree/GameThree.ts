@@ -275,12 +275,13 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     // *** Final round ***
-
     private isFinalRound() {
         return this.roundIdx >= this.numberRounds;
     }
+
     private sendTakeFinalPhotosCountdown() {
         this.gameThreeGameState = GameThreeGameState.TakingFinalPhotos;
+        this.initiateCountdown(this.countdownTimeTakeFinalPhotos);
         GameThreeEventEmitter.emitTakeFinalPhotosCountdown(this.roomId, this.countdownTimeTakeFinalPhotos);
     }
 }
