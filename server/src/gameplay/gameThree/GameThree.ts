@@ -90,7 +90,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     private handleNewRound() {
         this.roundIdx++;
         GameThreeEventEmitter.emitNewRound(this.roomId, this.roundIdx);
-        if (!this.isFinalRound()) {
+        if (!this.isFinalRound() && this.photoTopics && this.photoTopics.length > 0) {
             this.sendPhotoTopic();
         } else {
             this.sendTakeFinalPhotosCountdown();
@@ -111,7 +111,6 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             super.startGame();
         }, this.countdownTimeGameStart);
 
-        // this.sendPhotoTopic();
         GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTimeGameStart, this.gameName);
         this.handleNewRound();
     }
@@ -120,14 +119,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         //TODO verify game state
         //TODO reset player has photo
         const topic = this.photoTopics?.shift();
-        if (topic) {
-            this.initiateCountdown(this.countdownTimeTakePhoto);
-            this.gameThreeGameState = GameThreeGameState.TakingPhoto;
-            //send to screen
-            GameThreeEventEmitter.emitNewTopic(this.roomId, topic, this.countdownTimeTakePhoto);
-        } else {
-            //TODO finished sending topics - now final round
-        }
+        this.initiateCountdown(this.countdownTimeTakePhoto);
+        this.gameThreeGameState = GameThreeGameState.TakingPhoto;
+        //send to screen
+        GameThreeEventEmitter.emitNewTopic(this.roomId, topic!, this.countdownTimeTakePhoto);
     }
 
     pauseGame(): void {
