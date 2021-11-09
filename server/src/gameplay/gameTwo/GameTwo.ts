@@ -14,7 +14,7 @@ import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
 import GameTwoPlayer from './GameTwoPlayer';
 import { GameStateInfo } from './interfaces';
 import { GameNames } from '../../enums/gameNames';
-import { Phases } from './enums/Phases';
+import RoundService from './classes/RoundService';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -26,13 +26,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     public lengthY: number;
     public sheep: Sheep[];
     private currentSheepId: number;
-    private roundCount: number;
-    private currentRound: number;
-    private phase: string;
     countdownTime = InitialParameters.COUNTDOWN_TIME;
-    private roundTime: number;
-    private guessingTime: number;
-    private resultsTime: number;
+    private roundService: RoundService;
 
     initialPlayerPositions = InitialParameters.PLAYERS_POSITIONS;
 
@@ -45,12 +40,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.lengthY = InitialParameters.LENGTH_Y;
         this.sheep = [];
         this.currentSheepId = 0;
-        this.roundCount = InitialParameters.ROUNDS;
-        this.roundTime = InitialParameters.ROUND_TIME;
-        this.guessingTime = InitialParameters.GUESSING_TIME;
-        this.resultsTime = InitialParameters.RESULTS_TIME;
-        this.currentRound = 1;
-        this.phase = Phases.COUNTING;
+        this.roundService = new RoundService()
     }
 
     getGameStateInfo(): GameStateInfo {
@@ -69,7 +59,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             sheep: this.sheep,
             lengthX: this.lengthX,
             lengthY: this.lengthY,
-            currentRound: this.currentRound,
+            currentRound: this.roundService.getRound(),
         };
     }
 
@@ -151,49 +141,9 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     startGame(): void {
         setTimeout(() => {
             super.startGame();
-            this.countingPhase();
+            this.roundService.countingPhase();
         }, this.countdownTime);
         GameTwoEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime, this.gameName);
-
-    }
-
-    protected logPhaseInfo(){
-        console.log('Round: ' + this.currentRound + ' | Phase: ' + this.phase);
-    }
-
-    protected countingPhase() {
-        this.phase = Phases.COUNTING;
-        this.logPhaseInfo();
-        //todo emit
-        setTimeout(() => {
-            this.guessingPhase();
-        }, this.roundTime);
-
-    }
-
-    protected guessingPhase() {
-        this.phase = Phases.GUESSING;
-        this.logPhaseInfo();
-        //todo emit
-        setTimeout(() => {
-            this.resultsPhase();
-        }, this.guessingTime);
-
-    }
-
-    protected resultsPhase() {
-        this.phase = Phases.RESULTS;
-        this.logPhaseInfo();
-        //todo emit
-
-        setTimeout(() => {
-            this.currentRound++;
-            if (this.currentRound <= this.roundCount) {
-                this.countingPhase();
-            }
-
-        }, this.resultsTime);
-
     }
 
     pauseGame(): void {
@@ -269,7 +219,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
         // todo handle if guess exists for round
 
-        player.guesses.push({ round: this.currentRound, guess: guess });
+        player.guesses.push({ round: this.roundService.getRound(), guess: guess });
 
     }
 
