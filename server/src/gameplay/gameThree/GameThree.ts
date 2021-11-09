@@ -170,6 +170,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                 this.handleReceivedPhotoVote(message as IMessagePhotoVote);
                 break;
             }
+            case GameThreeMessageTypes.FINISHED_PRESENTING: {
+                this.handlePresentingRoundFinished();
+                break;
+            }
             default:
                 console.info(message);
         }
