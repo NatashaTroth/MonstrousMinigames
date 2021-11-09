@@ -1,7 +1,7 @@
-import { Storage } from "../../domain/storage/Storage";
-import { UserInitMessage } from "../../domain/typeGuards/userInit";
-import { persistUser } from "../../domain/user/persistUser";
-import { MessageTypes } from "../../utils/constants";
+import { Storage } from '../../domain/storage/Storage';
+import { UserInitMessage } from '../../domain/typeGuards/userInit';
+import { persistUser } from '../../domain/user/persistUser';
+import { MessageTypes } from '../../utils/constants';
 
 beforeEach(() => {
     global.sessionStorage = new LocalStorageFake();

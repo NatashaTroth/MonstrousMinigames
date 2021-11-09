@@ -1,9 +1,11 @@
+import { Dialog } from '@material-ui/core';
 import * as React from 'react';
+import styled from 'styled-components';
 
 import { GameContext } from '../../contexts/GameContextProvider';
 import GameEventEmitter from '../../domain/phaser/GameEventEmitter';
 import Button from './Button';
-import { DialogContent, StyledDialog } from './PausedDialog.sc';
+import { OrangeBase } from './CommonStyles.sc';
 
 const PausedDialog: React.FunctionComponent = ({ children }) => {
     const { hasPaused } = React.useContext(GameContext);
@@ -35,3 +37,22 @@ const PausedDialog: React.FunctionComponent = ({ children }) => {
 };
 
 export default PausedDialog;
+
+export const StyledDialog = styled(Dialog)`
+    && {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+`;
+
+const DialogContent = styled(OrangeBase)`
+    && {
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        border-radius: 10px;
+    }
+`;

@@ -8,6 +8,8 @@ import * as colors from '../colors';
 import { Character, CharacterAnimation } from '../gameInterfaces';
 import { CharacterAnimationFrames } from '../gameInterfaces/Character';
 import { Coordinates } from '../gameTypes';
+import { Scene } from '../Scene';
+import { SpriteWithDynamicBody } from '../SpriteWithDynamicBody';
 import { sharedTextStyleProperties } from '../textStyleProperties';
 
 /**
@@ -353,12 +355,13 @@ export class PhaserPlayerRenderer {
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
-        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
-        this.player.setDepth(depthDictionary.player);
-        this.player.setBounce(0.2);
-        this.player.setCollideWorldBounds(true);
-        this.player.setScale((0.66 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
-        this.player.y = this.player.y - this.player.displayHeight / 2; //set correct y pos according to player height
+        this.player = handleRenderPlayer(
+            this.scene,
+            this.numberPlayers,
+            this.laneHeightsPerNumberPlayers,
+            coordinates,
+            monsterSpriteSheetName
+        );
     }
 
     private initiateAnimation(spritesheetName: string, animationName: string, frames: CharacterAnimationFrames) {
@@ -378,19 +381,54 @@ export class PhaserPlayerRenderer {
     }
 
     renderWind() {
-        if (this.chaser) {
-            this.scene.anims.create({
-                key: 'windAnimation',
-                frames: this.scene.anims.generateFrameNumbers('windSpritesheet', { start: 0, end: 5 }),
-                frameRate: 8,
-                repeat: 0,
-            });
-            this.wind = this.scene.physics.add.sprite(this.chaser.x - 50, this.chaser.y + 30, 'windSpritesheet');
-            this.wind.setScale((0.5 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
-            this.wind.setDepth(depthDictionary.chaser);
-            this.wind.y = this.wind.y - this.wind.displayHeight / 2; //set correct y pos according to player height
-            this.wind.play('windAnimation');
-            this.wind.on('animationcomplete', this.wind.destroy);
-        }
+        this.wind = handleRenderWind(this.chaser, this.scene, this.numberPlayers, this.laneHeightsPerNumberPlayers);
     }
+}
+
+export function handleRenderPlayer(
+    scene: Scene,
+    numberPlayers: number,
+    laneHeightsPerNumberPlayers: number[],
+    coordinates: Coordinates,
+    monsterSpriteSheetName: string
+) {
+    const player = scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
+    player.setDepth(depthDictionary.player);
+    player.setBounce(0.2);
+    player.setCollideWorldBounds(true);
+    player.setScale((0.66 / numberPlayers) * laneHeightsPerNumberPlayers[numberPlayers - 1]);
+    player.y = player.y - player.displayHeight / 2; //set correct y pos according to player height
+
+    return player as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+}
+
+export function handleRenderWind(
+    chaser: SpriteWithDynamicBody | undefined,
+    scene: Scene,
+    numberPlayers: number,
+    laneHeightsPerNumberPlayers: number[]
+) {
+    if (chaser) {
+        scene.anims.create({
+            key: 'windAnimation',
+            frames: scene.anims.generateFrameNumbers('windSpritesheet', { start: 0, end: 5 }),
+            frameRate: 8,
+            repeat: 0,
+        });
+        const wind = scene.physics.add.sprite(chaser.x - 50, chaser.y + 30, 'windSpritesheet');
+        handleWindAnimation(wind, numberPlayers, laneHeightsPerNumberPlayers);
+        return wind as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    }
+}
+
+export function handleWindAnimation(
+    wind: SpriteWithDynamicBody,
+    numberPlayers: number,
+    laneHeightsPerNumberPlayers: number[]
+) {
+    wind.setScale((0.5 / numberPlayers) * laneHeightsPerNumberPlayers[numberPlayers - 1]);
+    wind.setDepth(depthDictionary.chaser);
+    wind.y = wind.y - wind.displayHeight / 2; //set correct y pos according to player height
+    wind.play('windAnimation');
+    wind.on('animationcomplete', wind.destroy);
 }

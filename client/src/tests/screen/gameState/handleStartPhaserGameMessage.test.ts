@@ -1,9 +1,7 @@
-import { createMemoryHistory } from "history";
+import { createMemoryHistory } from 'history';
 
-import {
-    handleStartPhaserGameMessage
-} from "../../../domain/commonGameState/screen/handleStartPhaserGameMessage";
-import { screenGame1Route } from "../../../utils/routes";
+import { handleStartPhaserGameMessage } from '../../../domain/commonGameState/screen/handleStartPhaserGameMessage';
+import { screenGame1Route } from '../../../utils/routes';
 
 describe('handleStartPhaserGameMessage', () => {
     const roomId = '1234';

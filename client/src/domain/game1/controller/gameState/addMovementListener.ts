@@ -1,5 +1,5 @@
-import { Socket } from "../../../socket/Socket";
-import { sendMovement } from "./sendMovement";
+import { Socket } from '../../../socket/Socket';
+import { sendMovement } from './sendMovement';
 
 export default function addMovementListener(controllerSocket: Socket, hasPaused: boolean, playerFinished: boolean) {
     window.addEventListener('devicemotion', e =>

@@ -31,7 +31,7 @@ Once the players join in the game, they will all be presented with a topic (e.g.
 
 -   For each vote a player gets on their picture, they will receive 1 point.
 
-... this flow repeats 3 times until the final round starts.
+... this flow repeats 2 times until the final round starts.
 
 ### Final Round
 

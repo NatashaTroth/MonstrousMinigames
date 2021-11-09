@@ -1,31 +1,31 @@
-import { localDevelopment, pushChasers } from '../../../constants';
-import User from '../../classes/user';
-import { GameNames } from '../../enums/gameNames';
-import { IMessage } from '../../interfaces/messages';
-import { GameState } from '../enums';
-import Game from '../Game';
-import { verifyGameState } from '../helperFunctions/verifyGameState';
-import { verifyUserId } from '../helperFunctions/verifyUserId';
-import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
-import { HashTable, IGameInterface } from '../interfaces';
-import { GameType } from '../leaderboard/enums/GameType';
-import Leaderboard from '../leaderboard/Leaderboard';
-import Player from '../Player';
-import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
-import UserHasNoStones from './customErrors/UserHasNoStones';
-import { GameOneMsgType, ObstacleType } from './enums';
-import GameOneEventEmitter from './GameOneEventEmitter';
-import * as InitialGameParameters from './GameOneInitialParameters';
-import GameOnePlayer from './GameOnePlayer';
+import { localDevelopment, pushChasers } from "../../../constants";
+import User from "../../classes/user";
+import { GameNames } from "../../enums/gameNames";
+import { IMessage } from "../../interfaces/messages";
+import { GameState } from "../enums";
+import Game from "../Game";
+import { verifyGameState } from "../helperFunctions/verifyGameState";
+import { verifyUserId } from "../helperFunctions/verifyUserId";
+import { verifyUserIsActive } from "../helperFunctions/verifyUserIsActive";
+import { HashTable, IGameInterface } from "../interfaces";
+import { GameType } from "../leaderboard/enums/GameType";
+import Leaderboard from "../leaderboard/Leaderboard";
+import Player from "../Player";
+import { NotAtObstacleError, WrongObstacleIdError } from "./customErrors";
+import UserHasNoStones from "./customErrors/UserHasNoStones";
+import { GameOneMsgType, ObstacleType } from "./enums";
+import GameOneEventEmitter from "./GameOneEventEmitter";
+import * as InitialGameParameters from "./GameOneInitialParameters";
+import GameOnePlayer from "./GameOnePlayer";
 import {
     createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
-} from './helperFunctions/initiatePlayerState';
-import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from './interfaces';
-import { ObstacleReachedInfoController } from './interfaces/GameEvents';
-import { IMessageObstacle } from './interfaces/messageObstacle';
-import { IMessageStunPlayer } from './interfaces/messageStunPlayer';
+} from "./helperFunctions/initiatePlayerState";
+import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from "./interfaces";
+import { ObstacleReachedInfoController } from "./interfaces/GameEvents";
+import { IMessageObstacle } from "./interfaces/messageObstacle";
+import { IMessageStunPlayer } from "./interfaces/messageStunPlayer";
 
-// const pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
+let pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
 
 interface GameOneInterface extends IGameInterface<GameOnePlayer, GameStateInfo> {
     trackLength: number;
@@ -109,14 +109,14 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
                 if (player.positionX < this.trackLength) {
                     this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
                 }
-                // // push chasers
-                // if (pushChasers) {
-                //     if (pushChasersPeriodicallyCounter >= 100) {
-                //         pushChasersPeriodicallyCounter = 0;
-                //         this.pushChasers(player.id!);
-                //     }
-                //     pushChasersPeriodicallyCounter++;
-                // }
+                // push chasers TODO delete
+                if (pushChasers) {
+                    if (pushChasersPeriodicallyCounter >= 100) {
+                        pushChasersPeriodicallyCounter = 0;
+                        this.pushChasers(player.id!);
+                    }
+                    pushChasersPeriodicallyCounter++;
+                }
             }
         }
     }

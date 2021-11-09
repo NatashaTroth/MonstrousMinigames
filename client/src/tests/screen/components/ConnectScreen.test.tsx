@@ -1,15 +1,13 @@
-import { cleanup } from "@testing-library/react";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure, mount, shallow } from "enzyme";
-import React from "react";
-import { ThemeProvider } from "styled-components";
+import { cleanup } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure, mount, shallow } from 'enzyme';
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
 
-import { ConnectScreen } from "../../../components/screen/ConnectScreen";
-import {
-    defaultValue as screenDefaultValue, ScreenSocketContext
-} from "../../../contexts/ScreenSocketContextProvider";
-import { InMemorySocketFake } from "../../../domain/socket/InMemorySocketFake";
-import theme from "../../../styles/theme";
+import { ConnectScreen } from '../../../components/screen/ConnectScreen';
+import { defaultValue as screenDefaultValue, ScreenSocketContext } from '../../../contexts/ScreenSocketContextProvider';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import theme from '../../../styles/theme';
 
 configure({ adapter: new Adapter() });
 

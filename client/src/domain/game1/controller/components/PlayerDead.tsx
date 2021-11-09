@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
+import styled from 'styled-components';
 
 import Character from '../../../../components/common/Character';
 import FullScreenContainer from '../../../../components/common/FullScreenContainer';
@@ -9,7 +10,6 @@ import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import history from '../../../history/history';
 import { handlePlayerGetsWindmill } from '../gameState/handlePlayerGetsWindmill';
 import { ObstacleInstructions } from './obstacles/ObstacleStyles.sc';
-import { PlayerDeadContainer } from './PlayerDead.sc';
 
 const PlayerDead: React.FC = () => {
     const { roomId } = React.useContext(GameContext);
@@ -47,3 +47,18 @@ const PlayerDead: React.FC = () => {
 };
 
 export default PlayerDead;
+
+const PlayerDeadContainer = styled.div`
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    align-items: center;
+    padding: 20px;
+    justify-content: center;
+`;
+
+const TextWrapper = styled.div`
+    margin-top: 20px;
+`;

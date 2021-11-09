@@ -1,7 +1,8 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
+import forest from '../../images/ui/forest_mobile.svg';
 import Button from '../common/Button';
-import { Container, Text } from './NoPermissions.sc';
 
 interface NoPermissionProps {
     getMotionPermission: () => void;
@@ -24,3 +25,22 @@ export const NoPermissions: React.FunctionComponent<NoPermissionProps> = ({
         </Container>
     );
 };
+
+const Container = styled.div`
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom;
+    background-image: url(${forest});
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 700;
+`;
+
+const Text = styled.div`
+    margin-bottom: 20px;
+`;
