@@ -150,7 +150,10 @@ roomId: string;
 countdownTime: number;
 ```
 
-8.) TODO
+8.)
+
+Other:
+Every time a new round starts: get 'game3/newRound' message
 
 ---------MAGDA FRAGEN----------
 Soll ich dir den GameThreeGameState schicken:
