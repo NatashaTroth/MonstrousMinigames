@@ -1,4 +1,3 @@
-import { Typography } from '@material-ui/core';
 import styled, { keyframes } from 'styled-components';
 
 import forest from '../../../../../images/ui/forest_mobile.svg';
@@ -112,7 +111,7 @@ export const ObstacleContent = styled.div`
     }
 `;
 
-export const ObstacleInstructions = styled(Typography)`
+export const ObstacleInstructions = styled.div`
     color: ${({ theme }) => theme.palette.primary.main};
     font-weight: 700;
     font-style: italic;

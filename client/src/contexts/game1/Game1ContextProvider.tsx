@@ -1,8 +1,8 @@
-import * as React from "react";
+import * as React from 'react';
 
-import history from "../../domain/history/history";
-import { ObstacleTypes, TrashType } from "../../utils/constants";
-import { controllerGame1Route, controllerObstacleRoute } from "../../utils/routes";
+import history from '../../domain/history/history';
+import { ObstacleTypes, TrashType } from '../../utils/constants';
+import { controllerGame1Route, controllerObstacleRoute } from '../../utils/routes';
 
 export const defaultValue = {
     obstacle: undefined,

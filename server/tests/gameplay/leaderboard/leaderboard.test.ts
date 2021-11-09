@@ -15,6 +15,7 @@ function createPlayerRanksArray(users: Array<User>, rankArray: Array<number>): A
             name: user.name,
             rank: rankArray[rankIndex++],
             finished: true,
+            isActive: true,
         };
     });
 }
@@ -95,17 +96,17 @@ describe('Add Game to Game History', () => {
     });
 
     it('adds the gameType the history object', async () => {
-        leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks);
-        expect(leaderboard.gameHistory[0].game).toBe(GameType.CatchFoodGame);
+        leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
+        expect(leaderboard.gameHistory[0].game).toBe(GameType.GameOne);
     });
 
     it('adds the playerRanks object to the history object', async () => {
-        leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks);
+        leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
         expect(leaderboard.gameHistory[0].playerRanks).toMatchObject(playerRanks);
     });
 
     it('Updates user points object when new points are added with duplicate ranks', async () => {
-        leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks);
+        leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
         expect(leaderboard.userPoints).toMatchObject({
             '1': {
                 points: 5,
@@ -124,12 +125,12 @@ describe('Add Game to Game History', () => {
 
     it('adds the new game to end of history array', async () => {
         //add first game
-        leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks);
+        leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
 
         //add second game
         const newUserName = 'New Player';
         const playerRanks2 = createPlayerRanksArray([new User('xxx', 'iii', newUserName, 1, '10')], [2, 2, 2, 2]);
-        leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks2);
+        leaderboard.addGameToHistory(GameType.GameOne, playerRanks2);
 
         expect(leaderboard.gameHistory.length).toBe(2);
         expect(leaderboard.gameHistory[0].playerRanks[0].name).toBe(users[0].name);
@@ -148,7 +149,7 @@ describe('Add Game to Game History', () => {
         it('Updates user points object when new points are added', async () => {
             const addUserPointsSpy = jest.spyOn(Leaderboard.prototype as any, 'addUserPoints');
             leaderboard.addUsers(users);
-            leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks);
+            leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
             expect(addUserPointsSpy).toHaveBeenCalledTimes(playerRanks.length);
             expect(leaderboard.userPoints[users[0].id].points).toBe(
                 leaderboard.rankPointsDictionary[playerRanks[0].rank]
@@ -159,7 +160,7 @@ describe('Add Game to Game History', () => {
             const addUserSpy = jest.spyOn(Leaderboard.prototype as any, 'addUser');
             //check userPoints is empty
             expect(Object.keys(leaderboard.userPoints).length).toBe(0);
-            leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks);
+            leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
             expect(Object.keys(leaderboard.userPoints).length).toBe(4);
             expect(addUserSpy).toHaveBeenCalledTimes(playerRanks.length);
         });
@@ -178,7 +179,7 @@ describe('Add Game to Game History', () => {
 
         it('Updates user points object when the first points are added', async () => {
             const playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
-            leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks);
+            leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
             expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(1);
 
             // leaderboard.updateUserPointsAfterGame(playerRanks);
@@ -203,7 +204,7 @@ describe('Add Game to Game History', () => {
             const playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
             playerRanks[0].finished = false; // player 1
             playerRanks[2].finished = false; // player 3
-            leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks);
+            leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
             expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(1);
 
             // leaderboard.updateUserPointsAfterGame(playerRanks);
@@ -225,11 +226,11 @@ describe('Add Game to Game History', () => {
         });
         it('Updates user points object when new points are added with duplicate ranks', async () => {
             const playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
-            leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks);
+            leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
             expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(1);
 
             const playerRanks2 = createPlayerRanksArray(users, [2, 4, 1, 2]);
-            leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks2);
+            leaderboard.addGameToHistory(GameType.GameOne, playerRanks2);
             expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(2);
 
             expect(leaderboard.userPoints).toMatchObject({
@@ -257,7 +258,7 @@ describe('Get Leaderboard Info', () => {
         playerRanks = createPlayerRanksArray(users, [2, 1, 4, 3]);
         leaderboard = new Leaderboard(roomId);
         leaderboard.addUsers(users);
-        leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks);
+        leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
         leaderboardInfo = leaderboard.getLeaderboardInfo();
     });
 
@@ -266,7 +267,7 @@ describe('Get Leaderboard Info', () => {
     });
 
     it('Returns the game history', async () => {
-        expect(leaderboardInfo.gameHistory[0].game).toBe(GameType.CatchFoodGame);
+        expect(leaderboardInfo.gameHistory[0].game).toBe(GameType.GameOne);
         expect(leaderboardInfo.gameHistory[0].playerRanks).toMatchObject(playerRanks);
     });
 
@@ -307,7 +308,7 @@ describe('Get Leaderboard Info Error No Game History', () => {
 
     it('Returns a copy of the game history object', async () => {
         leaderboardInfo = leaderboard.getLeaderboardInfo();
-        leaderboard.addGameToHistory(GameType.CatchFoodGame, playerRanks);
+        leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
         expect(leaderboardInfo.gameHistory).toMatchObject([]);
     });
 });

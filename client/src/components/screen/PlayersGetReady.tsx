@@ -3,19 +3,20 @@ import * as React from 'react';
 
 import Button from '../../components/common/Button';
 import { characters } from '../../config/characters';
+import { GameNames } from '../../config/games';
+import { ScreenStates } from '../../config/screenStates';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext, User } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import handleStartGame1 from '../../domain/game1/screen/gameState/handleStartGame1';
 import handleStartGame2 from '../../domain/game2/screen/gameState/handleStartGame2';
-import handleStartGame3 from '../../domain/game3/screen/gameState/handleStartGame3';
+import handleStartClickedGame3 from '../../domain/game3/screen/gameState/handleStartClickedGame3';
 import history from '../../domain/history/history';
 import { Socket } from '../../domain/socket/Socket';
 import { MessageTypes } from '../../utils/constants';
-import { GameNames } from '../../utils/games';
 import { Routes } from '../../utils/routes';
-import { ScreenStates } from '../../utils/screenStates';
+import { BackButtonContainer, FullScreenContainer } from '../common/FullScreenStyles.sc';
 import { getUserArray } from './Lobby';
 import {
     Character,
@@ -26,7 +27,6 @@ import {
     ConnectedUserStatus,
     Content,
     GetReadyBackground,
-    GetReadyContainer,
 } from './PlayersGetReady.sc';
 
 const PlayersGetReady: React.FC = () => {
@@ -59,7 +59,7 @@ const PlayersGetReady: React.FC = () => {
     }, [screenState]);
 
     return (
-        <GetReadyContainer>
+        <FullScreenContainer>
             <GetReadyBackground>
                 <Content>
                     <ConnectedUsers>
@@ -95,14 +95,17 @@ const PlayersGetReady: React.FC = () => {
                     )}
                 </Content>
             </GetReadyBackground>
-        </GetReadyContainer>
+            <BackButtonContainer>
+                <Button onClick={history.goBack}>Back</Button>
+            </BackButtonContainer>
+        </FullScreenContainer>
     );
 };
 
 export default PlayersGetReady;
 
-function startGame(gameId: GameNames, screenSocket: Socket) {
-    switch (gameId) {
+function startGame(game: GameNames, screenSocket: Socket) {
+    switch (game) {
         case GameNames.game1:
             handleStartGame1(screenSocket);
             return;
@@ -110,7 +113,7 @@ function startGame(gameId: GameNames, screenSocket: Socket) {
             handleStartGame2(screenSocket);
             return;
         case GameNames.game3:
-            handleStartGame3(screenSocket);
+            handleStartClickedGame3(screenSocket);
             return;
     }
 }

@@ -1,4 +1,4 @@
-import { StunnablePlayersMessage } from "../../../typeGuards/game1/stunnablePlayers";
+import { StunnablePlayersMessage } from '../../../typeGuards/game1/stunnablePlayers';
 
 interface HandleStunnablePlayersMessage {
     data: StunnablePlayersMessage;

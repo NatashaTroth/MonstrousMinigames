@@ -29,8 +29,8 @@ import forest2 from '../../../../images/ui/forest2.png';
 import forest2Smaller from '../../../../images/ui/forest2Smaller.png';
 import forestTile from '../../../../images/ui/forestTile.png';
 import warning from '../../../../images/ui/warning.png';
-import { AnimationName } from '../phaser/enums';
-import { Character, CharacterAnimation, CharacterSpriteProperties } from '../phaser/gameInterfaces';
+import { AnimationName } from '../../../phaser/enums';
+import { Character, CharacterAnimation, CharacterSpriteProperties } from '../../../phaser/gameInterfaces';
 
 export const audioFiles = [
     { name: 'backgroundMusicStart', file: [game1SoundStart] },

@@ -13,3 +13,16 @@ export const VoteInstructions = styled(Typography)`
 export const ButtonContainer = styled.div`
     margin-bottom: 30px;
 `;
+export const VoteForPictureContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    width: 100%;
+    align-self: stretch;
+`;
+export const MediumImageContainer = styled.div`
+    display: flex;
+    width: 45%;
+    padding: 0.5rem;
+`;

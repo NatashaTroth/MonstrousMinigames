@@ -1,18 +1,19 @@
-import { Typography } from '@material-ui/core';
-import * as React from 'react';
-import { Field, FieldRenderProps, Form } from 'react-final-form';
+import { Typography } from "@material-ui/core";
+import * as React from "react";
+import { Field, FieldRenderProps, Form } from "react-final-form";
 
-import Button from '../../../../components/common/Button';
-import { FirebaseContext } from '../../../../contexts/FirebaseContextProvider';
-import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
-import uploadFile from '../../../storage/uploadFile';
-import { ScreenContainer } from './Game3Styles.sc';
-import { StyledImg, StyledLabel, UploadWrapper } from './TakePicture.sc';
+import Button from "../../../../components/common/Button";
+import { ControllerSocketContext } from "../../../../contexts/ControllerSocketContextProvider";
+import { FirebaseContext } from "../../../../contexts/FirebaseContextProvider";
+import { Game3Context } from "../../../../contexts/game3/Game3ContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
+import uploadFile from "../gameState/uploadFile";
+import { ScreenContainer } from "./Game3Styles.sc";
+import { StyledImg, StyledLabel, UploadWrapper } from "./TakePicture.sc";
 
-interface UploadProps {
-    picture: File;
+export interface UploadProps {
+    picture: File | undefined;
 }
 
 const TakePicture: React.FunctionComponent = () => {
@@ -20,17 +21,10 @@ const TakePicture: React.FunctionComponent = () => {
     const { roomId } = React.useContext(GameContext);
     const { userId } = React.useContext(PlayerContext);
     const { challengeId } = React.useContext(Game3Context);
+    const { controllerSocket } = React.useContext(ControllerSocketContext);
 
-    const upload = async (values: UploadProps) => {
-        if (!values.picture) return;
-
-        if (storage && roomId) {
-            const success = await uploadFile(storage, values.picture, roomId, userId, challengeId);
-            if (success) {
-                // todo
-            }
-        }
-    };
+    const upload = async (values: UploadProps) =>
+        uploadFile(values, storage, roomId, userId, challengeId, controllerSocket);
 
     return (
         <ScreenContainer>

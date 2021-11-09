@@ -1,19 +1,19 @@
-import random from 'random';
+import random from "random";
 
-import User from '../../classes/user';
-import { IMessage } from '../../interfaces/messages';
-import Game from '../Game';
-import { IGameInterface } from '../interfaces';
-import Leaderboard from '../leaderboard/Leaderboard';
-import Player from '../Player';
-import Sheep from './classes/Sheep';
-import InitialParameters from './constants/InitialParameters';
-import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
-import { SheepStates } from './enums/SheepStates';
-import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
-import GameTwoPlayer from './GameTwoPlayer';
-import { GameStateInfo } from './interfaces';
-import { GameNames } from '../../enums/gameNames';
+import User from "../../classes/user";
+import { GameNames } from "../../enums/gameNames";
+import { IMessage } from "../../interfaces/messages";
+import Game from "../Game";
+import { IGameInterface } from "../interfaces";
+import Leaderboard from "../leaderboard/Leaderboard";
+import Player from "../Player";
+import GameTwoEventEmitter from "./classes/GameTwoEventEmitter";
+import Sheep from "./classes/Sheep";
+import InitialParameters from "./constants/InitialParameters";
+import { GameTwoMessageTypes } from "./enums/GameTwoMessageTypes";
+import { SheepStates } from "./enums/SheepStates";
+import GameTwoPlayer from "./GameTwoPlayer";
+import { GameStateInfo } from "./interfaces";
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -25,7 +25,12 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     public lengthY: number;
     public sheep: Sheep[];
     private currentSheepId: number;
+    private roundTime: number;
+    private roundCount: number;
+    private currentRound: number;
     countdownTime = InitialParameters.COUNTDOWN_TIME;
+
+
 
     initialPlayerPositions = InitialParameters.PLAYERS_POSITIONS;
 
@@ -38,6 +43,9 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.lengthY = InitialParameters.LENGTH_Y;
         this.sheep = [];
         this.currentSheepId = 0;
+        this.roundTime = InitialParameters.ROUND_TIME;
+        this.roundCount = InitialParameters.ROUNDS;
+        this.currentRound = 1;
     }
 
     getGameStateInfo(): GameStateInfo {
@@ -51,14 +59,14 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 positionY: player.posY,
                 finished: player.finished,
                 isActive: player.isActive,
-                characterNumber: player.characterNumber
+                characterNumber: player.characterNumber,
             })),
             sheep: this.sheep,
             lengthX: this.lengthX,
             lengthY: this.lengthY,
+            currentRound: this.currentRound,
         };
     }
-
 
     protected mapUserToPlayer(user: User): GameTwoPlayer {
         const player = new GameTwoPlayer(
@@ -72,11 +80,10 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
-        return
-
+        return;
     }
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
-        return
+        return;
     }
 
     protected initSheep(count: number): void {
@@ -120,18 +127,14 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         return valid;
     }
 
-
     protected beforeCreateNewGame() {
-        return
+        return;
     }
 
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
         this.initSheep(InitialParameters.SHEEP_COUNT);
-        GameTwoEventEmitter.emitInitialGameStateInfoUpdate(
-            this.roomId,
-            this.getGameStateInfo()
-        )
+        GameTwoEventEmitter.emitInitialGameStateInfoUpdate(this.roomId, this.getGameStateInfo());
     }
 
     startGame(): void {
@@ -139,7 +142,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             super.startGame();
         }, this.countdownTime);
         GameTwoEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime, this.gameName);
-
     }
     pauseGame(): void {
         super.pauseGame();
@@ -206,6 +208,18 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         player.killsLeft--;
     }
 
+
+    protected handleGuess(userId: string, guess: number) {
+        const player = this.players.get(userId)!;
+
+        // todo handle if player not found
+
+        // todo handle if guess exists for round
+
+        player.guesses.push({round: this.currentRound, guess: guess});
+    
+    }
+
     protected handleInput(message: IMessage) {
         switch (message.type) {
             case GameTwoMessageTypes.MOVE:
@@ -213,6 +227,9 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 break;
             case GameTwoMessageTypes.KILL:
                 this.killSheep(message.userId!);
+                break;
+            case GameTwoMessageTypes.GUESS:
+                this.handleGuess(message.userId!, message.guess!);
                 break;
             default:
                 console.info(message);
@@ -237,5 +254,4 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
         return false;
     }
-
 }

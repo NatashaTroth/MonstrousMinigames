@@ -187,8 +187,6 @@ interface Props {
     selected: boolean;
 }
 
-const boxShadowDepth = 7;
-
 export const PlayerButtonContainer = styled.div<Props>`
     && {
         margin-bottom: 20px;
@@ -202,7 +200,7 @@ export const PlayerButtonContainer = styled.div<Props>`
         border-radius: 10px;
         min-width: 200px;
         box-shadow: ${({ characterNumber, theme, selected }) =>
-            `calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${
+            `calc(${theme.boxShadowDepth} * 1px) calc(${theme.boxShadowDepth} * 1px) 0 ${
                 selected ? theme.palette.secondary.dark : darken(theme.colors.characterColors[characterNumber], 0.5)
             }}`};
     }

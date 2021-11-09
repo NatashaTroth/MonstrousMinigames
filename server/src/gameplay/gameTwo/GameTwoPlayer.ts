@@ -1,21 +1,24 @@
 import Player from "../Player";
 import InitialParameters from "./constants/InitialParameters";
 import { Direction } from "./enums/Direction";
+import { Guess } from "./interfaces";
 
 class GameTwoPlayer extends Player {
     public direction: string;
     public speed: number;
+    public guesses: Guess[];
     constructor(
         public id: string,
         name: string,
         public posX: number,
         public posY: number,
         public killsLeft: number,
-        public characterNumber: number,
+        public characterNumber: number
     ) {
-        super(id, name);
+        super(id, name, characterNumber);
         this.direction = 'C';
         this.speed = InitialParameters.SPEED;
+        this.guesses = [];
     }
 
     update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
@@ -51,6 +54,5 @@ class GameTwoPlayer extends Player {
     public setKillsLeft(killsLeft: number) {
         this.killsLeft = killsLeft;
     }
-
 }
 export default GameTwoPlayer;
