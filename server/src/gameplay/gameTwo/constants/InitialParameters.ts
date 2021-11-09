@@ -33,7 +33,10 @@ const KILL_RADIUS = 5;
 const KILLS_PER_ROUND = 5;
 
 const ROUNDS = 3;
-const ROUND_TIME = 60000;
+
+const ROUND_TIME = 30000;
+const GUESSING_TIME = 10000;
+const RESULTS_TIME = 10000;
 
 
 
@@ -48,5 +51,7 @@ export default {
     KILL_RADIUS,
     KILLS_PER_ROUND,
     ROUNDS,
-    ROUND_TIME
+    ROUND_TIME,
+    GUESSING_TIME,
+    RESULTS_TIME
 }
