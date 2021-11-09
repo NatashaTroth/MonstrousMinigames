@@ -98,22 +98,22 @@ describe('GameTwo Tests', () => {
         expect(gameTwo.gameState).toEqual(GameState.Stopped);
     });
 
-    it('should move the player if message is sent', async () => {
-        const message = {
-            type: GameTwoMessageTypes.MOVE,
-            roomId: roomId,
-            direction: 'S',
-            userId: users[0].id
-        };
-        gameTwo.receiveInput(message);
+    // it('should move the player if message is sent', async () => {
+    //     const message = {
+    //         type: GameTwoMessageTypes.MOVE,
+    //         roomId: roomId,
+    //         direction: 'S',
+    //         userId: users[0].id
+    //     };
+    //     gameTwo.receiveInput(message);
 
-        jest.useRealTimers();
+    //     jest.useRealTimers();
 
-        setTimeout(() => {
-            expect(gameTwo.getGameStateInfo().playersState[0].positionY).toBeGreaterThan(InitialParameters.PLAYERS_POSITIONS[0].y);
-        }, 3000);
+    //     setTimeout(() => {
+    //         expect(gameTwo.getGameStateInfo().playersState[0].positionY).toBeGreaterThan(InitialParameters.PLAYERS_POSITIONS[0].y);
+    //     }, 3000);
 
-    });
+    // });
 
     it('should kill sheep if message is sent and user is in radius', async () => {
         const sheep = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x, InitialParameters.PLAYERS_POSITIONS[0].y, gameTwo.sheep.length);
