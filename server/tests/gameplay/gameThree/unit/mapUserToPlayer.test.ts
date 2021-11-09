@@ -33,6 +33,6 @@ describe('Map User to Player', () => {
     });
 
     it('should create a roundInfo array with the correct number of rounds', async () => {
-        expect(player.roundInfo.length).toBe(InitialParameters.NUMBER_ROUNDS);
+        expect(player.roundInfo.length).toBe(InitialParameters.NUMBER_ROUNDS - 1);
     });
 });

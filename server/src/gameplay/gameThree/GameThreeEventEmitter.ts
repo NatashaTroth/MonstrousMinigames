@@ -13,7 +13,7 @@ import { InitialGameStateInfo, PlayerRank } from './interfaces';
 import {
     GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
-    GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS,
+    GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS, GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
     GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
     GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER, GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS
 } from './interfaces/GameThreeEventMessages';
@@ -144,6 +144,21 @@ export default class GameThreeEventEmitter {
             type: GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
             roomId,
             countdownTime,
+        });
+    }
+
+    public static emitPresentFinalPhotosCountdown(
+        roomId: string,
+        countdownTime: number,
+        photographerId: string,
+        photoUrls: string[]
+    ) {
+        this.GameThreeEventMessageEmitter.emit({
+            type: GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
+            roomId,
+            countdownTime,
+            photographerId,
+            photoUrls,
         });
     }
 }
