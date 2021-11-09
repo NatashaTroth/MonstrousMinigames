@@ -1,9 +1,9 @@
-import Phaser from "phaser";
+import Phaser from 'phaser';
 
-import { depthDictionary } from "../../../../../config/depthDictionary";
-import SheepGameScene from "../../components/SheepGameScene";
-import { Character, CharacterAnimationFrames } from "../gameInterfaces/Character";
-import { Coordinates } from "../gameTypes/Coordinates";
+import { depthDictionary } from '../../../../../config/depthDictionary';
+import SheepGameScene from '../../components/SheepGameScene';
+import { Character, CharacterAnimationFrames } from '../gameInterfaces/Character';
+import { Coordinates } from '../gameTypes/Coordinates';
 
 /**
  * this is an incomplete PlayerRenderer adapter which contains all the phaser logic. This class might only be tested via
@@ -45,6 +45,12 @@ export class PhaserPlayerRenderer {
         if (this.player) {
             this.player.x = newXPosition;
         }
+    }
+
+    renderSheepBackground(width: number, height: number) {
+        const element = this.scene.add.image(0, 0, 'forest2');
+        element.setDisplaySize(width, height);
+        element.setOrigin(0, 1);
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {

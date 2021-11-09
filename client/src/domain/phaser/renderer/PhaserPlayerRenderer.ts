@@ -100,12 +100,6 @@ export class PhaserPlayerRenderer {
         }
     }
 
-    renderSheepBackground(width: number, height: number) {
-        const element = this.scene.add.image(0, 0, 'forest2');
-        element.setDisplaySize(width, height);
-        element.setOrigin(0, 1);
-    }
-
     private calcWidthKeepAspectRatio(bg: Phaser.GameObjects.Image | Phaser.GameObjects.TileSprite, laneHeight: number) {
         //Keep aspect ratio when setting displaySize
         // oldHeight .... 100%
