@@ -437,6 +437,49 @@ example:
     "receivingUserId": "XXxXX"
 }
 ```
+
+### game2/move
+
+-   send the move direction
+-   directions: N,E,S,W,C
+  
+example:
+
+```json
+{
+    "type": "game2/move",
+    "userId": "XXxXX",
+    "direction": "S"
+}
+```
+
+### game2/kill
+
+-   send the kill event
+  
+example:
+
+```json
+{
+    "type": "game2/kill",
+    "userId": "XXxXX"
+}
+```
+
+### game2/guess
+
+-   send the guess of a user
+  
+example:
+
+```json
+{
+    "type": "game2/guess",
+    "userId": "XXxXX",
+    "guess": 38
+}
+```
+
 * * *
 
 ## Screen → Server

@@ -55,6 +55,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
 
     const {
         setGameStarted,
+        setSheepGameStarted,
         setRoomId,
         setHasPaused,
         resetGame,
@@ -77,6 +78,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setObstacle,
         setPlayerRank,
         setGameStarted,
+        setSheepGameStarted,
         setName,
         setAvailableCharacters,
         history,

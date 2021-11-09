@@ -10,4 +10,5 @@ export interface InitialGameStateInfo extends GameStateInfo {
     sheep: Array<Sheep>;
     lengthX: number;
     lengthY: number;
+    currentRound: number;
 }

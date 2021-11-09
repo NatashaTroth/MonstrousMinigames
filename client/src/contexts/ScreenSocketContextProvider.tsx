@@ -69,6 +69,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
     const { setTopicMessage, setTimeIsUp } = React.useContext(Game3Context);
     const {
         setGameStarted,
+        setSheepGameStarted,
         setRoomId,
         setConnectedUsers,
         setCountdownTime,
@@ -91,6 +92,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                     setConnectedUsers,
                     setHasPaused,
                     setGameStarted,
+                    setSheepGameStarted,
                     setCountdownTime,
                     setFinished,
                     setPlayerRanks,
@@ -111,6 +113,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 setConnectedUsers,
                 setHasPaused,
                 setGameStarted,
+                setSheepGameStarted,
                 setCountdownTime,
                 setFinished,
                 setPlayerRanks,

@@ -79,6 +79,19 @@ export enum MessageTypesGame1 {
     stunnablePlayers = 'game1/stunnablePlayers',
 }
 
+export enum MessageTypesGame2 {
+    runForward = 'game2/runForward',
+    started = 'game2/hasStarted',
+    phaserLoaded = 'game2/phaserGameLoaded',
+    phaserLoadingTimedOut = 'game2/phaserLoadingTimedOut',
+    allScreensSheepGameLoaded = 'game2/allScreensPhaserGameLoaded',
+    startSheepGame = 'game2/startPhaserGame',
+    initialGameState = 'game2/initialGameState',
+    gameState = 'game2/gameState',
+    movePlayer = 'game2/move',
+    killSheep = 'game2/kill',
+}
+
 export const enum MessageTypesGame3 {
     newPhotoTopic = 'game3/newPhotoTopic',
     initialGameState = 'game3/initialGameState',

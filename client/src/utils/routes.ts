@@ -1,4 +1,4 @@
-import { ObstacleTypes } from './constants';
+import { ObstacleTypes } from "./constants";
 
 export enum Routes {
     // Routes for router

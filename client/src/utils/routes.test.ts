@@ -3,6 +3,7 @@ import {
     controllerChooseCharacterRoute,
     controllerFinishedRoute,
     controllerGame1Route,
+    controllerGame2Route,
     controllerLobbyRoute,
     controllerObstacleRoute,
     controllerPlayerDeadRoute,
@@ -36,6 +37,10 @@ describe('test routing functions', () => {
 
     it('controllerGame1Route should return /controller/${roomId}/game1', () => {
         expect(controllerGame1Route(roomId)).toBe(`/controller/${roomId}/game1`);
+    });
+
+    it('controllerGame2Route should return /controller/${roomId}/game2', () => {
+        expect(controllerGame2Route(roomId)).toBe(`/controller/${roomId}/game2`);
     });
 
     it('controllerPlayerStunnedRoute should return /controller/${roomId}/stunned', () => {
