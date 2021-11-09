@@ -1,19 +1,21 @@
 /* eslint-disable simple-import-sort/imports */
-import "jest-styled-components";
-import { cleanup } from "@testing-library/react";
-import React from "react";
-import { ThemeProvider } from "styled-components";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure, mount } from "enzyme";
-import Carousel from "react-multi-carousel";
-import { createMemoryHistory } from "history";
+import 'jest-styled-components';
+import { cleanup } from '@testing-library/react';
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure, mount } from 'enzyme';
+import Carousel from 'react-multi-carousel';
+import { createMemoryHistory } from 'history';
 
 import ChooseCharacter, {
-    chooseCharacterClick, CustomLeftArrow, CustomRightArrow
-} from "../../../components/controller/ChooseCharacter";
-import { InMemorySocketFake } from "../../../domain/socket/InMemorySocketFake";
-import theme from "../../../styles/theme";
-import { MessageTypes } from "../../../utils/constants";
+    chooseCharacterClick,
+    CustomLeftArrow,
+    CustomRightArrow,
+} from '../../../components/controller/ChooseCharacter';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import theme from '../../../styles/theme';
+import { MessageTypes } from '../../../utils/constants';
 
 configure({ adapter: new Adapter() });
 

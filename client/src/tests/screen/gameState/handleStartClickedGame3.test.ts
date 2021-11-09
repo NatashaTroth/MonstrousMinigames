@@ -1,6 +1,6 @@
-import handleStartClickedGame3 from "../../../domain/game3/screen/gameState/handleStartClickedGame3";
-import { InMemorySocketFake } from "../../../domain/socket/InMemorySocketFake";
-import { MessageTypes } from "../../../utils/constants";
+import handleStartClickedGame3 from '../../../domain/game3/screen/gameState/handleStartClickedGame3';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { MessageTypes } from '../../../utils/constants';
 
 beforeEach(() => {
     global.sessionStorage.clear();

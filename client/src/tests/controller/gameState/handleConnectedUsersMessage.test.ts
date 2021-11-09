@@ -1,8 +1,6 @@
-import {
-    handleConnectedUsersMessage
-} from "../../../domain/commonGameState/controller/handleConnectedUsersMessage";
-import { ConnectedUsersMessage } from "../../../domain/typeGuards/connectedUsers";
-import { MessageTypes } from "../../../utils/constants";
+import { handleConnectedUsersMessage } from '../../../domain/commonGameState/controller/handleConnectedUsersMessage';
+import { ConnectedUsersMessage } from '../../../domain/typeGuards/connectedUsers';
+import { MessageTypes } from '../../../utils/constants';
 
 describe('handleConnectedUsersMessage function', () => {
     const mockData: ConnectedUsersMessage = {

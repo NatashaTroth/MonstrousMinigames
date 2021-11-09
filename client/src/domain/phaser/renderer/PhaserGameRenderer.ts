@@ -1,15 +1,17 @@
 //TODO can be used by all phaser games!!
 
-import Phaser from "phaser";
+import Phaser, { GameObjects } from 'phaser';
 
-import { depthDictionary } from "../../../config/depthDictionary";
-import { designDevelopment } from "../../../utils/constants";
-import { getRandomInt } from "../../../utils/getRandomInt";
-import MainScene from "../../game1/screen/components/MainScene";
-import SheepGameScene from "../../game2/screen/components/SheepGameScene";
-import * as colors from "../colors";
-import { gameLoadedWaitingMessages, gameLoadingMessages } from "../gameLoadingMessages";
-import { countdownTextStyleProperties, loadingTextStyleProperties } from "../textStyleProperties";
+import { depthDictionary } from '../../../config/depthDictionary';
+import { designDevelopment } from '../../../utils/constants';
+import { getRandomInt } from '../../../utils/getRandomInt';
+import MainScene from '../../game1/screen/components/MainScene';
+import SheepGameScene from '../../game2/screen/components/SheepGameScene';
+import * as colors from '../colors';
+import { gameLoadedWaitingMessages, gameLoadingMessages } from '../gameLoadingMessages';
+import { Scene } from '../Scene';
+import { GameObjectText } from '../Text';
+import { countdownTextStyleProperties, loadingTextStyleProperties } from '../textStyleProperties';
 
 /**
  * this is an incomplete GameRenderer adapter which contains all the phaser logic. This class might only be tested via
@@ -36,29 +38,7 @@ export class PhaserGameRenderer {
     }
 
     renderCountdown(text: string) {
-        const fixedWidth = 800;
-        const fixedHeight = 200;
-        const x = this.scene.windowWidth / 2 - fixedWidth / 2;
-        const y = this.scene.windowHeight / 2 - fixedHeight / 2;
-
-        if (this.countdownText) {
-            this.countdownText.setText(text);
-        } else {
-            this.countdownText = this.scene.make.text({
-                x,
-                y,
-                text,
-                style: {
-                    ...countdownTextStyleProperties,
-                    fontSize: `${fixedHeight}px`,
-                    fixedWidth,
-                    fixedHeight,
-                },
-                add: true,
-            });
-            this.countdownText.scrollFactorX = 0;
-            this.countdownText.setDepth(depthDictionary.countdown);
-        }
+        this.countdownText = handleRenderCountdown(this.scene, this.countdownText, text);
     }
 
     renderLoadingScreen() {
@@ -151,4 +131,32 @@ export class PhaserGameRenderer {
     destroyCountdown() {
         this.countdownText?.destroy();
     }
+}
+
+export function handleRenderCountdown(scene: Scene, countdownText: GameObjectText | undefined, text: string) {
+    const fixedWidth = 800;
+    const fixedHeight = 200;
+    const x = scene.windowWidth / 2 - fixedWidth / 2;
+    const y = scene.windowHeight / 2 - fixedHeight / 2;
+
+    if (countdownText) {
+        countdownText.setText(text);
+    } else {
+        countdownText = scene.make.text({
+            x,
+            y,
+            text,
+            style: {
+                ...countdownTextStyleProperties,
+                fontSize: `${fixedHeight}px`,
+                fixedWidth,
+                fixedHeight,
+            },
+            add: true,
+        });
+        countdownText.scrollFactorX = 0;
+        countdownText.setDepth(depthDictionary.countdown);
+    }
+
+    return countdownText as GameObjects.Text;
 }

@@ -1,6 +1,6 @@
-import handleStartGame1 from "../../../domain/game1/screen/gameState/handleStartGame1";
-import { InMemorySocketFake } from "../../../domain/socket/InMemorySocketFake";
-import { MessageTypesGame1 } from "../../../utils/constants";
+import handleStartGame1 from '../../../domain/game1/screen/gameState/handleStartGame1';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { MessageTypesGame1 } from '../../../utils/constants';
 
 beforeEach(() => {
     global.sessionStorage.clear();

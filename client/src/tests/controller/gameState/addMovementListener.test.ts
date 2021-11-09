@@ -1,7 +1,5 @@
-import {
-    sendMovementToController
-} from "../../../domain/game1/controller/gameState/addMovementListener";
-import { InMemorySocketFake } from "../../../domain/socket/InMemorySocketFake";
+import { sendMovementToController } from '../../../domain/game1/controller/gameState/addMovementListener';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
 
 describe('test sendMovementToController function', () => {
     it('sendMovementToController should call handed sendMovement function', async () => {

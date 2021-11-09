@@ -1,4 +1,4 @@
-import { handleAudio } from "../../domain/audio/handleAudio";
+import { handleAudio } from '../../domain/audio/handleAudio';
 
 describe('handleAudio function', () => {
     it('handed pauseLobbyMusic should be called', () => {

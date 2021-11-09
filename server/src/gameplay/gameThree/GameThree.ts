@@ -1,24 +1,24 @@
-import validator from "validator";
+import validator from 'validator';
 
-import User from "../../classes/user";
-import { GameNames } from "../../enums/gameNames";
-import { IMessage } from "../../interfaces/messages";
-import Game from "../Game";
-import { IGameInterface } from "../interfaces";
-import Leaderboard from "../leaderboard/Leaderboard";
-import Player from "../Player";
-import { RandomWordGenerator } from "./classes/RandomWordGenerator";
-import InitialParameters from "./constants/InitialParameters";
-import { InvalidUrlError } from "./customErrors";
-import { GameThreeGameState } from "./enums/GameState";
-import { GameThreeMessageTypes } from "./enums/GameThreeMessageTypes";
-import GameThreeEventEmitter from "./GameThreeEventEmitter";
+import User from '../../classes/user';
+import { GameNames } from '../../enums/gameNames';
+import { IMessage } from '../../interfaces/messages';
+import Game from '../Game';
+import { IGameInterface } from '../interfaces';
+import Leaderboard from '../leaderboard/Leaderboard';
+import Player from '../Player';
+import { RandomWordGenerator } from './classes/RandomWordGenerator';
+import InitialParameters from './constants/InitialParameters';
+import { InvalidUrlError } from './customErrors';
+import { GameThreeGameState } from './enums/GameState';
+import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
+import GameThreeEventEmitter from './GameThreeEventEmitter';
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
-import GameThreePlayer from "./GameThreePlayer";
+import GameThreePlayer from './GameThreePlayer';
 import {
     IMessagePhoto, IMessagePhotoVote, photoPhotographerMapper, votingResultsPhotographerMapper
-} from "./interfaces";
-import { GameStateInfo } from "./interfaces/GameStateInfo";
+} from './interfaces';
+import { GameStateInfo } from './interfaces/GameStateInfo';
 
 type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
 
@@ -69,6 +69,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         // handle taking photo
         if (this.countdownRunning) {
             this.reduceCountdown(timeElapsedSinceLastFrame);
+
             if (this.countdownOver()) {
                 switch (this.gameThreeGameState) {
                     case GameThreeGameState.TakingPhoto:
@@ -84,6 +85,18 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             }
         }
     }
+
+    // *** Round Change ***
+    private handleNewRound() {
+        this.roundIdx++;
+        GameThreeEventEmitter.emitNewRound(this.roomId, this.roundIdx);
+        if (!this.isFinalRound()) {
+            this.sendPhotoTopic();
+        } else {
+            this.sendTakeFinalPhotosCountdown();
+        }
+    }
+
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
         //TODO
     }
@@ -96,9 +109,11 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     startGame(): void {
         setTimeout(() => {
             super.startGame();
-            this.sendPhotoTopic();
         }, this.countdownTimeGameStart);
+
+        // this.sendPhotoTopic();
         GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTimeGameStart, this.gameName);
+        this.handleNewRound();
     }
 
     private sendPhotoTopic() {
@@ -175,6 +190,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private handleReceivedPhoto(message: IMessagePhoto) {
+        if (this.gameThreeGameState !== GameThreeGameState.TakingPhoto) return;
         if (!validator.isURL(message.url))
             throw new InvalidUrlError('The received value for the URL is not valid.', message.userId);
         const player = this.players.get(message.userId!);
@@ -209,6 +225,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     // *** Voting ***
     private handleReceivedPhotoVote(message: IMessagePhotoVote) {
+        if (this.gameThreeGameState !== GameThreeGameState.Voting) return;
         const player = this.players.get(message.photographerId!);
         const voter = this.players.get(message.voterId);
         if (player && voter && !voter.roundInfo[this.roundIdx].voted) {
@@ -262,22 +279,13 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         GameThreeEventEmitter.emitPhotoVotingResults(this.roomId, votingResults, this.countdownTimeViewResults);
     }
 
-    // *** Round Change ***
-    private handleNewRound() {
-        this.roundIdx++;
-        if (!this.isFinalRound()) {
-            this.sendPhotoTopic();
-        } else {
-            this.sendTakeFinalPhotosCountdown();
-        }
-    }
+    // *** Final round ***
 
     private isFinalRound() {
-        return this.roundIdx >= this.numberRounds - 1;
+        return this.roundIdx >= this.numberRounds;
     }
-
-    // *** Final round ***
     private sendTakeFinalPhotosCountdown() {
+        this.gameThreeGameState = GameThreeGameState.TakingFinalPhotos;
         GameThreeEventEmitter.emitTakeFinalPhotosCountdown(this.roomId, this.countdownTimeTakeFinalPhotos);
     }
 }

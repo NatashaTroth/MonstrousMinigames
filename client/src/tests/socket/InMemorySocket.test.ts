@@ -1,5 +1,5 @@
-import { InMemorySocketFake } from "../../domain/socket/InMemorySocketFake";
-import { MessageSocket } from "../../domain/socket/MessageSocket";
+import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
+import { MessageSocket } from '../../domain/socket/MessageSocket';
 
 describe('InMemorySocket', () => {
     it('when data was written, registered callback is called', async () => {

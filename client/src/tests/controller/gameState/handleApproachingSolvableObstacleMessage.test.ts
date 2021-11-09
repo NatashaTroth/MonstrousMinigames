@@ -1,10 +1,6 @@
-import {
-    handleApproachingObstacleMessage
-} from "../../../domain/game1/controller/gameState/handleApproachingSolvableObstacleMessage";
-import {
-    ApproachingSolvableObstacleMessage
-} from "../../../domain/typeGuards/game1/approachingSolvableObstacleTypeGuard";
-import { MessageTypesGame1, ObstacleTypes } from "../../../utils/constants";
+import { handleApproachingObstacleMessage } from '../../../domain/game1/controller/gameState/handleApproachingSolvableObstacleMessage';
+import { ApproachingSolvableObstacleMessage } from '../../../domain/typeGuards/game1/approachingSolvableObstacleTypeGuard';
+import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
 
 describe('handleApproachingObstacleMessage', () => {
     const data: ApproachingSolvableObstacleMessage = {

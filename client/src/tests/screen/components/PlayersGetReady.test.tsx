@@ -1,12 +1,12 @@
-import "@testing-library/jest-dom/extend-expect";
+import '@testing-library/jest-dom/extend-expect';
 
-import { cleanup, fireEvent, queryAllByText, queryByText, render } from "@testing-library/react";
-import React from "react";
-import { ThemeProvider } from "styled-components";
+import { cleanup, fireEvent, queryAllByText, queryByText, render } from '@testing-library/react';
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
 
-import PlayersGetReady from "../../../components/screen/PlayersGetReady";
-import { defaultValue, GameContext } from "../../../contexts/GameContextProvider";
-import theme from "../../../styles/theme";
+import PlayersGetReady from '../../../components/screen/PlayersGetReady';
+import { defaultValue, GameContext } from '../../../contexts/GameContextProvider';
+import theme from '../../../styles/theme';
 
 afterEach(cleanup);
 describe('Screen GetReady', () => {

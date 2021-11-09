@@ -1,14 +1,14 @@
-import "jest-styled-components";
+import 'jest-styled-components';
 
-import { cleanup, fireEvent, render } from "@testing-library/react";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure, mount } from "enzyme";
-import * as React from "react";
-import { ThemeProvider } from "styled-components";
+import { cleanup, fireEvent, render } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure, mount } from 'enzyme';
+import * as React from 'react';
+import { ThemeProvider } from 'styled-components';
 
-import Button from "../../components/common/Button";
-import { StyledButtonBase } from "../../components/common/Button.sc";
-import theme from "../../styles/theme";
+import Button from '../../components/common/Button';
+import { StyledButtonBase } from '../../components/common/Button.sc';
+import theme from '../../styles/theme';
 
 configure({ adapter: new Adapter() });
 

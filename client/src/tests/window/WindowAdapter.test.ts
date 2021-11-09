@@ -1,4 +1,4 @@
-import { WindowAdapter } from "../../domain/window/WindowAdapter";
+import { WindowAdapter } from '../../domain/window/WindowAdapter';
 
 describe('WindowAdapter function', () => {
     it('device motion event should be window device motion event', () => {

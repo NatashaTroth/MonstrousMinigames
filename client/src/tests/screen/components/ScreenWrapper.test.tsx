@@ -1,7 +1,7 @@
-import { cleanup, queryByText, render } from "@testing-library/react";
-import React from "react";
+import { cleanup, queryByText, render } from '@testing-library/react';
+import React from 'react';
 
-import ScreenWrapper from "../../../components/screen/ScreenWrapper";
+import ScreenWrapper from '../../../components/screen/ScreenWrapper';
 
 afterEach(cleanup);
 
