@@ -85,6 +85,18 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             }
         }
     }
+
+    // *** Round Change ***
+    private handleNewRound() {
+        this.roundIdx++;
+        GameThreeEventEmitter.emitNewRound(this.roomId, this.roundIdx);
+        if (!this.isFinalRound()) {
+            this.sendPhotoTopic();
+        } else {
+            this.sendTakeFinalPhotosCountdown();
+        }
+    }
+
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
         //TODO
     }
@@ -98,8 +110,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         setTimeout(() => {
             super.startGame();
         }, this.countdownTimeGameStart);
-        this.sendPhotoTopic();
+
+        // this.sendPhotoTopic();
         GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTimeGameStart, this.gameName);
+        this.handleNewRound();
     }
 
     private sendPhotoTopic() {
@@ -265,22 +279,11 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         GameThreeEventEmitter.emitPhotoVotingResults(this.roomId, votingResults, this.countdownTimeViewResults);
     }
 
-    // *** Round Change ***
-    private handleNewRound() {
-        this.roundIdx++;
-        GameThreeEventEmitter.emitNewRound(this.roomId, this.roundIdx);
-        if (!this.isFinalRound()) {
-            this.sendPhotoTopic();
-        } else {
-            this.sendTakeFinalPhotosCountdown();
-        }
-    }
+    // *** Final round ***
 
     private isFinalRound() {
         return this.roundIdx >= this.numberRounds;
     }
-
-    // *** Final round ***
     private sendTakeFinalPhotosCountdown() {
         this.gameThreeGameState = GameThreeGameState.TakingFinalPhotos;
         GameThreeEventEmitter.emitTakeFinalPhotosCountdown(this.roomId, this.countdownTimeTakeFinalPhotos);
