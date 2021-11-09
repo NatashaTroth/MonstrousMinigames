@@ -83,16 +83,18 @@ const PlayersGetReady: React.FC = () => {
                     </ConnectedUsers>
                     {screenAdmin && (
                         <Tooltip title={message}>
-                            <Button
-                                disabled={!canStart}
-                                onClick={() => {
-                                    if (getUserArray(connectedUsers || []).length > 0 && chosenGame) {
-                                        startGame(chosenGame!, screenSocket!);
-                                    }
-                                }}
-                            >
-                                Start
-                            </Button>
+                            <span>
+                                <Button
+                                    disabled={!canStart}
+                                    onClick={() => {
+                                        if (getUserArray(connectedUsers || []).length > 0 && chosenGame) {
+                                            startGame(chosenGame!, screenSocket!);
+                                        }
+                                    }}
+                                >
+                                    Start
+                                </Button>
+                            </span>
                         </Tooltip>
                     )}
                 </Content>

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 
-import { Game, games } from '../../config/games';
+import { Game, GameNames, games } from '../../config/games';
 import { ScreenStates } from '../../config/screenStates';
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
@@ -104,7 +104,13 @@ const ChooseGame: React.FunctionComponent = () => {
                         <GamePreviewContainer>
                             <PreviewImageContainer src={selectedGame.image} />
                             <ImageDescription>{selectedGame.imageDescription}</ImageDescription>
-                            {selectedGame.description}
+                            {selectedGame.id === GameNames.game1 ? (
+                                <Game1Description />
+                            ) : selectedGame.id === GameNames.game2 ? (
+                                <Game2Description />
+                            ) : (
+                                <Game3Description />
+                            )}
                         </GamePreviewContainer>
                         <SelectGameButtonContainer>
                             {screenAdmin && (
