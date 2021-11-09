@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { Tooltip } from '@material-ui/core';
 import * as React from 'react';
 
 import Button from '../../components/common/Button';
@@ -36,10 +37,7 @@ const PlayersGetReady: React.FC = () => {
 
     const emptyGame = !connectedUsers || connectedUsers.length === 0;
     const usersReady =
-        !connectedUsers ||
-        connectedUsers.filter((user: User) => {
-            return user.ready;
-        }).length === connectedUsers.length;
+        !connectedUsers || connectedUsers.filter((user: User) => user.ready).length === connectedUsers.length;
 
     React.useEffect(() => {
         handleAudioPermission(audioPermission, { setAudioPermissionGranted });
@@ -57,6 +55,8 @@ const PlayersGetReady: React.FC = () => {
             history.push(`${Routes.screen}/${roomId}/${screenState}`);
         }
     }, [screenState]);
+
+    const { canStart, message } = canStartGame(emptyGame, usersReady, connectedUsers, chosenGame);
 
     return (
         <FullScreenContainer>
@@ -82,16 +82,18 @@ const PlayersGetReady: React.FC = () => {
                         ))}
                     </ConnectedUsers>
                     {screenAdmin && (
-                        <Button
-                            disabled={emptyGame || !usersReady}
-                            onClick={() => {
-                                if (getUserArray(connectedUsers || []).length > 0 && chosenGame) {
-                                    startGame(chosenGame!, screenSocket!);
-                                }
-                            }}
-                        >
-                            Start
-                        </Button>
+                        <Tooltip title={message}>
+                            <Button
+                                disabled={!canStart}
+                                onClick={() => {
+                                    if (getUserArray(connectedUsers || []).length > 0 && chosenGame) {
+                                        startGame(chosenGame!, screenSocket!);
+                                    }
+                                }}
+                            >
+                                Start
+                            </Button>
+                        </Tooltip>
                     )}
                 </Content>
             </GetReadyBackground>
@@ -116,4 +118,22 @@ function startGame(game: GameNames, screenSocket: Socket) {
             handleStartClickedGame3(screenSocket);
             return;
     }
+}
+
+function canStartGame(
+    emptyGame: boolean,
+    usersReady: boolean,
+    connectedUsers: User[] | undefined,
+    chosenGame: GameNames | undefined
+): { canStart: boolean; message: string } {
+    if (chosenGame === GameNames.game3 && connectedUsers && connectedUsers.length >= 3) {
+        if (!emptyGame && usersReady) return { canStart: true, message: '' };
+        return { canStart: false, message: 'Not all users are ready yet' };
+    } else if (chosenGame === GameNames.game3) {
+        return { canStart: false, message: 'Three players are needed to play this game' };
+    }
+
+    if (!emptyGame && usersReady) return { canStart: true, message: '' };
+
+    return { canStart: false, message: 'Not all users are ready yet' };
 }

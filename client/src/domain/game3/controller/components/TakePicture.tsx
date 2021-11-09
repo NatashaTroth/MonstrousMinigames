@@ -1,16 +1,16 @@
-import { Typography } from "@material-ui/core";
-import * as React from "react";
-import { Field, FieldRenderProps, Form } from "react-final-form";
+import { Typography } from '@material-ui/core';
+import * as React from 'react';
+import { Field, FieldRenderProps, Form } from 'react-final-form';
 
-import Button from "../../../../components/common/Button";
-import { ControllerSocketContext } from "../../../../contexts/ControllerSocketContextProvider";
-import { FirebaseContext } from "../../../../contexts/FirebaseContextProvider";
-import { Game3Context } from "../../../../contexts/game3/Game3ContextProvider";
-import { GameContext } from "../../../../contexts/GameContextProvider";
-import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
-import uploadFile from "../gameState/uploadFile";
-import { ScreenContainer } from "./Game3Styles.sc";
-import { StyledImg, StyledLabel, UploadWrapper } from "./TakePicture.sc";
+import Button from '../../../../components/common/Button';
+import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
+import { FirebaseContext } from '../../../../contexts/FirebaseContextProvider';
+import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
+import { GameContext } from '../../../../contexts/GameContextProvider';
+import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
+import uploadFile from '../gameState/uploadFile';
+import { ScreenContainer } from './Game3Styles.sc';
+import { StyledImg, StyledLabel, UploadWrapper } from './TakePicture.sc';
 
 export interface UploadProps {
     picture: File | undefined;
@@ -22,30 +22,37 @@ const TakePicture: React.FunctionComponent = () => {
     const { userId } = React.useContext(PlayerContext);
     const { challengeId } = React.useContext(Game3Context);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
+    const [uploaded, setUploaded] = React.useState(false);
 
-    const upload = async (values: UploadProps) =>
+    const upload = async (values: UploadProps) => {
         uploadFile(values, storage, roomId, userId, challengeId, controllerSocket);
+        setUploaded(true);
+    };
 
     return (
         <ScreenContainer>
-            <Form
-                mode="add"
-                onSubmit={upload}
-                render={({ handleSubmit, values }) => (
-                    <form onSubmit={handleSubmit}>
-                        <Field
-                            type="file"
-                            name="picture"
-                            label="Picture"
-                            render={({ input, meta }) => <FileInput input={input} meta={meta} />}
-                            fullWidth
-                        />
-                        <Button type="submit" disabled={!values.picture}>
-                            Upload
-                        </Button>
-                    </form>
-                )}
-            />
+            {uploaded ? (
+                <Form
+                    mode="add"
+                    onSubmit={upload}
+                    render={({ handleSubmit, values }) => (
+                        <form onSubmit={handleSubmit}>
+                            <Field
+                                type="file"
+                                name="picture"
+                                label="Picture"
+                                render={({ input, meta }) => <FileInput input={input} meta={meta} />}
+                                fullWidth
+                            />
+                            <Button type="submit" disabled={!values.picture}>
+                                Upload
+                            </Button>
+                        </form>
+                    )}
+                />
+            ) : (
+                <div>Photo has been submitted</div>
+            )}
         </ScreenContainer>
     );
 };

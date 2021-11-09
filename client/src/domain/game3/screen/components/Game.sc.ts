@@ -8,13 +8,8 @@ export const StyledImg = styled.img`
     display: flex;
     width: 100%;
     margin-top: 2px;
-`;
-
-export const TimeWrapper = styled.div`
-    position: relative;
-    width: 80px;
-    height: 60px;
-    font-size: 48px;
+    object-fit: cover;
+    height: 100%;
 `;
 
 export const InstructionContainer = styled.div`
@@ -58,12 +53,13 @@ export const ImageContainer = styled.div`
 `;
 
 export const Frame = styled.div`
-    width: 18%;
+    width: 20%;
+    height: 55%;
     background: url(${frame});
     margin: auto;
     display: flex;
     background-size: cover;
-    box-shadow: inset 0 50px rgba(255, 255, 255, 0.1), inset 2px -15px 30px rgba(0, 0, 0, 0.4),
-        2px 2px 5px rgba(0, 0, 0, 0.3);
-    padding: 2%;
+    align-items: center;
+    padding: 2.6%;
+    background-position: center;
 `;

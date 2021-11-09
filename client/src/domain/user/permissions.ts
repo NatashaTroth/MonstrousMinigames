@@ -1,5 +1,6 @@
-import { Navigator } from "../navigator/Navigator";
-import { Window } from "../window/Window";
+import { localDevelopment } from '../../utils/constants';
+import { Navigator } from '../navigator/Navigator';
+import { Window } from '../window/Window';
 
 export async function ClickRequestDeviceMotion(window: Window) {
     // iOS: Requests permission for device orientation
@@ -13,6 +14,8 @@ export async function ClickRequestDeviceMotion(window: Window) {
 }
 
 export async function getMicrophoneStream(navigator: Navigator) {
+    // TODO remove
+    if (localDevelopment) return true;
     try {
         // https://github.com/microsoft/TypeScript/issues/33232
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {

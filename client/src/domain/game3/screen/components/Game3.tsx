@@ -1,12 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { getDownloadURL, listAll, ref } from 'firebase/storage';
 import * as React from 'react';
-import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
+import Countdown from '../../../../components/common/Countdown';
 import { FirebaseContext } from '../../../../contexts/FirebaseContextProvider';
 import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
-import theme from '../../../../styles/theme';
 import {
     Frame,
     ImageContainer,
@@ -16,15 +15,15 @@ import {
     RandomWord,
     ScreenContainer,
     StyledImg,
-    TimeWrapper,
 } from './Game.sc';
 
 const Game3: React.FunctionComponent = () => {
     const [images, setImages] = React.useState<string[]>([]);
     const { roomId } = React.useContext(GameContext);
     const { challengeId } = React.useContext(Game3Context);
-    const { setTimeIsUp, timeIsUp } = React.useContext(Game3Context);
+    const { setTimeIsUp, timeIsUp, startingCountdownTime } = React.useContext(Game3Context);
     const [loading, setLoading] = React.useState(false);
+    const [displayStartingCountdown, setDisplayStartingCountdown] = React.useState(challengeId === 1 ? true : false);
 
     const { topicMessage } = React.useContext(Game3Context);
 
@@ -54,45 +53,49 @@ const Game3: React.FunctionComponent = () => {
 
     return (
         <ScreenContainer>
-            <InstructionContainer>
-                {timeIsUp ? (
-                    <>
-                        <PictureInstruction>
-                            Vote on your smartphone for the picture that looks most like
-                        </PictureInstruction>
-                        <RandomWord>{topicMessage.topic}</RandomWord>
-                    </>
-                ) : (
-                    <>
-                        <PictureInstruction>Take a picture that represents the word</PictureInstruction>
-                        <RandomWord>{topicMessage.topic}</RandomWord>
-                    </>
-                )}
-            </InstructionContainer>
-            {!timeIsUp && topicMessage.countdownTime > 0 && (
-                <CountdownCircleTimer
-                    isPlaying
-                    duration={topicMessage.countdownTime / 1000}
-                    colors={[
-                        [theme.palette.primary.main, 0.5],
-                        [theme.palette.secondary.main, 0.5],
-                    ]}
+            {displayStartingCountdown ? (
+                <Countdown
+                    time={startingCountdownTime}
                     onComplete={() => {
-                        setTimeIsUp(true);
+                        setDisplayStartingCountdown(false);
                     }}
-                >
-                    {({ remainingTime }) => <TimeWrapper>{remainingTime}</TimeWrapper>}
-                </CountdownCircleTimer>
-            )}
-            {loading && <LoadingMessage>Loading images...</LoadingMessage>}
-            {timeIsUp && !loading && (
-                <ImageContainer>
-                    {images.map((image, index) => (
-                        <Frame key={`image${index}`}>
-                            <StyledImg src={image} />
-                        </Frame>
-                    ))}
-                </ImageContainer>
+                />
+            ) : (
+                <>
+                    <InstructionContainer>
+                        {timeIsUp ? (
+                            <>
+                                <PictureInstruction>
+                                    Vote on your smartphone for the picture that looks most like
+                                </PictureInstruction>
+                                <RandomWord>{topicMessage.topic}</RandomWord>
+                            </>
+                        ) : (
+                            <>
+                                <PictureInstruction>Take a picture that represents the word</PictureInstruction>
+                                <RandomWord>{topicMessage.topic}</RandomWord>
+                            </>
+                        )}
+                    </InstructionContainer>
+                    {!timeIsUp && topicMessage.countdownTime > 0 && (
+                        <Countdown
+                            time={topicMessage.countdownTime}
+                            onComplete={() => {
+                                setTimeIsUp(true);
+                            }}
+                        />
+                    )}
+                    {loading && <LoadingMessage>Loading images...</LoadingMessage>}
+                    {timeIsUp && !loading && (
+                        <ImageContainer>
+                            {images.map((image, index) => (
+                                <Frame key={`image${index}`}>
+                                    <StyledImg src={image} />
+                                </Frame>
+                            ))}
+                        </ImageContainer>
+                    )}
+                </>
             )}
         </ScreenContainer>
     );

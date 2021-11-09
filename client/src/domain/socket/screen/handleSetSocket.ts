@@ -39,6 +39,7 @@ export interface HandleSetSocketDependencies {
     setChosenGame: (val: GameNames) => void;
     setTopicMessage: (val: { topic: string; countdownTime: number }) => void;
     setTimeIsUp: (val: boolean) => void;
+    setStartingCountdownTime: (val: number) => void;
     history: History;
 }
 
@@ -60,6 +61,7 @@ export function handleSetSocket(
         setChosenGame,
         setTopicMessage,
         setTimeIsUp,
+        setStartingCountdownTime,
         history,
     } = dependencies;
 
@@ -111,7 +113,9 @@ export function handleSetSocket(
         handleGameStartedMessage({
             roomId,
             game: data.game,
+            countdownTime: data.countdownTime,
             dependencies: {
+                setStartingCountdownTime,
                 setGameStarted,
                 history,
             },

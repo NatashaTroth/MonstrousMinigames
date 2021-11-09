@@ -23,6 +23,10 @@ export const defaultValue = {
     setVoteForPhotoMessage: () => {
         // do nothing
     },
+    startingCountdownTime: 0,
+    setStartingCountdownTime: () => {
+        // do nothing
+    },
 };
 
 interface Game3ContextProps {
@@ -36,6 +40,8 @@ interface Game3ContextProps {
     setPhotos: (photos: string[]) => void;
     voteForPhotoMessage: { photoUrls: photoPhotographerMapper[]; countdownTime: number };
     setVoteForPhotoMessage: (val: { photoUrls: photoPhotographerMapper[]; countdownTime: number }) => void;
+    startingCountdownTime: number;
+    setStartingCountdownTime: (val: number) => void;
 }
 
 export const Game3Context = React.createContext<Game3ContextProps>(defaultValue);
@@ -49,6 +55,7 @@ const Game3ContextProvider: React.FunctionComponent = ({ children }) => {
     });
     const [photos, setPhotos] = React.useState<string[]>([]);
     const [timeIsUp, setTimeIsUp] = React.useState(false);
+    const [startingCountdownTime, setStartingCountdownTime] = React.useState(defaultValue.startingCountdownTime);
 
     const content = {
         challengeId,
@@ -61,6 +68,8 @@ const Game3ContextProvider: React.FunctionComponent = ({ children }) => {
         setPhotos,
         voteForPhotoMessage,
         setVoteForPhotoMessage,
+        startingCountdownTime,
+        setStartingCountdownTime,
     };
     return <Game3Context.Provider value={content}>{children}</Game3Context.Provider>;
 };
