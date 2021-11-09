@@ -33,7 +33,7 @@ describe('GameTwo Tests', () => {
     });
 
     it('should have the correct amount of sheep', async () => {
-        expect(gameTwo.sheep.length).toBe(InitialParameters.SHEEP_COUNT);
+        expect(gameTwo.sheepService.sheep.length).toBe(InitialParameters.SHEEP_COUNT);
     });
 
     it('should set a user inactive after disconnecting', async () => {
@@ -116,8 +116,8 @@ describe('GameTwo Tests', () => {
     });
 
     it('should kill sheep if message is sent and user is in radius', async () => {
-        const sheep = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x, InitialParameters.PLAYERS_POSITIONS[0].y, gameTwo.sheep.length);
-        gameTwo.sheep.push(sheep);
+        const sheep = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x, InitialParameters.PLAYERS_POSITIONS[0].y, gameTwo.sheepService.sheep.length);
+        gameTwo.sheepService.sheep.push(sheep);
 
         const message = {
             type: GameTwoMessageTypes.KILL,
@@ -125,19 +125,19 @@ describe('GameTwo Tests', () => {
             userId: users[0].id
         }
         gameTwo.receiveInput(message);
-        expect(gameTwo.sheep[sheep.id].state).toEqual(SheepStates.DECOY);
+        expect(gameTwo.sheepService.sheep[sheep.id].state).toEqual(SheepStates.DECOY);
     });
 
 
     it('should kill the closer sheep if two sheep are in radius', async () => {
-        const sheep = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x + InitialParameters.KILL_RADIUS -1, InitialParameters.PLAYERS_POSITIONS[0].y + InitialParameters.KILL_RADIUS -1, gameTwo.sheep.length);
-        gameTwo.sheep.push(sheep);
+        const sheep = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x + InitialParameters.KILL_RADIUS -1, InitialParameters.PLAYERS_POSITIONS[0].y + InitialParameters.KILL_RADIUS -1, gameTwo.sheepService.sheep.length);
+        gameTwo.sheepService.sheep.push(sheep);
 
-        const sheep2 = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x + InitialParameters.KILL_RADIUS, InitialParameters.PLAYERS_POSITIONS[0].y + InitialParameters.KILL_RADIUS, gameTwo.sheep.length);
-        gameTwo.sheep.push(sheep2);
+        const sheep2 = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x + InitialParameters.KILL_RADIUS, InitialParameters.PLAYERS_POSITIONS[0].y + InitialParameters.KILL_RADIUS, gameTwo.sheepService.sheep.length);
+        gameTwo.sheepService.sheep.push(sheep2);
 
-        const sheep3 = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x + InitialParameters.KILL_RADIUS -2, InitialParameters.PLAYERS_POSITIONS[0].y + InitialParameters.KILL_RADIUS -2, gameTwo.sheep.length);
-        gameTwo.sheep.push(sheep3);
+        const sheep3 = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x + InitialParameters.KILL_RADIUS -2, InitialParameters.PLAYERS_POSITIONS[0].y + InitialParameters.KILL_RADIUS -2, gameTwo.sheepService.sheep.length);
+        gameTwo.sheepService.sheep.push(sheep3);
 
         const message = {
             type: GameTwoMessageTypes.KILL,
@@ -145,7 +145,7 @@ describe('GameTwo Tests', () => {
             userId: users[0].id
         }
         gameTwo.receiveInput(message);
-        expect(gameTwo.sheep[sheep3.id].state).toEqual(SheepStates.DECOY);
+        expect(gameTwo.sheepService.sheep[sheep3.id].state).toEqual(SheepStates.DECOY);
     });
 
     it('should kill sheep if user has no kills left', async () => {
@@ -153,8 +153,8 @@ describe('GameTwo Tests', () => {
             gameTwo.players.get(users[0].id)?.setKillsLeft(0);
         }
 
-        const sheep = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x, InitialParameters.PLAYERS_POSITIONS[0].y, gameTwo.sheep.length);
-        gameTwo.sheep.push(sheep);
+        const sheep = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x, InitialParameters.PLAYERS_POSITIONS[0].y, gameTwo.sheepService.sheep.length);
+        gameTwo.sheepService.sheep.push(sheep);
 
         const message = {
             type: GameTwoMessageTypes.KILL,
@@ -162,7 +162,7 @@ describe('GameTwo Tests', () => {
             userId: users[0].id
         }
         gameTwo.receiveInput(message);
-        expect(gameTwo.sheep[sheep.id].state).toEqual(SheepStates.ALIVE);
+        expect(gameTwo.sheepService.sheep[sheep.id].state).toEqual(SheepStates.ALIVE);
     });
 
     it('should not kill sheep if user is not in radius', async () => {
@@ -173,7 +173,7 @@ describe('GameTwo Tests', () => {
         }
         gameTwo.receiveInput(message);
 
-        const decoySheep = gameTwo.sheep.filter(sheep => {
+        const decoySheep = gameTwo.sheepService.sheep.filter(sheep => {
             return sheep.state === SheepStates.DECOY;
         })
         expect(decoySheep.length).toEqual(0);
