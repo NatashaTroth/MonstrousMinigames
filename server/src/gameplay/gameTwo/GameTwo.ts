@@ -25,7 +25,12 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     public lengthY: number;
     public sheep: Sheep[];
     private currentSheepId: number;
+    private roundTime: number;
+    private roundCount: number;
+    private currentRound: number;
     countdownTime = InitialParameters.COUNTDOWN_TIME;
+
+
 
     initialPlayerPositions = InitialParameters.PLAYERS_POSITIONS;
 
@@ -38,6 +43,9 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.lengthY = InitialParameters.LENGTH_Y;
         this.sheep = [];
         this.currentSheepId = 0;
+        this.roundTime = InitialParameters.ROUND_TIME;
+        this.roundCount = InitialParameters.ROUNDS;
+        this.currentRound = 1;
     }
 
     getGameStateInfo(): GameStateInfo {
@@ -56,6 +64,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             sheep: this.sheep,
             lengthX: this.lengthX,
             lengthY: this.lengthY,
+            currentRound: this.currentRound,
         };
     }
 
@@ -199,6 +208,18 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         player.killsLeft--;
     }
 
+
+    protected handleGuess(userId: string, guess: number) {
+        const player = this.players.get(userId)!;
+
+        // todo handle if player not found
+
+        // todo handle if guess exists for round
+
+        player.guesses.push({round: this.currentRound, guess: guess});
+    
+    }
+
     protected handleInput(message: IMessage) {
         switch (message.type) {
             case GameTwoMessageTypes.MOVE:
@@ -206,6 +227,9 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 break;
             case GameTwoMessageTypes.KILL:
                 this.killSheep(message.userId!);
+                break;
+            case GameTwoMessageTypes.GUESS:
+                this.handleGuess(message.userId!, message.guess!);
                 break;
             default:
                 console.info(message);
