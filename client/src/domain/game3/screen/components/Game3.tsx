@@ -19,11 +19,10 @@ import {
 
 const Game3: React.FunctionComponent = () => {
     const [images, setImages] = React.useState<string[]>([]);
-    const { roomId } = React.useContext(GameContext);
-    const { challengeId } = React.useContext(Game3Context);
-    const { setTimeIsUp, timeIsUp, startingCountdownTime } = React.useContext(Game3Context);
+    const { roomId, countdownTime } = React.useContext(GameContext);
+    const { setTimeIsUp, timeIsUp, roundIdx } = React.useContext(Game3Context);
     const [loading, setLoading] = React.useState(false);
-    const [displayStartingCountdown, setDisplayStartingCountdown] = React.useState(challengeId === 1 ? true : false);
+    const [displayStartingCountdown, setDisplayStartingCountdown] = React.useState(roundIdx === 1 ? true : false);
 
     const { topicMessage } = React.useContext(Game3Context);
 
@@ -33,7 +32,7 @@ const Game3: React.FunctionComponent = () => {
         if (storage) {
             setLoading(true);
             const imageUrls: string[] = [];
-            const imageReferences = await listAll(ref(storage, `${roomId}/${challengeId}`));
+            const imageReferences = await listAll(ref(storage, `${roomId}/${roundIdx}`));
             const promises = imageReferences.items.map(async imgRef => {
                 const url = await getDownloadURL(imgRef);
                 imageUrls.push(url);
@@ -55,7 +54,7 @@ const Game3: React.FunctionComponent = () => {
         <ScreenContainer>
             {displayStartingCountdown ? (
                 <Countdown
-                    time={startingCountdownTime}
+                    time={countdownTime}
                     onComplete={() => {
                         setDisplayStartingCountdown(false);
                     }}
@@ -72,6 +71,7 @@ const Game3: React.FunctionComponent = () => {
                             </>
                         ) : (
                             <>
+                                <PictureInstruction>Round {roundIdx}</PictureInstruction>
                                 <PictureInstruction>Take a picture that represents the word</PictureInstruction>
                                 <RandomWord>{topicMessage.topic}</RandomWord>
                             </>

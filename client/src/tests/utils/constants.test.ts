@@ -1,4 +1,4 @@
-import { designDevelopment, GameState, localDevelopment, ObstacleTypes } from './constants';
+import { designDevelopment, GameState, localDevelopment, ObstacleTypes } from '../../utils/constants';
 
 describe('test GAMESTATE enum', () => {
     it('GAMESTATE.created should return CREATED', () => {

@@ -1,4 +1,4 @@
-import { getRandomInt } from './getRandomInt';
+import { getRandomInt } from '../../utils/getRandomInt';
 
 describe('randomInt function', () => {
     it('should return number equal or greater than min', () => {

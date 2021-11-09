@@ -3,7 +3,7 @@ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount } from 'enzyme';
 import React from 'react';
 
-import { generateQRCode } from './generateQRCode';
+import { generateQRCode } from '../../utils/generateQRCode';
 
 configure({ adapter: new Adapter() });
 

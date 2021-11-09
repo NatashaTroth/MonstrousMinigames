@@ -39,7 +39,7 @@ export interface HandleSetSocketDependencies {
     setChosenGame: (val: GameNames) => void;
     setTopicMessage: (val: { topic: string; countdownTime: number }) => void;
     setTimeIsUp: (val: boolean) => void;
-    setStartingCountdownTime: (val: number) => void;
+    setRoundIdx: (roundIdx: number) => void;
     history: History;
 }
 
@@ -61,7 +61,8 @@ export function handleSetSocket(
         setChosenGame,
         setTopicMessage,
         setTimeIsUp,
-        setStartingCountdownTime,
+        setCountdownTime,
+        setRoundIdx,
         history,
     } = dependencies;
 
@@ -115,7 +116,7 @@ export function handleSetSocket(
             game: data.game,
             countdownTime: data.countdownTime,
             dependencies: {
-                setStartingCountdownTime,
+                setCountdownTime,
                 setGameStarted,
                 history,
             },
@@ -124,7 +125,7 @@ export function handleSetSocket(
 
     gameSetSocket.listen((data: GameSetMessage) => setChosenGame(data.game));
 
-    handleSetScreenSocketGame3(socket, { setTopicMessage, setTimeIsUp });
+    handleSetScreenSocketGame3(socket, { setTopicMessage, setTimeIsUp, setRoundIdx });
 
     history.push(`${Routes.screen}/${roomId}/${route || Routes.lobby}`);
 }

@@ -14,7 +14,7 @@ describe('gameHasStarted function', () => {
             roomId,
             game,
             countdownTime: 3000,
-            dependencies: { setGameStarted, history, setStartingCountdownTime: jest.fn() },
+            dependencies: { setGameStarted, history, setCountdownTime: jest.fn() },
         });
 
         expect(setGameStarted).toHaveBeenLastCalledWith(true);

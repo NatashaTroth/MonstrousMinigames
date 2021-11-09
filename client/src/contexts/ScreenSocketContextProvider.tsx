@@ -66,7 +66,7 @@ export interface User {
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenSocket, setScreenSocket] = React.useState<Socket>();
     const history = useHistory();
-    const { setTopicMessage, setTimeIsUp, setStartingCountdownTime } = React.useContext(Game3Context);
+    const { setTopicMessage, setTimeIsUp, setRoundIdx } = React.useContext(Game3Context);
     const {
         setGameStarted,
         setRoomId,
@@ -80,6 +80,23 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setChosenGame,
     } = React.useContext(GameContext);
 
+    const dependencies = {
+        setScreenSocket,
+        setConnectedUsers,
+        setHasPaused,
+        setGameStarted,
+        setCountdownTime,
+        setFinished,
+        setPlayerRanks,
+        setScreenAdmin,
+        setScreenState,
+        setChosenGame,
+        setTopicMessage,
+        setTimeIsUp,
+        setRoundIdx,
+        history,
+    };
+
     const content = {
         screenSocket,
         setScreenSocket: (socket: Socket, roomId: string, route: string) => {
@@ -87,20 +104,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 socket,
                 roomId,
                 {
-                    setScreenSocket,
-                    setConnectedUsers,
-                    setHasPaused,
-                    setGameStarted,
-                    setCountdownTime,
-                    setFinished,
-                    setPlayerRanks,
-                    setScreenAdmin,
-                    setScreenState,
-                    setChosenGame,
-                    setTopicMessage,
-                    setTimeIsUp,
-                    setStartingCountdownTime,
-                    history,
+                    ...dependencies,
                 },
                 route
             );
@@ -108,20 +112,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         handleSocketConnection: (roomId: string, route: string) => {
             handleSocketConnection(roomId, route, {
                 setRoomId,
-                setScreenSocket,
-                setConnectedUsers,
-                setHasPaused,
-                setGameStarted,
-                setCountdownTime,
-                setFinished,
-                setPlayerRanks,
-                setScreenAdmin,
-                setScreenState,
-                setChosenGame,
-                setTopicMessage,
-                setTimeIsUp,
-                setStartingCountdownTime,
-                history,
+                ...dependencies,
             });
         },
     };

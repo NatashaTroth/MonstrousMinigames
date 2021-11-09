@@ -1,4 +1,4 @@
-import { ObstacleTypes } from './constants';
+import { ObstacleTypes } from '../../utils/constants';
 import {
     controllerChooseCharacterRoute,
     controllerFinishedRoute,
@@ -13,7 +13,7 @@ import {
     screenGame1Route,
     screenGetReadyRoute,
     screenLobbyRoute,
-} from './routes';
+} from '../../utils/routes';
 
 describe('test routing functions', () => {
     const roomId = 'ABCD';

@@ -6,10 +6,19 @@ import theme from '../../styles/theme';
 
 interface CountdownProps {
     time: number;
-    onComplete: () => void;
+    onComplete?: () => void;
+    size?: 'small' | 'default';
 }
-const Countdown: React.FunctionComponent<CountdownProps> = ({ time, onComplete }) => (
+const Countdown: React.FunctionComponent<CountdownProps> = ({
+    time,
+    onComplete = () => {
+        // do nothing
+    },
+    size = 'default',
+}) => (
     <CountdownCircleTimer
+        size={size === 'small' ? 100 : 180}
+        strokeWidth={size === 'small' ? 8 : 12}
         isPlaying
         duration={time / 1000}
         colors={[
@@ -18,15 +27,19 @@ const Countdown: React.FunctionComponent<CountdownProps> = ({ time, onComplete }
         ]}
         onComplete={onComplete}
     >
-        {({ remainingTime }) => <TimeWrapper>{remainingTime}</TimeWrapper>}
+        {({ remainingTime }) => <TimeWrapper size={size}>{remainingTime}</TimeWrapper>}
     </CountdownCircleTimer>
 );
 
 export default Countdown;
 
-const TimeWrapper = styled.div`
+interface TimeWrapperProps {
+    size: 'default' | 'small';
+}
+
+const TimeWrapper = styled.div<TimeWrapperProps>`
     position: relative;
-    width: 80px;
-    height: 60px;
-    font-size: 48px;
+    width: ${({ size }) => (size === 'small' ? '50px' : '80px')};
+    height: ${({ size }) => (size === 'small' ? '42px' : '60px')};
+    font-size: ${({ size }) => (size === 'small' ? '35px' : '48px')};
 `;

@@ -1,4 +1,4 @@
-import { formatMs } from './formatMs';
+import { formatMs } from '../../utils/formatMs';
 
 describe('test formatMS function', () => {
     it('should format number', () => {

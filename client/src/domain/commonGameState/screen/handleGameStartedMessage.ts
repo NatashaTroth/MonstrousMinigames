@@ -10,17 +10,17 @@ interface HandleGameStarted {
     dependencies: {
         setGameStarted: (val: boolean) => void;
         history: History;
-        setStartingCountdownTime: (val: number) => void;
+        setCountdownTime: (val: number) => void;
     };
 }
 export function handleGameStartedMessage(props: HandleGameStarted) {
     const { roomId, dependencies, game, countdownTime } = props;
-    const { setGameStarted, history, setStartingCountdownTime } = dependencies;
+    const { setGameStarted, history, setCountdownTime } = dependencies;
 
     switch (game) {
         case GameNames.game3:
             setGameStarted(true);
-            setStartingCountdownTime(countdownTime);
+            setCountdownTime(countdownTime);
             history.push(screenGame3Route(roomId));
             return;
     }
