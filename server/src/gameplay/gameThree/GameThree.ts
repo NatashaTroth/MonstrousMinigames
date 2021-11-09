@@ -171,6 +171,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                 break;
             }
             case GameThreeMessageTypes.FINISHED_PRESENTING: {
+                this.stopCountdown();
                 this.handlePresentingRoundFinished();
                 break;
             }
