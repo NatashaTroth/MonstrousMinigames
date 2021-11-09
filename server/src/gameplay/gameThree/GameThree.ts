@@ -17,7 +17,8 @@ import GameThreeEventEmitter from './GameThreeEventEmitter';
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreePlayer from './GameThreePlayer';
 import {
-    IMessagePhoto, IMessagePhotoVote, photoPhotographerMapper, votingResultsPhotographerMapper
+    IMessagePhoto, IMessagePhotoVote, photoPhotographerMapper, PlayerNameId,
+    votingResultsPhotographerMapper
 } from './interfaces';
 import { GameStateInfo } from './interfaces/GameStateInfo';
 
@@ -360,6 +361,12 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private handlePresentingFinalPhotosFinished() {
-        //Todo
+        const playerNameIds: PlayerNameId[] = Array.from(this.players.values()).map(player => {
+            return { id: player.id, name: player.name };
+        });
+
+        this.initiateCountdown(this.countdownTimeVote);
+        this.gameThreeGameState = GameThreeGameState.FinalVoting;
+        GameThreeEventEmitter.emitVoteForFinalPhotos(this.roomId, this.countdownTimeVote, playerNameIds);
     }
 }
