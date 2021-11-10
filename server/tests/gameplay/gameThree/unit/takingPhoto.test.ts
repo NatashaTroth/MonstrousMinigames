@@ -37,7 +37,7 @@ describe('Handle taking photo', () => {
         const spy = jest.spyOn(GameThree.prototype as any, 'sendPhotosToScreen');
 
         gameThree['countdownTimeLeft'] = 0;
-        gameThree['handleTakingPhoto']();
+        gameThree['handleFinishedTakingPhoto']();
         expect(spy).toBeCalledTimes(1);
     });
 });

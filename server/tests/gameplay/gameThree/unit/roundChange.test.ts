@@ -32,8 +32,9 @@ describe('Handle new round', () => {
         expect(gameThree['roundIdx']).toBe(roundIdx + 1);
     });
 
-    it('should call sendPhotoTopic when it is not the final round', async () => {
+    it('should call sendPhotoTopic when it is not the final round and photoTopics is not empty', async () => {
         gameThree['roundIdx'] = 0;
+        gameThree['photoTopics'] = ['cat', 'dog'];
         const spy = jest.spyOn(GameThree.prototype as any, 'sendPhotoTopic');
 
         gameThree['handleNewRound']();
@@ -41,6 +42,14 @@ describe('Handle new round', () => {
     });
 
     it('should call sendTakeFinalPhotosCountdown when it is the final round', async () => {
+        gameThree['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        const spy = jest.spyOn(GameThree.prototype as any, 'sendTakeFinalPhotosCountdown');
+
+        gameThree['handleNewRound']();
+        expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call sendTakeFinalPhotosCountdown when photoTopics is empty', async () => {
         gameThree['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
         const spy = jest.spyOn(GameThree.prototype as any, 'sendTakeFinalPhotosCountdown');
 

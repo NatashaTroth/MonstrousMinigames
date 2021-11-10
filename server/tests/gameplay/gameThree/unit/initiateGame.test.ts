@@ -41,6 +41,12 @@ describe('Change and verify game state', () => {
         expect(gameThree['countdownTimeTakeFinalPhotos']).toBe(InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS);
     });
 
+    it('initiates countdownTimePresentFinalPhotos with correct value', async () => {
+        expect(gameThree['countdownTimePresentFinalPhotos']).toBe(
+            InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS
+        );
+    });
+
     it('initiates numberRounds with correct value', async () => {
         expect(gameThree['numberRounds']).toBe(InitialParameters.NUMBER_ROUNDS);
     });

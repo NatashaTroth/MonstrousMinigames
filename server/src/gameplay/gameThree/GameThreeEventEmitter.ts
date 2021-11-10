@@ -9,13 +9,15 @@ import {
     GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED
 } from '../interfaces/GlobalEventMessages';
 import { GameThreeEventMessageEmitter } from './GameThreeEventMessageEmitter';
-import { InitialGameStateInfo, PlayerRank } from './interfaces';
+import { FinalResults, InitialGameStateInfo, PlayerNameId, PlayerRank } from './interfaces';
 import {
     GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
-    GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS,
+    GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS, GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
     GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
-    GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER, GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS
+    GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER,
+    GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS, GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS,
+    GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS
 } from './interfaces/GameThreeEventMessages';
 import { photoPhotographerMapper } from './interfaces/photoPhotographerMapper';
 import { votingResultsPhotographerMapper } from './interfaces/votingResultsPhotographerMapper';
@@ -144,6 +146,38 @@ export default class GameThreeEventEmitter {
             type: GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
             roomId,
             countdownTime,
+        });
+    }
+
+    public static emitPresentFinalPhotosCountdown(
+        roomId: string,
+        countdownTime: number,
+        photographerId: string,
+        photoUrls: string[]
+    ) {
+        this.GameThreeEventMessageEmitter.emit({
+            type: GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
+            roomId,
+            countdownTime,
+            photographerId,
+            photoUrls,
+        });
+    }
+
+    public static emitVoteForFinalPhotos(roomId: string, countdownTime: number, photographers: PlayerNameId[]) {
+        this.GameThreeEventMessageEmitter.emit({
+            type: GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS,
+            roomId,
+            countdownTime,
+            photographers,
+        });
+    }
+
+    public static emitViewingFinalResults(roomId: string, results: FinalResults[]) {
+        this.GameThreeEventMessageEmitter.emit({
+            type: GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS,
+            roomId,
+            results,
         });
     }
 }
