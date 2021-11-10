@@ -1,6 +1,6 @@
-import { History } from "history";
+import { History } from 'history';
 
-import { screenGame1Route, screenGame2Route } from "../../../utils/routes";
+import { screenGame1Route, screenGame2Route } from '../../../utils/routes';
 
 interface HandleStartPhaserGame {
     roomId: string;

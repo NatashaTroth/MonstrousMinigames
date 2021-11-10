@@ -58,7 +58,3 @@ const PlayerDeadContainer = styled.div`
     padding: 20px;
     justify-content: center;
 `;
-
-const TextWrapper = styled.div`
-    margin-top: 20px;
-`;

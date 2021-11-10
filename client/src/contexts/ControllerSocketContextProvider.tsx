@@ -51,7 +51,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         PlayerContext
     );
 
-    const { setPhotos, setVoteForPhotoMessage } = React.useContext(Game3Context);
+    const { setPhotos, setVoteForPhotoMessage, setRoundIdx, setTopicMessage } = React.useContext(Game3Context);
 
     const {
         setGameStarted,
@@ -63,6 +63,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setConnectedUsers,
         hasPaused,
         setChosenGame,
+        setCountdownTime,
     } = React.useContext(GameContext);
 
     React.useEffect(() => {
@@ -95,6 +96,9 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setChosenGame,
         setPhotos,
         setVoteForPhotoMessage,
+        setRoundIdx,
+        setCountdownTime,
+        setTopicMessage,
     };
 
     const content = {

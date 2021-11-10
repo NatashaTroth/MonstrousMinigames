@@ -2,8 +2,8 @@ import { Typography } from '@material-ui/core';
 import styled from 'styled-components';
 
 export const StyledLabel = styled.label`
-    &:hover {
-        cursor: pointer;
+    p {
+        font-weight: 700;
     }
 
     input[type='file'] {
@@ -30,6 +30,10 @@ export const FileName = styled(Typography)`
 
 export const StyledImg = styled.img`
     display: flex;
-    width: 60%;
+    width: 40%;
     margin-bottom: 20px;
+`;
+
+export const CountdownContainer = styled.div`
+    margin-bottom: 30px;
 `;
