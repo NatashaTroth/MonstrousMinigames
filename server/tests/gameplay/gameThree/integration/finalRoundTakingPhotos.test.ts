@@ -50,7 +50,7 @@ describe('Initiate stage', () => {
     });
 });
 
-describe('Taking Photo', () => {
+describe('Taking Final Photos', () => {
     beforeEach(() => {
         Date.now = () => dateNow;
         jest.useFakeTimers();
