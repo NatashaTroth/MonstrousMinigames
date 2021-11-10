@@ -1,8 +1,10 @@
-import { Typography } from '@material-ui/core';
-import styled from 'styled-components';
+import { Typography } from "@material-ui/core";
+import styled from "styled-components";
 
-import { StyledFullScreenContainer } from '../../../../components/controller/FullScreenContainer.sc';
-import frame from '../../../../images/ui/frame.jpeg';
+import {
+    StyledFullScreenContainer
+} from "../../../../components/controller/FullScreenContainer.sc";
+import frame from "../../../../images/ui/frame.jpeg";
 
 export const StyledImg = styled.img`
     display: flex;
@@ -37,13 +39,6 @@ export const ScreenContainer = styled(StyledFullScreenContainer)`
     && {
         flex-direction: column;
     }
-`;
-
-export const LoadingMessage = styled(Typography)`
-    font-size: 20px;
-    color: ${({ theme }) => theme.palette.primary.main};
-    font-weight: 700;
-    font-style: italic;
 `;
 
 export const ImageContainer = styled.div`

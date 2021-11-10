@@ -1,17 +1,17 @@
-import { Typography } from '@material-ui/core';
-import * as React from 'react';
-import { Field, FieldRenderProps, Form } from 'react-final-form';
+import { Typography } from "@material-ui/core";
+import * as React from "react";
+import { Field, FieldRenderProps, Form } from "react-final-form";
 
-import Button from '../../../../components/common/Button';
-import Countdown from '../../../../components/common/Countdown';
-import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
-import { FirebaseContext } from '../../../../contexts/FirebaseContextProvider';
-import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
-import uploadFile from '../gameState/uploadFile';
-import { Instructions, ScreenContainer } from './Game3Styles.sc';
-import { CountdownContainer, StyledImg, StyledLabel, UploadWrapper } from './TakePicture.sc';
+import Button from "../../../../components/common/Button";
+import Countdown from "../../../../components/common/Countdown";
+import { ControllerSocketContext } from "../../../../contexts/ControllerSocketContextProvider";
+import { FirebaseContext } from "../../../../contexts/FirebaseContextProvider";
+import { Game3Context } from "../../../../contexts/game3/Game3ContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
+import uploadFile from "../gameState/uploadFile";
+import { CountdownContainer, Instructions, ScreenContainer } from "./Game3Styles.sc";
+import { StyledImg, StyledLabel, UploadWrapper } from "./TakePicture.sc";
 
 export interface UploadProps {
     picture: File | undefined;
@@ -23,49 +23,57 @@ const TakePicture: React.FunctionComponent = () => {
     const { userId } = React.useContext(PlayerContext);
     const { roundIdx, topicMessage } = React.useContext(Game3Context);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
-    const [uploaded, setUploaded] = React.useState(false);
+    const [uploadedImagesCount, setUploadedImagesCount] = React.useState(0);
     const [displayCountdown, setDisplayCountdown] = React.useState(true);
 
     const upload = async (values: UploadProps) => {
         uploadFile(values, storage, roomId, userId, roundIdx, controllerSocket);
-        setUploaded(true);
+        setUploadedImagesCount(uploadedImagesCount + 1);
     };
+
+    const finalRound = roundIdx === 3;
 
     return (
         <ScreenContainer>
-            {!displayCountdown && topicMessage?.countdownTime !== -1 && (
+            {!displayCountdown && topicMessage?.countdownTime && topicMessage?.countdownTime > 0 && (
                 <CountdownContainer>
-                    <Countdown time={60000} size="small" />
+                    <Countdown time={topicMessage?.countdownTime} size="small" />
                 </CountdownContainer>
             )}
-            <Instructions>Round {roundIdx}</Instructions>
+            <Instructions>{finalRound ? 'Final Round' : `Round ${roundIdx}`}</Instructions>
             {displayCountdown ? (
                 <>
                     <Countdown time={countdownTime} onComplete={() => setDisplayCountdown(false)} />
                 </>
             ) : (
                 <>
-                    {!uploaded ? (
-                        <Form
-                            mode="add"
-                            onSubmit={upload}
-                            render={({ handleSubmit, values }) => (
-                                <form onSubmit={handleSubmit}>
-                                    <Field
-                                        type="file"
-                                        name="picture"
-                                        label="Picture"
-                                        render={({ input, meta }) => <FileInput input={input} meta={meta} />}
-                                        fullWidth
-                                    />
-                                    <Button type="submit" disabled={!values.picture} size="small">
-                                        Upload
-                                    </Button>
-                                </form>
-                            )}
-                        />
+                    {uploadedImagesCount < 1 || (finalRound && uploadedImagesCount < 3) ? (
+                        <>
+                            {finalRound && <Instructions>{uploadedImagesCount}/3 pictures uploaded</Instructions>}
+                            <Form
+                                mode="add"
+                                onSubmit={upload}
+                                render={({ handleSubmit, values, submitting }) => (
+                                    <form onSubmit={handleSubmit}>
+                                        <Field
+                                            type="file"
+                                            name="picture"
+                                            label="Picture"
+                                            render={({ input, meta }) => <FileInput input={input} meta={meta} />}
+                                            fullWidth
+                                        />
+                                        <Button type="submit" disabled={!values.picture} size="small">
+                                            Upload
+                                        </Button>
+                                    </form>
+                                )}
+                            />
+                        </>
                     ) : (
-                        <Instructions>Picture has been submitted. Waiting for the other players...</Instructions>
+                        <Instructions>
+                            {finalRound ? 'Pictures have' : 'Picture has'} been submitted. Waiting for the other
+                            players...
+                        </Instructions>
                     )}
                 </>
             )}
@@ -75,7 +83,11 @@ const TakePicture: React.FunctionComponent = () => {
 
 export default TakePicture;
 
-const FileInput: React.FC<FieldRenderProps<string, HTMLElement>> = ({ input: { value, onChange, ...input }, meta }) => {
+const FileInput: React.FC<FieldRenderProps<string, HTMLElement>> = ({
+    input: { value, onChange, ...input },
+    meta,
+    submitting,
+}) => {
     const [preview, setPreview] = React.useState<undefined | string>();
     const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         if (target.files && target.files[0]) {

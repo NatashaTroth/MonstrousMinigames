@@ -1,7 +1,9 @@
-import { Typography } from '@material-ui/core';
-import styled from 'styled-components';
+import { Typography } from "@material-ui/core";
+import styled from "styled-components";
 
-import { StyledFullScreenContainer } from '../../../../components/controller/FullScreenContainer.sc';
+import {
+    StyledFullScreenContainer
+} from "../../../../components/controller/FullScreenContainer.sc";
 
 export const ScreenContainer = styled(StyledFullScreenContainer)`
     && {
@@ -16,4 +18,8 @@ export const Instructions = styled(Typography)`
     font-style: italic;
     margin-bottom: 30px;
     padding: 0 20px;
+`;
+
+export const CountdownContainer = styled.div`
+    margin-bottom: 30px;
 `;
