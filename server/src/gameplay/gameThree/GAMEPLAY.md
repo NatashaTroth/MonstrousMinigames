@@ -179,9 +179,31 @@ countdownTime: number;
 
 11.) When countdown runs out, or presenting play clicks on the finished button, the photos of the next random photographer are sent ('game3/presentFinalPhotos'). (and so on until all players have presented)
 
-12.) Once all players have presented their photos, the final voting stage message is sent to the client (SCREEN + CONTROLLER)
+12.) Once all players have presented their photos, the final voting stage message is sent to the client (SCREEN + CONTROLLER) 'game3/voteForFinalPhotos'
 
----
+13.) Controllers send their votes 'game3/finishedPresenting' (same message content as voting before)
+
+```typescript
+{
+    voterId: string;
+    photographerId: string;
+}
+```
+
+14.) After time runs out or all votes are sent (whichever is first), the server sends the final results to the client (SCREEN + CONTROLLER) 'game3/finalResults'. The gameState is set to FINISHED. (same message content as viewing results before, but without the countdown)
+
+```typescript
+ {
+    roomId: string;
+    results: votingResultsPhotographerMapper[];
+}
+
+//votingResultsPhotographerMapper:
+export interface votingResultsPhotographerMapper {
+    photographerId: string;
+    points: number;
+}
+```
 
 Other:
 Every time a new round starts: get 'game3/newRound' message

@@ -4,6 +4,7 @@ import User from '../../classes/user';
 import { GameNames } from '../../enums/gameNames';
 import { shuffleArray } from '../../helpers/shuffleArray';
 import { IMessage } from '../../interfaces/messages';
+import { GameState } from '../enums';
 import Game from '../Game';
 import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
@@ -97,6 +98,9 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                         break;
                     case GameThreeGameState.PresentingFinalPhotos:
                         this.handlePresentingRoundFinished();
+                        break;
+                    case GameThreeGameState.FinalVoting:
+                        this.handleFinishedFinalVoting();
                         break;
                 }
             }
@@ -368,5 +372,14 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         this.initiateCountdown(this.countdownTimeVote);
         this.gameThreeGameState = GameThreeGameState.FinalVoting;
         GameThreeEventEmitter.emitVoteForFinalPhotos(this.roomId, this.countdownTimeVote, playerNameIds);
+    }
+
+    private handleFinishedFinalVoting() {
+        const finalResults: votingResultsPhotographerMapper[] = Array.from(this.players.values()).map(player => {
+            return { photographerId: player.id, points: player.getTotalPoints() };
+        });
+        this.gameThreeGameState = GameThreeGameState.FinalVoting;
+        this.gameState = GameState.Finished;
+        GameThreeEventEmitter.emitFinalResults(this.roomId, finalResults);
     }
 }

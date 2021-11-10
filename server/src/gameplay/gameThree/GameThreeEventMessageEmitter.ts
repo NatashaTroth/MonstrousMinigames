@@ -12,6 +12,7 @@ import { GlobalEventMessage } from '../interfaces/GlobalEventMessages';
 import { IGameStateBase } from '../interfaces/IGameStateBase';
 import Player from '../Player';
 import {
+    GAME_THREE_EVENT_MESSAGE__FINAL_PHOTOS,
     GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
     GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS, GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
@@ -62,6 +63,7 @@ export class GameThreeEventMessageEmitter implements EventMessageEmitter {
             case GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN:
             case GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS:
             case GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS:
+            case GAME_THREE_EVENT_MESSAGE__FINAL_PHOTOS:
                 this.sendToAll(message, screenNameSpace, room);
                 this.sendToAll(message, controllerNameSpace, room);
                 break;

@@ -11,6 +11,7 @@ import {
 import { GameThreeEventMessageEmitter } from './GameThreeEventMessageEmitter';
 import { InitialGameStateInfo, PlayerNameId, PlayerRank } from './interfaces';
 import {
+    GAME_THREE_EVENT_MESSAGE__FINAL_PHOTOS,
     GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
     GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS, GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
@@ -169,6 +170,14 @@ export default class GameThreeEventEmitter {
             roomId,
             countdownTime,
             photographers,
+        });
+    }
+
+    public static emitFinalResults(roomId: string, results: votingResultsPhotographerMapper[]) {
+        this.GameThreeEventMessageEmitter.emit({
+            type: GAME_THREE_EVENT_MESSAGE__FINAL_PHOTOS,
+            roomId,
+            results,
         });
     }
 }

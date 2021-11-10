@@ -12,6 +12,7 @@ export const GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS = 'game3/photoVoting
 export const GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN = 'game3/takeFinalPhotosCountdown';
 export const GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS = 'game3/presentFinalPhotos';
 export const GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS = 'game3/voteForFinalPhotos';
+export const GAME_THREE_EVENT_MESSAGE__FINAL_PHOTOS = 'game3/finalResults';
 
 export const GAME_THREE_EVENT_MESSAGES = [
     GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
@@ -23,6 +24,7 @@ export const GAME_THREE_EVENT_MESSAGES = [
     GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
     GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
     GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS,
+    GAME_THREE_EVENT_MESSAGE__FINAL_PHOTOS,
 ];
 
 export interface GameThreeInitialGameState {
@@ -81,6 +83,11 @@ export interface VoteForFinalPhotos {
     countdownTime: number;
     photographers: PlayerNameId[];
 }
+export interface FinalPhotos {
+    type: typeof GAME_THREE_EVENT_MESSAGE__FINAL_PHOTOS;
+    roomId: string;
+    results: votingResultsPhotographerMapper[];
+}
 
 export type GameThreeEventMessage =
     | GameThreeInitialGameState
@@ -91,4 +98,5 @@ export type GameThreeEventMessage =
     | PhotoVotingResults
     | TakeFinalPhotosCountdown
     | PresentFinalPhotos
-    | VoteForFinalPhotos;
+    | VoteForFinalPhotos
+    | FinalPhotos;
