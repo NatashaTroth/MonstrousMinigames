@@ -261,8 +261,8 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     private sendPhotosToScreen() {
         const photoUrls: photoPhotographerMapper[] = Array.from(this.players.values())
             .filter(player => player.roundInfo[this.roundIdx].url)
-            .map(player => {
-                return { photographerId: player.id, url: player.roundInfo[this.roundIdx].url };
+            .map((player, idx) => {
+                return { photographerId: player.id, photoId: idx + 1, url: player.roundInfo[this.roundIdx].url };
             });
 
         this.initiateCountdown(this.countdownTimeVote);
