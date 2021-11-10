@@ -10,4 +10,5 @@ export interface GameStateInfo extends IGameStateBase {
     sheep: Array<Sheep>;
     lengthX: number;
     lengthY: number;
+    currentRound: number;
 }

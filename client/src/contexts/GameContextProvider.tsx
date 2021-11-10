@@ -5,6 +5,7 @@ import { GameNames } from '../config/games';
 import { ScreenStates } from '../config/screenStates';
 import { handleSetGameFinished } from '../domain/commonGameState/controller/handleSetGameFinished';
 import { handleSetGameStarted } from '../domain/commonGameState/controller/handleSetGameStarted';
+import { handleSetSheepGameStarted } from '../domain/commonGameState/controller/handleSetSheepGameStarted';
 import { User } from '../domain/typeGuards/connectedUsers';
 import { PlayerRank } from './ScreenSocketContextProvider';
 
@@ -15,6 +16,10 @@ export const defaultValue = {
     },
     gameStarted: false,
     setGameStarted: () => {
+        // do nothing
+    },
+    sheepGameStarted: false,
+    setSheepGameStarted: () => {
         // do nothing
     },
     roomId: undefined,
@@ -70,6 +75,8 @@ interface GameContextProps {
     setFinished: (val: boolean) => void;
     gameStarted: boolean;
     setGameStarted: (val: boolean) => void;
+    sheepGameStarted: boolean;
+    setSheepGameStarted: (val: boolean) => void;
     roomId?: string;
     setRoomId: (val?: string) => void;
     connectedUsers?: User[];
@@ -101,6 +108,7 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [playerRanks, setPlayerRanks] = React.useState<undefined | PlayerRank[]>();
     const [finished, setFinished] = React.useState<boolean>(false);
     const [gameStarted, setGameStarted] = React.useState<boolean>(false);
+    const [sheepGameStarted, setSheepGameStarted] = React.useState<boolean>(false);
     const [roomId, setRoomId] = React.useState<undefined | string>();
     const [connectedUsers, setConnectedUsers] = React.useState<undefined | User[]>();
     const [showInstructions, setShowInstructions] = React.useState<boolean>(true);
@@ -118,6 +126,8 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setFinished: (val: boolean) => handleSetGameFinished(val, { setFinished }),
         gameStarted,
         setGameStarted: (val: boolean) => handleSetGameStarted(val, { setGameStarted }),
+        sheepGameStarted,
+        setSheepGameStarted: (val: boolean) => handleSetSheepGameStarted(val, { setSheepGameStarted }),
         roomId,
         setRoomId,
         connectedUsers,
@@ -125,6 +135,7 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         resetGame: () => {
             setFinished(false);
             setGameStarted(false);
+            setSheepGameStarted(false);
         },
         showInstructions,
         setShowInstructions,

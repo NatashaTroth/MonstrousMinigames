@@ -172,7 +172,9 @@ export class PhaserPlayerRenderer {
                 repeat: -1,
             });
             this.chaser = this.scene.physics.add.sprite(-1, chasersPositionY, 'chasersSpritesheet');
-            this.chaser.setScale((0.7 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+            this.chaser.setScale(
+                (0.7 / this.numberPlayers) * this.laneHeightsPerNumberPlayers![this.numberPlayers - 1]
+            );
             this.chaser.setDepth(depthDictionary.chaser);
             this.chaser.y = this.chaser.y - this.chaser.displayHeight / 2; //set correct y pos according to player height
             this.chaser.play('chasersAnimation');
@@ -190,7 +192,7 @@ export class PhaserPlayerRenderer {
             this.backgroundElements![0].y - this.backgroundElements![0].displayHeight,
             'pebble'
         );
-        pebble.setScale((0.4 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+        pebble.setScale((0.4 / this.numberPlayers) * this.laneHeightsPerNumberPlayers![this.numberPlayers - 1]);
         pebble.y += pebble.displayHeight / 2;
         pebble.body.setGravity(0, 1200);
         pebble.setCollideWorldBounds(true);
@@ -205,7 +207,7 @@ export class PhaserPlayerRenderer {
 
     renderCave(posX: number, posY: number) {
         posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
-        const scale = (0.9 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1];
+        const scale = (0.9 / this.numberPlayers) * this.laneHeightsPerNumberPlayers![this.numberPlayers - 1];
         const yOffset = 2.2;
         this.caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
         this.caveBehind.setScale(scale);
@@ -257,7 +259,7 @@ export class PhaserPlayerRenderer {
 
     renderObstacles(posX: number, posY: number, obstacleScale: number, obstacleType: string, depth: number) {
         const obstacle = this.scene.physics.add.sprite(posX, posY, obstacleType);
-        obstacle.setScale(obstacleScale * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+        obstacle.setScale(obstacleScale * this.laneHeightsPerNumberPlayers![this.numberPlayers - 1]);
 
         obstacle.y -= obstacle.displayHeight / 1.3;
         obstacle.setDepth(depth);
@@ -327,7 +329,7 @@ export class PhaserPlayerRenderer {
                     'attention'
                 )
                 .setDepth(depthDictionary.attention)
-                .setScale((1 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+                .setScale((1 / this.numberPlayers) * this.laneHeightsPerNumberPlayers![this.numberPlayers - 1]);
         }
     }
 
@@ -340,7 +342,7 @@ export class PhaserPlayerRenderer {
                     'warning'
                 )
                 .setDepth(depthDictionary.attention)
-                .setScale((1 / this.numberPlayers) * this.laneHeightsPerNumberPlayers[this.numberPlayers - 1]);
+                .setScale((1 / this.numberPlayers) * this.laneHeightsPerNumberPlayers![this.numberPlayers - 1]);
         }
     }
 

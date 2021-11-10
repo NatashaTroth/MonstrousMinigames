@@ -33,6 +33,7 @@ describe('handleSetSocket', () => {
         setTopicMessage: jest.fn(),
         setTimeIsUp: jest.fn(),
         setRoundIdx: jest.fn(),
+        setSheepGameStarted: jest.fn(),
         history,
     };
 

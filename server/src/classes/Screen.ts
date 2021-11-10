@@ -1,8 +1,10 @@
 import { Namespace, Socket } from 'socket.io';
 
+import { GameNames } from '../enums/gameNames';
 import { MessageTypes } from '../enums/messageTypes';
 import Game from '../gameplay/Game';
 import { GameOneMsgType } from '../gameplay/gameOne/enums';
+import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
 // import { GameThreeMessageTypes } from '../gameplay/gameThree/enums/GameThreeMessageTypes';
 // import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
 import { IMessage } from '../interfaces/messages';
@@ -44,18 +46,18 @@ class Screen {
         }
     }
 
-    private trySendAllScreensPhaserGameLoaded(timedOut = false) {
+    private trySendAllScreensPhaserGameLoaded(game: string, timedOut = false) {
         if (!this.room!.sentAllScreensLoaded) {
             this.room!.sentAllScreensLoaded = true;
             if (this.room?.allScreensLoadedTimeout) clearTimeout(this.room.allScreensLoadedTimeout);
-            this.emitter.sendAllScreensPhaserGameLoaded([this.screenNamespace], this.room!);
+            this.emitter.sendAllScreensPhaserGameLoaded([this.screenNamespace], this.room!, game);
         }
 
         if (timedOut) {
             console.log('sending timed out');
             const notReadyScreens = this.room!.getScreensPhaserNotReady();
             notReadyScreens.forEach(screen => {
-                this.emitter.sendScreenPhaserGameLoadedTimedOut(this.screenNamespace, screen.id); //TODO natasha
+                this.emitter.sendScreenPhaserGameLoadedTimedOut(this.screenNamespace, screen.id, game); //TODO natasha
             });
         }
     }
@@ -145,17 +147,37 @@ class Screen {
                     if (this.room && !this.room?.firstPhaserScreenLoaded) {
                         this.room.firstPhaserScreenLoaded = true;
                         this.room.allScreensLoadedTimeout = setTimeout(() => {
-                            this.trySendAllScreensPhaserGameLoaded(true);
+                            this.trySendAllScreensPhaserGameLoaded(GameNames.GAME1, true);
                             ///TODO natasha - send timedout to other screens
                         }, 10000);
                     }
 
                     if (this.room?.allPhaserGamesReady()) {
-                        this.trySendAllScreensPhaserGameLoaded();
+                        this.trySendAllScreensPhaserGameLoaded(GameNames.GAME1);
                     }
                     break;
                 case GameOneMsgType.START_PHASER_GAME:
-                    this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!);
+                    this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!, GameNames.GAME1);
+                    break;
+                case GameTwoMessageTypes.PHASER_GAME_LOADED:
+                    console.log(message);
+                    this.room?.setScreenPhaserGameReady(this.socket.id, true);
+                    if (this.room && !this.room?.firstPhaserScreenLoaded) {
+                        this.room.firstPhaserScreenLoaded = true;
+                        this.room.allScreensLoadedTimeout = setTimeout(() => {
+                            this.trySendAllScreensPhaserGameLoaded(GameNames.GAME2, true);
+                            ///TODO natasha - send timedout to other screens
+                        }, 10000);
+                    }
+
+                    if (this.room?.allPhaserGamesReady()) {
+                        this.trySendAllScreensPhaserGameLoaded(GameNames.GAME2);
+                    }
+                    break;
+
+                case GameTwoMessageTypes.START_PHASER_GAME:
+                    console.log(message);
+                    this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!, GameNames.GAME2);
                     break;
                 default:
                     console.info(message);

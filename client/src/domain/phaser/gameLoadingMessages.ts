@@ -16,7 +16,6 @@ export const gameLoadingMessages = [
     'Carefully catching spiders (scared)',
     'Helping spiders make their webs',
     'On your marks, get set, ',
-    'Waiting for the bus',
 ];
 
 export const gameLoadedWaitingMessages = ['Finished loading. Waiting for fellow monsters to connect'];

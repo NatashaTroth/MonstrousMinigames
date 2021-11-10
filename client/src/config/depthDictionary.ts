@@ -20,4 +20,5 @@ export const depthDictionary = {
     progressBar: 90,
     percentText: 95,
     deadText: 100,
+    sheep: 40,
 };
