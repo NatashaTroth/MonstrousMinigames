@@ -32,6 +32,7 @@ import { GameData } from '../phaser/gameInterfaces/GameData';
 import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
 import { initialGameInput } from '../phaser/initialGameInput';
 import { Player } from '../phaser/Player';
+import { Sheep } from '../phaser/Sheep';
 import { audioFiles, characters, images } from './GameAssets';
 
 const windowHeight = window.innerHeight;
@@ -43,6 +44,7 @@ class SheepGameScene extends Phaser.Scene {
     posX: number;
     posY: number;
     players: Array<Player>;
+    sheep: Array<Sheep>;
     gameStarted: boolean;
     paused: boolean;
     gameRenderer?: PhaserGameRenderer;
@@ -62,6 +64,7 @@ class SheepGameScene extends Phaser.Scene {
         this.posX = 0;
         this.posY = 0; //TODO get from backend
         this.players = [];
+        this.sheep = [];
         this.gameStarted = false;
         this.paused = false;
         this.gameEventEmitter = GameEventEmitter.getInstance();
@@ -228,14 +231,18 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     initiateGame(gameStateData: GameData) {
+        // eslint-disable-next-line no-console
+        console.log(gameStateData);
         this.gameToScreenMapper = new GameToScreenMapper(gameStateData.playersState[0].positionX, this.windowWidth, 0);
-
-        // this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
 
         this.physics.world.setBounds(0, 0, 7500, windowHeight);
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);
+        }
+
+        for (let i = 0; i < gameStateData.sheep.length - 98; i++) {
+            this.createSheep(i, gameStateData);
         }
     }
 
@@ -249,13 +256,28 @@ class SheepGameScene extends Phaser.Scene {
         const player = new Player(
             this,
             index,
-            { x: gameStateData.playersState[index].positionX, y: this.posY },
+            { x: gameStateData.playersState[index].positionX, y: gameStateData.playersState[index].positionY },
             gameStateData,
             character,
             numberPlayers,
             this.gameToScreenMapper!
         );
         this.players.push(player);
+    }
+
+    private createSheep(index: number, gameStateData: GameData) {
+        // eslint-disable-next-line no-console
+        console.log(gameStateData.sheep[index]);
+        const numberOfSheep = gameStateData.sheep.length;
+        const sheep = new Sheep(
+            this,
+            index,
+            { x: gameStateData.sheep[index].posX, y: gameStateData.sheep[index].posY },
+            gameStateData,
+            numberOfSheep,
+            this.gameToScreenMapper!
+        );
+        this.sheep.push(sheep);
     }
 
     private createGameCountdown(countdownTime: number) {

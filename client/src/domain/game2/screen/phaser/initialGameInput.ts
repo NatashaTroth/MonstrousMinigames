@@ -13,7 +13,7 @@ export const initialGameInput = {
             characterNumber: 1,
         },
     ],
-    sheep: [{ state: SheepState.ALIVE, id: 'sheep1', coordinates: { x: 100, y: 150 } }],
+    sheep: [{ state: SheepState.ALIVE, id: 'sheep1', posX: 100, posY: 150 }],
     lengthX: 250,
     lengthY: 200,
     gameState: 'CREATED',

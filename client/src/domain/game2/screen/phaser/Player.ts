@@ -29,11 +29,11 @@ export class Player {
 
         this.renderer = new PhaserPlayerRenderer(scene);
 
-        this.renderer.renderBackground();
+        this.renderer.renderSheepBackground(window.innerWidth, window.innerHeight);
         this.setPlayer();
     }
 
-    moveForward(newXPosition: number, trackLength: number) {
+    moveForward(newXPosition: number) {
         //TODO
 
         if (newXPosition == this.coordinates.x && this.playerRunning) {
