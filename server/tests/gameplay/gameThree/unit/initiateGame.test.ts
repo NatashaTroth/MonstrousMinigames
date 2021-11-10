@@ -67,8 +67,8 @@ describe('Change and verify game state', () => {
         expect(gameThree['countdownRunning']).toBeFalsy();
     });
 
-    it('initiates roundIdx with 0', async () => {
-        expect(gameThree['roundIdx']).toBe(0);
+    it('initiates roundIdx with -1', async () => {
+        expect(gameThree['roundIdx']).toBe(-1);
     });
 
     it('initiates gameName with Game3', async () => {
