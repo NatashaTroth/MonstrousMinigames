@@ -82,7 +82,6 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
             if (this.countdownOver()) {
                 this.stopCountdown();
-
                 switch (this.gameThreeGameState) {
                     case GameThreeGameState.TakingPhoto:
                         this.handleFinishedTakingPhoto();
@@ -239,7 +238,8 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         if (player && !player.finalRoundInfo.received) player.receivedFinalPhoto(message.url);
 
         if (this.allFinalPhotosReceived()) {
-            this.handleFinishedTakingFinalPhotos();
+            this.handleAllFinalPhotosReceived();
+            // this.handleFinishedTakingFinalPhotos();
         }
     }
 
@@ -332,13 +332,18 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         GameThreeEventEmitter.emitTakeFinalPhotosCountdown(this.roomId, this.countdownTimeTakeFinalPhotos);
     }
 
+    private handleAllFinalPhotosReceived() {
+        this.stopCountdown();
+        this.handleFinishedTakingFinalPhotos();
+    }
+
     private handleFinishedTakingFinalPhotos() {
         this.playerPresentOrder = shuffleArray(
             Array.from(this.players.values())
                 .filter(player => player.finalRoundInfo.received)
                 .map(player => player.id)
         );
-        this.gameThreeGameState = GameThreeGameState.FinalVoting;
+        this.gameThreeGameState = GameThreeGameState.PresentingFinalPhotos;
         this.handlePresentingRoundFinished();
     }
 
@@ -378,8 +383,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         const finalResults: votingResultsPhotographerMapper[] = Array.from(this.players.values()).map(player => {
             return { photographerId: player.id, points: player.getTotalPoints() };
         });
-        this.gameThreeGameState = GameThreeGameState.FinalVoting;
+        this.gameThreeGameState = GameThreeGameState.ViewingFinalResults;
         this.gameState = GameState.Finished;
         GameThreeEventEmitter.emitFinalResults(this.roomId, finalResults);
+
+        //TODO Leaderboard
     }
 }
