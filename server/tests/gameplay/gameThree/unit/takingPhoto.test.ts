@@ -47,6 +47,7 @@ describe('Handle received photo', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         gameThree['gameThreeGameState'] = GameThreeGameState.TakingPhoto;
+        gameThree['roundIdx'] = 0; // to simulate update in handling first round
     });
 
     afterEach(() => {
@@ -115,6 +116,7 @@ describe('All photos received', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
+        gameThree['roundIdx'] = 0; // to simulate update in handling first round
     });
 
     afterEach(() => {
@@ -146,6 +148,7 @@ describe('Send Photos to screen', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
+        gameThree['roundIdx'] = 0; // to simulate update in handling first round
     });
 
     afterEach(() => {

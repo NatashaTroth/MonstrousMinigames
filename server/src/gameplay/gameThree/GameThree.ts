@@ -43,7 +43,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     private gameThreeGameState = GameThreeGameState.BeforeStart;
     private countdownTimeLeft = 0;
     private countdownRunning = false;
-    private roundIdx = 0;
+    private roundIdx = -1;
     private playerPresentOrder: string[] = [];
 
     // private viewingPhotoResults = false //TODO handle
