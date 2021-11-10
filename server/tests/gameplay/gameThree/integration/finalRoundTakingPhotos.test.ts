@@ -71,6 +71,12 @@ describe('Taking Final Photos', () => {
         expect(gameThree.players.get(users[0].id)!.finalRoundInfo.urls.length).toBe(1);
     });
 
+    it('should increase final points by 1 when photo received', async () => {
+        const initialFinalPoints = gameThree.players.get(users[0].id)!.finalRoundInfo.points;
+        gameThree['handleInput'](message);
+        expect(gameThree.players.get(users[0].id)!.finalRoundInfo.points).toBe(initialFinalPoints + 1);
+    });
+
     it('should update the urls length when multiple photos are sent', async () => {
         for (let i = 1; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
             gameThree['handleInput'](message);

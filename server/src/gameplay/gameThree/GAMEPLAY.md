@@ -210,17 +210,6 @@ Other:
 Every time a new round starts: get 'game3/newRound' message
 
 ---------MAGDA FRAGEN----------
-Soll ich dir den GameThreeGameState schicken:
-
-```typescript
-export enum GameThreeGameState {
-    BeforeStart = 'BEFORE_START',
-    TakingPhoto = 'TAKING_PHOTO',
-    Voting = 'VOTING',
-    ViewingResults = 'VIEWING_RESULTS',
-    WaitingForClientAction = 'WAITING_FOR_CLIENT_ACTION',
-}
-```
 
 //**\_\_\_**
 Punkte system: final round 1 pkt pro foto den man abschickt - max 3 fotos
@@ -228,7 +217,3 @@ Punkte system: final round 1 pkt pro foto den man abschickt - max 3 fotos
 final round - 1 pkt pro vote
 
 automatisch punkte wenn vorher nur 1 person in runde foto - skip vote message - kriegt alle punkte für die runde
-
-vote for photos - jedem url bild eine id geben immer 1, 2, 3, 4
-
-1.)
