@@ -432,10 +432,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             return { photographerId: player.id, points: player.getTotalPoints() };
         });
 
-        // finalResults.sort((a, b) => b.points - a.points);
+        finalResults.sort((a, b) => b.points - a.points);
         this.gameThreeGameState = GameThreeGameState.ViewingFinalResults;
         this.gameState = GameState.Finished;
-        GameThreeEventEmitter.emitFinalResults(this.roomId, finalResults);
+        GameThreeEventEmitter.emitViewingFinalResults(this.roomId, finalResults);
 
         //TODO Leaderboard
         //TODO rank

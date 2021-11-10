@@ -63,9 +63,11 @@ class GameThreePlayer extends Player {
     }
 
     getTotalPoints() {
-        return this.roundInfo.reduce((result, item) => {
-            return result + item.points;
-        }, 0);
+        return (
+            this.roundInfo.reduce((result, item) => {
+                return result + item.points;
+            }, 0) + this.finalRoundInfo.points
+        );
     }
 }
 export default GameThreePlayer;
