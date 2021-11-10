@@ -94,7 +94,7 @@ describe('Final results', () => {
         }
         // add points
         Array.from(gameThree.players.values()).forEach((player, idx) => {
-            pointsArray.push(0);
+            pointsArray.push(player.getTotalPoints()); // get points from before (from sending final photo)
             for (let i = 0; i < InitialParameters.NUMBER_ROUNDS - 1; i++) {
                 player.addPoints(1, idx);
                 pointsArray[idx] += idx;

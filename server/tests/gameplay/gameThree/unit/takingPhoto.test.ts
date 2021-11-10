@@ -69,6 +69,13 @@ describe('Handle received photo', () => {
         expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']].url).toBe(message.url);
     });
 
+    fit('should not save the photo url for a new photo when a photo has already been received', async () => {
+        gameThree['handleReceivedPhoto'](message);
+        const newUrl = 'https://mockPhoto2.com';
+        gameThree['handleReceivedPhoto']({ ...message, url: newUrl });
+        expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']].url).toBe(message.url);
+    });
+
     it('should throw an InvalidUrlError when url is not valid', async () => {
         const newMessage = { ...message };
         newMessage.url = 'notAUrl';

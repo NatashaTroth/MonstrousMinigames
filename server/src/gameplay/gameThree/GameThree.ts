@@ -240,7 +240,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     private handleReceivedFinalPhoto(message: IMessagePhoto) {
         const player = this.players.get(message.userId!);
-        if (player && !player.finalRoundInfo.received) player.receivedFinalPhoto(message.url);
+        if (player && !player.finalRoundInfo.received) {
+            player.receivedFinalPhoto(message.url);
+            player.addPointsFinalRound(1);
+        }
 
         if (this.allFinalPhotosReceived()) {
             this.handleAllFinalPhotosReceived();
