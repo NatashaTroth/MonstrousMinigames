@@ -81,7 +81,6 @@ export enum MessageTypesGame1 {
 
 export enum MessageTypesGame2 {
     runForward = 'game2/runForward',
-    started = 'game2/hasStarted',
     phaserLoaded = 'game2/phaserGameLoaded',
     phaserLoadingTimedOut = 'game2/phaserLoadingTimedOut',
     allScreensSheepGameLoaded = 'game2/allScreensPhaserGameLoaded',

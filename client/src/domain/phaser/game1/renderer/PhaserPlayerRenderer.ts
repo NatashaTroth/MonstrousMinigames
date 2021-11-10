@@ -1,16 +1,16 @@
 import Phaser from 'phaser';
 
-import { depthDictionary } from '../../../config/depthDictionary';
-import { fireworkFlares } from '../../game1/screen/components/GameAssets';
-import MainScene from '../../game1/screen/components/MainScene';
-import { moveLanesToCenter } from '../../game1/screen/gameState/moveLanesToCenter';
-import * as colors from '../colors';
-import { Character, CharacterAnimation } from '../gameInterfaces';
-import { CharacterAnimationFrames } from '../gameInterfaces/Character';
-import { Coordinates } from '../gameTypes';
-import { Scene } from '../Scene';
-import { SpriteWithDynamicBody } from '../SpriteWithDynamicBody';
-import { sharedTextStyleProperties } from '../textStyleProperties';
+import { depthDictionary } from '../../../../config/depthDictionary';
+import { fireworkFlares } from '../../../game1/screen/components/GameAssets';
+import MainScene from '../../../game1/screen/components/MainScene';
+import { moveLanesToCenter } from '../../../game1/screen/gameState/moveLanesToCenter';
+import * as colors from '../../colors';
+import { Character, CharacterAnimation } from '../../gameInterfaces';
+import { CharacterAnimationFrames } from '../../gameInterfaces/Character';
+import { Coordinates } from '../../gameTypes';
+import { Scene } from '../../Scene';
+import { SpriteWithDynamicBody } from '../../SpriteWithDynamicBody';
+import { sharedTextStyleProperties } from '../../textStyleProperties';
 
 /**
  * this is an incomplete PlayerRenderer adapter which contains all the phaser logic. This class might only be tested via

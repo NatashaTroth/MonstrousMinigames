@@ -8,7 +8,7 @@ import { getRandomInt } from '../../../utils/getRandomInt';
 import MainScene from '../../game1/screen/components/MainScene';
 import SheepGameScene from '../../game2/screen/components/SheepGameScene';
 import * as colors from '../colors';
-import { gameLoadedWaitingMessages, gameLoadingMessages } from '../gameLoadingMessages';
+import { gameLoadedWaitingMessages, gameLoadingMessages } from '../game1/gameLoadingMessages';
 import { Scene } from '../Scene';
 import { GameObjectText } from '../Text';
 import { countdownTextStyleProperties, loadingTextStyleProperties } from '../textStyleProperties';

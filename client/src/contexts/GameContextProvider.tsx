@@ -4,8 +4,6 @@ import { defaultAvailableCharacters } from '../config/characters';
 import { GameNames } from '../config/games';
 import { ScreenStates } from '../config/screenStates';
 import { handleSetGameFinished } from '../domain/commonGameState/controller/handleSetGameFinished';
-import { handleSetGameStarted } from '../domain/commonGameState/controller/handleSetGameStarted';
-import { handleSetSheepGameStarted } from '../domain/commonGameState/controller/handleSetSheepGameStarted';
 import { User } from '../domain/typeGuards/connectedUsers';
 import { PlayerRank } from './ScreenSocketContextProvider';
 
@@ -125,9 +123,9 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         finished,
         setFinished: (val: boolean) => handleSetGameFinished(val, { setFinished }),
         gameStarted,
-        setGameStarted: (val: boolean) => handleSetGameStarted(val, { setGameStarted }),
+        setGameStarted,
         sheepGameStarted,
-        setSheepGameStarted: (val: boolean) => handleSetSheepGameStarted(val, { setSheepGameStarted }),
+        setSheepGameStarted,
         roomId,
         setRoomId,
         connectedUsers,

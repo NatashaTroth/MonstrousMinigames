@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 
-import { depthDictionary } from '../../../../../config/depthDictionary';
-import SheepGameScene from '../../components/SheepGameScene';
-import { CharacterAnimationFrames } from '../gameInterfaces/Character';
-import { Coordinates } from '../gameTypes/Coordinates';
+import { depthDictionary } from '../../../../config/depthDictionary';
+import SheepGameScene from '../../../game2/screen/components/SheepGameScene';
+import { CharacterAnimationFrames } from '../../gameInterfaces/Character';
+import { Coordinates } from '../../gameTypes';
 import { SheepState } from '../Sheep';
 
 /**

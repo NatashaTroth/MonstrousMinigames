@@ -1,18 +1,14 @@
-import { AnimationName } from '../enums';
+import { AnimationNameGame1, AnimationNameGame2 } from '../enums/AnimationName';
 
 export interface Character {
     name: string;
     file: string;
-    // stunnedFile: string;
-    animations: Map<AnimationName, CharacterAnimation>;
-    // stunnedAnimationName: string;
+    animations: Map<AnimationNameGame1 | AnimationNameGame2, CharacterAnimation>;
     properties: CharacterSpriteProperties;
 }
 
 export interface CharacterAnimation {
     name: string;
-    // spritesheetName: string;
-    // file: string;
     frames: CharacterAnimationFrames;
 }
 

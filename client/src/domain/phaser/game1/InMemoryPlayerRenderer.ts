@@ -1,4 +1,4 @@
-import { Character } from './gameInterfaces';
+import { Character } from '../gameInterfaces';
 import { PlayerRenderer } from './PlayerRenderer';
 
 export class InMemoryPlayerRenderer implements PlayerRenderer {

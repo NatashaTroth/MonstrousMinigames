@@ -8,7 +8,6 @@ import { handleGameHasFinishedMessage } from '../../commonGameState/controller/h
 import { handleGameHasResetMessage } from '../../commonGameState/controller/handleGameHasResetMessage';
 import { handleGameHasStoppedMessage } from '../../commonGameState/controller/handleGameHasStoppedMessage';
 import { handleGameStartedMessage } from '../../commonGameState/controller/handleGameStartedMessage';
-import { handleSheepGameStartedMessage } from '../../commonGameState/controller/handleSheepGameStartedMessage';
 import { handleUserInitMessage } from '../../commonGameState/controller/handleUserInitMessage';
 import { handleSetControllerSocketGame1 } from '../../game1/controller/socket/Sockets';
 import { handleSetControllerSocketGame3 } from '../../game3/controller/socket/Sockets';
@@ -23,7 +22,6 @@ import { GameSetMessage, gameSetTypeGuard } from '../../typeGuards/gameSet';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
 import { GameHasResetMessage, resetTypeGuard } from '../../typeGuards/reset';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
-import { StartSheepGameMessage, startSheepGameTypeGuard } from '../../typeGuards/startSheepGame';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../typeGuards/stopped';
 import { UserInitMessage, userInitTypeGuard } from '../../typeGuards/userInit';
 
@@ -35,7 +33,6 @@ export interface HandleSetSocketDependencies {
     setPlayerRank: (val: number) => void;
     setHasPaused: (val: boolean) => void;
     setGameStarted: (val: boolean) => void;
-    setSheepGameStarted: (val: boolean) => void;
     setName: (val: string) => void;
     setAvailableCharacters: (val: number[]) => void;
     setUserId: (val: string) => void;
@@ -66,7 +63,6 @@ export function handleSetSocket(
         setPlayerRank,
         setHasPaused,
         setGameStarted,
-        setSheepGameStarted,
         setName,
         setAvailableCharacters,
         setUserId,
@@ -85,7 +81,6 @@ export function handleSetSocket(
 
     const userInitSocket = new MessageSocket(userInitTypeGuard, socket);
     const startedSocket = new MessageSocket(startedTypeGuard, socket);
-    const sheepGameStartedSocket = new MessageSocket(startSheepGameTypeGuard, socket);
     const pausedSocket = new MessageSocket(pausedTypeGuard, socket);
     const resumedSocket = new MessageSocket(resumedTypeGuard, socket);
     const stoppedSocket = new MessageSocket(stoppedTypeGuard, socket);
@@ -119,17 +114,6 @@ export function handleSetSocket(
             },
         })
     );
-
-    sheepGameStartedSocket.listen((data: StartSheepGameMessage) => {
-        handleSheepGameStartedMessage({
-            roomId,
-            countdownTime: data.countdownTime,
-            dependencies: {
-                setSheepGameStarted,
-                history,
-            },
-        });
-    });
 
     // TODO remove when phaser is ready
     pausedSocket.listen((data: GameHasPausedMessage) => {

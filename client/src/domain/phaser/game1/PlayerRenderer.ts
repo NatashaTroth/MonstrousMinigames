@@ -1,4 +1,4 @@
-import { Character } from './gameInterfaces';
+import { Character } from '../gameInterfaces';
 
 export interface PlayerRenderer {
     renderBackground: (

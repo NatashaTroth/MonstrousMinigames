@@ -7,8 +7,8 @@ import orangeMonster from '../../../../images/characters/spritesheets/monsters/o
 import pinkMonster from '../../../../images/characters/spritesheets/monsters/pink_spritesheet.png';
 import sheepDecoy from '../../../../images/characters/spritesheets/sheep/sheep_decoy.png';
 import forest2 from '../../../../images/ui/forest2.png';
-import { AnimationName } from '../phaser/enums/AnimationNames';
-import { Character, CharacterAnimation, CharacterSpriteProperties } from '../phaser/gameInterfaces/Character';
+import { AnimationNameGame2 } from '../../../phaser/enums/AnimationName';
+import { Character, CharacterAnimation, CharacterSpriteProperties } from '../../../phaser/gameInterfaces';
 
 //TODO types
 
@@ -28,8 +28,8 @@ export const characterSpriteSheetPrefix = 'character_';
 
 export const characters: Character[] = characterFiles.map((file, idx) => {
     const monsterName = `${characterSpriteSheetPrefix}${defaultAvailableCharacters[idx].toString()}`;
-    const animationsMap = new Map<AnimationName, CharacterAnimation>();
-    animationsMap.set(AnimationName.Running, {
+    const animationsMap = new Map<AnimationNameGame2, CharacterAnimation>();
+    animationsMap.set(AnimationNameGame2.Running, {
         name: `${monsterName}_running`,
         frames: { start: 8, end: 11 },
     });

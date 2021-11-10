@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 
-import { depthDictionary } from '../../../../../config/depthDictionary';
-import SheepGameScene from '../../components/SheepGameScene';
-import { Character, CharacterAnimationFrames } from '../gameInterfaces/Character';
-import { Coordinates } from '../gameTypes/Coordinates';
+import { depthDictionary } from '../../../../config/depthDictionary';
+import SheepGameScene from '../../../game2/screen/components/SheepGameScene';
+import { Character, CharacterAnimationFrames } from '../../gameInterfaces/Character';
+import { Coordinates } from '../../gameTypes';
 
 /**
  * this is an incomplete PlayerRenderer adapter which contains all the phaser logic. This class might only be tested via
