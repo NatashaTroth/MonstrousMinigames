@@ -1,10 +1,10 @@
 //import { designDevelopment } from '../../../../utils/constants';
 //import { depthDictionary } from '../../../../utils/depthDictionary';
-import SheepGameScene from '../components/SheepGameScene';
-import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
-import { Coordinates } from '../phaser/gameTypes/Coordinates';
-import { Character } from './gameInterfaces/Character';
+import SheepGameScene from '../../game2/screen/components/SheepGameScene';
+import { Character } from '../gameInterfaces';
+import { Coordinates } from '../gameTypes';
 import { GameData } from './gameInterfaces/GameData';
+import { GameToScreenMapper } from './GameToScreenMapper';
 import { PhaserSheepRenderer } from './renderer/PhaserSheepRenderer';
 
 export enum SheepState {

@@ -20,6 +20,8 @@ export function handleGameStartedMessage(props: HandleGameStarted) {
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
     document.body.style.userSelect = 'none';
+    document.body.style.webkitUserSelect = 'none';
+
     setGameStarted(true);
     setCountdownTime(countdownTime);
 

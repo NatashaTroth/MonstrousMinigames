@@ -1,10 +1,10 @@
-import { depthDictionary } from '../../config/depthDictionary';
-import { designDevelopment, localDevelopment, ObstacleTypes, stunnedAnimation } from '../../utils/constants';
-import MainScene from '../game1/screen/components/MainScene';
-import { AnimationName } from './enums';
-import { Character, GameData } from './gameInterfaces';
+import { depthDictionary } from '../../../config/depthDictionary';
+import { designDevelopment, localDevelopment, ObstacleTypes, stunnedAnimation } from '../../../utils/constants';
+import MainScene from '../../game1/screen/components/MainScene';
+import { AnimationNameGame1 } from '../enums/AnimationName';
+import { Character, GameData } from '../gameInterfaces';
+import { Coordinates } from '../gameTypes';
 import { GameToScreenMapper } from './GameToScreenMapper';
-import { Coordinates } from './gameTypes';
 import { PlayerRenderer } from './PlayerRenderer';
 
 /**
@@ -151,7 +151,7 @@ export class Player {
 
     handlePlayerStunned() {
         if (!this.stunned) {
-            this.renderer.stunPlayer(this.character.animations.get(AnimationName.Stunned)!.name);
+            this.renderer.stunPlayer(this.character.animations.get(AnimationNameGame1.Stunned)!.name);
             this.stunned = true;
         }
     }
@@ -247,7 +247,7 @@ export class Player {
     }
 
     startRunning() {
-        const animationName = this.character.animations.get(AnimationName.Running)?.name;
+        const animationName = this.character.animations.get(AnimationNameGame1.Running)?.name;
         if (animationName) this.renderer.startAnimation(animationName);
         this.playerRunning = true;
     }

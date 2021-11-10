@@ -1,12 +1,10 @@
-//import { designDevelopment } from '../../../../utils/constants';
-//import { depthDictionary } from '../../../../utils/depthDictionary';
-import SheepGameScene from '../components/SheepGameScene';
-import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
-import { Coordinates } from '../phaser/gameTypes/Coordinates';
-import { PhaserPlayerRenderer } from '../phaser/renderer/PhaserPlayerRenderer';
-import { AnimationName } from './enums/AnimationNames';
-import { Character } from './gameInterfaces/Character';
-import { GameData } from './gameInterfaces/GameData';
+import SheepGameScene from '../../game2/screen/components/SheepGameScene';
+import { AnimationNameGame2 } from '../enums/AnimationName';
+import { GameData } from '../game2/gameInterfaces/GameData';
+import { Character } from '../gameInterfaces/Character';
+import { Coordinates } from '../gameTypes/Coordinates';
+import { GameToScreenMapper } from './GameToScreenMapper';
+import { PhaserPlayerRenderer } from './renderer/PhaserPlayerRenderer';
 
 export class Player {
     username: string;
@@ -58,7 +56,7 @@ export class Player {
     }
 
     startRunning() {
-        const animationName = this.character.animations.get(AnimationName.Running)?.name;
+        const animationName = this.character.animations.get(AnimationNameGame2.Running)?.name;
         if (animationName) this.renderer.startAnimation(animationName);
         this.playerRunning = true;
     }

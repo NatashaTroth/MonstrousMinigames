@@ -1,5 +1,5 @@
 import { MessageTypesGame2 } from '../../../utils/constants';
-import { GameData } from '../../game2/screen/phaser/gameInterfaces/GameData';
+import { GameData } from '../../phaser/game2/gameInterfaces/GameData';
 import { MessageDataGame2 } from '../MessageDataGame2';
 
 export interface InitialGameStateInfoMessage {

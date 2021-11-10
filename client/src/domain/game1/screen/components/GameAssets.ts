@@ -29,7 +29,7 @@ import forest2 from '../../../../images/ui/forest2.png';
 import forest2Smaller from '../../../../images/ui/forest2Smaller.png';
 import forestTile from '../../../../images/ui/forestTile.png';
 import warning from '../../../../images/ui/warning.png';
-import { AnimationName } from '../../../phaser/enums';
+import { AnimationNameGame1 } from '../../../phaser/enums/AnimationName';
 import { Character, CharacterAnimation, CharacterSpriteProperties } from '../../../phaser/gameInterfaces';
 
 export const audioFiles = [
@@ -48,12 +48,12 @@ export const characterSpriteSheetPrefix = 'character_';
 
 export const characters: Character[] = characterFiles.map((file, idx) => {
     const monsterName = `${characterSpriteSheetPrefix}${defaultAvailableCharacters[idx].toString()}`;
-    const animationsMap = new Map<AnimationName, CharacterAnimation>();
-    animationsMap.set(AnimationName.Running, {
+    const animationsMap = new Map<AnimationNameGame1, CharacterAnimation>();
+    animationsMap.set(AnimationNameGame1.Running, {
         name: `${monsterName}_running`,
         frames: { start: 8, end: 11 },
     });
-    animationsMap.set(AnimationName.Stunned, {
+    animationsMap.set(AnimationNameGame1.Stunned, {
         name: `${monsterName}_stunned`,
         frames: { start: 12, end: 15 },
     });
