@@ -114,6 +114,7 @@ storage hinten - nach spiel alles löschen
 //photoPhotographerMapper:
 export interface photoPhotographerMapper {
     photographerId: string;
+    photoId: number;
     url: string;
 }
 ```
