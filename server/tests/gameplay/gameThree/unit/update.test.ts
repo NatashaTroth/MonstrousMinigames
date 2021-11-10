@@ -26,8 +26,8 @@ describe('Update method', () => {
         expect(gameThree['countdownTimeLeft']).toBe(initialCountDownTime - timeElapsed);
     });
 
-    it('should call handleTakingPhoto if the gameThreeGameState is TakingPhoto and countdown is over', async () => {
-        const spy = jest.spyOn(GameThree.prototype as any, 'handleTakingPhoto').mockImplementation(() => {
+    it('should call handleFinishedTakingPhoto if the gameThreeGameState is TakingPhoto and countdown is over', async () => {
+        const spy = jest.spyOn(GameThree.prototype as any, 'handleFinishedTakingPhoto').mockImplementation(() => {
             Promise.resolve();
         });
         gameThree['gameThreeGameState'] = GameThreeGameState.TakingPhoto;
@@ -36,8 +36,8 @@ describe('Update method', () => {
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
-    it('should not call handleTakingPhoto if the gameThreeGameState is TakingPhoto and countdown is not over', async () => {
-        const spy = jest.spyOn(GameThree.prototype as any, 'handleTakingPhoto').mockImplementation(() => {
+    it('should not call handleFinishedTakingPhoto if the gameThreeGameState is TakingPhoto and countdown is not over', async () => {
+        const spy = jest.spyOn(GameThree.prototype as any, 'handleFinishedTakingPhoto').mockImplementation(() => {
             Promise.resolve();
         });
         gameThree['gameThreeGameState'] = GameThreeGameState.TakingPhoto;
@@ -46,8 +46,8 @@ describe('Update method', () => {
         expect(spy).not.toHaveBeenCalled();
     });
 
-    it('should call handleVoting if the gameThreeGameState is Voting and countdown is over', async () => {
-        const spy = jest.spyOn(GameThree.prototype as any, 'handleVoting').mockImplementation(() => {
+    it('should call handleFinishedVoting if the gameThreeGameState is Voting and countdown is over', async () => {
+        const spy = jest.spyOn(GameThree.prototype as any, 'handleFinishedVoting').mockImplementation(() => {
             Promise.resolve();
         });
         gameThree['gameThreeGameState'] = GameThreeGameState.Voting;
@@ -55,8 +55,8 @@ describe('Update method', () => {
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
-    it('should not call handleVoting if the gameThreeGameState is Voting and countdown is not over', async () => {
-        const spy = jest.spyOn(GameThree.prototype as any, 'handleVoting').mockImplementation(() => {
+    it('should not call handleFinishedVoting if the gameThreeGameState is Voting and countdown is not over', async () => {
+        const spy = jest.spyOn(GameThree.prototype as any, 'handleFinishedVoting').mockImplementation(() => {
             Promise.resolve();
         });
         gameThree['gameThreeGameState'] = GameThreeGameState.Voting;
