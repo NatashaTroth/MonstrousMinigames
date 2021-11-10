@@ -1,6 +1,7 @@
 //TODO Events/Messages 1
 
 import { GameStateInfo, PlayerNameId, votingResultsPhotographerMapper } from './';
+import { FinalResults } from './FinalResults';
 import { photoPhotographerMapper } from './photoPhotographerMapper';
 
 export const GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE = 'game3/initialGameState';
@@ -86,7 +87,7 @@ export interface VoteForFinalPhotos {
 export interface ViewingFinalPhotos {
     type: typeof GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS;
     roomId: string;
-    results: votingResultsPhotographerMapper[];
+    results: FinalResults[];
 }
 
 export type GameThreeEventMessage =

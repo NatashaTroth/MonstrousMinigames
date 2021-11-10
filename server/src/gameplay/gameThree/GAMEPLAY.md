@@ -190,18 +190,19 @@ countdownTime: number;
 }
 ```
 
-14.) After time runs out or all votes are sent (whichever is first), the server sends the final results to the client (SCREEN + CONTROLLER) 'game3/finalResults'. The gameState is set to FINISHED. (same message content as viewing results before, but without the countdown)
+14.) After time runs out or all votes are sent (whichever is first), the server sends the final results to the client (SCREEN + CONTROLLER) 'game3/finalResults'. The gameState is set to FINISHED.
 
 ```typescript
  {
     roomId: string;
-    results: votingResultsPhotographerMapper[];
+    results: finalResults[];
 }
 
 //votingResultsPhotographerMapper:
-export interface votingResultsPhotographerMapper {
+export interface finalResults {
     photographerId: string;
     points: number;
+    rank: number;
 }
 ```
 
@@ -220,3 +221,14 @@ export enum GameThreeGameState {
     WaitingForClientAction = 'WAITING_FOR_CLIENT_ACTION',
 }
 ```
+
+//**\_\_\_**
+Punkte system: final round 1 pkt pro foto den man abschickt - max 3 fotos
+
+final round - 1 pkt pro vote
+
+automatisch punkte wenn vorher nur 1 person in runde foto - skip vote message - kriegt alle punkte für die runde
+
+vote for photos - jedem url bild eine id geben immer 1, 2, 3, 4
+
+1.)

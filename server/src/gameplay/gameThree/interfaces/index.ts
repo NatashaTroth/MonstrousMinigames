@@ -1,4 +1,5 @@
 import { FinalPhotos } from './FinalPhotos';
+import { FinalResults } from './FinalResults';
 import * as GameEvents from './GameEvents';
 import { GameStateInfo } from './GameStateInfo';
 import { GameThreePlayerRank } from './GameThreePlayerRank';
@@ -26,4 +27,5 @@ export {
     photoPhotographerMapper,
     FinalPhotos,
     PlayerNameId,
+    FinalResults,
 };

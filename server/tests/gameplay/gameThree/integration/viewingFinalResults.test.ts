@@ -124,10 +124,34 @@ describe('Final results', () => {
     it('should emit the points sorted in descending order (0 and 1st place)', async () => {
         expect(eventData.results[0].points).toBeGreaterThanOrEqual(eventData.results[1].points);
     });
+
     it('should emit the points sorted in descending order (1st and 2nd place)', async () => {
         expect(eventData.results[1].points).toBeGreaterThanOrEqual(eventData.results[2].points);
     });
+
     it('should emit the points sorted in descending order (2nd and 3rd place)', async () => {
         expect(eventData.results[2].points).toBeGreaterThanOrEqual(eventData.results[3].points);
     });
+
+    it('should emit the points sorted in descending order (2nd and 3rd place)', async () => {
+        expect(eventData.results[2].points).toBeGreaterThanOrEqual(eventData.results[3].points);
+    });
+
+    it('should emit the rank 1', async () => {
+        expect(eventData.results[0].rank).toBe(1);
+    });
+
+    it('should emit the rank 2', async () => {
+        expect(eventData.results[1].rank).toBe(2);
+    });
+
+    it('should emit the rank 3', async () => {
+        expect(eventData.results[2].rank).toBe(3);
+    });
+
+    it('should emit the rank 4', async () => {
+        expect(eventData.results[3].rank).toBe(4);
+    });
+
+    it.todo('test points better - just done for quickness here. also test when the same amount of points same rank');
 });

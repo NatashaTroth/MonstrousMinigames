@@ -18,7 +18,7 @@ import GameThreeEventEmitter from './GameThreeEventEmitter';
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreePlayer from './GameThreePlayer';
 import {
-    IMessagePhoto, IMessagePhotoVote, photoPhotographerMapper, PlayerNameId,
+    FinalResults, IMessagePhoto, IMessagePhotoVote, photoPhotographerMapper, PlayerNameId,
     votingResultsPhotographerMapper
 } from './interfaces';
 import { GameStateInfo } from './interfaces/GameStateInfo';
@@ -428,17 +428,23 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private handleFinishedFinalVoting() {
-        const finalResults: votingResultsPhotographerMapper[] = Array.from(this.players.values()).map(player => {
-            return { photographerId: player.id, points: player.getTotalPoints() };
+        const finalResults: FinalResults[] = Array.from(this.players.values()).map(player => {
+            return { photographerId: player.id, points: player.getTotalPoints(), rank: 0 };
         });
 
-        finalResults.sort((a, b) => b.points - a.points);
+        finalResults
+            .sort((a, b) => b.points - a.points)
+            .map(result => {
+                const rank = this.rankSuccessfulUser(result.points);
+                this.players.get(result.photographerId)!.rank = rank;
+                result.rank = rank;
+                return result;
+            });
+
         this.gameThreeGameState = GameThreeGameState.ViewingFinalResults;
         this.gameState = GameState.Finished;
         GameThreeEventEmitter.emitViewingFinalResults(this.roomId, finalResults);
 
         //TODO Leaderboard
-        //TODO rank
-        //TODO sort results
     }
 }

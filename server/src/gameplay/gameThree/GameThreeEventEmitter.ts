@@ -9,7 +9,7 @@ import {
     GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED
 } from '../interfaces/GlobalEventMessages';
 import { GameThreeEventMessageEmitter } from './GameThreeEventMessageEmitter';
-import { InitialGameStateInfo, PlayerNameId, PlayerRank } from './interfaces';
+import { FinalResults, InitialGameStateInfo, PlayerNameId, PlayerRank } from './interfaces';
 import {
     GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
@@ -173,7 +173,7 @@ export default class GameThreeEventEmitter {
         });
     }
 
-    public static emitViewingFinalResults(roomId: string, results: votingResultsPhotographerMapper[]) {
+    public static emitViewingFinalResults(roomId: string, results: FinalResults[]) {
         this.GameThreeEventMessageEmitter.emit({
             type: GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS,
             roomId,
