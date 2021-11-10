@@ -7,17 +7,23 @@ interface HandleGameStarted {
     roomId: string;
     game: GameNames;
     countdownTime: number;
-    dependencies: { setGameStarted: (val: boolean) => void; history: History };
+    dependencies: {
+        setGameStarted: (val: boolean) => void;
+        history: History;
+        setCountdownTime: (time: number) => void;
+    };
 }
 export function handleGameStartedMessage(props: HandleGameStarted) {
     const { roomId, dependencies, countdownTime, game } = props;
-    const { setGameStarted, history } = dependencies;
+    const { setGameStarted, history, setCountdownTime } = dependencies;
 
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
     document.body.style.userSelect = 'none';
+    document.body.style.webkitUserSelect = 'none';
+
     setGameStarted(true);
-    sessionStorage.setItem('countdownTime', String(countdownTime));
+    setCountdownTime(countdownTime);
 
     switch (game) {
         case GameNames.game1:

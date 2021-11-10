@@ -46,6 +46,9 @@ export interface HandleSetSocketDependencies {
     setStunnablePlayers: (val: string[]) => void;
     setChosenGame: (val: GameNames) => void;
     setVoteForPhotoMessage: (val: { photoUrls: photoPhotographerMapper[]; countdownTime: number }) => void;
+    setRoundIdx: (roundIdx: number) => void;
+    setCountdownTime: (time: number) => void;
+    setTopicMessage: (val: { topic: string; countdownTime: number }) => void;
 }
 
 export function handleSetSocket(
@@ -69,6 +72,9 @@ export function handleSetSocket(
         playerRank,
         setChosenGame,
         setVoteForPhotoMessage,
+        setRoundIdx,
+        setCountdownTime,
+        setTopicMessage,
     } = dependencies;
 
     setControllerSocket(socket);
@@ -103,6 +109,7 @@ export function handleSetSocket(
             countdownTime: data.countdownTime,
             dependencies: {
                 setGameStarted,
+                setCountdownTime,
                 history,
             },
         })
@@ -146,7 +153,7 @@ export function handleSetSocket(
     });
 
     handleSetControllerSocketGame1(socket, roomId, playerFinished, dependencies);
-    handleSetControllerSocketGame3(socket, { setVoteForPhotoMessage });
+    handleSetControllerSocketGame3(socket, { setVoteForPhotoMessage, setRoundIdx, setTopicMessage });
 
     gameSetSocket.listen((data: GameSetMessage) => setChosenGame(data.game));
 

@@ -2,7 +2,7 @@ import {
     handleRenderPlayer,
     handleRenderWind,
     handleWindAnimation,
-} from '../../domain/phaser/renderer/PhaserPlayerRenderer';
+} from '../../domain/phaser/game1/renderer/PhaserPlayerRenderer';
 
 describe('handleRenderWind', () => {
     const chaser = {

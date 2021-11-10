@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import gameDemo from '../../images/ui/gameDemo.png';
 import { OrangeBase } from '../common/CommonStyles.sc';
 
 export const CloseButtonContainer = styled.div`
@@ -80,9 +79,13 @@ export const OliverImage = styled.img`
     min-width: 200px;
 `;
 
-export const PreviewImageContainer = styled.div`
+interface PreviewImageContainer {
+    src: string;
+}
+
+export const PreviewImageContainer = styled.div<PreviewImageContainer>`
     margin-top: 30px;
-    background-image: url(${gameDemo});
+    background-image: url(${({ src }) => src});
     width: 100%;
     height: 30%;
     background-size: cover;

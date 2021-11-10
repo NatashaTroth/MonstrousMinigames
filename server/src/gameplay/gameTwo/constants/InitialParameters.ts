@@ -32,6 +32,10 @@ const SHEEP_COUNT = 100;
 const KILL_RADIUS = 5;
 const KILLS_PER_ROUND = 5;
 
+const ROUNDS = 3;
+const ROUND_TIME = 60000;
+
+
 
 export default {
     COUNTDOWN_TIME,
@@ -42,5 +46,7 @@ export default {
     MARGIN,
     SHEEP_COUNT,
     KILL_RADIUS,
-    KILLS_PER_ROUND
+    KILLS_PER_ROUND,
+    ROUNDS,
+    ROUND_TIME
 }

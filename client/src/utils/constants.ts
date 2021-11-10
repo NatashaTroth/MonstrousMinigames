@@ -79,12 +79,25 @@ export enum MessageTypesGame1 {
     stunnablePlayers = 'game1/stunnablePlayers',
 }
 
+export enum MessageTypesGame2 {
+    runForward = 'game2/runForward',
+    phaserLoaded = 'game2/phaserGameLoaded',
+    phaserLoadingTimedOut = 'game2/phaserLoadingTimedOut',
+    allScreensSheepGameLoaded = 'game2/allScreensPhaserGameLoaded',
+    startSheepGame = 'game2/startPhaserGame',
+    initialGameState = 'game2/initialGameState',
+    gameState = 'game2/gameState',
+    movePlayer = 'game2/move',
+    killSheep = 'game2/kill',
+}
+
 export const enum MessageTypesGame3 {
     newPhotoTopic = 'game3/newPhotoTopic',
     initialGameState = 'game3/initialGameState',
     photo = 'game3/photo',
     voteForPhotos = 'game3/voteForPhotos',
     photoVote = 'game3/photoVote',
+    newRound = 'game3/newRound',
 }
 
 export const localDevelopment = false; //the one in constants.ts on the server
