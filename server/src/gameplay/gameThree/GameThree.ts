@@ -213,9 +213,14 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         if (!validator.isURL(message.url))
             throw new InvalidUrlError('The received value for the URL is not valid.', message.userId);
 
-        if (this.gameThreeGameState === GameThreeGameState.TakingPhoto) this.handleReceivedSinglePhoto(message);
-        else if (this.gameThreeGameState === GameThreeGameState.TakingFinalPhotos)
-            this.handleReceivedFinalPhoto(message);
+        switch (this.gameThreeGameState) {
+            case GameThreeGameState.TakingPhoto:
+                this.handleReceivedSinglePhoto(message);
+                break;
+            case GameThreeGameState.TakingFinalPhotos:
+                this.handleReceivedFinalPhoto(message);
+                break;
+        }
     }
 
     private handleReceivedSinglePhoto(message: IMessagePhoto) {
@@ -267,7 +272,17 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     // *** Voting ***
     private handleReceivedPhotoVote(message: IMessagePhotoVote) {
-        if (this.gameThreeGameState !== GameThreeGameState.Voting) return;
+        switch (this.gameThreeGameState) {
+            case GameThreeGameState.Voting:
+                this.handleSinglePhotoVoteReceived(message);
+                break;
+            case GameThreeGameState.FinalVoting:
+                this.handleFinalPhotoVoteReceived(message);
+                break;
+        }
+    }
+
+    private handleSinglePhotoVoteReceived(message: IMessagePhotoVote) {
         const player = this.players.get(message.photographerId!);
         const voter = this.players.get(message.voterId);
         if (player && voter && !voter.roundInfo[this.roundIdx].voted) {
@@ -379,14 +394,51 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         GameThreeEventEmitter.emitVoteForFinalPhotos(this.roomId, this.countdownTimeVote, playerNameIds);
     }
 
+    private handleFinalPhotoVoteReceived(message: IMessagePhotoVote) {
+        const player = this.players.get(message.photographerId!);
+        const voter = this.players.get(message.voterId);
+        if (player && voter && !voter.finalRoundInfo.voted) {
+            player?.addPointsFinalRound(1);
+
+            voter.finalRoundInfo.voted = true;
+        }
+
+        if (this.allFinalVotesReceived()) {
+            this.handleAllFinalVotesReceived();
+            //Do something
+        }
+        // const player = this.players.get(message.userId!);
+        // if (player && !player.finalRoundInfo.received) player.receivedFinalPhoto(message.url);
+
+        // if (this.allFinalPhotosReceived()) {
+        //     this.handleAllFinalPhotosReceived();
+        //     // this.handleFinishedTakingFinalPhotos();
+        // }
+    }
+
+    private allFinalVotesReceived(): boolean {
+        return Array.from(this.players.values()).every(player => player.finalRoundInfo.voted);
+    }
+
+    private handleAllFinalVotesReceived() {
+        //TODO
+        // send all photos, start voting
+        this.stopCountdown();
+        this.handleFinishedFinalVoting();
+    }
+
     private handleFinishedFinalVoting() {
         const finalResults: votingResultsPhotographerMapper[] = Array.from(this.players.values()).map(player => {
             return { photographerId: player.id, points: player.getTotalPoints() };
         });
+
+        // finalResults.sort((a, b) => b.points - a.points);
         this.gameThreeGameState = GameThreeGameState.ViewingFinalResults;
         this.gameState = GameState.Finished;
         GameThreeEventEmitter.emitFinalResults(this.roomId, finalResults);
 
         //TODO Leaderboard
+        //TODO rank
+        //TODO sort results
     }
 }

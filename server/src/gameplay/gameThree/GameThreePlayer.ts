@@ -55,7 +55,11 @@ class GameThreePlayer extends Player {
     }
 
     addPoints(roundIdx: number, points: number) {
-        this.roundInfo[roundIdx].points = points;
+        this.roundInfo[roundIdx].points += points;
+    }
+
+    addPointsFinalRound(points: number) {
+        this.finalRoundInfo.points += points;
     }
 
     getTotalPoints() {
