@@ -241,7 +241,7 @@ class SheepGameScene extends Phaser.Scene {
             this.createPlayer(i, gameStateData);
         }
 
-        for (let i = 0; i < gameStateData.sheep.length - 98; i++) {
+        for (let i = 0; i < gameStateData.sheep.length; i++) {
             this.createSheep(i, gameStateData);
         }
     }

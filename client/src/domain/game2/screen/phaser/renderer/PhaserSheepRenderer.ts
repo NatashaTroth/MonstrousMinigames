@@ -28,15 +28,12 @@ export class PhaserSheepRenderer {
     }
 
     renderSheep(sheep: Sheep) {
-        if (!this.sheep) {
-            if (sheep.state == SheepState.ALIVE) {
-                this.renderSheepInitially(sheep.coordinates);
-            } else if (sheep.state == SheepState.DECOY) {
-                this.placeDecoy();
-            }
-        } else if (this.sheep) {
-            this.sheep.x = sheep.coordinates.x;
-            this.sheep.y = sheep.coordinates.y;
+        // eslint-disable-next-line no-console
+        console.log('rendersheep');
+        if (sheep.state == SheepState.ALIVE) {
+            this.renderSheepInitially(sheep.coordinates);
+        } else if (sheep.state == SheepState.DECOY) {
+            this.placeDecoy();
         }
     }
 
@@ -70,7 +67,7 @@ export class PhaserSheepRenderer {
     }
 
     private renderSheepInitially(coordinates: Coordinates) {
-        this.sheep = this.scene.physics.add.sprite(20, 20, 'sheepDecoy');
+        this.sheep = this.scene.physics.add.sprite(coordinates.x, coordinates.y, 'sheepDecoy');
         this.sheep.setScale(0.1);
         //this.sheep = this.scene.physics.add.sprite(coordinates.x, coordinates.y, 'sheepSpritesheet', 11);
         this.sheep.setDepth(depthDictionary.sheep);
