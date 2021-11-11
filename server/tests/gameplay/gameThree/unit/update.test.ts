@@ -13,7 +13,7 @@ describe('Update method', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.gameState = GameState.Started;
-        gameThree['countdown'].countdownRunning = true;
+        gameThree['countdown']!.countdownRunning = true;
     });
 
     afterEach(() => {
@@ -21,17 +21,17 @@ describe('Update method', () => {
     });
 
     xit('should update the countdown time if a countdown is running', async () => {
-        gameThree['countdown'].countdownTimeLeft = initialCountDownTime;
+        gameThree['countdown']!.countdownTimeLeft = initialCountDownTime;
         gameThree['update'](100, timeElapsed);
-        expect(gameThree['countdown'].countdownTimeLeft).toBe(initialCountDownTime - timeElapsed);
+        expect(gameThree['countdown']!.countdownTimeLeft).toBe(initialCountDownTime - timeElapsed);
     });
 
     xit('should call handleFinishedTakingPhoto if the gameThreeGameState is TakingPhoto and countdown is over', async () => {
         const spy = jest.spyOn(GameThree.prototype as any, 'handleFinishedTakingPhoto').mockImplementation(() => {
             Promise.resolve();
         });
-        gameThree['stageController'].stage = GameThreeGameState.TakingPhoto;
-        // gameThree['countdown'].countdownTimeLeft = 0
+        gameThree['stageController']!.stage = GameThreeGameState.TakingPhoto;
+        // gameThree['countdown']!.countdownTimeLeft = 0
         gameThree['update'](100, timeElapsed);
         expect(spy).toHaveBeenCalledTimes(1);
     });
@@ -40,8 +40,8 @@ describe('Update method', () => {
         const spy = jest.spyOn(GameThree.prototype as any, 'handleFinishedTakingPhoto').mockImplementation(() => {
             Promise.resolve();
         });
-        gameThree['stageController'].stage = GameThreeGameState.TakingPhoto;
-        gameThree['countdown'].countdownTimeLeft = initialCountDownTime;
+        gameThree['stageController']!.stage = GameThreeGameState.TakingPhoto;
+        gameThree['countdown']!.countdownTimeLeft = initialCountDownTime;
         gameThree['update'](100, timeElapsed);
         expect(spy).not.toHaveBeenCalled();
     });
@@ -50,7 +50,7 @@ describe('Update method', () => {
         const spy = jest.spyOn(GameThree.prototype as any, 'handleFinishedVoting').mockImplementation(() => {
             Promise.resolve();
         });
-        gameThree['stageController'].stage = GameThreeGameState.Voting;
+        gameThree['stageController']!.stage = GameThreeGameState.Voting;
         gameThree['update'](100, timeElapsed);
         expect(spy).toHaveBeenCalledTimes(1);
     });
@@ -59,8 +59,8 @@ describe('Update method', () => {
         const spy = jest.spyOn(GameThree.prototype as any, 'handleFinishedVoting').mockImplementation(() => {
             Promise.resolve();
         });
-        gameThree['stageController'].stage = GameThreeGameState.Voting;
-        gameThree['countdown'].countdownTimeLeft = initialCountDownTime;
+        gameThree['stageController']!.stage = GameThreeGameState.Voting;
+        gameThree['countdown']!.countdownTimeLeft = initialCountDownTime;
         gameThree['update'](100, timeElapsed);
         expect(spy).not.toHaveBeenCalled();
     });
@@ -69,7 +69,7 @@ describe('Update method', () => {
         const spy = jest.spyOn(GameThree.prototype as any, 'handleNewRound').mockImplementation(() => {
             Promise.resolve();
         });
-        gameThree['stageController'].stage = GameThreeGameState.ViewingResults;
+        gameThree['stageController']!.stage = GameThreeGameState.ViewingResults;
         gameThree['update'](100, timeElapsed);
         expect(spy).toHaveBeenCalledTimes(1);
     });
@@ -78,8 +78,8 @@ describe('Update method', () => {
         const spy = jest.spyOn(GameThree.prototype as any, 'handleNewRound').mockImplementation(() => {
             Promise.resolve();
         });
-        gameThree['stageController'].stage = GameThreeGameState.ViewingResults;
-        gameThree['countdown'].countdownTimeLeft = initialCountDownTime;
+        gameThree['stageController']!.stage = GameThreeGameState.ViewingResults;
+        gameThree['countdown']!.countdownTimeLeft = initialCountDownTime;
         gameThree['update'](100, timeElapsed);
         expect(spy).not.toHaveBeenCalled();
     });

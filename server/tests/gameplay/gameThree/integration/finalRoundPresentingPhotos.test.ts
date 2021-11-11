@@ -33,8 +33,8 @@ describe('Initiate stage', () => {
         jest.useFakeTimers();
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
-        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        gameThree['stageController'].handleNewRound();
+        gameThree['stageController']!['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController']!.handleNewRound();
         // advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS);
         //all users send photos
     });
@@ -82,8 +82,8 @@ describe('Presenting Final Photos', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
-        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        gameThree['stageController'].handleNewRound();
+        gameThree['stageController']!['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController']!.handleNewRound();
         users.forEach(user => {
             for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
                 gameThree['handleInput']({ ...photoMessage, userId: user.id });
@@ -104,7 +104,7 @@ describe('Presenting Final Photos', () => {
 
     it('should change keep the state PresentingFinalPhotos when countdown runs out and not all players have presented', async () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.PresentingFinalPhotos);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.PresentingFinalPhotos);
     });
 
     it('should change the state to FinalVoting when countdown runs out and all players have presented', async () => {
@@ -113,7 +113,7 @@ describe('Presenting Final Photos', () => {
         }
 
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.FinalVoting);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.FinalVoting);
     });
 
     it('should emit the PresentingFinalPhotos event when countdown runs out and not all players have presented', async () => {
@@ -129,9 +129,9 @@ describe('Presenting Final Photos', () => {
     });
 
     it('should reduce the number of players to present when a new presenting round starts', async () => {
-        const initialNumberPresenters = gameThree['playerPresentOrder'].length;
+        const initialNumberPresenters = gameThree['presentationController']!['playerPresentOrder'].length;
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);
-        expect(gameThree['playerPresentOrder'].length).toBe(initialNumberPresenters - 1);
+        expect(gameThree['presentationController']!['playerPresentOrder'].length).toBe(initialNumberPresenters - 1);
     });
 
     it('should emit the PresentingFinalPhotos event with the countdown time for presenting', async () => {

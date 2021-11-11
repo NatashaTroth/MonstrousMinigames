@@ -10,7 +10,7 @@ import GameThree from '../../../../src/gameplay/gameThree/GameThree';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED, GlobalEventMessage
 } from '../../../../src/gameplay/interfaces/GlobalEventMessages';
-import { leaderboard, roomId } from '../../mockData';
+import { leaderboard, roomId, users } from '../../mockData';
 
 let gameThree: GameThree;
 let gameEventEmitter: GameEventEmitter;
@@ -22,6 +22,7 @@ describe('Start', () => {
     beforeEach(() => {
         jest.useFakeTimers();
         gameThree = new GameThree(roomId, leaderboard);
+        gameThree.createNewGame(users);
         gameThree.gameState = GameState.Started;
     });
     afterEach(() => {
@@ -52,6 +53,6 @@ describe('Start', () => {
 
     it('should start TakingPhoto stage', async () => {
         gameThree['startGame']();
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.TakingPhoto);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.TakingPhoto);
     });
 });

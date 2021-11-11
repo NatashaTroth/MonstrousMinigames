@@ -33,8 +33,8 @@ describe('Initiate stage', () => {
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        gameThree['stageController'].handleNewRound();
+        gameThree['stageController']!['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController']!.handleNewRound();
         users.forEach(user => {
             for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
                 gameThree['handleInput']({ ...photoMessage, userId: user.id });
@@ -84,8 +84,8 @@ describe('Final results', () => {
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        gameThree['stageController'].handleNewRound();
+        gameThree['stageController']!['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController']!.handleNewRound();
         users.forEach(user => {
             for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
                 gameThree['handleInput']({ ...photoMessage, userId: user.id });

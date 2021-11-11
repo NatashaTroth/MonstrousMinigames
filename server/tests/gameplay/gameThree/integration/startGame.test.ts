@@ -44,6 +44,6 @@ describe('Taking Photo', () => {
 
     it('should have a gameThreeGameState of TakingPhoto when game is started', async () => {
         startGameAdvanceCountdown(gameThree);
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.TakingPhoto);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.TakingPhoto);
     });
 });

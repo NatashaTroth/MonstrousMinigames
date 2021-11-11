@@ -225,3 +225,5 @@ automatisch punkte wenn vorher nur 1 person in runde foto - skip vote message - 
 user deactivated
 
 add all the global messages stop game (not pause), ...
+
+also set received finalinfo true when only received 1

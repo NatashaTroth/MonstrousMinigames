@@ -39,8 +39,8 @@ describe('Initiate stage', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
-        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        gameThree['stageController'].handleNewRound();
+        gameThree['stageController']!['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController']!.handleNewRound();
         users.forEach(user => {
             for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
                 gameThree['handleInput']({ ...photoMessage, userId: user.id });
@@ -82,8 +82,8 @@ describe('Voting stage', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
-        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        gameThree['stageController'].handleNewRound();
+        gameThree['stageController']!['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController']!.handleNewRound();
         users.forEach(user => {
             for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
                 gameThree['handleInput']({ ...photoMessage, userId: user.id });
@@ -109,7 +109,7 @@ describe('Voting stage', () => {
 
     it('should have a gameThreeGameState of FinalVoting after only one vote is sent', async () => {
         gameThree['handleInput'](votingMessage);
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.FinalVoting);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.FinalVoting);
     });
 
     it('should not have received all votes when only one is sent', async () => {
@@ -124,7 +124,7 @@ describe('Voting stage', () => {
 
     it('should change state to ViewingFinalResults when all votes have been received', async () => {
         receiveAllVotes();
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.ViewingFinalResults);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.ViewingFinalResults);
     });
 
     it('should change game state to Finished when all votes have been received', async () => {
@@ -140,7 +140,7 @@ describe('Voting stage', () => {
 
     it('should change state to ViewingFinalResults when countdown runs out', async () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.ViewingFinalResults);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.ViewingFinalResults);
     });
 
     it('should change game state to Finished when countdown runs out', async () => {

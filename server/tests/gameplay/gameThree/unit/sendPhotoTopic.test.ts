@@ -9,7 +9,7 @@ import GameThree from '../../../../src/gameplay/gameThree/GameThree';
 import {
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GameThreeEventMessage
 } from '../../../../src/gameplay/gameThree/interfaces/GameThreeEventMessages';
-import { leaderboard, roomId } from '../../mockData';
+import { leaderboard, roomId, users } from '../../mockData';
 
 let gameThree: GameThree;
 let gameEventEmitter: GameEventEmitter;
@@ -20,6 +20,7 @@ describe('Send Photo Topic', () => {
     });
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
+        gameThree.createNewGame(users);
     });
     afterEach(() => {
         jest.clearAllMocks();
@@ -27,7 +28,7 @@ describe('Send Photo Topic', () => {
 
     it('should change the gameThreeGameState to TakingPhoto', async () => {
         gameThree['sendPhotoTopic']();
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.TakingPhoto);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.TakingPhoto);
     });
 
     it('should call initiateCountdown with the take photo time', async () => {

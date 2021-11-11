@@ -76,13 +76,13 @@ describe('Voting stage', () => {
     it('should allow client to send a vote within the countdown time', async () => {
         gameThree['handleInput'](message);
         expect(
-            gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']['_roundIdx']].voted
+            gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].voted
         ).toBeTruthy();
     });
 
     it('should have a gameThreeGameState of Voting after only one vote is sent', async () => {
         gameThree['handleInput'](message);
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.Voting);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.Voting);
     });
 
     it('should not have received all votes when only one is sent', async () => {
@@ -97,7 +97,7 @@ describe('Voting stage', () => {
 
     it('should change state to ViewingResults when all votes have been received', async () => {
         receiveAllVotes();
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.ViewingResults);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.ViewingResults);
     });
 
     it('should stop the countdown when all votes have been received', async () => {
@@ -108,14 +108,14 @@ describe('Voting stage', () => {
 
     it('should change state to ViewingResults when countdown runs out', async () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.ViewingResults);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.ViewingResults);
     });
 
     it('should not accept new votes when time has run out', async () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
         gameThree['handleInput'](message);
         expect(
-            gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']['_roundIdx']].voted
+            gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].voted
         ).toBeFalsy();
     });
 

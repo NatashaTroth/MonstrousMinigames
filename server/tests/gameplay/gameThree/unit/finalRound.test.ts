@@ -19,6 +19,7 @@ let gameEventEmitter: GameEventEmitter;
 describe('Send take final photos countdown', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
+        gameThree.createNewGame(users);
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
 
@@ -58,7 +59,7 @@ describe('Send take final photos countdown', () => {
 
     it('should set gameThreeGameState to TakingFinalPhotos', async () => {
         gameThree['sendTakeFinalPhotosCountdown']();
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.TakingFinalPhotos);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.TakingFinalPhotos);
     });
 });
 
@@ -97,8 +98,8 @@ describe('Send final photos to screen', () => {
 
     //     const photoUrls: string[] = [];
     //     Array.from(gameThree.players.values()).forEach((player, idx) => {
-    //         player.roundInfo[gameThree['stageController']['_roundIdx']].received = true;
-    //         player.roundInfo[gameThree['stageController']['_roundIdx']].url = idx.toString();
+    //         player.roundInfo[gameThree['stageController']!['_roundIdx']].received = true;
+    //         player.roundInfo[gameThree['stageController']!['_roundIdx']].url = idx.toString();
     //         photoUrls.push(idx.toString());
     //     });
 
@@ -116,8 +117,8 @@ describe('Send final photos to screen', () => {
 
     //     const photographerIds: string[] = [];
     //     Array.from(gameThree.players.values()).forEach((player, idx) => {
-    //         player.roundInfo[gameThree['stageController']['_roundIdx']].received = true;
-    //         player.roundInfo[gameThree['stageController']['_roundIdx']].url = idx.toString();
+    //         player.roundInfo[gameThree['stageController']!['_roundIdx']].received = true;
+    //         player.roundInfo[gameThree['stageController']!['_roundIdx']].url = idx.toString();
     //         photographerIds[idx] = player.id;
     //     });
 
@@ -139,8 +140,8 @@ describe('Send final photos to screen', () => {
     //     const photographerIds: string[] = [];
     //     const otherPlayers = Array.from(gameThree.players.values()).filter(player => player.id !== users[0].id);
     //     otherPlayers.forEach((player, idx) => {
-    //         player.roundInfo[gameThree['stageController']['_roundIdx']].received = true;
-    //         player.roundInfo[gameThree['stageController']['_roundIdx']].url = photoUrls;
+    //         player.roundInfo[gameThree['stageController']!['_roundIdx']].received = true;
+    //         player.roundInfo[gameThree['stageController']!['_roundIdx']].url = photoUrls;
     //         photographerIds[idx] = player.id;
     //     });
 
@@ -161,6 +162,6 @@ describe('Send final photos to screen', () => {
 
     // it('should set gameThreeGameState to Voting', async () => {
     //     gameThree['sendPhotosToScreen']();
-    //     expect(gameThree['stageController'].stage).toBe(GameThreeGameState.Voting);
+    //     expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.Voting);
     // });
 });

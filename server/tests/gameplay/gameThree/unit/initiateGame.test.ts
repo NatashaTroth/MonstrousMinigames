@@ -5,7 +5,7 @@ import { GameThree } from '../../../../src/gameplay';
 // import {
 //     RandomWordGenerator
 // } from '../../../../src/gameplay/gameThree/classes/RandomWordGenerator';
-import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
+// import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
 import { GameThreeGameState } from '../../../../src/gameplay/gameThree/enums/GameState';
 import { leaderboard, roomId, users } from '../../mockData';
 
@@ -21,16 +21,16 @@ describe('Change and verify game state', () => {
         expect(gameThree['_gameStartedAt']).toBe(0);
     });
 
-    it('initiates numberRounds with correct value', async () => {
-        expect(gameThree['numberRounds']).toBe(InitialParameters.NUMBER_ROUNDS);
-    });
+    // it('initiates numberRounds with correct value', async () => {
+    //     expect(gameThree['numberRounds']).toBe(InitialParameters.NUMBER_ROUNDS);
+    // });
 
     // it('initiates randomWordGenerator with new RandomWordGenerator instance', async () => {
     //     expect(gameThree['randomWordGenerator']).toBeInstanceOf(RandomWordGenerator);
     // });
 
     it('initiates gameThreeGameState with BeforeStart value', async () => {
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.BeforeStart);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.BeforeStart);
     });
 
     // it('initiates countdownTimeLeft with 0', async () => {
@@ -42,7 +42,7 @@ describe('Change and verify game state', () => {
     // });
 
     it('initiates roundIdx with -1', async () => {
-        expect(gameThree['stageController'].roundIdx).toBe(-1);
+        expect(gameThree['stageController']!.roundIdx).toBe(-1);
     });
 
     it('initiates gameName with Game3', async () => {

@@ -20,7 +20,7 @@ export class StageController {
     handleNewRound() {
         this._roundIdx++;
         GameThreeEventEmitter.emitNewRound(this.gameThree.roomId, this.roundIdx);
-        if (!this.isFinalRound() && this.gameThree.photoTopics.isAnotherTopicAvailable()) {
+        if (!this.isFinalRound() && this.gameThree.photoTopics!.isAnotherTopicAvailable()) {
             this.gameThree.sendPhotoTopic();
         } else {
             this.gameThree.sendTakeFinalPhotosCountdown();

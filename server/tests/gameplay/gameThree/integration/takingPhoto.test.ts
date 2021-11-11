@@ -67,16 +67,16 @@ describe('Taking Photo', () => {
     it('should allow client to send a photo within the countdown time', async () => {
         gameThree['handleInput'](message);
         expect(
-            gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']['_roundIdx']].received
+            gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].received
         ).toBeTruthy();
-        expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']['_roundIdx']].url).toBe(
+        expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].url).toBe(
             mockPhotoUrl
         );
     });
 
     it('should have a gameThreeGameState of TakingPhoto after only one photo is sent', async () => {
         gameThree['handleInput'](message);
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.TakingPhoto);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.TakingPhoto);
     });
 
     it('should not have received all photos when only one is sent', async () => {
@@ -96,7 +96,7 @@ describe('Taking Photo', () => {
         users.forEach(user => {
             gameThree['handleInput']({ ...message, userId: user.id });
         });
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.Voting);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.Voting);
     });
 
     it('should stop the countdown when all photos have been received', async () => {
@@ -109,15 +109,15 @@ describe('Taking Photo', () => {
 
     it('should change state to Voting when countdown runs out', async () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.Voting);
+        expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.Voting);
     });
 
     it('should not accept new photos when time has run out', async () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         gameThree['handleInput'](message);
         expect(
-            gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']['_roundIdx']].received
+            gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].received
         ).toBeFalsy();
-        expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']['_roundIdx']].url).toBe('');
+        expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].url).toBe('');
     });
 });
