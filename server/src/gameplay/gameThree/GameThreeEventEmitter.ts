@@ -9,7 +9,9 @@ import {
     GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED
 } from '../interfaces/GlobalEventMessages';
 import { GameThreeEventMessageEmitter } from './GameThreeEventMessageEmitter';
-import { FinalResults, PlayerNameId, PlayerRank } from './interfaces';
+import {
+    FinalResults, photoPhotographerMapper, PlayerNameId, PlayerRank, votingResultsPhotographerMapper
+} from './interfaces';
 import {
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
     GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS, GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
@@ -18,8 +20,6 @@ import {
     GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS, GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS,
     GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS
 } from './interfaces/GameThreeEventMessages';
-import { photoPhotographerMapper } from './interfaces/photoPhotographerMapper';
-import { votingResultsPhotographerMapper } from './interfaces/votingResultsPhotographerMapper';
 
 // params: (data: GameEvents.ObstacleReachedInfo
 

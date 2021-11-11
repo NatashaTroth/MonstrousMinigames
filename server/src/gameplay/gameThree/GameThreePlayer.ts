@@ -1,7 +1,6 @@
 import Player from '../Player';
 import InitialParameters from './constants/InitialParameters';
-import { Photo } from './interfaces';
-import { FinalPhotos } from './interfaces/FinalPhotos';
+import { FinalPhotos, Photo } from './interfaces';
 
 class GameThreePlayer extends Player {
     roundInfo: Photo[];
