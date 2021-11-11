@@ -1,17 +1,17 @@
-import { FinalPhotos } from './FinalPhotos';
-import * as GameEvents from './GameEvents';
-import { GameStateInfo } from './GameStateInfo';
-import { GameThreePlayerRank } from './GameThreePlayerRank';
-import { InitialGameStateInfo } from './InitialGameStateInfo';
-import { IMessagePhoto } from './messagePhoto';
-import { IMessagePhotoVote } from './messagePhotoVote';
-import { NamespaceAdapter } from './NamespaceAdapter';
-import { Photo } from './Photo';
-import { photoPhotographerMapper } from './photoPhotographerMapper';
-import { PlayerNameId } from './PlayerNameId';
-import { PlayerState } from './PlayerState';
-import { PlayerStateForClient } from './PlayerStateForClient';
-import { votingResultsPhotographerMapper } from './votingResultsPhotographerMapper';
+import type { FinalPhotos } from './FinalPhotos';
+import type * as GameEvents from './GameEvents';
+import type { GameStateInfo } from './GameStateInfo';
+import type { GameThreePlayerRank } from './GameThreePlayerRank';
+import type { InitialGameStateInfo } from './InitialGameStateInfo';
+import type { IMessagePhoto } from './messagePhoto';
+import type { IMessagePhotoVote } from './messagePhotoVote';
+import type { NamespaceAdapter } from './NamespaceAdapter';
+import type { Photo } from './Photo';
+import type { photoPhotographerMapper } from './photoPhotographerMapper';
+import type { PlayerNameId } from './PlayerNameId';
+import type { PlayerState } from './PlayerState';
+import type { PlayerStateForClient } from './PlayerStateForClient';
+import type { votingResultsPhotographerMapper } from './votingResultsPhotographerMapper';
 
 export {
     PlayerState,
