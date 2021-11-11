@@ -156,6 +156,7 @@ describe('Handle function send to controller', () => {
             roomId,
             countdownTime,
             photographerId: users[0].id,
+            name: '',
             photoUrls: [mockPhotoUrl],
         };
 
@@ -277,6 +278,7 @@ describe('Handle function send to screen', () => {
             roomId,
             countdownTime,
             photographerId: users[0].id,
+            name: '',
             photoUrls: [mockPhotoUrl],
         };
 
