@@ -9,9 +9,8 @@ import {
     GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED
 } from '../interfaces/GlobalEventMessages';
 import { GameThreeEventMessageEmitter } from './GameThreeEventMessageEmitter';
-import { FinalResults, InitialGameStateInfo, PlayerNameId, PlayerRank } from './interfaces';
+import { FinalResults, PlayerNameId, PlayerRank } from './interfaces';
 import {
-    GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
     GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS, GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
     GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
@@ -28,13 +27,13 @@ export default class GameThreeEventEmitter {
     private static readonly GameThreeEventMessageEmitter = DI.resolve(GameThreeEventMessageEmitter);
 
     //TODO is this used?
-    public static emitInitialGameStateInfoUpdate(roomId: string, gameState: InitialGameStateInfo) {
-        this.GameThreeEventMessageEmitter.emit({
-            type: GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
-            roomId,
-            data: gameState,
-        });
-    }
+    // public static emitInitialGameStateInfoUpdate(roomId: string, gameState: InitialGameStateInfo) {
+    //     this.GameThreeEventMessageEmitter.emit({
+    //         type: GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
+    //         roomId,
+    //         data: gameState,
+    //     });
+    // }
 
     public static emitGameHasStartedEvent(roomId: string, countdownTime: number, game: string) {
         this.GameThreeEventMessageEmitter.emit({

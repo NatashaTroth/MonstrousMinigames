@@ -1,5 +1,4 @@
 //TODO Events/Messages 3
-import { Namespace } from 'socket.io';
 import { singleton } from 'tsyringe';
 
 import GameEventEmitter from '../../classes/GameEventEmitter';
@@ -12,7 +11,6 @@ import { GlobalEventMessage } from '../interfaces/GlobalEventMessages';
 import { IGameStateBase } from '../interfaces/IGameStateBase';
 import Player from '../Player';
 import {
-    GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
     GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS, GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
     GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
@@ -20,6 +18,7 @@ import {
     GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS, GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS,
     GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS, GAME_THREE_EVENT_MESSAGES, GameThreeEventMessage
 } from './interfaces/GameThreeEventMessages';
+import { NamespaceAdapter } from './NamespaceMock';
 
 @singleton()
 export class GameThreeEventMessageEmitter implements EventMessageEmitter {
@@ -33,8 +32,8 @@ export class GameThreeEventMessageEmitter implements EventMessageEmitter {
     }
 
     handle(
-        controllerNameSpace: Namespace,
-        screenNameSpace: Namespace,
+        controllerNameSpace: NamespaceAdapter,
+        screenNameSpace: NamespaceAdapter,
         room: Room,
         message: GameThreeEventMessage
     ): void {
@@ -50,9 +49,9 @@ export class GameThreeEventMessageEmitter implements EventMessageEmitter {
             //     controllerNameSpace.to(user.socketId).emit('message', message);
             //     break;
             // send to room's screens
-            case GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE:
-                this.sendToAll(message, screenNameSpace, room);
-                break;
+            // case GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE:
+            //     this.sendToAll(message, screenNameSpace, room);
+            //     break;
             // send to room's screens and controllers
             case GAME_THREE_EVENT_MESSAGE__NEW_ROUND:
             case GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC:
@@ -68,7 +67,7 @@ export class GameThreeEventMessageEmitter implements EventMessageEmitter {
                 break;
         }
     }
-    private sendToAll(message: GameThreeEventMessage, nameSpace: Namespace, room: Room) {
+    private sendToAll(message: GameThreeEventMessage, nameSpace: NamespaceAdapter, room: Room) {
         nameSpace.to(room.id).emit('message', message);
     }
 }

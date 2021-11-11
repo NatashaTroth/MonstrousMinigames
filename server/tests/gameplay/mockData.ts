@@ -19,3 +19,5 @@ export const mockMessage: IMessage = {
 };
 
 export const dateNow = 1618665766156;
+
+export const mockPhotoUrl = 'https://mockPhoto.com';
