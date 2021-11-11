@@ -1,7 +1,9 @@
-import { Chip, Typography } from '@material-ui/core';
-import styled, { keyframes } from 'styled-components';
+import { Chip, Typography } from "@material-ui/core";
+import styled, { keyframes } from "styled-components";
 
-import { StyledFullScreenContainer } from '../../../../components/controller/FullScreenContainer.sc';
+import {
+    StyledFullScreenContainer
+} from "../../../../components/controller/FullScreenContainer.sc";
 
 export const StyledImg = styled.img`
     display: flex;
@@ -42,6 +44,7 @@ export const ImagesContainer = styled.div`
     display: flex;
     width: 100%;
     justify-content: space-around;
+    height: 70%;
 `;
 
 export const ImageContainer = styled.div`
@@ -49,10 +52,12 @@ export const ImageContainer = styled.div`
     flex-direction: column;
     width: 20%;
     align-items: center;
+    height: 90%;
 `;
 
 export const Frame = styled.div`
     width: 100%;
+    height: 70%;
     display: flex;
     align-items: center;
     padding: 20px;
@@ -60,7 +65,6 @@ export const Frame = styled.div`
     background-position: center;
     box-shadow: inset 0 0px rgba(255, 255, 255, 0.1), inset 2px -15px 30px rgba(0, 0, 0, 0.4),
         2px 2px 5px rgba(0, 0, 0, 0.3);
-    margin-bottom: 30px;
 `;
 
 const slideIn = keyframes`
@@ -90,5 +94,6 @@ export const StyledChip = styled(Chip)`
         animation-timing-function: ease;
         box-shadow: ${({ theme }) => `4px 4px 0 ${theme.colors.progressBarGreen}}`};
         animation-fill-mode: forwards;
+        position: absolute;
     }
 `;

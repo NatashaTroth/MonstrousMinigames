@@ -1,16 +1,18 @@
-import * as React from 'react';
-import styled from 'styled-components';
+import * as React from "react";
+import styled from "styled-components";
 
-import Button from '../../../../components/common/Button';
-import Countdown from '../../../../components/common/Countdown';
-import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
-import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
-import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
-import sendVote from '../gameState/sendVote';
-import { CountdownContainer, Instructions, ScreenContainer } from './Game3Styles.sc';
+import Button from "../../../../components/common/Button";
+import Countdown from "../../../../components/common/Countdown";
+import { ControllerSocketContext } from "../../../../contexts/ControllerSocketContextProvider";
+import { Game3Context } from "../../../../contexts/game3/Game3ContextProvider";
+import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
+import { Photographer } from "../../../typeGuards/game3/voteForFinalPhotos";
+import { PhotoUserMapper } from "../../../typeGuards/game3/voteForPhotos";
+import sendVote from "../gameState/sendVote";
+import { CountdownContainer, Instructions, ScreenContainer } from "./Game3Styles.sc";
 
 const Vote: React.FunctionComponent = () => {
-    const { voteForPhotoMessage } = React.useContext(Game3Context);
+    const { voteForPhotoMessage, roundIdx } = React.useContext(Game3Context);
     const [timeIsUp, setTimeIsUp] = React.useState(false);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { userId } = React.useContext(PlayerContext);
@@ -19,6 +21,14 @@ const Vote: React.FunctionComponent = () => {
         sendVote(userId, photographerId, controllerSocket);
         setTimeIsUp(true);
     }
+
+    const finalRound = roundIdx === 3;
+
+    const votingOptions: Photographer[] | PhotoUserMapper[] | undefined = voteForPhotoMessage
+        ? voteForPhotoMessage.photoUrls
+            ? (voteForPhotoMessage.photoUrls.filter(photo => photo.photographerId !== userId) as PhotoUserMapper[])
+            : (voteForPhotoMessage!.photographers!.filter(photo => photo.photographerId !== userId) as Photographer[])
+        : undefined;
 
     return (
         <ScreenContainer>
@@ -35,13 +45,20 @@ const Vote: React.FunctionComponent = () => {
             )}
             {!timeIsUp && (
                 <>
-                    <Instructions>Choose the picture you like the most</Instructions>
+                    <Instructions>Choose the {finalRound ? 'story' : 'picture'} you like the most</Instructions>
                     <VoteContainer>
                         {voteForPhotoMessage?.photoUrls
-                            .filter(photo => photo.photographerId !== userId)
-                            .map((photo, index) => (
+                            ?.filter(photo => photo.photographerId !== userId)
+                            .map((item, index) => (
                                 <ButtonContainer key={`button${index}`}>
-                                    <Button onClick={() => handleVote(photo.photographerId)}>{photo.photoId}</Button>
+                                    <Button onClick={() => handleVote(item.photographerId)}>{item.photoId}</Button>
+                                </ButtonContainer>
+                            ))}
+                        {voteForPhotoMessage?.photographers
+                            ?.filter(photographer => photographer.photographerId !== userId)
+                            .map((item, index) => (
+                                <ButtonContainer key={`button${index}`}>
+                                    <Button onClick={() => handleVote(item.photographerId)}>{item.name}</Button>
                                 </ButtonContainer>
                             ))}
                     </VoteContainer>

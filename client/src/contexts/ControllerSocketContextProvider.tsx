@@ -1,15 +1,15 @@
-import * as React from 'react';
+import * as React from "react";
 
-import addMovementListener from '../domain/game1/controller/gameState/addMovementListener';
-import history from '../domain/history/history';
-import { handleSetSocket } from '../domain/socket/controller/handleSetSocket';
-import { handleSocketConnection } from '../domain/socket/controller/handleSocketConnection';
-import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
-import { Socket } from '../domain/socket/Socket';
-import { Game1Context } from './game1/Game1ContextProvider';
-import { Game3Context } from './game3/Game3ContextProvider';
-import { GameContext } from './GameContextProvider';
-import { PlayerContext } from './PlayerContextProvider';
+import addMovementListener from "../domain/game1/controller/gameState/addMovementListener";
+import history from "../domain/history/history";
+import { handleSetSocket } from "../domain/socket/controller/handleSetSocket";
+import { handleSocketConnection } from "../domain/socket/controller/handleSocketConnection";
+import { InMemorySocketFake } from "../domain/socket/InMemorySocketFake";
+import { Socket } from "../domain/socket/Socket";
+import { Game1Context } from "./game1/Game1ContextProvider";
+import { Game3Context } from "./game3/Game3ContextProvider";
+import { GameContext } from "./GameContextProvider";
+import { PlayerContext } from "./PlayerContextProvider";
 
 export const defaultValue = {
     controllerSocket: new InMemorySocketFake(),
@@ -58,6 +58,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setTopicMessage,
         setVotingResults,
         setFinalRoundCountdownTime,
+        setPresentFinalPhotos,
     } = React.useContext(Game3Context);
 
     const {
@@ -106,6 +107,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setTopicMessage,
         setVotingResults,
         setFinalRoundCountdownTime,
+        setPresentFinalPhotos,
     };
 
     const content = {

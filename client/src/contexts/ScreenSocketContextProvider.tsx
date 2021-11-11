@@ -72,6 +72,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setVoteForPhotoMessage,
         setVotingResults,
         setFinalRoundCountdownTime,
+        setPresentFinalPhotos,
     } = React.useContext(Game3Context);
     const {
         setGameStarted,
@@ -104,6 +105,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setVoteForPhotoMessage,
         setVotingResults,
         setFinalRoundCountdownTime,
+        setPresentFinalPhotos,
         history,
     };
 

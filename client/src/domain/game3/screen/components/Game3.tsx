@@ -1,23 +1,22 @@
-import React from 'react';
+import React from "react";
 
-import Countdown from '../../../../components/common/Countdown';
-import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
+import Countdown from "../../../../components/common/Countdown";
+import { Game3Context } from "../../../../contexts/game3/Game3ContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
 import {
-    Frame,
-    ImageContainer,
-    ImagesContainer,
-    InstructionContainer,
-    PictureInstruction,
-    RandomWord,
-    ScreenContainer,
-    StyledChip,
-    StyledImg,
-} from './Game.sc';
+    Frame, ImageContainer, ImagesContainer, InstructionContainer, PictureInstruction, RandomWord,
+    ScreenContainer, StyledChip, StyledImg
+} from "./Game.sc";
 
 const Game3: React.FunctionComponent = () => {
     const { countdownTime } = React.useContext(GameContext);
-    const { roundIdx, voteForPhotoMessage, votingResults, finalRoundCountdownTime } = React.useContext(Game3Context);
+    const {
+        roundIdx,
+        voteForPhotoMessage,
+        votingResults,
+        finalRoundCountdownTime,
+        presentFinalPhotos,
+    } = React.useContext(Game3Context);
     const [displayCountdown, setDisplayCountdown] = React.useState(true);
 
     const { topicMessage } = React.useContext(Game3Context);
@@ -27,13 +26,17 @@ const Game3: React.FunctionComponent = () => {
         setDisplayCountdown(true);
     }, [roundIdx]);
 
-    const timeToDisplay = finalRoundCountdownTime
-        ? finalRoundCountdownTime
-        : voteForPhotoMessage
-        ? voteForPhotoMessage.countdownTime
-        : topicMessage
-        ? topicMessage.countdownTime
-        : 0;
+    const timeToDisplay =
+        // presentFinalPhotos
+        //     ? presentFinalPhotos.countdownTime
+        //     :
+        finalRoundCountdownTime
+            ? finalRoundCountdownTime
+            : voteForPhotoMessage
+            ? voteForPhotoMessage.countdownTime
+            : topicMessage
+            ? topicMessage.countdownTime
+            : 0;
 
     return (
         <ScreenContainer>
@@ -51,7 +54,11 @@ const Game3: React.FunctionComponent = () => {
             ) : (
                 <>
                     <InstructionContainer>
-                        {voteForPhotoMessage ? (
+                        {presentFinalPhotos ? (
+                            <PictureInstruction>
+                                {presentFinalPhotos.photographerId} - Tell us a story about your pictures
+                            </PictureInstruction>
+                        ) : voteForPhotoMessage ? (
                             <>
                                 <PictureInstruction>
                                     Vote on your smartphone for the picture that looks most like
@@ -69,9 +76,10 @@ const Game3: React.FunctionComponent = () => {
                             </>
                         )}
                     </InstructionContainer>
-                    <ImagesContainer>
-                        {voteForPhotoMessage &&
-                            voteForPhotoMessage.photoUrls.map((photo, index) => (
+
+                    {voteForPhotoMessage && (
+                        <ImagesContainer>
+                            {voteForPhotoMessage.photoUrls?.map((photo, index) => (
                                 <ImageContainer key={`image${index}`}>
                                     <PictureInstruction>{photo.photoId}</PictureInstruction>
                                     <Frame>
@@ -90,7 +98,19 @@ const Game3: React.FunctionComponent = () => {
                                     )}
                                 </ImageContainer>
                             ))}
-                    </ImagesContainer>
+                        </ImagesContainer>
+                    )}
+                    {presentFinalPhotos && (
+                        <ImagesContainer>
+                            {presentFinalPhotos.photoUrls?.map((photo, index) => (
+                                <ImageContainer key={`image${index}`}>
+                                    <Frame>
+                                        <StyledImg src={photo} />
+                                    </Frame>
+                                </ImageContainer>
+                            ))}
+                        </ImagesContainer>
+                    )}
                 </>
             )}
         </ScreenContainer>

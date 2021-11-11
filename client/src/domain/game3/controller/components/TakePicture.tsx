@@ -1,17 +1,17 @@
-import { Typography } from '@material-ui/core';
-import * as React from 'react';
-import { Field, FieldRenderProps, Form } from 'react-final-form';
+import { Typography } from "@material-ui/core";
+import * as React from "react";
+import { Field, FieldRenderProps, Form } from "react-final-form";
 
-import Button from '../../../../components/common/Button';
-import Countdown from '../../../../components/common/Countdown';
-import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
-import { FirebaseContext } from '../../../../contexts/FirebaseContextProvider';
-import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
-import uploadFile from '../gameState/uploadFile';
-import { CountdownContainer, Instructions, ScreenContainer } from './Game3Styles.sc';
-import { StyledImg, StyledLabel, UploadWrapper } from './TakePicture.sc';
+import Button from "../../../../components/common/Button";
+import Countdown from "../../../../components/common/Countdown";
+import { ControllerSocketContext } from "../../../../contexts/ControllerSocketContextProvider";
+import { FirebaseContext } from "../../../../contexts/FirebaseContextProvider";
+import { Game3Context } from "../../../../contexts/game3/Game3ContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
+import uploadFile from "../gameState/uploadFile";
+import { CountdownContainer, Instructions, ScreenContainer } from "./Game3Styles.sc";
+import { StyledImg, StyledLabel, UploadWrapper } from "./TakePicture.sc";
 
 export interface UploadProps {
     picture: File | undefined;
@@ -25,10 +25,12 @@ const TakePicture: React.FunctionComponent = () => {
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const [uploadedImagesCount, setUploadedImagesCount] = React.useState(0);
     const [displayCountdown, setDisplayCountdown] = React.useState(true);
+    const [preview, setPreview] = React.useState<undefined | string>();
 
     const upload = async (values: UploadProps) => {
-        uploadFile(values, storage, roomId, userId, roundIdx, controllerSocket);
+        uploadFile(values, storage, roomId, userId, roundIdx, controllerSocket, uploadedImagesCount);
         setUploadedImagesCount(uploadedImagesCount + 1);
+        setPreview(undefined);
     };
 
     const finalRound = roundIdx === 3;
@@ -59,13 +61,25 @@ const TakePicture: React.FunctionComponent = () => {
                             <Form
                                 mode="add"
                                 onSubmit={upload}
-                                render={({ handleSubmit, values, submitting }) => (
-                                    <form onSubmit={handleSubmit}>
+                                render={({ handleSubmit, values, form }) => (
+                                    <form
+                                        onSubmit={val => {
+                                            handleSubmit(val);
+                                            form.reset();
+                                        }}
+                                    >
                                         <Field
                                             type="file"
                                             name="picture"
                                             label="Picture"
-                                            render={({ input, meta }) => <FileInput input={input} meta={meta} />}
+                                            render={({ input, meta }) => (
+                                                <FileInput
+                                                    input={input}
+                                                    meta={meta}
+                                                    preview={preview}
+                                                    setPreview={setPreview}
+                                                />
+                                            )}
                                             fullWidth
                                         />
                                         <Button type="submit" disabled={!values.picture} size="small">
@@ -89,12 +103,11 @@ const TakePicture: React.FunctionComponent = () => {
 
 export default TakePicture;
 
-const FileInput: React.FC<FieldRenderProps<string, HTMLElement>> = ({
-    input: { value, onChange, ...input },
-    meta,
-    submitting,
-}) => {
-    const [preview, setPreview] = React.useState<undefined | string>();
+interface FileInputProps extends FieldRenderProps<string, HTMLElement> {
+    preview: string | undefined;
+    setPreview: (val: string | undefined) => void;
+}
+const FileInput: React.FC<FileInputProps> = ({ input: { value, onChange, ...input }, meta, preview, setPreview }) => {
     const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         if (target.files && target.files[0]) {
             setPreview(URL.createObjectURL(target.files[0]));

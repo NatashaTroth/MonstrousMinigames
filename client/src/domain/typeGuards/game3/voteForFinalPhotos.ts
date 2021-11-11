@@ -1,0 +1,18 @@
+import { MessageTypesGame3 } from "../../../utils/constants";
+import { MessageDataGame3 } from "./MessageDataGame3";
+
+export interface Photographer {
+    photographerId: string;
+    name: string;
+}
+
+export interface VoteForFinalPhotosMessage {
+    type: MessageTypesGame3.voteForFinalPhots;
+    roomId: string;
+    photographers: Photographer[];
+    countdownTime: number;
+}
+
+export const voteForFinalPhotosMessageTypeGuard = (data: MessageDataGame3): data is VoteForFinalPhotosMessage => {
+    return (data as VoteForFinalPhotosMessage).type === MessageTypesGame3.voteForFinalPhots;
+};
