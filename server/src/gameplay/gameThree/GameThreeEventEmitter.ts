@@ -10,7 +10,7 @@ import {
 } from '../interfaces/GlobalEventMessages';
 import { GameThreeEventMessageEmitter } from './GameThreeEventMessageEmitter';
 import {
-    FinalResults, photoPhotographerMapper, PlayerNameId, PlayerRank, votingResultsPhotographerMapper
+    photoPhotographerMapper, PlayerNameId, PlayerRank, votingResultsPhotographerMapper
 } from './interfaces';
 import {
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
@@ -20,6 +20,7 @@ import {
     GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS, GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS,
     GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS
 } from './interfaces/GameThreeEventMessages';
+import { GameThreePlayerRank } from './interfaces/GameThreePlayerRank';
 
 // params: (data: GameEvents.ObstacleReachedInfo
 
@@ -174,7 +175,7 @@ export default class GameThreeEventEmitter {
         });
     }
 
-    public static emitViewingFinalResults(roomId: string, results: FinalResults[]) {
+    public static emitViewingFinalResults(roomId: string, results: GameThreePlayerRank[]) {
         this.GameThreeEventMessageEmitter.emit({
             type: GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS,
             roomId,
