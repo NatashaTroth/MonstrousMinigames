@@ -156,13 +156,13 @@ export function handleSetSocket(
         setVoteForPhotoMessage,
         setFinalRoundCountdownTime,
         setVotingResults,
-        setPresentFinalPhotos,
     });
 
     handleSetScreenSocketGame3(socket, {
         setRoundIdx,
         setVoteForPhotoMessage,
         setVotingResults,
+        setPresentFinalPhotos,
     });
 
     history.push(`${Routes.screen}/${roomId}/${route || Routes.lobby}`);

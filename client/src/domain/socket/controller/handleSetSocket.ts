@@ -178,12 +178,12 @@ export function handleSetSocket(
         setVoteForPhotoMessage,
         setFinalRoundCountdownTime,
         setVotingResults,
-        setPresentFinalPhotos,
     });
     handleSetControllerSocketGame3(socket, {
         setVoteForPhotoMessage,
         setRoundIdx,
         setVotingResults,
+        setPresentFinalPhotos,
     });
 
     gameSetSocket.listen((data: GameSetMessage) => setChosenGame(data.game));

@@ -18,7 +18,7 @@ const Game3: React.FunctionComponent = () => {
         presentFinalPhotos,
     } = React.useContext(Game3Context);
     const [displayCountdown, setDisplayCountdown] = React.useState(true);
-
+    const [timeToDisplay, setTimeToDisplay] = React.useState(0);
     const { topicMessage } = React.useContext(Game3Context);
     const finalRound = roundIdx === 3;
 
@@ -26,17 +26,21 @@ const Game3: React.FunctionComponent = () => {
         setDisplayCountdown(true);
     }, [roundIdx]);
 
-    const timeToDisplay =
-        // presentFinalPhotos
-        //     ? presentFinalPhotos.countdownTime
-        //     :
-        finalRoundCountdownTime
+    React.useEffect(() => {
+        const time = presentFinalPhotos
+            ? presentFinalPhotos.countdownTime
+            : finalRoundCountdownTime
             ? finalRoundCountdownTime
             : voteForPhotoMessage
             ? voteForPhotoMessage.countdownTime
             : topicMessage
             ? topicMessage.countdownTime
             : 0;
+
+        // eslint-disable-next-line no-console
+        console.log(time);
+        setTimeToDisplay(time);
+    }, [presentFinalPhotos, finalRoundCountdownTime, voteForPhotoMessage, topicMessage]);
 
     return (
         <ScreenContainer>
@@ -56,7 +60,7 @@ const Game3: React.FunctionComponent = () => {
                     <InstructionContainer>
                         {presentFinalPhotos ? (
                             <PictureInstruction>
-                                {presentFinalPhotos.photographerId} - Tell us a story about your pictures
+                                {presentFinalPhotos.name} - Tell us a story about your pictures
                             </PictureInstruction>
                         ) : voteForPhotoMessage ? (
                             <>

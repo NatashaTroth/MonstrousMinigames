@@ -1,16 +1,16 @@
-import { Pause, PlayArrow, Stop, VolumeOff, VolumeUp } from '@material-ui/icons';
-import Phaser from 'phaser';
-import * as React from 'react';
-import { useParams } from 'react-router';
+import { Pause, PlayArrow, Stop, VolumeOff, VolumeUp } from "@material-ui/icons";
+import Phaser from "phaser";
+import * as React from "react";
+import { useParams } from "react-router";
 
-import { RouteParams } from '../../../../App';
-import { AudioContext } from '../../../../contexts/AudioContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
-import { ScreenSocketContext } from '../../../../contexts/ScreenSocketContextProvider';
-import { handleAudioPermission } from '../../../audio/handlePermission';
-import GameEventEmitter from '../../../phaser/GameEventEmitter';
-import { AudioButton, Container, PauseButton, StopButton } from './Game.sc';
-import MainScene from './MainScene';
+import { RouteParams } from "../../../../App";
+import { AudioContext } from "../../../../contexts/AudioContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import { ScreenSocketContext } from "../../../../contexts/ScreenSocketContextProvider";
+import { handleAudioPermission } from "../../../audio/handlePermission";
+import GameEventEmitter from "../../../phaser/GameEventEmitter";
+import { AudioButton, Container, PauseButton, StopButton } from "./Game.sc";
+import MainScene from "./MainScene";
 
 const Game: React.FunctionComponent = () => {
     const { roomId, hasPaused, screenAdmin } = React.useContext(GameContext);
@@ -61,6 +61,7 @@ const Game: React.FunctionComponent = () => {
         });
         game.scene.add('MainScene', MainScene, false); //socket: ScreenSocket.getInstance(socket)
         game.scene.start('MainScene', { roomId, socket: screenSocket, screenAdmin });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     async function handleAudio() {

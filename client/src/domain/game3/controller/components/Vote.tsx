@@ -6,8 +6,6 @@ import Countdown from "../../../../components/common/Countdown";
 import { ControllerSocketContext } from "../../../../contexts/ControllerSocketContextProvider";
 import { Game3Context } from "../../../../contexts/game3/Game3ContextProvider";
 import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
-import { Photographer } from "../../../typeGuards/game3/voteForFinalPhotos";
-import { PhotoUserMapper } from "../../../typeGuards/game3/voteForPhotos";
 import sendVote from "../gameState/sendVote";
 import { CountdownContainer, Instructions, ScreenContainer } from "./Game3Styles.sc";
 
@@ -24,11 +22,8 @@ const Vote: React.FunctionComponent = () => {
 
     const finalRound = roundIdx === 3;
 
-    const votingOptions: Photographer[] | PhotoUserMapper[] | undefined = voteForPhotoMessage
-        ? voteForPhotoMessage.photoUrls
-            ? (voteForPhotoMessage.photoUrls.filter(photo => photo.photographerId !== userId) as PhotoUserMapper[])
-            : (voteForPhotoMessage!.photographers!.filter(photo => photo.photographerId !== userId) as Photographer[])
-        : undefined;
+    // eslint-disable-next-line no-console
+    console.log(userId);
 
     return (
         <ScreenContainer>
@@ -55,10 +50,10 @@ const Vote: React.FunctionComponent = () => {
                                 </ButtonContainer>
                             ))}
                         {voteForPhotoMessage?.photographers
-                            ?.filter(photographer => photographer.photographerId !== userId)
+                            ?.filter(photographer => photographer.id !== userId)
                             .map((item, index) => (
                                 <ButtonContainer key={`button${index}`}>
-                                    <Button onClick={() => handleVote(item.photographerId)}>{item.name}</Button>
+                                    <Button onClick={() => handleVote(item.id)}>{item.name}</Button>
                                 </ButtonContainer>
                             ))}
                     </VoteContainer>

@@ -38,7 +38,9 @@ export const defaultValue = {
 export type VoteResult = { results: VotingResult[]; countdownTime: number } | undefined;
 export type Topic = { topic: string; countdownTime: number } | undefined;
 export type Vote = { photoUrls?: PhotoUserMapper[]; photographers?: Photographer[]; countdownTime: number } | undefined;
-export type FinalPhoto = { photographerId: string; photoUrls: string[]; countdownTime: number } | undefined;
+export type FinalPhoto =
+    | { photographerId: string; photoUrls: string[]; countdownTime: number; name: string }
+    | undefined;
 
 interface Game3ContextProps {
     roundIdx: number;

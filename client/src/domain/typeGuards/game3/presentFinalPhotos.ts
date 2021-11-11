@@ -7,6 +7,7 @@ export interface PresentFinalPhotosMessage {
     photographerId: string;
     photoUrls: string[];
     countdownTime: number;
+    name: string;
 }
 
 export const presentFinalPhotosTypeGuard = (data: MessageDataGame3): data is PresentFinalPhotosMessage => {

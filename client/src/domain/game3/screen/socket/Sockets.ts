@@ -1,7 +1,10 @@
-import { Vote, VoteResult } from "../../../../contexts/game3/Game3ContextProvider";
+import { FinalPhoto, Vote, VoteResult } from "../../../../contexts/game3/Game3ContextProvider";
 import { MessageSocket } from "../../../socket/MessageSocket";
 import { Socket } from "../../../socket/Socket";
 import { NewRoundMessage, newRoundTypeGuard } from "../../../typeGuards/game3/newRound";
+import {
+    PresentFinalPhotosMessage, presentFinalPhotosTypeGuard
+} from "../../../typeGuards/game3/presentFinalPhotos";
 import {
     VoteForPhotoMessage, voteForPhotoMessageTypeGuard
 } from "../../../typeGuards/game3/voteForPhotos";
@@ -10,13 +13,15 @@ export interface HandleSetSocket3Dependencies {
     setRoundIdx: (roundIdx: number) => void;
     setVoteForPhotoMessage: (val: Vote) => void;
     setVotingResults: (val: VoteResult) => void;
+    setPresentFinalPhotos: (val: FinalPhoto) => void;
 }
 
 export function handleSetScreenSocketGame3(socket: Socket, dependencies: HandleSetSocket3Dependencies) {
     const voteForPhotoSocket = new MessageSocket(voteForPhotoMessageTypeGuard, socket);
     const newRoundSocket = new MessageSocket(newRoundTypeGuard, socket);
+    const presentFinalPhotosSocket = new MessageSocket(presentFinalPhotosTypeGuard, socket);
 
-    const { setRoundIdx, setVoteForPhotoMessage, setVotingResults } = dependencies;
+    const { setRoundIdx, setVoteForPhotoMessage, setVotingResults, setPresentFinalPhotos } = dependencies;
 
     newRoundSocket.listen((data: NewRoundMessage) => {
         setRoundIdx(data.roundIdx + 1);
@@ -26,5 +31,14 @@ export function handleSetScreenSocketGame3(socket: Socket, dependencies: HandleS
 
     voteForPhotoSocket.listen((data: VoteForPhotoMessage) => {
         setVoteForPhotoMessage({ photoUrls: data.photoUrls, countdownTime: data.countdownTime });
+    });
+
+    presentFinalPhotosSocket.listen((data: PresentFinalPhotosMessage) => {
+        setPresentFinalPhotos({
+            photographerId: data.photographerId,
+            name: data.name,
+            photoUrls: data.photoUrls,
+            countdownTime: data.countdownTime,
+        });
     });
 }

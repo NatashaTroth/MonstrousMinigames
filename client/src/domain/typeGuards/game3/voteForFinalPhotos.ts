@@ -2,7 +2,7 @@ import { MessageTypesGame3 } from "../../../utils/constants";
 import { MessageDataGame3 } from "./MessageDataGame3";
 
 export interface Photographer {
-    photographerId: string;
+    id: string;
     name: string;
 }
 
