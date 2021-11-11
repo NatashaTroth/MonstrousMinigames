@@ -27,7 +27,7 @@ describe('Handle Received Photo Vote', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         gameThree['stageController'].stage = GameThreeGameState.Voting;
-        gameThree['roundIdx'] = 0; // to simulate update in handling first round
+        gameThree['stageController']['_roundIdx'] = 0; // to simulate update in handling first round
     });
 
     afterEach(() => {
@@ -36,21 +36,27 @@ describe('Handle Received Photo Vote', () => {
 
     it("should set the voter's voted property to true", async () => {
         gameThree['handleReceivedPhotoVote'](message);
-        expect(gameThree.players.get(message.voterId)!.roundInfo[gameThree['roundIdx']].voted).toBeTruthy();
+        expect(
+            gameThree.players.get(message.voterId)!.roundInfo[gameThree['stageController']['_roundIdx']].voted
+        ).toBeTruthy();
     });
 
     it('should add the points to the player', async () => {
-        const currentPoints = gameThree.players.get(message.photographerId)!.roundInfo[gameThree['roundIdx']].points;
+        const currentPoints = gameThree.players.get(message.photographerId)!.roundInfo[
+            gameThree['stageController']['_roundIdx']
+        ].points;
         gameThree['handleReceivedPhotoVote'](message);
-        expect(gameThree.players.get(message.photographerId)!.roundInfo[gameThree['roundIdx']].points).toBe(
-            currentPoints + 1
-        );
+        expect(
+            gameThree.players.get(message.photographerId)!.roundInfo[gameThree['stageController']['_roundIdx']].points
+        ).toBe(currentPoints + 1);
     });
 
     it("should not set the voter's voted property to true, if gameThreeGameState is not Voting", async () => {
         gameThree['stageController'].stage = GameThreeGameState.BeforeStart;
         gameThree['handleReceivedPhotoVote'](message);
-        expect(gameThree.players.get(message.voterId)!.roundInfo[gameThree['roundIdx']].voted).toBeFalsy();
+        expect(
+            gameThree.players.get(message.voterId)!.roundInfo[gameThree['stageController']['_roundIdx']].voted
+        ).toBeFalsy();
     });
 });
 
@@ -58,7 +64,7 @@ describe('Remove voting points from players who did not participate this round',
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
-        gameThree['roundIdx'] = 0; // to simulate update in handling first round
+        gameThree['stageController']['_roundIdx'] = 0; // to simulate update in handling first round
     });
 
     afterEach(() => {
@@ -66,7 +72,9 @@ describe('Remove voting points from players who did not participate this round',
     });
 
     it('should remove received voting points from players who did not take a photo', async () => {
-        const playerRoundInfo = gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']];
+        const playerRoundInfo = gameThree.players.get(users[0].id)!.roundInfo[
+            gameThree['stageController']['_roundIdx']
+        ];
         playerRoundInfo.points = 100;
         playerRoundInfo.received = false;
         playerRoundInfo.voted = true;
@@ -75,11 +83,15 @@ describe('Remove voting points from players who did not participate this round',
     });
 
     it('should remove received voting points from all players who did not take a photo', async () => {
-        const player1RoundInfo = gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']];
+        const player1RoundInfo = gameThree.players.get(users[0].id)!.roundInfo[
+            gameThree['stageController']['_roundIdx']
+        ];
         player1RoundInfo.points = 100;
         player1RoundInfo.received = false;
         player1RoundInfo.voted = true;
-        const player2RoundInfo = gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']];
+        const player2RoundInfo = gameThree.players.get(users[0].id)!.roundInfo[
+            gameThree['stageController']['_roundIdx']
+        ];
         player2RoundInfo.points = 100;
         player2RoundInfo.received = false;
         player2RoundInfo.voted = true;
@@ -89,7 +101,9 @@ describe('Remove voting points from players who did not participate this round',
     });
 
     it('should remove received voting points from players who did not vote', async () => {
-        const playerRoundInfo = gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']];
+        const playerRoundInfo = gameThree.players.get(users[0].id)!.roundInfo[
+            gameThree['stageController']['_roundIdx']
+        ];
         playerRoundInfo.points = 100;
         playerRoundInfo.received = true;
         playerRoundInfo.voted = false;
@@ -98,11 +112,15 @@ describe('Remove voting points from players who did not participate this round',
     });
 
     it('should remove received voting points from all players who did not vote', async () => {
-        const player1RoundInfo = gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']];
+        const player1RoundInfo = gameThree.players.get(users[0].id)!.roundInfo[
+            gameThree['stageController']['_roundIdx']
+        ];
         player1RoundInfo.points = 100;
         player1RoundInfo.received = true;
         player1RoundInfo.voted = false;
-        const player2RoundInfo = gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']];
+        const player2RoundInfo = gameThree.players.get(users[0].id)!.roundInfo[
+            gameThree['stageController']['_roundIdx']
+        ];
         player2RoundInfo.points = 100;
         player2RoundInfo.received = true;
         player2RoundInfo.voted = false;
@@ -112,11 +130,15 @@ describe('Remove voting points from players who did not participate this round',
     });
 
     it('should remove received voting points from all players who did not take a photo or vote', async () => {
-        const player1RoundInfo = gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']];
+        const player1RoundInfo = gameThree.players.get(users[0].id)!.roundInfo[
+            gameThree['stageController']['_roundIdx']
+        ];
         player1RoundInfo.points = 100;
         player1RoundInfo.received = false;
         player1RoundInfo.voted = false;
-        const player2RoundInfo = gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']];
+        const player2RoundInfo = gameThree.players.get(users[0].id)!.roundInfo[
+            gameThree['stageController']['_roundIdx']
+        ];
         player2RoundInfo.points = 100;
         player2RoundInfo.received = false;
         player2RoundInfo.voted = false;
@@ -130,7 +152,7 @@ describe('All votes received', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
-        gameThree['roundIdx'] = 0; // to simulate update in handling first round
+        gameThree['stageController']['_roundIdx'] = 0; // to simulate update in handling first round
     });
 
     afterEach(() => {
@@ -139,7 +161,7 @@ describe('All votes received', () => {
 
     it('should return true when all players have voted', async () => {
         Array.from(gameThree.players.values()).forEach(player => {
-            player.roundInfo[gameThree['roundIdx']].voted = true;
+            player.roundInfo[gameThree['stageController']['_roundIdx']].voted = true;
         });
 
         expect(gameThree['allVotesReceived']()).toBeTruthy();
@@ -148,7 +170,7 @@ describe('All votes received', () => {
     it('should return false when not all players have voted', async () => {
         const otherPlayers = Array.from(gameThree.players.values()).filter(player => player.id !== users[0].id);
         otherPlayers.forEach(player => {
-            player.roundInfo[gameThree['roundIdx']].voted = true;
+            player.roundInfo[gameThree['stageController']['_roundIdx']].voted = true;
         });
 
         expect(gameThree['allVotesReceived']()).toBeFalsy();
@@ -160,7 +182,7 @@ describe('Send Photos to screen', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
-        gameThree['roundIdx'] = 0; // to simulate update in handling first round
+        gameThree['stageController']['_roundIdx'] = 0; // to simulate update in handling first round
     });
 
     afterEach(() => {
@@ -193,7 +215,7 @@ describe('Send Photos to screen', () => {
 
         const points: number[] = [];
         Array.from(gameThree.players.values()).forEach((player, idx) => {
-            player.roundInfo[gameThree['roundIdx']].points = idx;
+            player.roundInfo[gameThree['stageController']['_roundIdx']].points = idx;
             points.push(idx);
         });
 

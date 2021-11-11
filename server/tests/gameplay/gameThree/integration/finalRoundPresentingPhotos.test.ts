@@ -33,8 +33,8 @@ describe('Initiate stage', () => {
         jest.useFakeTimers();
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
-        gameThree['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        gameThree['handleNewRound']();
+        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController'].handleNewRound();
         // advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS);
         //all users send photos
     });
@@ -82,8 +82,8 @@ describe('Presenting Final Photos', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
-        gameThree['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        gameThree['handleNewRound']();
+        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController'].handleNewRound();
         users.forEach(user => {
             for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
                 gameThree['handleInput']({ ...photoMessage, userId: user.id });

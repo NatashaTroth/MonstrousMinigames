@@ -45,8 +45,8 @@ describe('Initiate stage', () => {
                 eventCalled = true;
             }
         });
-        gameThree['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        gameThree['handleNewRound']();
+        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController'].handleNewRound();
         expect(eventCalled).toBeTruthy();
     });
 });
@@ -58,8 +58,8 @@ describe('Taking Final Photos', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
-        gameThree['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        gameThree['handleNewRound']();
+        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController'].handleNewRound();
     });
 
     afterEach(() => {

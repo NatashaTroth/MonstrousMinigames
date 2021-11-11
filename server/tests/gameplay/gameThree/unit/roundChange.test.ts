@@ -26,34 +26,34 @@ describe('Handle new round', () => {
     });
 
     it('should increase the roundIdx', async () => {
-        const roundIdx = gameThree['roundIdx'];
+        const roundIdx = gameThree['stageController']['_roundIdx'];
 
-        gameThree['handleNewRound']();
-        expect(gameThree['roundIdx']).toBe(roundIdx + 1);
+        gameThree['stageController'].handleNewRound();
+        expect(gameThree['stageController']['_roundIdx']).toBe(roundIdx + 1);
     });
 
     it('should call sendPhotoTopic when it is not the final round and photoTopics is not empty', async () => {
-        gameThree['roundIdx'] = 0;
+        gameThree['stageController']['_roundIdx'] = 0;
         // gameThree.photoTopics.topics = ['cat', 'dog'];
         const spy = jest.spyOn(GameThree.prototype as any, 'sendPhotoTopic');
 
-        gameThree['handleNewRound']();
+        gameThree['stageController'].handleNewRound();
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it('should call sendTakeFinalPhotosCountdown when it is the final round', async () => {
-        gameThree['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
         const spy = jest.spyOn(GameThree.prototype as any, 'sendTakeFinalPhotosCountdown');
 
-        gameThree['handleNewRound']();
+        gameThree['stageController'].handleNewRound();
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it('should call sendTakeFinalPhotosCountdown when photoTopics is empty', async () => {
-        gameThree['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
         const spy = jest.spyOn(GameThree.prototype as any, 'sendTakeFinalPhotosCountdown');
 
-        gameThree['handleNewRound']();
+        gameThree['stageController'].handleNewRound();
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
@@ -65,7 +65,7 @@ describe('Handle new round', () => {
             }
         });
 
-        gameThree['handleNewRound']();
+        gameThree['stageController'].handleNewRound();
         expect(eventCalled).toBeTruthy();
     });
 });
@@ -80,13 +80,13 @@ describe('Is final round', () => {
     });
 
     it('should return true when it is the final round', async () => {
-        gameThree['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        gameThree['handleNewRound']();
-        expect(gameThree['isFinalRound']()).toBeTruthy();
+        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController'].handleNewRound();
+        expect(gameThree['stageController']['isFinalRound']()).toBeTruthy();
     });
 
     it('should return false when it is the final round', async () => {
-        gameThree['roundIdx'] = 0;
-        expect(gameThree['isFinalRound']()).toBeFalsy();
+        gameThree['stageController']['_roundIdx'] = 0;
+        expect(gameThree['stageController']['isFinalRound']()).toBeFalsy();
     });
 });

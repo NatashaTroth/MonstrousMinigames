@@ -97,8 +97,8 @@ describe('Send final photos to screen', () => {
 
     //     const photoUrls: string[] = [];
     //     Array.from(gameThree.players.values()).forEach((player, idx) => {
-    //         player.roundInfo[gameThree['roundIdx']].received = true;
-    //         player.roundInfo[gameThree['roundIdx']].url = idx.toString();
+    //         player.roundInfo[gameThree['stageController']['_roundIdx']].received = true;
+    //         player.roundInfo[gameThree['stageController']['_roundIdx']].url = idx.toString();
     //         photoUrls.push(idx.toString());
     //     });
 
@@ -116,8 +116,8 @@ describe('Send final photos to screen', () => {
 
     //     const photographerIds: string[] = [];
     //     Array.from(gameThree.players.values()).forEach((player, idx) => {
-    //         player.roundInfo[gameThree['roundIdx']].received = true;
-    //         player.roundInfo[gameThree['roundIdx']].url = idx.toString();
+    //         player.roundInfo[gameThree['stageController']['_roundIdx']].received = true;
+    //         player.roundInfo[gameThree['stageController']['_roundIdx']].url = idx.toString();
     //         photographerIds[idx] = player.id;
     //     });
 
@@ -139,8 +139,8 @@ describe('Send final photos to screen', () => {
     //     const photographerIds: string[] = [];
     //     const otherPlayers = Array.from(gameThree.players.values()).filter(player => player.id !== users[0].id);
     //     otherPlayers.forEach((player, idx) => {
-    //         player.roundInfo[gameThree['roundIdx']].received = true;
-    //         player.roundInfo[gameThree['roundIdx']].url = photoUrls;
+    //         player.roundInfo[gameThree['stageController']['_roundIdx']].received = true;
+    //         player.roundInfo[gameThree['stageController']['_roundIdx']].url = photoUrls;
     //         photographerIds[idx] = player.id;
     //     });
 

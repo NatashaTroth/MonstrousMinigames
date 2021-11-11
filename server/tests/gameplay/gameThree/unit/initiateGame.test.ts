@@ -42,7 +42,7 @@ describe('Change and verify game state', () => {
     // });
 
     it('initiates roundIdx with -1', async () => {
-        expect(gameThree['roundIdx']).toBe(-1);
+        expect(gameThree['stageController'].roundIdx).toBe(-1);
     });
 
     it('initiates gameName with Game3', async () => {

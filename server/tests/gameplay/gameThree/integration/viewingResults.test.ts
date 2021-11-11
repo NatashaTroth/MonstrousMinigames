@@ -61,19 +61,19 @@ describe('Viewing results', () => {
     });
 
     it('should increase roundIdx when countdown is over', async () => {
-        const initialRoundIdx = gameThree['roundIdx'];
+        const initialRoundIdx = gameThree['stageController']['_roundIdx'];
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
-        expect(gameThree['roundIdx']).toBe(initialRoundIdx + 1);
+        expect(gameThree['stageController']['_roundIdx']).toBe(initialRoundIdx + 1);
     });
 
     it('should set gameThreeGameState to TakingPhoto when not the final round when countdown is over', async () => {
-        gameThree['roundIdx'] = 0;
+        gameThree['stageController']['_roundIdx'] = 0;
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
         expect(gameThree['stageController'].stage).toBe(GameThreeGameState.TakingPhoto);
     });
 
     it('should set gameThreeGameState to Final when not the final round when countdown is over', async () => {
-        gameThree['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
         expect(gameThree['stageController'].stage).toBe(GameThreeGameState.TakingFinalPhotos);
     });

@@ -39,8 +39,8 @@ describe('Initiate stage', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
-        gameThree['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        gameThree['handleNewRound']();
+        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController'].handleNewRound();
         users.forEach(user => {
             for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
                 gameThree['handleInput']({ ...photoMessage, userId: user.id });
@@ -82,8 +82,8 @@ describe('Voting stage', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
-        gameThree['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        gameThree['handleNewRound']();
+        gameThree['stageController']['_roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        gameThree['stageController'].handleNewRound();
         users.forEach(user => {
             for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
                 gameThree['handleInput']({ ...photoMessage, userId: user.id });
