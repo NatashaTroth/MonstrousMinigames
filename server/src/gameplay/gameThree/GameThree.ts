@@ -432,7 +432,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private handleFinishedFinalVoting() {
-        const finalResults: GameThreePlayerRank[] = Array.from(this.players.values()).map(player => {
+        const playerRanks: GameThreePlayerRank[] = Array.from(this.players.values()).map(player => {
             return {
                 id: player.id,
                 name: player.name,
@@ -442,7 +442,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             };
         });
 
-        finalResults
+        playerRanks
             .sort((a, b) => b.points - a.points)
             .map(result => {
                 const rank = this.rankSuccessfulUser(result.points);
@@ -453,7 +453,8 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
         this.gameThreeGameState = GameThreeGameState.ViewingFinalResults;
         this.gameState = GameState.Finished;
-        GameThreeEventEmitter.emitViewingFinalResults(this.roomId, finalResults);
+        // GameThreeEventEmitter.emitViewingFinalResults(this.roomId, finalResults);
+        GameThreeEventEmitter.emitGameHasFinishedEvent(this.roomId, this.gameState, playerRanks);
 
         //TODO Leaderboard
     }

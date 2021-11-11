@@ -17,10 +17,8 @@ import {
     GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS, GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
     GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
     GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER,
-    GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS, GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS,
-    GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS
+    GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS, GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS
 } from './interfaces/GameThreeEventMessages';
-import { GameThreePlayerRank } from './interfaces/GameThreePlayerRank';
 
 // params: (data: GameEvents.ObstacleReachedInfo
 
@@ -172,14 +170,6 @@ export default class GameThreeEventEmitter {
             roomId,
             countdownTime,
             photographers,
-        });
-    }
-
-    public static emitViewingFinalResults(roomId: string, results: GameThreePlayerRank[]) {
-        this.GameThreeEventMessageEmitter.emit({
-            type: GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS,
-            roomId,
-            results,
         });
     }
 }
