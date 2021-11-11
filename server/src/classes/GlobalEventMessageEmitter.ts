@@ -1,15 +1,16 @@
 import { Namespace } from 'socket.io';
 import { singleton } from 'tsyringe';
+
 import Game from '../gameplay/Game';
 import {
-    GlobalEventMessage,
-    GLOBAL_EVENT_MESSAGES,
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED,
     GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED,
     GLOBAL_EVENT_MESSAGE__GAME_HAS_RESUMED,
     GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED,
     GLOBAL_EVENT_MESSAGE__GAME_HAS_STOPPED,
     GLOBAL_EVENT_MESSAGE__PLAYER_HAS_DISCONNECTED,
+    GLOBAL_EVENT_MESSAGES,
+    GlobalEventMessage,
 } from '../gameplay/interfaces/GlobalEventMessages';
 import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
 import Player from '../gameplay/Player';

@@ -4,6 +4,7 @@ import { GameOnePlayerRank } from './GameOnePlayerRank';
 import { GameStateInfo } from './GameStateInfo';
 import { InitialGameStateInfo } from './InitialGameStateInfo';
 import { IMessageObstacle } from './messageObstacle';
+import { NamespaceAdapter } from './NamespaceAdapter';
 import { Obstacle } from './Obstacle';
 import { ObstacleTypeObject } from './ObstacleTypeObject';
 import { PlayerState } from './PlayerState';
@@ -20,4 +21,5 @@ export {
     Chaser,
     ObstacleTypeObject,
     IMessageObstacle,
+    NamespaceAdapter,
 };

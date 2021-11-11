@@ -18,10 +18,9 @@ import GameThreeEventEmitter from './GameThreeEventEmitter';
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreePlayer from './GameThreePlayer';
 import {
-    FinalResults, IMessagePhoto, IMessagePhotoVote, photoPhotographerMapper, PlayerNameId,
-    votingResultsPhotographerMapper
+    FinalResults, GameStateInfo, IMessagePhoto, IMessagePhotoVote, photoPhotographerMapper,
+    PlayerNameId, votingResultsPhotographerMapper
 } from './interfaces';
-import { GameStateInfo } from './interfaces/GameStateInfo';
 
 type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
 
