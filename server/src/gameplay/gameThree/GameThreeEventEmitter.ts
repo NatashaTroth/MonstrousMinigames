@@ -153,6 +153,7 @@ export default class GameThreeEventEmitter {
         roomId: string,
         countdownTime: number,
         photographerId: string,
+        name: string,
         photoUrls: string[]
     ) {
         this.GameThreeEventMessageEmitter.emit({
@@ -160,6 +161,7 @@ export default class GameThreeEventEmitter {
             roomId,
             countdownTime,
             photographerId,
+            name,
             photoUrls,
         });
     }
