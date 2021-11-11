@@ -21,32 +21,6 @@ describe('Change and verify game state', () => {
         expect(gameThree['_gameStartedAt']).toBe(0);
     });
 
-    it('initiates countdownTimeGameStart with correct value', async () => {
-        expect(gameThree['countdownTimeGameStart']).toBe(InitialParameters.COUNTDOWN_TIME_GAME_START);
-    });
-
-    it('initiates countdownTimeTakePhoto with correct value', async () => {
-        expect(gameThree['countdownTimeTakePhoto']).toBe(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-    });
-
-    it('initiates countdownTimeVote with correct value', async () => {
-        expect(gameThree['countdownTimeVote']).toBe(InitialParameters.COUNTDOWN_TIME_VOTE);
-    });
-
-    it('initiates countdownTimeViewResults with correct value', async () => {
-        expect(gameThree['countdownTimeViewResults']).toBe(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
-    });
-
-    it('initiates countdownTimeTakeFinalPhotos with correct value', async () => {
-        expect(gameThree['countdownTimeTakeFinalPhotos']).toBe(InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS);
-    });
-
-    it('initiates countdownTimePresentFinalPhotos with correct value', async () => {
-        expect(gameThree['countdownTimePresentFinalPhotos']).toBe(
-            InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS
-        );
-    });
-
     it('initiates numberRounds with correct value', async () => {
         expect(gameThree['numberRounds']).toBe(InitialParameters.NUMBER_ROUNDS);
     });

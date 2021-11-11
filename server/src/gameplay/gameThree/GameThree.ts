@@ -32,12 +32,6 @@ type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
 //tdd as if you meant it
 // extract class refactoring martin fowler
 export default class GameThree extends Game<GameThreePlayer, GameStateInfo> implements GameThreeGameInterface {
-    private countdownTimeGameStart = InitialParameters.COUNTDOWN_TIME_GAME_START;
-    private countdownTimeTakePhoto = InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO;
-    private countdownTimeVote = InitialParameters.COUNTDOWN_TIME_VOTE;
-    private countdownTimeViewResults = InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS;
-    private countdownTimeTakeFinalPhotos = InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS;
-    private countdownTimePresentFinalPhotos = InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS;
     // private countdownTimeLeft = 0;
     // private countdownRunning = false;
 
@@ -133,9 +127,13 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     startGame(): void {
         setTimeout(() => {
             super.startGame();
-        }, this.countdownTimeGameStart);
+        }, InitialParameters.COUNTDOWN_TIME_GAME_START);
 
-        GameThreeEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTimeGameStart, this.gameName);
+        GameThreeEventEmitter.emitGameHasStartedEvent(
+            this.roomId,
+            InitialParameters.COUNTDOWN_TIME_GAME_START,
+            this.gameName
+        );
         this.handleNewRound();
     }
 
@@ -143,10 +141,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         //TODO verify game state
         //TODO reset player has photo
         const topic = this.photoTopics.nextTopic();
-        this.countdown.initiateCountdown(this.countdownTimeTakePhoto);
+        this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         this.gameThreeGameState = GameThreeGameState.TakingPhoto;
         //send to screen
-        GameThreeEventEmitter.emitNewTopic(this.roomId, topic!, this.countdownTimeTakePhoto);
+        GameThreeEventEmitter.emitNewTopic(this.roomId, topic!, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
     }
 
     pauseGame(): void {
@@ -276,9 +274,9 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                 };
             });
 
-        this.countdown.initiateCountdown(this.countdownTimeVote);
+        this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VOTE);
         this.gameThreeGameState = GameThreeGameState.Voting;
-        GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, this.countdownTimeVote);
+        GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
     }
 
     // *** Voting ***
@@ -345,9 +343,13 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             };
         });
         this.gameThreeGameState = GameThreeGameState.ViewingResults;
-        this.countdown.initiateCountdown(this.countdownTimeViewResults);
+        this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
 
-        GameThreeEventEmitter.emitPhotoVotingResults(this.roomId, votingResults, this.countdownTimeViewResults);
+        GameThreeEventEmitter.emitPhotoVotingResults(
+            this.roomId,
+            votingResults,
+            InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS
+        );
     }
 
     // *** Final round ***
@@ -357,8 +359,11 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     private sendTakeFinalPhotosCountdown() {
         this.gameThreeGameState = GameThreeGameState.TakingFinalPhotos;
-        this.countdown.initiateCountdown(this.countdownTimeTakeFinalPhotos);
-        GameThreeEventEmitter.emitTakeFinalPhotosCountdown(this.roomId, this.countdownTimeTakeFinalPhotos);
+        this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS);
+        GameThreeEventEmitter.emitTakeFinalPhotosCountdown(
+            this.roomId,
+            InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS
+        );
     }
 
     private handleAllFinalPhotosReceived() {
@@ -389,10 +394,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         const photoUrls: string[] = Array.from(this.players.values()).find(player => player.id === photographerId)!
             .finalRoundInfo.urls;
 
-        this.countdown.initiateCountdown(this.countdownTimePresentFinalPhotos);
+        this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);
         GameThreeEventEmitter.emitPresentFinalPhotosCountdown(
             this.roomId,
-            this.countdownTimePresentFinalPhotos,
+            InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS,
             photographerId,
             this.players.get(photographerId)!.name,
             photoUrls
@@ -404,9 +409,9 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             return { id: player.id, name: player.name };
         });
 
-        this.countdown.initiateCountdown(this.countdownTimeVote);
+        this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VOTE);
         this.gameThreeGameState = GameThreeGameState.FinalVoting;
-        GameThreeEventEmitter.emitVoteForFinalPhotos(this.roomId, this.countdownTimeVote, playerNameIds);
+        GameThreeEventEmitter.emitVoteForFinalPhotos(this.roomId, InitialParameters.COUNTDOWN_TIME_VOTE, playerNameIds);
     }
 
     private handleFinalPhotoVoteReceived(message: IMessagePhotoVote) {
