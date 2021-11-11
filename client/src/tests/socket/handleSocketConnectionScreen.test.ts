@@ -23,6 +23,7 @@ describe('Screen Socket Connection', () => {
             setTimeIsUp: jest.fn(),
             setSheepGameStarted: jest.fn(),
             setRoomId,
+            setRoundIdx: jest.fn(),
             history,
         };
 

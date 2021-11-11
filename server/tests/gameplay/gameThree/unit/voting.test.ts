@@ -26,6 +26,7 @@ describe('Handle Received Photo Vote', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         gameThree['gameThreeGameState'] = GameThreeGameState.Voting;
+        gameThree['roundIdx'] = 0; // to simulate update in handling first round
     });
 
     afterEach(() => {
@@ -56,6 +57,7 @@ describe('Remove voting points from players who did not participate this round',
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
+        gameThree['roundIdx'] = 0; // to simulate update in handling first round
     });
 
     afterEach(() => {
@@ -127,6 +129,7 @@ describe('All votes received', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
+        gameThree['roundIdx'] = 0; // to simulate update in handling first round
     });
 
     afterEach(() => {
@@ -156,6 +159,7 @@ describe('Send Photos to screen', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
+        gameThree['roundIdx'] = 0; // to simulate update in handling first round
     });
 
     afterEach(() => {

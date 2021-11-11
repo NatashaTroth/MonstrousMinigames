@@ -1,5 +1,5 @@
-import { MessageTypes } from "../../../utils/constants";
-import { MessageDataGame2 } from "../MessageDataGame2";
+import { MessageTypes } from '../../../utils/constants';
+import { MessageDataGame2 } from '../MessageDataGame2';
 
 export interface SheepGameHasStartedMessage {
     type: MessageTypes.gameHasStarted;

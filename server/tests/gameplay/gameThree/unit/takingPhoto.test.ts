@@ -37,7 +37,7 @@ describe('Handle taking photo', () => {
         const spy = jest.spyOn(GameThree.prototype as any, 'sendPhotosToScreen');
 
         gameThree['countdownTimeLeft'] = 0;
-        gameThree['handleTakingPhoto']();
+        gameThree['handleFinishedTakingPhoto']();
         expect(spy).toBeCalledTimes(1);
     });
 });
@@ -47,6 +47,7 @@ describe('Handle received photo', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         gameThree['gameThreeGameState'] = GameThreeGameState.TakingPhoto;
+        gameThree['roundIdx'] = 0; // to simulate update in handling first round
     });
 
     afterEach(() => {
@@ -66,6 +67,13 @@ describe('Handle received photo', () => {
 
     it('should save the photo url to the player', async () => {
         gameThree['handleReceivedPhoto'](message);
+        expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']].url).toBe(message.url);
+    });
+
+    fit('should not save the photo url for a new photo when a photo has already been received', async () => {
+        gameThree['handleReceivedPhoto'](message);
+        const newUrl = 'https://mockPhoto2.com';
+        gameThree['handleReceivedPhoto']({ ...message, url: newUrl });
         expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']].url).toBe(message.url);
     });
 
@@ -115,6 +123,7 @@ describe('All photos received', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
+        gameThree['roundIdx'] = 0; // to simulate update in handling first round
     });
 
     afterEach(() => {
@@ -146,6 +155,7 @@ describe('Send Photos to screen', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
+        gameThree['roundIdx'] = 0; // to simulate update in handling first round
     });
 
     afterEach(() => {
@@ -201,6 +211,28 @@ describe('Send Photos to screen', () => {
         gameThree['sendPhotosToScreen']();
         expect(eventData?.photoUrls.map(photoUrl => photoUrl.photographerId)).toEqual(
             expect.arrayContaining(photographerIds)
+        );
+    });
+
+    it('should return the incrementing photoId', async () => {
+        let eventData: undefined | VoteForPhotos;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS) {
+                eventData = message;
+            }
+        });
+
+        const photographerIds: string[] = [];
+        Array.from(gameThree.players.values()).forEach((player, idx) => {
+            player.roundInfo[gameThree['roundIdx']].received = true;
+            player.roundInfo[gameThree['roundIdx']].url = idx.toString();
+            photographerIds[idx] = player.id;
+        });
+
+        gameThree['sendPhotosToScreen']();
+        console.log(eventData);
+        expect(eventData?.photoUrls.map(photoUrl => photoUrl.photoId)).toEqual(
+            expect.arrayContaining(Array.from({ length: eventData!.photoUrls.length }, (_, i) => i + 1))
         );
     });
 

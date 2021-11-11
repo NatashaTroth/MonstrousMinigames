@@ -114,6 +114,7 @@ storage hinten - nach spiel alles löschen
 //photoPhotographerMapper:
 export interface photoPhotographerMapper {
     photographerId: string;
+    photoId: number;
     url: string;
 }
 ```
@@ -150,24 +151,70 @@ roomId: string;
 countdownTime: number;
 ```
 
-8.)
+--- Final round ---
+8.) Server sends 'game3/takeFinalPhotosCountdown':
+
+```typescript
+roomId: string;
+countdownTime: number;
+```
+
+9.) Controller takes a photos and sends them individually to server: 'game3/photo'
+
+```typescript
+{
+    url: string;
+}
+```
+
+10.) When the take final photos timer runs out or all photos have been sent (whichever is first), server sends the photo urls of one player (photographerId - random order) to client (SCREEN + CONTROLLER): 'game3/presentFinalPhotos'
+
+```typescript
+{
+    roomId: string;
+    countdownTime: number;
+    photographerId: string;
+    photoUrls: string[];
+}
+```
+
+11.) When countdown runs out, or presenting play clicks on the finished button, the photos of the next random photographer are sent ('game3/presentFinalPhotos'). (and so on until all players have presented)
+
+12.) Once all players have presented their photos, the final voting stage message is sent to the client (SCREEN + CONTROLLER) 'game3/voteForFinalPhotos'
+
+13.) Controllers send their votes 'game3/finishedPresenting' (same message content as voting before)
+
+```typescript
+{
+    voterId: string;
+    photographerId: string;
+}
+```
+
+14.) After time runs out or all votes are sent (whichever is first), the server sends the final results to the client (SCREEN + CONTROLLER) 'game3/finalResults'. The gameState is set to FINISHED.
+
+```typescript
+ {
+    roomId: string;
+    results: finalResults[];
+}
+
+//votingResultsPhotographerMapper:
+export interface finalResults {
+    photographerId: string;
+    points: number;
+    rank: number;
+}
+```
 
 Other:
 Every time a new round starts: get 'game3/newRound' message
 
 ---------MAGDA FRAGEN----------
-Soll ich dir den GameThreeGameState schicken:
 
-```typescript
-export enum GameThreeGameState {
-    BeforeStart = 'BEFORE_START',
-    TakingPhoto = 'TAKING_PHOTO',
-    Voting = 'VOTING',
-    ViewingResults = 'VIEWING_RESULTS',
-    WaitingForClientAction = 'WAITING_FOR_CLIENT_ACTION',
-}
-```
+//**\_\_\_**
+Punkte system: final round 1 pkt pro foto den man abschickt - max 3 fotos
 
-Soll ich dir den Countdown schicken - also wie lange man hat um die Voting Ergebnisse anzuschauen? Vermutlich schon oder?
+final round - 1 pkt pro vote
 
-Ich kann dir auch die Rundenzahl mitschicken - soll ich das in eine eigene Message - oder beim photoTopic message dazu?
+automatisch punkte wenn vorher nur 1 person in runde foto - skip vote message - kriegt alle punkte für die runde

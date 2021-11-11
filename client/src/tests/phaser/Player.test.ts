@@ -1,10 +1,10 @@
 import { depthDictionary } from '../../config/depthDictionary';
 import MainScene from '../../domain/game1/screen/components/MainScene';
-import { AnimationName } from '../../domain/phaser/enums';
+import { AnimationNameGame1 } from '../../domain/phaser/enums/AnimationName';
+import { GameToScreenMapper } from '../../domain/phaser/game1/GameToScreenMapper';
+import { InMemoryPlayerRenderer } from '../../domain/phaser/game1/InMemoryPlayerRenderer';
+import { Player } from '../../domain/phaser/game1/Player';
 import { CharacterAnimation } from '../../domain/phaser/gameInterfaces';
-import { GameToScreenMapper } from '../../domain/phaser/GameToScreenMapper';
-import { InMemoryPlayerRenderer } from '../../domain/phaser/InMemoryPlayerRenderer';
-import { Player } from '../../domain/phaser/Player';
 import { GameState, ObstacleTypes } from '../../utils/constants';
 
 describe('Player Renderer Initial', () => {
@@ -14,7 +14,7 @@ describe('Player Renderer Initial', () => {
     const character = {
         name: 'mock',
         file: 'test',
-        animations: new Map<AnimationName, CharacterAnimation>([]),
+        animations: new Map<AnimationNameGame1, CharacterAnimation>([]),
         properties: {
             frameWidth: 10,
             frameHeight: 10,
@@ -178,16 +178,16 @@ describe('Player Renderer', () => {
     const character = {
         name: 'mock',
         file: 'test',
-        animations: new Map<AnimationName, CharacterAnimation>([
+        animations: new Map<AnimationNameGame1, CharacterAnimation>([
             [
-                AnimationName.Running,
+                AnimationNameGame1.Running,
                 {
                     name: `running`,
                     frames: { start: 8, end: 11 },
                 },
             ],
             [
-                AnimationName.Stunned,
+                AnimationNameGame1.Stunned,
                 {
                     name: `stunned`,
                     frames: { start: 8, end: 11 },

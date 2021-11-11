@@ -32,7 +32,7 @@ describe('Constructor', () => {
     });
 
     it('should initiate roundInfo', async () => {
-        expect(player.roundInfo.length).toBe(InitialParameters.NUMBER_ROUNDS);
+        expect(player.roundInfo.length).toBe(InitialParameters.NUMBER_ROUNDS - 1);
     });
 
     it('should fill roundInfo with default values', async () => {

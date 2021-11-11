@@ -29,6 +29,9 @@ describe('Controller Socket Connection', () => {
             setStunnablePlayers: jest.fn(),
             setChosenGame: jest.fn(),
             setVoteForPhotoMessage: jest.fn(),
+            setRoundIdx: jest.fn(),
+            setCountdownTime: jest.fn(),
+            setTopicMessage: jest.fn(),
             setSheepGameStarted: jest.fn(),
         };
 

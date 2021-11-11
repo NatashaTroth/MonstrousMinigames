@@ -81,7 +81,6 @@ export enum MessageTypesGame1 {
 
 export enum MessageTypesGame2 {
     runForward = 'game2/runForward',
-    started = 'game2/hasStarted',
     phaserLoaded = 'game2/phaserGameLoaded',
     phaserLoadingTimedOut = 'game2/phaserLoadingTimedOut',
     allScreensSheepGameLoaded = 'game2/allScreensPhaserGameLoaded',
@@ -98,6 +97,7 @@ export const enum MessageTypesGame3 {
     photo = 'game3/photo',
     voteForPhotos = 'game3/voteForPhotos',
     photoVote = 'game3/photoVote',
+    newRound = 'game3/newRound',
 }
 
 export const localDevelopment = false; //the one in constants.ts on the server

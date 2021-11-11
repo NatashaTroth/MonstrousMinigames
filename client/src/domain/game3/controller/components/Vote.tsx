@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { CountdownCircleTimer } from 'react-countdown-circle-timer';
+import styled from 'styled-components';
 
+import Countdown from '../../../../components/common/Countdown';
 import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
 import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
-import theme from '../../../../styles/theme';
-import { StyledImg, TimeWrapper } from '../../screen/components/Game.sc';
+import { StyledImg } from '../../screen/components/Game.sc';
 import sendVote from '../gameState/sendVote';
-import { ScreenContainer } from './Game3Styles.sc';
-import { MediumImageContainer, VoteForPictureContainer, VoteInstructions } from './Vote.sc';
+import { Instructions, ScreenContainer } from './Game3Styles.sc';
+
 const Vote: React.FunctionComponent = () => {
     const { voteForPhotoMessage } = React.useContext(Game3Context);
     const [timeIsUp, setTimeIsUp] = React.useState(false);
@@ -24,7 +24,7 @@ const Vote: React.FunctionComponent = () => {
         <ScreenContainer>
             {!timeIsUp && (
                 <>
-                    <VoteInstructions>Choose the picture you like the most</VoteInstructions>
+                    <Instructions>Choose the picture you like the most</Instructions>
                     <VoteForPictureContainer>
                         {voteForPhotoMessage.photoUrls
                             .filter(picture => picture.photographerId !== userId)
@@ -39,24 +39,34 @@ const Vote: React.FunctionComponent = () => {
                     </VoteForPictureContainer>
                 </>
             )}
-            {timeIsUp && <VoteInstructions>Your vote has been submitted, waiting for the others...</VoteInstructions>}
+            {timeIsUp && <Instructions>Your vote has been submitted, waiting for the others...</Instructions>}
             {!timeIsUp && voteForPhotoMessage.countdownTime > 0 && (
-                <CountdownCircleTimer
-                    isPlaying
-                    duration={voteForPhotoMessage.countdownTime / 1000}
-                    colors={[
-                        [theme.palette.primary.main, 0.5],
-                        [theme.palette.secondary.main, 0.5],
-                    ]}
+                <Countdown
+                    time={voteForPhotoMessage.countdownTime}
                     onComplete={() => {
                         setTimeIsUp(true);
                     }}
-                >
-                    {({ remainingTime }) => <TimeWrapper>{remainingTime}</TimeWrapper>}
-                </CountdownCircleTimer>
+                />
             )}
         </ScreenContainer>
     );
 };
 
 export default Vote;
+
+const ButtonContainer = styled.div`
+    margin-bottom: 30px;
+`;
+const VoteForPictureContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    width: 100%;
+    align-self: stretch;
+`;
+const MediumImageContainer = styled.div`
+    display: flex;
+    width: 45%;
+    padding: 0.5rem;
+`;
