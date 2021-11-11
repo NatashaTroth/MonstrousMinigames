@@ -72,7 +72,7 @@ describe('Taking Photo', () => {
 
     it('should have a gameThreeGameState of TakingPhoto after only one photo is sent', async () => {
         gameThree['handleInput'](message);
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.TakingPhoto);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.TakingPhoto);
     });
 
     it('should not have received all photos when only one is sent', async () => {
@@ -92,7 +92,7 @@ describe('Taking Photo', () => {
         users.forEach(user => {
             gameThree['handleInput']({ ...message, userId: user.id });
         });
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.Voting);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.Voting);
     });
 
     it('should stop the countdown when all photos have been received', async () => {
@@ -105,7 +105,7 @@ describe('Taking Photo', () => {
 
     it('should change state to Voting when countdown runs out', async () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.Voting);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.Voting);
     });
 
     it('should not accept new photos when time has run out', async () => {

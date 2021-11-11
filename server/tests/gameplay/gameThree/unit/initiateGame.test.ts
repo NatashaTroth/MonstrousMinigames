@@ -30,7 +30,7 @@ describe('Change and verify game state', () => {
     // });
 
     it('initiates gameThreeGameState with BeforeStart value', async () => {
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.BeforeStart);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.BeforeStart);
     });
 
     // it('initiates countdownTimeLeft with 0', async () => {

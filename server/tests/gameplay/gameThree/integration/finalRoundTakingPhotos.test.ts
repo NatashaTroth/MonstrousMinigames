@@ -103,7 +103,7 @@ describe('Taking Final Photos', () => {
         for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
             gameThree['handleInput'](message);
         }
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.TakingFinalPhotos);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.TakingFinalPhotos);
     });
 
     it('should not have received all final photos when only one user has sent them', async () => {
@@ -151,7 +151,7 @@ describe('Taking Final Photos', () => {
                 gameThree['handleInput']({ ...message, userId: user.id });
             }
         });
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.PresentingFinalPhotos);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.PresentingFinalPhotos);
     });
 
     it('should stop the countdown when all photos have been received', async () => {
@@ -170,7 +170,7 @@ describe('Taking Final Photos', () => {
         }
 
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS);
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.PresentingFinalPhotos);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.PresentingFinalPhotos);
     });
 
     it('should not accept new photos when time has run out', async () => {

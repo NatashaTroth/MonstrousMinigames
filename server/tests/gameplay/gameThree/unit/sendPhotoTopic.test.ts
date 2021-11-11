@@ -27,7 +27,7 @@ describe('Send Photo Topic', () => {
 
     it('should change the gameThreeGameState to TakingPhoto', async () => {
         gameThree['sendPhotoTopic']();
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.TakingPhoto);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.TakingPhoto);
     });
 
     it('should call initiateCountdown with the take photo time', async () => {

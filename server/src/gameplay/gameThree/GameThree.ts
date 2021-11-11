@@ -11,6 +11,7 @@ import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
 import { Countdown } from './classes/Countdown';
 import { PhotoTopics } from './classes/PhotoTopics';
+import { StageController } from './classes/StageController';
 import InitialParameters from './constants/InitialParameters';
 import { InvalidUrlError } from './customErrors';
 import { GameThreeGameState } from './enums/GameState';
@@ -32,25 +33,15 @@ type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
 //tdd as if you meant it
 // extract class refactoring martin fowler
 export default class GameThree extends Game<GameThreePlayer, GameStateInfo> implements GameThreeGameInterface {
-    // private countdownTimeLeft = 0;
-    // private countdownRunning = false;
-
-    // private photoTopics?: string[];
-
-    // private countdown = new Countdown();
-
     // TODO
-    private countdown = new Countdown(() => this.handleUpdate());
+    private stageController = new StageController(this);
+    private countdown = new Countdown(this.stageController);
 
     public photoTopics = new PhotoTopics();
 
     private numberRounds = InitialParameters.NUMBER_ROUNDS;
-    private gameThreeGameState = GameThreeGameState.BeforeStart;
     private roundIdx = -1;
     private playerPresentOrder: string[] = [];
-
-    // private viewingPhotoResults = false //TODO handle
-    // private finalRound = false; //TODO
     gameName = GameNames.GAME3;
 
     constructor(roomId: string, public leaderboard: Leaderboard) {
@@ -82,31 +73,31 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         this.countdown.update(timeElapsedSinceLastFrame);
     }
 
-    private handleUpdate() {
-        switch (this.gameThreeGameState) {
-            case GameThreeGameState.TakingPhoto:
-                this.handleFinishedTakingPhoto();
-                break;
-            case GameThreeGameState.Voting:
-                this.handleFinishedVoting();
-                break;
-            case GameThreeGameState.ViewingResults:
-                this.handleNewRound();
-                break;
-            case GameThreeGameState.TakingFinalPhotos:
-                this.handleFinishedTakingFinalPhotos();
-                break;
-            case GameThreeGameState.PresentingFinalPhotos:
-                this.handlePresentingRoundFinished();
-                break;
-            case GameThreeGameState.FinalVoting:
-                this.handleFinishedFinalVoting();
-                break;
-        }
-    }
+    // private handleUpdate() {
+    //     switch (this.gameThreeGameState) {
+    //         case GameThreeGameState.TakingPhoto:
+    //             this.handleFinishedTakingPhoto();
+    //             break;
+    //         case GameThreeGameState.Voting:
+    //             this.handleFinishedVoting();
+    //             break;
+    //         case GameThreeGameState.ViewingResults:
+    //             this.handleNewRound();
+    //             break;
+    //         case GameThreeGameState.TakingFinalPhotos:
+    //             this.handleFinishedTakingFinalPhotos();
+    //             break;
+    //         case GameThreeGameState.PresentingFinalPhotos:
+    //             this.handlePresentingRoundFinished();
+    //             break;
+    //         case GameThreeGameState.FinalVoting:
+    //             this.handleFinishedFinalVoting();
+    //             break;
+    //     }
+    // }
 
     // *** Round Change ***
-    private handleNewRound() {
+    handleNewRound() {
         this.roundIdx++;
         GameThreeEventEmitter.emitNewRound(this.roomId, this.roundIdx);
         if (!this.isFinalRound() && this.photoTopics.isAnotherTopicAvailable()) {
@@ -142,7 +133,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         //TODO reset player has photo
         const topic = this.photoTopics.nextTopic();
         this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-        this.gameThreeGameState = GameThreeGameState.TakingPhoto;
+        this.stageController.updateStage(GameThreeGameState.TakingPhoto);
         //send to screen
         GameThreeEventEmitter.emitNewTopic(this.roomId, topic!, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
     }
@@ -206,7 +197,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     // }
 
     // *** Taking Photos ***
-    private handleFinishedTakingPhoto() {
+    handleFinishedTakingPhoto() {
         // GameThreeEventEmitter.emitTakePhotoCountdownOver(this.roomId); //TODO??
         this.sendPhotosToScreen();
     }
@@ -215,7 +206,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         if (!validator.isURL(message.url))
             throw new InvalidUrlError('The received value for the URL is not valid.', message.userId);
 
-        switch (this.gameThreeGameState) {
+        switch (this.stageController.stage) {
             case GameThreeGameState.TakingPhoto:
                 this.handleReceivedSinglePhoto(message);
                 break;
@@ -275,13 +266,13 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             });
 
         this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VOTE);
-        this.gameThreeGameState = GameThreeGameState.Voting;
+        this.stageController.updateStage(GameThreeGameState.Voting);
         GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
     }
 
     // *** Voting ***
     private handleReceivedPhotoVote(message: IMessagePhotoVote) {
-        switch (this.gameThreeGameState) {
+        switch (this.stageController.stage) {
             case GameThreeGameState.Voting:
                 this.handleSinglePhotoVoteReceived(message);
                 break;
@@ -309,7 +300,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         }
     }
 
-    private handleFinishedVoting() {
+    handleFinishedVoting() {
         this.removeVotingPointsFromPlayersNoParticipation();
         this.sendPhotoVotingResultsToScreen();
 
@@ -342,7 +333,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                 points: player.roundInfo[this.roundIdx].points,
             };
         });
-        this.gameThreeGameState = GameThreeGameState.ViewingResults;
+        this.stageController.updateStage(GameThreeGameState.ViewingResults);
         this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
 
         GameThreeEventEmitter.emitPhotoVotingResults(
@@ -358,7 +349,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     private sendTakeFinalPhotosCountdown() {
-        this.gameThreeGameState = GameThreeGameState.TakingFinalPhotos;
+        this.stageController.updateStage(GameThreeGameState.TakingFinalPhotos);
         this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS);
         GameThreeEventEmitter.emitTakeFinalPhotosCountdown(
             this.roomId,
@@ -371,17 +362,17 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         this.handleFinishedTakingFinalPhotos();
     }
 
-    private handleFinishedTakingFinalPhotos() {
+    handleFinishedTakingFinalPhotos() {
         this.playerPresentOrder = shuffleArray(
             Array.from(this.players.values())
                 .filter(player => player.finalRoundInfo.received)
                 .map(player => player.id)
         );
-        this.gameThreeGameState = GameThreeGameState.PresentingFinalPhotos;
+        this.stageController.updateStage(GameThreeGameState.PresentingFinalPhotos);
         this.handlePresentingRoundFinished();
     }
 
-    private handlePresentingRoundFinished() {
+    handlePresentingRoundFinished() {
         if (this.playerPresentOrder.length > 0) {
             this.sendFinalPhotosToScreen();
         } else {
@@ -410,7 +401,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         });
 
         this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VOTE);
-        this.gameThreeGameState = GameThreeGameState.FinalVoting;
+        this.stageController.updateStage(GameThreeGameState.FinalVoting);
         GameThreeEventEmitter.emitVoteForFinalPhotos(this.roomId, InitialParameters.COUNTDOWN_TIME_VOTE, playerNameIds);
     }
 
@@ -447,7 +438,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         this.handleFinishedFinalVoting();
     }
 
-    private handleFinishedFinalVoting() {
+    handleFinishedFinalVoting() {
         const playerRanks: GameThreePlayerRank[] = Array.from(this.players.values()).map(player => {
             return {
                 id: player.id,
@@ -467,7 +458,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                 return result;
             });
 
-        this.gameThreeGameState = GameThreeGameState.ViewingFinalResults;
+        this.stageController.updateStage(GameThreeGameState.ViewingFinalResults);
         this.gameState = GameState.Finished;
         // GameThreeEventEmitter.emitViewingFinalResults(this.roomId, finalResults);
         GameThreeEventEmitter.emitGameHasFinishedEvent(this.roomId, this.gameState, playerRanks);

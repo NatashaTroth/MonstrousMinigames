@@ -58,7 +58,7 @@ describe('Send take final photos countdown', () => {
 
     it('should set gameThreeGameState to TakingFinalPhotos', async () => {
         gameThree['sendTakeFinalPhotosCountdown']();
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.TakingFinalPhotos);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.TakingFinalPhotos);
     });
 });
 
@@ -161,6 +161,6 @@ describe('Send final photos to screen', () => {
 
     // it('should set gameThreeGameState to Voting', async () => {
     //     gameThree['sendPhotosToScreen']();
-    //     expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.Voting);
+    //     expect(gameThree['stageController'].stage).toBe(GameThreeGameState.Voting);
     // });
 });

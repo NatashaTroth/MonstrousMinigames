@@ -104,7 +104,7 @@ describe('Presenting Final Photos', () => {
 
     it('should change keep the state PresentingFinalPhotos when countdown runs out and not all players have presented', async () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.PresentingFinalPhotos);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.PresentingFinalPhotos);
     });
 
     it('should change the state to FinalVoting when countdown runs out and all players have presented', async () => {
@@ -113,7 +113,7 @@ describe('Presenting Final Photos', () => {
         }
 
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.FinalVoting);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.FinalVoting);
     });
 
     it('should emit the PresentingFinalPhotos event when countdown runs out and not all players have presented', async () => {

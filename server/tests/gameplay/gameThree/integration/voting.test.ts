@@ -80,7 +80,7 @@ describe('Voting stage', () => {
 
     it('should have a gameThreeGameState of Voting after only one vote is sent', async () => {
         gameThree['handleInput'](message);
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.Voting);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.Voting);
     });
 
     it('should not have received all votes when only one is sent', async () => {
@@ -95,7 +95,7 @@ describe('Voting stage', () => {
 
     it('should change state to ViewingResults when all votes have been received', async () => {
         receiveAllVotes();
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.ViewingResults);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.ViewingResults);
     });
 
     it('should stop the countdown when all votes have been received', async () => {
@@ -106,7 +106,7 @@ describe('Voting stage', () => {
 
     it('should change state to ViewingResults when countdown runs out', async () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.ViewingResults);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.ViewingResults);
     });
 
     it('should not accept new votes when time has run out', async () => {

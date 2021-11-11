@@ -30,7 +30,7 @@ describe('Update method', () => {
         const spy = jest.spyOn(GameThree.prototype as any, 'handleFinishedTakingPhoto').mockImplementation(() => {
             Promise.resolve();
         });
-        gameThree['gameThreeGameState'] = GameThreeGameState.TakingPhoto;
+        gameThree['stageController'].stage = GameThreeGameState.TakingPhoto;
         // gameThree['countdown'].countdownTimeLeft = 0
         gameThree['update'](100, timeElapsed);
         expect(spy).toHaveBeenCalledTimes(1);
@@ -40,7 +40,7 @@ describe('Update method', () => {
         const spy = jest.spyOn(GameThree.prototype as any, 'handleFinishedTakingPhoto').mockImplementation(() => {
             Promise.resolve();
         });
-        gameThree['gameThreeGameState'] = GameThreeGameState.TakingPhoto;
+        gameThree['stageController'].stage = GameThreeGameState.TakingPhoto;
         gameThree['countdown'].countdownTimeLeft = initialCountDownTime;
         gameThree['update'](100, timeElapsed);
         expect(spy).not.toHaveBeenCalled();
@@ -50,7 +50,7 @@ describe('Update method', () => {
         const spy = jest.spyOn(GameThree.prototype as any, 'handleFinishedVoting').mockImplementation(() => {
             Promise.resolve();
         });
-        gameThree['gameThreeGameState'] = GameThreeGameState.Voting;
+        gameThree['stageController'].stage = GameThreeGameState.Voting;
         gameThree['update'](100, timeElapsed);
         expect(spy).toHaveBeenCalledTimes(1);
     });
@@ -59,7 +59,7 @@ describe('Update method', () => {
         const spy = jest.spyOn(GameThree.prototype as any, 'handleFinishedVoting').mockImplementation(() => {
             Promise.resolve();
         });
-        gameThree['gameThreeGameState'] = GameThreeGameState.Voting;
+        gameThree['stageController'].stage = GameThreeGameState.Voting;
         gameThree['countdown'].countdownTimeLeft = initialCountDownTime;
         gameThree['update'](100, timeElapsed);
         expect(spy).not.toHaveBeenCalled();
@@ -69,7 +69,7 @@ describe('Update method', () => {
         const spy = jest.spyOn(GameThree.prototype as any, 'handleNewRound').mockImplementation(() => {
             Promise.resolve();
         });
-        gameThree['gameThreeGameState'] = GameThreeGameState.ViewingResults;
+        gameThree['stageController'].stage = GameThreeGameState.ViewingResults;
         gameThree['update'](100, timeElapsed);
         expect(spy).toHaveBeenCalledTimes(1);
     });
@@ -78,7 +78,7 @@ describe('Update method', () => {
         const spy = jest.spyOn(GameThree.prototype as any, 'handleNewRound').mockImplementation(() => {
             Promise.resolve();
         });
-        gameThree['gameThreeGameState'] = GameThreeGameState.ViewingResults;
+        gameThree['stageController'].stage = GameThreeGameState.ViewingResults;
         gameThree['countdown'].countdownTimeLeft = initialCountDownTime;
         gameThree['update'](100, timeElapsed);
         expect(spy).not.toHaveBeenCalled();

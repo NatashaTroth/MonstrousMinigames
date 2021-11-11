@@ -26,7 +26,7 @@ describe('Handle Received Photo Vote', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
-        gameThree['gameThreeGameState'] = GameThreeGameState.Voting;
+        gameThree['stageController'].stage = GameThreeGameState.Voting;
         gameThree['roundIdx'] = 0; // to simulate update in handling first round
     });
 
@@ -48,7 +48,7 @@ describe('Handle Received Photo Vote', () => {
     });
 
     it("should not set the voter's voted property to true, if gameThreeGameState is not Voting", async () => {
-        gameThree['gameThreeGameState'] = GameThreeGameState.BeforeStart;
+        gameThree['stageController'].stage = GameThreeGameState.BeforeStart;
         gameThree['handleReceivedPhotoVote'](message);
         expect(gameThree.players.get(message.voterId)!.roundInfo[gameThree['roundIdx']].voted).toBeFalsy();
     });
@@ -230,6 +230,6 @@ describe('Send Photos to screen', () => {
 
     it('should set gameThreeGameState to ViewingResults', async () => {
         gameThree['sendPhotoVotingResultsToScreen']();
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.ViewingResults);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.ViewingResults);
     });
 });

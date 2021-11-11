@@ -1,10 +1,15 @@
 // todo VL eher gemeloop
 
+import { StageController } from './StageController';
+
 export class Countdown {
     public countdownTimeLeft = 0;
     public countdownRunning = false;
+    private stageController: StageController;
 
-    constructor(private onCountdownFinished: () => void) {}
+    constructor(stageController: StageController) {
+        this.stageController = stageController;
+    }
 
     initiateCountdown(time: number) {
         this.countdownTimeLeft = time;
@@ -29,7 +34,8 @@ export class Countdown {
 
             if (this.countdownOver()) {
                 this.stopCountdown();
-                this.onCountdownFinished();
+                // this.onCountdownFinished();
+                this.stageController.handleNextStage();
             }
         }
     }

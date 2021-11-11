@@ -1,6 +1,9 @@
 import 'reflect-metadata';
 
+import { GameThree } from '../../../../src/gameplay';
 import { Countdown } from '../../../../src/gameplay/gameThree/classes/Countdown';
+import { StageController } from '../../../../src/gameplay/gameThree/classes/StageController';
+import { leaderboard, roomId } from '../../mockData';
 
 let countdown: Countdown;
 
@@ -9,11 +12,7 @@ const timeReduction = 50;
 
 describe('Initiate Countdown', () => {
     beforeEach(() => {
-        countdown = new Countdown(
-            jest.fn(() => {
-                /*do nothing */
-            })
-        );
+        countdown = new Countdown(new StageController(new GameThree(roomId, leaderboard)));
     });
 
     it('should set countdownTimeLeft to the countdown time', async () => {
@@ -29,11 +28,7 @@ describe('Initiate Countdown', () => {
 
 describe('Reduce Countdown', () => {
     beforeEach(() => {
-        countdown = new Countdown(
-            jest.fn(() => {
-                /*do nothing */
-            })
-        );
+        countdown = new Countdown(new StageController(new GameThree(roomId, leaderboard)));
         countdown.countdownTimeLeft = initialCountDownTime;
     });
 
@@ -45,11 +40,7 @@ describe('Reduce Countdown', () => {
 
 describe('Stop Countdown', () => {
     beforeEach(() => {
-        countdown = new Countdown(
-            jest.fn(() => {
-                /*do nothing */
-            })
-        );
+        countdown = new Countdown(new StageController(new GameThree(roomId, leaderboard)));
         countdown.countdownTimeLeft = initialCountDownTime;
     });
 
@@ -66,11 +57,7 @@ describe('Stop Countdown', () => {
 
 describe('Check if countdown is over', () => {
     beforeEach(() => {
-        countdown = new Countdown(
-            jest.fn(() => {
-                /*do nothing */
-            })
-        );
+        countdown = new Countdown(new StageController(new GameThree(roomId, leaderboard)));
     });
 
     it('should return false', async () => {

@@ -52,6 +52,6 @@ describe('Start', () => {
 
     it('should start TakingPhoto stage', async () => {
         gameThree['startGame']();
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.TakingPhoto);
+        expect(gameThree['stageController'].stage).toBe(GameThreeGameState.TakingPhoto);
     });
 });
