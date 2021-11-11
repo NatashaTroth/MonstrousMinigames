@@ -53,7 +53,7 @@ describe('Initiate stage', () => {
         jest.clearAllMocks();
     });
 
-    it('should emit the FinalResults event when voting is over', async () => {
+    it('should emit the GameHasFinished event when voting is over', async () => {
         let eventCalled = false;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
             if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
