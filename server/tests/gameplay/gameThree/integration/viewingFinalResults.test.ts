@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
+import { GameState } from '../../../../src/gameplay/enums';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
 // import { GameThreeGameState } from '../../../../src/gameplay/gameThree/enums/GameState'; //TODO test
 import {
@@ -10,8 +11,8 @@ import {
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
 import { IMessagePhoto } from '../../../../src/gameplay/gameThree/interfaces';
 import {
-    GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS, GameThreeEventMessage, ViewingFinalPhotos
-} from '../../../../src/gameplay/gameThree/interfaces/GameThreeEventMessages';
+    GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage, GlobalGameHasFinished
+} from '../../../../src/gameplay/interfaces/GlobalEventMessages';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
 import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
 
@@ -52,10 +53,10 @@ describe('Initiate stage', () => {
         jest.clearAllMocks();
     });
 
-    it('should emit the FinalResults event when voting is over', async () => {
+    it('should emit the GameHasFinished event when voting is over', async () => {
         let eventCalled = false;
-        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
-            if (message.type === GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS) {
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+            if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
                 eventCalled = true;
             }
         });
@@ -65,10 +66,14 @@ describe('Initiate stage', () => {
 });
 
 describe('Final results', () => {
-    let eventData: ViewingFinalPhotos = {
-        type: GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS,
+    let eventData: GlobalGameHasFinished = {
+        type: GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED,
         roomId: 'xxx',
-        results: [],
+        data: {
+            roomId: 'xx',
+            gameState: GameState.Finished,
+            playerRanks: [],
+        },
     };
     const pointsArray: number[] = [];
 
@@ -104,8 +109,8 @@ describe('Final results', () => {
         });
 
         // get final results
-        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
-            if (message.type === GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS) {
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+            if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
                 eventData = message;
             }
         });
@@ -118,39 +123,41 @@ describe('Final results', () => {
     });
 
     it('should emit the points sorted in descending order', async () => {
-        expect(eventData.results.map(result => result.points)).toStrictEqual(pointsArray.sort((a, b) => b - a));
+        expect(eventData.data.playerRanks.map(result => result.points)).toStrictEqual(
+            pointsArray.sort((a, b) => b - a)
+        );
     });
 
     it('should emit the points sorted in descending order (0 and 1st place)', async () => {
-        expect(eventData.results[0].points).toBeGreaterThanOrEqual(eventData.results[1].points);
+        expect(eventData.data.playerRanks[0].points).toBeGreaterThanOrEqual(eventData.data.playerRanks[1].points);
     });
 
     it('should emit the points sorted in descending order (1st and 2nd place)', async () => {
-        expect(eventData.results[1].points).toBeGreaterThanOrEqual(eventData.results[2].points);
+        expect(eventData.data.playerRanks[1].points).toBeGreaterThanOrEqual(eventData.data.playerRanks[2].points);
     });
 
     it('should emit the points sorted in descending order (2nd and 3rd place)', async () => {
-        expect(eventData.results[2].points).toBeGreaterThanOrEqual(eventData.results[3].points);
+        expect(eventData.data.playerRanks[2].points).toBeGreaterThanOrEqual(eventData.data.playerRanks[3].points);
     });
 
     it('should emit the points sorted in descending order (2nd and 3rd place)', async () => {
-        expect(eventData.results[2].points).toBeGreaterThanOrEqual(eventData.results[3].points);
+        expect(eventData.data.playerRanks[2].points).toBeGreaterThanOrEqual(eventData.data.playerRanks[3].points);
     });
 
     it('should emit the rank 1', async () => {
-        expect(eventData.results[0].rank).toBe(1);
+        expect(eventData.data.playerRanks[0].rank).toBe(1);
     });
 
     it('should emit the rank 2', async () => {
-        expect(eventData.results[1].rank).toBe(2);
+        expect(eventData.data.playerRanks[1].rank).toBe(2);
     });
 
     it('should emit the rank 3', async () => {
-        expect(eventData.results[2].rank).toBe(3);
+        expect(eventData.data.playerRanks[2].rank).toBe(3);
     });
 
     it('should emit the rank 4', async () => {
-        expect(eventData.results[3].rank).toBe(4);
+        expect(eventData.data.playerRanks[3].rank).toBe(4);
     });
 
     it.todo('test points better - just done for quickness here. also test when the same amount of points same rank');

@@ -194,8 +194,12 @@ countdownTime: number;
 
 ```typescript
  {
-    roomId: string;
-    results: finalResults[];
+    roomId,
+    data: {
+        roomId,
+        gameState,
+        playerRanks,
+    },
 }
 
 //votingResultsPhotographerMapper:
@@ -219,3 +223,5 @@ Every time a new round starts: get 'game3/newRound' message
 automatisch punkte wenn vorher nur 1 person in runde foto - skip vote message - kriegt alle punkte für die runde
 
 user deactivated
+
+add all the global messages stop game (not pause), ...
