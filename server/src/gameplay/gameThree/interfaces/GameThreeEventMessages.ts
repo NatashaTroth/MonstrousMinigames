@@ -1,7 +1,8 @@
 //TODO Events/Messages 1
 
-import { GameStateInfo, PlayerNameId, votingResultsPhotographerMapper } from './';
-import { FinalResults } from './FinalResults';
+
+import { PlayerNameId, votingResultsPhotographerMapper } from './';
+import { GameThreePlayerRank } from './GameThreePlayerRank';
 import { photoPhotographerMapper } from './photoPhotographerMapper';
 
 export const GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE = 'game3/initialGameState';
@@ -28,11 +29,11 @@ export const GAME_THREE_EVENT_MESSAGES = [
     GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS,
 ];
 
-export interface GameThreeInitialGameState {
-    type: typeof GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE;
-    roomId: string;
-    data: GameStateInfo;
-}
+// export interface GameThreeInitialGameState {
+//     type: typeof GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE;
+//     roomId: string;
+//     data: GameStateInfo;
+// }
 export interface GameThreeNewRound {
     type: typeof GAME_THREE_EVENT_MESSAGE__NEW_ROUND;
     roomId: string;
@@ -76,6 +77,7 @@ export interface PresentFinalPhotos {
     roomId: string;
     countdownTime: number;
     photographerId: string;
+    name: string;
     photoUrls: string[];
 }
 export interface VoteForFinalPhotos {
@@ -87,11 +89,11 @@ export interface VoteForFinalPhotos {
 export interface ViewingFinalPhotos {
     type: typeof GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS;
     roomId: string;
-    results: FinalResults[];
+    results: GameThreePlayerRank[];
 }
 
 export type GameThreeEventMessage =
-    | GameThreeInitialGameState
+    // | GameThreeInitialGameState
     | GameThreeNewRound
     | NewPhotoTopicInfo
     | TakePhotoCountdownOver

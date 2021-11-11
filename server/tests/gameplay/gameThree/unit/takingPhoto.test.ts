@@ -70,7 +70,7 @@ describe('Handle received photo', () => {
         expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['roundIdx']].url).toBe(message.url);
     });
 
-    fit('should not save the photo url for a new photo when a photo has already been received', async () => {
+    it('should not save the photo url for a new photo when a photo has already been received', async () => {
         gameThree['handleReceivedPhoto'](message);
         const newUrl = 'https://mockPhoto2.com';
         gameThree['handleReceivedPhoto']({ ...message, url: newUrl });
@@ -230,7 +230,6 @@ describe('Send Photos to screen', () => {
         });
 
         gameThree['sendPhotosToScreen']();
-        console.log(eventData);
         expect(eventData?.photoUrls.map(photoUrl => photoUrl.photoId)).toEqual(
             expect.arrayContaining(Array.from({ length: eventData!.photoUrls.length }, (_, i) => i + 1))
         );

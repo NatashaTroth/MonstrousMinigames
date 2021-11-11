@@ -139,6 +139,7 @@ describe('Presenting Final Photos', () => {
             roomId: '',
             countdownTime: 0,
             photographerId: '',
+            name: '',
             photoUrls: [],
         };
 
@@ -152,12 +153,33 @@ describe('Presenting Final Photos', () => {
         expect(eventData.countdownTime).toBe(InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);
     });
 
+    it('should emit the PresentingFinalPhotos event with the photographers name for presenting', async () => {
+        let eventData: PresentFinalPhotos = {
+            type: GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
+            roomId: '',
+            countdownTime: 0,
+            photographerId: '',
+            name: '',
+            photoUrls: [],
+        };
+
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS) {
+                eventData = message;
+            }
+        });
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);
+
+        expect(eventData.name).toBe(gameThree.players.get(eventData.photographerId)!.name);
+    });
+
     it('should emit the PresentingFinalPhotos event with the urls of that player', async () => {
         let eventData: PresentFinalPhotos = {
             type: GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
             roomId: '',
             countdownTime: 0,
             photographerId: '',
+            name: '',
             photoUrls: [],
         };
 
