@@ -46,7 +46,7 @@ const topic = 'cats';
 const roundIdx = 1;
 const photoUrls = [{ photographerId: users[0].id, url: mockPhotoUrl, photoId: 1 }];
 const votingResults = [{ photographerId: users[0].id, points: 5 }];
-const finalVotingResults = [{ photographerId: users[0].id, points: 5, rank: 1 }];
+const finalVotingResults = [{ id: users[0].id, name: users[0].name, points: 5, rank: 1, isActive: true }];
 
 describe('Can handle function', () => {
     beforeAll(() => {
