@@ -76,6 +76,7 @@ export interface PresentFinalPhotos {
     roomId: string;
     countdownTime: number;
     photographerId: string;
+    name: string;
     photoUrls: string[];
 }
 export interface VoteForFinalPhotos {

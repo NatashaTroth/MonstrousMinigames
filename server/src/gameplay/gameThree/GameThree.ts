@@ -382,6 +382,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             this.roomId,
             this.countdownTimePresentFinalPhotos,
             photographerId,
+            this.players.get(photographerId)!.name,
             photoUrls
         );
     }
