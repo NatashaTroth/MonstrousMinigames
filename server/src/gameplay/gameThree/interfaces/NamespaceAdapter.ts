@@ -1,4 +1,4 @@
-import { GameThreeEventMessage } from './interfaces/GameThreeEventMessages';
+import { GameThreeEventMessage } from './GameThreeEventMessages';
 
 export interface NamespaceAdapter {
     to: (roomId: string) => NamespaceAdapter;

@@ -6,6 +6,7 @@ import { GameThreePlayerRank } from './GameThreePlayerRank';
 import { InitialGameStateInfo } from './InitialGameStateInfo';
 import { IMessagePhoto } from './messagePhoto';
 import { IMessagePhotoVote } from './messagePhotoVote';
+import { NamespaceAdapter } from './NamespaceAdapter';
 import { Photo } from './Photo';
 import { photoPhotographerMapper } from './photoPhotographerMapper';
 import { PlayerNameId } from './PlayerNameId';
@@ -28,4 +29,5 @@ export {
     FinalPhotos,
     PlayerNameId,
     FinalResults,
+    NamespaceAdapter,
 };

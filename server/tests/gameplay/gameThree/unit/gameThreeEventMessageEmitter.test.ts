@@ -6,6 +6,7 @@ import { GameThree } from '../../../../src/gameplay';
 import {
     GameThreeEventMessageEmitter
 } from '../../../../src/gameplay/gameThree/GameThreeEventMessageEmitter';
+import { NamespaceAdapter } from '../../../../src/gameplay/gameThree/interfaces';
 import {
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
     GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS, GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
@@ -16,7 +17,6 @@ import {
     PhotoVotingResults, PresentFinalPhotos, TakeFinalPhotosCountdown, TakePhotoCountdownOver,
     ViewingFinalPhotos, VoteForFinalPhotos, VoteForPhotos
 } from '../../../../src/gameplay/gameThree/interfaces/GameThreeEventMessages';
-import { NamespaceAdapter } from '../../../../src/gameplay/gameThree/NamespaceMock';
 import { leaderboard, mockPhotoUrl, roomId, users } from '../../mockData';
 
 let gameThree: GameThree;
