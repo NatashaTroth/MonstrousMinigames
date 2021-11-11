@@ -57,11 +57,11 @@ describe('Can handle function', () => {
         gameThree.createNewGame(users);
     });
 
-    xit('should return false for a wrong message type', async () => {
+    it('should return false for a wrong message type', async () => {
         expect(gameThreeEventMessageEmitter.canHandle({ type: 'test', roomId: 'xx' }, gameThree)).toBeFalsy();
     });
 
-    xit('should return true for a correct message type', async () => {
+    it('should return true for a correct message type', async () => {
         expect(
             gameThreeEventMessageEmitter.canHandle(
                 { type: GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, roomId: 'xx' },
@@ -81,7 +81,7 @@ describe('Handle function send to controller', () => {
         gameThree.createNewGame(users);
     });
 
-    xit('should emit GAME_THREE_EVENT_MESSAGE__NEW_ROUND ', () => {
+    it('should emit GAME_THREE_EVENT_MESSAGE__NEW_ROUND ', () => {
         const message: GameThreeNewRound = {
             type: GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
             roomId,
@@ -92,7 +92,7 @@ describe('Handle function send to controller', () => {
         expect(controllerSpaceEmit).toHaveBeenCalledWith('message', message);
     });
 
-    xit('should call emit GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC', () => {
+    it('should call emit GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC', () => {
         const message: NewPhotoTopicInfo = {
             type: GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC,
             roomId,
@@ -104,7 +104,7 @@ describe('Handle function send to controller', () => {
         expect(controllerSpaceEmit).toHaveBeenCalledWith('message', message);
     });
 
-    xit('should call emit GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER', () => {
+    it('should call emit GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER', () => {
         const message: TakePhotoCountdownOver = {
             type: GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER,
             roomId,
@@ -114,7 +114,7 @@ describe('Handle function send to controller', () => {
         expect(controllerSpaceEmit).toHaveBeenCalledWith('message', message);
     });
 
-    xit('should call emit GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS', () => {
+    it('should call emit GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS', () => {
         const message: VoteForPhotos = {
             type: GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS,
             roomId,
@@ -126,7 +126,7 @@ describe('Handle function send to controller', () => {
         expect(controllerSpaceEmit).toHaveBeenCalledWith('message', message);
     });
 
-    xit('should call emit GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS', () => {
+    it('should call emit GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS', () => {
         const message: PhotoVotingResults = {
             type: GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS,
             roomId,
@@ -138,7 +138,7 @@ describe('Handle function send to controller', () => {
         expect(controllerSpaceEmit).toHaveBeenCalledWith('message', message);
     });
 
-    xit('should call emit GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN', () => {
+    it('should call emit GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN', () => {
         const message: TakeFinalPhotosCountdown = {
             type: GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
             roomId,
@@ -149,7 +149,7 @@ describe('Handle function send to controller', () => {
         expect(controllerSpaceEmit).toHaveBeenCalledWith('message', message);
     });
 
-    xit('should call emit GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS', () => {
+    it('should call emit GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS', () => {
         const message: PresentFinalPhotos = {
             type: GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
             roomId,
@@ -163,7 +163,7 @@ describe('Handle function send to controller', () => {
         expect(controllerSpaceEmit).toHaveBeenCalledWith('message', message);
     });
 
-    xit('should call emit GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS', () => {
+    it('should call emit GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS', () => {
         const message: VoteForFinalPhotos = {
             type: GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS,
             roomId,
@@ -192,7 +192,7 @@ describe('Handle function send to screen', () => {
     //     emit: (messageName: string, message: GameThreeEventMessage) => void;
     // }
 
-    xit('should emit GAME_THREE_EVENT_MESSAGE__NEW_ROUND ', () => {
+    it('should emit GAME_THREE_EVENT_MESSAGE__NEW_ROUND ', () => {
         const message: GameThreeNewRound = {
             type: GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
             roomId,
@@ -203,7 +203,7 @@ describe('Handle function send to screen', () => {
         expect(screenSpaceEmit).toHaveBeenCalledWith('message', message);
     });
 
-    xit('should call emit GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC', () => {
+    it('should call emit GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC', () => {
         const message: NewPhotoTopicInfo = {
             type: GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC,
             roomId,
@@ -215,7 +215,7 @@ describe('Handle function send to screen', () => {
         expect(screenSpaceEmit).toHaveBeenCalledWith('message', message);
     });
 
-    xit('should call emit GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER', () => {
+    it('should call emit GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER', () => {
         const message: TakePhotoCountdownOver = {
             type: GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER,
             roomId,
@@ -225,7 +225,7 @@ describe('Handle function send to screen', () => {
         expect(screenSpaceEmit).toHaveBeenCalledWith('message', message);
     });
 
-    xit('should call emit GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS', () => {
+    it('should call emit GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS', () => {
         const message: VoteForPhotos = {
             type: GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS,
             roomId,
@@ -237,7 +237,7 @@ describe('Handle function send to screen', () => {
         expect(screenSpaceEmit).toHaveBeenCalledWith('message', message);
     });
 
-    xit('should call emit GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS', () => {
+    it('should call emit GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS', () => {
         const message: PhotoVotingResults = {
             type: GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS,
             roomId,
@@ -249,7 +249,7 @@ describe('Handle function send to screen', () => {
         expect(screenSpaceEmit).toHaveBeenCalledWith('message', message);
     });
 
-    xit('should call emit GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN', () => {
+    it('should call emit GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN', () => {
         const message: TakeFinalPhotosCountdown = {
             type: GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
             roomId,
@@ -260,7 +260,7 @@ describe('Handle function send to screen', () => {
         expect(screenSpaceEmit).toHaveBeenCalledWith('message', message);
     });
 
-    xit('should call emit GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS', () => {
+    it('should call emit GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS', () => {
         const message: PresentFinalPhotos = {
             type: GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
             roomId,
@@ -274,7 +274,7 @@ describe('Handle function send to screen', () => {
         expect(screenSpaceEmit).toHaveBeenCalledWith('message', message);
     });
 
-    xit('should call emit GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS', () => {
+    it('should call emit GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS', () => {
         const message: VoteForFinalPhotos = {
             type: GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS,
             roomId,
@@ -285,6 +285,4 @@ describe('Handle function send to screen', () => {
         gameThreeEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
         expect(screenSpaceEmit).toHaveBeenCalledWith('message', message);
     });
-
-    it.todo('test finished message');
 });

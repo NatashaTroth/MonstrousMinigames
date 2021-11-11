@@ -194,8 +194,12 @@ countdownTime: number;
 
 ```typescript
  {
-    roomId: string;
-    results: finalResults[];
+    roomId,
+    data: {
+        roomId,
+        gameState,
+        playerRanks,
+    },
 }
 
 //votingResultsPhotographerMapper:
