@@ -1,26 +1,25 @@
-import { controllerGame3Route, controllerVoteRoute } from "../../../../utils/routes";
-import history from "../../../history/history";
-import { MessageSocket } from "../../../socket/MessageSocket";
-import { Socket } from "../../../socket/Socket";
+import { controllerGame3Route, controllerVoteRoute } from '../../../../utils/routes';
+import history from '../../../history/history';
+import { MessageSocket } from '../../../socket/MessageSocket';
+import { Socket } from '../../../socket/Socket';
 import {
-    FinalRoundCountdownMessage, finalRoundCountdownTypeGuard
-} from "../../../typeGuards/game3/finalRoundCountdown";
+    FinalRoundCountdownMessage,
+    finalRoundCountdownTypeGuard,
+} from '../../../typeGuards/game3/finalRoundCountdown';
+import { NewPhotoTopicMessage, newPhotoTopicTypeGuard } from '../../../typeGuards/game3/newPhotoTopic';
+import { NewRoundMessage, newRoundTypeGuard } from '../../../typeGuards/game3/newRound';
 import {
-    NewPhotoTopicMessage, newPhotoTopicTypeGuard
-} from "../../../typeGuards/game3/newPhotoTopic";
-import { NewRoundMessage, newRoundTypeGuard } from "../../../typeGuards/game3/newRound";
-import {
-    PhotoUserMapper, VoteForPhotoMessage, voteForPhotoMessageTypeGuard
-} from "../../../typeGuards/game3/voteForPhotos";
-import {
-    VotingResult, VotingResultsMessage, votingResultsTypeGuard
-} from "../../../typeGuards/game3/votingResults";
+    PhotoUserMapper,
+    VoteForPhotoMessage,
+    voteForPhotoMessageTypeGuard,
+} from '../../../typeGuards/game3/voteForPhotos';
+import { VotingResult, VotingResultsMessage, votingResultsTypeGuard } from '../../../typeGuards/game3/votingResults';
 
 export interface HandleSetSocket3ControllerDependencies {
     setVoteForPhotoMessage: (val: { photoUrls: PhotoUserMapper[]; countdownTime: number } | undefined) => void;
     setRoundIdx: (roundIdx: number) => void;
     setTopicMessage: (props: { topic: string; countdownTime: number } | undefined) => void;
-    setCountdownTime: (time: number) => void;
+    setFinalRoundCountdownTime: (time: number) => void;
     setVotingResults: (val: { results: VotingResult[]; countdownTime: number } | undefined) => void;
 }
 
@@ -31,7 +30,13 @@ export function handleSetControllerSocketGame3(socket: Socket, dependencies: Han
     const finalRoundCountdownSocket = new MessageSocket(finalRoundCountdownTypeGuard, socket);
     const votingResultsSocket = new MessageSocket(votingResultsTypeGuard, socket);
 
-    const { setTopicMessage, setVoteForPhotoMessage, setRoundIdx, setCountdownTime, setVotingResults } = dependencies;
+    const {
+        setTopicMessage,
+        setVoteForPhotoMessage,
+        setRoundIdx,
+        setFinalRoundCountdownTime,
+        setVotingResults,
+    } = dependencies;
 
     newRoundSocket.listen((data: NewRoundMessage) => {
         setRoundIdx(data.roundIdx);
@@ -50,7 +55,7 @@ export function handleSetControllerSocketGame3(socket: Socket, dependencies: Han
     });
 
     finalRoundCountdownSocket.listen((data: FinalRoundCountdownMessage) => {
-        setCountdownTime(data.countdownTime);
+        setFinalRoundCountdownTime(data.countdownTime);
     });
 
     votingResultsSocket.listen((data: VotingResultsMessage) => {

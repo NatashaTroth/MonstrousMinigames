@@ -1,6 +1,6 @@
-import { createMemoryHistory } from "history";
+import { createMemoryHistory } from 'history';
 
-import { handleSocketConnection } from "../../domain/socket/screen/handleSocketConnection";
+import { handleSocketConnection } from '../../domain/socket/screen/handleSocketConnection';
 
 describe('Screen Socket Connection', () => {
     it('handed setRoomId function should be called with handed roomId', () => {
@@ -23,6 +23,8 @@ describe('Screen Socket Connection', () => {
             setSheepGameStarted: jest.fn(),
             setRoomId,
             setRoundIdx: jest.fn(),
+            setVotingResults: jest.fn(),
+            setFinalRoundCountdownTime: jest.fn(),
             history,
         };
 

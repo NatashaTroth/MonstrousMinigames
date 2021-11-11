@@ -1,12 +1,19 @@
-import React from "react";
+import React from 'react';
 
-import Countdown from "../../../../components/common/Countdown";
-import { Game3Context } from "../../../../contexts/game3/Game3ContextProvider";
-import { GameContext } from "../../../../contexts/GameContextProvider";
+import Countdown from '../../../../components/common/Countdown';
+import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
+import { GameContext } from '../../../../contexts/GameContextProvider';
 import {
-    Frame, ImageContainer, InstructionContainer, PictureInstruction, RandomWord, ScreenContainer,
-    StyledImg
-} from "./Game.sc";
+    Frame,
+    ImageContainer,
+    ImagesContainer,
+    InstructionContainer,
+    PictureInstruction,
+    RandomWord,
+    ScreenContainer,
+    StyledChip,
+    StyledImg,
+} from './Game.sc';
 
 const Game3: React.FunctionComponent = () => {
     const { countdownTime } = React.useContext(GameContext);
@@ -62,27 +69,28 @@ const Game3: React.FunctionComponent = () => {
                             </>
                         )}
                     </InstructionContainer>
-
-                    <ImageContainer>
+                    <ImagesContainer>
                         {voteForPhotoMessage &&
-                            voteForPhotoMessage.photoUrls.map((image, index) => (
-                                <>
-                                    <Frame key={`image${index}`}>
-                                        <StyledImg src={image.url} />
+                            voteForPhotoMessage.photoUrls.map((photo, index) => (
+                                <ImageContainer key={`image${index}`}>
+                                    <PictureInstruction>{photo.photoId}</PictureInstruction>
+                                    <Frame>
+                                        <StyledImg src={photo.url} />
                                     </Frame>
                                     {votingResults && (
-                                        <PictureInstruction>
-                                            Points:{' '}
-                                            {
-                                                votingResults.results.find(
-                                                    result => result.photographerId === image.photographerId
-                                                )?.points
-                                            }
-                                        </PictureInstruction>
+                                        <div>
+                                            <StyledChip
+                                                label={`+ ${
+                                                    votingResults.results.find(
+                                                        result => result.photographerId === photo.photographerId
+                                                    )?.points
+                                                }`}
+                                            />
+                                        </div>
                                     )}
-                                </>
+                                </ImageContainer>
                             ))}
-                    </ImageContainer>
+                    </ImagesContainer>
                 </>
             )}
         </ScreenContainer>

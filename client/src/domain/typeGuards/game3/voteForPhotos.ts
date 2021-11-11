@@ -1,8 +1,9 @@
-import { MessageTypesGame3 } from "../../../utils/constants";
-import { MessageDataGame3 } from "./MessageDataGame3";
+import { MessageTypesGame3 } from '../../../utils/constants';
+import { MessageDataGame3 } from './MessageDataGame3';
 
 export interface PhotoUserMapper {
     photographerId: string;
+    photoId: number;
     url: string;
 }
 

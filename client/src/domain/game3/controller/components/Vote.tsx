@@ -1,13 +1,13 @@
-import * as React from "react";
-import styled from "styled-components";
+import * as React from 'react';
+import styled from 'styled-components';
 
-import Button from "../../../../components/common/Button";
-import Countdown from "../../../../components/common/Countdown";
-import { ControllerSocketContext } from "../../../../contexts/ControllerSocketContextProvider";
-import { Game3Context } from "../../../../contexts/game3/Game3ContextProvider";
-import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
-import sendVote from "../gameState/sendVote";
-import { CountdownContainer, Instructions, ScreenContainer } from "./Game3Styles.sc";
+import Button from '../../../../components/common/Button';
+import Countdown from '../../../../components/common/Countdown';
+import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
+import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
+import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
+import sendVote from '../gameState/sendVote';
+import { CountdownContainer, Instructions, ScreenContainer } from './Game3Styles.sc';
 
 const Vote: React.FunctionComponent = () => {
     const { voteForPhotoMessage } = React.useContext(Game3Context);
@@ -38,10 +38,10 @@ const Vote: React.FunctionComponent = () => {
                     <Instructions>Choose the picture you like the most</Instructions>
                     <VoteContainer>
                         {voteForPhotoMessage?.photoUrls
-                            .filter(picture => picture.photographerId !== userId)
-                            .map((picture, index) => (
+                            .filter(photo => photo.photographerId !== userId)
+                            .map((photo, index) => (
                                 <ButtonContainer key={`button${index}`}>
-                                    <Button onClick={() => handleVote(picture.photographerId)}>{index + 1}</Button>
+                                    <Button onClick={() => handleVote(photo.photographerId)}>{photo.photoId}</Button>
                                 </ButtonContainer>
                             ))}
                     </VoteContainer>

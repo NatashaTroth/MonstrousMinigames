@@ -1,21 +1,19 @@
-import { createMemoryHistory } from "history";
+import { createMemoryHistory } from 'history';
 
-import { GameNames } from "../../config/games";
-import { InMemorySocketFake } from "../../domain/socket/InMemorySocketFake";
-import { handleSetSocket } from "../../domain/socket/screen/handleSetSocket";
-import { ConnectedUsersMessage } from "../../domain/typeGuards/connectedUsers";
-import { GameHasFinishedMessage } from "../../domain/typeGuards/finished";
-import { GameHasStartedMessage } from "../../domain/typeGuards/game1/started";
-import { NewPhotoTopicMessage } from "../../domain/typeGuards/game3/newPhotoTopic";
-import { GameHasPausedMessage } from "../../domain/typeGuards/paused";
-import { GameHasResetMessage } from "../../domain/typeGuards/reset";
-import { GameHasResumedMessage } from "../../domain/typeGuards/resumed";
-import { StartPhaserGameMessage } from "../../domain/typeGuards/startPhaserGame";
-import { GameHasStoppedMessage } from "../../domain/typeGuards/stopped";
-import {
-    GameState, MessageTypes, MessageTypesGame1, MessageTypesGame3
-} from "../../utils/constants";
-import { screenLobbyRoute } from "../../utils/routes";
+import { GameNames } from '../../config/games';
+import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
+import { handleSetSocket } from '../../domain/socket/screen/handleSetSocket';
+import { ConnectedUsersMessage } from '../../domain/typeGuards/connectedUsers';
+import { GameHasFinishedMessage } from '../../domain/typeGuards/finished';
+import { GameHasStartedMessage } from '../../domain/typeGuards/game1/started';
+import { NewPhotoTopicMessage } from '../../domain/typeGuards/game3/newPhotoTopic';
+import { GameHasPausedMessage } from '../../domain/typeGuards/paused';
+import { GameHasResetMessage } from '../../domain/typeGuards/reset';
+import { GameHasResumedMessage } from '../../domain/typeGuards/resumed';
+import { StartPhaserGameMessage } from '../../domain/typeGuards/startPhaserGame';
+import { GameHasStoppedMessage } from '../../domain/typeGuards/stopped';
+import { GameState, MessageTypes, MessageTypesGame1, MessageTypesGame3 } from '../../utils/constants';
+import { screenLobbyRoute } from '../../utils/routes';
 
 describe('handleSetSocket', () => {
     const history = createMemoryHistory();
@@ -36,6 +34,8 @@ describe('handleSetSocket', () => {
         setRoundIdx: jest.fn(),
         setSheepGameStarted: jest.fn(),
         setVoteForPhotoMessage: jest.fn(),
+        setVotingResults: jest.fn(),
+        setFinalRoundCountdownTime: jest.fn(),
         history,
     };
 
