@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
+import { Countdown } from '../../../../src/gameplay/gameThree/classes/Countdown';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
 import { GameThreeGameState } from '../../../../src/gameplay/gameThree/enums/GameState';
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
@@ -19,16 +20,9 @@ describe('Send Photo Topic', () => {
     });
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
-        gameThree['photoTopics'] = ['cat', 'dog', 'fish'];
     });
     afterEach(() => {
         jest.clearAllMocks();
-    });
-
-    it('reduces the photo topics by 1', async () => {
-        const photoTopicsLength = gameThree['photoTopics']!.length;
-        gameThree['sendPhotoTopic']();
-        expect(gameThree['photoTopics']!.length).toBe(photoTopicsLength - 1);
     });
 
     it('should change the gameThreeGameState to TakingPhoto', async () => {
@@ -37,7 +31,7 @@ describe('Send Photo Topic', () => {
     });
 
     it('should call initiateCountdown with the take photo time', async () => {
-        const spy = jest.spyOn(GameThree.prototype as any, 'initiateCountdown').mockImplementation(() => {
+        const spy = jest.spyOn(Countdown.prototype as any, 'initiateCountdown').mockImplementation(() => {
             Promise.resolve();
         });
 

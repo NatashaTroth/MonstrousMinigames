@@ -1,70 +1,85 @@
 import 'reflect-metadata';
 
-import GameThree from '../../../../src/gameplay/gameThree/GameThree';
-import { leaderboard, roomId } from '../../mockData';
+import { Countdown } from '../../../../src/gameplay/gameThree/classes/Countdown';
 
-let gameThree: GameThree;
+let countdown: Countdown;
 
 const initialCountDownTime = 500;
 const timeReduction = 50;
 
 describe('Initiate Countdown', () => {
     beforeEach(() => {
-        gameThree = new GameThree(roomId, leaderboard);
+        countdown = new Countdown(
+            jest.fn(() => {
+                /*do nothing */
+            })
+        );
     });
 
     it('should set countdownTimeLeft to the countdown time', async () => {
-        gameThree['initiateCountdown'](initialCountDownTime);
-        expect(gameThree['countdownTimeLeft']).toBe(initialCountDownTime);
+        countdown.initiateCountdown(initialCountDownTime);
+        expect(countdown.countdownTimeLeft).toBe(initialCountDownTime);
     });
 
     it('should set countdownRunning to true', async () => {
-        gameThree['initiateCountdown'](initialCountDownTime);
-        expect(gameThree['countdownRunning']).toBeTruthy();
+        countdown.initiateCountdown(initialCountDownTime);
+        expect(countdown.countdownRunning).toBeTruthy();
     });
 });
 
 describe('Reduce Countdown', () => {
     beforeEach(() => {
-        gameThree = new GameThree(roomId, leaderboard);
-        gameThree['countdownTimeLeft'] = initialCountDownTime;
+        countdown = new Countdown(
+            jest.fn(() => {
+                /*do nothing */
+            })
+        );
+        countdown.countdownTimeLeft = initialCountDownTime;
     });
 
     it('should reduce the countdownTimeLeft by given time', async () => {
-        gameThree['reduceCountdown'](timeReduction);
-        expect(gameThree['countdownTimeLeft']).toBe(initialCountDownTime - timeReduction);
+        countdown.reduceCountdown(timeReduction);
+        expect(countdown.countdownTimeLeft).toBe(initialCountDownTime - timeReduction);
     });
 });
 
 describe('Stop Countdown', () => {
     beforeEach(() => {
-        gameThree = new GameThree(roomId, leaderboard);
-        gameThree['countdownTimeLeft'] = initialCountDownTime;
+        countdown = new Countdown(
+            jest.fn(() => {
+                /*do nothing */
+            })
+        );
+        countdown.countdownTimeLeft = initialCountDownTime;
     });
 
     it('should set countdownTimeLeft to 0', async () => {
-        gameThree['stopCountdown']();
-        expect(gameThree['countdownTimeLeft']).toBe(0);
+        countdown.stopCountdown();
+        expect(countdown.countdownTimeLeft).toBe(0);
     });
 
     it('should set countdownRunning to false', async () => {
-        gameThree['stopCountdown']();
-        expect(gameThree['countdownRunning']).toBeFalsy();
+        countdown.stopCountdown();
+        expect(countdown.countdownRunning).toBeFalsy();
     });
 });
 
 describe('Check if countdown is over', () => {
     beforeEach(() => {
-        gameThree = new GameThree(roomId, leaderboard);
+        countdown = new Countdown(
+            jest.fn(() => {
+                /*do nothing */
+            })
+        );
     });
 
     it('should return false', async () => {
-        gameThree['countdownTimeLeft'] = initialCountDownTime;
-        expect(gameThree['countdownOver']()).toBeFalsy();
+        countdown.countdownTimeLeft = initialCountDownTime;
+        expect(countdown.countdownOver()).toBeFalsy();
     });
 
     it('should return true', async () => {
-        gameThree['countdownTimeLeft'] = 0;
-        expect(gameThree['countdownOver']()).toBeTruthy();
+        countdown.countdownTimeLeft = 0;
+        expect(countdown.countdownOver()).toBeTruthy();
     });
 });

@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
+import { Countdown } from '../../../../src/gameplay/gameThree/classes/Countdown';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
 import { GameThreeGameState } from '../../../../src/gameplay/gameThree/enums/GameState';
 import {
@@ -95,7 +96,7 @@ describe('Taking Photo', () => {
     });
 
     it('should stop the countdown when all photos have been received', async () => {
-        const spy = jest.spyOn(GameThree.prototype as any, 'stopCountdown');
+        const spy = jest.spyOn(Countdown.prototype as any, 'stopCountdown');
         users.forEach(user => {
             gameThree['handleInput']({ ...message, userId: user.id });
         });

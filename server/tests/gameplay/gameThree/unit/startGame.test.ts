@@ -51,7 +51,6 @@ describe('Start', () => {
     });
 
     it('should start TakingPhoto stage', async () => {
-        gameThree['photoTopics'] = ['topic1', 'topic2'];
         gameThree['startGame']();
         expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.TakingPhoto);
     });

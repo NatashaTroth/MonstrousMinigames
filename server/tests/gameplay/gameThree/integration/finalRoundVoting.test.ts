@@ -3,6 +3,7 @@ import 'reflect-metadata';
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameState } from '../../../../src/gameplay/enums';
+import { Countdown } from '../../../../src/gameplay/gameThree/classes/Countdown';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
 import { GameThreeGameState } from '../../../../src/gameplay/gameThree/enums/GameState';
 import {
@@ -132,7 +133,7 @@ describe('Voting stage', () => {
     });
 
     it('should stop the countdown when all votes have been received', async () => {
-        const spy = jest.spyOn(GameThree.prototype as any, 'stopCountdown');
+        const spy = jest.spyOn(Countdown.prototype as any, 'stopCountdown');
         receiveAllVotes();
         expect(spy).toBeCalledTimes(1);
     });

@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
+import { Countdown } from '../../../../src/gameplay/gameThree/classes/Countdown';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
 import { GameThreeGameState } from '../../../../src/gameplay/gameThree/enums/GameState';
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
@@ -48,7 +49,7 @@ describe('Send take final photos countdown', () => {
     });
 
     it('should initiate the takingFinalPhotos countdown', async () => {
-        const spy = jest.spyOn(GameThree.prototype as any, 'initiateCountdown');
+        const spy = jest.spyOn(Countdown.prototype as any, 'initiateCountdown');
 
         gameThree['sendTakeFinalPhotosCountdown']();
         expect(spy).toHaveBeenCalledTimes(1);

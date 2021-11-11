@@ -34,7 +34,7 @@ describe('Handle new round', () => {
 
     it('should call sendPhotoTopic when it is not the final round and photoTopics is not empty', async () => {
         gameThree['roundIdx'] = 0;
-        gameThree['photoTopics'] = ['cat', 'dog'];
+        // gameThree.photoTopics.topics = ['cat', 'dog'];
         const spy = jest.spyOn(GameThree.prototype as any, 'sendPhotoTopic');
 
         gameThree['handleNewRound']();

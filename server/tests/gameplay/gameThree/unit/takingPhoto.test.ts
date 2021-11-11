@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
+import { Countdown } from '../../../../src/gameplay/gameThree/classes/Countdown';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
 import { InvalidUrlError } from '../../../../src/gameplay/gameThree/customErrors';
 import { GameThreeGameState } from '../../../../src/gameplay/gameThree/enums/GameState';
@@ -35,8 +36,7 @@ describe('Handle taking photo', () => {
 
     it('should call sendPhotosToScreen when countdown is over', async () => {
         const spy = jest.spyOn(GameThree.prototype as any, 'sendPhotosToScreen');
-
-        gameThree['countdownTimeLeft'] = 0;
+        gameThree['countdown'].stopCountdown();
         gameThree['handleFinishedTakingPhoto']();
         expect(spy).toBeCalledTimes(1);
     });
@@ -260,7 +260,7 @@ describe('Send Photos to screen', () => {
     });
 
     it('should initiate the voting countdown', async () => {
-        const spy = jest.spyOn(GameThree.prototype as any, 'initiateCountdown');
+        const spy = jest.spyOn(Countdown.prototype as any, 'initiateCountdown');
 
         gameThree['sendPhotosToScreen']();
         expect(spy).toHaveBeenCalledTimes(1);

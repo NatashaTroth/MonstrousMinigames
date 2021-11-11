@@ -1,10 +1,10 @@
 // todo VL eher gemeloop
 
 export class Countdown {
-    private countdownTimeLeft = 0;
+    public countdownTimeLeft = 0;
     public countdownRunning = false;
 
-    constructor(private onUpdate: () => void) {}
+    constructor(private onCountdownFinished: () => void) {}
 
     initiateCountdown(time: number) {
         this.countdownTimeLeft = time;
@@ -29,6 +29,7 @@ export class Countdown {
 
             if (this.countdownOver()) {
                 this.stopCountdown();
+                this.onCountdownFinished();
             }
         }
     }
