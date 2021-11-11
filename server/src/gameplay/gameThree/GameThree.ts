@@ -43,7 +43,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     private gameThreeGameState = GameThreeGameState.BeforeStart;
     private countdownTimeLeft = 0;
     private countdownRunning = false;
-    private roundIdx = 0;
+    private roundIdx = -1;
     private playerPresentOrder: string[] = [];
 
     // private viewingPhotoResults = false //TODO handle
@@ -240,7 +240,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     private handleReceivedFinalPhoto(message: IMessagePhoto) {
         const player = this.players.get(message.userId!);
-        if (player && !player.finalRoundInfo.received) player.receivedFinalPhoto(message.url);
+        if (player && !player.finalRoundInfo.received) {
+            player.receivedFinalPhoto(message.url);
+            player.addPointsFinalRound(1);
+        }
 
         if (this.allFinalPhotosReceived()) {
             this.handleAllFinalPhotosReceived();

@@ -71,6 +71,12 @@ describe('Taking Final Photos', () => {
         expect(gameThree.players.get(users[0].id)!.finalRoundInfo.urls.length).toBe(1);
     });
 
+    it('should increase final points by 1 when photo received', async () => {
+        const initialFinalPoints = gameThree.players.get(users[0].id)!.finalRoundInfo.points;
+        gameThree['handleInput'](message);
+        expect(gameThree.players.get(users[0].id)!.finalRoundInfo.points).toBe(initialFinalPoints + 1);
+    });
+
     it('should update the urls length when multiple photos are sent', async () => {
         for (let i = 1; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
             gameThree['handleInput'](message);
@@ -114,6 +120,28 @@ describe('Taking Final Photos', () => {
         });
 
         expect(gameThree['allFinalPhotosReceived']()).toBeTruthy();
+    });
+
+    it('should not accept any more photos when already received number of final photos', async () => {
+        users.forEach(user => {
+            for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS + 1; i++) {
+                gameThree['handleInput']({ ...message, userId: user.id });
+            }
+        });
+
+        expect(gameThree.players.get(users[0].id)!.finalRoundInfo.urls.length).toBe(
+            InitialParameters.NUMBER_FINAL_PHOTOS
+        );
+    });
+
+    it('should not accept any more points when already received number of final photos', async () => {
+        users.forEach(user => {
+            for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS + 1; i++) {
+                gameThree['handleInput']({ ...message, userId: user.id });
+            }
+        });
+
+        expect(gameThree.players.get(users[0].id)!.finalRoundInfo.points).toBe(InitialParameters.NUMBER_FINAL_PHOTOS);
     });
 
     it('should change state to PresentingFinalPhotos when all photos have been received', async () => {
