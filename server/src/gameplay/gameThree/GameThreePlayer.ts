@@ -3,8 +3,8 @@ import InitialParameters from './constants/InitialParameters';
 import { FinalPhotos, Photo } from './interfaces';
 
 class GameThreePlayer extends Player {
-    roundInfo: Photo[];
-    finalRoundInfo: FinalPhotos;
+    private roundInfo: Photo[];
+    private finalRoundInfo: FinalPhotos;
 
     constructor(id: string, name: string, characterNumber: number) {
         super(id, name, characterNumber);
@@ -67,6 +67,52 @@ class GameThreePlayer extends Player {
                 return result + item.points;
             }, 0) + this.finalRoundInfo.points
         );
+    }
+
+    getRoundPoints(roundIdx: number) {
+        return this.roundInfo[roundIdx].points;
+    }
+
+    getFinalPoints() {
+        return this.finalRoundInfo.points;
+    }
+
+    removePoints(roundIdx: number) {
+        if (!this.roundInfo[roundIdx].voted || !this.roundInfo[roundIdx].received) {
+            this.roundInfo[roundIdx].points = 0;
+        }
+    }
+
+    hasVoted(roundIdx: number) {
+        return this.roundInfo[roundIdx].voted;
+    }
+
+    hasVotedFinal() {
+        return this.finalRoundInfo.voted;
+    }
+
+    hasReceivedPhoto(roundIdx: number) {
+        return this.roundInfo[roundIdx].received;
+    }
+
+    hasReceivedFinalPhotos() {
+        return this.finalRoundInfo.received;
+    }
+
+    getUrl(roundIdx: number) {
+        return this.roundInfo[roundIdx].url;
+    }
+
+    getFinalUrls() {
+        return this.finalRoundInfo.urls;
+    }
+
+    voted(roundidx: number) {
+        this.roundInfo[roundidx].voted = true;
+    }
+
+    votedFinal() {
+        this.finalRoundInfo.voted = true;
     }
 }
 export default GameThreePlayer;

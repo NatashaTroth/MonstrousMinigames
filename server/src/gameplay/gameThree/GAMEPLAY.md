@@ -227,3 +227,5 @@ user deactivated
 add all the global messages stop game (not pause), ...
 
 also set received finalinfo true when only received 1
+
+add roundIdx in player

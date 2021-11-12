@@ -75,9 +75,7 @@ describe('Voting stage', () => {
 
     it('should allow client to send a vote within the countdown time', async () => {
         gameThree['handleInput'](message);
-        expect(
-            gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].voted
-        ).toBeTruthy();
+        expect(gameThree.players.get(users[0].id)!.hasVoted(gameThree['stageController']!['_roundIdx'])).toBeTruthy();
     });
 
     it('should have a gameThreeGameState of Voting after only one vote is sent', async () => {
@@ -114,9 +112,7 @@ describe('Voting stage', () => {
     it('should not accept new votes when time has run out', async () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
         gameThree['handleInput'](message);
-        expect(
-            gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].voted
-        ).toBeFalsy();
+        expect(gameThree.players.get(users[0].id)!.hasVoted(gameThree['stageController']!['_roundIdx'])).toBeFalsy();
     });
 
     it.todo('test points');

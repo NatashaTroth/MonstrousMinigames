@@ -40,8 +40,8 @@ describe('Initiate stage', () => {
                 gameThree['handleInput']({ ...photoMessage, userId: user.id });
             }
         });
-        const numberPresentations = Array.from(gameThree.players.values()).filter(
-            player => player.finalRoundInfo.received
+        const numberPresentations = Array.from(gameThree.players.values()).filter(player =>
+            player.hasReceivedFinalPhotos()
         ).length;
         for (let i = 0; i < numberPresentations; i++) {
             advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);
@@ -91,8 +91,8 @@ describe('Final results', () => {
                 gameThree['handleInput']({ ...photoMessage, userId: user.id });
             }
         });
-        const numberPresentations = Array.from(gameThree.players.values()).filter(
-            player => player.finalRoundInfo.received
+        const numberPresentations = Array.from(gameThree.players.values()).filter(player =>
+            player.hasReceivedFinalPhotos()
         ).length;
         for (let i = 0; i < numberPresentations; i++) {
             advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);

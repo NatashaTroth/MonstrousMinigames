@@ -192,7 +192,7 @@ describe('Presenting Final Photos', () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);
 
         expect(eventData.photoUrls).toEqual(
-            expect.arrayContaining(gameThree.players.get(eventData.photographerId)!.finalRoundInfo.urls)
+            expect.arrayContaining(gameThree.players.get(eventData.photographerId)!.getFinalUrls())
         );
     });
 });

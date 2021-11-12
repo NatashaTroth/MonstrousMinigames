@@ -67,9 +67,9 @@ describe('Taking Photo', () => {
     it('should allow client to send a photo within the countdown time', async () => {
         gameThree['handleInput'](message);
         expect(
-            gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].received
+            gameThree.players.get(users[0].id)!.hasReceivedPhoto(gameThree['stageController']!['_roundIdx'])
         ).toBeTruthy();
-        expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].url).toBe(
+        expect(gameThree.players.get(users[0].id)!.getUrl(gameThree['stageController']!['_roundIdx'])).toBe(
             mockPhotoUrl
         );
     });
@@ -116,8 +116,8 @@ describe('Taking Photo', () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         gameThree['handleInput'](message);
         expect(
-            gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].received
+            gameThree.players.get(users[0].id)!.hasReceivedPhoto(gameThree['stageController']!['_roundIdx'])
         ).toBeFalsy();
-        expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].url).toBe('');
+        expect(gameThree.players.get(users[0].id)!.getUrl(gameThree['stageController']!['_roundIdx'])).toBe('');
     });
 });

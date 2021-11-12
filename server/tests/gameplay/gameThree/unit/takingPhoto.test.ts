@@ -58,7 +58,7 @@ describe('Handle received photo', () => {
     it('should set the photo received property on the player to true', async () => {
         gameThree['handleReceivedPhoto'](message);
         expect(
-            gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].received
+            gameThree.players.get(users[0].id)!.hasReceivedPhoto(gameThree['stageController']!['_roundIdx'])
         ).toBeTruthy();
     });
 
@@ -66,13 +66,13 @@ describe('Handle received photo', () => {
         gameThree['stageController']!.stage = GameThreeGameState.BeforeStart;
         gameThree['handleReceivedPhoto'](message);
         expect(
-            gameThree.players.get(message.userId)!.roundInfo[gameThree['stageController']!['_roundIdx']].received
+            gameThree.players.get(message.userId)!.hasReceivedPhoto(gameThree['stageController']!['_roundIdx'])
         ).toBeFalsy();
     });
 
     it('should save the photo url to the player', async () => {
         gameThree['handleReceivedPhoto'](message);
-        expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].url).toBe(
+        expect(gameThree.players.get(users[0].id)!.getUrl(gameThree['stageController']!['_roundIdx'])).toBe(
             message.url
         );
     });
@@ -81,7 +81,7 @@ describe('Handle received photo', () => {
         gameThree['handleReceivedPhoto'](message);
         const newUrl = 'https://mockPhoto2.com';
         gameThree['handleReceivedPhoto']({ ...message, url: newUrl });
-        expect(gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].url).toBe(
+        expect(gameThree.players.get(users[0].id)!.getUrl(gameThree['stageController']!['_roundIdx'])).toBe(
             message.url
         );
     });
@@ -107,7 +107,7 @@ describe('Handle received photo', () => {
         //set the other players received photo to true
         const otherPlayers = Array.from(gameThree.players.values()).filter(player => player.id !== users[0].id);
         otherPlayers.forEach(player => {
-            player.roundInfo[gameThree['stageController']!['_roundIdx']].received = true;
+            player.receivedPhoto(mockPhotoUrl, gameThree['stageController']!['_roundIdx']);
         });
 
         const spy = jest.spyOn(GameThree.prototype as any, 'handleAllPhotosReceived').mockImplementation(() => {
@@ -141,17 +141,19 @@ describe('All photos received', () => {
 
     it('should return true when all photos are received', async () => {
         Array.from(gameThree.players.values()).forEach(player => {
-            player.roundInfo[gameThree['stageController']!['_roundIdx']].received = true;
+            player.receivedPhoto(mockPhotoUrl, gameThree['stageController']!['_roundIdx']);
         });
         expect(gameThree['allPhotosReceived']()).toBeTruthy();
     });
 
     it('should return false when not all photos are received', async () => {
-        Array.from(gameThree.players.values()).forEach(player => {
-            player.roundInfo[gameThree['stageController']!['_roundIdx']].received = true;
-        });
+        Array.from(gameThree.players.values())
+            .filter(player => player.id !== users[0].id)
+            .forEach(player => {
+                player.receivedPhoto(mockPhotoUrl, gameThree['stageController']!['_roundIdx']);
+            });
 
-        gameThree.players.get(users[0].id)!.roundInfo[gameThree['stageController']!['_roundIdx']].received = false;
+        // gameThree.players.get(users[0].id)!.hasReceivedPhoto(gameThree['stageController']!['_roundIdx']) = false;
         expect(gameThree['allPhotosReceived']()).toBeFalsy();
     });
 });
@@ -193,9 +195,9 @@ describe('Send Photos to screen', () => {
 
         const photoUrls: string[] = [];
         Array.from(gameThree.players.values()).forEach((player, idx) => {
-            player.roundInfo[gameThree['stageController']!['_roundIdx']].received = true;
-            player.roundInfo[gameThree['stageController']!['_roundIdx']].url = idx.toString();
-            photoUrls.push(idx.toString());
+            const url = `https://mockPhoto${idx}.com`;
+            player.receivedPhoto(url, gameThree['stageController']!['_roundIdx']);
+            photoUrls.push(url);
         });
 
         gameThree['sendPhotosToScreen']();
@@ -212,8 +214,8 @@ describe('Send Photos to screen', () => {
 
         const photographerIds: string[] = [];
         Array.from(gameThree.players.values()).forEach((player, idx) => {
-            player.roundInfo[gameThree['stageController']!['_roundIdx']].received = true;
-            player.roundInfo[gameThree['stageController']!['_roundIdx']].url = idx.toString();
+            player.receivedPhoto(mockPhotoUrl, gameThree['stageController']!['_roundIdx']);
+
             photographerIds[idx] = player.id;
         });
 
@@ -233,8 +235,8 @@ describe('Send Photos to screen', () => {
 
         const photographerIds: string[] = [];
         Array.from(gameThree.players.values()).forEach((player, idx) => {
-            player.roundInfo[gameThree['stageController']!['_roundIdx']].received = true;
-            player.roundInfo[gameThree['stageController']!['_roundIdx']].url = idx.toString();
+            player.receivedPhoto(mockPhotoUrl, gameThree['stageController']!['_roundIdx']);
+
             photographerIds[idx] = player.id;
         });
 
@@ -252,12 +254,11 @@ describe('Send Photos to screen', () => {
             }
         });
 
-        const photoUrls = 'a';
         const photographerIds: string[] = [];
         const otherPlayers = Array.from(gameThree.players.values()).filter(player => player.id !== users[0].id);
         otherPlayers.forEach((player, idx) => {
-            player.roundInfo[gameThree['stageController']!['_roundIdx']].received = true;
-            player.roundInfo[gameThree['stageController']!['_roundIdx']].url = photoUrls;
+            player.receivedPhoto(mockPhotoUrl, gameThree['stageController']!['_roundIdx']);
+
             photographerIds[idx] = player.id;
         });
 
