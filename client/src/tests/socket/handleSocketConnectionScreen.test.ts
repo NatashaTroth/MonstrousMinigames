@@ -26,6 +26,7 @@ describe('Screen Socket Connection', () => {
             setVotingResults: jest.fn(),
             setFinalRoundCountdownTime: jest.fn(),
             history,
+            setPresentFinalPhotos: jest.fn(),
         };
 
         handleSocketConnection(roomId, 'Test', dependencies);
