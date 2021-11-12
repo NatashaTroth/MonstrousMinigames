@@ -20,7 +20,7 @@ export class PhotoStage {
         return photosArray;
     }
 
-    sendPhotosToScreen(roomId: string, countdownTime: number) {
+    sendPhotosToClient(roomId: string, countdownTime: number) {
         const photoUrls = this.getPhotos();
         GameThreeEventEmitter.emitVoteForPhotos(roomId, photoUrls, countdownTime);
     }

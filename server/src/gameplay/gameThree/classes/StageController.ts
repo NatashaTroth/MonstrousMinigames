@@ -8,6 +8,7 @@ import GameThreeEventEmitter from '../GameThreeEventEmitter';
 import { IMessagePhoto, IMessagePhotoVote } from '../interfaces';
 import { Countdown } from './Countdown';
 import { PhotoStage } from './PhotoStage';
+import { PhotoTopics } from './PhotoTopics';
 import { VotingStage } from './VotingStage';
 
 //TODO maybe also a round handler class
@@ -19,10 +20,12 @@ export class StageController {
     private photoStage?: PhotoStage;
     private votingStage?: VotingStage;
     private countdown: Countdown;
+    private photoTopics: PhotoTopics;
 
     constructor(gameThree: GameThree) {
         this.gameThree = gameThree;
         this.countdown = new Countdown(this); //TODO remove argument
+        this.photoTopics = new PhotoTopics();
     }
 
     updateStage(stage: GameThreeGameState) {
@@ -50,7 +53,7 @@ export class StageController {
         this._roundIdx++;
         GameThreeEventEmitter.emitNewRound(this.gameThree.roomId, this.roundIdx);
         if (!this.isFinalRound() && this.gameThree.photoTopics!.isAnotherTopicAvailable()) {
-            this.gameThree.sendPhotoTopic();
+            this.switchToTakingPhotoStage();
         } else {
             this.gameThree.sendTakeFinalPhotosCountdown();
         }
@@ -119,6 +122,14 @@ export class StageController {
                 this.gameThree.handleFinalPhotoVoteReceived(message);
                 break;
         }
+    }
+
+    private switchToTakingPhotoStage() {
+        this.photoTopics.sendNextTopicToClient(this.gameThree.roomId);
+        this.countdown?.stopCountdown(); //TODO can delete?
+        // this.updatePlayerPoints();
+        this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        this.updateStage(GameThreeGameState.TakingPhoto);
     }
 
     private switchToVotingStage() {

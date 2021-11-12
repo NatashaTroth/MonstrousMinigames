@@ -72,7 +72,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         super.createNewGame(users);
         this.stageController = new StageController(this);
         this.countdown = new Countdown(this.stageController);
-        this.photoTopics = new PhotoTopics();
+        // this.photoTopics = new PhotoTopics();
         this.presentationController = new PresentationController(
             Array.from(this.players.values()).map(player => player.id)
         );
@@ -89,16 +89,6 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             this.gameName
         );
         this.stageController?.handleNewRound();
-    }
-
-    sendPhotoTopic() {
-        //TODO verify game state
-        //TODO reset player has photo
-        const topic = this.photoTopics?.nextTopic();
-        this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-        this.stageController?.updateStage(GameThreeGameState.TakingPhoto);
-        //send to screen
-        GameThreeEventEmitter.emitNewTopic(this.roomId, topic!, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
     }
 
     pauseGame(): void {

@@ -1,4 +1,5 @@
 import InitialParameters from '../constants/InitialParameters';
+import GameThreeEventEmitter from '../GameThreeEventEmitter';
 import { RandomWordGenerator } from './RandomWordGenerator';
 
 export class PhotoTopics {
@@ -15,6 +16,12 @@ export class PhotoTopics {
 
     isAnotherTopicAvailable() {
         return this._topics.length > 0;
+    }
+
+    sendNextTopicToClient(roomId: string) {
+        if (this.isAnotherTopicAvailable()) {
+            GameThreeEventEmitter.emitNewTopic(roomId, this.nextTopic()!, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        }
     }
 
     public get topics(): string[] {
