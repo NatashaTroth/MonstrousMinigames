@@ -1,5 +1,5 @@
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
-import { votingResultsPhotographerMapper } from '../interfaces';
+import { VotingResultsPhotographerMapper } from '../interfaces';
 
 export class VotingStage {
     //TODO make URL type
@@ -39,8 +39,8 @@ export class VotingStage {
         GameThreeEventEmitter.emitPhotoVotingResults(roomId, votingResults, countdownTime);
     }
 
-    private getAllVotes(): votingResultsPhotographerMapper[] {
-        const votesArray: votingResultsPhotographerMapper[] = [];
+    private getAllVotes(): VotingResultsPhotographerMapper[] {
+        const votesArray: VotingResultsPhotographerMapper[] = [];
         this.votes.forEach((value, key) => votesArray.push({ photographerId: key, votes: value }));
         return votesArray;
     }

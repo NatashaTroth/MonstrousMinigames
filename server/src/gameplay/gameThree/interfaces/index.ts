@@ -3,15 +3,16 @@ import type * as GameEvents from './GameEvents';
 import type { GameStateInfo } from './GameStateInfo';
 import type { GameThreePlayerRank } from './GameThreePlayerRank';
 import type { InitialGameStateInfo } from './InitialGameStateInfo';
-import type { IMessagePhoto } from './messagePhoto';
-import type { IMessagePhotoVote } from './messagePhotoVote';
+import type { IMessagePhoto } from './IMessagePhoto';
+import type { IMessagePhotoVote } from './IMessagePhotoVote';
 import type { NamespaceAdapter } from './NamespaceAdapter';
 import type { Photo } from './Photo';
-import type { photoPhotographerMapper } from './photoPhotographerMapper';
+import type { PhotoPhotographerMapper } from './PhotoPhotographerMapper';
 import type { PlayerNameId } from './PlayerNameId';
 import type { PlayerState } from './PlayerState';
 import type { PlayerStateForClient } from './PlayerStateForClient';
-import type { votingResultsPhotographerMapper } from './votingResultsPhotographerMapper';
+import type { VotingResultsPhotographerMapper } from './VotingResultsPhotographerMapper';
+import type { PhotosPhotographerMapper } from './PhotosPhotographerMapper';
 
 export {
     PlayerState,
@@ -23,9 +24,10 @@ export {
     Photo,
     IMessagePhoto,
     IMessagePhotoVote,
-    votingResultsPhotographerMapper,
-    photoPhotographerMapper,
+    VotingResultsPhotographerMapper,
+    PhotoPhotographerMapper,
     FinalPhotos,
     PlayerNameId,
     NamespaceAdapter,
+    PhotosPhotographerMapper,
 };

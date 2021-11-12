@@ -114,6 +114,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         //TODO validate inputs - like correct userId...
         switch (message.type) {
             case GameThreeMessageTypes.PHOTO: {
+                // TODO check    const player = this.players.get(message.userId!);
                 this.stageController!.handleReceivedPhoto(message as IMessagePhoto);
                 break;
             }
@@ -137,19 +138,6 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     //********************** Helper Functions **********************/
 
-    handleReceivedFinalPhoto(message: IMessagePhoto) {
-        const player = this.players.get(message.userId!);
-        if (player && !player.hasReceivedFinalPhotos()) {
-            player.receivedFinalPhoto(message.url);
-            player.addPointsFinalRound(1);
-        }
-
-        if (this.allFinalPhotosReceived()) {
-            this.handleAllFinalPhotosReceived();
-            // this.handleFinishedTakingFinalPhotos();
-        }
-    }
-
     //TODO make players class??
     private allFinalPhotosReceived(): boolean {
         return Array.from(this.players.values()).every(player => player.finalPhotosAreReceived());
@@ -158,14 +146,14 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     // *** Final round ***
 
-    sendTakeFinalPhotosCountdown() {
-        this.stageController!.updateStage(GameThreeGameState.TakingFinalPhotos);
-        this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS);
-        GameThreeEventEmitter.emitTakeFinalPhotosCountdown(
-            this.roomId,
-            InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS
-        );
-    }
+    // sendTakeFinalPhotosCountdown() {
+    //     this.stageController!.updateStage(GameThreeGameState.TakingFinalPhotos);
+    //     this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS);
+    //     GameThreeEventEmitter.emitTakeFinalPhotosCountdown(
+    //         this.roomId,
+    //         InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS
+    //     );
+    // }
 
     private handleAllFinalPhotosReceived() {
         this.countdown?.stopCountdown();

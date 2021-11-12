@@ -1,9 +1,8 @@
 //TODO Events/Messages 1
 
-
-import { PlayerNameId, votingResultsPhotographerMapper } from './';
+import { PlayerNameId, VotingResultsPhotographerMapper } from './';
 import { GameThreePlayerRank } from './GameThreePlayerRank';
-import { photoPhotographerMapper } from './photoPhotographerMapper';
+import { PhotoPhotographerMapper } from './PhotoPhotographerMapper';
 
 export const GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE = 'game3/initialGameState';
 export const GAME_THREE_EVENT_MESSAGE__NEW_ROUND = 'game3/newRound';
@@ -55,14 +54,14 @@ export interface TakePhotoCountdownOver {
 export interface VoteForPhotos {
     type: typeof GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS;
     roomId: string;
-    photoUrls: photoPhotographerMapper[];
+    photoUrls: PhotoPhotographerMapper[];
     countdownTime: number;
 }
 
 export interface PhotoVotingResults {
     type: typeof GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS;
     roomId: string;
-    results: votingResultsPhotographerMapper[];
+    results: VotingResultsPhotographerMapper[];
     countdownTime: number;
 }
 

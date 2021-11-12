@@ -1,4 +1,4 @@
-export interface votingResultsPhotographerMapper {
+export interface VotingResultsPhotographerMapper {
     photographerId: string;
     votes: number;
 }
