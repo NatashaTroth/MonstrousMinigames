@@ -2,12 +2,16 @@ import InitialParameters from '../constants/InitialParameters';
 import { GameThreeGameState } from '../enums/GameState';
 import GameThree from '../GameThree';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
+import { Countdown } from './Countdown';
+import { PhotoStage } from './PhotoStage';
 
 export class StageController {
     stage = GameThreeGameState.BeforeStart; //TODO make private
     private gameThree: GameThree;
     private _roundIdx = -1;
     numberRounds = InitialParameters.NUMBER_ROUNDS;
+    private photoStage?: PhotoStage;
+    private countdown?: Countdown;
 
     constructor(gameThree: GameThree) {
         this.gameThree = gameThree;
@@ -15,6 +19,12 @@ export class StageController {
 
     updateStage(stage: GameThreeGameState) {
         this.stage = stage;
+
+        switch (stage) {
+            case GameThreeGameState.TakingPhoto:
+                this.photoStage = new PhotoStage();
+                break;
+        }
     }
 
     handleNewRound() {
@@ -30,7 +40,7 @@ export class StageController {
     handleNextStage() {
         switch (this.stage) {
             case GameThreeGameState.TakingPhoto:
-                this.gameThree.handleFinishedTakingPhoto();
+                this.handleFinishedTakingPhoto();
                 break;
             case GameThreeGameState.Voting:
                 this.gameThree.handleFinishedVoting();
@@ -56,5 +66,22 @@ export class StageController {
 
     private isFinalRound() {
         return this._roundIdx >= this.numberRounds;
+    }
+
+    // ********** new ************
+    handleFinishedTakingPhoto() {
+        this.sendPhotosToScreen();
+    }
+
+    private sendPhotosToScreen() {
+        const photoUrls = this.photoStage!.getPhotos();
+
+        this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VOTE);
+        this.updateStage(GameThreeGameState.Voting);
+        GameThreeEventEmitter.emitVoteForPhotos(
+            this.gameThree.roomId,
+            photoUrls,
+            InitialParameters.COUNTDOWN_TIME_VOTE
+        );
     }
 }
