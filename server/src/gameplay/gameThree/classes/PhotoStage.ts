@@ -9,6 +9,10 @@ export abstract class PhotoStage {
 
     abstract getPhotos(): PhotoPhotographerMapper[] | PhotosPhotographerMapper[];
 
+    getPhotoUrlsFromUser(photographerId: string): string[] {
+        return this.photos.has(photographerId) ? [...this.photos.get(photographerId)!] : [];
+    }
+
     // private getPhotos(): PhotoPhotographerMapper[] {
     //     const photosArray: PhotoPhotographerMapper[] = [];
     //     this.photos.forEach((value, key) => photosArray.push({ photographerId: key, url: value }));

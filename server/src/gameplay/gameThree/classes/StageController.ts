@@ -1,16 +1,20 @@
 import validator from 'validator';
 
+import { GameState } from '../../enums';
 import InitialParameters from '../constants/InitialParameters';
 import { InvalidUrlError } from '../customErrors';
 import { GameThreeGameState } from '../enums/GameState';
 import GameThree from '../GameThree';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
-import { IMessagePhoto, IMessagePhotoVote, PhotoPhotographerMapper } from '../interfaces';
+import {
+    IMessagePhoto, IMessagePhotoVote, PhotoPhotographerMapper, PlayerNameId
+} from '../interfaces';
+import { GameThreePlayerRank } from '../interfaces/GameThreePlayerRank';
 import { Countdown } from './Countdown';
 import { MultiplePhotosStage } from './MultiplePhotosStage';
 import { PhotoStage } from './PhotoStage';
 import { PhotoTopics } from './PhotoTopics';
-// import { PresentationController } from './PresentationController';
+import { PresentationStage } from './PresentationStage';
 import { SinglePhotoStage } from './SinglePhotoStage';
 import { VotingStage } from './VotingStage';
 
@@ -19,17 +23,21 @@ export class StageController {
     stage = GameThreeGameState.BeforeStart; //TODO make private
     private gameThree: GameThree;
     private _roundIdx = -1;
-    numberRounds = InitialParameters.NUMBER_ROUNDS;
     private photoStage?: PhotoStage;
     private votingStage?: VotingStage;
     private countdown: Countdown;
     private photoTopics: PhotoTopics;
-    // private presentationController: PresentationController;
+    private presentationStage?: PresentationStage;
 
     constructor(gameThree: GameThree) {
         this.gameThree = gameThree;
         this.countdown = new Countdown(this); //TODO remove argument
         this.photoTopics = new PhotoTopics();
+    }
+
+    update(timeElapsedSinceLastFrame: number) {
+        this.countdown.update(timeElapsedSinceLastFrame);
+        if (this.countdown.countdownOver()) this.handleNextStage();
     }
 
     updateStage(stage: GameThreeGameState) {
@@ -42,8 +50,8 @@ export class StageController {
                 this.photoStage = new SinglePhotoStage();
                 break;
             case GameThreeGameState.Voting:
+            case GameThreeGameState.FinalVoting:
                 this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VOTE);
-
                 this.votingStage = new VotingStage();
                 break;
             case GameThreeGameState.ViewingResults:
@@ -55,16 +63,19 @@ export class StageController {
                 this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS);
                 //TODO viewing stage?
                 break;
-            // case GameThreeGameState.PresentingFinalPhotos:
-            //     this.presentationController = new PresentationController(
+            case GameThreeGameState.PresentingFinalPhotos:
+                this.presentationStage = new PresentationStage(
+                    Array.from(this.gameThree.players.values()).map(player => player.id)
+                );
+                this.handleNewPresentationRound();
+                break;
+            // case GameThreeGameState.FinalVoting:
+            //     this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VOTE);
+
+            //     this.presentationStage = new PresentationStage(
             //         Array.from(this.gameThree.players.values()).map(player => player.id)
             //     );
-            //     // this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);
-            //     if (this.presentationController!.isAnotherPresenterAvailable()) {
-            //         this.sendFinalPhotosToScreen();
-            //     } else {
-            //         this.handlePresentingFinalPhotosFinished();
-            //     }
+            //     this.handleNewPresentationRound();
             //     break;
         }
     }
@@ -83,7 +94,6 @@ export class StageController {
         switch (this.stage) {
             case GameThreeGameState.TakingPhoto:
                 this.switchToVotingStage();
-
                 break;
             case GameThreeGameState.Voting:
                 this.switchToVotingStage();
@@ -95,10 +105,10 @@ export class StageController {
                 this.switchToFinalPresentationStage();
                 break;
             case GameThreeGameState.PresentingFinalPhotos:
-                this.gameThree.handlePresentingRoundFinished();
+                this.handleNewPresentationRound();
                 break;
             case GameThreeGameState.FinalVoting:
-                this.gameThree.handleFinishedFinalVoting();
+                this.switchToViewingFinalResultsStage();
                 break;
         }
     }
@@ -108,7 +118,7 @@ export class StageController {
     }
 
     private isFinalRound() {
-        return this._roundIdx >= this.numberRounds;
+        return this._roundIdx >= InitialParameters.NUMBER_ROUNDS;
     }
 
     // ********** new ************
@@ -137,22 +147,28 @@ export class StageController {
     }
 
     handleReceivedPhotoVote(message: IMessagePhotoVote) {
-        switch (this.stage) {
-            case GameThreeGameState.Voting:
-                this.votingStage!.addVote(message.voterId, message.photographerId);
-                if (this.votingStage!.haveVotesFromAllUsers(Array.from(this.gameThree.players.keys()))) {
-                    this.switchToViewingResultsStage();
-                }
-                break;
-            case GameThreeGameState.FinalVoting:
-                this.gameThree.handleFinalPhotoVoteReceived(message);
-                break;
+        this.votingStage!.addVote(message.voterId, message.photographerId);
+        if (this.votingStage!.haveVotesFromAllUsers(Array.from(this.gameThree.players.keys()))) {
+            this.stage === GameThreeGameState.Voting
+                ? this.switchToViewingResultsStage()
+                : this.switchToViewingFinalResultsStage();
         }
+
+        // switch (this.stage) {
+        //     case GameThreeGameState.Voting:
+        //         break;
+        //     case GameThreeGameState.FinalVoting:
+        //         if (this.votingStage!.haveVotesFromAllUsers(Array.from(this.gameThree.players.keys()))) {
+        //             this.switchToViewingFinalResultsStage();
+        //         }
+        //         this.handleFinalPhotoVoteReceived(message);
+        //         break;
+        // }
     }
 
     private switchToTakingPhotoStage() {
         this.photoTopics.sendNextTopicToClient(this.gameThree.roomId);
-        this.countdown?.stopCountdown(); //TODO can delete?
+        this.countdown?.resetCountdown(); //TODO can delete?
         // this.updatePlayerPoints();
         this.updateStage(GameThreeGameState.TakingPhoto);
     }
@@ -201,5 +217,63 @@ export class StageController {
         this.gameThree.players.forEach(player => {
             player.totalPoints += this.photoStage!.getNumberPhotos();
         });
+    }
+
+    handleNewPresentationRound() {
+        if (this.presentationStage!.isAnotherPresenterAvailable()) {
+            const nextPresenterId = this.presentationStage!.nextPresenter();
+            const photoUrls = this.photoStage!.getPhotoUrlsFromUser(nextPresenterId);
+
+            GameThreeEventEmitter.emitPresentFinalPhotosCountdown(
+                this.gameThree.roomId,
+                InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS,
+                nextPresenterId,
+                this.gameThree.players.get(nextPresenterId)!.name,
+                photoUrls
+            );
+            this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);
+        } else {
+            this.switchToFinalVotingStage();
+        }
+    }
+
+    private switchToFinalVotingStage() {
+        const playerNameIds: PlayerNameId[] = Array.from(this.gameThree.players.values()).map(player => {
+            return { id: player.id, name: player.name };
+        });
+
+        GameThreeEventEmitter.emitVoteForFinalPhotos(
+            this.gameThree.roomId,
+            InitialParameters.COUNTDOWN_TIME_VOTE,
+            playerNameIds
+        );
+        this.updateStage(GameThreeGameState.FinalVoting);
+    }
+
+    private switchToViewingFinalResultsStage() {
+        const playerRanks: GameThreePlayerRank[] = Array.from(this.gameThree.players.values()).map(player => {
+            return {
+                id: player.id,
+                name: player.name,
+                points: player.getTotalPoints(),
+                rank: 0,
+                isActive: player.isActive,
+            };
+        });
+
+        playerRanks
+            .sort((a, b) => b.points - a.points)
+            .map(result => {
+                const rank = this.gameThree.rankSuccessfulUser(result.points); //TODO !!! make this function protected again
+                this.gameThree.players.get(result.id)!.rank = rank;
+                result.rank = rank;
+                return result;
+            });
+
+        this.updateStage(GameThreeGameState.ViewingFinalResults);
+        this.gameThree.gameState = GameState.Finished;
+        GameThreeEventEmitter.emitGameHasFinishedEvent(this.gameThree.roomId, this.gameThree.gameState, playerRanks);
+
+        //TODO Leaderboard
     }
 }

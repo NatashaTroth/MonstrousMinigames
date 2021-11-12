@@ -1,6 +1,6 @@
 import { shuffleArray } from '../../../helpers/shuffleArray';
 
-export class PresentationController {
+export class PresentationStage {
     private playerPresentOrder: string[] = [];
 
     constructor(playerIds: string[]) {
@@ -14,7 +14,7 @@ export class PresentationController {
 
     nextPresenter() {
         const presenter = this.playerPresentOrder.shift();
-        if (presenter) return presenter;
+        if (presenter) return presenter!;
         throw new Error('No presenter left'); //TODO handle
     }
 

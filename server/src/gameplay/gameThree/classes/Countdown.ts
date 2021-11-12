@@ -20,7 +20,7 @@ export class Countdown {
         this.countdownTimeLeft -= time;
     }
 
-    stopCountdown() {
+    resetCountdown() {
         this.countdownTimeLeft = 0;
         this.countdownRunning = false;
     }
@@ -33,9 +33,8 @@ export class Countdown {
             this.reduceCountdown(timeElapsedSinceLastFrame);
 
             if (this.countdownOver()) {
-                this.stopCountdown();
+                this.resetCountdown();
                 // this.onCountdownFinished();
-                this.stageController.handleNextStage();
             }
         }
     }

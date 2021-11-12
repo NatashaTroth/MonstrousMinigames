@@ -31,7 +31,12 @@ export class SinglePhotoStage extends PhotoStage {
         return photographerIds.every(photographerId => this.photos.has(photographerId));
     }
 
+    // *** TODO: only to satisfy parent class - don't need - remove
     getNumberPhotos() {
         return 1;
     }
+
+    //  getPhotoUrlsFromUser(photographerId): string {
+    //      return
+    //  }
 }
