@@ -9,14 +9,14 @@ export class PhotoStage {
     private photos: Map<string, string>;
 
     constructor() {
-        this.photos = new Map<string, string>(); //key = playerId, value = url
+        this.photos = new Map<string, string>(); //key = photographerId, value = url
     }
 
     // *** Taking Photos ***
 
     private getPhotos(): photoPhotographerMapper[] {
         const photosArray: photoPhotographerMapper[] = [];
-        this.photos.forEach((key, value) => photosArray.push({ photographerId: key, url: value }));
+        this.photos.forEach((value, key) => photosArray.push({ photographerId: key, url: value }));
         return photosArray;
     }
 
@@ -36,5 +36,9 @@ export class PhotoStage {
 
     havePhotosFromAllUsers(photographerIds: string[]) {
         return photographerIds.every(photographerId => this.photos.has(photographerId));
+    }
+
+    hasSentPhoto(photographerId: string) {
+        return this.photos.has(photographerId);
     }
 }

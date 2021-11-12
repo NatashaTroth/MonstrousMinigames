@@ -16,9 +16,7 @@ import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreeEventEmitter from './GameThreeEventEmitter';
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreePlayer from './GameThreePlayer';
-import {
-    GameStateInfo, IMessagePhoto, IMessagePhotoVote, PlayerNameId, votingResultsPhotographerMapper
-} from './interfaces';
+import { GameStateInfo, IMessagePhoto, IMessagePhotoVote, PlayerNameId } from './interfaces';
 import { GameThreePlayerRank } from './interfaces/GameThreePlayerRank';
 
 type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
@@ -130,7 +128,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                 break;
             }
             case GameThreeMessageTypes.PHOTO_VOTE: {
-                this.handleReceivedPhotoVote(message as IMessagePhotoVote);
+                // TODO check they exist
+                // const player = this.players.get(message.photographerId!);
+                // const voter = this.players.get(message.voterId);
+                this.stageController!.handleReceivedPhotoVote(message as IMessagePhotoVote);
                 break;
             }
             case GameThreeMessageTypes.FINISHED_PRESENTING: {
@@ -163,77 +164,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     private allFinalPhotosReceived(): boolean {
         return Array.from(this.players.values()).every(player => player.finalPhotosAreReceived());
     }
-
-    // *** Voting ***
-    private handleReceivedPhotoVote(message: IMessagePhotoVote) {
-        switch (this.stageController!.stage) {
-            case GameThreeGameState.Voting:
-                this.handleSinglePhotoVoteReceived(message);
-                break;
-            case GameThreeGameState.FinalVoting:
-                this.handleFinalPhotoVoteReceived(message);
-                break;
-        }
-    }
-
-    private handleSinglePhotoVoteReceived(message: IMessagePhotoVote) {
-        const player = this.players.get(message.photographerId!);
-        const voter = this.players.get(message.voterId);
-        if (player && voter && !voter.hasVoted(this.stageController!.roundIdx)) {
-            player?.addPoints(this.stageController!.roundIdx, 1);
-            // if (voter) {
-            voter.voted(this.stageController!.roundIdx);
-            // voter.roundInfo[this.stageController!.roundIdx].points += 1; //point for voting //TODO???
-            // }
-        }
-        // this.players.get(message.voterId)?.roundInfo[this.stageController!.roundIdx].voted = true
-
-        if (this.allVotesReceived()) {
-            this.handleAllVotesReceived();
-            //Do something
-        }
-    }
-
-    handleFinishedVoting() {
-        this.removeVotingPointsFromPlayersNoParticipation();
-        this.sendPhotoVotingResultsToScreen();
-
-        //TODO if time over or if all received - check what photos received and forward to screens
-    }
-
-    private removeVotingPointsFromPlayersNoParticipation() {
-        Array.from(this.players.values()).forEach(player => {
-            player.removePoints(this.stageController!.roundIdx);
-        });
-    }
-
-    private allVotesReceived(): boolean {
-        return Array.from(this.players.values()).every(player => player.hasVoted(this.stageController!.roundIdx));
-    }
-
-    private handleAllVotesReceived() {
-        //TODO
-        // send all photos, start voting
-        this.countdown?.stopCountdown();
-        this.sendPhotoVotingResultsToScreen();
-    }
-
-    private sendPhotoVotingResultsToScreen() {
-        const votingResults: votingResultsPhotographerMapper[] = Array.from(this.players.values()).map(player => {
-            return {
-                photographerId: player.id,
-                points: player.getRoundPoints(this.stageController!.roundIdx),
-            };
-        });
-        this.stageController!.updateStage(GameThreeGameState.ViewingResults);
-        this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
-
-        GameThreeEventEmitter.emitPhotoVotingResults(
-            this.roomId,
-            votingResults,
-            InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS
-        );
-    }
+    // *********
 
     // *** Final round ***
 
@@ -295,7 +226,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         GameThreeEventEmitter.emitVoteForFinalPhotos(this.roomId, InitialParameters.COUNTDOWN_TIME_VOTE, playerNameIds);
     }
 
-    private handleFinalPhotoVoteReceived(message: IMessagePhotoVote) {
+    handleFinalPhotoVoteReceived(message: IMessagePhotoVote) {
         const player = this.players.get(message.photographerId!);
         const voter = this.players.get(message.voterId);
         if (player && voter && !voter.hasVotedFinal()) {

@@ -1,4 +1,4 @@
 export interface votingResultsPhotographerMapper {
     photographerId: string;
-    points: number;
+    votes: number;
 }

@@ -5,6 +5,7 @@ import { FinalPhotos, Photo } from './interfaces';
 class GameThreePlayer extends Player {
     private roundInfo: Photo[];
     private finalRoundInfo: FinalPhotos;
+    private _totalPoints = 0;
 
     constructor(id: string, name: string, characterNumber: number) {
         super(id, name, characterNumber);
@@ -39,6 +40,10 @@ class GameThreePlayer extends Player {
     // photoIsReceived(roundIdx: number) {
     //     return this.roundInfo[roundIdx].received;
     // }
+
+    set totalPoints(points: number) {
+        this._totalPoints += points;
+    }
 
     receivedFinalPhoto(url: string) {
         // if (this.roundInfo.length >= roundIdx + 1) this.roundInfo[roundIdx].url = url;
