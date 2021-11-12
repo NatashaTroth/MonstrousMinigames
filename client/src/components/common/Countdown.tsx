@@ -1,8 +1,8 @@
-import React from 'react';
-import { CountdownCircleTimer } from 'react-countdown-circle-timer';
-import styled from 'styled-components';
+import React from "react";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import styled from "styled-components";
 
-import theme from '../../styles/theme';
+import theme from "../../styles/theme";
 
 interface CountdownProps {
     time: number;
@@ -40,6 +40,6 @@ interface TimeWrapperProps {
 const TimeWrapper = styled.div<TimeWrapperProps>`
     position: relative;
     width: ${({ size }) => (size === 'small' ? '50px' : '80px')};
-    height: ${({ size }) => (size === 'small' ? '42px' : '60px')};
-    font-size: ${({ size }) => (size === 'small' ? '35px' : '48px')};
+    height: ${({ size }) => (size === 'small' ? '38px' : '60px')};
+    font-size: ${({ size }) => (size === 'small' ? '30px' : '48px')};
 `;

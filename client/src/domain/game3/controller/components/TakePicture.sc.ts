@@ -1,5 +1,5 @@
-import { Typography } from '@material-ui/core';
-import styled from 'styled-components';
+import { Typography } from "@material-ui/core";
+import styled from "styled-components";
 
 export const StyledLabel = styled.label`
     p {
@@ -32,8 +32,4 @@ export const StyledImg = styled.img`
     display: flex;
     width: 40%;
     margin-bottom: 20px;
-`;
-
-export const CountdownContainer = styled.div`
-    margin-bottom: 30px;
 `;

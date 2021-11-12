@@ -1,8 +1,9 @@
-import { Typography } from '@material-ui/core';
-import styled from 'styled-components';
+import { Chip, Typography } from "@material-ui/core";
+import styled, { keyframes } from "styled-components";
 
-import { StyledFullScreenContainer } from '../../../../components/controller/FullScreenContainer.sc';
-import frame from '../../../../images/ui/frame.jpeg';
+import {
+    StyledFullScreenContainer
+} from "../../../../components/controller/FullScreenContainer.sc";
 
 export const StyledImg = styled.img`
     display: flex;
@@ -39,27 +40,60 @@ export const ScreenContainer = styled(StyledFullScreenContainer)`
     }
 `;
 
-export const LoadingMessage = styled(Typography)`
-    font-size: 20px;
-    color: ${({ theme }) => theme.palette.primary.main};
-    font-weight: 700;
-    font-style: italic;
+export const ImagesContainer = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    height: 70%;
 `;
 
 export const ImageContainer = styled.div`
     display: flex;
-    width: 100%;
-    justify-content: space-around;
+    flex-direction: column;
+    width: 20%;
+    align-items: center;
+    height: 90%;
 `;
 
 export const Frame = styled.div`
-    width: 20%;
-    height: 55%;
-    background: url(${frame});
-    margin: auto;
+    width: 100%;
+    height: 70%;
     display: flex;
-    background-size: cover;
     align-items: center;
-    padding: 2.6%;
+    padding: 20px;
+    background-color: ${({ theme }) => theme.palette.secondary.main};
     background-position: center;
+    box-shadow: inset 0 0px rgba(255, 255, 255, 0.1), inset 2px -15px 30px rgba(0, 0, 0, 0.4),
+        2px 2px 5px rgba(0, 0, 0, 0.3);
+`;
+
+const slideIn = keyframes`
+    0% {
+        transform: translateY(+1000px);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateY(-500px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-500px);
+        opacity: 0;
+    }
+`;
+
+export const StyledChip = styled(Chip)`
+    && {
+        animation-duration: 8s;
+        animation-iteration-count: 1;
+        animation-name: ${slideIn};
+        transform-origin: origin;
+        transition: 4s;
+        animation-timing-function: ease;
+        box-shadow: ${({ theme }) => `4px 4px 0 ${theme.colors.progressBarGreen}}`};
+        animation-fill-mode: forwards;
+        position: absolute;
+    }
 `;

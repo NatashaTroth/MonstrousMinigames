@@ -20,11 +20,13 @@ describe('Screen Socket Connection', () => {
             setChosenGame: jest.fn(),
             setTopicMessage: jest.fn(),
             setVoteForPhotoMessage: jest.fn(),
-            setTimeIsUp: jest.fn(),
             setSheepGameStarted: jest.fn(),
             setRoomId,
             setRoundIdx: jest.fn(),
+            setVotingResults: jest.fn(),
+            setFinalRoundCountdownTime: jest.fn(),
             history,
+            setPresentFinalPhotos: jest.fn(),
         };
 
         handleSocketConnection(roomId, 'Test', dependencies);
