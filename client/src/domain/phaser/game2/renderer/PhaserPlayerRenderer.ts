@@ -54,8 +54,6 @@ export class PhaserPlayerRenderer {
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
-        // eslint-disable-next-line no-console
-        console.log('monster');
         this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
         this.player.setScale(0.2);
         this.player.setDepth(depthDictionary.player);

@@ -28,8 +28,6 @@ export class PhaserSheepRenderer {
     }
 
     renderSheep(sheep: Sheep) {
-        // eslint-disable-next-line no-console
-        console.log('rendersheep');
         if (sheep.state == SheepState.ALIVE) {
             this.renderSheepInitially(sheep.coordinates);
         } else if (sheep.state == SheepState.DECOY) {

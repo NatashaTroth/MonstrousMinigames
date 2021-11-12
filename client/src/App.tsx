@@ -166,7 +166,15 @@ const App: React.FunctionComponent = () => {
                                                                         exact
                                                                     />
                                                                     {/*----------------- Game 2 -----------------*/}
-                                                                    <Route path={Routes.controllerGame2} exact />
+                                                                    <Route
+                                                                        path={Routes.controllerGame2}
+                                                                        component={() => (
+                                                                            <ShakeInstruction
+                                                                                sessionStorage={sessionStorage}
+                                                                            />
+                                                                        )}
+                                                                        exact
+                                                                    />
                                                                     <Route
                                                                         path={Routes.screenGame2}
                                                                         component={Game2}
