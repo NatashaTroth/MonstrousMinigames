@@ -22,9 +22,6 @@ const Vote: React.FunctionComponent = () => {
 
     const finalRound = roundIdx === 3;
 
-    // eslint-disable-next-line no-console
-    console.log(userId);
-
     return (
         <ScreenContainer>
             {!timeIsUp && voteForPhotoMessage?.countdownTime && voteForPhotoMessage.countdownTime > 0 && (

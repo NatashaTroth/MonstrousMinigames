@@ -29,9 +29,10 @@ export interface PlayerRank {
     rank?: number;
     finished: boolean;
     totalTimeInMs?: number;
-    positionX: number;
+    positionX?: number;
     isActive: boolean;
-    dead: boolean;
+    dead?: boolean;
+    points?: number;
 }
 
 export interface PlayerState {

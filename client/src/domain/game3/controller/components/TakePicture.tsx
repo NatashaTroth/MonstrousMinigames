@@ -6,7 +6,7 @@ import { FirebaseContext } from "../../../../contexts/FirebaseContextProvider";
 import { Game3Context } from "../../../../contexts/game3/Game3ContextProvider";
 import { GameContext } from "../../../../contexts/GameContextProvider";
 import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
-import uploadFile from "../gameState/uploadFile";
+import uploadFile from "../gameState/handleFiles";
 import { CountdownContainer, Instructions, ScreenContainer } from "./Game3Styles.sc";
 import PhotoForm from "./PhotoForm";
 
