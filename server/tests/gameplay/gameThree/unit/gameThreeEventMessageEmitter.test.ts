@@ -12,10 +12,9 @@ import {
     GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS, GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
     GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
     GAME_THREE_EVENT_MESSAGE__TAKE_PHOTO_COUNTDOWN_OVER,
-    GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS, GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS,
-    GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS, GameThreeNewRound, NewPhotoTopicInfo,
-    PhotoVotingResults, PresentFinalPhotos, TakeFinalPhotosCountdown, TakePhotoCountdownOver,
-    ViewingFinalPhotos, VoteForFinalPhotos, VoteForPhotos
+    GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS, GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS,
+    GameThreeNewRound, NewPhotoTopicInfo, PhotoVotingResults, PresentFinalPhotos,
+    TakeFinalPhotosCountdown, TakePhotoCountdownOver, VoteForFinalPhotos, VoteForPhotos
 } from '../../../../src/gameplay/gameThree/interfaces/GameThreeEventMessages';
 import { leaderboard, mockPhotoUrl, roomId, users } from '../../mockData';
 
@@ -46,7 +45,7 @@ const topic = 'cats';
 const roundIdx = 1;
 const photoUrls = [{ photographerId: users[0].id, url: mockPhotoUrl, photoId: 1 }];
 const votingResults = [{ photographerId: users[0].id, points: 5 }];
-const finalVotingResults = [{ id: users[0].id, name: users[0].name, points: 5, rank: 1, isActive: true }];
+// const finalVotingResults = [{ id: users[0].id, name: users[0].name, points: 5, rank: 1, isActive: true }];
 
 describe('Can handle function', () => {
     beforeAll(() => {
@@ -175,17 +174,6 @@ describe('Handle function send to controller', () => {
         gameThreeEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
         expect(controllerSpaceEmit).toHaveBeenCalledWith('message', message);
     });
-
-    it('should call emit GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS', () => {
-        const message: ViewingFinalPhotos = {
-            type: GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS,
-            roomId,
-            results: finalVotingResults,
-        };
-
-        gameThreeEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
-        expect(controllerSpaceEmit).toHaveBeenCalledWith('message', message);
-    });
 });
 
 describe('Handle function send to screen', () => {
@@ -292,17 +280,6 @@ describe('Handle function send to screen', () => {
             roomId,
             countdownTime,
             photographers: [{ id: users[0].id, name: users[0].name }],
-        };
-
-        gameThreeEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
-        expect(screenSpaceEmit).toHaveBeenCalledWith('message', message);
-    });
-
-    it('should call emit GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS', () => {
-        const message: ViewingFinalPhotos = {
-            type: GAME_THREE_EVENT_MESSAGE__VIEWING_FINAL_PHOTOS,
-            roomId,
-            results: finalVotingResults,
         };
 
         gameThreeEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
