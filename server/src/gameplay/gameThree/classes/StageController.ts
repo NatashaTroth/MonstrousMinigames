@@ -1,7 +1,11 @@
+import validator from 'validator';
+
 import InitialParameters from '../constants/InitialParameters';
+import { InvalidUrlError } from '../customErrors';
 import { GameThreeGameState } from '../enums/GameState';
 import GameThree from '../GameThree';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
+import { IMessagePhoto } from '../interfaces';
 import { Countdown } from './Countdown';
 import { PhotoStage } from './PhotoStage';
 
@@ -11,10 +15,11 @@ export class StageController {
     private _roundIdx = -1;
     numberRounds = InitialParameters.NUMBER_ROUNDS;
     private photoStage?: PhotoStage;
-    private countdown?: Countdown;
+    private countdown: Countdown;
 
     constructor(gameThree: GameThree) {
         this.gameThree = gameThree;
+        this.countdown = new Countdown(this); //TODO remove argument
     }
 
     updateStage(stage: GameThreeGameState) {
@@ -40,7 +45,8 @@ export class StageController {
     handleNextStage() {
         switch (this.stage) {
             case GameThreeGameState.TakingPhoto:
-                this.handleFinishedTakingPhoto();
+                this.switchToVotingStage();
+
                 break;
             case GameThreeGameState.Voting:
                 this.gameThree.handleFinishedVoting();
@@ -69,19 +75,27 @@ export class StageController {
     }
 
     // ********** new ************
-    handleFinishedTakingPhoto() {
-        this.sendPhotosToScreen();
+
+    handleReceivedPhoto(message: IMessagePhoto) {
+        if (!validator.isURL(message.url))
+            throw new InvalidUrlError('The received value for the URL is not valid.', message.userId);
+
+        switch (this.stage) {
+            case GameThreeGameState.TakingPhoto:
+                this.photoStage!.addPhoto(message.userId, message.url);
+                if (this.photoStage!.havePhotosFromAllUsers(Array.from(this.gameThree.players.keys()))) {
+                    this.switchToVotingStage();
+                }
+                break;
+            case GameThreeGameState.TakingFinalPhotos:
+                this.gameThree.handleReceivedFinalPhoto(message);
+                break;
+        }
     }
 
-    private sendPhotosToScreen() {
-        const photoUrls = this.photoStage!.getPhotos();
-
+    private switchToVotingStage() {
+        this.photoStage!.sendPhotosToScreen(this.gameThree.roomId, InitialParameters.COUNTDOWN_TIME_VOTE);
         this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VOTE);
         this.updateStage(GameThreeGameState.Voting);
-        GameThreeEventEmitter.emitVoteForPhotos(
-            this.gameThree.roomId,
-            photoUrls,
-            InitialParameters.COUNTDOWN_TIME_VOTE
-        );
     }
 }

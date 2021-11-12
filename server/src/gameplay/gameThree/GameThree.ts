@@ -1,5 +1,3 @@
-import validator from 'validator';
-
 import User from '../../classes/user';
 import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
@@ -13,15 +11,13 @@ import { PhotoTopics } from './classes/PhotoTopics';
 import { PresentationController } from './classes/PresentationController';
 import { StageController } from './classes/StageController';
 import InitialParameters from './constants/InitialParameters';
-import { InvalidUrlError } from './customErrors';
 import { GameThreeGameState } from './enums/GameState';
 import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreeEventEmitter from './GameThreeEventEmitter';
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreePlayer from './GameThreePlayer';
 import {
-    GameStateInfo, IMessagePhoto, IMessagePhotoVote, photoPhotographerMapper, PlayerNameId,
-    votingResultsPhotographerMapper
+    GameStateInfo, IMessagePhoto, IMessagePhotoVote, PlayerNameId, votingResultsPhotographerMapper
 } from './interfaces';
 import { GameThreePlayerRank } from './interfaces/GameThreePlayerRank';
 
@@ -35,7 +31,7 @@ type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
 export default class GameThree extends Game<GameThreePlayer, GameStateInfo> implements GameThreeGameInterface {
     // TODO set in create new game so workds for reset
     private stageController?: StageController;
-    private countdown?: Countdown;
+    private countdown?: Countdown; //TODO move to stage controller
     public photoTopics?: PhotoTopics;
     // private roundIdx = -1;
     // private playerPresentOrder: string[] = [];
@@ -127,9 +123,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     protected handleInput(message: IMessage) {
+        //TODO validate inputs - like correct userId...
         switch (message.type) {
             case GameThreeMessageTypes.PHOTO: {
-                this.handleReceivedPhoto(message as IMessagePhoto);
+                this.stageController!.handleReceivedPhoto(message as IMessagePhoto);
                 break;
             }
             case GameThreeMessageTypes.PHOTO_VOTE: {
@@ -149,45 +146,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     //********************** Helper Functions **********************/
 
-    // *** Taking Photos ***
-    handleFinishedTakingPhoto() {
-        // GameThreeEventEmitter.emitTakePhotoCountdownOver(this.roomId); //TODO??
-        this.sendPhotosToScreen();
-    }
-
-    private handleReceivedPhoto(message: IMessagePhoto) {
-        if (!validator.isURL(message.url))
-            throw new InvalidUrlError('The received value for the URL is not valid.', message.userId);
-
-        switch (this.stageController!.stage) {
-            case GameThreeGameState.TakingPhoto:
-                this.handleReceivedSinglePhoto(message);
-                break;
-            case GameThreeGameState.TakingFinalPhotos:
-                this.handleReceivedFinalPhoto(message);
-                break;
-        }
-    }
-
-    private handleReceivedSinglePhoto(message: IMessagePhoto) {
-        const player = this.players.get(message.userId!);
-        if (player && !player.hasReceivedPhoto(this.stageController!.roundIdx))
-            player.receivedPhoto(message.url, this.stageController!.roundIdx);
-
-        if (this.allPhotosReceived()) {
-            this.handleAllPhotosReceived();
-            //Do something
-        }
-    }
-
-    //TODO make players class??
-    private allPhotosReceived(): boolean {
-        return Array.from(this.players.values()).every(player =>
-            player.photoIsReceived(this.stageController!.roundIdx)
-        );
-    }
-
-    private handleReceivedFinalPhoto(message: IMessagePhoto) {
+    handleReceivedFinalPhoto(message: IMessagePhoto) {
         const player = this.players.get(message.userId!);
         if (player && !player.hasReceivedFinalPhotos()) {
             player.receivedFinalPhoto(message.url);
@@ -203,27 +162,6 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     //TODO make players class??
     private allFinalPhotosReceived(): boolean {
         return Array.from(this.players.values()).every(player => player.finalPhotosAreReceived());
-    }
-
-    private handleAllPhotosReceived() {
-        this.countdown?.stopCountdown();
-        this.sendPhotosToScreen();
-    }
-
-    private sendPhotosToScreen() {
-        const photoUrls: photoPhotographerMapper[] = Array.from(this.players.values())
-            .filter(player => player.getUrl(this.stageController!.roundIdx))
-            .map((player, idx) => {
-                return {
-                    photographerId: player.id,
-                    photoId: idx + 1,
-                    url: player.getUrl(this.stageController!.roundIdx),
-                };
-            });
-
-        this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VOTE);
-        this.stageController!.updateStage(GameThreeGameState.Voting);
-        GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
     }
 
     // *** Voting ***

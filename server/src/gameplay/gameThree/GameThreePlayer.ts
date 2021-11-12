@@ -12,8 +12,8 @@ class GameThreePlayer extends Player {
         this.roundInfo = new Array(InitialParameters.NUMBER_ROUNDS - 1);
         for (let i = 0; i < this.roundInfo.length; i++) {
             this.roundInfo[i] = {
-                url: '',
-                received: false,
+                // url: '',
+                // received: false,
                 points: 0,
                 voted: false,
             };
@@ -31,14 +31,14 @@ class GameThreePlayer extends Player {
         // do something
     }
 
-    receivedPhoto(url: string, roundIdx: number) {
-        if (this.roundInfo.length >= roundIdx + 1) this.roundInfo[roundIdx].url = url;
-        this.roundInfo[roundIdx].received = true;
-    }
+    // receivedPhoto(url: string, roundIdx: number) {
+    //     if (this.roundInfo.length >= roundIdx + 1) this.roundInfo[roundIdx].url = url;
+    //     this.roundInfo[roundIdx].received = true;
+    // }
 
-    photoIsReceived(roundIdx: number) {
-        return this.roundInfo[roundIdx].received;
-    }
+    // photoIsReceived(roundIdx: number) {
+    //     return this.roundInfo[roundIdx].received;
+    // }
 
     receivedFinalPhoto(url: string) {
         // if (this.roundInfo.length >= roundIdx + 1) this.roundInfo[roundIdx].url = url;
@@ -78,9 +78,10 @@ class GameThreePlayer extends Player {
     }
 
     removePoints(roundIdx: number) {
-        if (!this.roundInfo[roundIdx].voted || !this.roundInfo[roundIdx].received) {
-            this.roundInfo[roundIdx].points = 0;
-        }
+        //TODO
+        // if (!this.roundInfo[roundIdx].voted || !this.roundInfo[roundIdx].received) {
+        this.roundInfo[roundIdx].points = 0;
+        // }
     }
 
     hasVoted(roundIdx: number) {
@@ -91,17 +92,17 @@ class GameThreePlayer extends Player {
         return this.finalRoundInfo.voted;
     }
 
-    hasReceivedPhoto(roundIdx: number) {
-        return this.roundInfo[roundIdx].received;
-    }
+    // hasReceivedPhoto(roundIdx: number) {
+    //     return this.roundInfo[roundIdx].received;
+    // }
 
     hasReceivedFinalPhotos() {
         return this.finalRoundInfo.received;
     }
 
-    getUrl(roundIdx: number) {
-        return this.roundInfo[roundIdx].url;
-    }
+    // getUrl(roundIdx: number) {
+    //     return this.roundInfo[roundIdx].url;
+    // }
 
     getFinalUrls() {
         return this.finalRoundInfo.urls;
