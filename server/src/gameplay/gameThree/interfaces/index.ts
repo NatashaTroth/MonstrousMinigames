@@ -10,10 +10,10 @@ import type { Photo } from './Photo';
 import type { PlayerNameId } from './PlayerNameId';
 import type { PlayerState } from './PlayerState';
 import type { PlayerStateForClient } from './PlayerStateForClient';
-import type { PhotosPhotographerMapper } from './PhotosPhotographerMapper';
-import type { PhotoPhotographerMapper } from './PhotoPhotographerMapper';
-import type { VotingResultsPhotographerMapper } from './VotingResultsPhotographerMapper';
+import { PhotosPhotographerMapper } from './PhotosPhotographerMapper';
+import { VotingResultsPhotographerMapper } from './VotingResultsPhotographerMapper';
 
+import type { PhotoPhotographerMapper } from './PhotoPhotographerMapper';
 export {
     PlayerState,
     PlayerStateForClient,
