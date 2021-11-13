@@ -1,6 +1,3 @@
-import validator from 'validator';
-
-import { InvalidUrlError } from '../customErrors';
 import { PhotoPhotographerMapper } from '../interfaces';
 import { PhotoStage } from './PhotoStage';
 
@@ -19,8 +16,9 @@ export class SinglePhotoStage extends PhotoStage {
     }
 
     addPhoto(photographerId: string, url: string) {
-        if (!validator.isURL(url))
-            throw new InvalidUrlError('The received value for the URL is not valid.', photographerId);
+        // if (!validator.isURL(url))
+        //     throw new InvalidUrlError('The received value for the URL is not valid.', photographerId);
+        this.validateUrl(url, photographerId);
 
         if (!this.photos.has(photographerId)) {
             this.photos.set(photographerId, url);

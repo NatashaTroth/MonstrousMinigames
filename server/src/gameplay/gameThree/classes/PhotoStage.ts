@@ -26,8 +26,8 @@ export abstract class PhotoStage {
 
     abstract addPhoto(photographerId: string, url: string): void;
 
-    verifyUrl(url: string, photographerId: string) {
-        //TODO MOVE TO URL CLASS
+    protected validateUrl(url: string, photographerId: string) {
+        //TODO Handle error - send something to client? or not bother with it at all?
         if (!validator.isURL(url))
             throw new InvalidUrlError('The received value for the URL is not valid.', photographerId);
     }

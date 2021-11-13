@@ -6,8 +6,7 @@ import Game from '../Game';
 import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
-import { PhotoTopics } from './classes/PhotoTopics';
-import { StageController } from './classes/StageController';
+import { StageController } from './classes';
 import InitialParameters from './constants/InitialParameters';
 import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreeEventEmitter from './GameThreeEventEmitter';
@@ -26,7 +25,6 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     // TODO set in create new game so workds for reset
     private stageController?: StageController;
 
-    public photoTopics?: PhotoTopics;
     // private roundIdx = -1;
     // private playerPresentOrder: string[] = [];
     gameName = GameNames.GAME3;
@@ -55,6 +53,9 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
         this.stageController!.update(timeElapsedSinceLastFrame);
+        // if(this.stageController!.stage === GameThreeGameState.ViewingFinalResults){
+
+        // }
     }
 
     // *** Round Change ***
@@ -65,7 +66,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
-        this.stageController = new StageController(this);
+        this.stageController = new StageController(this.roomId, this.players, this);
     }
 
     startGame(): void {
