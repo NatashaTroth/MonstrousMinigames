@@ -120,7 +120,7 @@ export class StageController {
     handleReceivedPhoto(message: IMessagePhoto) {
         if (!validator.isURL(message.url))
             throw new InvalidUrlError('The received value for the URL is not valid.', message.userId);
-        this.photoStage!.addPhoto(message.userId, message.url);
+        this.photoStage!.handleInput({ photographerId: message.userId, url: message.url });
 
         if (this.photoStage!.havePhotosFromAllUsers(Array.from(this.players.keys()))) {
             this.stage === GameThreeGameState.TakingPhoto
@@ -130,7 +130,7 @@ export class StageController {
     }
 
     handleReceivedPhotoVote(message: IMessagePhotoVote) {
-        this.votingStage!.addVote(message.voterId, message.photographerId);
+        this.votingStage!.handleInput({ voterId: message.voterId, photographerId: message.photographerId });
         if (this.votingStage!.haveVotesFromAllUsers(Array.from(this.players.keys()))) {
             this.stage === GameThreeGameState.Voting
                 ? this.switchToViewingResultsStage()

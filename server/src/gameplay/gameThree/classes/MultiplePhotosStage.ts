@@ -1,5 +1,6 @@
 import { PhotosPhotographerMapper } from '../interfaces';
 import { PhotoStage } from './PhotoStage';
+import { PhotoInput } from './Stage';
 
 export class MultiplePhotosStage extends PhotoStage {
     protected photos: Map<string, string[]>;
@@ -9,20 +10,24 @@ export class MultiplePhotosStage extends PhotoStage {
         this.photos = new Map<string, string[]>(); //key = photographerId, value = url
     }
 
+    entry() {
+        //TODO
+    }
+
     getPhotos(): PhotosPhotographerMapper[] {
         const photosArray: PhotosPhotographerMapper[] = [];
         this.photos.forEach((value, key) => photosArray.push({ photographerId: key, urls: value }));
         return photosArray;
     }
 
-    addPhoto(photographerId: string, url: string) {
-        this.validateUrl(url, photographerId);
+    handleInput(data: PhotoInput) {
+        this.validateUrl(data.url, data.photographerId);
 
-        if (!this.photos.has(photographerId)) {
-            this.photos.set(photographerId, [url]);
+        if (!this.photos.has(data.photographerId)) {
+            this.photos.set(data.photographerId, [data.url]);
         } else {
-            const urls = this.photos.get(photographerId)!;
-            if (urls.length < this.maxNumberPhotos) this.photos.set(photographerId, [...urls, url]);
+            const urls = this.photos.get(data.photographerId)!;
+            if (urls.length < this.maxNumberPhotos) this.photos.set(data.photographerId, [...urls, data.url]);
             //TODO control
         }
     }

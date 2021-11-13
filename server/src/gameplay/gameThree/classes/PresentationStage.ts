@@ -1,6 +1,7 @@
 import { shuffleArray } from '../../../helpers/shuffleArray';
+import { Stage } from './Stage';
 
-export class PresentationStage {
+export class PresentationStage implements Stage {
     private playerPresentOrder: string[] = [];
 
     constructor(playerIds: string[]) {
@@ -10,6 +11,15 @@ export class PresentationStage {
         // this.playerPresentOrder = shuffleArray(
         //     // players.filter(player => player.finalRoundInfo.received).map(player => player.id)
         // );
+    }
+
+    entry() {
+        //TODO
+    }
+
+    //TODO change not undefined
+    handleInput(data: undefined) {
+        //TODO change stage
     }
 
     nextPresenter() {

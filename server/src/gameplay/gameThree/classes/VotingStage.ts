@@ -1,7 +1,8 @@
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
 import { VotingResultsPhotographerMapper } from '../interfaces';
+import { Stage, VotingInput } from './Stage';
 
-export class VotingStage {
+export class VotingStage implements Stage {
     //TODO make URL type
     private votes: Map<string, number>;
     private voterIds: string[]; //voters
@@ -11,10 +12,14 @@ export class VotingStage {
         this.voterIds = [];
     }
 
-    addVote(voterId: string, photographerId: string) {
-        if (!this.voterIds.includes(voterId)) {
-            this.voterIds.push(voterId);
-            this.addVoteToVotesMap(photographerId);
+    entry() {
+        //TODO
+    }
+
+    handleInput(data: VotingInput) {
+        if (!this.voterIds.includes(data.voterId)) {
+            this.voterIds.push(data.voterId);
+            this.addVoteToVotesMap(data.photographerId);
         }
     }
 

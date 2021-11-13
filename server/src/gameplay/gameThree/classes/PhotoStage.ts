@@ -2,10 +2,15 @@ import validator from 'validator';
 
 import { InvalidUrlError } from '../customErrors';
 import { PhotoPhotographerMapper, PhotosPhotographerMapper } from '../interfaces';
+import { PhotoInput, Stage } from './Stage';
 
-export abstract class PhotoStage {
+export abstract class PhotoStage implements Stage {
     //TODO make URL type
     protected abstract photos: Map<string, string | string[]>;
+
+    abstract entry(): void;
+
+    abstract handleInput(data: PhotoInput): void;
 
     abstract getPhotos(): PhotoPhotographerMapper[] | PhotosPhotographerMapper[];
 
@@ -13,36 +18,11 @@ export abstract class PhotoStage {
         return this.photos.has(photographerId) ? [...this.photos.get(photographerId)!] : [];
     }
 
-    // private getPhotos(): PhotoPhotographerMapper[] {
-    //     const photosArray: PhotoPhotographerMapper[] = [];
-    //     this.photos.forEach((value, key) => photosArray.push({ photographerId: key, url: value }));
-    //     return photosArray;
-    // }
-
-    // sendPhotosToClient(roomId: string, countdownTime: number) {
-    //     const photoUrls = this.getPhotos();
-    //     GameThreeEventEmitter.emitVoteForPhotos(roomId, photoUrls, countdownTime);
-    // }
-
-    abstract addPhoto(photographerId: string, url: string): void;
-
     protected validateUrl(url: string, photographerId: string) {
         //TODO Handle error - send something to client? or not bother with it at all?
         if (!validator.isURL(url))
             throw new InvalidUrlError('The received value for the URL is not valid.', photographerId);
     }
-
-    // addPhoto(photographerId: string, url: string) {
-    //     if (!validator.isURL(url))
-    //         throw new InvalidUrlError('The received value for the URL is not valid.', photographerId);
-
-    //     if (!this.photos.has(photographerId)) {
-    //         this.photos.set(photographerId, url);
-    //     }
-    //     else{
-    //         this.addNewUrl()
-    //     }
-    // }
 
     abstract havePhotosFromAllUsers(photographerIds: string[]): boolean;
 

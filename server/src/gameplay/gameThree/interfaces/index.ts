@@ -7,12 +7,12 @@ import type { IMessagePhoto } from './IMessagePhoto';
 import type { IMessagePhotoVote } from './IMessagePhotoVote';
 import type { NamespaceAdapter } from './NamespaceAdapter';
 import type { Photo } from './Photo';
-import type { PhotoPhotographerMapper } from './PhotoPhotographerMapper';
 import type { PlayerNameId } from './PlayerNameId';
 import type { PlayerState } from './PlayerState';
 import type { PlayerStateForClient } from './PlayerStateForClient';
-import type { VotingResultsPhotographerMapper } from './VotingResultsPhotographerMapper';
 import type { PhotosPhotographerMapper } from './PhotosPhotographerMapper';
+import type { PhotoPhotographerMapper } from './PhotoPhotographerMapper';
+import type { VotingResultsPhotographerMapper } from './VotingResultsPhotographerMapper';
 
 export {
     PlayerState,

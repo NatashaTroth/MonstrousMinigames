@@ -1,8 +1,7 @@
 //TODO Events/Messages 1
 
-import { PlayerNameId, VotingResultsPhotographerMapper } from './';
+import { PhotoPhotographerMapper, PlayerNameId, VotingResultsPhotographerMapper } from './';
 import { GameThreePlayerRank } from './GameThreePlayerRank';
-import { PhotoPhotographerMapper } from './PhotoPhotographerMapper';
 
 export const GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE = 'game3/initialGameState';
 export const GAME_THREE_EVENT_MESSAGE__NEW_ROUND = 'game3/newRound';
