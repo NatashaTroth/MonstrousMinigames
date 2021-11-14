@@ -36,14 +36,9 @@ export default class RoundService {
         return this.phase === Phases.RESULTS;
     }
 
-    protected logPhaseInfo() {
-        console.log('Round: ' + this.round + ' | Phase: ' + this.phase);
-    }
-
     public countingPhase() {
         this.phase = Phases.COUNTING;
-        this.logPhaseInfo();
-        //todo emit
+
         setTimeout(() => {
             this.guessingPhase();
         }, this.roundTime);
@@ -52,8 +47,7 @@ export default class RoundService {
 
     public guessingPhase() {
         this.phase = Phases.GUESSING;
-        this.logPhaseInfo();
-        //todo emit
+
         setTimeout(() => {
             this.resultsPhase();
         }, this.guessingTime);
@@ -62,8 +56,6 @@ export default class RoundService {
 
     public resultsPhase() {
         this.phase = Phases.RESULTS;
-        this.logPhaseInfo();
-        //todo emit
 
         setTimeout(() => {
             this.round++;

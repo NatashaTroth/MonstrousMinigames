@@ -54,7 +54,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             sheep: this.sheepService.getSheep(),
             lengthX: this.lengthX,
             lengthY: this.lengthY,
-            currentRound: this.roundService.getRound(),
+            round: this.roundService.getRound(),
+            phase: this.roundService.getPhase(),
         };
     }
 
