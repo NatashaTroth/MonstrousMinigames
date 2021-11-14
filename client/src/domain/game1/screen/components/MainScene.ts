@@ -5,6 +5,15 @@ import windSpritesheet from '../../../../images/characters/spritesheets/chasers/
 import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1 } from '../../../../utils/constants';
 import { screenFinishedRoute } from '../../../../utils/routes';
 import history from '../../../history/history';
+import { GameToScreenMapper } from '../../../phaser/game1/GameToScreenMapper';
+import { initialGameInput } from '../../../phaser/game1/initialGameInput';
+import { Player } from '../../../phaser/game1/Player';
+import { PhaserPlayerRenderer } from '../../../phaser/game1/renderer/PhaserPlayerRenderer';
+import { GameAudio } from '../../../phaser/GameAudio';
+import GameEventEmitter from '../../../phaser/GameEventEmitter';
+import { GameEventTypes } from '../../../phaser/GameEventTypes';
+import { GameData } from '../../../phaser/gameInterfaces';
+import { PhaserGameRenderer } from '../../../phaser/renderer/PhaserGameRenderer';
 import { MessageSocket } from '../../../socket/MessageSocket';
 import { Socket } from '../../../socket/Socket';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
@@ -35,14 +44,7 @@ import { GameHasStartedMessage, startedTypeGuard } from '../../../typeGuards/gam
 import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
-import { GameAudio } from '../phaser/GameAudio';
-import GameEventEmitter from '../phaser/GameEventEmitter';
-import { GameEventTypes } from '../phaser/GameEventTypes';
-import { GameData } from '../phaser/gameInterfaces';
-import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
-import { initialGameInput } from '../phaser/initialGameInput';
-import { Player } from '../phaser/Player';
-import { PhaserGameRenderer } from '../phaser/renderer/PhaserGameRenderer';
+import { moveLanesToCenter } from '../gameState/moveLanesToCenter';
 import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
 class MainScene extends Phaser.Scene {
@@ -175,10 +177,7 @@ class MainScene extends Phaser.Scene {
     }
 
     sendStartGame() {
-        this.socket?.emit({
-            type: MessageTypes.startGame,
-            roomId: this.roomId,
-        });
+        handleStartGame(this.socket, this.roomId);
     }
 
     initSockets() {
@@ -287,6 +286,10 @@ class MainScene extends Phaser.Scene {
         this.gameEventEmitter.on(GameEventTypes.PauseResume, () => {
             this.handlePauseResumeButton();
         });
+
+        this.gameEventEmitter.on(GameEventTypes.Stop, () => {
+            this.handleStopGame();
+        });
     }
 
     initiateGame(gameStateData: GameData) {
@@ -325,7 +328,7 @@ class MainScene extends Phaser.Scene {
                     this.players[i].handlePlayerUnStunned();
                 }
 
-                this.players[i].moveForward(gameStateData.playersState[i].positionX, this.trackLength);
+                this.players[i].moveForward(gameStateData.playersState[i].positionX);
                 this.players[i].checkAtObstacle(gameStateData.playersState[i].atObstacle);
             }
             this.players[i].setChasers(gameStateData.chasersPositionX);
@@ -351,25 +354,20 @@ class MainScene extends Phaser.Scene {
         const numberPlayers = gameStateData.playersState.length;
         const laneHeightsPerNumberPlayers = [1 / 3, 2 / 3, 1, 1];
         const laneHeight = (this.windowHeight / numberPlayers) * laneHeightsPerNumberPlayers[numberPlayers - 1];
-        const posY = this.moveLanesToCenter(this.windowHeight, laneHeight, index, numberPlayers);
+        const posY = moveLanesToCenter(this.windowHeight, laneHeight, index, numberPlayers);
 
         const player = new Player(
             this,
-            laneHeightsPerNumberPlayers,
             laneHeight,
             index,
             { x: gameStateData.playersState[index].positionX, y: posY },
             gameStateData,
             character,
             numberPlayers,
-            this.gameToScreenMapper!
+            this.gameToScreenMapper!,
+            new PhaserPlayerRenderer(this, numberPlayers, laneHeightsPerNumberPlayers)
         );
         this.players.push(player);
-    }
-
-    //TODO duplicate, also in phaserPlayerRenderer.ts
-    private moveLanesToCenter(windowHeight: number, newHeight: number, index: number, numberPlayers: number) {
-        return (windowHeight - newHeight * numberPlayers) / 2 + newHeight * (index + 1);
     }
 
     private createGameCountdown(countdownTime: number) {
@@ -413,13 +411,27 @@ class MainScene extends Phaser.Scene {
     }
 
     handlePauseResumeButton() {
-        this.socket?.emit({ type: MessageTypes.pauseResume });
+        handleResume(this.socket);
     }
 
-    //TODO stop game button
-    // function handleStopGame() {
-    //     screenSocket?.emit({ type: MessageTypes.stopGame });
-    // }
+    handleStopGame() {
+        handleStop(this.socket);
+    }
 }
 
 export default MainScene;
+
+export function handleResume(socket: Socket | undefined) {
+    socket?.emit({ type: MessageTypes.pauseResume });
+}
+
+export function handleStartGame(socket: Socket | undefined, roomId: string | undefined) {
+    socket?.emit({
+        type: MessageTypes.startGame,
+        roomId,
+    });
+}
+
+export function handleStop(socket: Socket | undefined) {
+    socket?.emit({ type: MessageTypes.stopGame });
+}

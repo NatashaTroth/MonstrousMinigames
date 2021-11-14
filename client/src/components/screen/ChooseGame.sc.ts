@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const boxShadowDepth = 7;
+import { OrangeBase } from '../common/CommonStyles.sc';
 
 export const CloseButtonContainer = styled.div`
     width: 100%;
@@ -51,39 +51,82 @@ export const RightContainer = styled.div`
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: space-between;
 
     @media (min-width: 1000px) {
         width: 75%;
     }
 `;
-export const GamePreviewContainer = styled.div`
-    height: 100%;
-    padding: 20px;
-    background-color: ${({ theme }) => theme.palette.secondary.main};
+export const GamePreviewContainer = styled(OrangeBase)`
+    width: 100%;
+    height: 90%;
     border-radius: 10px;
-    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
-        ${({ theme }) => theme.palette.secondary.dark};
 `;
 
 export const SelectGameButtonContainer = styled.div`
-    margin-top: 20px;
-`;
-
-export const PreviewImage = styled.img`
-    display: flex;
-    width: 100%;
+    margin: 20px 0;
 `;
 
 export const BackButtonContainer = styled.div`
     display: flex;
     width: 100%;
-    justify-content: flex-end;
-    margin: 30px 0;
+    margin: 60px 0 30px 0;
 `;
 
 export const OliverImage = styled.img`
     display: flex;
     width: 100%;
     min-width: 200px;
+`;
+
+interface PreviewImageContainer {
+    src: string;
+}
+
+export const PreviewImageContainer = styled.div<PreviewImageContainer>`
+    margin-top: 30px;
+    background-image: url(${({ src }) => src});
+    width: 100%;
+    height: 30%;
+    background-size: cover;
+    background-position: bottom;
+`;
+
+export const ImageDescription = styled.div`
+    background: ${({ theme }) => theme.palette.secondary.dark};
+    color: white;
+    font-size: 18px;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    font-weight: 600;
+`;
+
+export const ControlInstructionsContainer = styled.div`
+    display: flex;
+    justify-content: space-around;
+`;
+
+export const ControlInstruction = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 10px 0;
+    font-size: 14px;
+    font-weight: 400;
+    width: 100%;
+`;
+
+export const InstructionImg = styled.img`
+    display: flex;
+    width: 60%;
+    margin-top: 20px;
+`;
+
+export const Wrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 18%;
 `;

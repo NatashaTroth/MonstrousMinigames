@@ -5,6 +5,7 @@ import { handleSetSocket } from '../domain/socket/screen/handleSetSocket';
 import { handleSocketConnection } from '../domain/socket/screen/handleSocketConnection';
 import { Socket } from '../domain/socket/Socket';
 import { GameState } from '../utils/constants';
+import { Game3Context } from './game3/Game3ContextProvider';
 import { GameContext } from './GameContextProvider';
 import { Obstacle } from './PlayerContextProvider';
 
@@ -28,9 +29,10 @@ export interface PlayerRank {
     rank?: number;
     finished: boolean;
     totalTimeInMs?: number;
-    positionX: number;
+    positionX?: number;
     isActive: boolean;
-    dead: boolean;
+    dead?: boolean;
+    points?: number;
 }
 
 export interface PlayerState {
@@ -65,7 +67,14 @@ export interface User {
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenSocket, setScreenSocket] = React.useState<Socket>();
     const history = useHistory();
-
+    const {
+        setTopicMessage,
+        setRoundIdx,
+        setVoteForPhotoMessage,
+        setVotingResults,
+        setFinalRoundCountdownTime,
+        setPresentFinalPhotos,
+    } = React.useContext(Game3Context);
     const {
         setGameStarted,
         setSheepGameStarted,
@@ -80,6 +89,27 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setChosenGame,
     } = React.useContext(GameContext);
 
+    const dependencies = {
+        setScreenSocket,
+        setConnectedUsers,
+        setHasPaused,
+        setGameStarted,
+        setCountdownTime,
+        setFinished,
+        setPlayerRanks,
+        setScreenAdmin,
+        setScreenState,
+        setChosenGame,
+        setTopicMessage,
+        setRoundIdx,
+        setSheepGameStarted,
+        setVoteForPhotoMessage,
+        setVotingResults,
+        setFinalRoundCountdownTime,
+        setPresentFinalPhotos,
+        history,
+    };
+
     const content = {
         screenSocket,
         setScreenSocket: (socket: Socket, roomId: string, route: string) => {
@@ -87,18 +117,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
                 socket,
                 roomId,
                 {
-                    setScreenSocket,
-                    setConnectedUsers,
-                    setHasPaused,
-                    setGameStarted,
-                    setSheepGameStarted,
-                    setCountdownTime,
-                    setFinished,
-                    setPlayerRanks,
-                    setScreenAdmin,
-                    setScreenState,
-                    setChosenGame,
-                    history,
+                    ...dependencies,
                 },
                 route
             );
@@ -106,18 +125,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         handleSocketConnection: (roomId: string, route: string) => {
             handleSocketConnection(roomId, route, {
                 setRoomId,
-                setScreenSocket,
-                setConnectedUsers,
-                setHasPaused,
-                setGameStarted,
-                setSheepGameStarted,
-                setCountdownTime,
-                setFinished,
-                setPlayerRanks,
-                setScreenAdmin,
-                setScreenState,
-                setChosenGame,
-                history,
+                ...dependencies,
             });
         },
     };

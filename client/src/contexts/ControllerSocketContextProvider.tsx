@@ -1,12 +1,13 @@
 import * as React from 'react';
 
+import addMovementListener from '../domain/game1/controller/gameState/addMovementListener';
 import history from '../domain/history/history';
 import { handleSetSocket } from '../domain/socket/controller/handleSetSocket';
 import { handleSocketConnection } from '../domain/socket/controller/handleSocketConnection';
 import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
 import { Socket } from '../domain/socket/Socket';
-import addMovementListener from '../domain/user/game1/addMovementListener';
 import { Game1Context } from './game1/Game1ContextProvider';
+import { Game3Context } from './game3/Game3ContextProvider';
 import { GameContext } from './GameContextProvider';
 import { PlayerContext } from './PlayerContextProvider';
 
@@ -51,8 +52,17 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
     );
 
     const {
+        setPhotos,
+        setVoteForPhotoMessage,
+        setRoundIdx,
+        setTopicMessage,
+        setVotingResults,
+        setFinalRoundCountdownTime,
+        setPresentFinalPhotos,
+    } = React.useContext(Game3Context);
+
+    const {
         setGameStarted,
-        setSheepGameStarted,
         setRoomId,
         setHasPaused,
         resetGame,
@@ -60,6 +70,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setConnectedUsers,
         hasPaused,
         setChosenGame,
+        setCountdownTime,
     } = React.useContext(GameContext);
 
     React.useEffect(() => {
@@ -75,7 +86,6 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setObstacle,
         setPlayerRank,
         setGameStarted,
-        setSheepGameStarted,
         setName,
         setAvailableCharacters,
         history,
@@ -90,6 +100,14 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setExceededChaserPushes,
         setStunnablePlayers,
         setChosenGame,
+        setPhotos,
+        setVoteForPhotoMessage,
+        setRoundIdx,
+        setCountdownTime,
+        setTopicMessage,
+        setVotingResults,
+        setFinalRoundCountdownTime,
+        setPresentFinalPhotos,
     };
 
     const content = {

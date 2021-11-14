@@ -18,7 +18,7 @@ export async function getAudioInput(
     },
     navigator: Navigator
 ) {
-    let stream: MediaStream | null = null;
+    let stream: MediaStream | null | Error = null;
     const w = window as WindowProps;
     const { solveObstacle, setProgress } = dependencies;
     currentCount = 0;
@@ -33,7 +33,7 @@ export async function getAudioInput(
         const analyser = audioContext.createAnalyser();
 
         if (stream) {
-            const microphone = audioContext.createMediaStreamSource(stream);
+            const microphone = audioContext.createMediaStreamSource(stream as MediaStream);
             const javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
 
             analyser.smoothingTimeConstant = 0.8;
@@ -49,7 +49,7 @@ export async function getAudioInput(
                 } else if (currentCount >= MAX && !send) {
                     send = true;
 
-                    stream!.getTracks().forEach(track => track.stop());
+                    (stream as MediaStream)!.getTracks().forEach(track => track.stop());
                     solveObstacle();
                 }
             });

@@ -4,6 +4,7 @@
   "description": "npm i",
   "main": "index.js",
   "scripts": {
+    "setup": "npm install && cd client && npm install && cd ../server && npm install && cd ..",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install"
   },
@@ -14,6 +15,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "husky": "^7.0.2"
+    "husky": "^7.0.4"
   }
 }

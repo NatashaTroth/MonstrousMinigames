@@ -49,7 +49,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 positionY: player.posY,
                 finished: player.finished,
                 isActive: player.isActive,
-                characterNumber: player.characterNumber
+                characterNumber: player.characterNumber,
             })),
             sheep: this.sheepService.getSheep(),
             lengthX: this.lengthX,
@@ -58,7 +58,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             phase: this.roundService.getPhase(),
         };
     }
-
 
     protected mapUserToPlayer(user: User): GameTwoPlayer {
         const player = new GameTwoPlayer(
@@ -72,14 +71,13 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
-        return
-
+        return;
     }
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
-        return
+        return;
     }
     protected beforeCreateNewGame() {
-        return
+        return;
     }
 
     createNewGame(users: Array<User>) {
@@ -179,5 +177,4 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
         return false;
     }
-
 }

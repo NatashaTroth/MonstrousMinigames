@@ -1,11 +1,13 @@
 image: node:15
 stages:
-    - npm
-    - lint
-    - test
-    - staging
-    - production
+  - npm
+  - lint
+  - test-unit
+  - test-integration
+  - test-other
+  - staging
+  - production
 
 include:
-    - local: "/server/.gitlab-ci.yml"
-    - local: "/client/.gitlab-ci.yml"
+  - local: "/server/.gitlab-ci.yml"
+  - local: "/client/.gitlab-ci.yml"

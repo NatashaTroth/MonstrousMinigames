@@ -1,18 +1,20 @@
+/* eslint-disable simple-import-sort/imports */
 import 'react-multi-carousel/lib/styles.css';
-
 import { ArrowBackIos, ArrowForwardIos, Clear } from '@material-ui/icons';
 import * as React from 'react';
 import Carousel from 'react-multi-carousel';
+import { History } from 'history';
 
 import Button from '../../components/common/Button';
 import IconButton from '../../components/common/IconButton';
 import { Label } from '../../components/common/Label.sc';
 import { carouselOptions } from '../../config/carouselOptions';
-import { characterDictionary, characters } from '../../config/characters';
+import { Character as CharacterInterface, characterDictionary, characters } from '../../config/characters';
 import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import history from '../../domain/history/history';
+import { Socket } from '../../domain/socket/Socket';
 import { MessageTypes } from '../../utils/constants';
 import { controllerLobbyRoute } from '../../utils/routes';
 import {
@@ -30,9 +32,9 @@ const ChooseCharacter: React.FunctionComponent = () => {
     const { roomId, availableCharacters } = React.useContext(GameContext);
     const [actualCharacter, setActualCharacter] = React.useState(0);
     const [isMoving, setIsMoving] = React.useState(false);
+    const searchParams = new URLSearchParams(history.location.search);
 
     const { controllerSocket } = React.useContext(ControllerSocketContext);
-    const searchParams = new URLSearchParams(history.location.search);
 
     let characterIndex = -1;
     if (character) {
@@ -58,6 +60,16 @@ const ChooseCharacter: React.FunctionComponent = () => {
             }
         }
     }
+
+    const handleChooseCharacterClick = () =>
+        chooseCharacterClick({
+            controllerSocket,
+            actualCharacter,
+            characterIndex,
+            roomId,
+            setCharacter,
+            history,
+        });
 
     return (
         <ChooseCharacterContainer>
@@ -90,21 +102,7 @@ const ChooseCharacter: React.FunctionComponent = () => {
             </Carousel>
             <ChooseButtonContainer>
                 <Button
-                    onClick={() => {
-                        if (characterIndex !== actualCharacter) {
-                            controllerSocket.emit({
-                                type: MessageTypes.selectCharacter,
-                                characterNumber: actualCharacter,
-                            });
-                            setCharacter(characters[actualCharacter]);
-                        }
-
-                        if (searchParams.get('back')) {
-                            history.goBack();
-                        } else {
-                            history.push(controllerLobbyRoute(roomId));
-                        }
-                    }}
+                    onClick={handleChooseCharacterClick}
                     disabled={!availableCharacters.includes(actualCharacter) && characterIndex !== actualCharacter}
                 >
                     Choose Character
@@ -115,6 +113,35 @@ const ChooseCharacter: React.FunctionComponent = () => {
 };
 
 export default ChooseCharacter;
+
+interface HandleChooseCharacterClickProps {
+    controllerSocket: Socket;
+    characterIndex: number;
+    actualCharacter: number;
+    setCharacter: (val: CharacterInterface) => void;
+    history: History;
+    roomId: string | undefined;
+}
+
+export const chooseCharacterClick = (props: HandleChooseCharacterClickProps) => {
+    const { characterIndex, actualCharacter, controllerSocket, setCharacter, roomId } = props;
+
+    const searchParams = new URLSearchParams(history.location.search);
+
+    if (characterIndex !== actualCharacter) {
+        controllerSocket.emit({
+            type: MessageTypes.selectCharacter,
+            characterNumber: actualCharacter,
+        });
+        setCharacter(characters[actualCharacter]);
+    }
+
+    if (searchParams.get('back')) {
+        history.goBack();
+    } else {
+        history.push(controllerLobbyRoute(roomId));
+    }
+};
 
 interface CustomArrow {
     handleOnClick: () => void;

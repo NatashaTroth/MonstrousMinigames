@@ -12,9 +12,11 @@ interface ButtonProps {
     fullwidth?: boolean;
     title?: string;
     size?: 'small' | 'medium' | 'large';
+    id?: string;
 }
 
 const Button: React.FunctionComponent<ButtonProps> = ({
+    id,
     children,
     onClick,
     type = 'button',
@@ -29,6 +31,7 @@ const Button: React.FunctionComponent<ButtonProps> = ({
         <Tooltip title={title || ''}>
             <span>
                 <StyledButton
+                    id={id}
                     disabled={disabled}
                     onClick={onClick}
                     type={type}

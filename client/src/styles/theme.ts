@@ -20,6 +20,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
             darkGreen: string;
             characterColors: string[];
         };
+        boxShadowDepth: number;
     }
     interface ThemeOptions {
         status?: {
@@ -40,6 +41,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
             darkGreen?: string;
             characterColors?: string[];
         };
+        boxShadowDepth?: number;
     }
 }
 
@@ -72,6 +74,19 @@ const theme = createMuiTheme({
         readyButton: '#1c2a2b',
         darkGreen: '#0e1a18',
         characterColors: ['#1e8fe2', '#69a04e', '#b53cd4', '#b97d35'],
+    },
+    boxShadowDepth: 7,
+    overrides: {
+        MuiChip: {
+            root: {
+                height: 38,
+                borderRadius: 20,
+                backgroundColor: '#6aac02',
+            },
+            label: {
+                fontSize: 30,
+            },
+        },
     },
 });
 

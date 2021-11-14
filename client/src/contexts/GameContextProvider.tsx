@@ -1,12 +1,11 @@
 import * as React from 'react';
 
 import { defaultAvailableCharacters } from '../config/characters';
+import { GameNames } from '../config/games';
+import { ScreenStates } from '../config/screenStates';
 import { handleSetGameFinished } from '../domain/commonGameState/controller/handleSetGameFinished';
-import { handleSetGameStarted } from '../domain/commonGameState/controller/handleSetGameStarted';
-import { handleSetSheepGameStarted } from '../domain/commonGameState/controller/handleSetSheepGameStarted';
 import { User } from '../domain/typeGuards/connectedUsers';
-import { GameNames } from '../utils/games';
-import { ScreenStates } from '../utils/screenStates';
+import { FirebaseContext } from './FirebaseContextProvider';
 import { PlayerRank } from './ScreenSocketContextProvider';
 
 export const defaultValue = {
@@ -120,14 +119,15 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenAdmin, setScreenAdmin] = React.useState<boolean>(false);
     const [screenState, setScreenState] = React.useState<string>(ScreenStates.lobby);
     const [availableCharacters, setAvailableCharacters] = React.useState<number[]>(defaultAvailableCharacters);
+    const { storage } = React.useContext(FirebaseContext);
 
     const content = {
         finished,
-        setFinished: (val: boolean) => handleSetGameFinished(val, { setFinished }),
+        setFinished: (val: boolean) => handleSetGameFinished(val, chosenGame, storage, roomId, { setFinished }),
         gameStarted,
-        setGameStarted: (val: boolean) => handleSetGameStarted(val, { setGameStarted }),
+        setGameStarted,
         sheepGameStarted,
-        setSheepGameStarted: (val: boolean) => handleSetSheepGameStarted(val, { setSheepGameStarted }),
+        setSheepGameStarted,
         roomId,
         setRoomId,
         connectedUsers,

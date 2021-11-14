@@ -9,7 +9,7 @@ import { GameContext } from '../../../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../../audio/handlePermission';
 import { AudioButton, Container, PauseButton } from '../../../game1/screen/components/Game.sc';
-import GameEventEmitter from '../phaser/GameEventEmitter';
+import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import SheepGameScene from './SheepGameScene';
 
 const Game2: React.FunctionComponent = () => {

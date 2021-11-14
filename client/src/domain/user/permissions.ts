@@ -1,3 +1,4 @@
+import { localDevelopment } from '../../utils/constants';
 import { Navigator } from '../navigator/Navigator';
 import { Window } from '../window/Window';
 
@@ -13,16 +14,15 @@ export async function ClickRequestDeviceMotion(window: Window) {
 }
 
 export async function getMicrophoneStream(navigator: Navigator) {
+    // TODO remove
+    if (localDevelopment) return true;
     try {
         // https://github.com/microsoft/TypeScript/issues/33232
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        // const mediaDevices = navigator as any;
-
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
             if (stream) {
-                stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+                (stream as MediaStream).getTracks().forEach((track: MediaStreamTrack) => track.stop());
             }
 
             return !!stream;

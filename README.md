@@ -1,21 +1,17 @@
-# Setup in client & server
+# Setup
 
-npm i
+npm run setup
 
 # Start client
 
 cd client/
-npm
+npm run start
 
 # Start server
 
 cd server/
 npm run dev
 
-# Tests in both
+# Local Development
 
-npm run test
-
-frontendBackend-
-
-npm i husky
+search for local development variables in server and client folder and set them to true

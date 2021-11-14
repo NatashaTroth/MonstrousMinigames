@@ -1,26 +1,25 @@
-import Grid from '@material-ui/core/Grid';
+import { Grid } from '@material-ui/core';
 import Slider from '@material-ui/core/Slider';
 import Typography from '@material-ui/core/Typography';
 import { VolumeOff } from '@material-ui/icons';
 import VolumeDown from '@material-ui/icons/VolumeDown';
 import VolumeUp from '@material-ui/icons/VolumeUp';
 import * as React from 'react';
+import styled from 'styled-components';
 
 import { AudioContext } from '../../contexts/AudioContextProvider';
 import { handleAudio } from '../../domain/audio/handleAudio';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import Button from './Button';
-import IconButton from './IconButton';
 import {
     BackButtonContainer,
-    Content,
+    ContentBase,
     ContentContainer,
+    FullScreenContainer,
     Headline,
-    SettingsContainer,
-    StyledGridContainer,
-    VolumeContainer,
-} from './Settings.sc';
+} from './FullScreenStyles.sc';
+import IconButton from './IconButton';
 
 const Settings: React.FunctionComponent = () => {
     const {
@@ -53,9 +52,9 @@ const Settings: React.FunctionComponent = () => {
     };
 
     return (
-        <SettingsContainer>
+        <FullScreenContainer>
             <ContentContainer>
-                <Content>
+                <ContentBase>
                     <Headline>Settings</Headline>
                     <VolumeContainer>
                         <Typography gutterBottom>Sound Volume</Typography>
@@ -91,12 +90,12 @@ const Settings: React.FunctionComponent = () => {
                             </IconButton>
                         </StyledGridContainer>
                     </VolumeContainer>
-                </Content>
-                <BackButtonContainer>
-                    <Button onClick={history.goBack}>Back</Button>
-                </BackButtonContainer>
+                </ContentBase>
             </ContentContainer>
-        </SettingsContainer>
+            <BackButtonContainer>
+                <Button onClick={history.goBack}>Back</Button>
+            </BackButtonContainer>
+        </FullScreenContainer>
     );
 };
 
@@ -120,3 +119,14 @@ export const updateVolume = async (
 
     setAudioVolume(newValue);
 };
+
+const VolumeContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    margin-bottom: 30px;
+`;
+
+const StyledGridContainer = styled(Grid)`
+    align-items: center;
+`;
