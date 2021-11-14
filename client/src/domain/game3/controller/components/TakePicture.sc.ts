@@ -1,5 +1,5 @@
-import { Typography } from "@material-ui/core";
-import styled from "styled-components";
+import { Typography } from '@material-ui/core';
+import styled from 'styled-components';
 
 export const StyledLabel = styled.label`
     p {

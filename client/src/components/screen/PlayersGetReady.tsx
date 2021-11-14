@@ -1,28 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Tooltip } from "@material-ui/core";
-import * as React from "react";
+import { Tooltip } from '@material-ui/core';
+import * as React from 'react';
 
-import Button from "../../components/common/Button";
-import { characters } from "../../config/characters";
-import { GameNames } from "../../config/games";
-import { ScreenStates } from "../../config/screenStates";
-import { AudioContext } from "../../contexts/AudioContextProvider";
-import { GameContext } from "../../contexts/GameContextProvider";
-import { ScreenSocketContext, User } from "../../contexts/ScreenSocketContextProvider";
-import { handleAudioPermission } from "../../domain/audio/handlePermission";
-import handleStartGame1 from "../../domain/game1/screen/gameState/handleStartGame1";
-import handleStartGame2 from "../../domain/game2/screen/gameState/handleStartGame2";
-import handleStartClickedGame3 from "../../domain/game3/screen/gameState/handleStartClickedGame3";
-import history from "../../domain/history/history";
-import { Socket } from "../../domain/socket/Socket";
-import { MessageTypes } from "../../utils/constants";
-import { Routes } from "../../utils/routes";
-import { BackButtonContainer, FullScreenContainer } from "../common/FullScreenStyles.sc";
-import { getUserArray } from "./Lobby";
+import Button from '../../components/common/Button';
+import { characters } from '../../config/characters';
+import { GameNames } from '../../config/games';
+import { ScreenStates } from '../../config/screenStates';
+import { AudioContext } from '../../contexts/AudioContextProvider';
+import { GameContext } from '../../contexts/GameContextProvider';
+import { ScreenSocketContext, User } from '../../contexts/ScreenSocketContextProvider';
+import { handleAudioPermission } from '../../domain/audio/handlePermission';
+import handleStartGame1 from '../../domain/game1/screen/gameState/handleStartGame1';
+import handleStartGame2 from '../../domain/game2/screen/gameState/handleStartGame2';
+import handleStartClickedGame3 from '../../domain/game3/screen/gameState/handleStartClickedGame3';
+import history from '../../domain/history/history';
+import { Socket } from '../../domain/socket/Socket';
+import { MessageTypes } from '../../utils/constants';
+import { Routes } from '../../utils/routes';
+import { BackButtonContainer, FullScreenContainer } from '../common/FullScreenStyles.sc';
+import { getUserArray } from './Lobby';
 import {
-    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer, ConnectedUsers,
-    ConnectedUserStatus, Content, GetReadyBackground
-} from "./PlayersGetReady.sc";
+    Character,
+    CharacterContainer,
+    ConnectedUserCharacter,
+    ConnectedUserContainer,
+    ConnectedUsers,
+    ConnectedUserStatus,
+    Content,
+    GetReadyBackground,
+} from './PlayersGetReady.sc';
 
 const PlayersGetReady: React.FC = () => {
     const { screenSocket } = React.useContext(ScreenSocketContext);

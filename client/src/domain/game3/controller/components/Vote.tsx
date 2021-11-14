@@ -1,13 +1,13 @@
-import * as React from "react";
-import styled from "styled-components";
+import * as React from 'react';
+import styled from 'styled-components';
 
-import Button from "../../../../components/common/Button";
-import Countdown from "../../../../components/common/Countdown";
-import { ControllerSocketContext } from "../../../../contexts/ControllerSocketContextProvider";
-import { Game3Context } from "../../../../contexts/game3/Game3ContextProvider";
-import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
-import sendVote from "../gameState/sendVote";
-import { CountdownContainer, Instructions, ScreenContainer } from "./Game3Styles.sc";
+import Button from '../../../../components/common/Button';
+import Countdown from '../../../../components/common/Countdown';
+import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
+import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
+import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
+import sendVote from '../gameState/sendVote';
+import { CountdownContainer, Instructions, ScreenContainer } from './Game3Styles.sc';
 
 const Vote: React.FunctionComponent = () => {
     const { voteForPhotoMessage, roundIdx } = React.useContext(Game3Context);

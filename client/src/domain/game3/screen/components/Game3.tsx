@@ -1,12 +1,19 @@
-import React from "react";
+import React from 'react';
 
-import Countdown from "../../../../components/common/Countdown";
-import { Game3Context } from "../../../../contexts/game3/Game3ContextProvider";
-import { GameContext } from "../../../../contexts/GameContextProvider";
+import Countdown from '../../../../components/common/Countdown';
+import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
+import { GameContext } from '../../../../contexts/GameContextProvider';
 import {
-    Frame, ImageContainer, ImagesContainer, InstructionContainer, PictureInstruction, RandomWord,
-    ScreenContainer, StyledChip, StyledImg
-} from "./Game.sc";
+    Frame,
+    ImageContainer,
+    ImagesContainer,
+    InstructionContainer,
+    PictureInstruction,
+    RandomWord,
+    ScreenContainer,
+    StyledChip,
+    StyledImg,
+} from './Game.sc';
 
 const Game3: React.FunctionComponent = () => {
     const { countdownTime } = React.useContext(GameContext);

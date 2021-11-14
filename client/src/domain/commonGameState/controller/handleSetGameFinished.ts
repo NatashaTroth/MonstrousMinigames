@@ -1,7 +1,7 @@
-import { FirebaseStorage } from "@firebase/storage";
+import { FirebaseStorage } from '@firebase/storage';
 
-import { GameNames } from "../../../config/games";
-import { deleteFiles } from "../../game3/controller/gameState/handleFiles";
+import { GameNames } from '../../../config/games';
+import { deleteFiles } from '../../game3/controller/gameState/handleFiles';
 
 export function handleSetGameFinished(
     finished: boolean,

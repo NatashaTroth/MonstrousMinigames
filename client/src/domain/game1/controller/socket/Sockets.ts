@@ -1,35 +1,26 @@
-import { History } from "history";
+import { History } from 'history';
 
-import { Obstacle } from "../../../../contexts/PlayerContextProvider";
+import { Obstacle } from '../../../../contexts/PlayerContextProvider';
+import { handlePlayerFinishedMessage } from '../../../commonGameState/controller/handlePlayerFinishedMessage';
+import { MessageSocket } from '../../../socket/MessageSocket';
+import { Socket } from '../../../socket/Socket';
 import {
-    handlePlayerFinishedMessage
-} from "../../../commonGameState/controller/handlePlayerFinishedMessage";
-import { MessageSocket } from "../../../socket/MessageSocket";
-import { Socket } from "../../../socket/Socket";
-import {
-    ApproachingSolvableObstacleMessage, approachingSolvableObstacleTypeGuard
-} from "../../../typeGuards/game1/approachingSolvableObstacleTypeGuard";
-import {
-    exceededMaxChaserPushesTypeGuard
-} from "../../../typeGuards/game1/exceededMaxChaserPushes";
-import { ObstacleMessage, obstacleTypeGuard } from "../../../typeGuards/game1/obstacle";
-import { PlayerDiedMessage, playerDiedTypeGuard } from "../../../typeGuards/game1/playerDied";
-import {
-    PlayerFinishedMessage, playerFinishedTypeGuard
-} from "../../../typeGuards/game1/playerFinished";
-import { playerStunnedTypeGuard } from "../../../typeGuards/game1/playerStunned";
-import { playerUnstunnedTypeGuard } from "../../../typeGuards/game1/playerUnstunned";
-import {
-    StunnablePlayersMessage, stunnablePlayersTypeGuard
-} from "../../../typeGuards/game1/stunnablePlayers";
-import {
-    handleApproachingObstacleMessage
-} from "../gameState/handleApproachingSolvableObstacleMessage";
-import { handleObstacleMessage } from "../gameState/handleObstacleMessage";
-import { handlePlayerDied } from "../gameState/handlePlayerDied";
-import { handlePlayerStunned } from "../gameState/handlePlayerStunned";
-import { handlePlayerUnstunned } from "../gameState/handlePlayerUnstunned";
-import { handleStunnablePlayers } from "../gameState/handleStunnablePlayers";
+    ApproachingSolvableObstacleMessage,
+    approachingSolvableObstacleTypeGuard,
+} from '../../../typeGuards/game1/approachingSolvableObstacleTypeGuard';
+import { exceededMaxChaserPushesTypeGuard } from '../../../typeGuards/game1/exceededMaxChaserPushes';
+import { ObstacleMessage, obstacleTypeGuard } from '../../../typeGuards/game1/obstacle';
+import { PlayerDiedMessage, playerDiedTypeGuard } from '../../../typeGuards/game1/playerDied';
+import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../../typeGuards/game1/playerFinished';
+import { playerStunnedTypeGuard } from '../../../typeGuards/game1/playerStunned';
+import { playerUnstunnedTypeGuard } from '../../../typeGuards/game1/playerUnstunned';
+import { StunnablePlayersMessage, stunnablePlayersTypeGuard } from '../../../typeGuards/game1/stunnablePlayers';
+import { handleApproachingObstacleMessage } from '../gameState/handleApproachingSolvableObstacleMessage';
+import { handleObstacleMessage } from '../gameState/handleObstacleMessage';
+import { handlePlayerDied } from '../gameState/handlePlayerDied';
+import { handlePlayerStunned } from '../gameState/handlePlayerStunned';
+import { handlePlayerUnstunned } from '../gameState/handlePlayerUnstunned';
+import { handleStunnablePlayers } from '../gameState/handleStunnablePlayers';
 
 export interface HandleSetControllerSocketGame1Dependencies {
     setPlayerFinished: (val: boolean) => void;

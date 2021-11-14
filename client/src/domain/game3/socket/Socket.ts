@@ -1,11 +1,9 @@
-import { Topic, Vote, VoteResult } from "../../../contexts/game3/Game3ContextProvider";
-import { MessageSocket } from "../../socket/MessageSocket";
-import { Socket } from "../../socket/Socket";
-import {
-    FinalRoundCountdownMessage, finalRoundCountdownTypeGuard
-} from "../../typeGuards/game3/finalRoundCountdown";
-import { NewPhotoTopicMessage, newPhotoTopicTypeGuard } from "../../typeGuards/game3/newPhotoTopic";
-import { VotingResultsMessage, votingResultsTypeGuard } from "../../typeGuards/game3/votingResults";
+import { Topic, Vote, VoteResult } from '../../../contexts/game3/Game3ContextProvider';
+import { MessageSocket } from '../../socket/MessageSocket';
+import { Socket } from '../../socket/Socket';
+import { FinalRoundCountdownMessage, finalRoundCountdownTypeGuard } from '../../typeGuards/game3/finalRoundCountdown';
+import { NewPhotoTopicMessage, newPhotoTopicTypeGuard } from '../../typeGuards/game3/newPhotoTopic';
+import { VotingResultsMessage, votingResultsTypeGuard } from '../../typeGuards/game3/votingResults';
 
 export interface HandleSetSocket3ControllerDependencies {
     setVoteForPhotoMessage: (val: Vote) => void;

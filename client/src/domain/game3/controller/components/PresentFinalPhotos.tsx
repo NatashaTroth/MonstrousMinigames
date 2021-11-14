@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import Countdown from "../../../../components/common/Countdown";
-import { Game3Context } from "../../../../contexts/game3/Game3ContextProvider";
-import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
-import { CountdownContainer, Instructions, ScreenContainer } from "./Game3Styles.sc";
+import Countdown from '../../../../components/common/Countdown';
+import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
+import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
+import { CountdownContainer, Instructions, ScreenContainer } from './Game3Styles.sc';
 
 const PresentFinalPhotos: React.FunctionComponent = () => {
     const { presentFinalPhotos } = React.useContext(Game3Context);

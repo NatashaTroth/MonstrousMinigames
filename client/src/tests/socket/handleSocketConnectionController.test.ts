@@ -1,6 +1,6 @@
-import { createMemoryHistory } from "history";
+import { createMemoryHistory } from 'history';
 
-import { handleSocketConnection } from "../../domain/socket/controller/handleSocketConnection";
+import { handleSocketConnection } from '../../domain/socket/controller/handleSocketConnection';
 
 describe('Controller Socket Connection', () => {
     it('handed setRoomId function should be called with handed roomId', () => {

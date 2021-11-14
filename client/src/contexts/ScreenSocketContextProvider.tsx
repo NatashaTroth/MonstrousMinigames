@@ -1,13 +1,13 @@
-import * as React from "react";
-import { useHistory } from "react-router-dom";
+import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
-import { handleSetSocket } from "../domain/socket/screen/handleSetSocket";
-import { handleSocketConnection } from "../domain/socket/screen/handleSocketConnection";
-import { Socket } from "../domain/socket/Socket";
-import { GameState } from "../utils/constants";
-import { Game3Context } from "./game3/Game3ContextProvider";
-import { GameContext } from "./GameContextProvider";
-import { Obstacle } from "./PlayerContextProvider";
+import { handleSetSocket } from '../domain/socket/screen/handleSetSocket';
+import { handleSocketConnection } from '../domain/socket/screen/handleSocketConnection';
+import { Socket } from '../domain/socket/Socket';
+import { GameState } from '../utils/constants';
+import { Game3Context } from './game3/Game3ContextProvider';
+import { GameContext } from './GameContextProvider';
+import { Obstacle } from './PlayerContextProvider';
 
 interface ScreenSocketContextProps {
     screenSocket: Socket | undefined;

@@ -1,12 +1,12 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { defaultAvailableCharacters } from "../config/characters";
-import { GameNames } from "../config/games";
-import { ScreenStates } from "../config/screenStates";
-import { handleSetGameFinished } from "../domain/commonGameState/controller/handleSetGameFinished";
-import { User } from "../domain/typeGuards/connectedUsers";
-import { FirebaseContext } from "./FirebaseContextProvider";
-import { PlayerRank } from "./ScreenSocketContextProvider";
+import { defaultAvailableCharacters } from '../config/characters';
+import { GameNames } from '../config/games';
+import { ScreenStates } from '../config/screenStates';
+import { handleSetGameFinished } from '../domain/commonGameState/controller/handleSetGameFinished';
+import { User } from '../domain/typeGuards/connectedUsers';
+import { FirebaseContext } from './FirebaseContextProvider';
+import { PlayerRank } from './ScreenSocketContextProvider';
 
 export const defaultValue = {
     finished: false,

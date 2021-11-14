@@ -1,20 +1,15 @@
-import { FinalPhoto, Vote, VoteResult } from "../../../../contexts/game3/Game3ContextProvider";
+import { FinalPhoto, Vote, VoteResult } from '../../../../contexts/game3/Game3ContextProvider';
+import { controllerGame3Route, controllerPresentRoute, controllerVoteRoute } from '../../../../utils/routes';
+import history from '../../../history/history';
+import { MessageSocket } from '../../../socket/MessageSocket';
+import { Socket } from '../../../socket/Socket';
+import { NewRoundMessage, newRoundTypeGuard } from '../../../typeGuards/game3/newRound';
+import { PresentFinalPhotosMessage, presentFinalPhotosTypeGuard } from '../../../typeGuards/game3/presentFinalPhotos';
 import {
-    controllerGame3Route, controllerPresentRoute, controllerVoteRoute
-} from "../../../../utils/routes";
-import history from "../../../history/history";
-import { MessageSocket } from "../../../socket/MessageSocket";
-import { Socket } from "../../../socket/Socket";
-import { NewRoundMessage, newRoundTypeGuard } from "../../../typeGuards/game3/newRound";
-import {
-    PresentFinalPhotosMessage, presentFinalPhotosTypeGuard
-} from "../../../typeGuards/game3/presentFinalPhotos";
-import {
-    VoteForFinalPhotosMessage, voteForFinalPhotosMessageTypeGuard
-} from "../../../typeGuards/game3/voteForFinalPhotos";
-import {
-    VoteForPhotoMessage, voteForPhotoMessageTypeGuard
-} from "../../../typeGuards/game3/voteForPhotos";
+    VoteForFinalPhotosMessage,
+    voteForFinalPhotosMessageTypeGuard,
+} from '../../../typeGuards/game3/voteForFinalPhotos';
+import { VoteForPhotoMessage, voteForPhotoMessageTypeGuard } from '../../../typeGuards/game3/voteForPhotos';
 
 export interface HandleSetSocket3ControllerDependencies {
     setVoteForPhotoMessage: (val: Vote) => void;

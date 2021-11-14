@@ -1,9 +1,7 @@
-import { Typography } from "@material-ui/core";
-import styled from "styled-components";
+import { Typography } from '@material-ui/core';
+import styled from 'styled-components';
 
-import {
-    StyledFullScreenContainer
-} from "../../../../components/controller/FullScreenContainer.sc";
+import { StyledFullScreenContainer } from '../../../../components/controller/FullScreenContainer.sc';
 
 export const ScreenContainer = styled(StyledFullScreenContainer)`
     && {

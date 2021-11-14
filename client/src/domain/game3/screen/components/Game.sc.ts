@@ -1,9 +1,7 @@
-import { Chip, Typography } from "@material-ui/core";
-import styled, { keyframes } from "styled-components";
+import { Chip, Typography } from '@material-ui/core';
+import styled, { keyframes } from 'styled-components';
 
-import {
-    StyledFullScreenContainer
-} from "../../../../components/controller/FullScreenContainer.sc";
+import { StyledFullScreenContainer } from '../../../../components/controller/FullScreenContainer.sc';
 
 export const StyledImg = styled.img`
     display: flex;

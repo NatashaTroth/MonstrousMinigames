@@ -1,8 +1,8 @@
-import React from "react";
-import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import styled from "styled-components";
+import React from 'react';
+import { CountdownCircleTimer } from 'react-countdown-circle-timer';
+import styled from 'styled-components';
 
-import theme from "../../styles/theme";
+import theme from '../../styles/theme';
 
 interface CountdownProps {
     time: number;

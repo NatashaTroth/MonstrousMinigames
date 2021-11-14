@@ -1,10 +1,8 @@
-import { initializeApp } from "@firebase/app";
-import { getStorage } from "@firebase/storage";
+import { initializeApp } from '@firebase/app';
+import { getStorage } from '@firebase/storage';
 
-import { GameNames } from "../../../config/games";
-import {
-    handleSetGameFinished
-} from "../../../domain/commonGameState/controller/handleSetGameFinished";
+import { GameNames } from '../../../config/games';
+import { handleSetGameFinished } from '../../../domain/commonGameState/controller/handleSetGameFinished';
 
 describe('handleSetGameFinished', () => {
     it('handed setFinished function should be called with finished value', () => {

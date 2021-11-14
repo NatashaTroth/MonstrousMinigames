@@ -1,8 +1,8 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { Photographer } from "../../domain/typeGuards/game3/voteForFinalPhotos";
-import { PhotoUserMapper } from "../../domain/typeGuards/game3/voteForPhotos";
-import { VotingResult } from "../../domain/typeGuards/game3/votingResults";
+import { Photographer } from '../../domain/typeGuards/game3/voteForFinalPhotos';
+import { PhotoUserMapper } from '../../domain/typeGuards/game3/voteForPhotos';
+import { VotingResult } from '../../domain/typeGuards/game3/votingResults';
 
 export const defaultValue = {
     roundIdx: 1,
