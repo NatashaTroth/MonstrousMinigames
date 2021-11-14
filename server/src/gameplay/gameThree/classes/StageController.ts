@@ -12,8 +12,7 @@ import {
 } from '../interfaces';
 import { GameThreePlayerRank } from '../interfaces/GameThreePlayerRank';
 import {
-    Countdown, MultiplePhotosStage, PhotoStage, PhotoTopics, PresentationStage, SinglePhotoStage,
-    VotingStage
+    Countdown, MultiplePhotosStage, PhotoStage, PresentationStage, SinglePhotoStage, VotingStage
 } from './';
 
 //TODO maybe also a round handler class
@@ -24,25 +23,32 @@ export class StageController {
     private photoStage?: PhotoStage;
     private votingStage?: VotingStage;
     private countdown: Countdown;
-    private photoTopics: PhotoTopics;
+    // private photoTopics: PhotoTopics;
     private presentationStage?: PresentationStage;
+
+    private stageTest?: Stage;
 
     constructor(private roomId: string, private players: Map<string, GameThreePlayer>, private gameThree: GameThree) {
         // this.gameThree = gameThree;
         this.countdown = new Countdown(this); //TODO remove argument
-        this.photoTopics = new PhotoTopics();
+        // this.photoTopics = new PhotoTopics();
     }
 
     update(timeElapsedSinceLastFrame: number) {
-        this.countdown.update(timeElapsedSinceLastFrame);
-        if (this.countdown.countdownOver()) this.handleStageCountdownOver();
+        // this.countdown.update(timeElapsedSinceLastFrame);
+        // if (this.countdown.countdownOver()) this.handleStageCountdownOver();
+
+        this.stageTest.update(timeElapsedSinceLastFrame);
     }
 
     handleNewRound() {
         this.roundIdx++;
         GameThreeEventEmitter.emitNewRound(this.roomId, this.roundIdx);
-        if (!this.isFinalRound() && this.photoTopics!.isAnotherTopicAvailable()) {
-            this.switchToTakingPhotoStage();
+        if (!this.isFinalRound()) {
+            //&& this.photoTopics!.isAnotherTopicAvailable()
+            // this.switchToTakingPhotoStage();
+
+            this.stageTest = new SinglePhotoStage();
         } else {
             this.switchToFinalTakingPhotosStage();
         }
@@ -68,7 +74,7 @@ export class StageController {
                 break;
             case GameThreeGameState.TakingFinalPhotos:
                 this.photoStage = new MultiplePhotosStage(InitialParameters.NUMBER_FINAL_PHOTOS);
-                this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS);
+                this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
                 //TODO viewing stage?
                 break;
             case GameThreeGameState.PresentingFinalPhotos:
@@ -138,12 +144,12 @@ export class StageController {
         }
     }
 
-    private switchToTakingPhotoStage() {
-        this.photoTopics.sendNextTopicToClient(this.roomId);
-        this.countdown?.resetCountdown(); //TODO can delete?
-        // this.updatePlayerPoints();
-        this.updateStage(GameThreeGameState.TakingPhoto);
-    }
+    // private switchToTakingPhotoStage() {
+    //     // this.photoTopics.sendNextTopicToClient(this.roomId);
+    //     this.countdown?.resetCountdown(); //TODO can delete?
+    //     // this.updatePlayerPoints();
+    //     this.updateStage(GameThreeGameState.TakingPhoto);
+    // }
 
     private switchToVotingStage() {
         const photoUrls: UrlPhotographerMapper[] = this.photoStage!.getPhotos() as UrlPhotographerMapper[];
@@ -169,7 +175,7 @@ export class StageController {
         this.updateStage(GameThreeGameState.TakingFinalPhotos);
         GameThreeEventEmitter.emitTakeFinalPhotosCountdown(
             this.roomId,
-            InitialParameters.COUNTDOWN_TIME_TAKE_FINAL_PHOTOS
+            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS
         );
     }
 
@@ -191,12 +197,12 @@ export class StageController {
 
             GameThreeEventEmitter.emitPresentFinalPhotosCountdown(
                 this.roomId,
-                InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS,
+                InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS,
                 nextPresenterId,
                 this.players.get(nextPresenterId)!.name,
                 photoUrls
             );
-            this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);
+            this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
         } else {
             this.switchToFinalVotingStage();
         }

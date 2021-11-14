@@ -4,11 +4,21 @@ import { InvalidUrlError } from '../customErrors';
 import { PhotosPhotographerMapper, UrlPhotographerMapper } from '../interfaces';
 import { PhotoInput, Stage } from './Stage';
 
-export abstract class PhotoStage implements Stage {
+export abstract class PhotoStage extends Stage {
+    protected abstract countdownTime: number;
+
     //TODO make URL type
     protected abstract photos: Map<string, string | string[]>;
 
-    abstract entry(): void;
+    // abstract entry(roomId: string): void;
+    entry(roomId: string) {
+        //TODO
+        super.entry(roomId);
+    }
+
+    update(timeElapsedSinceLastFrame: number) {
+        super.update(timeElapsedSinceLastFrame);
+    }
 
     abstract handleInput(data: PhotoInput): void;
 

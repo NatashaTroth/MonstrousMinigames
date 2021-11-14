@@ -1,5 +1,7 @@
 // import validator from 'validator';
 
+import { Countdown } from './';
+
 // import { InvalidUrlError } from '../customErrors';
 // import { UrlPhotographerMapper, PhotosPhotographerMapper } from '../interfaces';
 
@@ -13,10 +15,19 @@ export interface VotingInput {
     photographerId: string;
 }
 
-export interface Stage {
-    handleInput(data: PhotoInput | VotingInput | undefined): void | Stage;
+export abstract class Stage {
+    private countdown = new Countdown();
+    protected abstract countdownTime: number;
 
-    entry(): void;
+    abstract handleInput(data: PhotoInput | VotingInput | undefined): void | Stage;
+
+    entry(roomId: string) {
+        this.countdown.initiateCountdown(this.countdownTime);
+    }
+
+    update(timeElapsedSinceLastFrame: number) {
+        this.countdown.update(timeElapsedSinceLastFrame);
+    }
 
     //TODO make URL type
     // protected abstract photos: Map<string, string | string[]>;

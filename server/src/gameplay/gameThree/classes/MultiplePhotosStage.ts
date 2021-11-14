@@ -10,7 +10,7 @@ export class MultiplePhotosStage extends PhotoStage {
         this.photos = new Map<string, string[]>(); //key = photographerId, value = url
     }
 
-    entry() {
+    entry(roomId: string) {
         //TODO
     }
 

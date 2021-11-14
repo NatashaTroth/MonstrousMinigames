@@ -1,17 +1,24 @@
+import InitialParameters from '../constants/InitialParameters';
 import { UrlPhotographerMapper } from '../interfaces';
+import { PhotoTopics } from './';
 import { PhotoStage } from './PhotoStage';
 import { PhotoInput } from './Stage';
 
 export class SinglePhotoStage extends PhotoStage {
     protected photos: Map<string, string>;
+    private photoTopics: PhotoTopics;
+    protected countdownTime = InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO;
 
     constructor() {
         super();
         this.photos = new Map<string, string>(); //key = photographerId, value = url
+        this.photoTopics = new PhotoTopics();
     }
 
-    entry() {
+    entry(roomId: string) {
         //TODO
+        super.entry(roomId);
+        this.photoTopics.sendNextTopicToClient(roomId);
     }
 
     getPhotos(): UrlPhotographerMapper[] {
