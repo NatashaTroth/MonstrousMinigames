@@ -1,7 +1,7 @@
 import validator from 'validator';
 
 import { InvalidUrlError } from '../customErrors';
-import { PhotoPhotographerMapper, PhotosPhotographerMapper } from '../interfaces';
+import { PhotosPhotographerMapper, UrlPhotographerMapper } from '../interfaces';
 import { PhotoInput, Stage } from './Stage';
 
 export abstract class PhotoStage implements Stage {
@@ -12,7 +12,7 @@ export abstract class PhotoStage implements Stage {
 
     abstract handleInput(data: PhotoInput): void;
 
-    abstract getPhotos(): PhotoPhotographerMapper[] | PhotosPhotographerMapper[];
+    abstract getPhotos(): UrlPhotographerMapper[] | PhotosPhotographerMapper[];
 
     getPhotoUrlsFromUser(photographerId: string): string[] {
         return this.photos.has(photographerId) ? [...this.photos.get(photographerId)!] : [];

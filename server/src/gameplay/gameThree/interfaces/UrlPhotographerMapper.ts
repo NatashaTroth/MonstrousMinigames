@@ -1,4 +1,4 @@
-export interface PhotoPhotographerMapper {
+export interface UrlPhotographerMapper {
     photographerId: string;
     url: string;
 }

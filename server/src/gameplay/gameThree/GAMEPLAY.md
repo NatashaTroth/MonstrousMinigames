@@ -107,12 +107,12 @@ storage hinten - nach spiel alles löschen
 ```typescript
 {
     roomId: string;
-    photoUrls: PhotoPhotographerMapper[];
+    photoUrls: UrlPhotographerMapper[];
     countdownTime: number;
 }
 
-//PhotoPhotographerMapper:
-export interface PhotoPhotographerMapper {
+//UrlPhotographerMapper:
+export interface UrlPhotographerMapper {
     photographerId: string;
     url: string;
 }
@@ -132,12 +132,12 @@ export interface PhotoPhotographerMapper {
 ```typescript
  {
     roomId: string;
-    results: VotingResultsPhotographerMapper[];
+    results: VotesPhotographerMapper[];
     countdownTime: number;
 }
 
-//VotingResultsPhotographerMapper:
-export interface VotingResultsPhotographerMapper {
+//VotesPhotographerMapper:
+export interface VotesPhotographerMapper {
     photographerId: string;
     points: number;
 }
@@ -202,7 +202,7 @@ countdownTime: number;
     },
 }
 
-//VotingResultsPhotographerMapper:
+//VotesPhotographerMapper:
 export interface GameThreePlayerRank  {
     id: string;
     name: string;

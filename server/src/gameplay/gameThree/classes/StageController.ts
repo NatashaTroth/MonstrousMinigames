@@ -8,7 +8,7 @@ import GameThree from '../GameThree';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
 import GameThreePlayer from '../GameThreePlayer';
 import {
-    IMessagePhoto, IMessagePhotoVote, PhotoPhotographerMapper, PlayerNameId
+    IMessagePhoto, IMessagePhotoVote, PlayerNameId, UrlPhotographerMapper
 } from '../interfaces';
 import { GameThreePlayerRank } from '../interfaces/GameThreePlayerRank';
 import {
@@ -146,7 +146,7 @@ export class StageController {
     }
 
     private switchToVotingStage() {
-        const photoUrls: PhotoPhotographerMapper[] = this.photoStage!.getPhotos() as PhotoPhotographerMapper[];
+        const photoUrls: UrlPhotographerMapper[] = this.photoStage!.getPhotos() as UrlPhotographerMapper[];
         GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
         this.updateStage(GameThreeGameState.Voting);
     }

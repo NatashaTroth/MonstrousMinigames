@@ -10,7 +10,7 @@ import {
 } from '../interfaces/GlobalEventMessages';
 import { GameThreeEventMessageEmitter } from './GameThreeEventMessageEmitter';
 import {
-    PhotoPhotographerMapper, PlayerNameId, PlayerRank, VotingResultsPhotographerMapper
+    PlayerNameId, PlayerRank, UrlPhotographerMapper, VotesPhotographerMapper
 } from './interfaces';
 import {
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
@@ -117,7 +117,7 @@ export default class GameThreeEventEmitter {
         });
     }
 
-    public static emitVoteForPhotos(roomId: string, photoUrls: PhotoPhotographerMapper[], countdownTime: number) {
+    public static emitVoteForPhotos(roomId: string, photoUrls: UrlPhotographerMapper[], countdownTime: number) {
         this.GameThreeEventMessageEmitter.emit({
             type: GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS,
             roomId,
@@ -126,11 +126,7 @@ export default class GameThreeEventEmitter {
         });
     }
 
-    public static emitPhotoVotingResults(
-        roomId: string,
-        results: VotingResultsPhotographerMapper[],
-        countdownTime: number
-    ) {
+    public static emitPhotoVotingResults(roomId: string, results: VotesPhotographerMapper[], countdownTime: number) {
         this.GameThreeEventMessageEmitter.emit({
             type: GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS,
             roomId,

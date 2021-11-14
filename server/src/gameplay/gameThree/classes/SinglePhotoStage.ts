@@ -1,4 +1,4 @@
-import { PhotoPhotographerMapper } from '../interfaces';
+import { UrlPhotographerMapper } from '../interfaces';
 import { PhotoStage } from './PhotoStage';
 import { PhotoInput } from './Stage';
 
@@ -14,8 +14,8 @@ export class SinglePhotoStage extends PhotoStage {
         //TODO
     }
 
-    getPhotos(): PhotoPhotographerMapper[] {
-        const photosArray: PhotoPhotographerMapper[] = [];
+    getPhotos(): UrlPhotographerMapper[] {
+        const photosArray: UrlPhotographerMapper[] = [];
         this.photos.forEach((value, key) => photosArray.push({ photographerId: key, url: value }));
         return photosArray;
     }

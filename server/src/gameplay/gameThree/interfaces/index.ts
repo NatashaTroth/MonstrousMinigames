@@ -10,10 +10,10 @@ import type { Photo } from './Photo';
 import type { PlayerNameId } from './PlayerNameId';
 import type { PlayerState } from './PlayerState';
 import type { PlayerStateForClient } from './PlayerStateForClient';
-import { PhotosPhotographerMapper } from './PhotosPhotographerMapper';
-import { VotingResultsPhotographerMapper } from './VotingResultsPhotographerMapper';
+import type { PhotosPhotographerMapper } from './PhotosPhotographerMapper';
+import { UrlPhotographerMapper } from './UrlPhotographerMapper';
+import { VotesPhotographerMapper } from './VotesPhotographerMapper';
 
-import type { PhotoPhotographerMapper } from './PhotoPhotographerMapper';
 export {
     PlayerState,
     PlayerStateForClient,
@@ -24,10 +24,10 @@ export {
     Photo,
     IMessagePhoto,
     IMessagePhotoVote,
-    VotingResultsPhotographerMapper,
-    PhotoPhotographerMapper,
     FinalPhotos,
     PlayerNameId,
     NamespaceAdapter,
     PhotosPhotographerMapper,
+    UrlPhotographerMapper,
+    VotesPhotographerMapper,
 };

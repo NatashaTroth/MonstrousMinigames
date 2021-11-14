@@ -1,5 +1,5 @@
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
-import { VotingResultsPhotographerMapper } from '../interfaces';
+import { VotesPhotographerMapper } from '../interfaces';
 import { Stage, VotingInput } from './Stage';
 
 export class VotingStage implements Stage {
@@ -44,8 +44,8 @@ export class VotingStage implements Stage {
         GameThreeEventEmitter.emitPhotoVotingResults(roomId, votingResults, countdownTime);
     }
 
-    private getAllVotes(): VotingResultsPhotographerMapper[] {
-        const votesArray: VotingResultsPhotographerMapper[] = [];
+    private getAllVotes(): VotesPhotographerMapper[] {
+        const votesArray: VotesPhotographerMapper[] = [];
         this.votes.forEach((value, key) => votesArray.push({ photographerId: key, votes: value }));
         return votesArray;
     }

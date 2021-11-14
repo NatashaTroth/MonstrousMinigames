@@ -1,7 +1,7 @@
 // import validator from 'validator';
 
 // import { InvalidUrlError } from '../customErrors';
-// import { PhotoPhotographerMapper, PhotosPhotographerMapper } from '../interfaces';
+// import { UrlPhotographerMapper, PhotosPhotographerMapper } from '../interfaces';
 
 export interface PhotoInput {
     photographerId: string;
@@ -20,7 +20,7 @@ export interface Stage {
 
     //TODO make URL type
     // protected abstract photos: Map<string, string | string[]>;
-    // abstract getPhotos(): PhotoPhotographerMapper[] | PhotosPhotographerMapper[];
+    // abstract getPhotos(): UrlPhotographerMapper[] | PhotosPhotographerMapper[];
     // getPhotoUrlsFromUser(photographerId: string): string[] {
     //     return this.photos.has(photographerId) ? [...this.photos.get(photographerId)!] : [];
     // }
