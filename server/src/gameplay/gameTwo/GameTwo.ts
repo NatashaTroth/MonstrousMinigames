@@ -118,29 +118,29 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     }
 
     protected movePlayer(userId: string, direction: string) {
-        this.players.get(userId)!.setDirection(direction);
+        const player = this.players.get(userId)!;
+        if (this.roundService.isCountingPhase() && player) {
+            player.setDirection(direction);
+        }
     }
     protected killSheep(userId: string) {
         const player = this.players.get(userId)!;
-
-        if (player.killsLeft < 1) {
-            return;
-        }
-
-        if (this.sheepService.killSheep(player)) {
-            player.killsLeft--;
+        if (this.roundService.isCountingPhase() && player && player.killsLeft > 0) {
+            if (this.sheepService.killSheep(player)) {
+                player.killsLeft--;
+            }
         }
     }
 
 
     protected handleGuess(userId: string, guess: number) {
         const player = this.players.get(userId)!;
-        ``
-        // todo handle if player not found
 
         // todo handle if guess exists for round
 
-        player.guesses.push({ round: this.roundService.getRound(), guess: guess });
+        if (this.roundService.isGuessingPhase() && player) {
+            player.guesses.push({ round: this.roundService.getRound(), guess: guess });
+        }
 
     }
 

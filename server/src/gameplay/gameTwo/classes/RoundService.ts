@@ -18,14 +18,25 @@ export default class RoundService {
         this.phase = Phases.COUNTING;
     }
 
-    public getRound(){
+    public getRound() {
         return this.round;
     }
-    public getPhase(){
+    public getPhase() {
         return this.phase;
     }
+    public isCountingPhase(): boolean {
+        return this.phase === Phases.COUNTING;
+    }
 
-    protected logPhaseInfo(){
+    public isGuessingPhase(): boolean {
+        return this.phase === Phases.GUESSING;
+    }
+
+    public isResultsPhase(): boolean {
+        return this.phase === Phases.RESULTS;
+    }
+
+    protected logPhaseInfo() {
         console.log('Round: ' + this.round + ' | Phase: ' + this.phase);
     }
 
@@ -62,5 +73,5 @@ export default class RoundService {
 
         }, this.resultsTime);
     }
-    
+
 }
