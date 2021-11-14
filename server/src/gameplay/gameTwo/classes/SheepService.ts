@@ -8,10 +8,12 @@ import Sheep from "./Sheep";
 export default class SheepService {
     public sheep: Sheep[];
     private currentSheepId: number;
+    private sheepCount: number;
 
-    constructor() {
+    constructor(sheepCount: number) {
         this.sheep = [];
         this.currentSheepId = 0;
+        this.sheepCount = sheepCount;
     }
 
 
@@ -20,11 +22,11 @@ export default class SheepService {
     }
 
 
-    public initSheep(count: number): void {
+    public initSheep(): void {
         const seedrandom = require('seedrandom');
         random.use(seedrandom('sheep'));
 
-        for (let i = 0; i < count; i++) {
+        for (let i = 0; i < this.sheepCount; i++) {
             let posX: number;
             let posY: number;
             do {

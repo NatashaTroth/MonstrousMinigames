@@ -34,7 +34,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.gameStateMessage = GameTwoMessageTypes.GAME_STATE;
         this.lengthX = InitialParameters.LENGTH_X;
         this.lengthY = InitialParameters.LENGTH_Y;
-        this.sheepService = new SheepService();
+        this.sheepService = new SheepService(InitialParameters.SHEEP_COUNT);
         this.roundService = new RoundService();
     }
 
@@ -82,7 +82,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
-        this.sheepService.initSheep(InitialParameters.SHEEP_COUNT);
+        this.sheepService.initSheep();
         GameTwoEventEmitter.emitInitialGameStateInfoUpdate(
             this.roomId,
             this.getGameStateInfo()
