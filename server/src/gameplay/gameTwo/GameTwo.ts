@@ -137,8 +137,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
         // todo handle if guess exists for round
 
-        if (this.roundService.isGuessingPhase() && player) {
-            player.guesses.push({ round: this.roundService.getRound(), guess: guess });
+        if (this.roundService.isGuessingPhase() && player && !player.getGuessForRound(this.roundService.getRound())) {
+            player.addGuess(this.roundService.getRound(), guess, this.sheepService.getAliveSheepCount());
         }
 
     }

@@ -60,7 +60,7 @@ export default class SheepService {
         return valid;
     }
 
-    public killSheep(player: GameTwoPlayer) {
+    public killSheep(player: GameTwoPlayer): boolean {
 
         const sheepInRadius = this.sheep.filter(sheep => {
             return (
@@ -97,6 +97,13 @@ export default class SheepService {
             this.sheep[sheepId].state = SheepStates.DECOY;
             return true;
         }
+    }
+
+    public getAliveSheepCount(): number {
+        const aliveSheep = this.sheep.filter(s => {
+            return s.state === SheepStates.ALIVE;
+        })
+        return aliveSheep.length;
     }
 
 }
