@@ -40,6 +40,11 @@ test-unit:server:
     except:
         - /^frontend-.*$/
         - staging
+    artifacts:
+        when: always
+        reports:
+        junit:
+            - junit.xml
 
 test-integration:server:
     stage: test-integration
