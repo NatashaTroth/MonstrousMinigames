@@ -43,8 +43,8 @@ test-unit:server:
     artifacts:
         when: always
         reports:
-        junit:
-            - junit.xml
+            junit:
+                - junit.xml
 
 test-integration:server:
     stage: test-integration
