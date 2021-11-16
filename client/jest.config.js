@@ -18,5 +18,6 @@ module.exports = {
     collectCoverageFrom: ['src/**/*.{ts,tsx}'],
     watchPathIgnorePatterns: ['src/config'],
     coveragePathIgnorePatterns: ['src/config'],
-    setupFiles: ["jest-canvas-mock"]
+    setupFiles: ["jest-canvas-mock"],
+    "reporters": [ "default", "jest-junit" ]
 };
