@@ -1,5 +1,7 @@
 import InitialParameters from "../constants/InitialParameters";
 import { Phases } from "../enums/Phases";
+import RoundEventEmitter from "./RoundEventEmitter";
+
 
 export default class RoundService {
     private roundCount: number;
@@ -8,14 +10,16 @@ export default class RoundService {
     private roundTime: number;
     private guessingTime: number;
     private resultsTime: number;
+    private roundEventEmitter: RoundEventEmitter;
 
     constructor() {
         this.roundCount = InitialParameters.ROUNDS;
-        this.roundTime = InitialParameters.ROUND_TIME;
+        this.roundTime = InitialParameters.COUNTING_TIME;
         this.guessingTime = InitialParameters.GUESSING_TIME;
         this.resultsTime = InitialParameters.RESULTS_TIME;
         this.round = 1;
         this.phase = Phases.COUNTING;
+        this.roundEventEmitter = RoundEventEmitter.getInstance();
     }
 
     public isCountingPhase(): boolean {
@@ -32,6 +36,7 @@ export default class RoundService {
 
     public countingPhase() {
         this.phase = Phases.COUNTING;
+        this.emitRoundChange();
 
         setTimeout(() => {
             this.guessingPhase();
@@ -41,6 +46,7 @@ export default class RoundService {
 
     public guessingPhase() {
         this.phase = Phases.GUESSING;
+        this.emitRoundChange();
 
         setTimeout(() => {
             this.resultsPhase();
@@ -50,6 +56,7 @@ export default class RoundService {
 
     public resultsPhase() {
         this.phase = Phases.RESULTS;
+        this.emitRoundChange();
 
         setTimeout(() => {
             this.round++;
@@ -58,6 +65,10 @@ export default class RoundService {
             }
 
         }, this.resultsTime);
+    }
+
+    private emitRoundChange(): void {
+        this.roundEventEmitter.emit(RoundEventEmitter.PHASE_CHANGE_EVENT, this.round, this.phase);
     }
 
 }
