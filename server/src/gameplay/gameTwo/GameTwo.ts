@@ -51,11 +51,11 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 isActive: player.isActive,
                 characterNumber: player.characterNumber,
             })),
-            sheep: this.sheepService.getSheep(),
+            sheep: this.sheepService.sheep,
             lengthX: this.lengthX,
             lengthY: this.lengthY,
-            round: this.roundService.getRound(),
-            phase: this.roundService.getPhase(),
+            round: this.roundService.round,
+            phase: this.roundService.phase,
         };
     }
 
@@ -137,8 +137,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
         // todo handle if guess exists for round
 
-        if (this.roundService.isGuessingPhase() && player && !player.getGuessForRound(this.roundService.getRound())) {
-            player.addGuess(this.roundService.getRound(), guess, this.sheepService.getAliveSheepCount());
+        if (this.roundService.isGuessingPhase() && player && !player.getGuessForRound(this.roundService.round)) {
+            player.addGuess(this.roundService.round, guess, this.sheepService.getAliveSheepCount());
         }
 
     }

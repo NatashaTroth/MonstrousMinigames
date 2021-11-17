@@ -3,8 +3,8 @@ import { Phases } from "../enums/Phases";
 
 export default class RoundService {
     private roundCount: number;
-    private round: number;
-    private phase: string;
+    public round: number;
+    public phase: string;
     private roundTime: number;
     private guessingTime: number;
     private resultsTime: number;
@@ -18,12 +18,6 @@ export default class RoundService {
         this.phase = Phases.COUNTING;
     }
 
-    public getRound() {
-        return this.round;
-    }
-    public getPhase() {
-        return this.phase;
-    }
     public isCountingPhase(): boolean {
         return this.phase === Phases.COUNTING;
     }
