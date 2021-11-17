@@ -1,5 +1,6 @@
 import validator from 'validator';
 
+import { IMessage } from '../../../interfaces/messages';
 import { GameState } from '../../enums';
 import InitialParameters from '../constants/InitialParameters';
 import { InvalidUrlError } from '../customErrors';
@@ -14,10 +15,12 @@ import { GameThreePlayerRank } from '../interfaces/GameThreePlayerRank';
 import {
     Countdown, MultiplePhotosStage, PhotoStage, PresentationStage, SinglePhotoStage, VotingStage
 } from './';
+import { Stage } from './Stage';
+import StageEventEmitter from './StageEventEmitter';
 
 //TODO maybe also a round handler class
 export class StageController {
-    private stage = GameThreeGameState.BeforeStart; //TODO make private
+    // private stage = GameThreeGameState.BeforeStart; //TODO make private
     // private gameThree: GameThree;
     private roundIdx = -1;
     private photoStage?: PhotoStage;
@@ -25,20 +28,34 @@ export class StageController {
     private countdown: Countdown;
     // private photoTopics: PhotoTopics;
     private presentationStage?: PresentationStage;
+    // private static readonly stageEventEmitter = DI.resolve(StageEventEmitter);
+    private stageEventEmitter = StageEventEmitter.getInstance();
 
-    private stageTest?: Stage;
+    private stage?: Stage;
 
-    constructor(private roomId: string, private players: Map<string, GameThreePlayer>, private gameThree: GameThree) {
+    constructor(private roomId: string, private players: Map<string, GameThreePlayer>) {
         // this.gameThree = gameThree;
-        this.countdown = new Countdown(this); //TODO remove argument
+        this.countdown = new Countdown(); //TODO remove argument
         // this.photoTopics = new PhotoTopics();
+        this.initStageEventEmitter();
+
+        this.stage = new SinglePhotoStage(
+            this.roomId,
+            Array.from(this.players.values()).map(player => player.id)
+        );
+    }
+
+    initStageEventEmitter() {
+        this.stageEventEmitter.on(StageEventEmitter.STAGE_CHANGE_EVENT, () => {
+            this.stage = this.stage?.switchToNextStage();
+        });
     }
 
     update(timeElapsedSinceLastFrame: number) {
         // this.countdown.update(timeElapsedSinceLastFrame);
         // if (this.countdown.countdownOver()) this.handleStageCountdownOver();
 
-        this.stageTest.update(timeElapsedSinceLastFrame);
+        this.stage?.update(timeElapsedSinceLastFrame);
     }
 
     handleNewRound() {
@@ -48,199 +65,192 @@ export class StageController {
             //&& this.photoTopics!.isAnotherTopicAvailable()
             // this.switchToTakingPhotoStage();
 
-            this.stageTest = new SinglePhotoStage();
+            this.stage = new SinglePhotoStage(this.roomId, Array.from(this.players.keys()));
         } else {
-            this.switchToFinalTakingPhotosStage();
+            // this.switchToFinalTakingPhotosStage();
         }
     }
 
-    updateStage(stage: GameThreeGameState) {
-        //TODO remove argument??
-        this.stage = stage;
-
-        switch (stage) {
-            case GameThreeGameState.TakingPhoto:
-                this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-                this.photoStage = new SinglePhotoStage();
-                break;
-            case GameThreeGameState.Voting:
-            case GameThreeGameState.FinalVoting:
-                this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VOTE);
-                this.votingStage = new VotingStage();
-                break;
-            case GameThreeGameState.ViewingResults:
-                this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
-                //TODO viewing stage?
-                break;
-            case GameThreeGameState.TakingFinalPhotos:
-                this.photoStage = new MultiplePhotosStage(InitialParameters.NUMBER_FINAL_PHOTOS);
-                this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
-                //TODO viewing stage?
-                break;
-            case GameThreeGameState.PresentingFinalPhotos:
-                this.presentationStage = new PresentationStage(
-                    Array.from(this.players.values()).map(player => player.id)
-                );
-                this.handleNewPresentationRound();
-                break;
-            // case GameThreeGameState.FinalVoting:
-            //     this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VOTE);
-
-            //     this.presentationStage = new PresentationStage(
-            //         Array.from(this.players.values()).map(player => player.id)
-            //     );
-            //     this.handleNewPresentationRound();
-            //     break;
-        }
+    handleInput(message: IMessage) {
+        this.stage?.handleInput(message);
     }
 
-    handleStageCountdownOver() {
-        switch (this.stage) {
-            case GameThreeGameState.TakingPhoto:
-                this.switchToVotingStage();
-                break;
-            case GameThreeGameState.Voting:
-                this.switchToViewingResultsStage();
-                break;
-            case GameThreeGameState.ViewingResults:
-                this.handleNewRound();
-                break;
-            case GameThreeGameState.TakingFinalPhotos:
-                this.switchToFinalPresentationStage();
-                break;
-            case GameThreeGameState.PresentingFinalPhotos:
-                this.handleNewPresentationRound();
-                break;
-            case GameThreeGameState.FinalVoting:
-                this.switchToViewingFinalResultsStage();
-                break;
-        }
-    }
+    // updateStage(stage: GameThreeGameState) {
+    //     //TODO remove argument??
+    //     this.stage = stage;
+
+    //         case GameThreeGameState.Voting:
+    //         case GameThreeGameState.FinalVoting:
+    //             this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VOTE);
+    //             this.votingStage = new VotingStage();
+    //             break;
+    //         case GameThreeGameState.ViewingResults:
+    //             this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+    //             //TODO viewing stage?
+    //             break;
+    //         case GameThreeGameState.TakingFinalPhotos:
+    //             this.photoStage = new MultiplePhotosStage(InitialParameters.NUMBER_FINAL_PHOTOS);
+    //             this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+    //             //TODO viewing stage?
+    //             break;
+    //         case GameThreeGameState.PresentingFinalPhotos:
+    //             this.presentationStage = new PresentationStage(
+    //                 Array.from(this.players.values()).map(player => player.id)
+    //             );
+    //             this.handleNewPresentationRound();
+    //             break;
+    //         // case GameThreeGameState.FinalVoting:
+    //         //     this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VOTE);
+
+    //         //     this.presentationStage = new PresentationStage(
+    //         //         Array.from(this.players.values()).map(player => player.id)
+    //         //     );
+    //         //     this.handleNewPresentationRound();
+    //         //     break;
+    //     }
+    // }
+
+    // handleStageCountdownOver() {
+    //     switch (this.stage) {
+    //         case GameThreeGameState.TakingPhoto:
+    //             this.switchToVotingStage();
+    //             break;
+    //         case GameThreeGameState.Voting:
+    //             this.switchToViewingResultsStage();
+    //             break;
+    //         case GameThreeGameState.ViewingResults:
+    //             this.handleNewRound();
+    //             break;
+    //         case GameThreeGameState.TakingFinalPhotos:
+    //             this.switchToFinalPresentationStage();
+    //             break;
+    //         case GameThreeGameState.PresentingFinalPhotos:
+    //             this.handleNewPresentationRound();
+    //             break;
+    //         case GameThreeGameState.FinalVoting:
+    //             this.switchToViewingFinalResultsStage();
+    //             break;
+    //     }
+    // }
 
     private isFinalRound() {
         return this.roundIdx >= InitialParameters.NUMBER_ROUNDS;
     }
 
-    // ********** new ************
+    // // ********** new ************
 
-    handleReceivedPhoto(message: IMessagePhoto) {
-        if (!validator.isURL(message.url))
-            throw new InvalidUrlError('The received value for the URL is not valid.', message.userId);
-        this.photoStage!.handleInput({ photographerId: message.userId, url: message.url });
+    // handleReceivedPhoto(message: IMessagePhoto) {
+    //     if (!validator.isURL(message.url))
+    //         throw new InvalidUrlError('The received value for the URL is not valid.', message.userId);
+    //     this.photoStage!.handleInput({ photographerId: message.userId, url: message.url });
 
-        if (this.photoStage!.havePhotosFromAllUsers(Array.from(this.players.keys()))) {
-            this.stage === GameThreeGameState.TakingPhoto
-                ? this.switchToVotingStage()
-                : this.switchToFinalPresentationStage();
-        }
-    }
-
-    handleReceivedPhotoVote(message: IMessagePhotoVote) {
-        this.votingStage!.handleInput({ voterId: message.voterId, photographerId: message.photographerId });
-        if (this.votingStage!.haveVotesFromAllUsers(Array.from(this.players.keys()))) {
-            this.stage === GameThreeGameState.Voting
-                ? this.switchToViewingResultsStage()
-                : this.switchToViewingFinalResultsStage();
-        }
-    }
-
-    // private switchToTakingPhotoStage() {
-    //     // this.photoTopics.sendNextTopicToClient(this.roomId);
-    //     this.countdown?.resetCountdown(); //TODO can delete?
-    //     // this.updatePlayerPoints();
-    //     this.updateStage(GameThreeGameState.TakingPhoto);
+    //     if (this.photoStage!.havePhotosFromAllUsers(Array.from(this.players.keys()))) {
+    //         this.stage === GameThreeGameState.TakingPhoto
+    //             ? this.switchToVotingStage()
+    //             : this.switchToFinalPresentationStage();
+    //     }
     // }
 
-    private switchToVotingStage() {
-        const photoUrls: UrlPhotographerMapper[] = this.photoStage!.getPhotos() as UrlPhotographerMapper[];
-        GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
-        this.updateStage(GameThreeGameState.Voting);
-    }
+    // handleReceivedPhotoVote(message: IMessagePhotoVote) {
+    //     this.votingStage!.handleInput({ voterId: message.voterId, photographerId: message.photographerId });
+    //     if (this.votingStage!.haveVotesFromAllUsers(Array.from(this.players.keys()))) {
+    //         this.stage === GameThreeGameState.Voting
+    //             ? this.switchToViewingResultsStage()
+    //             : this.switchToViewingFinalResultsStage();
+    //     }
+    // }
 
-    private switchToViewingResultsStage() {
-        this.votingStage?.sendPhotoVotingResultsToScreen(this.roomId, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS); //TODO MAYBE MOVE EMITTER TO HERE
-        this.updatePlayerPointsFromVotes();
-        this.updateStage(GameThreeGameState.ViewingResults);
-    }
+    // // private switchToTakingPhotoStage() {
+    // //     // this.photoTopics.sendNextTopicToClient(this.roomId);
+    // //     this.countdown?.resetCountdown(); //TODO can delete?
+    // //     // this.updatePlayerPoints();
+    // //     this.updateStage(GameThreeGameState.TakingPhoto);
+    // // }
 
-    private updatePlayerPointsFromVotes() {
-        this.players.forEach(player => {
-            if (this.photoStage!.hasAddedPhoto(player.id) && this.votingStage!.hasVoted(player.id))
-                player.totalPoints += this.votingStage!.getNumberVotes(player.id);
-        });
-    }
+    // private switchToViewingResultsStage() {
+    //     this.votingStage?.sendPhotoVotingResultsToScreen(this.roomId, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS); //TODO MAYBE MOVE EMITTER TO HERE
+    //     this.updatePlayerPointsFromVotes();
+    //     this.updateStage(GameThreeGameState.ViewingResults);
+    // }
 
-    // ****** final round ******
-    private switchToFinalTakingPhotosStage() {
-        this.updateStage(GameThreeGameState.TakingFinalPhotos);
-        GameThreeEventEmitter.emitTakeFinalPhotosCountdown(
-            this.roomId,
-            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS
-        );
-    }
+    // private updatePlayerPointsFromVotes() {
+    //     this.players.forEach(player => {
+    //         if (this.photoStage!.hasAddedPhoto(player.id) && this.votingStage!.hasVoted(player.id))
+    //             player.totalPoints += this.votingStage!.getNumberVotes(player.id);
+    //     });
+    // }
 
-    private switchToFinalPresentationStage() {
-        this.addPointPerReceivedPhoto();
-        this.updateStage(GameThreeGameState.PresentingFinalPhotos);
-    }
+    // // ****** final round ******
+    // private switchToFinalTakingPhotosStage() {
+    //     this.updateStage(GameThreeGameState.TakingFinalPhotos);
+    //     GameThreeEventEmitter.emitTakeFinalPhotosCountdown(
+    //         this.roomId,
+    //         InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS
+    //     );
+    // }
 
-    private addPointPerReceivedPhoto() {
-        this.players.forEach(player => {
-            player.totalPoints += this.photoStage!.getNumberPhotos();
-        });
-    }
+    // private switchToFinalPresentationStage() {
+    //     this.addPointPerReceivedPhoto();
+    //     this.updateStage(GameThreeGameState.PresentingFinalPhotos);
+    // }
 
-    handleNewPresentationRound() {
-        if (this.presentationStage!.isAnotherPresenterAvailable()) {
-            const nextPresenterId = this.presentationStage!.nextPresenter();
-            const photoUrls = this.photoStage!.getPhotoUrlsFromUser(nextPresenterId);
+    // private addPointPerReceivedPhoto() {
+    //     this.players.forEach(player => {
+    //         player.totalPoints += this.photoStage!.getNumberPhotos();
+    //     });
+    // }
 
-            GameThreeEventEmitter.emitPresentFinalPhotosCountdown(
-                this.roomId,
-                InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS,
-                nextPresenterId,
-                this.players.get(nextPresenterId)!.name,
-                photoUrls
-            );
-            this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
-        } else {
-            this.switchToFinalVotingStage();
-        }
-    }
+    // handleNewPresentationRound() {
+    //     if (this.presentationStage!.isAnotherPresenterAvailable()) {
+    //         const nextPresenterId = this.presentationStage!.nextPresenter();
+    //         const photoUrls = this.photoStage!.getPhotoUrlsFromUser(nextPresenterId);
 
-    private switchToFinalVotingStage() {
-        const playerNameIds: PlayerNameId[] = Array.from(this.players.values()).map(player => {
-            return { id: player.id, name: player.name };
-        });
+    //         GameThreeEventEmitter.emitPresentFinalPhotosCountdown(
+    //             this.roomId,
+    //             InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS,
+    //             nextPresenterId,
+    //             this.players.get(nextPresenterId)!.name,
+    //             photoUrls
+    //         );
+    //         this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
+    //     } else {
+    //         this.switchToFinalVotingStage();
+    //     }
+    // }
 
-        GameThreeEventEmitter.emitVoteForFinalPhotos(this.roomId, InitialParameters.COUNTDOWN_TIME_VOTE, playerNameIds);
-        this.updateStage(GameThreeGameState.FinalVoting);
-    }
+    // private switchToFinalVotingStage() {
+    //     const playerNameIds: PlayerNameId[] = Array.from(this.players.values()).map(player => {
+    //         return { id: player.id, name: player.name };
+    //     });
 
-    private switchToViewingFinalResultsStage() {
-        const playerRanks: GameThreePlayerRank[] = Array.from(this.players.values()).map(player => {
-            return {
-                id: player.id,
-                name: player.name,
-                points: player.totalPoints,
-                rank: 0,
-                isActive: player.isActive,
-            };
-        });
+    //     GameThreeEventEmitter.emitVoteForFinalPhotos(this.roomId, InitialParameters.COUNTDOWN_TIME_VOTE, playerNameIds);
+    //     this.updateStage(GameThreeGameState.FinalVoting);
+    // }
 
-        playerRanks
-            .sort((a, b) => b.points - a.points)
-            .map(result => {
-                const rank = this.gameThree.rankSuccessfulUser(result.points); //TODO !!! make this function protected again
-                this.players.get(result.id)!.rank = rank;
-                result.rank = rank;
-                return result;
-            });
+    // private switchToViewingFinalResultsStage() {
+    //     const playerRanks: GameThreePlayerRank[] = Array.from(this.players.values()).map(player => {
+    //         return {
+    //             id: player.id,
+    //             name: player.name,
+    //             points: player.totalPoints,
+    //             rank: 0,
+    //             isActive: player.isActive,
+    //         };
+    //     });
 
-        this.updateStage(GameThreeGameState.ViewingFinalResults);
-        this.gameThree.gameState = GameState.Finished;
-        GameThreeEventEmitter.emitGameHasFinishedEvent(this.roomId, this.gameThree.gameState, playerRanks);
+    //     playerRanks
+    //         .sort((a, b) => b.points - a.points)
+    //         .map(result => {
+    //             const rank = this.gameThree.rankSuccessfulUser(result.points); //TODO !!! make this function protected again
+    //             this.players.get(result.id)!.rank = rank;
+    //             result.rank = rank;
+    //             return result;
+    //         });
 
-        //TODO Leaderboard
-    }
+    //     this.updateStage(GameThreeGameState.ViewingFinalResults);
+    //     this.gameThree.gameState = GameState.Finished;
+    //     GameThreeEventEmitter.emitGameHasFinishedEvent(this.roomId, this.gameThree.gameState, playerRanks);
+
+    //     //TODO Leaderboard
+    // }
 }

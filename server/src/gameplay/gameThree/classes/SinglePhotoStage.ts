@@ -1,24 +1,32 @@
+import DI from '../../../di';
+import { IMessage } from '../../../interfaces/messages';
 import InitialParameters from '../constants/InitialParameters';
-import { UrlPhotographerMapper } from '../interfaces';
+import { GameThreeMessageTypes } from '../enums/GameThreeMessageTypes';
+import GameThreeEventEmitter from '../GameThreeEventEmitter';
+import { IMessagePhoto, IMessagePhotoVote, UrlPhotographerMapper } from '../interfaces';
 import { PhotoTopics } from './';
 import { PhotoStage } from './PhotoStage';
 import { PhotoInput } from './Stage';
+import { VotingStage } from './VotingStage';
 
 export class SinglePhotoStage extends PhotoStage {
     protected photos: Map<string, string>;
     private photoTopics: PhotoTopics;
-    protected countdownTime = InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO;
+    // protected countdownTime = InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO;
+    // private static readonly stageEventEmitter = DI.resolve(StageEventEmitter);
 
-    constructor() {
-        super();
+    constructor(roomId: string, userIds: string[]) {
+        super(roomId, userIds, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         this.photos = new Map<string, string>(); //key = photographerId, value = url
         this.photoTopics = new PhotoTopics();
+        // super.entry();
+        this.photoTopics.sendNextTopicToClient(roomId);
     }
 
-    entry(roomId: string) {
-        //TODO
-        super.entry(roomId);
-        this.photoTopics.sendNextTopicToClient(roomId);
+    switchToNextStage() {
+        const photoUrls: UrlPhotographerMapper[] = this.getPhotos() as UrlPhotographerMapper[];
+        GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
+        return new VotingStage(this.roomId, this.userIds);
     }
 
     getPhotos(): UrlPhotographerMapper[] {
@@ -27,13 +35,23 @@ export class SinglePhotoStage extends PhotoStage {
         return photosArray;
     }
 
-    handleInput(data: PhotoInput) {
-        // if (!validator.isURL(url))
-        //     throw new InvalidUrlError('The received value for the URL is not valid.', photographerId);
-        this.validateUrl(data.url, data.photographerId);
+    // handleInput(message: IMessage) {
+    //     super.handleInput(message);
+    //     const data = message as IMessagePhoto;
+    //     this.validateUrl(data.url, data.photographerId);
 
-        if (!this.photos.has(data.photographerId)) {
-            this.photos.set(data.photographerId, data.url);
+    //     // if (!this.photos.has(data.photographerId)) {
+    //     //     this.photos.set(data.photographerId, data.url);
+    //     // }
+
+    //     if (this.havePhotosFromAllUsers(this.userIds)) {
+    //         this.emitStageChangeEvent();
+    //     }
+    // }
+
+    protected addPhoto(photographerId: string, url: string) {
+        if (!this.photos.has(photographerId)) {
+            this.photos.set(photographerId, url);
         }
     }
 

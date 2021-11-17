@@ -1,26 +1,45 @@
 import validator from 'validator';
 
+import { IMessage } from '../../../interfaces/messages';
 import { InvalidUrlError } from '../customErrors';
-import { PhotosPhotographerMapper, UrlPhotographerMapper } from '../interfaces';
+import { GameThreeMessageTypes } from '../enums/GameThreeMessageTypes';
+import { IMessagePhoto, PhotosPhotographerMapper, UrlPhotographerMapper } from '../interfaces';
 import { PhotoInput, Stage } from './Stage';
 
 export abstract class PhotoStage extends Stage {
-    protected abstract countdownTime: number;
+    // protected abstract countdownTime: number;
 
     //TODO make URL type
     protected abstract photos: Map<string, string | string[]>;
 
+    constructor(roomId: string, userIds: string[], countdownTime: number) {
+        super(roomId, userIds, countdownTime);
+    }
+
     // abstract entry(roomId: string): void;
-    entry(roomId: string) {
-        //TODO
-        super.entry(roomId);
+    // entry() {
+    //     //TODO
+    //     super.entry();
+    // }
+
+    abstract switchToNextStage(): Stage;
+
+    // update(timeElapsedSinceLastFrame: number) {
+    //     super.update(timeElapsedSinceLastFrame);
+    // }
+
+    handleInput(message: IMessage) {
+        if (message.type !== GameThreeMessageTypes.PHOTO) return;
+        const data = message as IMessagePhoto;
+        this.validateUrl(data.url, data.photographerId);
+
+        this.addPhoto(data.photographerId, data.url);
+        if (this.havePhotosFromAllUsers(this.userIds)) {
+            this.emitStageChangeEvent();
+        }
     }
 
-    update(timeElapsedSinceLastFrame: number) {
-        super.update(timeElapsedSinceLastFrame);
-    }
-
-    abstract handleInput(data: PhotoInput): void;
+    protected abstract addPhoto(photographerId: string, url: string): void;
 
     abstract getPhotos(): UrlPhotographerMapper[] | PhotosPhotographerMapper[];
 

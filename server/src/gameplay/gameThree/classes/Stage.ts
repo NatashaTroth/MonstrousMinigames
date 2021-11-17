@@ -1,6 +1,8 @@
 // import validator from 'validator';
 
+import { IMessage } from '../../../interfaces/messages';
 import { Countdown } from './';
+import StageEventEmitter from './StageEventEmitter';
 
 // import { InvalidUrlError } from '../customErrors';
 // import { UrlPhotographerMapper, PhotosPhotographerMapper } from '../interfaces';
@@ -16,17 +18,33 @@ export interface VotingInput {
 }
 
 export abstract class Stage {
-    private countdown = new Countdown();
-    protected abstract countdownTime: number;
+    protected countdown = new Countdown();
+    // protected abstract countdownTime: number;
+    private stageEventEmitter = StageEventEmitter.getInstance();
 
-    abstract handleInput(data: PhotoInput | VotingInput | undefined): void | Stage;
+    // abstract handleInput(data: PhotoInput | VotingInput | undefined): void | Stage;
+    abstract handleInput(message: IMessage): void;
 
-    entry(roomId: string) {
+    constructor(protected roomId: string, protected userIds: string[] = [], protected countdownTime: number) {
+        this.initiateCountdown();
+    }
+
+    protected initiateCountdown() {
         this.countdown.initiateCountdown(this.countdownTime);
     }
 
+    abstract switchToNextStage(): Stage;
+
     update(timeElapsedSinceLastFrame: number) {
         this.countdown.update(timeElapsedSinceLastFrame);
+        if (this.countdown.countdownOver()) {
+            //TODO
+            this.emitStageChangeEvent();
+        }
+    }
+
+    emitStageChangeEvent() {
+        this.stageEventEmitter.emit(StageEventEmitter.STAGE_CHANGE_EVENT);
     }
 
     //TODO make URL type
