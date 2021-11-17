@@ -7,6 +7,8 @@ import FullScreenContainer from '../../../../components/common/FullScreenContain
 import { Instruction } from '../../../../components/common/Instruction.sc';
 import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
+import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
+import { MessageTypesGame2 } from '../../../../utils/constants';
 import { Countdown } from '../../../game1/controller/components/ShakeInstruction.sc';
 import { Storage } from '../../../storage/Storage';
 import { JoystickContainer, KillSheepButtonContainer } from './Joystick.sc';
@@ -22,6 +24,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
 
     const { roomId } = React.useContext(GameContext);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
+    const { userId } = React.useContext(PlayerContext);
 
     React.useEffect(() => {
         if (counter !== null && counter !== undefined) {
@@ -35,6 +38,31 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [counter]);
 
+    function getDirection(direction: string) {
+        switch (direction) {
+            case 'FORWARD':
+                return 'S';
+            case 'BACKWARD':
+                return 'N';
+            case 'LEFT':
+                return 'W';
+            case 'RIGHT':
+                return 'E';
+            case 'CENTER':
+                return 'C';
+        }
+    }
+
+    function handleMove(data?: any) {
+        // eslint-disable-next-line no-console
+        console.log(data.direction);
+        controllerSocket.emit({
+            type: MessageTypesGame2.movePlayer,
+            userId: userId,
+            direction: getDirection(data.direction),
+        });
+    }
+
     return (
         <FullScreenContainer>
             <Container>
@@ -44,7 +72,12 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                     <>
                         <Instruction>Use the Joystick to Move</Instruction>
                         <JoystickContainer>
-                            <Joystick size={100} baseColor="grey" stickColor="white"></Joystick>
+                            <Joystick
+                                size={100}
+                                baseColor="grey"
+                                stickColor="white"
+                                move={handleMove.bind(this)}
+                            ></Joystick>
                         </JoystickContainer>
                         <KillSheepButtonContainer>
                             <Button>Kill Sheep</Button>
