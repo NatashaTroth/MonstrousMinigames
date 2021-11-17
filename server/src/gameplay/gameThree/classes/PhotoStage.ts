@@ -16,12 +16,6 @@ export abstract class PhotoStage extends Stage {
         super(roomId, userIds, countdownTime);
     }
 
-    // abstract entry(roomId: string): void;
-    // entry() {
-    //     //TODO
-    //     super.entry();
-    // }
-
     abstract switchToNextStage(): Stage;
 
     // update(timeElapsedSinceLastFrame: number) {
@@ -41,27 +35,23 @@ export abstract class PhotoStage extends Stage {
 
     protected abstract addPhoto(photographerId: string, url: string): void;
 
-    abstract getPhotos(): UrlPhotographerMapper[] | PhotosPhotographerMapper[];
+    protected abstract getPhotos(): UrlPhotographerMapper[] | PhotosPhotographerMapper[];
 
-    getPhotoUrlsFromUser(photographerId: string): string[] {
-        return this.photos.has(photographerId) ? [...this.photos.get(photographerId)!] : [];
-    }
+    // getPhotoUrlsFromUser(photographerId: string): string[] {
+    //     return this.photos.has(photographerId) ? [...this.photos.get(photographerId)!] : [];
+    // }
 
-    protected validateUrl(url: string, photographerId: string) {
+    private validateUrl(url: string, photographerId: string) {
         //TODO Handle error - send something to client? or not bother with it at all?
         if (!validator.isURL(url))
             throw new InvalidUrlError('The received value for the URL is not valid.', photographerId);
     }
 
-    abstract havePhotosFromAllUsers(photographerIds: string[]): boolean;
+    // protected abstract havePhotosFromAllUsers(photographerIds: string[]): boolean;
 
-    // havePhotosFromAllUsers(photographerIds: string[]) {
-    //     return photographerIds.every(photographerId => this.photos.has(photographerId));
-    // }
-
-    hasAddedPhoto(photographerId: string) {
-        return this.photos.has(photographerId);
+    private havePhotosFromAllUsers(photographerIds: string[]) {
+        return photographerIds.every(photographerId => this.photos.has(photographerId));
     }
 
-    abstract getNumberPhotos(photographerId?: string): number;
+    protected abstract hasAddedPhoto(photographerId: string): boolean;
 }

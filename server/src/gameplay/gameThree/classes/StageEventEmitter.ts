@@ -1,8 +1,5 @@
 import EventEmitter from 'events';
 
-// import { singleton } from 'tsyringe';
-
-// @singleton()
 export default class StageEventEmitter extends EventEmitter {
     private static instance: StageEventEmitter;
     public static STAGE_CHANGE_EVENT = 'STAGE_CHANGE_EVENT';

@@ -12,8 +12,6 @@ import { VotingStage } from './VotingStage';
 export class SinglePhotoStage extends PhotoStage {
     protected photos: Map<string, string>;
     private photoTopics: PhotoTopics;
-    // protected countdownTime = InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO;
-    // private static readonly stageEventEmitter = DI.resolve(StageEventEmitter);
 
     constructor(roomId: string, userIds: string[]) {
         super(roomId, userIds, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
@@ -29,42 +27,19 @@ export class SinglePhotoStage extends PhotoStage {
         return new VotingStage(this.roomId, this.userIds);
     }
 
-    getPhotos(): UrlPhotographerMapper[] {
-        const photosArray: UrlPhotographerMapper[] = [];
-        this.photos.forEach((value, key) => photosArray.push({ photographerId: key, url: value }));
-        return photosArray;
-    }
-
-    // handleInput(message: IMessage) {
-    //     super.handleInput(message);
-    //     const data = message as IMessagePhoto;
-    //     this.validateUrl(data.url, data.photographerId);
-
-    //     // if (!this.photos.has(data.photographerId)) {
-    //     //     this.photos.set(data.photographerId, data.url);
-    //     // }
-
-    //     if (this.havePhotosFromAllUsers(this.userIds)) {
-    //         this.emitStageChangeEvent();
-    //     }
-    // }
-
     protected addPhoto(photographerId: string, url: string) {
         if (!this.photos.has(photographerId)) {
             this.photos.set(photographerId, url);
         }
     }
 
-    havePhotosFromAllUsers(photographerIds: string[]) {
-        return photographerIds.every(photographerId => this.photos.has(photographerId));
+    protected getPhotos(): UrlPhotographerMapper[] {
+        const photosArray: UrlPhotographerMapper[] = [];
+        this.photos.forEach((value, key) => photosArray.push({ photographerId: key, url: value }));
+        return photosArray;
     }
 
-    // *** TODO: only to satisfy parent class - don't need - remove
-    getNumberPhotos() {
-        return 1;
+    protected hasAddedPhoto(photographerId: string) {
+        return this.photos.has(photographerId);
     }
-
-    //  getPhotoUrlsFromUser(photographerId): string {
-    //      return
-    //  }
 }
