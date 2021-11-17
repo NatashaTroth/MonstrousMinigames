@@ -27,7 +27,7 @@ const PLAYERS_POSITIONS = [
 
 const MARGIN = 20;
 
-const SHEEP_COUNT = 100;
+const SHEEP_COUNT = 30;
 
 const KILL_RADIUS = 5;
 const KILLS_PER_ROUND = 5;
