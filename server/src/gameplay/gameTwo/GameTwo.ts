@@ -12,6 +12,7 @@ import { GameStateInfo } from './interfaces';
 import { GameNames } from '../../enums/gameNames';
 import RoundService from './classes/RoundService';
 import SheepService from './classes/SheepService';
+import RoundEventEmitter from './classes/RoundEventEmitter';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -24,6 +25,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     countdownTime = InitialParameters.COUNTDOWN_TIME;
     public sheepService: SheepService;
     private roundService: RoundService;
+    private roundEventEmitter: RoundEventEmitter;
 
     initialPlayerPositions = InitialParameters.PLAYERS_POSITIONS;
 
@@ -36,6 +38,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.lengthY = InitialParameters.LENGTH_Y;
         this.sheepService = new SheepService(InitialParameters.SHEEP_COUNT);
         this.roundService = new RoundService();
+        this.roundEventEmitter = RoundEventEmitter.getInstance();
+
     }
 
     getGameStateInfo(): GameStateInfo {
@@ -85,6 +89,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         super.createNewGame(users);
         this.sheepService.initSheep();
         this.sheepService.listenToRoundChanges();
+        this.listenToEvents();
         GameTwoEventEmitter.emitInitialGameStateInfoUpdate(
             this.roomId,
             this.getGameStateInfo()
@@ -133,14 +138,13 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         }
     }
 
-
     protected handleGuess(userId: string, guess: number) {
         const player = this.players.get(userId)!;
 
         // todo handle if guess exists for round
 
         if (this.roundService.isGuessingPhase() && player && !player.getGuessForRound(this.roundService.round)) {
-            player.addGuess(this.roundService.round, guess, this.sheepService.aliveSheepCounts[this.roundService.round-1]);
+            player.addGuess(this.roundService.round, guess, this.sheepService.aliveSheepCounts[this.roundService.round - 1]);
         }
 
     }
@@ -178,5 +182,11 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         }
 
         return false;
+    }
+
+    protected listenToEvents(): void {
+        this.roundEventEmitter.on(RoundEventEmitter.PHASE_CHANGE_EVENT, (round: number, phase: string) => {
+            GameTwoEventEmitter.emitPhaseHasChanged(this.roomId, round, phase);
+        });
     }
 }

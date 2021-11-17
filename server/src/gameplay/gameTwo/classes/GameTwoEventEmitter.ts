@@ -9,7 +9,7 @@ import {
 import { GameTwoMessageEmitter } from './GameTwoMessageEmitter';
 import { GameStateInfo, PlayerRank } from '../interfaces';
 import {
-    GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
+    GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED,
 } from './../interfaces/GameTwoEventMessages';
 
 export default class GameTwoEventEmitter {
@@ -78,6 +78,14 @@ export default class GameTwoEventEmitter {
             type: GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED,
             roomId,
             userId,
+        });
+    }
+    public static emitPhaseHasChanged(roomId: string, round: number, phase: string) {
+        this.GameTwoMessageEmitter.emit({
+            type: GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED,
+            roomId,
+            round,
+            phase,
         });
     }
 }

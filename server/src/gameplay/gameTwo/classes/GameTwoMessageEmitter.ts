@@ -9,7 +9,8 @@ import { IGameStateBase } from '../../interfaces/IGameStateBase';
 import {
     GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     GAME_TWO_EVENT_MESSAGES,
-    GameTwoEventMessage
+    GameTwoEventMessage,
+    GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED
 } from '../interfaces/GameTwoEventMessages';
 import { EventMessage } from '../../../interfaces/EventMessage';
 import Room from '../../../classes/room';
@@ -17,7 +18,7 @@ import Player from '../../Player';
 
 @singleton()
 export class GameTwoMessageEmitter implements EventMessageEmitter {
-    constructor(private readonly gameEventEmitter: GameEventEmitter) {}
+    constructor(private readonly gameEventEmitter: GameEventEmitter) { }
 
     emit(message: GameTwoEventMessage | GlobalEventMessage): void {
         this.gameEventEmitter.emit(GameEventEmitter.EVENT_MESSAGE_EVENT, message);
@@ -33,9 +34,12 @@ export class GameTwoMessageEmitter implements EventMessageEmitter {
     ): void {
 
         switch (message.type) {
-            // send to room's screens
             case GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE:
                 screenNameSpace.to(room.id).emit('message', message);
+                break;
+            case GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED:
+                screenNameSpace.to(room.id).emit('message', message);
+                controllerNameSpace.to(room.id).emit('message', message);
                 break;
         }
     }

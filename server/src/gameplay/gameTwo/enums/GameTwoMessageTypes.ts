@@ -8,4 +8,5 @@ export enum GameTwoMessageTypes {
     MOVE = 'game2/move',
     KILL = 'game2/kill',
     GUESS = 'game2/guess',
+    PHASE_HAS_CHANGED = 'game2/PhaseHasChanged',
 }

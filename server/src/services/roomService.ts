@@ -17,7 +17,9 @@ class RoomService {
 
     constructor(@inject(DI_ROOM_NUMBER) roomCount: number) {
         this.rooms = [];
-        this.roomCodes = generator.generateCodes('****', roomCount, { alphanumericChars: 'BCDFGHJKLMNPQRSTVWXYZ' });
+        this.roomCodes = generator.generateCodes('****', roomCount, {
+            alphanumericChars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        });
     }
 
     public createRoom(roomId: string = this.getSingleRoomCode(), game?: Game): Room {
