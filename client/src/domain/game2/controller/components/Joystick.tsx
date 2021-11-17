@@ -1,6 +1,7 @@
 import { Container } from '@material-ui/core';
 import * as React from 'react';
 import { Joystick } from 'react-joystick-component';
+import { IJoystickUpdateEvent } from 'react-joystick-component/build/lib/Joystick';
 
 import Button from '../../../../components/common/Button';
 import FullScreenContainer from '../../../../components/common/FullScreenContainer';
@@ -53,14 +54,21 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
         }
     }
 
-    function handleMove(data?: any) {
-        // eslint-disable-next-line no-console
-        console.log(data.direction);
+    function emitKillMessage() {
         controllerSocket.emit({
-            type: MessageTypesGame2.movePlayer,
+            type: MessageTypesGame2.killSheep,
             userId: userId,
-            direction: getDirection(data.direction),
         });
+    }
+
+    function handleMove(event: IJoystickUpdateEvent) {
+        if (event.direction) {
+            controllerSocket.emit({
+                type: MessageTypesGame2.movePlayer,
+                userId: userId,
+                direction: getDirection(event.direction.toString()),
+            });
+        }
     }
 
     return (
@@ -80,7 +88,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                             ></Joystick>
                         </JoystickContainer>
                         <KillSheepButtonContainer>
-                            <Button>Kill Sheep</Button>
+                            <Button onClick={emitKillMessage}>Kill Sheep</Button>
                         </KillSheepButtonContainer>
                     </>
                 )}
