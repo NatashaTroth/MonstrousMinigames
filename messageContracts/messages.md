@@ -220,6 +220,20 @@ example:
 }
 ```
 
+### game2/phaseHasChanged
+
+-   send the current round and phase
+  
+example:
+
+```json
+{
+    "type": "game2/phaseHasChanged",
+    "round": 1,
+    "phase": "results"
+}
+```
+
 ### gameHasStarted
 
 -   on 'GameHasStarted' game event
@@ -230,7 +244,8 @@ example:
 
 ```json
 {
-    "type":"game1/gameHasStarted",
+    "type":"gameHasStarted",
+    "roomId":"ABCD"
     "countdownTime": 3,
     "game": "game1"
 }
