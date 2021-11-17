@@ -1,19 +1,5 @@
 import styled from 'styled-components';
 
-import forest from '../../images/ui/forest_mobile.svg';
-
-export const ChooseCharacterContainer = styled.div`
-    height: 100%;
-    width: 100%;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: bottom;
-    background-image: url(${forest});
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-`;
-
 interface Props {
     available: boolean;
 }

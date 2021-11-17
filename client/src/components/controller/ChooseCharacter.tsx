@@ -21,11 +21,11 @@ import {
     Character,
     CharacterContainer,
     ChooseButtonContainer,
-    ChooseCharacterContainer,
     ClearContainer,
     Left,
     Right,
 } from './ChooseCharacter.sc';
+import { StyledFullScreenContainer } from './FullScreenContainer.sc';
 
 const ChooseCharacter: React.FunctionComponent = () => {
     const { character, setCharacter } = React.useContext(PlayerContext);
@@ -45,9 +45,10 @@ const ChooseCharacter: React.FunctionComponent = () => {
         if (!isMoving) {
             if (actualCharacter === characters.length - 1) {
                 setActualCharacter(0);
-            } else {
-                setActualCharacter(actualCharacter + 1);
+                return;
             }
+
+            setActualCharacter(actualCharacter + 1);
         }
     }
 
@@ -55,9 +56,10 @@ const ChooseCharacter: React.FunctionComponent = () => {
         if (!isMoving) {
             if (actualCharacter === 0) {
                 setActualCharacter(characters.length - 1);
-            } else {
-                setActualCharacter(actualCharacter - 1);
+                return;
             }
+
+            setActualCharacter(actualCharacter - 1);
         }
     }
 
@@ -72,7 +74,7 @@ const ChooseCharacter: React.FunctionComponent = () => {
         });
 
     return (
-        <ChooseCharacterContainer>
+        <StyledFullScreenContainer>
             {searchParams.get('back') && (
                 <ClearContainer>
                     <IconButton onClick={() => history.goBack()}>
@@ -108,7 +110,7 @@ const ChooseCharacter: React.FunctionComponent = () => {
                     Choose Character
                 </Button>
             </ChooseButtonContainer>
-        </ChooseCharacterContainer>
+        </StyledFullScreenContainer>
     );
 };
 
@@ -138,9 +140,10 @@ export const chooseCharacterClick = (props: HandleChooseCharacterClickProps) => 
 
     if (searchParams.get('back')) {
         history.goBack();
-    } else {
-        history.push(controllerLobbyRoute(roomId));
+        return;
     }
+
+    history.push(controllerLobbyRoute(roomId));
 };
 
 interface CustomArrow {

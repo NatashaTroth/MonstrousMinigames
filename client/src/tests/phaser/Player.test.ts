@@ -1,77 +1,25 @@
-import { depthDictionary } from '../../config/depthDictionary';
-import MainScene from '../../domain/game1/screen/components/MainScene';
 import { AnimationNameGame1 } from '../../domain/phaser/enums/AnimationName';
-import { GameToScreenMapper } from '../../domain/phaser/game1/GameToScreenMapper';
 import { InMemoryPlayerRenderer } from '../../domain/phaser/game1/InMemoryPlayerRenderer';
 import { Player } from '../../domain/phaser/game1/Player';
 import { CharacterAnimation } from '../../domain/phaser/gameInterfaces';
-import { GameState, ObstacleTypes } from '../../utils/constants';
+import {
+    character,
+    coordinates,
+    gameStateData,
+    gameToScreenMapper,
+    index,
+    laneHeight,
+    laneHeightsPerNumberPlayers,
+    numberPlayers,
+    posY,
+    scene,
+    spiderObstacle,
+    stoneObstacle,
+    trashObstacle,
+    treeObstacle,
+} from './PlayerTestData';
 
 describe('Player Renderer Initial', () => {
-    const numberPlayers = 1;
-    const laneHeight = 100;
-    const index = 0;
-    const character = {
-        name: 'mock',
-        file: 'test',
-        animations: new Map<AnimationNameGame1, CharacterAnimation>([]),
-        properties: {
-            frameWidth: 10,
-            frameHeight: 10,
-        },
-    };
-    const laneHeightsPerNumberPlayers = [10];
-    const posY = 200;
-    const scene = new MainScene();
-    const gameToScreenMapper = new GameToScreenMapper(200, 500);
-    const spiderObstacle = {
-        id: 1,
-        positionX: 200,
-        type: ObstacleTypes.spider,
-    };
-    const treeObstacle = {
-        id: 1,
-        positionX: 200,
-        type: ObstacleTypes.treeStump,
-    };
-    const trashObstacle = {
-        id: 1,
-        positionX: 200,
-        type: ObstacleTypes.trash,
-    };
-    const stoneObstacle = {
-        id: 1,
-        positionX: 200,
-        type: ObstacleTypes.stone,
-    };
-
-    const gameStateData = {
-        gameState: GameState.started,
-        numberOfObstacles: 4,
-        playersState: [
-            {
-                dead: false,
-                atObstacle: false,
-                finished: false,
-                finishedTimeMs: 0,
-                id: '1',
-                isActive: true,
-                name: 'Mock',
-                obstacles: [spiderObstacle, treeObstacle, trashObstacle, stoneObstacle],
-                positionX: 200,
-                rank: 0,
-                characterNumber: 1,
-                stunned: false,
-            },
-        ],
-        roomId: 'CDES',
-        trackLength: 500,
-        chasersPositionX: 100,
-        cameraPositionX: 100,
-    };
-
-    const coordinates = { x: gameStateData.playersState[index].positionX, y: posY };
-
     const mockRenderBackground = jest.fn();
     const mockRenderPlayer = jest.fn();
     const mockRenderObstacles = jest.fn();
@@ -127,38 +75,38 @@ describe('Player Renderer Initial', () => {
 
         expect(mockRenderObstacles).toHaveBeenNthCalledWith(
             1,
-            gameToScreenMapper.mapGameMeasurementToScreen(spiderObstacle.positionX) + 75,
-            coordinates.y,
-            0.7 / numberPlayers,
+            expect.anything(),
+            expect.anything(),
+            expect.anything(),
             spiderObstacle.type.toLowerCase(),
-            depthDictionary.obstacle
+            expect.anything()
         );
 
         expect(mockRenderObstacles).toHaveBeenNthCalledWith(
             2,
-            gameToScreenMapper.mapGameMeasurementToScreen(treeObstacle.positionX) + 75,
-            coordinates.y,
-            0.7 / numberPlayers,
+            expect.anything(),
+            expect.anything(),
+            expect.anything(),
             treeObstacle.type.toLowerCase(),
-            depthDictionary.obstacle - 1
+            expect.anything()
         );
 
         expect(mockRenderObstacles).toHaveBeenNthCalledWith(
             3,
-            gameToScreenMapper.mapGameMeasurementToScreen(trashObstacle.positionX) + 75,
-            coordinates.y + 10,
-            0.7 / numberPlayers,
+            expect.anything(),
+            expect.anything(),
+            expect.anything(),
             trashObstacle.type.toLowerCase(),
-            depthDictionary.obstacle - 2
+            expect.anything()
         );
 
         expect(mockRenderObstacles).toHaveBeenNthCalledWith(
             4,
-            gameToScreenMapper.mapGameMeasurementToScreen(stoneObstacle.positionX) + 75,
-            coordinates.y + 16 / numberPlayers,
-            0.75 / numberPlayers,
+            expect.anything(),
+            expect.anything(),
+            expect.anything(),
             stoneObstacle.type.toLowerCase(),
-            depthDictionary.stoneObstacle - 3
+            expect.anything()
         );
     });
 
@@ -173,8 +121,6 @@ describe('Player Renderer Initial', () => {
 
 describe('Player Renderer', () => {
     const numberPlayers = 2;
-    const laneHeight = 100;
-    const index = 0;
     const character = {
         name: 'mock',
         file: 'test',
@@ -199,38 +145,6 @@ describe('Player Renderer', () => {
             frameHeight: 10,
         },
     };
-
-    const laneHeightsPerNumberPlayers = [10];
-    const posY = 200;
-    const scene = new MainScene();
-    const gameToScreenMapper = new GameToScreenMapper(200, 500);
-
-    const gameStateData = {
-        gameState: GameState.started,
-        numberOfObstacles: 4,
-        playersState: [
-            {
-                dead: false,
-                atObstacle: false,
-                finished: false,
-                finishedTimeMs: 0,
-                id: '1',
-                isActive: true,
-                name: 'Mock',
-                obstacles: [],
-                positionX: 200,
-                rank: 0,
-                characterNumber: 1,
-                stunned: false,
-            },
-        ],
-        roomId: 'CDES',
-        trackLength: 500,
-        chasersPositionX: 100,
-        cameraPositionX: 100,
-    };
-
-    const coordinates = { x: gameStateData.playersState[index].positionX, y: posY };
 
     it('should call destroyCave when player is dead', () => {
         const mockDestroyCave = jest.fn();

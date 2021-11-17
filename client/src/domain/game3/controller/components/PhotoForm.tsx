@@ -59,7 +59,13 @@ const FileInput: React.FC<FileInputProps> = ({ input: { value, onChange, ...inpu
             {preview && <StyledImg src={preview} alt="" />}
             <Button>
                 <StyledLabel>
-                    <input type="file" accept="image/*" capture="camera" onChange={handleChange} />
+                    <input
+                        type="file"
+                        accept="image/*"
+                        capture="camera"
+                        data-testid="image-upload"
+                        onChange={handleChange}
+                    />
                     <Typography>{preview ? 'Retake' : 'Take picture'}</Typography>
                 </StyledLabel>
             </Button>

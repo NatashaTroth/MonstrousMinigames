@@ -86,13 +86,15 @@ export function handleTouchEnd(props: HandleTouchEnd) {
             if (trunksToFinish - 1 === progress) {
                 if (tutorial) {
                     handleTutorialFinished?.(ObstacleTypes.spider);
-                } else {
-                    solveObstacle();
+                    return;
                 }
-            } else {
-                setProgress(progress + 1);
-                newTrunk(orientationOptions, setOrientation);
+
+                solveObstacle();
+                return;
             }
+
+            setProgress(progress + 1);
+            newTrunk(orientationOptions, setOrientation);
         } else {
             setFailed(true);
         }

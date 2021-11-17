@@ -7,10 +7,10 @@ export async function ClickRequestDeviceMotion(window: Window) {
     if (window.DeviceMotionEvent && typeof window.DeviceMotionEvent.requestPermission === 'function') {
         const permissionReq = await window.DeviceMotionEvent.requestPermission();
         return permissionReq === 'granted' ? true : false;
-    } else {
-        // every OS than Safari
-        return true;
     }
+
+    // every OS than Safari
+    return true;
 }
 
 export async function getMicrophoneStream(navigator: Navigator) {

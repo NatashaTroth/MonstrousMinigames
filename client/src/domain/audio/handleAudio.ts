@@ -8,6 +8,7 @@ interface AudioDependencies {
     setAudioPermissionGranted: (permission: boolean) => void;
 }
 
+// TODO rename
 export async function handleAudio({
     playing,
     audioPermission,
@@ -18,7 +19,8 @@ export async function handleAudio({
     handleAudioPermission(audioPermission, { setAudioPermissionGranted });
     if (playing) {
         pauseLobbyMusic(audioPermission);
-    } else {
-        playLobbyMusic(audioPermission);
+        return;
     }
+
+    playLobbyMusic(audioPermission);
 }

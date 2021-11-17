@@ -16,7 +16,7 @@ configure({ adapter: new Adapter() });
 afterEach(cleanup);
 
 describe('Character Stunned', () => {
-    it('renders the stunned image', () => {
+    it('renders the stunned image for specified character', () => {
         const character = characters[0];
         const container = mount(
             <ThemeProvider theme={theme}>

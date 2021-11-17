@@ -1,7 +1,7 @@
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 
 describe('handlePermission function', () => {
-    it('handed pauseLobbyMusic should not be called if permissions already granted', () => {
+    it('handed setAudioPermissionGranted should not be called if permissions already granted', () => {
         const setAudioPermissionGranted = jest.fn();
 
         handleAudioPermission(true, { setAudioPermissionGranted });

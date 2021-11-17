@@ -35,6 +35,7 @@ export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history 
             <FormContainer
                 onSubmit={e => {
                     e.preventDefault();
+
                     const frame = document.getElementsByTagName('iframe')[0];
                     if (frame) {
                         frame.parentNode?.removeChild(frame);

@@ -31,11 +31,30 @@ const Tutorial: React.FunctionComponent<TutorialProps> = ({ history }) => {
     const handleTutorialFinished = (nextComponent: ComponentToTest) => {
         if (nextComponent === 'finished') {
             history.push(controllerLobbyRoute(roomId));
-        } else {
-            setComponentToTest(nextComponent);
+            return;
         }
+
+        setComponentToTest(nextComponent);
     };
 
+    return selectAcutalTutorial({ chosenGame, handleTutorialFinished, componentToTest, history });
+};
+
+export default Tutorial;
+
+interface SelectAcutalTutorialProps {
+    chosenGame: GameNames | undefined;
+    handleTutorialFinished: (nextComponent: ComponentToTest) => void;
+    componentToTest: ComponentToTest;
+    history: History;
+}
+
+function selectAcutalTutorial({
+    chosenGame,
+    handleTutorialFinished,
+    componentToTest,
+    history,
+}: SelectAcutalTutorialProps) {
     switch (chosenGame) {
         case GameNames.game1:
             return componentToTest === ObstacleTypes.treeStump ? (
@@ -54,6 +73,4 @@ const Tutorial: React.FunctionComponent<TutorialProps> = ({ history }) => {
         default:
             return null;
     }
-};
-
-export default Tutorial;
+}

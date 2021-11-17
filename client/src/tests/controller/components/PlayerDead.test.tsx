@@ -16,7 +16,7 @@ configure({ adapter: new Adapter() });
 afterEach(cleanup);
 
 describe('Character Dead', () => {
-    it('renders the dead image', () => {
+    it('renders the dead image for specified character', () => {
         const character = characters[0];
         const container = mount(
             <ThemeProvider theme={theme}>
