@@ -89,7 +89,20 @@ example:
     "rank": 1
 }
 ```
+### game2/guessHint
 
+-   send the hint for the result of the guess
+-   sent to the individual controller
+  
+example:
+
+```json
+{
+    "type": "game2/guessResult",
+    "hint": "way too high",
+    "
+}
+```
 
 * * *
 ## Server → Screen

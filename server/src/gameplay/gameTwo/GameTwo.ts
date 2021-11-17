@@ -13,6 +13,7 @@ import { GameNames } from '../../enums/gameNames';
 import RoundService from './classes/RoundService';
 import SheepService from './classes/SheepService';
 import RoundEventEmitter from './classes/RoundEventEmitter';
+import { GuessHints } from './enums/GuessHints';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -141,10 +142,11 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     protected handleGuess(userId: string, guess: number) {
         const player = this.players.get(userId)!;
 
-        // todo handle if guess exists for round
-
-        if (this.roundService.isGuessingPhase() && player && !player.getGuessForRound(this.roundService.round)) {
-            player.addGuess(this.roundService.round, guess, this.sheepService.aliveSheepCounts[this.roundService.round - 1]);
+        if (this.roundService.isGuessingPhase() && player) {
+            if (player.addGuess(this.roundService.round, guess, this.sheepService.aliveSheepCounts[this.roundService.round - 1])) {
+                // todo dynamically set guess hints
+                GameTwoEventEmitter.emitGuessHint(this.roomId, player.id, GuessHints.LOW);
+            }
         }
 
     }
