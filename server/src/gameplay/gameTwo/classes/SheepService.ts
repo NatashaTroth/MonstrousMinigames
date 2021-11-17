@@ -11,14 +11,14 @@ export default class SheepService {
     public sheep: Sheep[];
     private currentSheepId: number;
     private sheepCount: number;
-    public aliveSheepCount: Array<number>;
+    public aliveSheepCounts: Array<number>;
     private roundEventEmitter: RoundEventEmitter;
 
     constructor(sheepCount: number) {
         this.sheep = [];
         this.currentSheepId = 0;
         this.sheepCount = sheepCount;
-        this.aliveSheepCount = new Array(InitialParameters.ROUNDS);
+        this.aliveSheepCounts = new Array(InitialParameters.ROUNDS);
         this.roundEventEmitter = RoundEventEmitter.getInstance();
     }
 
@@ -117,7 +117,7 @@ export default class SheepService {
     public listenToRoundChanges(): void {
         this.roundEventEmitter.on(RoundEventEmitter.PHASE_CHANGE_EVENT, (round: number, phase: string) => {
             if (phase === Phases.COUNTING) {
-                this.aliveSheepCount[round - 1] = this.getAliveSheepCount();
+                this.aliveSheepCounts[round - 1] = this.getAliveSheepCount();
             }
         });
     }

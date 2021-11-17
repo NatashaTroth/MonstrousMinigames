@@ -56,6 +56,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             lengthY: this.lengthY,
             round: this.roundService.round,
             phase: this.roundService.phase,
+            aliveSheepCounts: this.sheepService.aliveSheepCounts
         };
     }
 
@@ -83,6 +84,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
         this.sheepService.initSheep();
+        this.sheepService.listenToRoundChanges();
         GameTwoEventEmitter.emitInitialGameStateInfoUpdate(
             this.roomId,
             this.getGameStateInfo()
@@ -138,7 +140,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         // todo handle if guess exists for round
 
         if (this.roundService.isGuessingPhase() && player && !player.getGuessForRound(this.roundService.round)) {
-            player.addGuess(this.roundService.round, guess, this.sheepService.getAliveSheepCount());
+            player.addGuess(this.roundService.round, guess, this.sheepService.aliveSheepCounts[this.roundService.round-1]);
         }
 
     }
