@@ -3,17 +3,16 @@ import InitialParameters from '../constants/InitialParameters';
 import { GameThreeMessageTypes } from '../enums/GameThreeMessageTypes';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
 import { IMessagePhotoVote, VotesPhotographerMapper } from '../interfaces';
-import { SinglePhotoStage } from './';
+import { SinglePhotoStage } from './SinglePhotoStage';
 import { Stage } from './Stage';
 
 export class VotingStage extends Stage {
     //TODO make URL type
     private votes: Map<string, number>;
     private voterIds: string[]; //voters
-    protected countdownTime = InitialParameters.COUNTDOWN_TIME_VOTE;
 
     constructor(roomId: string, userIds: string[]) {
-        super(roomId, userIds);
+        super(roomId, userIds, InitialParameters.COUNTDOWN_TIME_VOTE);
         this.votes = new Map<string, number>(); //key = photographerId, value = number of votes
         this.voterIds = [];
     }

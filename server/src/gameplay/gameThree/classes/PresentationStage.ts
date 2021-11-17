@@ -1,7 +1,7 @@
 import { shuffleArray } from '../../../helpers/shuffleArray';
-import { Stage } from './Stage';
+import { IMessage } from '../../../interfaces/messages';
 
-export class PresentationStage implements Stage {
+export class PresentationStage {
     private playerPresentOrder: string[] = [];
 
     constructor(playerIds: string[]) {
@@ -18,7 +18,7 @@ export class PresentationStage implements Stage {
     }
 
     //TODO change not undefined
-    handleInput(data: undefined) {
+    handleInput(message: IMessage) {
         //TODO change stage
     }
 

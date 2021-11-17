@@ -1,22 +1,14 @@
-import validator from 'validator';
-
 import { IMessage } from '../../../interfaces/messages';
-import { GameState } from '../../enums';
 import InitialParameters from '../constants/InitialParameters';
-import { InvalidUrlError } from '../customErrors';
-import { GameThreeGameState } from '../enums/GameState';
-import GameThree from '../GameThree';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
 import GameThreePlayer from '../GameThreePlayer';
-import {
-    IMessagePhoto, IMessagePhotoVote, PlayerNameId, UrlPhotographerMapper
-} from '../interfaces';
-import { GameThreePlayerRank } from '../interfaces/GameThreePlayerRank';
-import {
-    Countdown, MultiplePhotosStage, PhotoStage, PresentationStage, SinglePhotoStage, VotingStage
-} from './';
+import { Countdown } from './Countdown';
+import { PhotoStage } from './PhotoStage';
+import { PresentationStage } from './PresentationStage';
+import { SinglePhotoStage } from './SinglePhotoStage';
 import { Stage } from './Stage';
 import StageEventEmitter from './StageEventEmitter';
+import { VotingStage } from './VotingStage';
 
 //TODO maybe also a round handler class
 export class StageController {
@@ -39,10 +31,12 @@ export class StageController {
         // this.photoTopics = new PhotoTopics();
         this.initStageEventEmitter();
 
-        this.stage = new SinglePhotoStage(
-            this.roomId,
-            Array.from(this.players.values()).map(player => player.id)
-        );
+        this.handleNewRound();
+
+        // this.stage = new SinglePhotoStage(
+        //     this.roomId,
+        //     Array.from(this.players.values()).map(player => player.id)
+        // );
     }
 
     initStageEventEmitter() {

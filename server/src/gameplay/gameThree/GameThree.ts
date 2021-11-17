@@ -6,13 +6,12 @@ import Game from '../Game';
 import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
-import { StageController } from './classes';
+import { StageController } from './classes/StageController';
 import InitialParameters from './constants/InitialParameters';
-import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreeEventEmitter from './GameThreeEventEmitter';
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreePlayer from './GameThreePlayer';
-import { GameStateInfo, IMessagePhoto, IMessagePhotoVote } from './interfaces';
+import { GameStateInfo } from './interfaces';
 
 type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
 
@@ -66,7 +65,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
-        this.stageController = new StageController(this.roomId, this.players, this);
+        this.stageController = new StageController(this.roomId, this.players);
     }
 
     startGame(): void {
