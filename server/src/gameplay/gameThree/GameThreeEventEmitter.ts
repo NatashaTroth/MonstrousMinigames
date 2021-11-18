@@ -127,6 +127,7 @@ export default class GameThreeEventEmitter {
     }
 
     public static emitPhotoVotingResults(roomId: string, results: VotesPhotographerMapper[], countdownTime: number) {
+        // console.log('Emitting Photo Voting Resutls');
         this.GameThreeEventMessageEmitter.emit({
             type: GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS,
             roomId,

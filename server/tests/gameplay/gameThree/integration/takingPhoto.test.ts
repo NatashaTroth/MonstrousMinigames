@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
+import StageEventEmitter from '../../../../src/gameplay/gameThree/classes/StageEventEmitter';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
 import {
     GameThreeMessageTypes
@@ -16,15 +17,14 @@ import { dateNow, leaderboard, roomId, users } from '../../mockData';
 import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
 
 let gameThree: GameThree;
-let gameEventEmitter: GameEventEmitter;
+const gameEventEmitter = DI.resolve(GameEventEmitter);
+
+// let gameEventEmitter: GameEventEmitter;
 
 const mockPhotoUrl = 'https://mockPhoto.com';
 const message: IMessagePhoto = { type: GameThreeMessageTypes.PHOTO, url: mockPhotoUrl, photographerId: users[0].id };
 
 describe('Initiate stage', () => {
-    beforeAll(() => {
-        gameEventEmitter = DI.resolve(GameEventEmitter);
-    });
     beforeEach(() => {
         Date.now = () => dateNow;
         jest.useFakeTimers();
@@ -44,13 +44,16 @@ describe('Initiate stage', () => {
                 eventCalled = true;
             }
         });
-        gameThree.startGame();
+        startGameAdvanceCountdown(gameThree);
         expect(eventCalled).toBeTruthy();
     });
 });
 
 describe('Taking Photo', () => {
     beforeEach(() => {
+        // console.log(
+        //     '------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------'
+        // );
         Date.now = () => dateNow;
         jest.useFakeTimers();
         gameThree = new GameThree(roomId, leaderboard);
@@ -61,6 +64,7 @@ describe('Taking Photo', () => {
     afterEach(() => {
         jest.runAllTimers();
         jest.clearAllMocks();
+        StageEventEmitter.getInstance().removeAllInstancesOfListeners();
     });
 
     // it('should allow client to send a photo within the countdown time', async () => {
@@ -76,7 +80,7 @@ describe('Taking Photo', () => {
     it('should not emit the Voting event when only one photo is sent', async () => {
         let eventCalled = false;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
-            if (message.type === GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC) {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS) {
                 eventCalled = true;
             }
         });
@@ -137,6 +141,7 @@ describe('Taking Photo', () => {
             }
         });
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+
         expect(eventCalled).toBeTruthy();
     });
 

@@ -2,7 +2,6 @@ import { IMessage } from '../../../interfaces/messages';
 import InitialParameters from '../constants/InitialParameters';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
 import GameThreePlayer from '../GameThreePlayer';
-import { Countdown } from './Countdown';
 import { PhotoStage } from './PhotoStage';
 import { PresentationStage } from './PresentationStage';
 import { SinglePhotoStage } from './SinglePhotoStage';
@@ -17,7 +16,7 @@ export class StageController {
     private roundIdx = -1;
     private photoStage?: PhotoStage;
     private votingStage?: VotingStage;
-    private countdown: Countdown;
+
     // private photoTopics: PhotoTopics;
     private presentationStage?: PresentationStage;
     // private static readonly stageEventEmitter = DI.resolve(StageEventEmitter);
@@ -25,9 +24,9 @@ export class StageController {
 
     private stage?: Stage;
 
-    constructor(private roomId: string, private players: Map<string, GameThreePlayer>) {
+    constructor(private roomId: string, private players: Map<string, GameThreePlayer>, private testNumber = 1) {
         // this.gameThree = gameThree;
-        this.countdown = new Countdown(); //TODO remove argument
+
         // this.photoTopics = new PhotoTopics();
         this.initStageEventEmitter();
 
@@ -40,8 +39,13 @@ export class StageController {
     }
 
     initStageEventEmitter() {
-        this.stageEventEmitter.on(StageEventEmitter.STAGE_CHANGE_EVENT, () => {
+        this.stageEventEmitter.on(StageEventEmitter.STAGE_CHANGE_EVENT, message => {
+            // console.log('event emitter test nr: ', this.testNumber);
+            // console.log(message);
+            // console.log('Change state event, from ', this.stage?.constructor.name);
             this.stage = this.stage?.switchToNextStage();
+            // console.log('To ', this.stage?.constructor.name);
+            // console.log('---');
         });
     }
 
@@ -56,16 +60,19 @@ export class StageController {
         this.roundIdx++;
         GameThreeEventEmitter.emitNewRound(this.roomId, this.roundIdx);
         if (!this.isFinalRound()) {
+            // // console.log('NEW ROUND    ', this.roundIdx);
             //&& this.photoTopics!.isAnotherTopicAvailable()
             // this.switchToTakingPhotoStage();
 
             this.stage = new SinglePhotoStage(this.roomId, Array.from(this.players.keys()));
         } else {
+            //TODO call remove all stage event listeners
             // this.switchToFinalTakingPhotosStage();
         }
     }
 
     handleInput(message: IMessage) {
+        // console.log('handleInput ', message);
         this.stage?.handleInput(message);
     }
 

@@ -21,6 +21,7 @@ export abstract class PhotoStage extends Stage {
         this.photos.addPhoto(data.photographerId, data.url);
 
         if (this.photos.havePhotosFromAllUsers(this.userIds)) {
+            // console.log('HAVE allllllll photos');
             this.emitStageChangeEvent();
         }
     }

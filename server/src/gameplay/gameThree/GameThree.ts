@@ -28,7 +28,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     // private playerPresentOrder: string[] = [];
     gameName = GameNames.GAME3;
 
-    constructor(roomId: string, public leaderboard: Leaderboard) {
+    constructor(roomId: string, public leaderboard: Leaderboard, private testNumber = 1) {
         super(roomId);
         this.sendGameStateUpdates = false;
     }
@@ -51,7 +51,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
-        this.stageController!.update(timeElapsedSinceLastFrame);
+        this.stageController?.update(timeElapsedSinceLastFrame);
         // if(this.stageController!.stage === GameThreeGameState.ViewingFinalResults){
 
         // }
@@ -65,12 +65,12 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
-        this.stageController = new StageController(this.roomId, this.players);
     }
 
     startGame(): void {
         setTimeout(() => {
             super.startGame();
+            this.stageController = new StageController(this.roomId, this.players, this.testNumber);
         }, InitialParameters.COUNTDOWN_TIME_GAME_START);
 
         GameThreeEventEmitter.emitGameHasStartedEvent(

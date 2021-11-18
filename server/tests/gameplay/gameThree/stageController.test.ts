@@ -34,7 +34,7 @@ describe('First stage', () => {
     //     expect(spy).toHaveBeenCalledWith(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
     // });
 
-    fit('should end the stage when all photos received', async () => {
+    it('should end the stage when all photos received', async () => {
         stageController = new StageController(roomId, gameThree.players);
 
         let eventCalled = false;

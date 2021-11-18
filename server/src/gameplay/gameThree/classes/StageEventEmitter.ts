@@ -15,4 +15,9 @@ export default class StageEventEmitter extends EventEmitter {
 
         return StageEventEmitter.instance;
     }
+
+    // For testing - TODO change
+    public removeAllInstancesOfListeners(): EventEmitter {
+        return super.removeAllListeners(StageEventEmitter.STAGE_CHANGE_EVENT);
+    }
 }

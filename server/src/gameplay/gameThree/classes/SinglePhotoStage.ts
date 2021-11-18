@@ -1,5 +1,4 @@
 import InitialParameters from '../constants/InitialParameters';
-import GameThreeEventEmitter from '../GameThreeEventEmitter';
 import { UrlPhotographerMapper } from '../interfaces';
 import { PhotoStage } from './PhotoStage';
 import { PhotoTopics } from './PhotoTopics';
@@ -18,7 +17,6 @@ export class SinglePhotoStage extends PhotoStage {
         const photoUrls: UrlPhotographerMapper[] = this.getPhotos().map(photoObject => {
             return { photographerId: photoObject.photographerId, url: photoObject.urls[0] };
         });
-        GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
-        return new VotingStage(this.roomId, this.userIds);
+        return new VotingStage(this.roomId, this.userIds, photoUrls);
     }
 }
