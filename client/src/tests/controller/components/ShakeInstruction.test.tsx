@@ -1,13 +1,14 @@
 /* eslint-disable simple-import-sort/imports */
 import 'jest-styled-components';
 import { cleanup, render } from '@testing-library/react';
-import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure } from 'enzyme';
+import React from 'react';
 
 import ShakeInstruction from '../../../domain/game1/controller/components/ShakeInstruction';
 import theme from '../../../styles/theme';
+import { LocalStorageFake } from '../../storage/LocalFakeStorage';
 
 configure({ adapter: new Adapter() });
 
@@ -58,34 +59,3 @@ describe('Shake Instruction', () => {
         expect(global.sessionStorage.getItem('countdownTime')).toBe(null);
     });
 });
-
-class LocalStorageFake implements Storage {
-    store: { [key: string]: string } = {};
-    length = 0;
-
-    clear() {
-        this.store = {};
-    }
-
-    getItem(key: string) {
-        return this.store[key] || null;
-    }
-
-    setItem(key: string, value: string | number) {
-        this.store[key] = String(value);
-        this.setLength();
-    }
-
-    removeItem(key: string) {
-        delete this.store[key];
-        this.setLength();
-    }
-
-    setLength() {
-        this.length = Object.keys(this.store).length;
-    }
-
-    key(index: number) {
-        return String(index);
-    }
-}

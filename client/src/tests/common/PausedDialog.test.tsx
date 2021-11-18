@@ -1,9 +1,9 @@
 import 'jest-styled-components';
 
-import { cleanup, queryByText, render } from '@testing-library/react';
+import { cleanup } from '@testing-library/react';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure } from 'enzyme';
-import * as React from 'react';
+import { configure, mount } from 'enzyme';
+import React from 'react';
 import { ThemeProvider } from 'styled-components';
 
 import PausedDialog from '../../components/common/PausedDialog';
@@ -15,9 +15,9 @@ configure({ adapter: new Adapter() });
 afterEach(cleanup);
 
 describe('PausedDialog', () => {
-    it('does not render "game has paused" on screen', () => {
+    it('does render "game has paused"', () => {
         const givenText = 'Game has paused';
-        const { container } = render(
+        const container = mount(
             <ThemeProvider theme={theme}>
                 <GameContext.Provider value={{ ...defaultValue, hasPaused: true }}>
                     <PausedDialog />
@@ -25,6 +25,6 @@ describe('PausedDialog', () => {
             </ThemeProvider>
         );
 
-        expect(queryByText(container, givenText)).toBeFalsy();
+        expect(container.findWhere(node => node.text() === givenText)).toBeTruthy();
     });
 });

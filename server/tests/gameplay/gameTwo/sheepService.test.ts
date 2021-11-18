@@ -14,7 +14,7 @@ describe('GameTwoPlyer Tests', () => {
     });
 
     it('the count of alive sheep is 0 if all sheep are dead', () => {
-        let newSheep = new Sheep(10,10,1);
+        const newSheep = new Sheep(10,10,1);
         newSheep.state = SheepStates.DECOY;
         sheepService.sheep = [newSheep];
         expect(sheepService.getAliveSheepCount()).toEqual(0);

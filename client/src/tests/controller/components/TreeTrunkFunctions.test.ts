@@ -67,7 +67,7 @@ describe('handleTouchEnd', () => {
     it('if handleTouchEnd is called and all trunks are solved, solveObstacle should be called', () => {
         const solveObstacle = jest.fn();
 
-        handleTouchEnd({ ...props, solveObstacle, progress: 4 });
+        handleTouchEnd({ ...props, solveObstacle, progress: props.trunksToFinish - 1 });
 
         expect(solveObstacle).toHaveBeenCalledTimes(1);
     });
@@ -75,7 +75,7 @@ describe('handleTouchEnd', () => {
     it('if handleTouchEnd is called and not all trunks are solved, setProgress should be called', () => {
         const setProgress = jest.fn();
 
-        handleTouchEnd({ ...props, setProgress, progress: 1 });
+        handleTouchEnd({ ...props, setProgress, progress: props.trunksToFinish - 2 });
 
         expect(setProgress).toHaveBeenCalledTimes(1);
     });

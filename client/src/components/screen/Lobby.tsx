@@ -12,7 +12,7 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
 import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
-import { localDevelopment, MessageTypes } from '../../utils/constants';
+import { MessageTypes } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';
 import { Routes, screenChooseGameRoute, screenLeaderboardRoute } from '../../utils/routes';
 import {
@@ -58,12 +58,7 @@ export const Lobby: React.FunctionComponent = () => {
     }
 
     React.useEffect(() => {
-        // TODO remove
-        if (localDevelopment) {
-            generateQRCode(`http://192.168.8.174:3000/${roomId}`, 'qrCode');
-        } else {
-            generateQRCode(`${process.env.REACT_APP_FRONTEND_URL}${roomId}`, 'qrCode');
-        }
+        generateQRCode(`${process.env.REACT_APP_FRONTEND_URL}${roomId}`, 'qrCode');
     }, [roomId]);
 
     React.useEffect(() => {

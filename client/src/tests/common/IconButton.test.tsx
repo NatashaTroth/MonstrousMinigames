@@ -9,7 +9,7 @@ import theme from '../../styles/theme';
 
 afterEach(cleanup);
 describe('IconButton', () => {
-    it('when the button is clicked, it the onClick handler', () => {
+    it('when the button is clicked, the onClick handler should be called', () => {
         const onClick = jest.fn();
         const { container } = render(
             <ThemeProvider theme={theme}>

@@ -11,8 +11,8 @@ import theme from '../../../styles/theme';
 
 configure({ adapter: new Adapter() });
 afterEach(cleanup);
-describe('Screen ConnectScreen', () => {
-    it('when connect button is clicked, handleSocketConnection function should be called', () => {
+describe('Screen ConnectDialog', () => {
+    it('when the "Enter" button is clicked, handleSocketConnection function should be called', () => {
         const handleSocketConnectionFunction = jest.fn();
         const wrapper = mount(
             <ThemeProvider theme={theme}>

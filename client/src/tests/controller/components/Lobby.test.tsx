@@ -35,24 +35,11 @@ describe('Lobby', () => {
         expect(container.find(CircularProgress)).toBeTruthy();
     });
 
-    it('when data is loaded, an ready instruction is rendered', () => {
+    it('when data is loaded, the player name gets rendered', () => {
+        const playerName = 'Mock';
         const container = shallow(
             <ThemeProvider theme={theme}>
                 <GameContext.Provider value={{ ...defaultGameValue, chosenGame: GameNames.game1 }}>
-                    <PlayerContext.Provider value={{ ...defaultValue, playerNumber: 1 }}>
-                        <Lobby history={history} />
-                    </PlayerContext.Provider>
-                </GameContext.Provider>
-            </ThemeProvider>
-        );
-        expect(container.findWhere(node => node.text() === `Show that you are ready to play!`)).toBeTruthy();
-    });
-
-    it('when data is loaded, the player name gets rendered', () => {
-        const playerName = 'Test';
-        const container = shallow(
-            <ThemeProvider theme={theme}>
-                <GameContext.Provider value={{ ...defaultGameValue }}>
                     <PlayerContext.Provider value={{ ...defaultValue, playerNumber: 1, name: playerName }}>
                         <Lobby history={history} />
                     </PlayerContext.Provider>
@@ -62,7 +49,7 @@ describe('Lobby', () => {
         expect(container.findWhere(node => node.text() === playerName)).toBeTruthy();
     });
 
-    it('when button "Change Character" is clicked, the history should change', () => {
+    it('when button "Change Character" is clicked, the history should change to the choose character route', () => {
         const roomId = 'ABCD';
         const location = `${controllerChooseCharacterRoute(roomId)}`;
         const container = mount(
@@ -98,6 +85,7 @@ describe('Lobby', () => {
     });
 
     it('when ready button is clicked, the instructions should change', () => {
+        const givenText = `Wait for the admin to start your game!`;
         const setReady = jest.fn();
         const container = mount(
             <ThemeProvider theme={theme}>
@@ -111,7 +99,7 @@ describe('Lobby', () => {
 
         container.find(ReadyButton).simulate('click');
 
-        expect(container.findWhere(node => node.text() === `Wait for the admin to start your game!`)).toBeTruthy();
+        expect(container.findWhere(node => node.text() === givenText)).toBeTruthy();
     });
 
     it('should render player character', () => {
@@ -129,7 +117,7 @@ describe('Lobby', () => {
         expect(container.find('img').at(0).prop('src')).toEqual(character.src);
     });
 
-    it('should render player character', () => {
+    it('when user is not ready, ready button should have defined background and text color', () => {
         const container = mount(
             <ThemeProvider theme={theme}>
                 <ReadyButton ready={false} />
@@ -140,7 +128,7 @@ describe('Lobby', () => {
         expect(container.find('div')).toHaveStyleRule('color', 'white');
     });
 
-    it('should render player character', () => {
+    it('when user is ready, ready button should have defined background and text color', () => {
         const container = mount(
             <ThemeProvider theme={theme}>
                 <ReadyButton ready={true} />

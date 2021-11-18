@@ -42,10 +42,11 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
         if (counter !== null && counter !== undefined) {
             if (counter > 0) {
                 setTimeout(() => setCounter(counter - 1), 1000);
-            } else {
-                sessionStorage.removeItem('countdownTime');
-                setCounter(null);
+                return;
             }
+
+            sessionStorage.removeItem('countdownTime');
+            setCounter(null);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [counter]);
