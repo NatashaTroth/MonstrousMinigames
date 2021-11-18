@@ -1,8 +1,14 @@
 import styled from 'styled-components';
 
+import { StyledFullScreenContainer } from './FullScreenContainer.sc';
+
 interface Props {
     available: boolean;
 }
+
+export const ChooseCharacterContainer = styled(StyledFullScreenContainer)`
+    align-items: initial;
+`;
 
 export const Character = styled.img<Props>`
     width: 100%;

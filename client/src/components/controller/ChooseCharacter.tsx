@@ -21,11 +21,11 @@ import {
     Character,
     CharacterContainer,
     ChooseButtonContainer,
+    ChooseCharacterContainer,
     ClearContainer,
     Left,
     Right,
 } from './ChooseCharacter.sc';
-import { StyledFullScreenContainer } from './FullScreenContainer.sc';
 
 const ChooseCharacter: React.FunctionComponent = () => {
     const { character, setCharacter } = React.useContext(PlayerContext);
@@ -74,7 +74,7 @@ const ChooseCharacter: React.FunctionComponent = () => {
         });
 
     return (
-        <StyledFullScreenContainer>
+        <ChooseCharacterContainer>
             {searchParams.get('back') && (
                 <ClearContainer>
                     <IconButton onClick={() => history.goBack()}>
@@ -86,7 +86,6 @@ const ChooseCharacter: React.FunctionComponent = () => {
             <Carousel
                 afterChange={(previousSlide, { currentSlide }) => {
                     setIsMoving(false);
-                    //todo handle swiping
                 }}
                 beforeChange={() => setIsMoving(true)}
                 {...carouselOptions}
@@ -110,7 +109,7 @@ const ChooseCharacter: React.FunctionComponent = () => {
                     Choose Character
                 </Button>
             </ChooseButtonContainer>
-        </StyledFullScreenContainer>
+        </ChooseCharacterContainer>
     );
 };
 

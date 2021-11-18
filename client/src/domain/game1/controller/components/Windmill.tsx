@@ -85,7 +85,7 @@ const Windmill: React.FunctionComponent<WindmillProps> = ({ tutorial = false, ha
             setRounds(rounds + 1);
             setDistance(0);
         }
-    }, []);
+    }, [distance, rounds, tutorial, controllerSocket, roomId, handleTutorialFinished]);
 
     return (
         <ObstacleContainer>
