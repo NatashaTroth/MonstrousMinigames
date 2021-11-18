@@ -1,42 +1,31 @@
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount } from 'enzyme';
-import { createMemoryHistory } from 'history';
 import React from 'react';
+import { ThemeProvider } from 'styled-components';
 
 import { Lobby } from '../../components/controller/Lobby';
-import { ControllerSocketContext, defaultValue } from '../../contexts/ControllerSocketContextProvider';
+import { GameNames } from '../../config/games';
+import { defaultValue, GameContext } from '../../contexts/GameContextProvider';
 import PlayerContextProvider from '../../contexts/PlayerContextProvider';
-import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
-import { UserInitMessage } from '../../domain/typeGuards/userInit';
-import { MessageTypes } from '../../utils/constants';
+import history from '../../domain/history/history';
+import theme from '../../styles/theme';
 
 configure({ adapter: new Adapter() });
 
 describe('PlayerContextProvider', () => {
-    it('When userInitMessage is emitted to controller socket, the PlayerContextProvider should provide the data', () => {
-        const history = createMemoryHistory();
-        const userName = 'Monster';
-        const socket = new InMemorySocketFake();
-        const message: UserInitMessage = {
-            type: MessageTypes.userInit,
-            userId: '1',
-            name: userName,
-            roomId: 'ABDE',
-            isAdmin: true,
-            number: 1,
-            ready: true,
-        };
-
+    it('PlayerContextProvider should provide the ready state to the lobby', () => {
         const container = mount(
-            <ControllerSocketContext.Provider value={{ ...defaultValue, controllerSocket: socket }}>
-                <PlayerContextProvider>
-                    <Lobby history={history} />
-                </PlayerContextProvider>
-            </ControllerSocketContext.Provider>
+            <ThemeProvider theme={theme}>
+                <GameContext.Provider value={{ ...defaultValue, chosenGame: GameNames.game1 }}>
+                    <PlayerContextProvider>
+                        <Lobby history={history} />
+                    </PlayerContextProvider>
+                </GameContext.Provider>
+            </ThemeProvider>
         );
 
-        socket.emit(message);
-
-        expect(container.findWhere(node => node.text() === userName)).toBeTruthy();
+        expect(
+            container.findWhere(node => node.type() === 'div' && node.text() === 'Show that you are ready to play!')
+        ).toHaveLength(1);
     });
 });

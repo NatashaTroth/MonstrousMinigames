@@ -21,7 +21,7 @@ afterAll(() => {
 });
 
 describe('ControllerSocketContextProvider', () => {
-    it('should set controller socket on connect click', () => {
+    it('handleSocketConnection should be called in Context', () => {
         const history = createMemoryHistory();
         history.push('/ABDE');
         global.localStorage.setItem('name', 'Mock');
