@@ -2,6 +2,7 @@ import { IMessage } from '../../../interfaces/messages';
 import InitialParameters from '../constants/InitialParameters';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
 import GameThreePlayer from '../GameThreePlayer';
+import { MultiplePhotosStage } from './MultiplePhotosStage';
 import { SinglePhotoStage } from './SinglePhotoStage';
 import { Stage } from './Stage';
 import StageEventEmitter from './StageEventEmitter';
@@ -34,9 +35,11 @@ export class StageController {
     handleNewRound() {
         this.roundIdx++;
         GameThreeEventEmitter.emitNewRound(this.roomId, this.roundIdx);
+        const userIds = Array.from(this.players.keys());
         if (!this.isFinalRound()) {
-            this.stage = new SinglePhotoStage(this.roomId, Array.from(this.players.keys()));
+            this.stage = new SinglePhotoStage(this.roomId, userIds);
         } else {
+            this.stage = new MultiplePhotosStage(this.roomId, userIds);
             //TODO call remove all stage event listeners
             // this.switchToFinalTakingPhotosStage();
         }
@@ -113,13 +116,6 @@ export class StageController {
     // }
 
     // // ****** final round ******
-    // private switchToFinalTakingPhotosStage() {
-    //     this.updateStage(GameThreeGameState.TakingFinalPhotos);
-    //     GameThreeEventEmitter.emitTakeFinalPhotosCountdown(
-    //         this.roomId,
-    //         InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS
-    //     );
-    // }
 
     // private switchToFinalPresentationStage() {
     //     this.addPointPerReceivedPhoto();
