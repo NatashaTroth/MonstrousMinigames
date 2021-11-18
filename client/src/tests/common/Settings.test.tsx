@@ -24,14 +24,6 @@ describe('Settings', () => {
 
         expect(queryByText(container, givenText)).toBeTruthy();
     });
-
-    it('volumeHasBeenUnmuted should return true if volume is 0 and new value is bigger than 0', () => {
-        expect(volumeHasBeenUnmuted(5, 0)).toBe(true);
-    });
-
-    it('volumeHasBeenUnmuted should return false if volume is not null', () => {
-        expect(volumeHasBeenUnmuted(5, 5)).toBe(false);
-    });
 });
 
 describe('volumeHasBeenUnmuted Function', () => {

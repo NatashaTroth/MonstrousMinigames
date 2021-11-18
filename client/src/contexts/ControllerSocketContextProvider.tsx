@@ -51,7 +51,15 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         PlayerContext
     );
 
-    const { setPhotos, setVoteForPhotoMessage, setRoundIdx, setTopicMessage } = React.useContext(Game3Context);
+    const {
+        setPhotos,
+        setVoteForPhotoMessage,
+        setRoundIdx,
+        setTopicMessage,
+        setVotingResults,
+        setFinalRoundCountdownTime,
+        setPresentFinalPhotos,
+    } = React.useContext(Game3Context);
 
     const {
         setGameStarted,
@@ -97,6 +105,9 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setRoundIdx,
         setCountdownTime,
         setTopicMessage,
+        setVotingResults,
+        setFinalRoundCountdownTime,
+        setPresentFinalPhotos,
     };
 
     const content = {

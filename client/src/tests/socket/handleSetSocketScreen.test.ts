@@ -31,9 +31,12 @@ describe('handleSetSocket', () => {
         setScreenState: jest.fn(),
         setChosenGame: jest.fn(),
         setTopicMessage: jest.fn(),
-        setTimeIsUp: jest.fn(),
         setRoundIdx: jest.fn(),
         setSheepGameStarted: jest.fn(),
+        setVoteForPhotoMessage: jest.fn(),
+        setVotingResults: jest.fn(),
+        setFinalRoundCountdownTime: jest.fn(),
+        setPresentFinalPhotos: jest.fn(),
         history,
     };
 

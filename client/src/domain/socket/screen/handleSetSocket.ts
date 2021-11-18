@@ -1,6 +1,7 @@
 import { History } from 'history';
 
 import { GameNames } from '../../../config/games';
+import { FinalPhoto, Topic, Vote, VoteResult } from '../../../contexts/game3/Game3ContextProvider';
 import { PlayerRank } from '../../../contexts/ScreenSocketContextProvider';
 import { Routes } from '../../../utils/routes';
 import { handleConnectedUsersMessage } from '../../commonGameState/screen/handleConnectedUsersMessage';
@@ -13,6 +14,7 @@ import {
     handleStartSheepGameMessage,
 } from '../../commonGameState/screen/handleStartPhaserGameMessage';
 import { handleSetScreenSocketGame3 } from '../../game3/screen/socket/Sockets';
+import { handleSetCommonSocketsGame3 } from '../../game3/socket/Socket';
 import { MessageSocket } from '../../socket/MessageSocket';
 import ScreenSocket from '../../socket/screenSocket';
 import { Socket } from '../../socket/Socket';
@@ -42,9 +44,12 @@ export interface HandleSetSocketDependencies {
     setScreenAdmin: (val: boolean) => void;
     setScreenState: (val: string) => void;
     setChosenGame: (val: GameNames) => void;
-    setTopicMessage: (val: { topic: string; countdownTime: number }) => void;
-    setTimeIsUp: (val: boolean) => void;
+    setTopicMessage: (val: Topic) => void;
+    setVoteForPhotoMessage: (val: Vote) => void;
+    setVotingResults: (val: VoteResult) => void;
     setRoundIdx: (roundIdx: number) => void;
+    setFinalRoundCountdownTime: (val: number) => void;
+    setPresentFinalPhotos: (val: FinalPhoto) => void;
     history: History;
 }
 
@@ -66,9 +71,12 @@ export function handleSetSocket(
         setScreenState,
         setChosenGame,
         setTopicMessage,
-        setTimeIsUp,
         setCountdownTime,
         setRoundIdx,
+        setVoteForPhotoMessage,
+        setVotingResults,
+        setFinalRoundCountdownTime,
+        setPresentFinalPhotos,
         history,
     } = dependencies;
 
@@ -136,7 +144,19 @@ export function handleSetSocket(
 
     gameSetSocket.listen((data: GameSetMessage) => setChosenGame(data.game));
 
-    handleSetScreenSocketGame3(socket, { setTopicMessage, setTimeIsUp, setRoundIdx });
+    handleSetCommonSocketsGame3(socket, {
+        setTopicMessage,
+        setVoteForPhotoMessage,
+        setFinalRoundCountdownTime,
+        setVotingResults,
+    });
+
+    handleSetScreenSocketGame3(socket, {
+        setRoundIdx,
+        setVoteForPhotoMessage,
+        setVotingResults,
+        setPresentFinalPhotos,
+    });
 
     history.push(`${Routes.screen}/${roomId}/${route || Routes.lobby}`);
 }

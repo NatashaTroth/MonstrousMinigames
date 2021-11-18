@@ -76,6 +76,18 @@ const theme = createMuiTheme({
         characterColors: ['#1e8fe2', '#69a04e', '#b53cd4', '#b97d35'],
     },
     boxShadowDepth: 7,
+    overrides: {
+        MuiChip: {
+            root: {
+                height: 38,
+                borderRadius: 20,
+                backgroundColor: '#6aac02',
+            },
+            label: {
+                fontSize: 30,
+            },
+        },
+    },
 });
 
 export default theme;

@@ -40,6 +40,7 @@ import Windmill from './domain/game1/controller/components/Windmill';
 import Game from './domain/game1/screen/components/Game';
 import Joystick from './domain/game2/controller/components/Joystick';
 import Game2 from './domain/game2/screen/components/Game2';
+import PresentFinalPhotos from './domain/game3/controller/components/PresentFinalPhotos';
 import TakePicture from './domain/game3/controller/components/TakePicture';
 import Vote from './domain/game3/controller/components/Vote';
 import Game3 from './domain/game3/screen/components/Game3';
@@ -75,15 +76,15 @@ const App: React.FunctionComponent = () => {
                     <ThemeProvider theme={theme}>
                         <AppContainer className="App">
                             <ScreenWrapper>
-                                <GameContextProvider>
-                                    <PlayerContextProvider>
-                                        <Game1ContextProvider>
-                                            <Game3ContextProvider>
-                                                <ScreenSocketContextProvider>
-                                                    <ControllerSocketContextProvider
-                                                        permission={!(!micPermission || !motionPermission)}
-                                                    >
-                                                        <FirebaseContextProvider>
+                                <FirebaseContextProvider>
+                                    <GameContextProvider>
+                                        <PlayerContextProvider>
+                                            <Game1ContextProvider>
+                                                <Game3ContextProvider>
+                                                    <ScreenSocketContextProvider>
+                                                        <ControllerSocketContextProvider
+                                                            permission={!(!micPermission || !motionPermission)}
+                                                        >
                                                             {!isMobileOnly && <MasterHeader history={history} />}
                                                             <PausedDialog>
                                                                 <Switch>
@@ -191,10 +192,17 @@ const App: React.FunctionComponent = () => {
                                                                         exact
                                                                     />
                                                                     <Route
+                                                                        path={Routes.controllerPresent}
+                                                                        component={PresentFinalPhotos}
+                                                                        exact
+                                                                    />
+
+                                                                    <Route
                                                                         path={Routes.screenGame3}
                                                                         component={Game3}
                                                                         exact
                                                                     />
+
                                                                     {/*----------------- General -----------------*/}
                                                                     <Route
                                                                         path={Routes.controllerPlayerFinished}
@@ -251,13 +259,13 @@ const App: React.FunctionComponent = () => {
                                                                     />
                                                                 </Switch>
                                                             </PausedDialog>
-                                                        </FirebaseContextProvider>
-                                                    </ControllerSocketContextProvider>
-                                                </ScreenSocketContextProvider>
-                                            </Game3ContextProvider>
-                                        </Game1ContextProvider>
-                                    </PlayerContextProvider>
-                                </GameContextProvider>
+                                                        </ControllerSocketContextProvider>
+                                                    </ScreenSocketContextProvider>
+                                                </Game3ContextProvider>
+                                            </Game1ContextProvider>
+                                        </PlayerContextProvider>
+                                    </GameContextProvider>
+                                </FirebaseContextProvider>
                             </ScreenWrapper>
                         </AppContainer>
                     </ThemeProvider>

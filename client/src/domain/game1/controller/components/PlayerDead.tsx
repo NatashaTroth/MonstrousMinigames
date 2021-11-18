@@ -23,9 +23,10 @@ const PlayerDead: React.FC = () => {
             if (counter > 0) {
                 const windmillTimeoutId = setTimeout(() => setCounter(counter - 1), 1000);
                 sessionStorage.setItem('windmillTimeoutId', String(windmillTimeoutId));
-            } else {
-                handlePlayerGetsWindmill(history, roomId);
+                return;
             }
+
+            handlePlayerGetsWindmill(history, roomId);
         }
     }, [counter]);
 

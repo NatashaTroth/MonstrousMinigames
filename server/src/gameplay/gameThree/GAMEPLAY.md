@@ -114,7 +114,6 @@ storage hinten - nach spiel alles löschen
 //photoPhotographerMapper:
 export interface photoPhotographerMapper {
     photographerId: string;
-    photoId: number;
     url: string;
 }
 ```
@@ -195,26 +194,34 @@ countdownTime: number;
 
 ```typescript
  {
-    roomId: string;
-    results: finalResults[];
+    roomId,
+    data: {
+        roomId,
+        gameState,
+        playerRanks,
+    },
 }
 
 //votingResultsPhotographerMapper:
-export interface finalResults {
-    photographerId: string;
-    points: number;
+export interface GameThreePlayerRank  {
+    id: string;
+    name: string;
     rank: number;
+    isActive: boolean;
+    points: number;
 }
+
 ```
 
 Other:
 Every time a new round starts: get 'game3/newRound' message
 
----------MAGDA FRAGEN----------
+---------TODO----------
 
 //**\_\_\_**
-Punkte system: final round 1 pkt pro foto den man abschickt - max 3 fotos
-
-final round - 1 pkt pro vote
 
 automatisch punkte wenn vorher nur 1 person in runde foto - skip vote message - kriegt alle punkte für die runde
+
+user deactivated
+
+add all the global messages stop game (not pause), ...

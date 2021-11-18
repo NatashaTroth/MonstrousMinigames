@@ -43,6 +43,9 @@ describe('handleSetSocket', () => {
         setRoundIdx: jest.fn(),
         setTopicMessage: jest.fn(),
         setCountdownTime: jest.fn(),
+        setVotingResults: jest.fn(),
+        setFinalRoundCountdownTime: jest.fn(),
+        setPresentFinalPhotos: jest.fn(),
     } as HandleSetSocketDependencies;
 
     it('when UserInitMessage was written, handed setPlayerNumber is executed', async () => {

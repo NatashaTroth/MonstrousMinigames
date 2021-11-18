@@ -17,3 +17,7 @@ export const Instructions = styled(Typography)`
     margin-bottom: 30px;
     padding: 0 20px;
 `;
+
+export const CountdownContainer = styled.div`
+    margin-bottom: 30px;
+`;

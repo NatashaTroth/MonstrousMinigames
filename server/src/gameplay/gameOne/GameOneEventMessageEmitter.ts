@@ -1,4 +1,3 @@
-import { Namespace } from 'socket.io';
 import { singleton } from 'tsyringe';
 
 import GameEventEmitter from '../../classes/GameEventEmitter';
@@ -10,6 +9,7 @@ import Game from '../Game';
 import { GlobalEventMessage } from '../interfaces/GlobalEventMessages';
 import { IGameStateBase } from '../interfaces/IGameStateBase';
 import Player from '../Player';
+import { NamespaceAdapter } from './interfaces';
 import {
     GAME_ONE_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE,
     GAME_ONE_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE_ONCE,
@@ -33,17 +33,22 @@ export class GameOneEventMessageEmitter implements EventMessageEmitter {
     canHandle(message: EventMessage, game: Game<Player, IGameStateBase>): boolean {
         return GAME_ONE_EVENT_MESSAGES.includes(message.type);
     }
-    handle(controllerNameSpace: Namespace, screenNameSpace: Namespace, room: Room, message: GameOneEventMessage): void {
+    handle(
+        controllerNameSpace: NamespaceAdapter,
+        screenNameSpace: NamespaceAdapter,
+        room: Room,
+        message: GameOneEventMessage
+    ): void {
         let user: User;
 
         switch (message.type) {
             // send to single user's controller
-            case GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_FINISHED:
-            case GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD:
             case GAME_ONE_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE:
             case GAME_ONE_EVENT_MESSAGE__OBSTACLE_REACHED:
             case GAME_ONE_EVENT_MESSAGE__PLAYER_IS_STUNNED:
             case GAME_ONE_EVENT_MESSAGE__PLAYER_IS_UNSTUNNED:
+            case GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_FINISHED:
+            case GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD:
             case GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES:
                 user = room.getUserById(message.userId);
                 if (!user) {

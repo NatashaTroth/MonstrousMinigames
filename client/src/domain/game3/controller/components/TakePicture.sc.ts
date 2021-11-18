@@ -33,7 +33,3 @@ export const StyledImg = styled.img`
     width: 40%;
     margin-bottom: 20px;
 `;
-
-export const CountdownContainer = styled.div`
-    margin-bottom: 30px;
-`;

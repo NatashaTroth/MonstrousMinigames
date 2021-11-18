@@ -1,99 +1,126 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { getDownloadURL, listAll, ref } from 'firebase/storage';
-import * as React from 'react';
+import React from 'react';
 
 import Countdown from '../../../../components/common/Countdown';
-import { FirebaseContext } from '../../../../contexts/FirebaseContextProvider';
 import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import {
     Frame,
     ImageContainer,
+    ImagesContainer,
     InstructionContainer,
-    LoadingMessage,
     PictureInstruction,
     RandomWord,
     ScreenContainer,
+    StyledChip,
     StyledImg,
 } from './Game.sc';
 
 const Game3: React.FunctionComponent = () => {
-    const [images, setImages] = React.useState<string[]>([]);
-    const { roomId, countdownTime } = React.useContext(GameContext);
-    const { setTimeIsUp, timeIsUp, roundIdx } = React.useContext(Game3Context);
-    const [loading, setLoading] = React.useState(false);
-    const [displayStartingCountdown, setDisplayStartingCountdown] = React.useState(roundIdx === 1 ? true : false);
-
+    const { countdownTime } = React.useContext(GameContext);
+    const {
+        roundIdx,
+        voteForPhotoMessage,
+        votingResults,
+        finalRoundCountdownTime,
+        presentFinalPhotos,
+    } = React.useContext(Game3Context);
+    const [displayCountdown, setDisplayCountdown] = React.useState(true);
+    const [timeToDisplay, setTimeToDisplay] = React.useState(0);
     const { topicMessage } = React.useContext(Game3Context);
-
-    const { storage } = React.useContext(FirebaseContext);
-
-    async function listAllFiles() {
-        if (storage) {
-            setLoading(true);
-            const imageUrls: string[] = [];
-            const imageReferences = await listAll(ref(storage, `${roomId}/${roundIdx}`));
-            const promises = imageReferences.items.map(async imgRef => {
-                const url = await getDownloadURL(imgRef);
-                imageUrls.push(url);
-            });
-
-            await Promise.all(promises);
-            setImages(Array.from(new Set(imageUrls)));
-            setLoading(false);
-        }
-    }
+    const finalRound = roundIdx === 3;
 
     React.useEffect(() => {
-        if (timeIsUp) {
-            listAllFiles();
-        }
-    }, [timeIsUp]);
+        setDisplayCountdown(true);
+    }, [roundIdx]);
+
+    React.useEffect(() => {
+        const time = presentFinalPhotos
+            ? presentFinalPhotos.countdownTime
+            : finalRoundCountdownTime
+            ? finalRoundCountdownTime
+            : voteForPhotoMessage
+            ? voteForPhotoMessage.countdownTime
+            : topicMessage
+            ? topicMessage.countdownTime
+            : 0;
+
+        // eslint-disable-next-line no-console
+        console.log(time);
+        setTimeToDisplay(time);
+    }, [presentFinalPhotos, finalRoundCountdownTime, voteForPhotoMessage, topicMessage]);
 
     return (
         <ScreenContainer>
-            {displayStartingCountdown ? (
-                <Countdown
-                    time={countdownTime}
-                    onComplete={() => {
-                        setDisplayStartingCountdown(false);
-                    }}
-                />
+            <PictureInstruction>{finalRound ? 'Final Round' : `Round ${roundIdx}`}</PictureInstruction>
+            {!displayCountdown && !voteForPhotoMessage && topicMessage && <Countdown time={timeToDisplay} />}
+            {displayCountdown ? (
+                <>
+                    <Countdown
+                        time={countdownTime}
+                        onComplete={() => {
+                            setDisplayCountdown(false);
+                        }}
+                    />
+                </>
             ) : (
                 <>
                     <InstructionContainer>
-                        {timeIsUp ? (
+                        {presentFinalPhotos ? (
+                            <PictureInstruction>
+                                {presentFinalPhotos.name} - Tell us a story about your pictures
+                            </PictureInstruction>
+                        ) : voteForPhotoMessage ? (
                             <>
                                 <PictureInstruction>
                                     Vote on your smartphone for the picture that looks most like
                                 </PictureInstruction>
-                                <RandomWord>{topicMessage.topic}</RandomWord>
+                                <RandomWord>{topicMessage?.topic}</RandomWord>
                             </>
+                        ) : finalRound ? (
+                            <PictureInstruction>
+                                Take three photos and tell a visual story about them afterwards
+                            </PictureInstruction>
                         ) : (
                             <>
-                                <PictureInstruction>Round {roundIdx}</PictureInstruction>
                                 <PictureInstruction>Take a picture that represents the word</PictureInstruction>
-                                <RandomWord>{topicMessage.topic}</RandomWord>
+                                <RandomWord>{topicMessage?.topic}</RandomWord>
                             </>
                         )}
                     </InstructionContainer>
-                    {!timeIsUp && topicMessage.countdownTime > 0 && (
-                        <Countdown
-                            time={topicMessage.countdownTime}
-                            onComplete={() => {
-                                setTimeIsUp(true);
-                            }}
-                        />
-                    )}
-                    {loading && <LoadingMessage>Loading images...</LoadingMessage>}
-                    {timeIsUp && !loading && (
-                        <ImageContainer>
-                            {images.map((image, index) => (
-                                <Frame key={`image${index}`}>
-                                    <StyledImg src={image} />
-                                </Frame>
+
+                    {voteForPhotoMessage && (
+                        <ImagesContainer>
+                            {voteForPhotoMessage.photoUrls?.map((photo, index) => (
+                                <ImageContainer key={`image${index}`}>
+                                    <PictureInstruction>{photo.photoId}</PictureInstruction>
+                                    <Frame>
+                                        <StyledImg src={photo.url} />
+                                    </Frame>
+                                    {votingResults && (
+                                        <div>
+                                            <StyledChip
+                                                label={`+ ${
+                                                    votingResults.results.find(
+                                                        result => result.photographerId === photo.photographerId
+                                                    )?.points
+                                                }`}
+                                            />
+                                        </div>
+                                    )}
+                                </ImageContainer>
                             ))}
-                        </ImageContainer>
+                        </ImagesContainer>
+                    )}
+                    {presentFinalPhotos && (
+                        <ImagesContainer>
+                            {presentFinalPhotos.photoUrls?.map((photo, index) => (
+                                <ImageContainer key={`image${index}`}>
+                                    <Frame>
+                                        <StyledImg src={photo} />
+                                    </Frame>
+                                </ImageContainer>
+                            ))}
+                        </ImagesContainer>
                     )}
                 </>
             )}

@@ -38,19 +38,30 @@ export const FinishedScreen: React.FunctionComponent = () => {
                             </InstructionText>
                         </Instruction>
 
-                        <Instruction variant="light">
-                            <InstructionText>{formatMs(player.totalTimeInMs!)}</InstructionText>
-                        </Instruction>
+                        {player.totalTimeInMs && (
+                            <>
+                                <Instruction variant="light">
+                                    <InstructionText>{formatMs(player.totalTimeInMs)}</InstructionText>
+                                </Instruction>
 
-                        {index === 0 ? (
-                            <Instruction variant="secondary">
-                                <InstructionText>{`${formatMs(player.totalTimeInMs!)}`} </InstructionText>
-                            </Instruction>
-                        ) : (
-                            <Instruction variant="primary">
-                                <InstructionText>
-                                    {`+${formatMs(player.totalTimeInMs! - sortedPlayerRanks[0].totalTimeInMs!)}`}{' '}
-                                </InstructionText>
+                                {index === 0 ? (
+                                    <Instruction variant="secondary">
+                                        <InstructionText>{`${formatMs(player.totalTimeInMs)}`} </InstructionText>
+                                    </Instruction>
+                                ) : (
+                                    <Instruction variant="primary">
+                                        <InstructionText>
+                                            {`+${formatMs(
+                                                player.totalTimeInMs! - sortedPlayerRanks[0].totalTimeInMs!
+                                            )}`}{' '}
+                                        </InstructionText>
+                                    </Instruction>
+                                )}
+                            </>
+                        )}
+                        {player.points && (
+                            <Instruction variant="light">
+                                <InstructionText>{player.points}</InstructionText>
                             </Instruction>
                         )}
                     </LeaderBoardRow>

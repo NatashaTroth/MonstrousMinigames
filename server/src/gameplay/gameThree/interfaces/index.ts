@@ -1,11 +1,11 @@
 import { FinalPhotos } from './FinalPhotos';
-import { FinalResults } from './FinalResults';
 import * as GameEvents from './GameEvents';
 import { GameStateInfo } from './GameStateInfo';
 import { GameThreePlayerRank } from './GameThreePlayerRank';
 import { InitialGameStateInfo } from './InitialGameStateInfo';
 import { IMessagePhoto } from './messagePhoto';
 import { IMessagePhotoVote } from './messagePhotoVote';
+import { NamespaceAdapter } from './NamespaceAdapter';
 import { Photo } from './Photo';
 import { photoPhotographerMapper } from './photoPhotographerMapper';
 import { PlayerNameId } from './PlayerNameId';
@@ -27,5 +27,5 @@ export {
     photoPhotographerMapper,
     FinalPhotos,
     PlayerNameId,
-    FinalResults,
+    NamespaceAdapter,
 };

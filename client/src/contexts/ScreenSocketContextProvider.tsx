@@ -29,9 +29,10 @@ export interface PlayerRank {
     rank?: number;
     finished: boolean;
     totalTimeInMs?: number;
-    positionX: number;
+    positionX?: number;
     isActive: boolean;
-    dead: boolean;
+    dead?: boolean;
+    points?: number;
 }
 
 export interface PlayerState {
@@ -66,7 +67,14 @@ export interface User {
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenSocket, setScreenSocket] = React.useState<Socket>();
     const history = useHistory();
-    const { setTopicMessage, setTimeIsUp, setRoundIdx } = React.useContext(Game3Context);
+    const {
+        setTopicMessage,
+        setRoundIdx,
+        setVoteForPhotoMessage,
+        setVotingResults,
+        setFinalRoundCountdownTime,
+        setPresentFinalPhotos,
+    } = React.useContext(Game3Context);
     const {
         setGameStarted,
         setSheepGameStarted,
@@ -93,9 +101,12 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setScreenState,
         setChosenGame,
         setTopicMessage,
-        setTimeIsUp,
         setRoundIdx,
         setSheepGameStarted,
+        setVoteForPhotoMessage,
+        setVotingResults,
+        setFinalRoundCountdownTime,
+        setPresentFinalPhotos,
         history,
     };
 

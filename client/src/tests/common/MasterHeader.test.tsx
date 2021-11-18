@@ -64,17 +64,4 @@ describe('MasterHeader', () => {
 
         expect(history.location).toHaveProperty('pathname', `/settings`);
     });
-
-    it('redirects to settings when settings icon is clicked', () => {
-        const container = mount(
-            <ThemeProvider theme={theme}>
-                <AudioContext.Provider value={{ ...defaultValue, musicIsPlaying: false }}></AudioContext.Provider>
-                <MasterHeader history={history} />
-            </ThemeProvider>
-        );
-
-        container.find('button').first().simulate('click');
-
-        expect(history.location).toHaveProperty('pathname', `/settings`);
-    });
 });

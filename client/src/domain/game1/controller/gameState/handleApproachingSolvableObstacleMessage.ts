@@ -10,7 +10,8 @@ export function handleApproachingObstacleMessage(props: HandleApproachingObstacl
     const { data, setEarlySolvableObstacle } = props;
     if (data.distance < 10) {
         setEarlySolvableObstacle(undefined);
-    } else {
-        setEarlySolvableObstacle({ id: data.obstacleId, type: data.obstacleType, distance: data.distance });
+        return;
     }
+
+    setEarlySolvableObstacle({ id: data.obstacleId, type: data.obstacleType, distance: data.distance });
 }

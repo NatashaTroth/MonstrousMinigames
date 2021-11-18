@@ -1,7 +1,6 @@
 import 'jest-styled-components';
 
 import { CircularProgress } from '@material-ui/core';
-import { cleanup } from '@testing-library/react';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount } from 'enzyme';
 import * as React from 'react';
@@ -11,8 +10,6 @@ import LoadingComponent from '../../components/common/LoadingComponent';
 import theme from '../../styles/theme';
 
 configure({ adapter: new Adapter() });
-
-afterEach(cleanup);
 
 describe('LoadingComponent', () => {
     it('renders an CircularProgress', () => {

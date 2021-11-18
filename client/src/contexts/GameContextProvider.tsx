@@ -5,6 +5,7 @@ import { GameNames } from '../config/games';
 import { ScreenStates } from '../config/screenStates';
 import { handleSetGameFinished } from '../domain/commonGameState/controller/handleSetGameFinished';
 import { User } from '../domain/typeGuards/connectedUsers';
+import { FirebaseContext } from './FirebaseContextProvider';
 import { PlayerRank } from './ScreenSocketContextProvider';
 
 export const defaultValue = {
@@ -118,10 +119,11 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenAdmin, setScreenAdmin] = React.useState<boolean>(false);
     const [screenState, setScreenState] = React.useState<string>(ScreenStates.lobby);
     const [availableCharacters, setAvailableCharacters] = React.useState<number[]>(defaultAvailableCharacters);
+    const { storage } = React.useContext(FirebaseContext);
 
     const content = {
         finished,
-        setFinished: (val: boolean) => handleSetGameFinished(val, { setFinished }),
+        setFinished: (val: boolean) => handleSetGameFinished(val, chosenGame, storage, roomId, { setFinished }),
         gameStarted,
         setGameStarted,
         sheepGameStarted,

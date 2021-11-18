@@ -1,4 +1,4 @@
-import { GameState } from "../enums";
+import { GameState } from '../enums';
 
 export const GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED = 'gameHasStarted';
 export const GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED = 'gameHasFinished';
@@ -30,7 +30,7 @@ export interface GlobalGameHasFinished {
     data: {
         roomId: string;
         gameState: GameState;
-        playerRanks?: any[];
+        playerRanks: any[];
     };
 }
 export interface GlobalGameHasStopped {
@@ -57,7 +57,7 @@ export interface GlobalPlayerHasReconnected {
 }
 
 export type GlobalEventMessage =
-    GlobalGameHasStarted
+    | GlobalGameHasStarted
     | GlobalGameHasFinished
     | GlobalGameHasStopped
     | GlobalGameHasPaused

@@ -76,15 +76,16 @@ const Windmill: React.FunctionComponent<WindmillProps> = ({ tutorial = false, ha
             if (rounds + 1 === MAX) {
                 if (tutorial) {
                     handleTutorialFinished?.('finished');
-                } else {
-                    controllerSocket.emit({ type: MessageTypesGame1.pushChasers });
-                    history.push(controllerPlayerDeadRoute(roomId));
+                    return;
                 }
+
+                controllerSocket.emit({ type: MessageTypesGame1.pushChasers });
+                history.push(controllerPlayerDeadRoute(roomId));
             }
             setRounds(rounds + 1);
             setDistance(0);
         }
-    });
+    }, [distance, rounds, tutorial, controllerSocket, roomId, handleTutorialFinished]);
 
     return (
         <ObstacleContainer>
