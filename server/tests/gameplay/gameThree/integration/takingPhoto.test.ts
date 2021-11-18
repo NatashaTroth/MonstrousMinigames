@@ -131,6 +131,18 @@ describe('Taking Photo', () => {
         expect(eventData!.photoUrls[0].url).toBe(message.url);
     });
 
+    it('should not emit the Voting event when taking photo countdown has not run out', async () => {
+        let eventCalled = false;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS) {
+                eventCalled = true;
+            }
+        });
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO - 1);
+
+        expect(eventCalled).toBeFalsy();
+    });
+
     it('should emit the Voting event when taking photo countdown runs out', async () => {
         let eventCalled = false;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {

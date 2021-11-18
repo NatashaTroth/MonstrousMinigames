@@ -17,7 +17,7 @@ import StageEventEmitter from './StageEventEmitter';
 export abstract class Stage {
     protected countdown = Countdown.getInstance();
     // protected abstract countdownTime: number;
-    private stageEventEmitter = StageEventEmitter.getInstance();
+    protected stageEventEmitter = StageEventEmitter.getInstance();
 
     abstract handleInput(message: IMessage): void;
 

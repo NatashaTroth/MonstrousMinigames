@@ -79,6 +79,20 @@ describe('Voting stage', () => {
     //     expect(eventCalled).toBeTruthy();
     // });
 
+    it('should not emit the View Results event when voting countdown has not run out', async () => {
+        let eventCalled = false;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS) {
+                eventCalled = true;
+            }
+        });
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE - 1);
+        // StageEventEmitter.getInstance().emit(StageEventEmitter.STAGE_CHANGE_EVENT);
+        // gameThree.receiveInput(message);
+
+        expect(eventCalled).toBeFalsy();
+    });
+
     it('should emit the View Results event when voting countdown runs out', async () => {
         let eventCalled = false;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
@@ -92,6 +106,8 @@ describe('Voting stage', () => {
 
         expect(eventCalled).toBeTruthy();
     });
+
+    it.todo('should update the points');
 
     // it('should allow client to send a vote within the countdown time', async () => {
     //     gameThree['handleInput'](message);
