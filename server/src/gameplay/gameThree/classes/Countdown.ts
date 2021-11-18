@@ -7,17 +7,12 @@ export class Countdown {
         //do nothing
     }
 
-    public static getInstance(newInstance = true): Countdown {
-        // // console.log('**new countdown instance **');
-        // if (!Countdown.instance) {
-        //     Countdown.instance = new Countdown();
-        // } else if (Countdown.instance && newInstance) {
-        //     Countdown.instance = new Countdown();
-        // }
+    public static getInstance(newInstance = false): Countdown {
+        if (!Countdown.instance || newInstance) {
+            Countdown.instance = new Countdown();
+        }
 
-        // return Countdown.instance;
-
-        return new Countdown();
+        return Countdown.instance;
     }
 
     public countdownTimeLeft = 0;

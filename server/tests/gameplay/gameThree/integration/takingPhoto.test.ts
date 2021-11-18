@@ -2,7 +2,6 @@ import 'reflect-metadata';
 
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
-import StageEventEmitter from '../../../../src/gameplay/gameThree/classes/StageEventEmitter';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
 import {
     GameThreeMessageTypes
@@ -64,7 +63,6 @@ describe('Taking Photo', () => {
     afterEach(() => {
         jest.runAllTimers();
         jest.clearAllMocks();
-        StageEventEmitter.getInstance().removeAllInstancesOfListeners();
     });
 
     // it('should allow client to send a photo within the countdown time', async () => {

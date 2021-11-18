@@ -8,16 +8,11 @@ export default class StageEventEmitter extends EventEmitter {
         super();
     }
 
-    public static getInstance(): StageEventEmitter {
-        if (!StageEventEmitter.instance) {
+    public static getInstance(newInstance = false): StageEventEmitter {
+        if (!StageEventEmitter.instance || newInstance) {
             StageEventEmitter.instance = new StageEventEmitter();
         }
 
         return StageEventEmitter.instance;
-    }
-
-    // For testing - TODO change
-    public removeAllInstancesOfListeners(): EventEmitter {
-        return super.removeAllListeners(StageEventEmitter.STAGE_CHANGE_EVENT);
     }
 }

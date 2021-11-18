@@ -20,13 +20,14 @@ export class StageController {
     // private photoTopics: PhotoTopics;
     private presentationStage?: PresentationStage;
     // private static readonly stageEventEmitter = DI.resolve(StageEventEmitter);
-    private stageEventEmitter = StageEventEmitter.getInstance();
+    private stageEventEmitter: StageEventEmitter;
 
     private stage?: Stage;
 
     constructor(private roomId: string, private players: Map<string, GameThreePlayer>, private testNumber = 1) {
         // this.gameThree = gameThree;
 
+        this.stageEventEmitter = StageEventEmitter.getInstance(true);
         // this.photoTopics = new PhotoTopics();
         this.initStageEventEmitter();
 
