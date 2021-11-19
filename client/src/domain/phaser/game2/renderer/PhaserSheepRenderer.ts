@@ -4,7 +4,7 @@ import { depthDictionary } from '../../../../config/depthDictionary';
 import SheepGameScene from '../../../game2/screen/components/SheepGameScene';
 import { CharacterAnimationFrames } from '../../gameInterfaces/Character';
 import { Coordinates } from '../../gameTypes';
-import { SheepState } from '../Sheep';
+import { Sheep, SheepState } from '../Sheep';
 
 /**
  * this is an incomplete PlayerRenderer adapter which contains all the phaser logic. This class might only be tested via
@@ -27,16 +27,11 @@ export class PhaserSheepRenderer {
         this.initiateAnimation('sheepSpritesheet', 'sheep_walkBack', { start: 14, end: 17 });
     }
 
-    renderSheep(coordinates: Coordinates, sheepState: SheepState) {
-        if (!this.sheep) {
-            if (sheepState == SheepState.ALIVE) {
-                this.renderSheepInitially(coordinates);
-            } else if (sheepState == SheepState.DECOY) {
-                this.placeDecoy();
-            }
-        } else if (this.sheep) {
-            this.sheep.x = coordinates.x;
-            this.sheep.y = coordinates.y;
+    renderSheep(sheep: Sheep) {
+        if (sheep.state == SheepState.ALIVE) {
+            this.renderSheepInitially(sheep.coordinates);
+        } else if (sheep.state == SheepState.DECOY) {
+            this.placeDecoy();
         }
     }
 
@@ -70,7 +65,8 @@ export class PhaserSheepRenderer {
     }
 
     private renderSheepInitially(coordinates: Coordinates) {
-        this.sheep = this.scene.physics.add.sprite(coordinates.x, coordinates.y, 'sheepSpritesheet', 11);
+        this.sheep = this.scene.physics.add.sprite(coordinates.x, coordinates.y, 'sheep');
+        this.sheep.setScale(0.05);
         this.sheep.setDepth(depthDictionary.sheep);
         this.sheep.setCollideWorldBounds(true);
     }

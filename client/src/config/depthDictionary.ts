@@ -8,6 +8,7 @@ export const depthDictionary = {
     caveBehind: 10,
     stoneObstacle: 29,
     obstacle: 39,
+    sheep: 39,
     player: 40,
     caveInFront: 45,
     chaser: 50,
@@ -20,5 +21,4 @@ export const depthDictionary = {
     progressBar: 90,
     percentText: 95,
     deadText: 100,
-    sheep: 40,
 };
