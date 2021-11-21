@@ -1,5 +1,5 @@
 import InitialParameters from '../constants/InitialParameters';
-import { UrlPhotographerMapper } from '../interfaces';
+import { PhotoPhotographerMapper } from '../interfaces';
 import { PhotoStage } from './PhotoStage';
 import { PhotoTopics } from './PhotoTopics';
 import { VotingStage } from './VotingStage';
@@ -14,7 +14,7 @@ export class SinglePhotoStage extends PhotoStage {
     }
 
     switchToNextStage() {
-        const photoUrls: UrlPhotographerMapper[] = this.getPhotos().map(photoObject => {
+        const photoUrls: PhotoPhotographerMapper[] = this.getPhotos().map(photoObject => {
             return { photographerId: photoObject.photographerId, url: photoObject.urls[0] };
         });
         return new VotingStage(this.roomId, this.userIds, photoUrls);

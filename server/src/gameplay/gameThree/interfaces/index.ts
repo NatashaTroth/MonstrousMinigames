@@ -11,7 +11,7 @@ import type { PlayerNameId } from './PlayerNameId';
 import type { PlayerState } from './PlayerState';
 import type { PlayerStateForClient } from './PlayerStateForClient';
 import type { PhotosPhotographerMapper } from './PhotosPhotographerMapper';
-import { UrlPhotographerMapper } from './UrlPhotographerMapper';
+import { PhotoPhotographerMapper } from './PhotoPhotographerMapper';
 import { VotesPhotographerMapper } from './VotesPhotographerMapper';
 
 export {
@@ -28,6 +28,6 @@ export {
     PlayerNameId,
     NamespaceAdapter,
     PhotosPhotographerMapper,
-    UrlPhotographerMapper,
+    PhotoPhotographerMapper,
     VotesPhotographerMapper,
 };

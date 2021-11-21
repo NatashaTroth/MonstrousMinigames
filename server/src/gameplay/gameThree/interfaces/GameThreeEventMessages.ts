@@ -1,6 +1,6 @@
 //TODO Events/Messages 1
 
-import { PlayerNameId, UrlPhotographerMapper, VotesPhotographerMapper } from './';
+import { PhotoPhotographerMapper, PlayerNameId, VotesPhotographerMapper } from './';
 import { GameThreePlayerRank } from './GameThreePlayerRank';
 
 export const GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE = 'game3/initialGameState';
@@ -53,7 +53,7 @@ export interface TakePhotoCountdownOver {
 export interface VoteForPhotos {
     type: typeof GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS;
     roomId: string;
-    photoUrls: UrlPhotographerMapper[];
+    photoUrls: PhotoPhotographerMapper[];
     countdownTime: number;
 }
 

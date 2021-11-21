@@ -1,34 +1,45 @@
-import { shuffleArray } from '../../../helpers/shuffleArray';
 import { IMessage } from '../../../interfaces/messages';
+import InitialParameters from '../constants/InitialParameters';
+import GameThreeEventEmitter from '../GameThreeEventEmitter';
+import { PhotosPhotographerMapper } from '../interfaces';
+import { PresentationController } from './PresentationController';
+import { Stage } from './Stage';
+import StageEventEmitter from './StageEventEmitter';
 
-export class PresentationStage {
-    private playerPresentOrder: string[] = [];
+export class PresentationStage extends Stage {
+    private presentationController: PresentationController;
 
-    constructor(playerIds: string[]) {
-        this.playerPresentOrder = shuffleArray(playerIds);
+    constructor(roomId: string, userIds: string[], photoUrls: PhotosPhotographerMapper[]) {
+        super(roomId, userIds, InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
 
-        //TODO
-        // this.playerPresentOrder = shuffleArray(
-        //     // players.filter(player => player.finalRoundInfo.received).map(player => player.id)
-        // );
+        this.presentationController = new PresentationController(userIds, photoUrls);
+        this.handleNewPresentationRound();
     }
 
-    entry() {
-        //TODO
-    }
-
-    //TODO change not undefined
     handleInput(message: IMessage) {
-        //TODO change stage
+        return;
     }
 
-    nextPresenter() {
-        const presenter = this.playerPresentOrder.shift();
-        if (presenter) return presenter!;
-        throw new Error('No presenter left'); //TODO handle
+    switchToNextStage() {
+        this.stageEventEmitter.emit(StageEventEmitter.NEW_ROUND_EVENT);
+        return this; //TODO change
     }
 
-    isAnotherPresenterAvailable() {
-        return this.playerPresentOrder.length > 0;
+    private handleNewPresentationRound() {
+        if (this.presentationController.isAnotherPresenterAvailable()) {
+            const nextPresenterId = this.presentationController.nextPresenter();
+            const photoUrls = this.presentationController.getPhotoUrlsFromUser(nextPresenterId);
+
+            GameThreeEventEmitter.emitPresentFinalPhotosCountdown(
+                this.roomId,
+                InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS,
+                nextPresenterId,
+                'this.players.get(nextPresenterId)!.name', //TODO
+                photoUrls
+            );
+            this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
+        } else {
+            // this.switchToFinalVotingStage();
+        }
     }
 }

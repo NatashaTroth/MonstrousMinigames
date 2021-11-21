@@ -56,4 +56,8 @@ export abstract class Stage {
             'Emitter: This StageLL: ' + this.constructor.name
         );
     }
+
+    hasNextStage(): boolean {
+        return true;
+    }
 }

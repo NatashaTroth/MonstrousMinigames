@@ -2,7 +2,7 @@ import { IMessage } from '../../../interfaces/messages';
 import InitialParameters from '../constants/InitialParameters';
 import { GameThreeMessageTypes } from '../enums/GameThreeMessageTypes';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
-import { IMessagePhotoVote, UrlPhotographerMapper } from '../interfaces';
+import { IMessagePhotoVote, PhotoPhotographerMapper } from '../interfaces';
 import { Stage } from './Stage';
 import { ViewingResultsStage } from './ViewingResultsStage';
 import { Votes } from './Votes';
@@ -11,7 +11,7 @@ export class VotingStage extends Stage {
     //TODO make URL type
     private votes: Votes;
 
-    constructor(roomId: string, userIds: string[], photoUrls: UrlPhotographerMapper[]) {
+    constructor(roomId: string, userIds: string[], photoUrls: PhotoPhotographerMapper[]) {
         super(roomId, userIds, InitialParameters.COUNTDOWN_TIME_VOTE);
         this.votes = new Votes();
         GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
@@ -30,7 +30,7 @@ export class VotingStage extends Stage {
         // this.sendPhotoVotingResultsToScreen(this.roomId, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
         // this.updatePlayerPointsFromVotes();
 
-        // const photoUrls: UrlPhotographerMapper[] = this.getPhotos() as UrlPhotographerMapper[];
+        // const photoUrls: PhotoPhotographerMapper[] = this.getPhotos() as PhotoPhotographerMapper[];
         // GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
 
         return new ViewingResultsStage(this.roomId, this.userIds, this.votes.getAllVotes()); //TODO

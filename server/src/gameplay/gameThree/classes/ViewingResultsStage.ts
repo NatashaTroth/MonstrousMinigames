@@ -3,7 +3,6 @@ import InitialParameters from '../constants/InitialParameters';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
 import { VotesPhotographerMapper } from '../interfaces';
 import { Stage } from './Stage';
-import StageEventEmitter from './StageEventEmitter';
 
 export class ViewingResultsStage extends Stage {
     constructor(roomId: string, userIds: string[], votingResults: VotesPhotographerMapper[]) {
@@ -19,8 +18,17 @@ export class ViewingResultsStage extends Stage {
         return;
     }
 
-    switchToNextStage() {
-        this.stageEventEmitter.emit(StageEventEmitter.NEW_ROUND_EVENT);
-        return this; //TODO change
+    hasNextStage(): boolean {
+        return false;
     }
+
+    switchToNextStage() {
+        //to satisfy compiler
+        return this;
+    }
+
+    // switchToNextStage() {
+    //     this.stageEventEmitter.emit(StageEventEmitter.NEW_ROUND_EVENT);
+    //     return null;
+    // }
 }

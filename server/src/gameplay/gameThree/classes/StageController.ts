@@ -11,7 +11,7 @@ import StageEventEmitter from './StageEventEmitter';
 export class StageController {
     private roundIdx = -1;
     private stageEventEmitter: StageEventEmitter;
-    private stage?: Stage;
+    private stage?: Stage | null;
 
     constructor(private roomId: string, private players: Map<string, GameThreePlayer>, private testNumber = 1) {
         this.stageEventEmitter = StageEventEmitter.getInstance(true);
@@ -21,11 +21,12 @@ export class StageController {
 
     initStageEventEmitter() {
         this.stageEventEmitter.on(StageEventEmitter.STAGE_CHANGE_EVENT, message => {
-            this.stage = this.stage?.switchToNextStage();
+            // console.log('new stage event');
+            this.stage?.hasNextStage() ? (this.stage = this.stage?.switchToNextStage()) : this.handleNewRound();
         });
-        this.stageEventEmitter.on(StageEventEmitter.NEW_ROUND_EVENT, message => {
-            this.handleNewRound();
-        });
+        // this.stageEventEmitter.on(StageEventEmitter.NEW_ROUND_EVENT, message => {
+        //     this.handleNewRound();
+        // });
     }
 
     update(timeElapsedSinceLastFrame: number) {
@@ -40,6 +41,9 @@ export class StageController {
             this.stage = new SinglePhotoStage(this.roomId, userIds);
         } else {
             this.stage = new MultiplePhotosStage(this.roomId, userIds);
+            // console.log('*******');
+            // console.log(this.stage.constructor.name);
+
             //TODO call remove all stage event listeners
             // this.switchToFinalTakingPhotosStage();
         }
@@ -56,11 +60,6 @@ export class StageController {
     //         case GameThreeGameState.FinalVoting:
     //             this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VOTE);
     //             this.votingStage = new VotingStage();
-    //             break;
-    //         case GameThreeGameState.TakingFinalPhotos:
-    //             this.photoStage = new MultiplePhotosStage(InitialParameters.NUMBER_FINAL_PHOTOS);
-    //             this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
-    //             //TODO viewing stage?
     //             break;
     //         case GameThreeGameState.PresentingFinalPhotos:
     //             this.presentationStage = new PresentationStage(

@@ -107,12 +107,12 @@ storage hinten - nach spiel alles löschen
 ```typescript
 {
     roomId: string;
-    photoUrls: UrlPhotographerMapper[];
+    photoUrls: PhotoPhotographerMapper[];
     countdownTime: number;
 }
 
-//UrlPhotographerMapper:
-export interface UrlPhotographerMapper {
+//PhotoPhotographerMapper:
+export interface PhotoPhotographerMapper {
     photographerId: string;
     url: string;
 }

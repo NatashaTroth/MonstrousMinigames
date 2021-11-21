@@ -10,7 +10,7 @@ import {
 } from '../interfaces/GlobalEventMessages';
 import { GameThreeEventMessageEmitter } from './GameThreeEventMessageEmitter';
 import {
-    PlayerNameId, PlayerRank, UrlPhotographerMapper, VotesPhotographerMapper
+    PhotoPhotographerMapper, PlayerNameId, PlayerRank, VotesPhotographerMapper
 } from './interfaces';
 import {
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
@@ -117,7 +117,7 @@ export default class GameThreeEventEmitter {
         });
     }
 
-    public static emitVoteForPhotos(roomId: string, photoUrls: UrlPhotographerMapper[], countdownTime: number) {
+    public static emitVoteForPhotos(roomId: string, photoUrls: PhotoPhotographerMapper[], countdownTime: number) {
         this.GameThreeEventMessageEmitter.emit({
             type: GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS,
             roomId,

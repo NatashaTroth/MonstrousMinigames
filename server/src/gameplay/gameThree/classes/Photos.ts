@@ -34,7 +34,10 @@ export class Photos {
     }
 
     havePhotosFromAllUsers(photographerIds: string[]) {
+        // console.log('-----');
         return photographerIds.every(photographerId => {
+            // console.log(this.photos.get(photographerId)!.length);
+            // console.log(this.maxNumberPhotos);
             return this.photos.has(photographerId) && this.photos.get(photographerId)!.length === this.maxNumberPhotos;
         });
     }
