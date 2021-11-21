@@ -1,22 +1,25 @@
-import React from 'react';
-import { CountdownCircleTimer } from 'react-countdown-circle-timer';
-import styled from 'styled-components';
+import React from "react";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import styled from "styled-components";
 
-import theme from '../../styles/theme';
+import theme from "../../styles/theme";
 
 interface CountdownProps {
     time: number;
+    keyValue?: string | number;
     onComplete?: () => void;
     size?: 'small' | 'default';
 }
 const Countdown: React.FunctionComponent<CountdownProps> = ({
     time,
+    keyValue,
     onComplete = () => {
         // do nothing
     },
     size = 'default',
 }) => (
     <CountdownCircleTimer
+        key={keyValue || time}
         size={size === 'small' ? 100 : 180}
         strokeWidth={size === 'small' ? 8 : 12}
         isPlaying
