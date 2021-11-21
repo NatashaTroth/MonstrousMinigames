@@ -14,7 +14,7 @@ const Photo: React.FunctionComponent<PhotoProps> = ({ url, id, votingResult }) =
         <Frame>
             <StyledImg src={url} />
         </Frame>
-        {votingResult && (
+        {votingResult !== undefined && (
             <div>
                 <StyledChip label={`+ ${votingResult}`} />
             </div>
