@@ -1,12 +1,10 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { defaultAvailableCharacters } from '../config/characters';
-import { GameNames } from '../config/games';
-import { ScreenStates } from '../config/screenStates';
-import { handleSetGameFinished } from '../domain/commonGameState/controller/handleSetGameFinished';
-import { User } from '../domain/typeGuards/connectedUsers';
-import { FirebaseContext } from './FirebaseContextProvider';
-import { PlayerRank } from './ScreenSocketContextProvider';
+import { defaultAvailableCharacters } from "../config/characters";
+import { GameNames } from "../config/games";
+import { ScreenStates } from "../config/screenStates";
+import { User } from "../domain/typeGuards/connectedUsers";
+import { PlayerRank } from "./ScreenSocketContextProvider";
 
 export const defaultValue = {
     finished: false,
@@ -113,17 +111,21 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [showInstructions, setShowInstructions] = React.useState<boolean>(true);
     const [countdownTime, setCountdownTime] = React.useState<number>(0);
     const [hasPaused, setHasPaused] = React.useState<boolean>(false);
-    // TODO use data from socket
     const [chosenGame, setChosenGame] = React.useState<undefined | GameNames>();
     const [tutorial, setTutorial] = React.useState(true);
     const [screenAdmin, setScreenAdmin] = React.useState<boolean>(false);
     const [screenState, setScreenState] = React.useState<string>(ScreenStates.lobby);
     const [availableCharacters, setAvailableCharacters] = React.useState<number[]>(defaultAvailableCharacters);
-    const { storage } = React.useContext(FirebaseContext);
 
     const content = {
         finished,
-        setFinished: (val: boolean) => handleSetGameFinished(val, chosenGame, storage, roomId, { setFinished }),
+        setFinished: (val: boolean) => {
+            document.body.style.overflow = 'visible';
+            document.body.style.position = 'static';
+            document.body.style.userSelect = 'auto';
+
+            setFinished(val);
+        },
         gameStarted,
         setGameStarted,
         sheepGameStarted,

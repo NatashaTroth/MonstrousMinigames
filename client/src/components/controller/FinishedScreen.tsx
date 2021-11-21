@@ -1,10 +1,10 @@
-import * as React from 'react';
-import styled from 'styled-components';
+import * as React from "react";
+import styled from "styled-components";
 
-import { Game1Context } from '../../contexts/game1/Game1ContextProvider';
-import { PlayerContext } from '../../contexts/PlayerContextProvider';
-import { Instruction, InstructionContainer, InstructionText } from '../common/Instruction.sc';
-import { StyledFullScreenContainer } from './FullScreenContainer.sc';
+import { Game1Context } from "../../contexts/game1/Game1ContextProvider";
+import { PlayerContext } from "../../contexts/PlayerContextProvider";
+import { Instruction, InstructionContainer, InstructionText } from "../common/Instruction.sc";
+import { StyledFullScreenContainer } from "./FullScreenContainer.sc";
 
 export const FinishedScreen: React.FunctionComponent = () => {
     const { playerRank } = React.useContext(PlayerContext);
@@ -12,19 +12,27 @@ export const FinishedScreen: React.FunctionComponent = () => {
 
     return (
         <StyledFullScreenContainer>
-            <FinishedScreenText variant="light">
-                {!dead && (
+            <FinishedScreenContainer>
+                <FinishedScreenText variant="light">
+                    {!dead && (
+                        <Instruction>
+                            <InstructionText>#{playerRank}</InstructionText>
+                        </Instruction>
+                    )}
                     <Instruction>
-                        <InstructionText>#{playerRank}</InstructionText>
+                        <InstructionText>Finished!</InstructionText>
                     </Instruction>
-                )}
-                <Instruction>
-                    <InstructionText>Finished!</InstructionText>
-                </Instruction>
-            </FinishedScreenText>
+                </FinishedScreenText>
+            </FinishedScreenContainer>
         </StyledFullScreenContainer>
     );
 };
+
+export const FinishedScreenContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
 
 const FinishedScreenText = styled(InstructionContainer)`
     width: 100%;
