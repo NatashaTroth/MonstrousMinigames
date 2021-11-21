@@ -1,12 +1,17 @@
 import { shuffleArray } from '../../../helpers/shuffleArray';
 import { IMessage } from '../../../interfaces/messages';
-import { PhotosPhotographerMapper } from '../interfaces';
+import InitialParameters from '../constants/InitialParameters';
+import { PlayerNameId } from '../interfaces';
 
 export class PresentationController {
-    private playerPresentOrder: string[] = [];
+    private playerPresentOrder: PlayerNameId[] = [];
+    private photoUrlsShuffled: string[];
 
-    constructor(playerIds: string[], private photoUrls: PhotosPhotographerMapper[]) {
-        this.playerPresentOrder = shuffleArray(playerIds);
+    constructor(players: PlayerNameId[], private photoUrls: string[]) {
+        console.log('**construnctor');
+        this.playerPresentOrder = shuffleArray(players);
+        this.photoUrlsShuffled = shuffleArray(photoUrls);
+        //TODO what if photoUrls = empty????  - cannot let it get to here
 
         //TODO
         // this.playerPresentOrder = shuffleArray(
@@ -23,9 +28,10 @@ export class PresentationController {
         //TODO change stage
     }
 
-    nextPresenter() {
+    nextPresenter(): PlayerNameId {
+        console.log(this.playerPresentOrder);
         const presenter = this.playerPresentOrder.shift();
-        if (presenter) return presenter!;
+        if (presenter) return presenter;
         throw new Error('No presenter left'); //TODO handle
     }
 
@@ -33,15 +39,25 @@ export class PresentationController {
         return this.playerPresentOrder.length > 0;
     }
 
-    getPhotoUrlsFromUser(photographerId: string): string[] {
-        const photographerPhotos = this.photoUrls.filter(
-            photographer => photographer.photographerId === photographerId
-        );
-        // if(photographerPhotos.length === 0) return []
+    getNextPhotoUrls(): string[] {
+        const urls: string[] = [];
+        let i = 0;
+        while (i < InitialParameters.NUMBER_FINAL_PHOTOS) {
+            if (this.photoUrlsShuffled.length === 0) this.photoUrlsShuffled = shuffleArray(this.photoUrls);
+            const url = this.photoUrlsShuffled.shift();
+            if (url) urls.push(url);
+            else return []; //because this.photoUrls must be empty
 
-        // photographerPhotos!
-
-        return photographerPhotos && photographerPhotos.length > 0 ? [...photographerPhotos[0].urls!] : [];
+            i++;
+        }
+        return urls;
+        // return photographerPhotos && photographerPhotos.length > 0 ? [...photographerPhotos[0].urls!] : [];
         // return this.photoUrls.has(photographerId) ? [...this.photos.get(photographerId)!] : [];
     }
+    // getPhotoUrlsFromUser(photographerId: string): string[] {
+    //     const photographerPhotos = this.photoUrls.filter(
+    //         photographer => photographer.photographerId === photographerId
+    //     );
+    //     return photographerPhotos && photographerPhotos.length > 0 ? [...photographerPhotos[0].urls!] : [];
+    // }
 }

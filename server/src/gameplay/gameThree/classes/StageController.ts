@@ -36,11 +36,13 @@ export class StageController {
     handleNewRound() {
         this.roundIdx++;
         GameThreeEventEmitter.emitNewRound(this.roomId, this.roundIdx);
-        const userIds = Array.from(this.players.keys());
+        const players = Array.from(this.players.values()).map(player => {
+            return { id: player.id, name: player.name };
+        });
         if (!this.isFinalRound()) {
-            this.stage = new SinglePhotoStage(this.roomId, userIds);
+            this.stage = new SinglePhotoStage(this.roomId, players);
         } else {
-            this.stage = new MultiplePhotosStage(this.roomId, userIds);
+            this.stage = new MultiplePhotosStage(this.roomId, players);
             // console.log('*******');
             // console.log(this.stage.constructor.name);
 

@@ -1,12 +1,12 @@
 import { IMessage } from '../../../interfaces/messages';
 import InitialParameters from '../constants/InitialParameters';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
-import { VotesPhotographerMapper } from '../interfaces';
+import { PlayerNameId, VotesPhotographerMapper } from '../interfaces';
 import { Stage } from './Stage';
 
 export class ViewingResultsStage extends Stage {
-    constructor(roomId: string, userIds: string[], votingResults: VotesPhotographerMapper[]) {
-        super(roomId, userIds, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+    constructor(roomId: string, players: PlayerNameId[], votingResults: VotesPhotographerMapper[]) {
+        super(roomId, players, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
         GameThreeEventEmitter.emitPhotoVotingResults(
             roomId,
             votingResults,
@@ -25,6 +25,10 @@ export class ViewingResultsStage extends Stage {
     switchToNextStage() {
         //to satisfy compiler
         return this;
+    }
+
+    protected countdownOver() {
+        this.emitStageChangeEvent();
     }
 
     // switchToNextStage() {

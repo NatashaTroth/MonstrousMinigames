@@ -1,39 +1,42 @@
 import { IMessage } from '../../../interfaces/messages';
 import InitialParameters from '../constants/InitialParameters';
 import { GameThreeMessageTypes } from '../enums/GameThreeMessageTypes';
-import GameThreeEventEmitter from '../GameThreeEventEmitter';
-import { IMessagePhotoVote, PhotoPhotographerMapper } from '../interfaces';
+import { IMessagePhotoVote, PhotoPhotographerMapper, PlayerNameId } from '../interfaces';
 import { Stage } from './Stage';
-import { ViewingResultsStage } from './ViewingResultsStage';
 import { Votes } from './Votes';
 
-export class VotingStage extends Stage {
+export abstract class VotingStage extends Stage {
     //TODO make URL type
-    private votes: Votes;
+    protected votes: Votes;
 
-    constructor(roomId: string, userIds: string[], photoUrls: PhotoPhotographerMapper[]) {
-        super(roomId, userIds, InitialParameters.COUNTDOWN_TIME_VOTE);
+    constructor(roomId: string, players: PlayerNameId[], photoUrls: PhotoPhotographerMapper[]) {
+        super(roomId, players, InitialParameters.COUNTDOWN_TIME_VOTE);
         this.votes = new Votes();
-        GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
     }
 
     handleInput(message: IMessage) {
         if (message.type !== GameThreeMessageTypes.PHOTO_VOTE) return;
         const data = message as IMessagePhotoVote;
         this.votes.addVote(data.voterId, data.photographerId);
-        if (this.votes.haveVotesFromAllUsers(this.userIds)) {
+        if (this.votes.haveVotesFromAllUsers(this.players)) {
             this.emitStageChangeEvent();
         }
     }
 
-    switchToNextStage() {
-        // this.sendPhotoVotingResultsToScreen(this.roomId, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
-        // this.updatePlayerPointsFromVotes();
+    abstract switchToNextStage(): Stage;
 
-        // const photoUrls: PhotoPhotographerMapper[] = this.getPhotos() as PhotoPhotographerMapper[];
-        // GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
+    // switchToNextStage() {
+    //     // this.sendPhotoVotingResultsToScreen(this.roomId, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+    //     // this.updatePlayerPointsFromVotes();
 
-        return new ViewingResultsStage(this.roomId, this.userIds, this.votes.getAllVotes()); //TODO
+    //     // const photoUrls: PhotoPhotographerMapper[] = this.getPhotos() as PhotoPhotographerMapper[];
+    //     // GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
+
+    //     return new ViewingResultsStage(this.roomId, this.players, this.votes.getAllVotes()); //TODO
+    // }
+
+    protected countdownOver() {
+        this.emitStageChangeEvent();
     }
 
     // haveVotesFromAllUsers(voterIds: string[]) {

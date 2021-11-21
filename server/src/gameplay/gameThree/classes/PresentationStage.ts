@@ -1,44 +1,54 @@
 import { IMessage } from '../../../interfaces/messages';
 import InitialParameters from '../constants/InitialParameters';
+import { GameThreeMessageTypes } from '../enums/GameThreeMessageTypes';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
-import { PhotosPhotographerMapper } from '../interfaces';
+import { PlayerNameId } from '../interfaces';
+import { MultiplePhotosVotingStage } from './MultiplePhotoVotingStage';
 import { PresentationController } from './PresentationController';
 import { Stage } from './Stage';
-import StageEventEmitter from './StageEventEmitter';
 
 export class PresentationStage extends Stage {
     private presentationController: PresentationController;
 
-    constructor(roomId: string, userIds: string[], photoUrls: PhotosPhotographerMapper[]) {
-        super(roomId, userIds, InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
+    constructor(roomId: string, players: PlayerNameId[], private photoUrls: string[]) {
+        super(roomId, players, InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
+        console.log('????????');
 
-        this.presentationController = new PresentationController(userIds, photoUrls);
+        this.presentationController = new PresentationController(players, photoUrls);
         this.handleNewPresentationRound();
     }
 
     handleInput(message: IMessage) {
-        return;
+        if (message.type !== GameThreeMessageTypes.FINISHED_PRESENTING) return;
+        this.handleNewPresentationRound();
     }
 
     switchToNextStage() {
-        this.stageEventEmitter.emit(StageEventEmitter.NEW_ROUND_EVENT);
-        return this; //TODO change
+        console.log('Switch new stage');
+        return new MultiplePhotosVotingStage(this.roomId, this.players, []); //TODO change make voting stage parent..
+    }
+
+    protected countdownOver() {
+        this.handleNewPresentationRound();
     }
 
     private handleNewPresentationRound() {
+        console.log('NEW presentation');
         if (this.presentationController.isAnotherPresenterAvailable()) {
-            const nextPresenterId = this.presentationController.nextPresenter();
-            const photoUrls = this.presentationController.getPhotoUrlsFromUser(nextPresenterId);
+            console.log('---');
+            const nextPresenter = this.presentationController.nextPresenter();
+            const photoUrls = this.presentationController.getNextPhotoUrls();
+            // const photoUrls = this.presentationController.getPhotoUrlsFromUser(nextPresenterId);
 
             GameThreeEventEmitter.emitPresentFinalPhotosCountdown(
                 this.roomId,
                 InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS,
-                nextPresenterId,
-                'this.players.get(nextPresenterId)!.name', //TODO
+                nextPresenter,
                 photoUrls
             );
             this.countdown.initiateCountdown(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
         } else {
+            this.emitStageChangeEvent();
             // this.switchToFinalVotingStage();
         }
     }

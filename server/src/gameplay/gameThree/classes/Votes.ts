@@ -1,4 +1,4 @@
-import { VotesPhotographerMapper } from '../interfaces';
+import { PlayerNameId, VotesPhotographerMapper } from '../interfaces';
 
 export class Votes {
     //TODO make URL type
@@ -25,8 +25,8 @@ export class Votes {
         }
     }
 
-    haveVotesFromAllUsers(voterIds: string[]) {
-        return voterIds.every(voterId => this.voterIds.includes(voterId));
+    haveVotesFromAllUsers(voterIds: PlayerNameId[]) {
+        return voterIds.every(voter => this.voterIds.includes(voter.id));
     }
 
     getNumberVotes(photographerId: string) {

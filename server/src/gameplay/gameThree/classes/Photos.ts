@@ -17,6 +17,12 @@ export class Photos {
         return photosArray;
     }
 
+    getPhotosUrls(): string[] {
+        const urlsArray: string[] = [];
+        this.photos.forEach((value, key) => urlsArray.push(...value));
+        return urlsArray;
+    }
+
     addPhoto(photographerId: string, url: string) {
         this.validateUrl(url, photographerId);
 

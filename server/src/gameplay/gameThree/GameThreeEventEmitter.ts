@@ -147,16 +147,15 @@ export default class GameThreeEventEmitter {
     public static emitPresentFinalPhotosCountdown(
         roomId: string,
         countdownTime: number,
-        photographerId: string,
-        name: string,
+        nextPresenter: PlayerNameId,
         photoUrls: string[]
     ) {
         this.GameThreeEventMessageEmitter.emit({
             type: GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
             roomId,
             countdownTime,
-            photographerId,
-            name,
+            photographerId: nextPresenter.id,
+            name: nextPresenter.name,
             photoUrls,
         });
     }

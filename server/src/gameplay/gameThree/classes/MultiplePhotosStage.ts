@@ -1,17 +1,17 @@
 import InitialParameters from '../constants/InitialParameters';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
-import { PhotosPhotographerMapper } from '../interfaces';
+import { PlayerNameId } from '../interfaces';
 import { PhotoStage } from './PhotoStage';
 import { PresentationStage } from './PresentationStage';
 
 export class MultiplePhotosStage extends PhotoStage {
-    constructor(roomId: string, userIds: string[]) {
-        super(
+    constructor(roomId: string, players: PlayerNameId[]) {
+        super({
             roomId,
-            userIds,
-            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS,
-            InitialParameters.NUMBER_FINAL_PHOTOS
-        );
+            players: players,
+            countdownTime: InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS,
+            maxNumberPhotos: InitialParameters.NUMBER_FINAL_PHOTOS,
+        });
         GameThreeEventEmitter.emitTakeFinalPhotosCountdown(
             roomId,
             InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS
@@ -19,10 +19,11 @@ export class MultiplePhotosStage extends PhotoStage {
     }
 
     switchToNextStage() {
-        const photoUrls: PhotosPhotographerMapper[] = this.getPhotos().map(photoObject => {
-            return { photographerId: photoObject.photographerId, urls: photoObject.urls };
-        });
-        return new PresentationStage(this.roomId, this.userIds, photoUrls);
+        // const photoUrls: PhotosPhotographerMapper[] = this.getPhotos().map(photoObject => {
+        //     return { photographerId: photoObject.photographerId, urls: photoObject.urls };
+        // });
+        const photoUrls: string[] = this.getPhotosUrls();
+        return new PresentationStage(this.roomId, this.players, photoUrls);
     }
 
     //TODO

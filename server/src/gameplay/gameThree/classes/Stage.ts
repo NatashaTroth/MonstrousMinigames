@@ -1,6 +1,7 @@
 // import validator from 'validator';
 
 import { IMessage } from '../../../interfaces/messages';
+import { PlayerNameId } from '../interfaces';
 import { Countdown } from './Countdown';
 import StageEventEmitter from './StageEventEmitter';
 
@@ -21,7 +22,7 @@ export abstract class Stage {
 
     abstract handleInput(message: IMessage): void;
 
-    constructor(protected roomId: string, protected userIds: string[] = [], protected countdownTime: number) {
+    constructor(protected roomId: string, protected players: PlayerNameId[] = [], protected countdownTime: number) {
         // console.log('--- new stage --- ', this.constructor.name);
         this.initiateCountdown();
     }
@@ -45,9 +46,12 @@ export abstract class Stage {
             //TODO
             // console.log('countdown over=========');
             // console.log(this.constructor.name);
-            this.emitStageChangeEvent();
+            // this.emitStageChangeEvent();
+            this.countdownOver();
         }
     }
+
+    protected abstract countdownOver(): void;
 
     emitStageChangeEvent() {
         this.countdown.resetCountdown();
