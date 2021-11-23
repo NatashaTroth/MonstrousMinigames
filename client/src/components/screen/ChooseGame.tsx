@@ -54,14 +54,22 @@ const ChooseGame: React.FunctionComponent = () => {
             screenSocket?.emit({
                 type: MessageTypes.screenState,
                 state: ScreenStates.chooseGame,
-                game: selectedGame,
+                game: selectedGame.id,
             });
         }
     }, [selectedGame]);
 
     React.useEffect(() => {
-        if (!screenAdmin && screenState !== ScreenStates.chooseGame) {
+        if (!screenAdmin && !screenState.startsWith(ScreenStates.chooseGame)) {
             history.push(`${Routes.screen}/${roomId}/${screenState}`);
+        } else if (!screenAdmin && screenState.startsWith(ScreenStates.chooseGame)) {
+            const gameId = screenState.replace(`${ScreenStates.chooseGame}/`, '');
+            const preselectedGame = games.filter(game => {
+                return game.id === gameId;
+            })[0];
+            if (preselectedGame) {
+                setSelectedGame(preselectedGame);
+            }
         }
     }, [screenState]);
 

@@ -177,14 +177,13 @@ example:
 ### screenState
 
 -   sends the current state of the admin screen
-  
 example:
 
 ```json
 {
     "type": "screenState",
     "state": "choose-game",
-    .
+    // "game": "game2"
     .
     .
 }
