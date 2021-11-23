@@ -31,7 +31,7 @@ export class Player {
         this.setPlayer();
     }
 
-    moveForward(newXPosition: number) {
+    moveTo(newXPosition: number, newYPosition: number) {
         //TODO
 
         if (newXPosition == this.coordinates.x && this.playerRunning) {
@@ -43,7 +43,11 @@ export class Player {
         }
 
         this.coordinates.x = newXPosition;
-        this.renderer.movePlayerForward(this.gameToScreenMapper.mapGameMeasurementToScreen(newXPosition));
+        this.coordinates.y = newYPosition;
+        this.renderer.movePlayerTo(
+            this.gameToScreenMapper.mapGameMeasurementToScreen(newXPosition),
+            this.gameToScreenMapper.mapGameMeasurementToScreen(newYPosition)
+        );
     }
 
     private setPlayer() {

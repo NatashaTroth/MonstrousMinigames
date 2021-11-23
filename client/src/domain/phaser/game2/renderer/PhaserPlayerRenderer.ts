@@ -41,9 +41,10 @@ export class PhaserPlayerRenderer {
         this.player?.destroy();
     }
 
-    movePlayerForward(newXPosition: number) {
+    movePlayerTo(newXPosition: number, newYPosition: number) {
         if (this.player) {
             this.player.x = newXPosition;
+            this.player.y = newYPosition;
         }
     }
 
@@ -55,7 +56,7 @@ export class PhaserPlayerRenderer {
 
     private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
         this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
-        this.player.setScale(0.2);
+        this.player.setScale(0.1);
         this.player.setDepth(depthDictionary.player);
         this.player.setCollideWorldBounds(true);
     }

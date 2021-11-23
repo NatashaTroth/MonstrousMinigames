@@ -252,7 +252,14 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     updateGameState(gameStateData: GameData) {
-        //TODO
+        for (let i = 0; i < this.players.length; i++) {
+            if (gameStateData.playersState[i]) {
+                this.players[i].moveTo(
+                    gameStateData.playersState[i].positionX,
+                    gameStateData.playersState[i].positionY
+                );
+            }
+        }
     }
 
     private createPlayer(index: number, gameStateData: GameData) {
