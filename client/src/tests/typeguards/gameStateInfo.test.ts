@@ -2,7 +2,7 @@ import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../domain/typeG
 import { GameState, MessageTypesGame1 } from '../../utils/constants';
 
 describe('game state info TypeGuard', () => {
-    it('when type is paused, it should return true', () => {
+    it('when type is gameState, it should return true', () => {
         const data: GameStateInfoMessage = {
             type: MessageTypesGame1.gameState,
             data: {
@@ -14,8 +14,6 @@ describe('game state info TypeGuard', () => {
                 numberOfObstacles: 4,
                 cameraPositionX: 0,
             },
-
-            // },
         };
 
         expect(gameStateInfoTypeGuard(data)).toEqual(true);

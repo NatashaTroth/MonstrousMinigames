@@ -45,9 +45,10 @@ const ChooseCharacter: React.FunctionComponent = () => {
         if (!isMoving) {
             if (actualCharacter === characters.length - 1) {
                 setActualCharacter(0);
-            } else {
-                setActualCharacter(actualCharacter + 1);
+                return;
             }
+
+            setActualCharacter(actualCharacter + 1);
         }
     }
 
@@ -55,9 +56,10 @@ const ChooseCharacter: React.FunctionComponent = () => {
         if (!isMoving) {
             if (actualCharacter === 0) {
                 setActualCharacter(characters.length - 1);
-            } else {
-                setActualCharacter(actualCharacter - 1);
+                return;
             }
+
+            setActualCharacter(actualCharacter - 1);
         }
     }
 
@@ -84,7 +86,6 @@ const ChooseCharacter: React.FunctionComponent = () => {
             <Carousel
                 afterChange={(previousSlide, { currentSlide }) => {
                     setIsMoving(false);
-                    //todo handle swiping
                 }}
                 beforeChange={() => setIsMoving(true)}
                 {...carouselOptions}
@@ -138,9 +139,10 @@ export const chooseCharacterClick = (props: HandleChooseCharacterClickProps) => 
 
     if (searchParams.get('back')) {
         history.goBack();
-    } else {
-        history.push(controllerLobbyRoute(roomId));
+        return;
     }
+
+    history.push(controllerLobbyRoute(roomId));
 };
 
 interface CustomArrow {

@@ -38,7 +38,7 @@ const PausedDialog: React.FunctionComponent = ({ children }) => {
 
 export default PausedDialog;
 
-export const StyledDialog = styled(Dialog)`
+const StyledDialog = styled(Dialog)`
     && {
         display: flex;
         justify-content: center;

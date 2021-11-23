@@ -8,6 +8,7 @@ import { GameData } from '../../../phaser/game2/gameInterfaces/GameData';
 import { GameToScreenMapper } from '../../../phaser/game2/GameToScreenMapper';
 import { initialGameInput } from '../../../phaser/game2/initialGameInput';
 import { Player } from '../../../phaser/game2/Player';
+import { Sheep } from '../../../phaser/game2/Sheep';
 import { GameAudio } from '../../../phaser/GameAudio';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import { GameEventTypes } from '../../../phaser/GameEventTypes';
@@ -43,6 +44,7 @@ class SheepGameScene extends Phaser.Scene {
     posX: number;
     posY: number;
     players: Array<Player>;
+    sheep: Array<Sheep>;
     gameStarted: boolean;
     paused: boolean;
     gameRenderer?: PhaserGameRenderer;
@@ -62,6 +64,7 @@ class SheepGameScene extends Phaser.Scene {
         this.posX = 0;
         this.posY = 0; //TODO get from backend
         this.players = [];
+        this.sheep = [];
         this.gameStarted = false;
         this.paused = false;
         this.gameEventEmitter = GameEventEmitter.getInstance();
@@ -130,8 +133,8 @@ class SheepGameScene extends Phaser.Scene {
     create() {
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
-        // this.initSockets();
-        // this.initiateEventEmitters();
+        this.initSockets();
+        this.initiateEventEmitters();
 
         if (localDevelopment && designDevelopment) {
             this.initiateGame(initialGameInput);
@@ -146,9 +149,11 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     sendStartGame() {
+        // eslint-disable-next-line no-console
+        console.log('sendStartGame');
         //TODO!!!! - do not send when game is already started? - or is it just ignored - appears to work - maybe check if no game state updates?
         this.socket?.emit({
-            type: MessageTypesGame2.startSheepGame,
+            type: MessageTypes.startGame,
             roomId: this.roomId,
             // userId: sessionStorage.getItem('userId'), //TODO
         });
@@ -172,7 +177,8 @@ class SheepGameScene extends Phaser.Scene {
         // second message -> createGame
         const allScreensSheepGameLoaded = new MessageSocket(allScreensSheepGameLoadedTypeGuard, this.socket);
         allScreensSheepGameLoaded.listen((data: AllScreensSheepGameLoadedMessage) => {
-            //this.allScreensLoaded = true
+            // eslint-disable-next-line no-console
+            console.log('allscreensLoaded');
             if (this.screenAdmin) this.sendCreateNewGame();
         });
 
@@ -184,6 +190,8 @@ class SheepGameScene extends Phaser.Scene {
         const startedGame = new MessageSocket(sheepGameStartedTypeGuard, this.socket);
         startedGame.listen((data: SheepGameHasStartedMessage) => {
             this.createGameCountdown(data.countdownTime);
+            // eslint-disable-next-line no-console
+            console.log('startedGame');
         });
 
         const gameStateInfoSocket = new MessageSocket(gameStateInfoTypeGuard, this.socket);
@@ -228,14 +236,18 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     initiateGame(gameStateData: GameData) {
+        // eslint-disable-next-line no-console
+        console.log(gameStateData);
         this.gameToScreenMapper = new GameToScreenMapper(gameStateData.playersState[0].positionX, this.windowWidth, 0);
-
-        // this.gameRenderer?.renderBackground(windowWidth, windowHeight, this.trackLength);
 
         this.physics.world.setBounds(0, 0, 7500, windowHeight);
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);
+        }
+
+        for (let i = 0; i < gameStateData.sheep.length; i++) {
+            this.createSheep(i, gameStateData);
         }
     }
 
@@ -249,13 +261,26 @@ class SheepGameScene extends Phaser.Scene {
         const player = new Player(
             this,
             index,
-            { x: gameStateData.playersState[index].positionX, y: this.posY },
+            { x: gameStateData.playersState[index].positionX, y: gameStateData.playersState[index].positionY },
             gameStateData,
             character,
             numberPlayers,
             this.gameToScreenMapper!
         );
         this.players.push(player);
+    }
+
+    private createSheep(index: number, gameStateData: GameData) {
+        const numberOfSheep = gameStateData.sheep.length;
+        const sheep = new Sheep(
+            this,
+            index,
+            { x: gameStateData.sheep[index].posX, y: gameStateData.sheep[index].posY },
+            gameStateData,
+            numberOfSheep,
+            this.gameToScreenMapper!
+        );
+        this.sheep.push(sheep);
     }
 
     private createGameCountdown(countdownTime: number) {

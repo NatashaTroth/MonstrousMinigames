@@ -1,14 +1,14 @@
-import * as React from 'react';
+import * as React from "react";
 
-import Countdown from '../../../../components/common/Countdown';
-import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
-import { FirebaseContext } from '../../../../contexts/FirebaseContextProvider';
-import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
-import uploadFile from '../gameState/handleFiles';
-import { CountdownContainer, Instructions, ScreenContainer } from './Game3Styles.sc';
-import PhotoForm from './PhotoForm';
+import Countdown from "../../../../components/common/Countdown";
+import { ControllerSocketContext } from "../../../../contexts/ControllerSocketContextProvider";
+import { FirebaseContext } from "../../../../contexts/FirebaseContextProvider";
+import { Game3Context } from "../../../../contexts/game3/Game3ContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
+import uploadFile from "../gameState/handleFiles";
+import { CountdownContainer, Instructions, ScreenContainer } from "./Game3Styles.sc";
+import PhotoForm from "./PhotoForm";
 
 export interface UploadProps {
     picture: File | undefined;

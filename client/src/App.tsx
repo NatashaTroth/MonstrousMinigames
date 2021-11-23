@@ -38,6 +38,7 @@ import PlayerStunned from './domain/game1/controller/components/PlayerStunned';
 import ShakeInstruction from './domain/game1/controller/components/ShakeInstruction';
 import Windmill from './domain/game1/controller/components/Windmill';
 import Game from './domain/game1/screen/components/Game';
+import Joystick from './domain/game2/controller/components/Joystick';
 import Game2 from './domain/game2/screen/components/Game2';
 import PresentFinalPhotos from './domain/game3/controller/components/PresentFinalPhotos';
 import TakePicture from './domain/game3/controller/components/TakePicture';
@@ -167,7 +168,13 @@ const App: React.FunctionComponent = () => {
                                                                         exact
                                                                     />
                                                                     {/*----------------- Game 2 -----------------*/}
-                                                                    <Route path={Routes.controllerGame2} exact />
+                                                                    <Route
+                                                                        path={Routes.controllerGame2}
+                                                                        component={() => (
+                                                                            <Joystick sessionStorage={sessionStorage} />
+                                                                        )}
+                                                                        exact
+                                                                    />
                                                                     <Route
                                                                         path={Routes.screenGame2}
                                                                         component={Game2}

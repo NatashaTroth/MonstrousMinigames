@@ -69,11 +69,12 @@ const Game: React.FunctionComponent = () => {
             GameEventEmitter.emitPauseAudioEvent();
             setGameAudioPlaying(false);
             mute();
-        } else {
-            GameEventEmitter.emitPlayAudioEvent();
-            setGameAudioPlaying(true);
-            unMute();
+            return;
         }
+
+        GameEventEmitter.emitPlayAudioEvent();
+        setGameAudioPlaying(true);
+        unMute();
     }
 
     //TODO click on pause immediately - doesn't work because wrong gamestate, countdown still running - fix

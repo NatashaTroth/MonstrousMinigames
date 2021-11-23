@@ -28,10 +28,11 @@ describe('Controller FinishedScreen', () => {
     );
 
     it('user rank is rendered', () => {
-        const givenText = '#1';
+        const rank = 1;
+        const givenText = `#${rank}`;
         const { container } = render(
             <ThemeProvider theme={theme}>
-                <PlayerContext.Provider value={{ ...defaultValue, playerRank: 1 }}>
+                <PlayerContext.Provider value={{ ...defaultValue, playerRank: rank }}>
                     {FinishedScreenComponent}
                 </PlayerContext.Provider>
             </ThemeProvider>

@@ -1,19 +1,14 @@
-import React from 'react';
+import React from "react";
 
-import Countdown from '../../../../components/common/Countdown';
-import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
+import Countdown from "../../../../components/common/Countdown";
 import {
-    Frame,
-    ImageContainer,
-    ImagesContainer,
-    InstructionContainer,
-    PictureInstruction,
-    RandomWord,
-    ScreenContainer,
-    StyledChip,
-    StyledImg,
-} from './Game.sc';
+    FinalPhoto, Game3Context, Topic, Vote, VoteResult
+} from "../../../../contexts/game3/Game3ContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import {
+    ImagesContainer, InstructionContainer, PictureInstruction, RandomWord, ScreenContainer
+} from "./Game.sc";
+import Photo from "./Photo";
 
 const Game3: React.FunctionComponent = () => {
     const { countdownTime } = React.useContext(GameContext);
@@ -25,7 +20,7 @@ const Game3: React.FunctionComponent = () => {
         presentFinalPhotos,
     } = React.useContext(Game3Context);
     const [displayCountdown, setDisplayCountdown] = React.useState(true);
-    const [timeToDisplay, setTimeToDisplay] = React.useState(0);
+    const [timeToDisplay, setTimeToDisplay] = React.useState<undefined | number>(undefined);
     const { topicMessage } = React.useContext(Game3Context);
     const finalRound = roundIdx === 3;
 
@@ -34,91 +29,58 @@ const Game3: React.FunctionComponent = () => {
     }, [roundIdx]);
 
     React.useEffect(() => {
-        const time = presentFinalPhotos
-            ? presentFinalPhotos.countdownTime
-            : finalRoundCountdownTime
-            ? finalRoundCountdownTime
-            : voteForPhotoMessage
-            ? voteForPhotoMessage.countdownTime
-            : topicMessage
-            ? topicMessage.countdownTime
-            : 0;
-
-        // eslint-disable-next-line no-console
-        console.log(time);
+        const time = getTime(presentFinalPhotos, finalRoundCountdownTime, voteForPhotoMessage, topicMessage);
         setTimeToDisplay(time);
     }, [presentFinalPhotos, finalRoundCountdownTime, voteForPhotoMessage, topicMessage]);
 
     return (
         <ScreenContainer>
             <PictureInstruction>{finalRound ? 'Final Round' : `Round ${roundIdx}`}</PictureInstruction>
-            {!displayCountdown && !voteForPhotoMessage && topicMessage && <Countdown time={timeToDisplay} />}
+            {!displayCountdown && timeToDisplay && !votingResults && (
+                <Countdown
+                    time={timeToDisplay}
+                    size="small"
+                    keyValue={`${presentFinalPhotos?.photographerId}${timeToDisplay}`}
+                />
+            )}
             {displayCountdown ? (
-                <>
-                    <Countdown
-                        time={countdownTime}
-                        onComplete={() => {
-                            setDisplayCountdown(false);
-                        }}
-                    />
-                </>
+                <Countdown
+                    time={countdownTime}
+                    onComplete={() => {
+                        setDisplayCountdown(false);
+                    }}
+                />
             ) : (
                 <>
                     <InstructionContainer>
-                        {presentFinalPhotos ? (
-                            <PictureInstruction>
-                                {presentFinalPhotos.name} - Tell us a story about your pictures
-                            </PictureInstruction>
-                        ) : voteForPhotoMessage ? (
-                            <>
-                                <PictureInstruction>
-                                    Vote on your smartphone for the picture that looks most like
-                                </PictureInstruction>
-                                <RandomWord>{topicMessage?.topic}</RandomWord>
-                            </>
-                        ) : finalRound ? (
-                            <PictureInstruction>
-                                Take three photos and tell a visual story about them afterwards
-                            </PictureInstruction>
-                        ) : (
-                            <>
-                                <PictureInstruction>Take a picture that represents the word</PictureInstruction>
-                                <RandomWord>{topicMessage?.topic}</RandomWord>
-                            </>
+                        {getInstruction(
+                            presentFinalPhotos,
+                            voteForPhotoMessage,
+                            finalRound,
+                            votingResults,
+                            topicMessage?.topic
                         )}
                     </InstructionContainer>
-
                     {voteForPhotoMessage && (
                         <ImagesContainer>
                             {voteForPhotoMessage.photoUrls?.map((photo, index) => (
-                                <ImageContainer key={`image${index}`}>
-                                    <PictureInstruction>{photo.photoId}</PictureInstruction>
-                                    <Frame>
-                                        <StyledImg src={photo.url} />
-                                    </Frame>
-                                    {votingResults && (
-                                        <div>
-                                            <StyledChip
-                                                label={`+ ${
-                                                    votingResults.results.find(
-                                                        result => result.photographerId === photo.photographerId
-                                                    )?.points
-                                                }`}
-                                            />
-                                        </div>
-                                    )}
-                                </ImageContainer>
+                                <Photo
+                                    key={`image${index}`}
+                                    id={photo.photoId}
+                                    url={photo.url}
+                                    votingResult={
+                                        votingResults?.results.find(
+                                            result => result.photographerId === photo.photographerId
+                                        )?.points
+                                    }
+                                />
                             ))}
                         </ImagesContainer>
                     )}
                     {presentFinalPhotos && (
                         <ImagesContainer>
                             {presentFinalPhotos.photoUrls?.map((photo, index) => (
-                                <ImageContainer key={`image${index}`}>
-                                    <Frame>
-                                        <StyledImg src={photo} />
-                                    </Frame>
-                                </ImageContainer>
+                                <Photo key={`finalResultimage${index}`} url={photo} />
                             ))}
                         </ImagesContainer>
                     )}
@@ -128,3 +90,52 @@ const Game3: React.FunctionComponent = () => {
     );
 };
 export default Game3;
+
+function getInstruction(
+    presentFinalPhotos: FinalPhoto,
+    voteForPhotoMessage: Vote,
+    finalRound: boolean,
+    votingResults: VoteResult,
+    topic: string | undefined
+) {
+    let instruction = 'Take a picture that represents the word';
+
+    if (finalRound) {
+        instruction = 'Take three photos and tell a visual story about them afterwards';
+    }
+
+    if (voteForPhotoMessage) {
+        instruction = finalRound
+            ? 'Vote on your smartphone for the story that you liked the most'
+            : 'Vote on your smartphone for the picture that looks most like';
+    }
+
+    if (votingResults) {
+        instruction = 'Results for this round';
+    }
+
+    if (presentFinalPhotos) {
+        instruction = `${presentFinalPhotos.name} - Tell us a story about your pictures`;
+    }
+
+    return (
+        <>
+            <PictureInstruction>{instruction}</PictureInstruction>
+            {!presentFinalPhotos && !finalRound && <RandomWord>{topic}</RandomWord>}
+        </>
+    );
+}
+
+function getTime(
+    presentFinalPhotos: FinalPhoto,
+    finalRoundCountdownTime: number,
+    voteForPhotoMessage: Vote,
+    topicMessage: Topic
+) {
+    if (voteForPhotoMessage) return voteForPhotoMessage.countdownTime;
+    else if (presentFinalPhotos) return presentFinalPhotos.countdownTime;
+    else if (finalRoundCountdownTime) return finalRoundCountdownTime;
+    else if (topicMessage) return topicMessage.countdownTime;
+
+    return undefined;
+}

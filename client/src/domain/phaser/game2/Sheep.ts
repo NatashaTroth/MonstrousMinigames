@@ -1,7 +1,6 @@
 //import { designDevelopment } from '../../../../utils/constants';
 //import { depthDictionary } from '../../../../utils/depthDictionary';
 import SheepGameScene from '../../game2/screen/components/SheepGameScene';
-import { Character } from '../gameInterfaces';
 import { Coordinates } from '../gameTypes';
 import { GameData } from './gameInterfaces/GameData';
 import { GameToScreenMapper } from './GameToScreenMapper';
@@ -24,22 +23,15 @@ export class Sheep {
         private index: number,
         public coordinates: Coordinates,
         private gameStateData: GameData,
-        private character: Character,
         private numberPlayers: number,
         private gameToScreenMapper: GameToScreenMapper
     ) {
         this.state = gameStateData.sheep[index].state;
         this.id = gameStateData.sheep[index].id;
-        this.coordinates = gameStateData.sheep[index].coordinates;
+        //this.coordinates = gameStateData.sheep[index].coordinates;
 
         this.renderer = new PhaserSheepRenderer(scene);
-        this.renderer.renderSheep(
-            {
-                x: this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
-                y: this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.y),
-            },
-            this.state
-        );
+        this.renderer.renderSheep(this);
     }
 
     moveSheep(posX: number, posY: number) {

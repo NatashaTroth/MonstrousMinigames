@@ -1,7 +1,9 @@
-import { Chip, Typography } from '@material-ui/core';
-import styled, { keyframes } from 'styled-components';
+import { Chip, Typography } from "@material-ui/core";
+import styled, { keyframes } from "styled-components";
 
-import { StyledFullScreenContainer } from '../../../../components/controller/FullScreenContainer.sc';
+import {
+    StyledFullScreenContainer
+} from "../../../../components/controller/FullScreenContainer.sc";
 
 export const StyledImg = styled.img`
     display: flex;
@@ -14,11 +16,11 @@ export const StyledImg = styled.img`
 export const InstructionContainer = styled.div`
     display: flex;
     flex-direction: column;
-    margin-bottom: 40px;
+    margin: 20px 0;
 `;
 
 export const PictureInstruction = styled(Typography)`
-    font-size: 40px;
+    font-size: 30px;
     color: ${({ theme }) => theme.palette.primary.main};
     font-weight: 700;
     font-style: italic;
@@ -27,7 +29,7 @@ export const PictureInstruction = styled(Typography)`
 `;
 
 export const RandomWord = styled(Typography)`
-    font-size: 55px;
+    font-size: 40px;
     color: ${({ theme }) => theme.palette.secondary.main};
     font-weight: 700;
 `;
