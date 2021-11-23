@@ -227,7 +227,7 @@
       }
 
       function onMessage(msg) {
-        if (msg.type !== "game1/gameState") {
+        if (msg.type !== "game1/gameState" && msg.type !== "game2/gameState") {
           console.log(msg);
         }
 

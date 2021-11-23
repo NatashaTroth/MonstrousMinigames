@@ -116,10 +116,11 @@ function sendScreenAdmin(nsp: Namespace, socketId: string, isScreenAdmin: boolea
     });
 }
 
-function sendScreenState(nsp: Namespace | Socket, state: string | undefined): void {
+function sendScreenState(nsp: Namespace | Socket, state: string | undefined, game?: string | undefined): void {
     nsp.emit('message', {
         type: MessageTypes.SCREEN_STATE,
         state: state,
+        game: game,
     });
 }
 

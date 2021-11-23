@@ -23,7 +23,7 @@ export enum Routes {
 
     screenLobby = '/screen/:id/lobby',
     screenLeaderboard = '/screen/:id/leaderboard',
-    screenChooseGame = '/screen/:id/choose-game',
+    screenChooseGame = '/screen/:id/choose-game/:game?',
     screenGetReady = '/screen/:id/get-ready',
     screenGame1 = '/screen/:id/game1',
     screenGame2 = '/screen/:id/game2',

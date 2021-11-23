@@ -4,7 +4,7 @@ import { SheepStates } from "../../../src/gameplay/gameTwo/enums/SheepStates";
 
 
 let sheepService: SheepService;
-describe('GameTwoPlyer Tests', () => {
+describe('SheepService Tests', () => {
     beforeEach(() => {
         sheepService = new SheepService(50);
     });

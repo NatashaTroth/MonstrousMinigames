@@ -134,7 +134,10 @@ export function handleSetSocket(
 
     screenAdminSocket.listen((data: ScreenAdminMessage) => setScreenAdmin(data.isAdmin));
 
-    screenStateSocket.listen((data: ScreenStateMessage) => setScreenState(data.state));
+    screenStateSocket.listen((data: ScreenStateMessage) => {
+        const screenState = data.game ? `${data.state}/${data.game}` : data.state;
+        setScreenState(screenState);
+    });
 
     startedSocket.listen((data: GameHasStartedMessage) => {
         handleGameStartedMessage({
