@@ -31,7 +31,7 @@ export class PhaserPlayerRenderer {
             this.initiateAnimation(character.name, character.name + +'_walkForward', { start: 0, end: 3 });
             this.initiateAnimation(character.name, character.name + +'_walkLeft', { start: 4, end: 7 });
             this.initiateAnimation(character.name, character.name + +'_walkRight', { start: 8, end: 11 });
-        } else if (this.player) {
+        } else {
             this.player.x = coordinates.x;
             this.player.y = coordinates.y;
         }
@@ -55,7 +55,7 @@ export class PhaserPlayerRenderer {
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
-        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
+        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName);
         this.player.setScale(0.1);
         this.player.setDepth(depthDictionary.player);
         this.player.setCollideWorldBounds(true);

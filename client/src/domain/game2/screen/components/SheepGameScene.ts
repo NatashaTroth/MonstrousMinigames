@@ -149,8 +149,6 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     sendStartGame() {
-        // eslint-disable-next-line no-console
-        console.log('sendStartGame');
         //TODO!!!! - do not send when game is already started? - or is it just ignored - appears to work - maybe check if no game state updates?
         this.socket?.emit({
             type: MessageTypes.startGame,
@@ -190,8 +188,6 @@ class SheepGameScene extends Phaser.Scene {
         const startedGame = new MessageSocket(sheepGameStartedTypeGuard, this.socket);
         startedGame.listen((data: SheepGameHasStartedMessage) => {
             this.createGameCountdown(data.countdownTime);
-            // eslint-disable-next-line no-console
-            console.log('startedGame');
         });
 
         const gameStateInfoSocket = new MessageSocket(gameStateInfoTypeGuard, this.socket);
