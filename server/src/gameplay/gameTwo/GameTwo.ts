@@ -13,7 +13,7 @@ import { GameNames } from '../../enums/gameNames';
 import RoundService from './classes/RoundService';
 import SheepService from './classes/SheepService';
 import RoundEventEmitter from './classes/RoundEventEmitter';
-import { GuessHints } from './enums/GuessHints';
+import GuessingService from './classes/GuessingServices';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -27,6 +27,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     public sheepService: SheepService;
     private roundService: RoundService;
     private roundEventEmitter: RoundEventEmitter;
+    private guessingService: GuessingService;
 
     initialPlayerPositions = InitialParameters.PLAYERS_POSITIONS;
 
@@ -40,6 +41,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.sheepService = new SheepService(InitialParameters.SHEEP_COUNT);
         this.roundService = new RoundService();
         this.roundEventEmitter = RoundEventEmitter.getInstance();
+        this.guessingService = new GuessingService(InitialParameters.ROUNDS);
 
     }
 
@@ -90,6 +92,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         super.createNewGame(users);
         this.sheepService.initSheep();
         this.sheepService.listenToRoundChanges();
+        this.guessingService.init(users);
         this.listenToEvents();
         GameTwoEventEmitter.emitInitialGameStateInfoUpdate(
             this.roomId,
@@ -147,18 +150,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             if (player.addGuess(this.roundService.round, guess, aliveSheep)) {
                 const miss = aliveSheep - guess;
 
-                let hint = GuessHints.EXACT
-                if (miss === 0) {
-                    hint = GuessHints.EXACT;
-                } else if (miss > 0 && miss <= InitialParameters.GOOD_GUESS_THRESHOLD) {
-                    hint = GuessHints.LOW;
-                } else if (miss > 0) {
-                    hint = GuessHints.VERY_LOW;
-                } else if (miss < 0 && miss >= -1 * InitialParameters.GOOD_GUESS_THRESHOLD) {
-                    hint = GuessHints.HIGH;
-                } else if (miss < 0) {
-                    hint = GuessHints.VERY_HIGH;
-                }
+                const hint = this.guessingService.getHint(miss);
                 GameTwoEventEmitter.emitGuessHint(this.roomId, player.id, hint);
             }
         }
