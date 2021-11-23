@@ -143,9 +143,23 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         const player = this.players.get(userId)!;
 
         if (this.roundService.isGuessingPhase() && player) {
-            if (player.addGuess(this.roundService.round, guess, this.sheepService.aliveSheepCounts[this.roundService.round - 1])) {
-                // todo dynamically set guess hints
-                GameTwoEventEmitter.emitGuessHint(this.roomId, player.id, GuessHints.LOW);
+            const aliveSheep = this.sheepService.aliveSheepCounts[this.roundService.round - 1];
+            if (player.addGuess(this.roundService.round, guess, aliveSheep)) {
+                const miss = aliveSheep - guess;
+
+                let hint = GuessHints.EXACT
+                if (miss === 0) {
+                    hint = GuessHints.EXACT;
+                } else if (miss > 0 && miss <= InitialParameters.GOOD_GUESS_THRESHOLD) {
+                    hint = GuessHints.LOW;
+                } else if (miss > 0) {
+                    hint = GuessHints.VERY_LOW;
+                } else if (miss < 0 && miss >= -1 * InitialParameters.GOOD_GUESS_THRESHOLD) {
+                    hint = GuessHints.HIGH;
+                } else if (miss < 0) {
+                    hint = GuessHints.VERY_HIGH;
+                }
+                GameTwoEventEmitter.emitGuessHint(this.roomId, player.id, hint);
             }
         }
 
