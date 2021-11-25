@@ -26,7 +26,7 @@ export class StageController {
         this.stageEventEmitter.on(StageEventEmitter.STAGE_CHANGE_EVENT, message => {
             // console.log('new stage event');
             if (this.stage?.hasNextStage()) {
-                this.playerPoints.addAllPlayerPoints(this.stage?.updatePoints());
+                this.playerPoints.addAllPlayerPoints(this.stage?.updatePlayerPoints());
                 this.stage = this.stage?.switchToNextStage();
             } else if (this.stage?.isFinalStage()) {
                 this.stage = null;
@@ -54,31 +54,12 @@ export class StageController {
         this.stage?.handleInput(message);
     }
 
+    getPlayerPoints(): Map<string, number> {
+        return this.playerPoints.getAllPlayerPoints();
+    }
+
     private handleGameFinished() {
         this.stageEventEmitter.emit(StageEventEmitter.GAME_FINISHED);
-
-        //         const playerRanks: GameThreePlayerRank[] = Array.from(this.players.values()).map(player => {
-        //     return {
-        //         id: player.id,
-        //         name: player.name,
-        //         points: player.totalPoints,
-        //         rank: 0,
-        //         isActive: player.isActive,
-        //     };
-        // });
-
-        // playerRanks
-        //     .sort((a, b) => b.points - a.points)
-        //     .map(result => {
-        //         const rank = this.gameThree.rankSuccessfulUser(result.points); //TODO !!! make this function protected again
-        //         this.players.get(result.id)!.rank = rank;
-        //         result.rank = rank;
-        //         return result;
-        //     });
-
-        // this.updateStage(GameThreeGameState.ViewingFinalResults);
-        // this.gameThree.gameState = GameState.Finished;
-        // GameThreeEventEmitter.emitGameHasFinishedEvent(this.roomId, GameState.Finished, []); //playerRanks);
     }
 
     private isFinalRound() {

@@ -55,7 +55,7 @@ export abstract class Stage {
         }
     }
 
-    updatePoints(): undefined | Map<string, number> {
+    updatePlayerPoints(): undefined | Map<string, number> {
         return undefined;
     }
 

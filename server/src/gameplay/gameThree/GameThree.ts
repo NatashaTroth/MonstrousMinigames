@@ -144,6 +144,16 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     handleGameFinished() {
+        //         const playerRanks: GameThreePlayerRank[] = Array.from(this.players.values()).map(player => {
+        //     return {
+        //         id: player.id,
+        //         name: player.name,
+        //         points: player.totalPoints,
+        //         rank: 0,
+        //         isActive: player.isActive,
+        //     };
+        // });
+
         // playerRanks
         //     .sort((a, b) => b.points - a.points)
         //     .map(result => {

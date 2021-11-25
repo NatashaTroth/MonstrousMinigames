@@ -28,7 +28,7 @@ export class FinalPhotosStage extends PhotoStage {
 
     //TODO
 
-    updatePoints(): undefined | Map<string, number> {
+    updatePlayerPoints(): undefined | Map<string, number> {
         this.setPointPerReceivedPhoto();
         return this.playerPoints.getAllPlayerPoints();
     }
