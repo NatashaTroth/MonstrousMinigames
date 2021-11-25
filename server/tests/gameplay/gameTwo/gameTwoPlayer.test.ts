@@ -1,3 +1,4 @@
+import { Direction } from "../../../src/gameplay/gameTwo/enums/Direction";
 import GameTwoPlayer from "../../../src/gameplay/gameTwo/GameTwoPlayer";
 
 
@@ -7,15 +8,98 @@ describe('GameTwoPlyer Tests', () => {
         player = new GameTwoPlayer('X', 'John', 10, 10, 3, 1);
     });
 
-    it('should get the right guess for the given round number', () => {
-        const guess = 10;
-        player.addGuess(1, guess, 20);
+    it('initial direction should be C', () => {
+        expect(player.direction).toEqual('C');
+    });
 
-        const guessForRound = player.getGuessForRound(1);
-        expect(guessForRound).toEqual(guess);
+    it('should have the same position when moving with direction set to stop', () => {
+        const initialPositionX = player.posX;
+        const initialPositionY = player.posY;
+
+        player.direction = Direction.STOP;
+        player.move();
+        player.move();
+
+        expect(player.posX).toEqual(initialPositionX);
+        expect(player.posX).toEqual(initialPositionY);
     });
-    it('should return false if there is no guess for the given round number', () => {
-        const guessForRound = player.getGuessForRound(1);
-        expect(guessForRound).toEqual(false);
+
+    it('should have a y-pos lower 1 than the initial positon when moving up once', () => {
+        const initialPositionY = player.posY;
+
+        player.direction = Direction.UP;
+        player.move();
+
+        expect(player.posY).toEqual(initialPositionY - 1);
     });
+
+    it('should have a y-pos higher 1 than the initial positon when moving down once', () => {
+        const initialPositionY = player.posY;
+
+        player.direction = Direction.DOWN;
+        player.move();
+
+        expect(player.posY).toEqual(initialPositionY + 1);
+    });
+    it('should have a x-pos lower 1 than the initial positon when moving left once', () => {
+        const initialPositionX = player.posX;
+
+        player.direction = Direction.LEFT;
+        player.move();
+
+        expect(player.posX).toEqual(initialPositionX - 1);
+    });
+    it('should have a x-pos higher 1 than the initial positon when moving right once', () => {
+        const initialPositionX = player.posX;
+
+        player.direction = Direction.RIGHT;
+        player.move();
+
+        expect(player.posX).toEqual(initialPositionX + 1);
+    });
+
+    it('should have higher x and y value on down-right movement', () => {
+        const initialPositionX = player.posX;
+        const initialPositionY = player.posY;
+
+        player.direction = Direction.DOWN_RIGHT;
+        player.move();
+
+        expect(player.posX).toEqual(initialPositionX + 1);
+        expect(player.posY).toEqual(initialPositionY + 1);
+    });
+
+    it('should have lower x and y value on up-left movement', () => {
+        const initialPositionX = player.posX;
+        const initialPositionY = player.posY;
+
+        player.direction = Direction.UP_LEFT;
+        player.move();
+
+        expect(player.posX).toEqual(initialPositionX - 1);
+        expect(player.posY).toEqual(initialPositionY - 1);
+    });
+
+    it('should have lower x and higher y value on down-left movement', () => {
+        const initialPositionX = player.posX;
+        const initialPositionY = player.posY;
+
+        player.direction = Direction.DOWN_LEFT;
+        player.move();
+
+        expect(player.posX).toEqual(initialPositionX - 1);
+        expect(player.posY).toEqual(initialPositionY + 1);
+    });
+
+    it('should have higher x and lower y value on up-right movement', () => {
+        const initialPositionX = player.posX;
+        const initialPositionY = player.posY;
+
+        player.direction = Direction.UP_RIGHT;
+        player.move();
+
+        expect(player.posX).toEqual(initialPositionX + 1);
+        expect(player.posY).toEqual(initialPositionY - 1);
+    });
+
 });

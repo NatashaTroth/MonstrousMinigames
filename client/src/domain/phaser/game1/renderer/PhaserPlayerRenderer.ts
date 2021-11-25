@@ -116,6 +116,8 @@ export class PhaserPlayerRenderer {
     }
 
     renderPlayer(idx: number, coordinates: Coordinates, character: Character, username?: string): void {
+        // eslint-disable-next-line no-console
+        console.log('rednder');
         let usernameToDisplay = '';
         if (username) {
             usernameToDisplay = username;

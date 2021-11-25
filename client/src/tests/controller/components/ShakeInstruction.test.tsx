@@ -1,11 +1,12 @@
 /* eslint-disable simple-import-sort/imports */
 import 'jest-styled-components';
-import { cleanup, render } from '@testing-library/react';
+import { cleanup, queryByText, render } from '@testing-library/react';
 import { ThemeProvider } from 'styled-components';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure } from 'enzyme';
 import React from 'react';
 
+import { defaultValue, Game1Context } from '../../../contexts/game1/Game1ContextProvider';
 import ShakeInstruction from '../../../domain/game1/controller/components/ShakeInstruction';
 import theme from '../../../styles/theme';
 import { LocalStorageFake } from '../../storage/LocalFakeStorage';
@@ -57,5 +58,19 @@ describe('Shake Instruction', () => {
         jest.setTimeout(3000);
 
         expect(global.sessionStorage.getItem('countdownTime')).toBe(null);
+    });
+
+    it('renders pebble instruction if user has stone', () => {
+        const sessionStorage = new LocalStorageFake();
+        const givenText = 'Click to use collected stone';
+        const { container } = render(
+            <ThemeProvider theme={theme}>
+                <Game1Context.Provider value={{ ...defaultValue, hasStone: true }}>
+                    <ShakeInstruction sessionStorage={sessionStorage} />
+                </Game1Context.Provider>
+            </ThemeProvider>
+        );
+
+        expect(queryByText(container, givenText)).toBeTruthy();
     });
 });

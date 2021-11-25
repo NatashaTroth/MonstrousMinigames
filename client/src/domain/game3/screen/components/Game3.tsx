@@ -1,14 +1,10 @@
-import React from "react";
+import React from 'react';
 
-import Countdown from "../../../../components/common/Countdown";
-import {
-    FinalPhoto, Game3Context, Topic, Vote, VoteResult
-} from "../../../../contexts/game3/Game3ContextProvider";
-import { GameContext } from "../../../../contexts/GameContextProvider";
-import {
-    ImagesContainer, InstructionContainer, PictureInstruction, RandomWord, ScreenContainer
-} from "./Game.sc";
-import Photo from "./Photo";
+import Countdown from '../../../../components/common/Countdown';
+import { FinalPhoto, Game3Context, Topic, Vote, VoteResult } from '../../../../contexts/game3/Game3ContextProvider';
+import { GameContext } from '../../../../contexts/GameContextProvider';
+import { ImagesContainer, InstructionContainer, PictureInstruction, RandomWord, ScreenContainer } from './Game.sc';
+import Photo from './Photo';
 
 const Game3: React.FunctionComponent = () => {
     const { countdownTime } = React.useContext(GameContext);
@@ -91,7 +87,7 @@ const Game3: React.FunctionComponent = () => {
 };
 export default Game3;
 
-function getInstruction(
+export function getInstruction(
     presentFinalPhotos: FinalPhoto,
     voteForPhotoMessage: Vote,
     finalRound: boolean,
@@ -126,9 +122,9 @@ function getInstruction(
     );
 }
 
-function getTime(
+export function getTime(
     presentFinalPhotos: FinalPhoto,
-    finalRoundCountdownTime: number,
+    finalRoundCountdownTime: number | undefined,
     voteForPhotoMessage: Vote,
     topicMessage: Topic
 ) {
