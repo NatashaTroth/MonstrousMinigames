@@ -19,55 +19,34 @@ class GameTwoPlayer extends Player {
     }
 
     update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
-        if (this.direction !== Direction.STOP) {
-            switch (this.direction) {
-                case Direction.UP_LEFT:
-                    if (this.posY > 0 && this.posX > 0) {
-                        this.posY -= this.speed;
-                        this.posX -= this.speed;
-                    }
-                    break;
-                case Direction.UP:
-                    if (this.posY > 0) {
-                        this.posY -= this.speed;
-                    }
-                    break;
-                case Direction.UP_RIGHT:
-                    if (this.posY > 0 && this.posX < InitialParameters.LENGTH_X) {
-                        this.posY -= this.speed;
-                        this.posX += this.speed;
-                    }
-                    break;
-                case Direction.RIGHT:
-                    if (this.posX < InitialParameters.LENGTH_X) {
-                        this.posX += this.speed;
-                    }
-                    break;
-                case Direction.DOWN_RIGHT:
-                    if (this.posY < InitialParameters.LENGTH_Y && this.posX < InitialParameters.LENGTH_X) {
-                        this.posY += this.speed;
-                        this.posX += this.speed;
-                    }
-                    break;
-                case Direction.DOWN:
-                    if (this.posY < InitialParameters.LENGTH_Y) {
-                        this.posY += this.speed;
-                    }
-                    break;
-                case Direction.DOWN_LEFT:
-                    if (this.posY < InitialParameters.LENGTH_Y && this.posX > 0) {
-                        this.posY += this.speed;
-                        this.posX -= this.speed;
-                    }
-                    break;
-                case Direction.LEFT:
-                    if (this.posX > 0) {
-                        this.posX -= this.speed;
-                    }
-                    break;
+        this.move();
+    }
+    public move() {
+        if (this.direction === Direction.STOP) {
+            return;
+        }
+        if (this.direction.startsWith(Direction.UP)) {
+            if (this.posY > 0) {
+                this.posY -= this.speed;
+            }
+        }
+        if (this.direction.startsWith(Direction.DOWN)) {
+            if (this.posY < InitialParameters.LENGTH_Y) {
+                this.posY += this.speed;
+            }
+        }
+        if (this.direction.includes(Direction.RIGHT)) {
+            if (this.posX < InitialParameters.LENGTH_X) {
+                this.posX += this.speed;
+            }
+        }
+        if (this.direction.includes(Direction.LEFT)) {
+            if (this.posX > 0) {
+                this.posX -= this.speed;
             }
         }
     }
+
     public setDirection(direction: string) {
         this.direction = direction;
     }
