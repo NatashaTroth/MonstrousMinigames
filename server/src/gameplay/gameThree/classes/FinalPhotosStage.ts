@@ -27,9 +27,15 @@ export class FinalPhotosStage extends PhotoStage {
     }
 
     //TODO
-    // private addPointPerReceivedPhoto() {
-    //     this.players.forEach(player => {
-    //         player.totalPoints += this.photoStage!.getNumberPhotos();
-    //     });
-    // }
+
+    updatePoints(): undefined | Map<string, number> {
+        this.setPointPerReceivedPhoto();
+        return this.playerPoints.getAllPlayerPoints();
+    }
+
+    private setPointPerReceivedPhoto() {
+        this.players.forEach(player => {
+            this.playerPoints.addPointsToPlayer(player.id, this.photos.getNumberPhotos(player.id));
+        });
+    }
 }

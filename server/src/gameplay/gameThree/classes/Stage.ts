@@ -3,6 +3,7 @@
 import { IMessage } from '../../../interfaces/messages';
 import { PlayerNameId } from '../interfaces';
 import { Countdown } from './Countdown';
+import { PlayerPoints } from './PlayerPoints';
 import StageEventEmitter from './StageEventEmitter';
 
 // export interface PhotoInput {
@@ -20,11 +21,14 @@ export abstract class Stage {
     // protected abstract countdownTime: number;
     protected stageEventEmitter = StageEventEmitter.getInstance();
 
+    protected playerPoints: PlayerPoints;
+
     abstract handleInput(message: IMessage): void;
 
     constructor(protected roomId: string, protected players: PlayerNameId[] = [], protected countdownTime: number) {
         // console.log('--- new stage --- ', this.constructor.name);
         this.initiateCountdown();
+        this.playerPoints = new PlayerPoints(players);
     }
 
     protected initiateCountdown() {
@@ -49,6 +53,10 @@ export abstract class Stage {
             // this.emitStageChangeEvent();
             this.countdownOver();
         }
+    }
+
+    updatePoints(): undefined | Map<string, number> {
+        return undefined;
     }
 
     protected abstract countdownOver(): void;

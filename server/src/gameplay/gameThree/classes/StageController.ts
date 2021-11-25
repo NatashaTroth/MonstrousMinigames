@@ -3,6 +3,7 @@ import InitialParameters from '../constants/InitialParameters';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
 import { PlayerNameId } from '../interfaces';
 import { FinalPhotosStage } from './FinalPhotosStage';
+import { PlayerPoints } from './PlayerPoints';
 import { SinglePhotoStage } from './SinglePhotoStage';
 import { Stage } from './Stage';
 import StageEventEmitter from './StageEventEmitter';
@@ -12,29 +13,26 @@ export class StageController {
     private roundIdx = -1;
     private stageEventEmitter: StageEventEmitter;
     private stage?: Stage | null;
+    private playerPoints: PlayerPoints;
 
     constructor(private roomId: string, private players: PlayerNameId[], private testNumber = 1) {
         this.stageEventEmitter = StageEventEmitter.getInstance(true);
         this.initStageEventEmitter();
         this.handleNewRound();
+        this.playerPoints = new PlayerPoints(players);
     }
 
     initStageEventEmitter() {
         this.stageEventEmitter.on(StageEventEmitter.STAGE_CHANGE_EVENT, message => {
             // console.log('new stage event');
-            if (this.stage?.hasNextStage()) this.stage = this.stage?.switchToNextStage();
-            else if (this.stage?.isFinalStage()) {
+            if (this.stage?.hasNextStage()) {
+                this.playerPoints.addAllPlayerPoints(this.stage?.updatePoints());
+                this.stage = this.stage?.switchToNextStage();
+            } else if (this.stage?.isFinalStage()) {
                 this.stage = null;
                 this.handleGameFinished();
             } else this.handleNewRound();
         });
-        // this.stageEventEmitter.on(StageEventEmitter.NEW_ROUND_EVENT, message => {
-        //     this.handleNewRound();
-        // });
-        // this.stageEventEmitter.on(StageEventEmitter.GAME_FINISHED, message => {
-        //     // this.stage = null;
-        //     // this.handleGameFinished();
-        // });
     }
 
     update(timeElapsedSinceLastFrame: number) {

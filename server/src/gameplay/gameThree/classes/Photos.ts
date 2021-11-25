@@ -58,7 +58,18 @@ export class Photos {
         return this.photos.has(photographerId);
     }
 
+    // getUsersWhoSentPhoto(): string[] {
+    //     return Array.from(this.photos.keys());
+    // }
+
     getNumberPhotos(photographerId: string) {
         return this.photos.has(photographerId) ? this.photos.get(photographerId)!.length : 0;
     }
+
+    // getNumberPhotosFromUsers() : Map<string, number> {
+    //     return this.photos.forEach((url, photographerId) => {
+    //         return this.getNumberPhotos (photographerId)
+    //     })
+    //     return this.photos.has(photographerId) ? this.photos.get(photographerId)!.length : 0;
+    // }
 }
