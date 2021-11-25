@@ -1,7 +1,7 @@
 import { IMessage } from '../../../interfaces/messages';
 import InitialParameters from '../constants/InitialParameters';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
-import GameThreePlayer from '../GameThreePlayer';
+import { PlayerNameId } from '../interfaces';
 import { FinalPhotosStage } from './FinalPhotosStage';
 import { SinglePhotoStage } from './SinglePhotoStage';
 import { Stage } from './Stage';
@@ -13,7 +13,7 @@ export class StageController {
     private stageEventEmitter: StageEventEmitter;
     private stage?: Stage | null;
 
-    constructor(private roomId: string, private players: Map<string, GameThreePlayer>, private testNumber = 1) {
+    constructor(private roomId: string, private players: PlayerNameId[], private testNumber = 1) {
         this.stageEventEmitter = StageEventEmitter.getInstance(true);
         this.initStageEventEmitter();
         this.handleNewRound();
@@ -44,45 +44,17 @@ export class StageController {
     handleNewRound() {
         this.roundIdx++;
         GameThreeEventEmitter.emitNewRound(this.roomId, this.roundIdx);
-        const players = Array.from(this.players.values()).map(player => {
-            return { id: player.id, name: player.name };
-        });
-        if (!this.isFinalRound()) {
-            this.stage = new SinglePhotoStage(this.roomId, players);
-        } else {
-            this.stage = new FinalPhotosStage(this.roomId, players);
-            // console.log('*******');
-            // console.log(this.stage.constructor.name);
 
-            //TODO call remove all stage event listeners
-            // this.switchToFinalTakingPhotosStage();
+        if (!this.isFinalRound()) {
+            this.stage = new SinglePhotoStage(this.roomId, this.players);
+        } else {
+            this.stage = new FinalPhotosStage(this.roomId, this.players);
         }
     }
 
     handleInput(message: IMessage) {
-        // console.log('handleInput ', message);
         this.stage?.handleInput(message);
     }
-
-    // updateStage(stage: GameThreeGameState) {
-    //     //TODO remove argument??
-    //     this.stage = stage;
-    //         case GameThreeGameState.FinalVoting:
-    //             this.countdown?.initiateCountdown(InitialParameters.COUNTDOWN_TIME_VOTE);
-    //             this.votingStage = new VotingStage();
-    //             break;
-
-    //     }
-    // }
-
-    // handleStageCountdownOver() {
-    //     switch (this.stage) {
-
-    //         case GameThreeGameState.FinalVoting:
-    //             this.switchToViewingFinalResultsStage();
-    //             break;
-    //     }
-    // }
 
     private handleGameFinished() {
         this.stageEventEmitter.emit(StageEventEmitter.GAME_FINISHED);
@@ -133,22 +105,12 @@ export class StageController {
 
     // private switchToFinalPresentationStage() {
     //     this.addPointPerReceivedPhoto(); //TODO
-    //     this.updateStage(GameThreeGameState.PresentingFinalPhotos);
     // }
 
     // private addPointPerReceivedPhoto() {
     //     this.players.forEach(player => {
     //         player.totalPoints += this.photoStage!.getNumberPhotos();
     //     });
-    // }
-
-    // private switchToFinalVotingStage() {
-    //     const playerNameIds: PlayerNameId[] = Array.from(this.players.values()).map(player => {
-    //         return { id: player.id, name: player.name };
-    //     });
-
-    //     GameThreeEventEmitter.emitVoteForFinalPhotos(this.roomId, InitialParameters.COUNTDOWN_TIME_VOTE, playerNameIds);
-    //     this.updateStage(GameThreeGameState.FinalVoting);
     // }
 
     // private switchToViewingFinalResultsStage() {
@@ -170,10 +132,6 @@ export class StageController {
     //             result.rank = rank;
     //             return result;
     //         });
-
-    //     this.updateStage(GameThreeGameState.ViewingFinalResults);
-    //     this.gameThree.gameState = GameState.Finished;
-    //     GameThreeEventEmitter.emitGameHasFinishedEvent(this.roomId, this.gameThree.gameState, playerRanks);
 
     //     //TODO Leaderboard
     // }

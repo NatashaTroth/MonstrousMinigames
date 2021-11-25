@@ -84,7 +84,13 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     startGameAfterTimeout() {
-        this.stageController = new StageController(this.roomId, this.players, this.testNumber);
+        this.stageController = new StageController(
+            this.roomId,
+            Array.from(this.players.values()).map(player => {
+                return { id: player.id, name: player.name };
+            }),
+            this.testNumber
+        );
         this.stageEventEmitter = StageEventEmitter.getInstance();
         this.stageEventEmitter.on(StageEventEmitter.GAME_FINISHED, message => {
             this.handleGameFinished();
