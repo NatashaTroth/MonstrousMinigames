@@ -17,7 +17,6 @@ export default class GuessingService {
         users.forEach(user => {
             this.guesses.set(user.id, new Array(this.roundCount));
         })
-        console.log(this.guesses);
     }
 
 
@@ -33,5 +32,17 @@ export default class GuessingService {
         } else {
             return GuessHints.EXACT;
         }
+    }
+
+    public addGuess(round: number, guess: number, userId: string): boolean {
+        const guesses = this.guesses.get(userId);
+        if (guesses) {
+            if (!guesses[round - 1]) {
+                guesses[round - 1] = guess;
+                this.guesses.set(userId, guesses);
+                return true;
+            }
+        }
+        return false;
     }
 }

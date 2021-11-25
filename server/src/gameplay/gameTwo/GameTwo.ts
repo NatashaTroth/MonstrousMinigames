@@ -130,7 +130,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     protected movePlayer(userId: string, direction: string) {
         const player = this.players.get(userId)!;
         if (this.roundService.isCountingPhase() && player) {
-            player.setDirection(direction);
+            player.direction = direction;
         }
     }
     protected killSheep(userId: string) {
@@ -147,7 +147,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
         if (this.roundService.isGuessingPhase() && player) {
             const aliveSheep = this.sheepService.aliveSheepCounts[this.roundService.round - 1];
-            if (player.addGuess(this.roundService.round, guess, aliveSheep)) {
+            if (this.guessingService.addGuess(this.roundService.round, guess, userId)) {
                 const miss = aliveSheep - guess;
 
                 const hint = this.guessingService.getHint(miss);
