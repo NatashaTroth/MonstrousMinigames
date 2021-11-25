@@ -1,12 +1,10 @@
 import Player from "../Player";
 import InitialParameters from "./constants/InitialParameters";
 import { Direction } from "./enums/Direction";
-import { Guess } from "./interfaces";
 
 class GameTwoPlayer extends Player {
     public direction: string;
     public speed: number;
-    public guesses: Guess[];
     constructor(
         public id: string,
         name: string,
@@ -18,7 +16,6 @@ class GameTwoPlayer extends Player {
         super(id, name, characterNumber);
         this.direction = 'C';
         this.speed = InitialParameters.SPEED;
-        this.guesses = [];
     }
 
     update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
@@ -47,27 +44,6 @@ class GameTwoPlayer extends Player {
             }
         }
     }
-
-    public addGuess(round: number, guess: number, actualNumber: number) {
-        if (!this.getGuessForRound(round)) {
-            const difference = Math.abs(guess - actualNumber);
-            this.guesses.push({ round: round, guess: guess, actualNumber: actualNumber, difference: difference });
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public getGuessForRound(round: number) {
-        const guessForRound = this.guesses.filter(guess => {
-            return guess.round === round;
-        })[0];
-        if (!guessForRound) {
-            return false;
-        }
-        return guessForRound.guess;
-    }
-
     public setDirection(direction: string) {
         this.direction = direction;
     }
