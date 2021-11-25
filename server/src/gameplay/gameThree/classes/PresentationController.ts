@@ -8,7 +8,6 @@ export class PresentationController {
     private photoUrlsShuffled: string[];
 
     constructor(players: PlayerNameId[], private photoUrls: string[]) {
-        console.log('**construnctor');
         this.playerPresentOrder = shuffleArray(players);
         this.photoUrlsShuffled = shuffleArray(photoUrls);
         //TODO what if photoUrls = empty????  - cannot let it get to here
@@ -29,7 +28,6 @@ export class PresentationController {
     }
 
     nextPresenter(): PlayerNameId {
-        console.log(this.playerPresentOrder);
         const presenter = this.playerPresentOrder.shift();
         if (presenter) return presenter;
         throw new Error('No presenter left'); //TODO handle

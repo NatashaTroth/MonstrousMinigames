@@ -1,12 +1,14 @@
 import User from '../../classes/user';
 import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
+import { GameState } from '../enums';
 // import { GameState } from '../enums';
 import Game from '../Game';
 import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
 import { StageController } from './classes/StageController';
+import StageEventEmitter from './classes/StageEventEmitter';
 import InitialParameters from './constants/InitialParameters';
 import GameThreeEventEmitter from './GameThreeEventEmitter';
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
@@ -23,7 +25,7 @@ type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
 export default class GameThree extends Game<GameThreePlayer, GameStateInfo> implements GameThreeGameInterface {
     // TODO set in create new game so workds for reset
     private stageController?: StageController;
-
+    private stageEventEmitter?: StageEventEmitter;
     // private roundIdx = -1;
     // private playerPresentOrder: string[] = [];
     gameName = GameNames.GAME3;
@@ -70,7 +72,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     startGame(): void {
         setTimeout(() => {
             super.startGame();
-            this.stageController = new StageController(this.roomId, this.players, this.testNumber);
+            this.startGameAfterTimeout();
         }, InitialParameters.COUNTDOWN_TIME_GAME_START);
 
         GameThreeEventEmitter.emitGameHasStartedEvent(
@@ -79,6 +81,14 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             this.gameName
         );
         this.stageController?.handleNewRound();
+    }
+
+    startGameAfterTimeout() {
+        this.stageController = new StageController(this.roomId, this.players, this.testNumber);
+        this.stageEventEmitter = StageEventEmitter.getInstance();
+        this.stageEventEmitter.on(StageEventEmitter.GAME_FINISHED, message => {
+            this.handleGameFinished();
+        });
     }
 
     pauseGame(): void {
@@ -125,5 +135,20 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         //     default:
         //         console.info(message);
         // }
+    }
+
+    handleGameFinished() {
+        // playerRanks
+        //     .sort((a, b) => b.points - a.points)
+        //     .map(result => {
+        //         const rank = this.gameThree.rankSuccessfulUser(result.points); //TODO !!! make this function protected again
+        //         this.players.get(result.id)!.rank = rank;
+        //         result.rank = rank;
+        //         return result;
+        //     });
+
+        // this.updateStage(GameThreeGameState.ViewingFinalResults);
+        this.gameState = GameState.Finished;
+        GameThreeEventEmitter.emitGameHasFinishedEvent(this.roomId, GameState.Finished, []); //playerRanks);
     }
 }

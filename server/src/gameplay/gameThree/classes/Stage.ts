@@ -64,4 +64,8 @@ export abstract class Stage {
     hasNextStage(): boolean {
         return true;
     }
+
+    isFinalStage(): boolean {
+        return false;
+    }
 }

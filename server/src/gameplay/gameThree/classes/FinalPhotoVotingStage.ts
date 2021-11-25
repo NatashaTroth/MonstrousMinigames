@@ -3,7 +3,7 @@ import GameThreeEventEmitter from '../GameThreeEventEmitter';
 import { PhotoPhotographerMapper, PlayerNameId } from '../interfaces';
 import { VotingStage } from './VotingStage';
 
-export class MultiplePhotosVotingStage extends VotingStage {
+export class FinalPhotosVotingStage extends VotingStage {
     //TODO make URL type
 
     constructor(roomId: string, players: PlayerNameId[], photoUrls: PhotoPhotographerMapper[]) {
@@ -13,6 +13,10 @@ export class MultiplePhotosVotingStage extends VotingStage {
 
     hasNextStage(): boolean {
         return false;
+    }
+
+    isFinalStage(): boolean {
+        return true;
     }
 
     switchToNextStage() {

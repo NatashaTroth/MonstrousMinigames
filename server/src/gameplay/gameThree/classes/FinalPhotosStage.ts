@@ -4,7 +4,7 @@ import { PlayerNameId } from '../interfaces';
 import { PhotoStage } from './PhotoStage';
 import { PresentationStage } from './PresentationStage';
 
-export class MultiplePhotosStage extends PhotoStage {
+export class FinalPhotosStage extends PhotoStage {
     constructor(roomId: string, players: PlayerNameId[]) {
         super({
             roomId,
