@@ -1,36 +1,43 @@
-import { History } from 'history';
+import { History } from "history";
 
-import { GameNames } from '../../../config/games';
-import { FinalPhoto, Topic, Vote, VoteResult } from '../../../contexts/game3/Game3ContextProvider';
-import { PlayerRank } from '../../../contexts/ScreenSocketContextProvider';
-import { Routes } from '../../../utils/routes';
-import { handleConnectedUsersMessage } from '../../commonGameState/screen/handleConnectedUsersMessage';
-import { handleGameHasFinishedMessage } from '../../commonGameState/screen/handleGameHasFinishedMessage';
-import { handleGameHasResetMessage } from '../../commonGameState/screen/handleGameHasResetMessage';
-import { handleGameHasStoppedMessage } from '../../commonGameState/screen/handleGameHasStoppedMessage';
-import { handleGameStartedMessage } from '../../commonGameState/screen/handleGameStartedMessage';
+import { GameNames } from "../../../config/games";
+import { FinalPhoto, Topic, Vote, VoteResult } from "../../../contexts/game3/Game3ContextProvider";
+import { PlayerRank } from "../../../contexts/ScreenSocketContextProvider";
+import { Routes } from "../../../utils/routes";
 import {
-    handleStartPhaserGameMessage,
-    handleStartSheepGameMessage,
-} from '../../commonGameState/screen/handleStartPhaserGameMessage';
-import { handleSetScreenSocketGame3 } from '../../game3/screen/socket/Sockets';
-import { handleSetCommonSocketsGame3 } from '../../game3/socket/Socket';
-import { MessageSocket } from '../../socket/MessageSocket';
-import ScreenSocket from '../../socket/screenSocket';
-import { Socket } from '../../socket/Socket';
-import { ConnectedUsersMessage, connectedUsersTypeGuard, User } from '../../typeGuards/connectedUsers';
-import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
-import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
-import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/game1/started';
-import { GameSetMessage, gameSetTypeGuard } from '../../typeGuards/gameSet';
-import { pausedTypeGuard } from '../../typeGuards/paused';
-import { resetTypeGuard } from '../../typeGuards/reset';
-import { resumedTypeGuard } from '../../typeGuards/resumed';
-import { ScreenAdminMessage, screenAdminTypeGuard } from '../../typeGuards/screenAdmin';
-import { ScreenStateMessage, screenStateTypeGuard } from '../../typeGuards/screenState';
-import { StartPhaserGameMessage, startPhaserGameTypeGuard } from '../../typeGuards/startPhaserGame';
-import { StartSheepGameMessage, startSheepGameTypeGuard } from '../../typeGuards/startSheepGame';
-import { stoppedTypeGuard } from '../../typeGuards/stopped';
+    handleConnectedUsersMessage
+} from "../../commonGameState/screen/handleConnectedUsersMessage";
+import {
+    handleGameHasFinishedMessage
+} from "../../commonGameState/screen/handleGameHasFinishedMessage";
+import { handleGameHasResetMessage } from "../../commonGameState/screen/handleGameHasResetMessage";
+import {
+    handleGameHasStoppedMessage
+} from "../../commonGameState/screen/handleGameHasStoppedMessage";
+import { handleGameStartedMessage } from "../../commonGameState/screen/handleGameStartedMessage";
+import {
+    handleStartPhaserGameMessage, handleStartSheepGameMessage
+} from "../../commonGameState/screen/handleStartPhaserGameMessage";
+import { handleSetScreenSocketGame3 } from "../../game3/screen/socket/Sockets";
+import { handleSetCommonSocketsGame3 } from "../../game3/socket/Socket";
+import { MessageSocket } from "../../socket/MessageSocket";
+import ScreenSocket from "../../socket/screenSocket";
+import { Socket } from "../../socket/Socket";
+import {
+    ConnectedUsersMessage, connectedUsersTypeGuard, User
+} from "../../typeGuards/connectedUsers";
+import { ErrorMessage, errorTypeGuard } from "../../typeGuards/error";
+import { finishedTypeGuard, GameHasFinishedMessage } from "../../typeGuards/finished";
+import { GameHasStartedMessage, startedTypeGuard } from "../../typeGuards/game1/started";
+import { GameSetMessage, gameSetTypeGuard } from "../../typeGuards/gameSet";
+import { pausedTypeGuard } from "../../typeGuards/paused";
+import { resetTypeGuard } from "../../typeGuards/reset";
+import { resumedTypeGuard } from "../../typeGuards/resumed";
+import { ScreenAdminMessage, screenAdminTypeGuard } from "../../typeGuards/screenAdmin";
+import { ScreenStateMessage, screenStateTypeGuard } from "../../typeGuards/screenState";
+import { StartPhaserGameMessage, startPhaserGameTypeGuard } from "../../typeGuards/startPhaserGame";
+import { StartSheepGameMessage, startSheepGameTypeGuard } from "../../typeGuards/startSheepGame";
+import { stoppedTypeGuard } from "../../typeGuards/stopped";
 
 export interface HandleSetSocketDependencies {
     setScreenSocket: (socket: Socket) => void;
@@ -101,9 +108,9 @@ export function handleSetSocket(
         handleConnectedUsersMessage({ data, dependencies: { setConnectedUsers } })
     );
 
-    finishedSocket.listen((data: GameHasFinishedMessage) =>
-        handleGameHasFinishedMessage({ data, roomId, dependencies: { setFinished, setPlayerRanks, history } })
-    );
+    finishedSocket.listen((data: GameHasFinishedMessage) => {
+        handleGameHasFinishedMessage({ data, roomId, dependencies: { setFinished, setPlayerRanks, history } });
+    });
 
     startPhaserGameSocket.listen((data: StartPhaserGameMessage) =>
         handleStartPhaserGameMessage({ roomId, dependencies: { setGameStarted, history } })
@@ -127,7 +134,10 @@ export function handleSetSocket(
 
     screenAdminSocket.listen((data: ScreenAdminMessage) => setScreenAdmin(data.isAdmin));
 
-    screenStateSocket.listen((data: ScreenStateMessage) => setScreenState(data.state));
+    screenStateSocket.listen((data: ScreenStateMessage) => {
+        const screenState = data.game ? `${data.state}/${data.game}` : data.state;
+        setScreenState(screenState);
+    });
 
     startedSocket.listen((data: GameHasStartedMessage) => {
         handleGameStartedMessage({

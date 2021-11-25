@@ -1,9 +1,9 @@
-import { FirebaseStorage, getDownloadURL, ref, uploadBytes } from '@firebase/storage';
-import { deleteObject, listAll } from 'firebase/storage';
+import { FirebaseStorage, getDownloadURL, ref, uploadBytes } from "@firebase/storage";
+import { deleteObject, listAll } from "firebase/storage";
 
-import { MessageTypesGame3 } from '../../../../utils/constants';
-import { Socket } from '../../../socket/Socket';
-import { UploadProps } from '../components/TakePicture';
+import { MessageTypesGame3 } from "../../../../utils/constants";
+import { Socket } from "../../../socket/Socket";
+import { UploadProps } from "../components/TakePicture";
 
 export default async function uploadFile(
     values: UploadProps,
@@ -58,13 +58,9 @@ export async function deleteFiles(storage: FirebaseStorage | undefined, roomId: 
         const childRef = ref(storage, `${pathToFile}/${fileName}`);
 
         // Delete the file
-        deleteObject(childRef)
-            .then(() => {
-                // File deleted successfully
-            })
-            .catch(error => {
-                // eslint-disable-next-line no-console
-                console.log(error);
-            });
+        deleteObject(childRef).catch(error => {
+            // eslint-disable-next-line no-console
+            console.log(error);
+        });
     }
 }

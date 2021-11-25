@@ -1,10 +1,10 @@
-import { Typography } from '@material-ui/core';
-import React from 'react';
-import { Field, FieldRenderProps, Form } from 'react-final-form';
+import { Typography } from "@material-ui/core";
+import React from "react";
+import { Field, FieldRenderProps, Form } from "react-final-form";
 
-import Button from '../../../../components/common/Button';
-import { UploadProps } from './TakePicture';
-import { StyledImg, StyledLabel, UploadWrapper } from './TakePicture.sc';
+import Button from "../../../../components/common/Button";
+import { UploadProps } from "./TakePicture";
+import { StyledImg, StyledLabel, UploadWrapper } from "./TakePicture.sc";
 
 interface PhotoFormProps {
     upload: (values: UploadProps) => void;

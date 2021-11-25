@@ -1,8 +1,8 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { Photographer } from '../../domain/typeGuards/game3/voteForFinalPhotos';
-import { PhotoUserMapper } from '../../domain/typeGuards/game3/voteForPhotos';
-import { VotingResult } from '../../domain/typeGuards/game3/votingResults';
+import { Photographer } from "../../domain/typeGuards/game3/voteForFinalPhotos";
+import { PhotoUserMapper } from "../../domain/typeGuards/game3/voteForPhotos";
+import { VotingResult } from "../../domain/typeGuards/game3/votingResults";
 
 export const defaultValue = {
     roundIdx: 1,
@@ -33,6 +33,9 @@ export const defaultValue = {
     setPresentFinalPhotos: () => {
         // do nothing
     },
+    resetGame3: () => {
+        // do nothing
+    },
 };
 
 export type VoteResult = { results: VotingResult[]; countdownTime: number } | undefined;
@@ -57,6 +60,7 @@ interface Game3ContextProps {
     setFinalRoundCountdownTime: (val: number) => void;
     presentFinalPhotos: FinalPhoto;
     setPresentFinalPhotos: (val: FinalPhoto) => void;
+    resetGame3: () => void;
 }
 
 export const Game3Context = React.createContext<Game3ContextProps>(defaultValue);
@@ -85,6 +89,15 @@ const Game3ContextProvider: React.FunctionComponent = ({ children }) => {
         setFinalRoundCountdownTime,
         presentFinalPhotos,
         setPresentFinalPhotos,
+        resetGame3: () => {
+            setRoundIdx(defaultValue.roundIdx);
+            setTopicMessage(defaultValue.topicMessage);
+            setVoteForPhotoMessage(defaultValue.voteForPhotoMessage);
+            setPhotos([]);
+            setVotingResults(defaultValue.voteForPhotoMessage);
+            setFinalRoundCountdownTime(defaultValue.finalRoundCountdownTime);
+            setPresentFinalPhotos(defaultValue.presentFinalPhotos);
+        },
     };
     return <Game3Context.Provider value={content}>{children}</Game3Context.Provider>;
 };

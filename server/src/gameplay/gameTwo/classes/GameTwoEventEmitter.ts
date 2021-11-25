@@ -9,7 +9,8 @@ import {
 import { GameTwoMessageEmitter } from './GameTwoMessageEmitter';
 import { GameStateInfo, PlayerRank } from '../interfaces';
 import {
-    GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
+    GAME_TWO_EVENT_MESSAGE__GUESS_HINT,
+    GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED,
 } from './../interfaces/GameTwoEventMessages';
 
 export default class GameTwoEventEmitter {
@@ -20,6 +21,24 @@ export default class GameTwoEventEmitter {
             type: GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
             roomId,
             data: gameState,
+        });
+    }
+
+    public static emitPhaseHasChanged(roomId: string, round: number, phase: string) {
+        this.GameTwoMessageEmitter.emit({
+            type: GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED,
+            roomId,
+            round,
+            phase,
+        });
+    }
+
+    public static emitGuessHint(roomId: string, userId: string, hint: string) {
+        this.GameTwoMessageEmitter.emit({
+            type: GAME_TWO_EVENT_MESSAGE__GUESS_HINT,
+            roomId,
+            userId,
+            hint,
         });
     }
 
