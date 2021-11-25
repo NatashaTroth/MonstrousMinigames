@@ -1,6 +1,8 @@
-import { handleConnectedUsersMessage } from '../../../domain/commonGameState/controller/handleConnectedUsersMessage';
-import { ConnectedUsersMessage } from '../../../domain/typeGuards/connectedUsers';
-import { MessageTypes } from '../../../utils/constants';
+import {
+    handleConnectedUsersMessage
+} from "../../../domain/commonGameState/controller/handleConnectedUsersMessage";
+import { ConnectedUsersMessage } from "../../../domain/typeGuards/connectedUsers";
+import { MessageTypes } from "../../../utils/constants";
 
 describe('handleConnectedUsersMessage function', () => {
     const mockData: ConnectedUsersMessage = {
@@ -22,10 +24,9 @@ describe('handleConnectedUsersMessage function', () => {
         const setAvailableCharacters = jest.fn();
         const setConnectedUsers = jest.fn();
 
-        handleConnectedUsersMessage({
-            data: mockData,
-            dependencies: { setAvailableCharacters, setConnectedUsers },
-        });
+        const withDependencies = handleConnectedUsersMessage({ setAvailableCharacters, setConnectedUsers });
+
+        withDependencies(mockData);
 
         expect(setAvailableCharacters).toHaveBeenCalledTimes(1);
     });
@@ -34,10 +35,9 @@ describe('handleConnectedUsersMessage function', () => {
         const setAvailableCharacters = jest.fn();
         const setConnectedUsers = jest.fn();
 
-        handleConnectedUsersMessage({
-            data: mockData,
-            dependencies: { setAvailableCharacters, setConnectedUsers },
-        });
+        const withDependencies = handleConnectedUsersMessage({ setAvailableCharacters, setConnectedUsers });
+
+        withDependencies(mockData);
 
         expect(setConnectedUsers).toHaveBeenCalledWith(mockData.users);
     });
@@ -46,11 +46,10 @@ describe('handleConnectedUsersMessage function', () => {
         const setAvailableCharacters = jest.fn();
         const setConnectedUsers = jest.fn();
 
-        handleConnectedUsersMessage({
-            data: {
-                type: MessageTypes.connectedUsers,
-            },
-            dependencies: { setAvailableCharacters, setConnectedUsers },
+        const withDependencies = handleConnectedUsersMessage({ setAvailableCharacters, setConnectedUsers });
+
+        withDependencies({
+            type: MessageTypes.connectedUsers,
         });
 
         expect(setConnectedUsers).toHaveBeenCalledWith([]);

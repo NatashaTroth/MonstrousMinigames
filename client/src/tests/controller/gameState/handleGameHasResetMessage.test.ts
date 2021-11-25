@@ -11,7 +11,9 @@ describe('handleGameHasResetMessage', () => {
     it('history push should be called with handed roomId', () => {
         const history = createMemoryHistory();
 
-        handleGameHasResetMessage(history, roomId, resetController);
+        const withDependencies = handleGameHasResetMessage({ history, resetController });
+
+        withDependencies(roomId);
 
         expect(history.location).toHaveProperty('pathname', `/controller/${roomId}/lobby`);
     });

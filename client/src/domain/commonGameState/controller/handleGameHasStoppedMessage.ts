@@ -1,19 +1,13 @@
-import { History } from 'history';
+import { History } from "history";
 
-import { controllerLobbyRoute } from '../../../utils/routes';
-import { Socket } from '../../socket/Socket';
+import { controllerLobbyRoute } from "../../../utils/routes";
 
-interface HandleGameHasStoppedMessage {
-    socket: Socket;
-    roomId: string;
-    dependencies: {
-        history: History;
-    };
+interface Dependencies {
+    history: History;
 }
 
-export function handleGameHasStoppedMessage(props: HandleGameHasStoppedMessage) {
-    const { roomId, dependencies } = props;
-    const { history } = dependencies;
-
-    history.push(controllerLobbyRoute(roomId));
+export function handleGameHasStoppedMessage(dependencies: Dependencies) {
+    return (roomId: string) => {
+        dependencies.history.push(controllerLobbyRoute(roomId));
+    };
 }

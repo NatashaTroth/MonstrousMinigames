@@ -1,11 +1,13 @@
-import { depthDictionary } from '../../../config/depthDictionary';
-import { designDevelopment, localDevelopment, ObstacleTypes, stunnedAnimation } from '../../../utils/constants';
-import MainScene from '../../game1/screen/components/MainScene';
-import { AnimationNameGame1 } from '../enums/AnimationName';
-import { Character, GameData } from '../gameInterfaces';
-import { Coordinates } from '../gameTypes';
-import { GameToScreenMapper } from './GameToScreenMapper';
-import { PlayerRenderer } from './PlayerRenderer';
+import { depthDictionary } from "../../../config/depthDictionary";
+import {
+    designDevelopment, localDevelopment, ObstacleTypes, stunnedAnimation
+} from "../../../utils/constants";
+import MainScene from "../../game1/screen/components/MainScene";
+import { AnimationNameGame1 } from "../enums/AnimationName";
+import { Character, GameData } from "../gameInterfaces";
+import { Coordinates } from "../gameTypes";
+import { GameToScreenMapper } from "./GameToScreenMapper";
+import { PlayerRenderer } from "./PlayerRenderer";
 
 /**
  * This is the main player class where all the business functionality should be implemented (eg. what happens when a
@@ -13,10 +15,27 @@ import { PlayerRenderer } from './PlayerRenderer';
  * on the replaceable interface (PlayerRenderer) which can be mocked. With the mocked interface in combination with
  * the InMemoryPlayerRenderer, testing this class should be pretty straight forward.
  */
+
+class DomainPlayer {
+    isMoving = false;
+    name: string;
+    id: string;
+
+    constructor(id: string, name: string) {
+        this.id = id;
+        this.name = name;
+    }
+
+    startMoving() {
+        this.isMoving = true;
+    }
+
+    stopMoving() {
+        this.isMoving = false;
+    }
+}
 export class Player {
-    username: string;
-    userId: string;
-    playerRunning: boolean;
+    player: DomainPlayer;
     playerAtObstacle: boolean;
     playerCountSameDistance: number;
     dead: boolean;
@@ -37,9 +56,6 @@ export class Player {
         private gameToScreenMapper: GameToScreenMapper,
         public playerRenderer: PlayerRenderer
     ) {
-        this.username = gameStateData.playersState[index].name;
-        this.userId = gameStateData.playersState[index].id;
-        this.playerRunning = false;
         this.playerAtObstacle = false;
         this.playerCountSameDistance = 0;
         this.dead = false;
@@ -47,6 +63,8 @@ export class Player {
         this.stunned = false;
         this.windowWidth = scene.windowWidth;
         this.windowHeight = scene.windowHeight;
+
+        this.player = new DomainPlayer(gameStateData.playersState[index].id, gameStateData.playersState[index].name);
 
         this.renderer = playerRenderer;
 
@@ -96,10 +114,10 @@ export class Player {
     moveForward(newXPosition: number) {
         if (this.finished) return;
 
-        if (newXPosition == this.coordinates.x && this.playerRunning) {
+        if (newXPosition == this.coordinates.x && this.player.isMoving) {
             this.stopRunning();
         } else {
-            if (!this.playerRunning) {
+            if (!this.player.isMoving) {
                 this.startRunning();
             }
         }
@@ -193,7 +211,7 @@ export class Player {
             y: this.coordinates.y,
         };
 
-        this.renderer.renderPlayer(this.index, screenCoordinates, this.character, this.username);
+        this.renderer.renderPlayer(this.index, screenCoordinates, this.character, this.player.name);
     }
 
     private setObstacles() {
@@ -249,11 +267,11 @@ export class Player {
     startRunning() {
         const animationName = this.character.animations.get(AnimationNameGame1.Running)?.name;
         if (animationName) this.renderer.startAnimation(animationName);
-        this.playerRunning = true;
+        this.player.startMoving();
     }
 
     stopRunning() {
         this.renderer.stopAnimation();
-        this.playerRunning = false;
+        this.player.stopMoving();
     }
 }

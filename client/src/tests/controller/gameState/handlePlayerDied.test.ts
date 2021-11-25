@@ -1,6 +1,6 @@
-import { handlePlayerDied } from '../../../domain/game1/controller/gameState/handlePlayerDied';
-import { PlayerDiedMessage } from '../../../domain/typeGuards/game1/playerDied';
-import { MessageTypesGame1 } from '../../../utils/constants';
+import { handlePlayerDied } from "../../../domain/game1/controller/gameState/handlePlayerDied";
+import { PlayerDiedMessage } from "../../../domain/typeGuards/game1/playerDied";
+import { MessageTypesGame1 } from "../../../utils/constants";
 
 describe('playerDied function', () => {
     let setPlayerDead: jest.Mock<any, any>;
@@ -18,21 +18,23 @@ describe('playerDied function', () => {
     });
 
     it('handed playerDied should be called with true', () => {
-        handlePlayerDied({
-            data: mockData,
-            roomId,
-            dependencies: { setPlayerDead, setPlayerRank },
+        const withDependencies = handlePlayerDied({
+            setPlayerDead,
+            setPlayerRank,
         });
+
+        withDependencies({ data: mockData, roomId });
 
         expect(setPlayerDead).toHaveBeenLastCalledWith(true);
     });
 
     it('handed setPlayerRank should be called with passed rank', () => {
-        handlePlayerDied({
-            data: mockData,
-            roomId,
-            dependencies: { setPlayerDead, setPlayerRank },
+        const withDependencies = handlePlayerDied({
+            setPlayerDead,
+            setPlayerRank,
         });
+
+        withDependencies({ data: mockData, roomId });
 
         expect(setPlayerRank).toHaveBeenLastCalledWith(mockData.rank);
     });

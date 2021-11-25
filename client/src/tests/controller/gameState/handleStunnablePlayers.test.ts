@@ -1,6 +1,8 @@
-import { handleStunnablePlayers } from '../../../domain/game1/controller/gameState/handleStunnablePlayers';
-import { StunnablePlayersMessage } from '../../../domain/typeGuards/game1/stunnablePlayers';
-import { MessageTypesGame1 } from '../../../utils/constants';
+import {
+    handleStunnablePlayers
+} from "../../../domain/game1/controller/gameState/handleStunnablePlayers";
+import { StunnablePlayersMessage } from "../../../domain/typeGuards/game1/stunnablePlayers";
+import { MessageTypesGame1 } from "../../../utils/constants";
 
 describe('handleStunnablePlayers function', () => {
     const mockData: StunnablePlayersMessage = {
@@ -12,10 +14,11 @@ describe('handleStunnablePlayers function', () => {
     it('handed setStunnablePlayers should be called', () => {
         const setStunnablePlayers = jest.fn();
 
-        handleStunnablePlayers({
-            data: mockData,
-            dependencies: { setStunnablePlayers },
+        const withDependencies = handleStunnablePlayers({
+            setStunnablePlayers,
         });
+
+        withDependencies(mockData);
 
         expect(setStunnablePlayers).toHaveBeenLastCalledWith(mockData.stunnablePlayers);
     });
