@@ -64,7 +64,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             lengthY: this.lengthY,
             round: this.roundService.round,
             phase: this.roundService.phase,
-            aliveSheepCounts: this.sheepService.aliveSheepCounts
+            aliveSheepCounts: this.guessingService.counts
         };
     }
 
@@ -92,7 +92,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
         this.sheepService.initSheep();
-        this.sheepService.listenToRoundChanges();
         this.guessingService.init(users);
         this.listenToEvents();
         GameTwoEventEmitter.emitInitialGameStateInfoUpdate(
