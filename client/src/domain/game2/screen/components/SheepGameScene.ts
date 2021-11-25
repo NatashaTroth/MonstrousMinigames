@@ -175,8 +175,6 @@ class SheepGameScene extends Phaser.Scene {
         // second message -> createGame
         const allScreensSheepGameLoaded = new MessageSocket(allScreensSheepGameLoadedTypeGuard, this.socket);
         allScreensSheepGameLoaded.listen((data: AllScreensSheepGameLoadedMessage) => {
-            // eslint-disable-next-line no-console
-            console.log('allscreensLoaded');
             if (this.screenAdmin) this.sendCreateNewGame();
         });
 

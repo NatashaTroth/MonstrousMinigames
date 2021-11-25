@@ -42,9 +42,9 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
     function getDirection(direction: string) {
         switch (direction) {
             case 'FORWARD':
-                return 'S';
-            case 'BACKWARD':
                 return 'N';
+            case 'BACKWARD':
+                return 'S';
             case 'LEFT':
                 return 'W';
             case 'RIGHT':
