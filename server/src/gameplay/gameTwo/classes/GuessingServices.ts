@@ -19,7 +19,15 @@ export default class GuessingService {
         })
     }
 
-
+    public getHintForRound(round: number, userId: string): string | null {
+        const guess = this.getGuessForRound(round, userId);
+        const count = this.getCountForRound(round);
+        if (guess && count) {
+            return this.getHint(count - guess);
+        }
+        return null;
+    }
+    
     public getHint(miss: number): string {
         if (miss > 0 && miss <= InitialParameters.GOOD_GUESS_THRESHOLD) {
             return GuessHints.LOW;
@@ -44,5 +52,36 @@ export default class GuessingService {
             }
         }
         return false;
+    }
+    private getGuessForRound(round: number, userId: string): number | null {
+        const guesses = this.getGuessesForUser(userId);
+        if (guesses) {
+            return guesses[round - 1];
+        }
+        return null;
+    }
+    private getGuessesForUser(userId: string): number[] | null {
+        const guesses = this.guesses.get(userId);
+        if (guesses) {
+            return guesses;
+        }
+        return null;
+    }
+
+
+    public saveSheepCount(round: number, count: number): boolean {
+        if (!this.counts[round - 1] && round <= this.roundCount - 1) {
+            this.counts[round - 1] = count;
+            return true;
+        }
+        return false;
+    }
+
+    public getCountForRound(round: number): number | null {
+        if (this.counts[round - 1]) {
+            return this.counts[round - 1];
+        } else {
+            return null;
+        }
     }
 }

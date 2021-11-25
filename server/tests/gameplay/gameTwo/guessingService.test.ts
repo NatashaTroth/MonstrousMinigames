@@ -36,4 +36,38 @@ describe('GuessingService Tests', () => {
         expect(guessingService.getHint(0)).toEqual(GuessHints.EXACT);
     });
 
+    it('should return the exact hint if a user guesses right', () => {
+        const round = 1;
+        const sheepCount = 10;
+        guessingService.saveSheepCount(round, sheepCount);
+        guessingService.addGuess(1, sheepCount, user.id);
+        expect(guessingService.getHintForRound(round, user.id)).toEqual(GuessHints.EXACT);
+    });
+
+    it('should return false if trying to save sheep count index is out of bound', () => {
+        expect(guessingService.saveSheepCount(5, 10)).toBeFalsy();
+    });
+
+    it('should return false if trying to save sheep count index is already set for round', () => {
+        guessingService.saveSheepCount(1, 11);
+        expect(guessingService.saveSheepCount(1, 10)).toBeFalsy();
+    });
+
+    it('should return true if sheepcount is saved', () => {
+        expect(guessingService.saveSheepCount(1, 10)).toBeTruthy();
+    });
+
+    it('should return the right saved sheep count', () => {
+        const round = 1;
+        const sheepCount = 10;
+        guessingService.saveSheepCount(round, sheepCount);
+        expect(guessingService.getCountForRound(round)).toEqual(sheepCount);
+    });
+
+    it('should return null if there is no saved count', () => {
+        const round = 1;
+        expect(guessingService.getCountForRound(round)).toEqual(null);
+    });
+
+
 });

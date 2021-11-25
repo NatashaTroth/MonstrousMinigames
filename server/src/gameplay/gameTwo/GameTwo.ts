@@ -14,6 +14,7 @@ import RoundService from './classes/RoundService';
 import SheepService from './classes/SheepService';
 import RoundEventEmitter from './classes/RoundEventEmitter';
 import GuessingService from './classes/GuessingServices';
+import { Phases } from './enums/Phases';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -144,14 +145,14 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     protected handleGuess(userId: string, guess: number) {
         const player = this.players.get(userId)!;
+        const round = this.roundService.round;
 
         if (this.roundService.isGuessingPhase() && player) {
-            const aliveSheep = this.sheepService.aliveSheepCounts[this.roundService.round - 1];
-            if (this.guessingService.addGuess(this.roundService.round, guess, userId)) {
-                const miss = aliveSheep - guess;
-
-                const hint = this.guessingService.getHint(miss);
-                GameTwoEventEmitter.emitGuessHint(this.roomId, player.id, hint);
+            if (this.guessingService.addGuess(round, guess, userId)) {
+                const hint = this.guessingService.getHintForRound(round, userId);
+                if (hint) {
+                    GameTwoEventEmitter.emitGuessHint(this.roomId, player.id, hint);
+                }
             }
         }
 
@@ -194,6 +195,9 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     protected listenToEvents(): void {
         this.roundEventEmitter.on(RoundEventEmitter.PHASE_CHANGE_EVENT, (round: number, phase: string) => {
+            if (phase === Phases.GUESSING) {
+                this.guessingService.saveSheepCount(round, this.sheepService.getAliveSheepCount());
+            }
             GameTwoEventEmitter.emitPhaseHasChanged(this.roomId, round, phase);
         });
     }
