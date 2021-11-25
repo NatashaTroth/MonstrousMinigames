@@ -9,6 +9,7 @@ import MainScene from '../../game1/screen/components/MainScene';
 import SheepGameScene from '../../game2/screen/components/SheepGameScene';
 import * as colors from '../colors';
 import { gameLoadedWaitingMessages, gameLoadingMessages } from '../game1/gameLoadingMessages';
+import { game2LoadingMessages } from '../game2/gameLoadingMessages';
 import { Scene } from '../Scene';
 import { GameObjectText } from '../Text';
 import { countdownTextStyleProperties, loadingTextStyleProperties } from '../textStyleProperties';
@@ -55,11 +56,15 @@ export class PhaserGameRenderer {
         const progressBoxXPos = this.sceneWidth / 2 - this.progressBoxWidth / 2;
         const progressBoxYPos = this.sceneHeight / 2 - this.progressBoxHeight / 2;
         this.progressBox.fillRect(progressBoxXPos, progressBoxYPos, this.progressBoxWidth, this.progressBoxHeight);
+        let loadingMessages = gameLoadingMessages;
+        if (this.scene instanceof SheepGameScene) {
+            loadingMessages = game2LoadingMessages;
+        }
 
         this.loadingText = this.scene.make.text({
             x: screenCenterWidth,
             y: screenCenterHeight - this.progressBoxHeight,
-            text: `${gameLoadingMessages[getRandomInt(0, gameLoadingMessages.length)]}...`,
+            text: `${loadingMessages[getRandomInt(0, loadingMessages.length)]}...`,
             style: {
                 ...loadingTextStyleProperties,
                 fontSize: `${20}px`,

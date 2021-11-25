@@ -8,7 +8,7 @@ import { GameData } from '../../../phaser/game2/gameInterfaces/GameData';
 import { GameToScreenMapper } from '../../../phaser/game2/GameToScreenMapper';
 import { initialGameInput } from '../../../phaser/game2/initialGameInput';
 import { Player } from '../../../phaser/game2/Player';
-import { Sheep } from '../../../phaser/game2/Sheep';
+import { Sheep, SheepState } from '../../../phaser/game2/Sheep';
 import { GameAudio } from '../../../phaser/GameAudio';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import { GameEventTypes } from '../../../phaser/GameEventTypes';
@@ -252,6 +252,15 @@ class SheepGameScene extends Phaser.Scene {
                     gameStateData.playersState[i].positionX,
                     gameStateData.playersState[i].positionY
                 );
+            }
+        }
+        for (let i = 0; i < this.sheep.length; i++) {
+            if (gameStateData.sheep[i]) {
+                if (gameStateData.sheep[i].state && gameStateData.sheep[i].state == SheepState.DECOY) {
+                    this.sheep[i].renderer.placeDecoy();
+                } else if (gameStateData.sheep[i].state == SheepState.DEAD) {
+                    this.sheep[i].renderer.destroySheep();
+                }
             }
         }
     }

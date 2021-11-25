@@ -59,6 +59,8 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
             type: MessageTypesGame2.killSheep,
             userId: userId,
         });
+        // eslint-disable-next-line no-console
+        console.log('kill');
     }
 
     function handleMove(event: IJoystickUpdateEvent) {
