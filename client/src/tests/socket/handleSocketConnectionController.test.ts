@@ -12,7 +12,7 @@ describe('Controller Socket Connection', () => {
         const setRoomId = jest.fn();
         const dependencies: HandleSocketConnDependencies = {
             history,
-            setRoomId: jest.fn(),
+            setRoomId,
             setChosenGame: jest.fn(),
             setControllerSocket: jest.fn(),
             setExceededChaserPushes: jest.fn(),
