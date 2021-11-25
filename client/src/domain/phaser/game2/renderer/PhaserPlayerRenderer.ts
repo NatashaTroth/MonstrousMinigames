@@ -21,6 +21,8 @@ export class PhaserPlayerRenderer {
     }
 
     renderPlayer(coordinates: Coordinates, character: Character): void {
+        // eslint-disable-next-line no-console
+        console.log('render');
         if (!this.player) {
             this.renderPlayerInitially(coordinates, character.name);
             // frames:
@@ -31,7 +33,7 @@ export class PhaserPlayerRenderer {
             this.initiateAnimation(character.name, character.name + +'_walkForward', { start: 0, end: 3 });
             this.initiateAnimation(character.name, character.name + +'_walkLeft', { start: 4, end: 7 });
             this.initiateAnimation(character.name, character.name + +'_walkRight', { start: 8, end: 11 });
-        } else if (this.player) {
+        } else {
             this.player.x = coordinates.x;
             this.player.y = coordinates.y;
         }
@@ -41,21 +43,23 @@ export class PhaserPlayerRenderer {
         this.player?.destroy();
     }
 
-    movePlayerForward(newXPosition: number) {
+    movePlayerTo(newXPosition: number, newYPosition: number) {
         if (this.player) {
             this.player.x = newXPosition;
+            this.player.y = newYPosition;
         }
     }
 
     renderSheepBackground(width: number, height: number) {
         const element = this.scene.add.image(0, 0, 'forest2');
         element.setDisplaySize(width, height);
-        element.setOrigin(0, 1);
+        element.setOrigin(0, 0);
+        element.setDepth(depthDictionary.sky);
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
-        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
-        this.player.setScale(0.2);
+        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName);
+        this.player.setScale(0.1);
         this.player.setDepth(depthDictionary.player);
         this.player.setCollideWorldBounds(true);
     }

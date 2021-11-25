@@ -8,7 +8,7 @@ import { GameData } from '../../../phaser/game2/gameInterfaces/GameData';
 import { GameToScreenMapper } from '../../../phaser/game2/GameToScreenMapper';
 import { initialGameInput } from '../../../phaser/game2/initialGameInput';
 import { Player } from '../../../phaser/game2/Player';
-import { Sheep } from '../../../phaser/game2/Sheep';
+import { Sheep, SheepState } from '../../../phaser/game2/Sheep';
 import { GameAudio } from '../../../phaser/GameAudio';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import { GameEventTypes } from '../../../phaser/GameEventTypes';
@@ -80,7 +80,7 @@ class SheepGameScene extends Phaser.Scene {
         this.socket = data.socket;
         this.screenAdmin = data.screenAdmin;
         this.gameRenderer = new PhaserGameRenderer(this);
-        this.initSockets();
+        //this.initSockets();
         this.initiateEventEmitters();
 
         if (this.roomId === '' && data.roomId !== undefined) {
@@ -149,8 +149,6 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     sendStartGame() {
-        // eslint-disable-next-line no-console
-        console.log('sendStartGame');
         //TODO!!!! - do not send when game is already started? - or is it just ignored - appears to work - maybe check if no game state updates?
         this.socket?.emit({
             type: MessageTypes.startGame,
@@ -160,6 +158,8 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     initSockets() {
+        // eslint-disable-next-line no-console
+        console.log('initSockers');
         if (!this.socket) return; //TODO - handle error - although think ok
         if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
@@ -177,8 +177,6 @@ class SheepGameScene extends Phaser.Scene {
         // second message -> createGame
         const allScreensSheepGameLoaded = new MessageSocket(allScreensSheepGameLoadedTypeGuard, this.socket);
         allScreensSheepGameLoaded.listen((data: AllScreensSheepGameLoadedMessage) => {
-            // eslint-disable-next-line no-console
-            console.log('allscreensLoaded');
             if (this.screenAdmin) this.sendCreateNewGame();
         });
 
@@ -190,8 +188,6 @@ class SheepGameScene extends Phaser.Scene {
         const startedGame = new MessageSocket(sheepGameStartedTypeGuard, this.socket);
         startedGame.listen((data: SheepGameHasStartedMessage) => {
             this.createGameCountdown(data.countdownTime);
-            // eslint-disable-next-line no-console
-            console.log('startedGame');
         });
 
         const gameStateInfoSocket = new MessageSocket(gameStateInfoTypeGuard, this.socket);
@@ -236,8 +232,6 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     initiateGame(gameStateData: GameData) {
-        // eslint-disable-next-line no-console
-        console.log(gameStateData);
         this.gameToScreenMapper = new GameToScreenMapper(gameStateData.playersState[0].positionX, this.windowWidth, 0);
 
         this.physics.world.setBounds(0, 0, 7500, windowHeight);
@@ -252,7 +246,23 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     updateGameState(gameStateData: GameData) {
-        //TODO
+        for (let i = 0; i < this.players.length; i++) {
+            if (gameStateData.playersState[i]) {
+                this.players[i].moveTo(
+                    gameStateData.playersState[i].positionX,
+                    gameStateData.playersState[i].positionY
+                );
+            }
+        }
+        for (let i = 0; i < this.sheep.length; i++) {
+            if (gameStateData.sheep[i]) {
+                if (gameStateData.sheep[i].state && gameStateData.sheep[i].state == SheepState.DECOY) {
+                    this.sheep[i].renderer.placeDecoy();
+                } else if (gameStateData.sheep[i].state == SheepState.DEAD) {
+                    this.sheep[i].renderer.destroySheep();
+                }
+            }
+        }
     }
 
     private createPlayer(index: number, gameStateData: GameData) {

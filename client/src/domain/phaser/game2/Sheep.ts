@@ -26,7 +26,7 @@ export class Sheep {
         private numberPlayers: number,
         private gameToScreenMapper: GameToScreenMapper
     ) {
-        this.state = gameStateData.sheep[index].state;
+        this.state = SheepState.ALIVE;
         this.id = gameStateData.sheep[index].id;
         //this.coordinates = gameStateData.sheep[index].coordinates;
 
