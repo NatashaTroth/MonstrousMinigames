@@ -51,7 +51,8 @@ export class PhaserPlayerRenderer {
     renderSheepBackground(width: number, height: number) {
         const element = this.scene.add.image(0, 0, 'forest2');
         element.setDisplaySize(width, height);
-        element.setOrigin(0, 1);
+        element.setOrigin(0, 0);
+        element.setDepth(depthDictionary.sky);
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
