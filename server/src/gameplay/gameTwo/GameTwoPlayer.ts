@@ -21,9 +21,21 @@ class GameTwoPlayer extends Player {
     update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
         if (this.direction !== Direction.STOP) {
             switch (this.direction) {
+                case Direction.UP_LEFT:
+                    if (this.posY > 0 && this.posX > 0) {
+                        this.posY -= this.speed;
+                        this.posX -= this.speed;
+                    }
+                    break;
                 case Direction.UP:
                     if (this.posY > 0) {
                         this.posY -= this.speed;
+                    }
+                    break;
+                case Direction.UP_RIGHT:
+                    if (this.posY > 0 && this.posX < InitialParameters.LENGTH_X) {
+                        this.posY -= this.speed;
+                        this.posX += this.speed;
                     }
                     break;
                 case Direction.RIGHT:
@@ -31,9 +43,21 @@ class GameTwoPlayer extends Player {
                         this.posX += this.speed;
                     }
                     break;
+                case Direction.DOWN_RIGHT:
+                    if (this.posY < InitialParameters.LENGTH_Y && this.posX < InitialParameters.LENGTH_X) {
+                        this.posY += this.speed;
+                        this.posX += this.speed;
+                    }
+                    break;
                 case Direction.DOWN:
                     if (this.posY < InitialParameters.LENGTH_Y) {
                         this.posY += this.speed;
+                    }
+                    break;
+                case Direction.DOWN_LEFT:
+                    if (this.posY < InitialParameters.LENGTH_Y && this.posX > 0) {
+                        this.posY += this.speed;
+                        this.posX -= this.speed;
                     }
                     break;
                 case Direction.LEFT:
