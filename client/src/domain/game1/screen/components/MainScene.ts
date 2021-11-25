@@ -1,54 +1,51 @@
-import Phaser from "phaser";
+import Phaser from 'phaser';
 
-import chasersSpritesheet from "../../../../images/characters/spritesheets/chasers/chasers_spritesheet.png";
-import windSpritesheet from "../../../../images/characters/spritesheets/chasers/wind_spritesheet.png";
+import chasersSpritesheet from '../../../../images/characters/spritesheets/chasers/chasers_spritesheet.png';
+import windSpritesheet from '../../../../images/characters/spritesheets/chasers/wind_spritesheet.png';
+import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1 } from '../../../../utils/constants';
+import { screenFinishedRoute } from '../../../../utils/routes';
+import history from '../../../history/history';
+import { GameToScreenMapper } from '../../../phaser/game1/GameToScreenMapper';
+import { initialGameInput } from '../../../phaser/game1/initialGameInput';
+import { Player } from '../../../phaser/game1/Player';
+import { PhaserPlayerRenderer } from '../../../phaser/game1/renderer/PhaserPlayerRenderer';
+import { GameAudio } from '../../../phaser/GameAudio';
+import GameEventEmitter from '../../../phaser/GameEventEmitter';
+import { GameEventTypes } from '../../../phaser/GameEventTypes';
+import { GameData } from '../../../phaser/gameInterfaces';
+import { PhaserGameRenderer } from '../../../phaser/renderer/PhaserGameRenderer';
+import { MessageSocket } from '../../../socket/MessageSocket';
+import { Socket } from '../../../socket/Socket';
+import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
 import {
-    designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1
-} from "../../../../utils/constants";
-import { screenFinishedRoute } from "../../../../utils/routes";
-import history from "../../../history/history";
-import { GameToScreenMapper } from "../../../phaser/game1/GameToScreenMapper";
-import { initialGameInput } from "../../../phaser/game1/initialGameInput";
-import { Player } from "../../../phaser/game1/Player";
-import { PhaserPlayerRenderer } from "../../../phaser/game1/renderer/PhaserPlayerRenderer";
-import { GameAudio } from "../../../phaser/GameAudio";
-import GameEventEmitter from "../../../phaser/GameEventEmitter";
-import { GameEventTypes } from "../../../phaser/GameEventTypes";
-import { GameData } from "../../../phaser/gameInterfaces";
-import { PhaserGameRenderer } from "../../../phaser/renderer/PhaserGameRenderer";
-import { MessageSocket } from "../../../socket/MessageSocket";
-import { Socket } from "../../../socket/Socket";
-import { finishedTypeGuard, GameHasFinishedMessage } from "../../../typeGuards/finished";
+    AllScreensPhaserGameLoadedMessage,
+    allScreensPhaserGameLoadedTypeGuard,
+} from '../../../typeGuards/game1/allScreensPhaserGameLoaded';
 import {
-    AllScreensPhaserGameLoadedMessage, allScreensPhaserGameLoadedTypeGuard
-} from "../../../typeGuards/game1/allScreensPhaserGameLoaded";
+    ApproachingSolvableObstacleOnceMessage,
+    approachingSolvableObstacleOnceTypeGuard,
+} from '../../../typeGuards/game1/approachingSolvableObstacleOnceTypeGuard';
+import { ChasersPushedMessage, ChasersPushedTypeGuard } from '../../../typeGuards/game1/chasersPushed';
+import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../../typeGuards/game1/gameStateInfo';
 import {
-    ApproachingSolvableObstacleOnceMessage, approachingSolvableObstacleOnceTypeGuard
-} from "../../../typeGuards/game1/approachingSolvableObstacleOnceTypeGuard";
+    InitialGameStateInfoMessage,
+    initialGameStateInfoTypeGuard,
+} from '../../../typeGuards/game1/initialGameStateInfo';
+import { ObstacleSkippedMessage, obstacleSkippedTypeGuard } from '../../../typeGuards/game1/obstacleSkipped';
 import {
-    ChasersPushedMessage, ChasersPushedTypeGuard
-} from "../../../typeGuards/game1/chasersPushed";
+    ObstacleWillBeSolvedMessage,
+    obstacleWillBeSolvedTypeGuard,
+} from '../../../typeGuards/game1/obstacleWillBeSolved';
 import {
-    GameStateInfoMessage, gameStateInfoTypeGuard
-} from "../../../typeGuards/game1/gameStateInfo";
-import {
-    InitialGameStateInfoMessage, initialGameStateInfoTypeGuard
-} from "../../../typeGuards/game1/initialGameStateInfo";
-import {
-    ObstacleSkippedMessage, obstacleSkippedTypeGuard
-} from "../../../typeGuards/game1/obstacleSkipped";
-import {
-    ObstacleWillBeSolvedMessage, obstacleWillBeSolvedTypeGuard
-} from "../../../typeGuards/game1/obstacleWillBeSolved";
-import {
-    PhaserLoadingTimedOutMessage, phaserLoadingTimedOutTypeGuard
-} from "../../../typeGuards/game1/phaserLoadingTimedOut";
-import { GameHasStartedMessage, startedTypeGuard } from "../../../typeGuards/game1/started";
-import { GameHasPausedMessage, pausedTypeGuard } from "../../../typeGuards/paused";
-import { GameHasResumedMessage, resumedTypeGuard } from "../../../typeGuards/resumed";
-import { GameHasStoppedMessage, stoppedTypeGuard } from "../../../typeGuards/stopped";
-import { moveLanesToCenter } from "../gameState/moveLanesToCenter";
-import { audioFiles, characters, fireworkFlares, images } from "./GameAssets";
+    PhaserLoadingTimedOutMessage,
+    phaserLoadingTimedOutTypeGuard,
+} from '../../../typeGuards/game1/phaserLoadingTimedOut';
+import { GameHasStartedMessage, startedTypeGuard } from '../../../typeGuards/game1/started';
+import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
+import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
+import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
+import { moveLanesToCenter } from '../gameState/moveLanesToCenter';
+import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
 class MainScene extends Phaser.Scene {
     windowWidth: number;
@@ -255,10 +252,10 @@ class MainScene extends Phaser.Scene {
         const chasersPushedSocket = new MessageSocket(ChasersPushedTypeGuard, this.socket);
         const xPositions: number[] = [];
         const yPositions: number[] = [];
-        this.players.forEach(element => {
-            if (!element.dead) {
-                xPositions.push(element.coordinates.x);
-                yPositions.push(element.coordinates.x);
+        this.players.forEach(player => {
+            if (!player.player.isDead) {
+                xPositions.push(player.coordinates.x);
+                yPositions.push(player.coordinates.x);
             }
         });
 
@@ -315,27 +312,27 @@ class MainScene extends Phaser.Scene {
     }
 
     updateGameState(gameStateData: GameData) {
-        for (let i = 0; i < this.players.length; i++) {
-            if (gameStateData.playersState[i].dead) {
-                if (!this.players[i].finished) {
-                    this.players[i].handlePlayerDead();
+        this.players.forEach((player, index) => {
+            if (gameStateData.playersState[index].dead) {
+                if (!player.player.isFinished) {
+                    player.handlePlayerDead();
                 }
-            } else if (gameStateData.playersState[i].finished) {
-                if (!this.players[i].finished) {
-                    this.players[i].handlePlayerFinished();
+            } else if (gameStateData.playersState[index].finished) {
+                if (!player.player.isFinished) {
+                    player.handlePlayerFinished();
                 }
-            } else if (gameStateData.playersState[i].stunned) {
-                this.players[i].handlePlayerStunned();
+            } else if (gameStateData.playersState[index].stunned) {
+                player.handlePlayerStunned();
             } else {
-                if (this.players[i].stunned) {
-                    this.players[i].handlePlayerUnStunned();
+                if (player.player.isStunned) {
+                    player.handlePlayerUnStunned();
                 }
 
-                this.players[i].moveForward(gameStateData.playersState[i].positionX);
-                this.players[i].checkAtObstacle(gameStateData.playersState[i].atObstacle);
+                player.moveForward(gameStateData.playersState[index].positionX);
+                player.checkAtObstacle(gameStateData.playersState[index].atObstacle);
             }
-            this.players[i].setChasers(gameStateData.chasersPositionX);
-        }
+            player.setChasers(gameStateData.chasersPositionX);
+        });
 
         this.moveCamera(gameStateData.cameraPositionX);
     }

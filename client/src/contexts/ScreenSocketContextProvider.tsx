@@ -1,6 +1,13 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { handleConnectedUsersMessage } from '../domain/commonGameState/screen/handleConnectedUsersMessage';
+import { handleGameHasFinishedMessage } from '../domain/commonGameState/screen/handleGameHasFinishedMessage';
+import { handleGameHasResetMessage } from '../domain/commonGameState/screen/handleGameHasResetMessage';
+import { handleGameHasStoppedMessage } from '../domain/commonGameState/screen/handleGameHasStoppedMessage';
+import { handleGameStartedMessage } from '../domain/commonGameState/screen/handleGameStartedMessage';
+import { handleStartPhaserGameMessage } from '../domain/commonGameState/screen/handleStartPhaserGameMessage';
+import { handleStartSheepGameMessage } from '../domain/game2/screen/gameState/handleStartSheepGameMessage';
 import { handleSetSocket } from '../domain/socket/screen/handleSetSocket';
 import { handleSocketConnection } from '../domain/socket/screen/handleSocketConnection';
 import { Socket } from '../domain/socket/Socket';
@@ -80,34 +87,35 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setSheepGameStarted,
         setRoomId,
         setConnectedUsers,
-        setCountdownTime,
         setHasPaused,
         setFinished,
         setPlayerRanks,
         setScreenAdmin,
         setScreenState,
         setChosenGame,
+        setCountdownTime,
     } = React.useContext(GameContext);
 
     const dependencies = {
         setScreenSocket,
-        setConnectedUsers,
         setHasPaused,
-        setGameStarted,
-        setCountdownTime,
-        setFinished,
-        setPlayerRanks,
         setScreenAdmin,
         setScreenState,
         setChosenGame,
         setTopicMessage,
         setRoundIdx,
-        setSheepGameStarted,
         setVoteForPhotoMessage,
         setVotingResults,
         setFinalRoundCountdownTime,
         setPresentFinalPhotos,
         history,
+        handleGameHasFinishedMessage: handleGameHasFinishedMessage({ setFinished, setPlayerRanks, history }),
+        handleConnectedUsersMessage: handleConnectedUsersMessage({ setConnectedUsers }),
+        handleStartPhaserGameMessage: handleStartPhaserGameMessage({ setGameStarted, history }),
+        handleStartSheepGameMessage: handleStartSheepGameMessage({ setSheepGameStarted, history }),
+        handleGameHasStoppedMessage: handleGameHasStoppedMessage({ history }),
+        handleGameHasResetMessage: handleGameHasResetMessage({ history }),
+        handleGameStartedMessage: handleGameStartedMessage({ history, setCountdownTime, setGameStarted }),
     };
 
     const content = {
