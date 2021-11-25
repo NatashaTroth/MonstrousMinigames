@@ -91,7 +91,7 @@ const Game3: React.FunctionComponent = () => {
 };
 export default Game3;
 
-function getInstruction(
+export function getInstruction(
     presentFinalPhotos: FinalPhoto,
     voteForPhotoMessage: Vote,
     finalRound: boolean,
@@ -126,9 +126,9 @@ function getInstruction(
     );
 }
 
-function getTime(
+export function getTime(
     presentFinalPhotos: FinalPhoto,
-    finalRoundCountdownTime: number,
+    finalRoundCountdownTime: number | undefined,
     voteForPhotoMessage: Vote,
     topicMessage: Topic
 ) {

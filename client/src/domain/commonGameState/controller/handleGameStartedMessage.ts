@@ -1,7 +1,9 @@
-import { History } from 'history';
+import { History } from "history";
 
-import { GameNames } from '../../../config/games';
-import { controllerGame1Route, controllerGame2Route, controllerGame3Route } from '../../../utils/routes';
+import { GameNames } from "../../../config/games";
+import {
+    controllerGame1Route, controllerGame2Route, controllerGame3Route
+} from "../../../utils/routes";
 
 interface HandleGameStarted {
     roomId: string;
@@ -24,10 +26,6 @@ export function handleGameStartedMessage(props: HandleGameStarted) {
 
     setGameStarted(true);
     setCountdownTime(countdownTime);
-
-    // DELETE
-    // eslint-disable-next-line no-console
-    console.log(GameNames);
 
     switch (game) {
         case GameNames.game1:

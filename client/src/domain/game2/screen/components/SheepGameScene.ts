@@ -1,39 +1,42 @@
-import Phaser from 'phaser';
+import Phaser from "phaser";
 
-import sheepSpritesheet from '../../../../images/characters/spritesheets/sheep/sheep_spritesheet.png';
-import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2 } from '../../../../utils/constants';
-import { screenFinishedRoute } from '../../../../utils/routes';
-import history from '../../../history/history';
-import { GameData } from '../../../phaser/game2/gameInterfaces/GameData';
-import { GameToScreenMapper } from '../../../phaser/game2/GameToScreenMapper';
-import { initialGameInput } from '../../../phaser/game2/initialGameInput';
-import { Player } from '../../../phaser/game2/Player';
-import { Sheep } from '../../../phaser/game2/Sheep';
-import { GameAudio } from '../../../phaser/GameAudio';
-import GameEventEmitter from '../../../phaser/GameEventEmitter';
-import { GameEventTypes } from '../../../phaser/GameEventTypes';
-import { PhaserGameRenderer } from '../../../phaser/renderer/PhaserGameRenderer';
-import { MessageSocket } from '../../../socket/MessageSocket';
-import { Socket } from '../../../socket/Socket';
-import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
+import sheepSpritesheet from "../../../../images/characters/spritesheets/sheep/sheep_spritesheet.png";
 import {
-    AllScreensSheepGameLoadedMessage,
-    allScreensSheepGameLoadedTypeGuard,
-} from '../../../typeGuards/game2/allScreensSheepGameLoaded';
-import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../../typeGuards/game2/gameStateInfo';
+    designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2
+} from "../../../../utils/constants";
+import { screenFinishedRoute } from "../../../../utils/routes";
+import history from "../../../history/history";
+import { GameData } from "../../../phaser/game2/gameInterfaces/GameData";
+import { GameToScreenMapper } from "../../../phaser/game2/GameToScreenMapper";
+import { initialGameInput } from "../../../phaser/game2/initialGameInput";
+import { Player } from "../../../phaser/game2/Player";
+import { Sheep } from "../../../phaser/game2/Sheep";
+import { GameAudio } from "../../../phaser/GameAudio";
+import GameEventEmitter from "../../../phaser/GameEventEmitter";
+import { GameEventTypes } from "../../../phaser/GameEventTypes";
+import { PhaserGameRenderer } from "../../../phaser/renderer/PhaserGameRenderer";
+import { MessageSocket } from "../../../socket/MessageSocket";
+import { Socket } from "../../../socket/Socket";
+import { finishedTypeGuard, GameHasFinishedMessage } from "../../../typeGuards/finished";
 import {
-    InitialGameStateInfoMessage,
-    initialGameStateInfoTypeGuard,
-} from '../../../typeGuards/game2/initialGameStateInfo';
+    AllScreensSheepGameLoadedMessage, allScreensSheepGameLoadedTypeGuard
+} from "../../../typeGuards/game2/allScreensSheepGameLoaded";
 import {
-    PhaserLoadingTimedOutMessage,
-    phaserLoadingTimedOutTypeGuard,
-} from '../../../typeGuards/game2/phaserLoadingTimedOut';
-import { SheepGameHasStartedMessage, sheepGameStartedTypeGuard } from '../../../typeGuards/game2/started';
-import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
-import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
-import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
-import { audioFiles, characters, images } from './GameAssets';
+    GameStateInfoMessage, gameStateInfoTypeGuard
+} from "../../../typeGuards/game2/gameStateInfo";
+import {
+    InitialGameStateInfoMessage, initialGameStateInfoTypeGuard
+} from "../../../typeGuards/game2/initialGameStateInfo";
+import {
+    PhaserLoadingTimedOutMessage, phaserLoadingTimedOutTypeGuard
+} from "../../../typeGuards/game2/phaserLoadingTimedOut";
+import {
+    SheepGameHasStartedMessage, sheepGameStartedTypeGuard
+} from "../../../typeGuards/game2/started";
+import { GameHasPausedMessage, pausedTypeGuard } from "../../../typeGuards/paused";
+import { GameHasResumedMessage, resumedTypeGuard } from "../../../typeGuards/resumed";
+import { GameHasStoppedMessage, stoppedTypeGuard } from "../../../typeGuards/stopped";
+import { audioFiles, characters, images } from "./GameAssets";
 
 const windowHeight = window.innerHeight;
 class SheepGameScene extends Phaser.Scene {
@@ -149,8 +152,6 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     sendStartGame() {
-        // eslint-disable-next-line no-console
-        console.log('sendStartGame');
         //TODO!!!! - do not send when game is already started? - or is it just ignored - appears to work - maybe check if no game state updates?
         this.socket?.emit({
             type: MessageTypes.startGame,

@@ -25,7 +25,7 @@ export const defaultValue = {
     setVotingResults: () => {
         // do nothing
     },
-    finalRoundCountdownTime: 0,
+    finalRoundCountdownTime: undefined,
     setFinalRoundCountdownTime: () => {
         // do nothing
     },
@@ -56,7 +56,7 @@ interface Game3ContextProps {
     setVoteForPhotoMessage: (val: Vote) => void;
     votingResults: VoteResult;
     setVotingResults: (val: VoteResult) => void;
-    finalRoundCountdownTime: number;
+    finalRoundCountdownTime: number | undefined;
     setFinalRoundCountdownTime: (val: number) => void;
     presentFinalPhotos: FinalPhoto;
     setPresentFinalPhotos: (val: FinalPhoto) => void;
@@ -71,7 +71,9 @@ const Game3ContextProvider: React.FunctionComponent = ({ children }) => {
     const [voteForPhotoMessage, setVoteForPhotoMessage] = React.useState<Vote>(defaultValue.voteForPhotoMessage);
     const [photos, setPhotos] = React.useState<string[]>([]);
     const [votingResults, setVotingResults] = React.useState<VoteResult>(defaultValue.voteForPhotoMessage);
-    const [finalRoundCountdownTime, setFinalRoundCountdownTime] = React.useState(defaultValue.finalRoundCountdownTime);
+    const [finalRoundCountdownTime, setFinalRoundCountdownTime] = React.useState<number | undefined>(
+        defaultValue.finalRoundCountdownTime
+    );
     const [presentFinalPhotos, setPresentFinalPhotos] = React.useState<FinalPhoto>(defaultValue.presentFinalPhotos);
 
     const content = {
