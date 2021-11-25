@@ -31,10 +31,8 @@ export class Player {
         this.setPlayer();
     }
 
-    moveForward(newXPosition: number) {
-        //TODO
-
-        if (newXPosition == this.coordinates.x && this.playerRunning) {
+    moveTo(newXPosition: number, newYPosition: number) {
+        if (newXPosition == this.coordinates.x && newYPosition == this.coordinates.y && this.playerRunning) {
             this.stopRunning();
         } else {
             if (!this.playerRunning) {
@@ -43,7 +41,11 @@ export class Player {
         }
 
         this.coordinates.x = newXPosition;
-        this.renderer.movePlayerForward(this.gameToScreenMapper.mapGameMeasurementToScreen(newXPosition));
+        this.coordinates.y = newYPosition;
+        this.renderer.movePlayerTo(
+            this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
+            this.coordinates.y
+        );
     }
 
     private setPlayer() {
@@ -57,7 +59,7 @@ export class Player {
 
     startRunning() {
         const animationName = this.character.animations.get(AnimationNameGame2.Running)?.name;
-        if (animationName) this.renderer.startAnimation(animationName);
+        //if (animationName) this.renderer.startAnimation(animationName);
         this.playerRunning = true;
     }
 

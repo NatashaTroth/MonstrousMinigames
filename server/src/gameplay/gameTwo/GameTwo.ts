@@ -13,7 +13,8 @@ import { GameNames } from '../../enums/gameNames';
 import RoundService from './classes/RoundService';
 import SheepService from './classes/SheepService';
 import RoundEventEmitter from './classes/RoundEventEmitter';
-import { GuessHints } from './enums/GuessHints';
+import GuessingService from './classes/GuessingServices';
+import { Phases } from './enums/Phases';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -27,6 +28,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     public sheepService: SheepService;
     private roundService: RoundService;
     private roundEventEmitter: RoundEventEmitter;
+    private guessingService: GuessingService;
 
     initialPlayerPositions = InitialParameters.PLAYERS_POSITIONS;
 
@@ -40,6 +42,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.sheepService = new SheepService(InitialParameters.SHEEP_COUNT);
         this.roundService = new RoundService();
         this.roundEventEmitter = RoundEventEmitter.getInstance();
+        this.guessingService = new GuessingService(InitialParameters.ROUNDS);
 
     }
 
@@ -61,7 +64,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             lengthY: this.lengthY,
             round: this.roundService.round,
             phase: this.roundService.phase,
-            aliveSheepCounts: this.sheepService.aliveSheepCounts
+            aliveSheepCounts: this.guessingService.counts
         };
     }
 
@@ -89,7 +92,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
         this.sheepService.initSheep();
-        this.sheepService.listenToRoundChanges();
+        this.guessingService.init(users);
         this.listenToEvents();
         GameTwoEventEmitter.emitInitialGameStateInfoUpdate(
             this.roomId,
@@ -127,7 +130,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     protected movePlayer(userId: string, direction: string) {
         const player = this.players.get(userId)!;
         if (this.roundService.isCountingPhase() && player) {
-            player.setDirection(direction);
+            player.direction = direction;
         }
     }
     protected killSheep(userId: string) {
@@ -141,11 +144,14 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     protected handleGuess(userId: string, guess: number) {
         const player = this.players.get(userId)!;
+        const round = this.roundService.round;
 
         if (this.roundService.isGuessingPhase() && player) {
-            if (player.addGuess(this.roundService.round, guess, this.sheepService.aliveSheepCounts[this.roundService.round - 1])) {
-                // todo dynamically set guess hints
-                GameTwoEventEmitter.emitGuessHint(this.roomId, player.id, GuessHints.LOW);
+            if (this.guessingService.addGuess(round, guess, userId)) {
+                const hint = this.guessingService.getHintForRound(round, userId);
+                if (hint) {
+                    GameTwoEventEmitter.emitGuessHint(this.roomId, player.id, hint);
+                }
             }
         }
 
@@ -188,6 +194,9 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     protected listenToEvents(): void {
         this.roundEventEmitter.on(RoundEventEmitter.PHASE_CHANGE_EVENT, (round: number, phase: string) => {
+            if (phase === Phases.GUESSING) {
+                this.guessingService.saveSheepCount(round, this.sheepService.getAliveSheepCount());
+            }
             GameTwoEventEmitter.emitPhaseHasChanged(this.roomId, round, phase);
         });
     }

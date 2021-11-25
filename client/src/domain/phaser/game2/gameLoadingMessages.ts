@@ -1,9 +1,9 @@
-export const gameLoadingMessages = [
-    'Just finishing a camp story',
+export const game2LoadingMessages = [
     'Casting sheep for the role',
-    'Searching for caves to hide in',
-    'Counting the fireflies',
-    '',
+    'Building a fence',
+    'Counting sheep',
+    'Feeding the sheep',
+    'Cutting the grass',
 ];
 
-export const gameLoadedWaitingMessages = ['Finished loading. Waiting for fellow monsters to connect'];
+export const game2LoadedWaitingMessages = ['Finished loading. Waiting for fellow monsters to connect'];

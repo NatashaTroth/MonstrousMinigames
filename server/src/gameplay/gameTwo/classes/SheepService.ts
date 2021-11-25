@@ -1,9 +1,7 @@
 import random from 'random';
 import InitialParameters from '../constants/InitialParameters';
-import { Phases } from '../enums/Phases';
 import { SheepStates } from '../enums/SheepStates';
 import GameTwoPlayer from '../GameTwoPlayer';
-import RoundEventEmitter from './RoundEventEmitter';
 import Sheep from "./Sheep";
 
 
@@ -11,15 +9,11 @@ export default class SheepService {
     public sheep: Sheep[];
     private currentSheepId: number;
     private sheepCount: number;
-    public aliveSheepCounts: Array<number>;
-    private roundEventEmitter: RoundEventEmitter;
 
     constructor(sheepCount: number) {
         this.sheep = [];
         this.currentSheepId = 0;
         this.sheepCount = sheepCount;
-        this.aliveSheepCounts = new Array(InitialParameters.ROUNDS);
-        this.roundEventEmitter = RoundEventEmitter.getInstance();
     }
 
 
@@ -113,14 +107,4 @@ export default class SheepService {
         })
         return aliveSheep.length;
     }
-
-    public listenToRoundChanges(): void {
-        this.roundEventEmitter.on(RoundEventEmitter.PHASE_CHANGE_EVENT, (round: number, phase: string) => {
-            if (phase === Phases.COUNTING) {
-                this.aliveSheepCounts[round - 1] = this.getAliveSheepCount();
-            }
-        });
-    }
-
-
 }
