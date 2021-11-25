@@ -80,7 +80,7 @@ class SheepGameScene extends Phaser.Scene {
         this.socket = data.socket;
         this.screenAdmin = data.screenAdmin;
         this.gameRenderer = new PhaserGameRenderer(this);
-        this.initSockets();
+        //this.initSockets();
         this.initiateEventEmitters();
 
         if (this.roomId === '' && data.roomId !== undefined) {
@@ -158,6 +158,8 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     initSockets() {
+        // eslint-disable-next-line no-console
+        console.log('initSockers');
         if (!this.socket) return; //TODO - handle error - although think ok
         if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
@@ -230,8 +232,6 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     initiateGame(gameStateData: GameData) {
-        // eslint-disable-next-line no-console
-        console.log(gameStateData);
         this.gameToScreenMapper = new GameToScreenMapper(gameStateData.playersState[0].positionX, this.windowWidth, 0);
 
         this.physics.world.setBounds(0, 0, 7500, windowHeight);
