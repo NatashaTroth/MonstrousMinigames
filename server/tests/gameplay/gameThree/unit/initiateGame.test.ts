@@ -12,19 +12,15 @@ describe('Initiate Game', () => {
         gameThree.createNewGame(users);
     });
 
-    it('initiates gameStartedTime with 0', async () => {
-        expect(gameThree['_gameStartedAt']).toBe(0);
-    });
-
     it('initiates gameName with Game3', async () => {
-        expect(gameThree['gameName']).toBe(GameNames.GAME3);
+        expect(gameThree.gameName).toBe(GameNames.GAME3);
     });
 
     it('initiates roomId with correct value', async () => {
-        expect(gameThree['roomId']).toBe(roomId);
+        expect(gameThree.roomId).toBe(roomId);
     });
 
     it('initiates sendGameStateUpdates with false', async () => {
-        expect(gameThree['sendGameStateUpdates']).toBeFalsy();
+        expect(gameThree.sendGameStateUpdates).toBeFalsy();
     });
 });

@@ -41,8 +41,6 @@ export class Countdown {
 
             if (this.countdownOver()) {
                 this.resetCountdown();
-                // console.log('---countdown over');
-                // this.onCountdownFinished();
             }
         }
     }
