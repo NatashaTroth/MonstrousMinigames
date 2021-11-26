@@ -1,6 +1,5 @@
 import validator from 'validator';
 
-import { InvalidUrlError } from '../customErrors';
 import { PhotosPhotographerMapper } from '../interfaces';
 
 export class Photos {
@@ -24,7 +23,7 @@ export class Photos {
     }
 
     addPhoto(photographerId: string, url: string) {
-        this.validateUrl(url, photographerId);
+        if (!validator.isURL(url)) return;
 
         if (!this.photos.has(photographerId)) {
             this.photos.set(photographerId, [url]);
@@ -35,41 +34,13 @@ export class Photos {
         }
     }
 
-    getPhotoUrlsFromUser(photographerId: string): string[] {
-        return this.photos.has(photographerId) ? [...this.photos.get(photographerId)!] : [];
-    }
-
     havePhotosFromAllUsers(photographerIds: string[]) {
-        // console.log('-----');
         return photographerIds.every(photographerId => {
-            // console.log(this.photos.get(photographerId)!.length);
-            // console.log(this.maxNumberPhotos);
             return this.photos.has(photographerId) && this.photos.get(photographerId)!.length === this.maxNumberPhotos;
         });
     }
 
-    validateUrl(url: string, photographerId: string) {
-        //TODO Handle error - send something to client? or not bother with it at all?
-        if (!validator.isURL(url))
-            throw new InvalidUrlError('The received value for the URL is not valid.', photographerId);
-    }
-
-    hasAddedPhoto(photographerId: string) {
-        return this.photos.has(photographerId);
-    }
-
-    // getUsersWhoSentPhoto(): string[] {
-    //     return Array.from(this.photos.keys());
-    // }
-
     getNumberPhotos(photographerId: string) {
         return this.photos.has(photographerId) ? this.photos.get(photographerId)!.length : 0;
     }
-
-    // getNumberPhotosFromUsers() : Map<string, number> {
-    //     return this.photos.forEach((url, photographerId) => {
-    //         return this.getNumberPhotos (photographerId)
-    //     })
-    //     return this.photos.has(photographerId) ? this.photos.get(photographerId)!.length : 0;
-    // }
 }
