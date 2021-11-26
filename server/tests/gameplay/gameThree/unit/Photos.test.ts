@@ -80,7 +80,7 @@ describe('Have Photos from all Users', () => {
     });
 });
 
-describe('Have Photos from all Users', () => {
+describe('Get number of photos', () => {
     beforeEach(() => {
         photos = new Photos(maxNumberPhotos);
     });

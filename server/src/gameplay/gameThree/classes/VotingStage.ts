@@ -17,8 +17,12 @@ export abstract class VotingStage extends Stage {
     handleInput(message: IMessage) {
         if (message.type !== GameThreeMessageTypes.PHOTO_VOTE) return;
         const data = message as IMessagePhotoVote;
-        this.votes.addVote(data.voterId, data.photographerId);
-        if (this.votes.haveVotesFromAllUsers(this.players)) {
+        if (
+            this.players.find(player => player.id === data.voterId) &&
+            this.players.find(player => player.id === data.photographerId)
+        )
+            this.votes.addVote(data.voterId, data.photographerId);
+        if (this.votes.haveVotesFromAllUsers(this.players.map(player => player.id))) {
             this.emitStageChangeEvent();
         }
     }

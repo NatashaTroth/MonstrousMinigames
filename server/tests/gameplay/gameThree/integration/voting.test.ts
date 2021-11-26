@@ -152,6 +152,12 @@ describe('Voting stage', () => {
     // });
 
     // it.todo('test points');
+    it.todo('should return false when a user votes for a user who does not exist');
+
+    // it('should return false when a user votes for a user who does not exist', () => {
+    //     votes.addVote(users[0].id, 'xxxxxx');
+    //     expect(votes.hasVoted(users[0].id)).toBeFalsy();
+    // });
 });
 
 function receiveAllVotes() {

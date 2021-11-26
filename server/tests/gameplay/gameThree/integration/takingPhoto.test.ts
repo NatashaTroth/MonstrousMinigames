@@ -191,4 +191,10 @@ describe('Taking Photo', () => {
     //     ).toBeFalsy();
     //     expect(gameThree.players.get(users[0].id)!.getUrl(gameThree['stageController']!['_roundIdx'])).toBe('');
     // });
+
+    it.todo('should not add a photo for for a user who does not exist');
+    // it('should not add a photo for for a user who does not exist', () => {
+    //     photos.addPhoto('xxxxxxx', mockPhotoUrl);
+    //     expect(photos.getPhotos().length).toBe(0);
+    // });
 });
