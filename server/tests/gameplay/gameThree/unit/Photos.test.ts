@@ -7,7 +7,7 @@ let photos: Photos;
 
 const maxNumberPhotos = 2;
 
-describe('Get photos', () => {
+describe('Add and Get photos', () => {
     beforeEach(() => {
         photos = new Photos(maxNumberPhotos);
     });
@@ -27,11 +27,9 @@ describe('Get photos', () => {
         expect(photos.getPhotos().find(photo => photo.photographerId === users[0].id)!.urls.length).toBe(2);
     });
 
-    it('should not exceed max number of photos per user', () => {
-        for (let i = 0; i <= maxNumberPhotos; i++) {
-            photos.addPhoto(users[0].id, mockPhotoUrl);
-        }
-        expect(photos.getPhotos().find(photo => photo.photographerId === users[0].id)!.urls.length).toBe(2);
+    it('should not add a photo if the url is invalid', () => {
+        photos.addPhoto(users[0].id, 'abc');
+        expect(photos.getPhotos().length).toBe(0);
     });
 });
 

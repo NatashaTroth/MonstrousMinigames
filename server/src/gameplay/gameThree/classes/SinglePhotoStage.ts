@@ -1,4 +1,5 @@
 import InitialParameters from '../constants/InitialParameters';
+import GameThreeEventEmitter from '../GameThreeEventEmitter';
 import { PhotoPhotographerMapper, PlayerNameId } from '../interfaces';
 import { PhotoStage } from './PhotoStage';
 import { PhotoTopics } from './PhotoTopics';
@@ -10,7 +11,14 @@ export class SinglePhotoStage extends PhotoStage {
     constructor(roomId: string, players: PlayerNameId[]) {
         super({ roomId, players: players, countdownTime: InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO });
         this.photoTopics = new PhotoTopics();
-        this.photoTopics.sendNextTopicToClient(roomId);
+
+        if (this.photoTopics.isAnotherTopicAvailable()) {
+            GameThreeEventEmitter.emitNewTopic(
+                roomId,
+                this.photoTopics.nextTopic()!,
+                InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO
+            );
+        }
     }
 
     switchToNextStage() {

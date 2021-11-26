@@ -23,13 +23,29 @@ describe('Add Points To Player', () => {
         playerPoints.addPointsToPlayer(users[0].id, points);
         expect(playerPoints.getPointsFromPlayer(users[0].id)).toBe(points);
     });
+
+    it('should not add points to non existent player', async () => {
+        const fakeUserId = 'xxxxxxxx';
+        playerPoints.addPointsToPlayer(fakeUserId, points);
+        expect(playerPoints.getPointsFromPlayer(fakeUserId)).toBe(0);
+    });
 });
 
-describe('Add Points To All Player', () => {
+describe('Add Points to multiple players', () => {
     beforeEach(() => {
         playerPoints = new PlayerPoints(players);
         playerPoints.addPointsToPlayer(users[0].id, points);
         playerPoints.addPointsToPlayer(users[1].id, points * 2);
+    });
+
+    it('should not add any new points when undefined is passed', async () => {
+        playerPoints.addPointsToMultiplePlayers(undefined);
+
+        expect(playerPoints.getPointsFromPlayer(users[0].id)).toBe(points);
+        expect(playerPoints.getPointsFromPlayer(users[1].id)).toBe(points * 2);
+        for (let i = 2; i < users.length; i++) {
+            expect(playerPoints.getPointsFromPlayer(users[i].id)).toBe(0);
+        }
     });
 
     it('should initiate player with 0 points', async () => {
@@ -38,7 +54,7 @@ describe('Add Points To All Player', () => {
         playerPoints2.addPointsToPlayer(users[0].id, newPoints);
         playerPoints2.addPointsToPlayer(users[1].id, newPoints * 2);
 
-        playerPoints2.addAllPlayerPoints(playerPoints.getAllPlayerPoints());
+        playerPoints2.addPointsToMultiplePlayers(playerPoints.getAllPlayerPoints());
 
         expect(playerPoints2.getPointsFromPlayer(users[0].id)).toBe(
             playerPoints.getPointsFromPlayer(users[0].id) + newPoints
@@ -62,7 +78,7 @@ describe('Get all player points', () => {
         playerPoints2.addPointsToPlayer(users[0].id, newPoints);
         playerPoints2.addPointsToPlayer(users[1].id, newPoints * 2);
 
-        playerPoints2.addAllPlayerPoints(playerPoints.getAllPlayerPoints());
+        playerPoints2.addPointsToMultiplePlayers(playerPoints.getAllPlayerPoints());
 
         expect(playerPoints2.getPointsFromPlayer(users[0].id)).toBe(
             playerPoints.getPointsFromPlayer(users[0].id) + newPoints
@@ -70,6 +86,17 @@ describe('Get all player points', () => {
         expect(playerPoints2.getPointsFromPlayer(users[1].id)).toBe(
             playerPoints.getPointsFromPlayer(users[1].id) + newPoints * 2
         );
+    });
+
+    it('should not add points for a player that does not exist', async () => {
+        const newPoints = 30;
+        const fakeUserId = 'xxxxxx';
+        const playerPoints2 = new PlayerPoints([{ id: fakeUserId, name: 'James P. Not Me' }]);
+        playerPoints2.addPointsToPlayer(fakeUserId, newPoints);
+
+        playerPoints.addPointsToMultiplePlayers(playerPoints2.getAllPlayerPoints());
+
+        expect(playerPoints.getPointsFromPlayer(fakeUserId)).toBe(0);
     });
 });
 

@@ -17,13 +17,12 @@ export class PlayerPoints {
 
     addPointsToPlayer(playerId: string, points: number) {
         const currentPoints = this.points.get(playerId);
-        // console.log(currentPoints);
         if (currentPoints != undefined) {
             this.points.set(playerId, currentPoints + points);
         }
     }
 
-    addAllPlayerPoints(playerPoints: Map<string, number> | undefined) {
+    addPointsToMultiplePlayers(playerPoints: Map<string, number> | undefined) {
         if (!playerPoints) return;
         this.points.forEach((currentPoints, playerId) => {
             if (playerPoints.has(playerId))
