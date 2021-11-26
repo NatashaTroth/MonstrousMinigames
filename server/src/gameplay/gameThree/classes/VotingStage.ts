@@ -47,6 +47,7 @@ export abstract class VotingStage extends Stage {
     private setPointPerReceivedVote() {
         const voterIds = this.votes.getVoterIds();
         this.votes.getAllVotes().forEach(votesPerPlayer => {
+            // only add votes for users that voted
             if (voterIds.includes(votesPerPlayer.photographerId))
                 this.playerPoints.addPointsToPlayer(votesPerPlayer.photographerId, votesPerPlayer.votes);
         });
