@@ -24,7 +24,7 @@ export class PhotoTopics {
         }
     }
 
-    public get topics(): string[] {
-        return [...this._topics];
-    }
+    // public get topics(): string[] {
+    //     return [...this._topics];
+    // }
 }
