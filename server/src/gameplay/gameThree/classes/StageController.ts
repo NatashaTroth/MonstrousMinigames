@@ -22,7 +22,7 @@ export class StageController {
         this.playerPoints = new PlayerPoints(players);
     }
 
-    initStageEventEmitter() {
+    private initStageEventEmitter() {
         this.stageEventEmitter.on(StageEventEmitter.STAGE_CHANGE_EVENT, message => {
             // console.log('new stage event');
             if (this.stage?.hasNextStage()) {

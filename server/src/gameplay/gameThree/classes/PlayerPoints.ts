@@ -17,7 +17,8 @@ export class PlayerPoints {
 
     addPointsToPlayer(playerId: string, points: number) {
         const currentPoints = this.points.get(playerId);
-        if (currentPoints) {
+        // console.log(currentPoints);
+        if (currentPoints != undefined) {
             this.points.set(playerId, currentPoints + points);
         }
     }
@@ -31,28 +32,12 @@ export class PlayerPoints {
         return this.points;
     }
 
-    getPointsSinglePlayer(playerId: string) {
+    getPointsFromPlayer(playerId: string) {
         const currentPoints = this.points.get(playerId);
         return currentPoints || 0;
     }
 
     getAllPlayerPoints(): Map<string, number> {
-        return this.points;
+        return new Map(this.points);
     }
-
-    // getTotalPoints() {
-    //     return (
-    //         this.roundInfo.reduce((result, item) => {
-    //             return result + item.points;
-    //         }, 0) + this.finalRoundInfo.points
-    //     );
-    // }
-
-    // getRoundPoints(roundIdx: number) {
-    //     return this.roundInfo[roundIdx].points;
-    // }
-
-    // getFinalPoints() {
-    //     return this.finalRoundInfo.points;
-    // }
 }
