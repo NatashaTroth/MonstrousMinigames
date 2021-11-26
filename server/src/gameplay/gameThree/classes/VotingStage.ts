@@ -45,8 +45,10 @@ export abstract class VotingStage extends Stage {
     }
 
     private setPointPerReceivedVote() {
+        const voterIds = this.votes.getVoterIds();
         this.votes.getAllVotes().forEach(votesPerPlayer => {
-            this.playerPoints.addPointsToPlayer(votesPerPlayer.photographerId, votesPerPlayer.votes);
+            if (voterIds.includes(votesPerPlayer.photographerId))
+                this.playerPoints.addPointsToPlayer(votesPerPlayer.photographerId, votesPerPlayer.votes);
         });
     }
 
