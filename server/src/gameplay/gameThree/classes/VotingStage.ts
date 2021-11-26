@@ -39,6 +39,17 @@ export abstract class VotingStage extends Stage {
         this.emitStageChangeEvent();
     }
 
+    updatePlayerPoints(): undefined | Map<string, number> {
+        this.setPointPerReceivedVote();
+        return this.playerPoints.getAllPlayerPoints();
+    }
+
+    private setPointPerReceivedVote() {
+        this.votes.getAllVotes().forEach(votesPerPlayer => {
+            this.playerPoints.addPointsToPlayer(votesPerPlayer.photographerId, votesPerPlayer.votes);
+        });
+    }
+
     // haveVotesFromAllUsers(voterIds: string[]) {
     //     return voterIds.every(voterId => this.voterIds.includes(voterId));
     // }

@@ -47,4 +47,8 @@ export class Votes {
     hasVoted(voterId: string) {
         return this.voterIds.includes(voterId);
     }
+
+    getVoterIds(): string[] {
+        return this.voterIds;
+    }
 }
