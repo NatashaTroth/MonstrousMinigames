@@ -81,7 +81,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             InitialParameters.COUNTDOWN_TIME_GAME_START,
             this.gameName
         );
-        this.stageController?.handleNewRound();
+        // this.stageController?.handleNewRound();
     }
 
     startGameAfterTimeout() {
