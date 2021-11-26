@@ -31,6 +31,16 @@ describe('Add and Get photos', () => {
         photos.addPhoto(users[0].id, 'abc');
         expect(photos.getPhotos().length).toBe(0);
     });
+
+    it('should not save the photo url for a new photo when the max number of photos have been received', async () => {
+        for (let i = 0; i < maxNumberPhotos; i++) {
+            photos.addPhoto(users[0].id, mockPhotoUrl);
+        }
+        const newUrl = 'https://mockPhoto2.com';
+        photos.addPhoto(users[0].id, newUrl);
+
+        expect(photos.getPhotos()).not.toBe(expect.arrayContaining([newUrl]));
+    });
 });
 
 describe('Get photos urls', () => {
