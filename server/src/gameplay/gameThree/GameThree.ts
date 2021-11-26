@@ -14,6 +14,7 @@ import GameThreeEventEmitter from './GameThreeEventEmitter';
 // import { GameThreeMessageTypes } from './enums/GameThreeMessageTypes';
 import GameThreePlayer from './GameThreePlayer';
 import { GameStateInfo } from './interfaces';
+import { GameThreePlayerRank } from './interfaces/GameThreePlayerRank';
 
 type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
 
@@ -144,26 +145,26 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     handleGameFinished() {
-        //         const playerRanks: GameThreePlayerRank[] = Array.from(this.players.values()).map(player => {
-        //     return {
-        //         id: player.id,
-        //         name: player.name,
-        //         points: player.totalPoints,
-        //         rank: 0,
-        //         isActive: player.isActive,
-        //     };
-        // });
+        const playerPoints = this.stageController!.getPlayerPoints();
+        const playerRanks: GameThreePlayerRank[] = Array.from(this.players.values()).map(player => {
+            return {
+                id: player.id,
+                name: player.name,
+                points: playerPoints.get(player.id) || 0,
+                rank: 0,
+                isActive: player.isActive,
+            };
+        });
 
-        // playerRanks
-        //     .sort((a, b) => b.points - a.points)
-        //     .map(result => {
-        //         const rank = this.gameThree.rankSuccessfulUser(result.points); //TODO !!! make this function protected again
-        //         this.players.get(result.id)!.rank = rank;
-        //         result.rank = rank;
-        //         return result;
-        //     });
+        playerRanks
+            .sort((a, b) => b.points - a.points)
+            .map(result => {
+                const rank = this.rankSuccessfulUser(result.points); //TODO !!! make this function protected again
+                this.players.get(result.id)!.rank = rank;
+                result.rank = rank;
+                return result;
+            });
 
-        // this.updateStage(GameThreeGameState.ViewingFinalResults);
         this.gameState = GameState.Finished;
         GameThreeEventEmitter.emitGameHasFinishedEvent(this.roomId, GameState.Finished, []); //playerRanks);
     }
