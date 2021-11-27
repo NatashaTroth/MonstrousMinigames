@@ -65,16 +65,6 @@ describe('Taking Photo', () => {
         jest.clearAllMocks();
     });
 
-    // it('should allow client to send a photo within the countdown time', async () => {
-    //     gameThree['handleInput'](message);
-    //     expect(
-    //         gameThree.players.get(users[0].id)!.hasReceivedPhoto(gameThree['stageController']!['_roundIdx'])
-    //     ).toBeTruthy();
-    //     expect(gameThree.players.get(users[0].id)!.getUrl(gameThree['stageController']!['_roundIdx'])).toBe(
-    //         mockPhotoUrl
-    //     );
-    // });
-
     it('should not emit the Voting event when only one photo is sent', async () => {
         let eventCalled = false;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {

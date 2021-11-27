@@ -58,6 +58,10 @@ export class StageController {
         return this.playerPoints.getAllPlayerPoints();
     }
 
+    public get currentStage(): Stage | null | undefined {
+        return this.stage;
+    }
+
     private handleGameFinished() {
         this.stageEventEmitter.emit(StageEventEmitter.GAME_FINISHED);
     }

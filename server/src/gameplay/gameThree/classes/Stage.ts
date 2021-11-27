@@ -63,10 +63,7 @@ export abstract class Stage {
 
     emitStageChangeEvent() {
         this.countdown.resetCountdown();
-        this.stageEventEmitter.emit(
-            StageEventEmitter.STAGE_CHANGE_EVENT,
-            'Emitter: This StageLL: ' + this.constructor.name
-        );
+        this.stageEventEmitter.emit(StageEventEmitter.STAGE_CHANGE_EVENT);
     }
 
     hasNextStage(): boolean {
