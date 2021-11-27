@@ -1,15 +1,19 @@
 import { IMessage } from '../../../interfaces/messages';
 import InitialParameters from '../constants/InitialParameters';
 import { GameThreeMessageTypes } from '../enums/GameThreeMessageTypes';
-import { IMessagePhotoVote, PhotoPhotographerMapper, PlayerNameId } from '../interfaces';
+import { IMessagePhotoVote, PlayerNameId } from '../interfaces';
 import { Stage } from './Stage';
 import { Votes } from './Votes';
 
 export abstract class VotingStage extends Stage {
-    //TODO make URL type
     protected votes: Votes;
 
-    constructor(roomId: string, players: PlayerNameId[], photoUrls: PhotoPhotographerMapper[]) {
+    constructor(
+        roomId: string,
+        players: PlayerNameId[],
+        private photographerIds: string[],
+        private onlyAddPointIfPhotographer = true
+    ) {
         super(roomId, players, InitialParameters.COUNTDOWN_TIME_VOTE);
         this.votes = new Votes();
     }
@@ -29,16 +33,6 @@ export abstract class VotingStage extends Stage {
 
     abstract switchToNextStage(): Stage;
 
-    // switchToNextStage() {
-    //     // this.sendPhotoVotingResultsToScreen(this.roomId, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
-    //     // this.updatePlayerPointsFromVotes();
-
-    //     // const photoUrls: PhotoPhotographerMapper[] = this.getPhotos() as PhotoPhotographerMapper[];
-    //     // GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
-
-    //     return new ViewingResultsStage(this.roomId, this.players, this.votes.getAllVotes()); //TODO
-    // }
-
     protected countdownOver() {
         this.emitStageChangeEvent();
     }
@@ -49,34 +43,20 @@ export abstract class VotingStage extends Stage {
     }
 
     private setPointPerReceivedVote() {
-        const voterIds = this.votes.getVoterIds();
         this.votes.getAllVotes().forEach(votesPerPlayer => {
-            // only add votes for users that voted
-            if (voterIds.includes(votesPerPlayer.photographerId))
+            if (this.photographerIsAllowedPoint(votesPerPlayer.photographerId))
                 this.playerPoints.addPointsToPlayer(votesPerPlayer.photographerId, votesPerPlayer.votes);
         });
     }
 
-    // haveVotesFromAllUsers(voterIds: string[]) {
-    //     return voterIds.every(voterId => this.voterIds.includes(voterId));
-    // }
+    private photographerIsAllowedPoint(photographerId: string) {
+        // only add point to photographers that voted and that took a photo (applicable - not applicable in final round, since a point is added for every photo taken)
 
-    // getNumberVotes(photographerId: string) {
-    //     return this.votes.get(photographerId) || 0;
-    // }
-
-    // sendPhotoVotingResultsToScreen(roomId: string, countdownTime: number) {
-    //     const votingResults = this.getAllVotes();
-    //     GameThreeEventEmitter.emitPhotoVotingResults(roomId, votingResults, countdownTime);
-    // }
-
-    // private getAllVotes(): VotesPhotographerMapper[] {
-    //     const votesArray: VotesPhotographerMapper[] = [];
-    //     this.votes.forEach((value, key) => votesArray.push({ photographerId: key, votes: value }));
-    //     return votesArray;
-    // }
-
-    // hasVoted(voterId: string) {
-    //     return this.voterIds.includes(voterId);
-    // }
+        const voterIds = this.votes.getVoterIds();
+        return (
+            voterIds.includes(photographerId) &&
+            this.onlyAddPointIfPhotographer &&
+            this.photographerIds.includes(photographerId)
+        );
+    }
 }

@@ -19,9 +19,6 @@ export class FinalPhotosStage extends PhotoStage {
     }
 
     switchToNextStage() {
-        // const photoUrls: PhotosPhotographerMapper[] = this.getPhotos().map(photoObject => {
-        //     return { photographerId: photoObject.photographerId, urls: photoObject.urls };
-        // });
         const photoUrls: string[] = this.getPhotosUrls();
         return new PresentationStage(this.roomId, this.players, photoUrls);
     }

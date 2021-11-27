@@ -23,7 +23,7 @@ export class PresentationStage extends Stage {
     }
 
     switchToNextStage() {
-        return new FinalPhotosVotingStage(this.roomId, this.players, []); //TODO change make voting stage parent..
+        return new FinalPhotosVotingStage(this.roomId, this.players); //TODO change make voting stage parent..
     }
 
     protected countdownOver() {

@@ -415,28 +415,3 @@ describe('Stage order after input', () => {
         expect(stageController.currentStage!).toBe(null);
     });
 });
-
-describe('Player Points', () => {
-    beforeEach(async () => {
-        stageController = new StageController(roomId, players);
-        jest.useFakeTimers();
-    });
-
-    afterEach(() => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
-    });
-
-    it('should return player points (1 each per vote)', () => {
-        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-        users.forEach((user, idx) => {
-            const msg = { ...votingMessage, voterId: user.id, photographerId: users[(idx + 1) % users.length].id };
-            stageController.handleInput(msg);
-        });
-        const points = stageController.getPlayerPoints();
-        expect(points.get(users[0].id)).toBe(1);
-        expect(points.get(users[1].id)).toBe(1);
-        expect(points.get(users[2].id)).toBe(1);
-        expect(points.get(users[3].id)).toBe(1);
-    });
-});

@@ -1,13 +1,13 @@
 import InitialParameters from '../constants/InitialParameters';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
-import { PhotoPhotographerMapper, PlayerNameId } from '../interfaces';
+import { PlayerNameId } from '../interfaces';
 import { VotingStage } from './VotingStage';
 
 export class FinalPhotosVotingStage extends VotingStage {
     //TODO make URL type
 
-    constructor(roomId: string, players: PlayerNameId[], photoUrls: PhotoPhotographerMapper[]) {
-        super(roomId, players, photoUrls);
+    constructor(roomId: string, players: PlayerNameId[]) {
+        super(roomId, players, [], false);
         GameThreeEventEmitter.emitVoteForFinalPhotos(this.roomId, InitialParameters.COUNTDOWN_TIME_VOTE, this.players);
     }
 

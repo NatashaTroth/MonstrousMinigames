@@ -24,8 +24,9 @@ export class StageController {
 
     private initStageEventEmitter() {
         this.stageEventEmitter.on(StageEventEmitter.STAGE_CHANGE_EVENT, message => {
+            // console.log('--NEW STAGE EVENT--');
+            this.playerPoints.addPointsToMultiplePlayers(this.stage?.updatePlayerPoints());
             if (this.stage?.hasNextStage()) {
-                this.playerPoints.addPointsToMultiplePlayers(this.stage?.updatePlayerPoints());
                 this.stage = this.stage?.switchToNextStage();
             } else if (this.stage?.isFinalStage()) {
                 this.stage = null;

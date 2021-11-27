@@ -25,6 +25,11 @@ export class SinglePhotoStage extends PhotoStage {
         const photoUrls: PhotoPhotographerMapper[] = this.getPhotos().map(photoObject => {
             return { photographerId: photoObject.photographerId, url: photoObject.urls[0] };
         });
-        return new SinglePhotoVotingStage(this.roomId, this.players, photoUrls);
+        GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
+        return new SinglePhotoVotingStage(
+            this.roomId,
+            this.players,
+            photoUrls.map(photoUrlObj => photoUrlObj.photographerId)
+        );
     }
 }
