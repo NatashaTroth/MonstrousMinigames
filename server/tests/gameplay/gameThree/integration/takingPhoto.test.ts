@@ -18,8 +18,6 @@ import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperF
 let gameThree: GameThree;
 const gameEventEmitter = DI.resolve(GameEventEmitter);
 
-// let gameEventEmitter: GameEventEmitter;
-
 const mockPhotoUrl = 'https://mockPhoto.com';
 const message: IMessagePhoto = { type: GameThreeMessageTypes.PHOTO, url: mockPhotoUrl, photographerId: users[0].id };
 

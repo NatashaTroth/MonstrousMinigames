@@ -45,6 +45,7 @@ describe('Initiate stage', () => {
     });
 
     afterEach(() => {
+        gameEventEmitter.removeAllListeners();
         jest.runAllTimers();
         jest.clearAllMocks();
     });

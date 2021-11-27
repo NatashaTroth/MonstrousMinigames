@@ -36,6 +36,7 @@ describe('Initiate stage', () => {
     });
 
     afterEach(() => {
+        gameEventEmitter.removeAllListeners();
         jest.runAllTimers();
         jest.clearAllMocks();
     });
@@ -64,12 +65,10 @@ describe('Taking Photo', () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
-        // console.log(
-        //     '------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------'
-        // );
     });
 
     afterEach(() => {
+        gameEventEmitter.removeAllListeners();
         jest.runAllTimers();
         jest.clearAllMocks();
     });

@@ -9,7 +9,7 @@ import {
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
 import { IMessagePhotoVote } from '../../../../src/gameplay/gameThree/interfaces';
 import {
-    GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS, GameThreeEventMessage
+    GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS, GameThreeEventMessage, PhotoVotingResults
 } from '../../../../src/gameplay/gameThree/interfaces/GameThreeEventMessages';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
 import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
@@ -37,6 +37,7 @@ describe('Voting stage', () => {
     });
 
     afterEach(() => {
+        gameEventEmitter.removeAllListeners();
         jest.runAllTimers();
         jest.clearAllMocks();
     });
@@ -64,21 +65,6 @@ describe('Voting stage', () => {
         expect(eventCalled).toBeTruthy();
     });
 
-    it.todo('should send all the correct number of votes with view results message');
-    //     it('should send all the correct number of votes with view results message', async () => {
-    //     let eventData: PhotoVotingResults;
-
-    //     gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
-    //         if (message.type === GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS) {
-    //             eventData = message;
-
-    //         }
-    //     });
-
-    //     receiveAllVotes();
-    //     expect(eventCalled).toBeTruthy();
-    // });
-
     it('should not emit the View Results event when voting countdown has not run out', async () => {
         let eventCalled = false;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
@@ -87,9 +73,6 @@ describe('Voting stage', () => {
             }
         });
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE - 1);
-        // StageEventEmitter.getInstance().emit(StageEventEmitter.STAGE_CHANGE_EVENT);
-        // gameThree.receiveInput(message);
-
         expect(eventCalled).toBeFalsy();
     });
 
@@ -101,63 +84,123 @@ describe('Voting stage', () => {
             }
         });
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
-        // StageEventEmitter.getInstance().emit(StageEventEmitter.STAGE_CHANGE_EVENT);
-        // gameThree.receiveInput(message);
-
         expect(eventCalled).toBeTruthy();
     });
+});
 
-    it.todo('should update the points');
+describe('Results', () => {
+    beforeAll(() => {
+        gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
+    beforeEach(() => {
+        Date.now = () => dateNow;
+        jest.useFakeTimers();
+        gameThree = new GameThree(roomId, leaderboard);
+        gameThree.createNewGame(users);
+        startGameAdvanceCountdown(gameThree);
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+    });
 
-    // it('should allow client to send a vote within the countdown time', async () => {
-    //     gameThree['handleInput'](message);
-    //     expect(gameThree.players.get(users[0].id)!.hasVoted(gameThree['stageController']!['_roundIdx'])).toBeTruthy();
-    // });
+    afterEach(() => {
+        gameEventEmitter.removeAllListeners();
+        jest.runAllTimers();
+        jest.clearAllMocks();
+    });
 
-    // it('should have a gameThreeGameState of Voting after only one vote is sent', async () => {
-    //     gameThree['handleInput'](message);
-    //     expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.Voting);
-    // });
+    it('should add a point to the photographerId when a vote was received', async () => {
+        let eventData: undefined | PhotoVotingResults;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS) {
+                eventData = message;
+            }
+        });
+        const msg: IMessagePhotoVote = {
+            type: GameThreeMessageTypes.PHOTO_VOTE,
+            voterId: users[0].id,
+            photographerId: users[1].id,
+        };
+        gameThree.receiveInput(msg);
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
+        expect(eventData?.results.length).toBe(1);
+        expect(eventData?.results.find(result => result.photographerId === users[1].id)?.votes).toBe(1);
+    });
 
-    // it('should not have received all votes when only one is sent', async () => {
-    //     gameThree['handleInput'](message);
-    //     expect(gameThree['allVotesReceived']()).toBeFalsy();
-    // });
+    it('should add a point per vote to the photographerId when a vote was received', async () => {
+        let eventData: undefined | PhotoVotingResults;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS) {
+                eventData = message;
+            }
+        });
+        const msg: IMessagePhotoVote = {
+            type: GameThreeMessageTypes.PHOTO_VOTE,
+            voterId: users[0].id,
+            photographerId: users[1].id,
+        };
+        gameThree.receiveInput(msg);
+        msg.voterId = users[2].id;
+        gameThree.receiveInput(msg);
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
+        expect(eventData?.results.length).toBe(1);
+        expect(eventData?.results.find(result => result.photographerId === users[1].id)?.votes).toBe(2);
+    });
 
-    // it('should have received all votes when all votes have been sent', async () => {
-    //     receiveAllVotes();
-    //     expect(gameThree['allVotesReceived']()).toBeTruthy();
-    // });
+    it('should add a point per vote to the photographerId when a vote was received', async () => {
+        let eventData: undefined | PhotoVotingResults;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS) {
+                eventData = message;
+            }
+        });
+        const msg: IMessagePhotoVote = {
+            type: GameThreeMessageTypes.PHOTO_VOTE,
+            voterId: users[0].id,
+            photographerId: users[1].id,
+        };
+        gameThree.receiveInput(msg);
+        msg.voterId = users[2].id;
+        gameThree.receiveInput(msg);
+        msg.voterId = users[1].id;
+        msg.photographerId = users[2].id;
+        gameThree.receiveInput(msg);
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
+        expect(eventData?.results.length).toBe(2);
+        expect(eventData?.results.find(result => result.photographerId === users[2].id)?.votes).toBe(1);
+    });
 
-    // it('should change state to ViewingResults when all votes have been received', async () => {
-    //     receiveAllVotes();
-    //     expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.ViewingResults);
-    // });
+    it('should not add a point to the photographerId from non existent voterId', async () => {
+        let eventData: undefined | PhotoVotingResults;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS) {
+                eventData = message;
+            }
+        });
+        const msg: IMessagePhotoVote = {
+            type: GameThreeMessageTypes.PHOTO_VOTE,
+            voterId: 'xxxxx',
+            photographerId: users[1].id,
+        };
+        gameThree.receiveInput(msg);
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
+        expect(eventData?.results.length).toBe(0);
+    });
 
-    // it('should stop the countdown when all votes have been received', async () => {
-    //     const spy = jest.spyOn(Countdown.prototype as any, 'stopCountdown');
-    //     receiveAllVotes();
-    //     expect(spy).toBeCalledTimes(1);
-    // });
-
-    // it('should change state to ViewingResults when countdown runs out', async () => {
-    //     advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
-    //     expect(gameThree['stageController']!.stage).toBe(GameThreeGameState.ViewingResults);
-    // });
-
-    // it('should not accept new votes when time has run out', async () => {
-    //     advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
-    //     gameThree['handleInput'](message);
-    //     expect(gameThree.players.get(users[0].id)!.hasVoted(gameThree['stageController']!['_roundIdx'])).toBeFalsy();
-    // });
-
-    // it.todo('test points');
-    it.todo('should return false when a user votes for a user who does not exist');
-
-    // it('should return false when a user votes for a user who does not exist', () => {
-    //     votes.addVote(users[0].id, 'xxxxxx');
-    //     expect(votes.hasVoted(users[0].id)).toBeFalsy();
-    // });
+    it('should not add a point to a non existent photographerId ', async () => {
+        let eventData: undefined | PhotoVotingResults;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS) {
+                eventData = message;
+            }
+        });
+        const msg: IMessagePhotoVote = {
+            type: GameThreeMessageTypes.PHOTO_VOTE,
+            voterId: users[0].id,
+            photographerId: 'xxxxx',
+        };
+        gameThree.receiveInput(msg);
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
+        expect(eventData?.results.length).toBe(0);
+    });
 });
 
 function receiveAllVotes() {

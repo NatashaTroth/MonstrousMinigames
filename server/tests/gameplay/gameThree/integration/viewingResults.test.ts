@@ -28,6 +28,7 @@ describe('Viewing Results stage', () => {
     });
 
     afterEach(() => {
+        gameEventEmitter.removeAllListeners();
         jest.runAllTimers();
         jest.clearAllMocks();
     });
