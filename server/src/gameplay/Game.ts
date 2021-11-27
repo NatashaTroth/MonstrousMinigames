@@ -158,7 +158,7 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     protected abstract update(timeElapsed: number, timeElapsedSinceLastFrame: number): Promise<void> | void;
     protected abstract handleInput(message: IMessage): Promise<void> | void;
     protected abstract postProcessPlayers(playersIterable: IterableIterator<TPlayer>): void;
-    rankSuccessfulUser(rankingMetric: number) {
+    protected rankSuccessfulUser(rankingMetric: number) {
         const currentRank = this.currentRank++;
 
         if (this._rankDictionary.has(rankingMetric)) {

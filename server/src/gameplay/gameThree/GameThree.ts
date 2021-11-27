@@ -119,29 +119,6 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
 
     protected handleInput(message: IMessage) {
         this.stageController?.handleInput(message);
-
-        //TODO validate inputs - like correct userId...
-        // switch (message.type) {
-        //     case GameThreeMessageTypes.PHOTO: {
-        //         // TODO check    const player = this.players.get(message.userId!);
-        //         this.stageController!.handleReceivedPhoto(message as IMessagePhoto);
-        //         break;
-        //     }
-        //     case GameThreeMessageTypes.PHOTO_VOTE: {
-        //         // TODO check they exist
-        //         // const player = this.players.get(message.photographerId!);
-        //         // const voter = this.players.get(message.voterId);
-        //         this.stageController!.handleReceivedPhotoVote(message as IMessagePhotoVote);
-        //         break;
-        //     }
-        //     case GameThreeMessageTypes.FINISHED_PRESENTING: {
-        //         this.stageController!.handleNewPresentationRound();
-
-        //         break;
-        //     }
-        //     default:
-        //         console.info(message);
-        // }
     }
 
     handleGameFinished() {
@@ -159,13 +136,13 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         playerRanks
             .sort((a, b) => b.points - a.points)
             .map(result => {
-                const rank = this.rankSuccessfulUser(result.points); //TODO !!! make this function protected again
+                const rank = this.rankSuccessfulUser(result.points);
                 this.players.get(result.id)!.rank = rank;
                 result.rank = rank;
                 return result;
             });
 
         this.gameState = GameState.Finished;
-        GameThreeEventEmitter.emitGameHasFinishedEvent(this.roomId, GameState.Finished, []); //playerRanks);
+        GameThreeEventEmitter.emitGameHasFinishedEvent(this.roomId, GameState.Finished, playerRanks);
     }
 }
