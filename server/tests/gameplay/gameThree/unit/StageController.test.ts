@@ -6,6 +6,9 @@ import {
 } from '../../../../src/gameplay/gameThree/classes/FinalPhotoVotingStage';
 import { PresentationStage } from '../../../../src/gameplay/gameThree/classes/PresentationStage';
 import { SinglePhotoStage } from '../../../../src/gameplay/gameThree/classes/SinglePhotoStage';
+import {
+    SinglePhotoVotingStage
+} from '../../../../src/gameplay/gameThree/classes/SinglePhotoVotingStage';
 import { StageController } from '../../../../src/gameplay/gameThree/classes/StageController';
 import StageEventEmitter from '../../../../src/gameplay/gameThree/classes/StageEventEmitter';
 import {
@@ -57,7 +60,7 @@ describe('Stage order after countdown', () => {
 
     it('should switch to voting stage after taking photo', async () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-        expect(stageController.currentStage!).toBeInstanceOf(VotingStage);
+        expect(stageController.currentStage!).toBeInstanceOf(SinglePhotoVotingStage);
     });
 
     it('should switch to viewing results stage after voting', async () => {
@@ -127,6 +130,91 @@ describe('Stage order after countdown', () => {
     });
 });
 
+describe('Stage order before countdown over', () => {
+    beforeEach(async () => {
+        stageController = new StageController(roomId, players);
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.runAllTimers();
+        jest.clearAllMocks();
+    });
+
+    it('should not switch to voting stage after taking photo if countdown is not over', async () => {
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO - 1);
+        expect(stageController.currentStage!).toBeInstanceOf(SinglePhotoStage);
+    });
+
+    it('should not switch to viewing results stage after voting if countdown is not over', async () => {
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE - 1);
+        expect(stageController.currentStage!).toBeInstanceOf(SinglePhotoVotingStage);
+    });
+
+    it('should not switch to taking single photo stage after not final viewing results stage if countdown is not over', async () => {
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS - 1);
+        expect(stageController.currentStage!).toBeInstanceOf(ViewingResultsStage);
+    });
+
+    it('should not switch to taking final photos stage after final viewing results stage if countdown is not over', async () => {
+        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS - 1);
+        expect(stageController.currentStage!).toBeInstanceOf(ViewingResultsStage);
+    });
+
+    it('should not switch to presentation stage taking final photos stage if countdown is not over', async () => {
+        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS - 1);
+        expect(stageController.currentStage!).toBeInstanceOf(FinalPhotosStage);
+    });
+
+    it('should not stay on the presentation stage after a presentation if countdown is not over', async () => {
+        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS - 1);
+        expect(stageController.currentStage!).toBeInstanceOf(PresentationStage);
+    });
+
+    it('should not switch to final voting stage after all presentations if countdown is not over', async () => {
+        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        users
+            .filter(user => user.id !== users[0].id)
+            .forEach(() => {
+                stageController.update(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
+            });
+        stageController.update(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS - 1);
+        expect(stageController.currentStage!).toBeInstanceOf(PresentationStage);
+    });
+
+    it('should not switch to no stage after final voting stage if countdown is not over', async () => {
+        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        users.forEach(() => {
+            stageController.update(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
+        });
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE - 1);
+        expect(stageController.currentStage!).toBeInstanceOf(FinalPhotosVotingStage);
+    });
+});
+
 let stageEventEmitter: StageEventEmitter;
 
 describe('Stage change events', () => {
@@ -147,7 +235,7 @@ describe('Stage change events', () => {
             eventCalledTimes++;
         });
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-        expect(stageController.currentStage!).toBeInstanceOf(VotingStage);
+        expect(stageController.currentStage!).toBeInstanceOf(SinglePhotoVotingStage);
 
         expect(eventCalledTimes).toBe(1);
     });
