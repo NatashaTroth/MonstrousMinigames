@@ -204,7 +204,7 @@ describe('Final Voting Points', () => {
         jest.clearAllMocks();
     });
 
-    it('should receive a point for a vote', async () => {
+    it('should receive three points for a vote', async () => {
         const voterId = users[0].id;
         const photographerId = users[1].id;
         const msg: IMessagePhotoVote = {
@@ -226,10 +226,11 @@ describe('Final Voting Points', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
 
         const userPoints = getPlayerPointsArray(stageController.getPlayerPoints());
-        expect(userPoints).toEqual([1, 1, 0, 0]); //order of elements is checked as well
+        const pointsPerVote = InitialParameters.POINTS_PER_VOTE_FINAL_ROUND;
+        expect(userPoints).toEqual([pointsPerVote, pointsPerVote, 0, 0]); //order of elements is checked as well
     });
 
-    it('should not receive a point for a vote if photographerId did not vote', async () => {
+    it('should not receive points for a vote if photographerId did not vote', async () => {
         const voterId = users[0].id;
         const photographerId = users[1].id;
         const msg: IMessagePhotoVote = {
@@ -246,7 +247,7 @@ describe('Final Voting Points', () => {
         expect(userPoints[0]).toEqual(0);
     });
 
-    it('should receive a point if photographerId did not take a photo', async () => {
+    it('should receive 3 points per vote if photographerId did not take a photo', async () => {
         const voterId = users[0].id;
         const photographerId = users[1].id;
         const msg: IMessagePhotoVote = {
@@ -268,10 +269,11 @@ describe('Final Voting Points', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
 
         const userPoints = getPlayerPointsArray(stageController.getPlayerPoints());
-        expect(userPoints).toEqual([1, 1, 0, 0]); //order of elements is checked as well
+        const pointsPerVote = InitialParameters.POINTS_PER_VOTE_FINAL_ROUND;
+        expect(userPoints).toEqual([pointsPerVote, pointsPerVote, 0, 0]); //order of elements is checked as well
     });
 
-    it('should return player points (1 each per vote)', () => {
+    it('should return player points (final vote points (3) each per vote)', () => {
         users.forEach((user, idx) => {
             const msg = {
                 type: votingMessage.type,
@@ -281,7 +283,8 @@ describe('Final Voting Points', () => {
             stageController.handleInput(msg);
         });
         const userPoints = getPlayerPointsArray(stageController.getPlayerPoints());
-        expect(userPoints).toEqual([1, 1, 1, 1]); //order of elements is checked as well
+        const pointsPerVote = InitialParameters.POINTS_PER_VOTE_FINAL_ROUND;
+        expect(userPoints).toEqual([pointsPerVote, pointsPerVote, pointsPerVote, pointsPerVote]); //order of elements is checked as well
     });
 });
 
@@ -300,7 +303,7 @@ describe('Full run through all stages', () => {
         users.forEach(() => {
             stageController.update(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
         });
-        everyOneGetsVote(stageController); // expect points to be: [2, maxNumberPhotos + 2, maxNumberPhotos + 1, 1]
+        everyOneGetsVote(stageController); // expect points to be: [1 + finalVotePoints, maxNumberPhotos + 1 + finalVotePoints, maxNumberPhotos + finalVotePoints, finalVotePoints]
     });
 
     afterEach(() => {
@@ -310,10 +313,10 @@ describe('Full run through all stages', () => {
 
     it('should have the correct final points', () => {
         expect(getPlayerPointsArray(stageController.getPlayerPoints())).toEqual([
-            2,
-            InitialParameters.NUMBER_FINAL_PHOTOS + 2,
-            InitialParameters.NUMBER_FINAL_PHOTOS + 1,
-            1,
+            1 + InitialParameters.POINTS_PER_VOTE_FINAL_ROUND,
+            InitialParameters.NUMBER_FINAL_PHOTOS + 1 + InitialParameters.POINTS_PER_VOTE_FINAL_ROUND,
+            InitialParameters.NUMBER_FINAL_PHOTOS + InitialParameters.POINTS_PER_VOTE_FINAL_ROUND,
+            InitialParameters.POINTS_PER_VOTE_FINAL_ROUND,
         ]);
     });
 

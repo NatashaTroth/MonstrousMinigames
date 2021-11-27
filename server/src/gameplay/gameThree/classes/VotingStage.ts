@@ -12,6 +12,7 @@ export abstract class VotingStage extends Stage {
         roomId: string,
         players: PlayerNameId[],
         private photographerIds: string[],
+        private pointsPerVote = 1,
         private onlyAddPointIfTookPhoto = true
     ) {
         super(roomId, players, InitialParameters.COUNTDOWN_TIME_VOTE);
@@ -46,7 +47,10 @@ export abstract class VotingStage extends Stage {
         this.votes.getAllVotes().forEach(votesPerPlayer => {
             // console.log('Allowed vote ', this.photographerIsAllowedPoint(votesPerPlayer.photographerId));
             if (this.photographerIsAllowedPoint(votesPerPlayer.photographerId))
-                this.playerPoints.addPointsToPlayer(votesPerPlayer.photographerId, votesPerPlayer.votes);
+                this.playerPoints.addPointsToPlayer(
+                    votesPerPlayer.photographerId,
+                    votesPerPlayer.votes * this.pointsPerVote
+                );
         });
     }
 
