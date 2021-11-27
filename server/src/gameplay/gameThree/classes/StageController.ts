@@ -45,6 +45,10 @@ export class StageController {
 
         if (!this.isFinalRound()) {
             this.stage = new SinglePhotoStage(this.roomId, this.players);
+        } else if (this.roundIdx > InitialParameters.NUMBER_ROUNDS) {
+            //TODO test
+            this.stage = null;
+            this.handleGameFinished();
         } else {
             this.stage = new FinalPhotosStage(this.roomId, this.players);
         }
@@ -67,6 +71,6 @@ export class StageController {
     }
 
     private isFinalRound() {
-        return this.roundIdx >= InitialParameters.NUMBER_ROUNDS;
+        return this.roundIdx === InitialParameters.NUMBER_ROUNDS;
     }
 }
