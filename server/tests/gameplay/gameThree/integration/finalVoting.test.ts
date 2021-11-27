@@ -105,6 +105,4 @@ describe('Taking Photo', () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
         expect(eventCalled).toBeTruthy();
     });
-
-    it.todo('test points');
 });

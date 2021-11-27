@@ -101,36 +101,6 @@ describe('Taking Photo', () => {
         expect(eventCalled).toBeTruthy();
     });
 
-    // fit('should send all the correct number of photos with voting message', async () => {
-    //     let eventData: VoteForPhotos;
-    //     gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
-    //         if (message.type === GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS) {
-    //             eventData = message;
-    //         }
-    //     });
-    //     users.forEach(user => {
-    //         const newMessage = { ...message, photographerId: user.id };
-    //         gameThree.receiveInput(newMessage);
-    //     });
-
-    //     expect(eventData!.photoUrls.length).toBe(users.length);
-    // });
-
-    // xit('should send the photo urls from the message with voting message', async () => {
-    //     let eventData: VoteForPhotos;
-    //     gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
-    //         if (message.type === GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS) {
-    //             eventData = message;
-    //         }
-    //     });
-    //     users.forEach(user => {
-    //         const newMessage = { ...message, photographerId: user.id };
-    //         gameThree.receiveInput(newMessage);
-    //     });
-
-    //     expect(eventData!.photoUrls[0].url).toBe(message.url);
-    // });
-
     it('should not emit the Present Final Photos event when taking photo countdown has not run out', async () => {
         let eventCalled = false;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {

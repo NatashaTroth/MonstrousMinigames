@@ -108,9 +108,6 @@ describe('Taking Photo', () => {
             }
         });
 
-        // const numberPresentations = Array.from(gameThree.players.values()).filter(player =>
-        //     player.hasReceivedFinalPhotos()
-        // ).length;
         for (let i = 0; i < users.length; i++) {
             advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
         }
