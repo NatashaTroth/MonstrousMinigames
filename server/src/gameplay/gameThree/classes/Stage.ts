@@ -26,7 +26,6 @@ export abstract class Stage {
     abstract handleInput(message: IMessage): void;
 
     constructor(protected roomId: string, protected players: PlayerNameId[] = [], protected countdownTime: number) {
-        // console.log('--- new stage --- ', this.constructor.name);
         this.initiateCountdown();
         this.playerPoints = new PlayerPoints(players);
     }
@@ -35,22 +34,11 @@ export abstract class Stage {
         this.countdown.initiateCountdown(this.countdownTime);
     }
 
-    // protected stopCountdown(){
-
-    // }
-
     abstract switchToNextStage(): Stage;
-    // switchToNextStage(): Stage | void {
-    //     this.countdown.resetCountdown();
-    // }
 
     update(timeElapsedSinceLastFrame: number) {
         this.countdown.update(timeElapsedSinceLastFrame);
         if (this.countdown.countdownOver()) {
-            //TODO
-            // console.log('countdown over=========');
-            // console.log(this.constructor.name);
-            // this.emitStageChangeEvent();
             this.countdownOver();
         }
     }

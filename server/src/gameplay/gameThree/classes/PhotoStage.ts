@@ -27,7 +27,10 @@ export abstract class PhotoStage extends Stage {
     handleInput(message: IMessage) {
         if (message.type !== GameThreeMessageTypes.PHOTO) return;
 
-        const data = message as IMessagePhoto;
+        this.addPhoto(message as IMessagePhoto);
+    }
+
+    private addPhoto(data: IMessagePhoto) {
         if (this.players.find(player => player.id === data.photographerId))
             this.photos.addPhoto(data.photographerId, data.url);
 

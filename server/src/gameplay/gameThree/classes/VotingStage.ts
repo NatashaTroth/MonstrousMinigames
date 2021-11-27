@@ -21,7 +21,10 @@ export abstract class VotingStage extends Stage {
 
     handleInput(message: IMessage) {
         if (message.type !== GameThreeMessageTypes.PHOTO_VOTE) return;
-        const data = message as IMessagePhotoVote;
+
+        this.addVote(message as IMessagePhotoVote);
+    }
+    private addVote(data: IMessagePhotoVote) {
         if (
             this.players.find(player => player.id === data.voterId) &&
             this.players.find(player => player.id === data.photographerId)
@@ -31,7 +34,6 @@ export abstract class VotingStage extends Stage {
             this.emitStageChangeEvent();
         }
     }
-
     abstract switchToNextStage(): Stage;
 
     protected countdownOver() {
