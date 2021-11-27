@@ -12,7 +12,7 @@ export abstract class VotingStage extends Stage {
         roomId: string,
         players: PlayerNameId[],
         private photographerIds: string[],
-        private onlyAddPointIfPhotographer = true
+        private onlyAddPointIfTookPhoto = true
     ) {
         super(roomId, players, InitialParameters.COUNTDOWN_TIME_VOTE);
         this.votes = new Votes();
@@ -44,6 +44,7 @@ export abstract class VotingStage extends Stage {
 
     private setPointPerReceivedVote() {
         this.votes.getAllVotes().forEach(votesPerPlayer => {
+            // console.log('Allowed vote ', this.photographerIsAllowedPoint(votesPerPlayer.photographerId));
             if (this.photographerIsAllowedPoint(votesPerPlayer.photographerId))
                 this.playerPoints.addPointsToPlayer(votesPerPlayer.photographerId, votesPerPlayer.votes);
         });
@@ -53,10 +54,7 @@ export abstract class VotingStage extends Stage {
         // only add point to photographers that voted and that took a photo (applicable - not applicable in final round, since a point is added for every photo taken)
 
         const voterIds = this.votes.getVoterIds();
-        return (
-            voterIds.includes(photographerId) &&
-            this.onlyAddPointIfPhotographer &&
-            this.photographerIds.includes(photographerId)
-        );
+        const voted = voterIds.includes(photographerId);
+        return this.onlyAddPointIfTookPhoto ? voted && this.photographerIds.includes(photographerId) : voted;
     }
 }
