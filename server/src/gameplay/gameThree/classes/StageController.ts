@@ -43,19 +43,18 @@ export class StageController {
         this.roundIdx++;
         GameThreeEventEmitter.emitNewRound(this.roomId, this.roundIdx);
 
-        if (!this.isFinalRound()) {
-            this.stage = new SinglePhotoStage(this.roomId, this.players);
+        if (this.isFinalRound()) {
+            this.stage = new FinalPhotosStage(this.roomId, this.players);
         } else if (this.roundIdx > InitialParameters.NUMBER_ROUNDS) {
-            //TODO test
             this.stage = null;
             this.handleGameFinished();
         } else {
-            this.stage = new FinalPhotosStage(this.roomId, this.players);
+            this.stage = new SinglePhotoStage(this.roomId, this.players);
         }
     }
 
     handleInput(message: IMessage) {
-        this.stage?.handleInput(message);
+        this.stage!.handleInput(message);
     }
 
     getPlayerPoints(): Map<string, number> {

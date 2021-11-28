@@ -5,8 +5,6 @@ import { ViewingResultsStage } from './ViewingResultsStage';
 import { VotingStage } from './VotingStage';
 
 export class SinglePhotoVotingStage extends VotingStage {
-    //TODO make URL type
-
     constructor(roomId: string, players: PlayerNameId[], photographerIds: string[]) {
         super(roomId, players, photographerIds);
     }
@@ -19,6 +17,6 @@ export class SinglePhotoVotingStage extends VotingStage {
             InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS
         );
 
-        return new ViewingResultsStage(this.roomId, this.players); //TODO
+        return new ViewingResultsStage(this.roomId, this.players);
     }
 }

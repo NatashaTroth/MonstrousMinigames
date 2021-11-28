@@ -43,13 +43,17 @@ const finishPresentingMessage: IMessage = {
     type: GameThreeMessageTypes.FINISHED_PRESENTING,
 };
 
+let stageEventEmitter: StageEventEmitter;
+
 describe('Stage order after countdown', () => {
     beforeEach(async () => {
         stageController = new StageController(roomId, players);
         jest.useFakeTimers();
+        stageEventEmitter = StageEventEmitter.getInstance();
     });
 
     afterEach(() => {
+        stageEventEmitter.removeAllListeners();
         jest.runAllTimers();
         jest.clearAllMocks();
     });
@@ -127,6 +131,26 @@ describe('Stage order after countdown', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
 
         expect(stageController.currentStage!).toBe(null);
+    });
+
+    it('should end game when roundIdx is higher than number of rounds', async () => {
+        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS;
+        stageController.handleNewRound();
+
+        expect(stageController.currentStage!).toBe(null);
+    });
+
+    it('should emit game finished when roundIdx is higher than number of rounds', async () => {
+        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS;
+
+        let eventCalled = false;
+        stageEventEmitter.on(StageEventEmitter.GAME_FINISHED, () => {
+            eventCalled = true;
+        });
+
+        stageController.handleNewRound();
+
+        expect(eventCalled).toBeTruthy();
     });
 });
 
@@ -214,8 +238,6 @@ describe('Stage order before countdown over', () => {
         expect(stageController.currentStage!).toBeInstanceOf(FinalPhotosVotingStage);
     });
 });
-
-let stageEventEmitter: StageEventEmitter;
 
 describe('Stage change events', () => {
     beforeEach(async () => {

@@ -24,6 +24,9 @@ export abstract class Stage {
     protected playerPoints: PlayerPoints;
 
     abstract handleInput(message: IMessage): void;
+    // handleInput(message: IMessage) {
+    //     return;
+    // }
 
     constructor(protected roomId: string, protected players: PlayerNameId[] = [], protected countdownTime: number) {
         this.initiateCountdown();

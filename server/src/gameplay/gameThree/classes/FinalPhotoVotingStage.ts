@@ -20,13 +20,6 @@ export class FinalPhotosVotingStage extends VotingStage {
     }
 
     switchToNextStage() {
-        // this.sendPhotoVotingResultsToScreen(this.roomId, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
-        // this.updatePlayerPointsFromVotes();
-
-        // const photoUrls: PhotoPhotographerMapper[] = this.getPhotos() as PhotoPhotographerMapper[];
-        // GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
-
-        // return new ViewingResultsStage(this.roomId, this.players, this.votes.getAllVotes()); //TODO
         return this;
     }
 }

@@ -11,14 +11,11 @@ export class SinglePhotoStage extends PhotoStage {
     constructor(roomId: string, players: PlayerNameId[]) {
         super({ roomId, players: players, countdownTime: InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO });
         this.photoTopics = new PhotoTopics();
-
-        if (this.photoTopics.isAnotherTopicAvailable()) {
-            GameThreeEventEmitter.emitNewTopic(
-                roomId,
-                this.photoTopics.nextTopic()!,
-                InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO
-            );
-        }
+        GameThreeEventEmitter.emitNewTopic(
+            roomId,
+            this.photoTopics.nextTopic()!,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO
+        );
     }
 
     switchToNextStage() {
