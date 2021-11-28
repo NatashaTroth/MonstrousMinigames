@@ -1,15 +1,16 @@
 import { MessageTypesGame3 } from '../../../utils/constants';
 import { MessageDataGame3 } from './MessageDataGame3';
 
-export interface photoPhotographerMapper {
+export interface PhotoUserMapper {
     photographerId: string;
+    photoId: number;
     url: string;
 }
 
 export interface VoteForPhotoMessage {
     type: MessageTypesGame3.voteForPhotos;
     roomId: string;
-    photoUrls: photoPhotographerMapper[];
+    photoUrls: PhotoUserMapper[];
     countdownTime: number;
 }
 

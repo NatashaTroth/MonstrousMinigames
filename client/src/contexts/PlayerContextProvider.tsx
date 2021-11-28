@@ -1,7 +1,7 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { Character } from '../config/characters';
-import { ObstacleTypes, TrashType } from '../utils/constants';
+import { Character } from "../config/characters";
+import { ObstacleTypes, TrashType } from "../utils/constants";
 
 export const defaultValue = {
     playerRank: undefined,
@@ -28,6 +28,9 @@ export const defaultValue = {
     setUserId: () => {
         // do nothing
     },
+    resetPlayer: () => {
+        // do nothing
+    },
 };
 export interface Obstacle {
     type: ObstacleTypes;
@@ -50,6 +53,7 @@ interface PlayerContextProps {
     setReady: (val: boolean) => void;
     userId: string;
     setUserId: (val: string) => void;
+    resetPlayer: () => void;
 }
 
 export const PlayerContext = React.createContext<PlayerContextProps>(defaultValue);
@@ -65,11 +69,9 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const content = {
         playerRank,
         setPlayerRank,
-        //TODO
-        // resetPlayer: () => {
-        //     setPlayerFinished(false);
-        //     setPlayerRank(undefined);
-        // },
+        resetPlayer: () => {
+            setPlayerRank(undefined);
+        },
         playerNumber,
         setPlayerNumber,
         character,

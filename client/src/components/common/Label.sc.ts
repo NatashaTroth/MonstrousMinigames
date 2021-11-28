@@ -7,7 +7,3 @@ export const Label = styled.div`
     font-style: italic;
     margin-bottom: 30px;
 `;
-
-export const AdminLabel = styled(Label)`
-    margin-bottom: 0;
-`;

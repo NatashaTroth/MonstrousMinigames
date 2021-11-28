@@ -61,6 +61,7 @@ const Game: React.FunctionComponent = () => {
         });
         game.scene.add('MainScene', MainScene, false); //socket: ScreenSocket.getInstance(socket)
         game.scene.start('MainScene', { roomId, socket: screenSocket, screenAdmin });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     async function handleAudio() {
@@ -68,11 +69,12 @@ const Game: React.FunctionComponent = () => {
             GameEventEmitter.emitPauseAudioEvent();
             setGameAudioPlaying(false);
             mute();
-        } else {
-            GameEventEmitter.emitPlayAudioEvent();
-            setGameAudioPlaying(true);
-            unMute();
+            return;
         }
+
+        GameEventEmitter.emitPlayAudioEvent();
+        setGameAudioPlaying(true);
+        unMute();
     }
 
     //TODO click on pause immediately - doesn't work because wrong gamestate, countdown still running - fix

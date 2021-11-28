@@ -4,8 +4,8 @@ import {
 } from '../../domain/typeGuards/game1/phaserLoadingTimedOut';
 import { MessageTypesGame1 } from '../../utils/constants';
 
-describe('paused TypeGuard', () => {
-    it('when type is paused, it should return true', () => {
+describe('phaserLoadingTimedOut TypeGuard', () => {
+    it('when type is phaserLoadingTimedOut, it should return true', () => {
         const data: PhaserLoadingTimedOutMessage = {
             type: MessageTypesGame1.phaserLoadingTimedOut,
         };

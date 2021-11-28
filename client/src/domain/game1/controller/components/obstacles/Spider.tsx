@@ -39,7 +39,6 @@ const Spider: React.FunctionComponent<SpiderProps> = ({ navigator, tutorial = fa
         let mounted = true;
         resetCurrentCount();
         initializeSkip();
-
         getAudioInput(
             MAX,
             {
@@ -47,16 +46,17 @@ const Spider: React.FunctionComponent<SpiderProps> = ({ navigator, tutorial = fa
                     if (mounted) {
                         if (tutorial) {
                             handleTutorialFinished?.(ObstacleTypes.trash);
-                        } else {
-                            solveObstacle({
-                                obstacle,
-                                controllerSocket,
-                                setObstacle,
-                                clearTimeout,
-                                roomId,
-                                handleSkip,
-                            });
+                            return;
                         }
+
+                        solveObstacle({
+                            obstacle,
+                            controllerSocket,
+                            setObstacle,
+                            clearTimeout,
+                            roomId,
+                            handleSkip,
+                        });
                     }
                 },
                 setProgress,

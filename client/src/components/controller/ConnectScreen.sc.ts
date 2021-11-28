@@ -1,20 +1,9 @@
 import styled from 'styled-components';
 
-import forest from '../../images/ui/forest_mobile.svg';
 import theme from '../../styles/theme';
+import { StyledFullScreenContainer } from './FullScreenContainer.sc';
 
-export const ConnectScreenContainer = styled.div`
-    height: 100%;
-    width: 100%;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: bottom;
-    background-image: url(${forest});
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-
+export const ConnectScreenContainer = styled(StyledFullScreenContainer)`
     iframe {
         border: 0;
         display: flex;

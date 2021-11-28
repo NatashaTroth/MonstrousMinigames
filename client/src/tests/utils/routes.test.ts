@@ -137,8 +137,8 @@ describe('test Routes enum', () => {
         expect(Routes.screenLobby).toBe('/screen/:id/lobby');
     });
 
-    it('Routes.screenChooseGame should return /screen/:id/choose-game', () => {
-        expect(Routes.screenChooseGame).toBe('/screen/:id/choose-game');
+    it('Routes.screenChooseGame should return /screen/:id/choose-game/:game?', () => {
+        expect(Routes.screenChooseGame).toBe('/screen/:id/choose-game/:game?');
     });
 
     it('Routes.screenGetReady should return /screen/:id/get-ready', () => {

@@ -1,6 +1,6 @@
-import { controllerFinishedRoute } from "../../../utils/routes";
-import history from "../../history/history";
-import { PlayerFinishedMessage } from "../../typeGuards/game1/playerFinished";
+import { controllerFinishedRoute } from '../../../utils/routes';
+import history from '../../history/history';
+import { PlayerFinishedMessage } from '../../typeGuards/game1/playerFinished';
 
 interface HandlePlayerFinished {
     data: PlayerFinishedMessage;

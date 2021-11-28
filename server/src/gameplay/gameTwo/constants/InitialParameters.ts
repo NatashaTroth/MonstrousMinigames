@@ -27,13 +27,18 @@ const PLAYERS_POSITIONS = [
 
 const MARGIN = 20;
 
-const SHEEP_COUNT = 100;
+const SHEEP_COUNT = 50;
 
 const KILL_RADIUS = 5;
 const KILLS_PER_ROUND = 5;
 
 const ROUNDS = 3;
-const ROUND_TIME = 60000;
+
+const COUNTING_TIME = 10000;
+const GUESSING_TIME = 10000;
+const RESULTS_TIME = 10000;
+
+const GOOD_GUESS_THRESHOLD = 5;
 
 
 
@@ -48,5 +53,8 @@ export default {
     KILL_RADIUS,
     KILLS_PER_ROUND,
     ROUNDS,
-    ROUND_TIME
+    COUNTING_TIME,
+    GUESSING_TIME,
+    RESULTS_TIME,
+    GOOD_GUESS_THRESHOLD
 }

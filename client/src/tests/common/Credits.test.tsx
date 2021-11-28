@@ -6,6 +6,7 @@ import { ThemeProvider } from 'styled-components';
 import Credits from '../../components/common/Credits';
 import theme from '../../styles/theme';
 
+// TODO vielleicht lieber testen ob Credits angezeigt werden wenn man auf Button clickt
 describe('Credits', () => {
     it('renders back button', () => {
         const buttonText = 'Back';

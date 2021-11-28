@@ -8,6 +8,7 @@
     },
     "scripts": {
         "test": "rm -rf dist/ && jest --watchAll",
+        "test:gameTwo": "jest --watch /gameTwo/",
         "test:gameThree": "jest --watch /gameThree/",
         "test:gameplay": "jest --watchAll ./tests/gameplay",
         "test:unit": "jest /unit/",

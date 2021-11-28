@@ -1,8 +1,7 @@
 import * as React from 'react';
 
-import history from '../../domain/history/history';
+import { handleReroute } from '../../domain/game1/controller/gameState/handleRerouteAtObstacle';
 import { ObstacleTypes, TrashType } from '../../utils/constants';
-import { controllerGame1Route, controllerObstacleRoute } from '../../utils/routes';
 
 export const defaultValue = {
     obstacle: undefined,
@@ -76,13 +75,7 @@ const Game1ContextProvider: React.FunctionComponent = ({ children }) => {
         obstacle,
         setObstacle: (roomId: string | undefined, val: undefined | Obstacle) => {
             setObstacle(val);
-            if (val) {
-                reroute = true;
-                history.push(controllerObstacleRoute(roomId, val.type)!);
-            } else if (reroute) {
-                reroute = false;
-                history.push(controllerGame1Route(roomId));
-            }
+            reroute = handleReroute(reroute, val, roomId);
         },
         dead,
         setPlayerDead,

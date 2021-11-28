@@ -53,7 +53,7 @@ describe('handleRenderWind', () => {
     it('should create wind', () => {
         handleRenderWind(chaser, scene, numberPlayers, laneHeightsPerNumberPlayers);
 
-        expect(scene.anims.generateFrameNumbers).toHaveBeenCalledWith('windSpritesheet', { start: 0, end: 5 });
+        expect(scene.anims.generateFrameNumbers).toHaveBeenCalledWith('windSpritesheet', expect.anything());
     });
 });
 
@@ -115,6 +115,11 @@ describe('handleRenderPlayer', () => {
     it('should create player', () => {
         handleRenderPlayer(scene, numberPlayers, laneHeightsPerNumberPlayers, coordinates, monsterSpriteSheetName);
 
-        expect(scene.physics.add.sprite).toHaveBeenCalledWith(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
+        expect(scene.physics.add.sprite).toHaveBeenCalledWith(
+            coordinates.x,
+            coordinates.y,
+            monsterSpriteSheetName,
+            expect.anything()
+        );
     });
 });

@@ -10,6 +10,7 @@ configure({ adapter: new Adapter() });
 
 afterEach(cleanup);
 
+// TODO
 describe('dragMoveListener function', () => {
     it('renders LinearProgressBar', () => {
         const getAttribute = jest.fn();

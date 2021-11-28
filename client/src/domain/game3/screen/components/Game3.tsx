@@ -1,99 +1,88 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { getDownloadURL, listAll, ref } from 'firebase/storage';
-import * as React from 'react';
+import React from "react";
 
-import Countdown from '../../../../components/common/Countdown';
-import { FirebaseContext } from '../../../../contexts/FirebaseContextProvider';
-import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
+import Countdown from "../../../../components/common/Countdown";
 import {
-    Frame,
-    ImageContainer,
-    InstructionContainer,
-    LoadingMessage,
-    PictureInstruction,
-    RandomWord,
-    ScreenContainer,
-    StyledImg,
-} from './Game.sc';
+    FinalPhoto, Game3Context, Topic, Vote, VoteResult
+} from "../../../../contexts/game3/Game3ContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import {
+    ImagesContainer, InstructionContainer, PictureInstruction, RandomWord, ScreenContainer
+} from "./Game.sc";
+import Photo from "./Photo";
 
 const Game3: React.FunctionComponent = () => {
-    const [images, setImages] = React.useState<string[]>([]);
-    const { roomId, countdownTime } = React.useContext(GameContext);
-    const { setTimeIsUp, timeIsUp, roundIdx } = React.useContext(Game3Context);
-    const [loading, setLoading] = React.useState(false);
-    const [displayStartingCountdown, setDisplayStartingCountdown] = React.useState(roundIdx === 1 ? true : false);
-
+    const { countdownTime } = React.useContext(GameContext);
+    const {
+        roundIdx,
+        voteForPhotoMessage,
+        votingResults,
+        finalRoundCountdownTime,
+        presentFinalPhotos,
+    } = React.useContext(Game3Context);
+    const [displayCountdown, setDisplayCountdown] = React.useState(true);
+    const [timeToDisplay, setTimeToDisplay] = React.useState<undefined | number>(undefined);
     const { topicMessage } = React.useContext(Game3Context);
-
-    const { storage } = React.useContext(FirebaseContext);
-
-    async function listAllFiles() {
-        if (storage) {
-            setLoading(true);
-            const imageUrls: string[] = [];
-            const imageReferences = await listAll(ref(storage, `${roomId}/${roundIdx}`));
-            const promises = imageReferences.items.map(async imgRef => {
-                const url = await getDownloadURL(imgRef);
-                imageUrls.push(url);
-            });
-
-            await Promise.all(promises);
-            setImages(Array.from(new Set(imageUrls)));
-            setLoading(false);
-        }
-    }
+    const finalRound = roundIdx === 3;
 
     React.useEffect(() => {
-        if (timeIsUp) {
-            listAllFiles();
-        }
-    }, [timeIsUp]);
+        setDisplayCountdown(true);
+    }, [roundIdx]);
+
+    React.useEffect(() => {
+        const time = getTime(presentFinalPhotos, finalRoundCountdownTime, voteForPhotoMessage, topicMessage);
+        setTimeToDisplay(time);
+    }, [presentFinalPhotos, finalRoundCountdownTime, voteForPhotoMessage, topicMessage]);
 
     return (
         <ScreenContainer>
-            {displayStartingCountdown ? (
+            <PictureInstruction>{finalRound ? 'Final Round' : `Round ${roundIdx}`}</PictureInstruction>
+            {!displayCountdown && timeToDisplay && !votingResults && (
+                <Countdown
+                    time={timeToDisplay}
+                    size="small"
+                    keyValue={`${presentFinalPhotos?.photographerId}${timeToDisplay}`}
+                />
+            )}
+            {displayCountdown ? (
                 <Countdown
                     time={countdownTime}
                     onComplete={() => {
-                        setDisplayStartingCountdown(false);
+                        setDisplayCountdown(false);
                     }}
                 />
             ) : (
                 <>
                     <InstructionContainer>
-                        {timeIsUp ? (
-                            <>
-                                <PictureInstruction>
-                                    Vote on your smartphone for the picture that looks most like
-                                </PictureInstruction>
-                                <RandomWord>{topicMessage.topic}</RandomWord>
-                            </>
-                        ) : (
-                            <>
-                                <PictureInstruction>Round {roundIdx}</PictureInstruction>
-                                <PictureInstruction>Take a picture that represents the word</PictureInstruction>
-                                <RandomWord>{topicMessage.topic}</RandomWord>
-                            </>
+                        {getInstruction(
+                            presentFinalPhotos,
+                            voteForPhotoMessage,
+                            finalRound,
+                            votingResults,
+                            topicMessage?.topic
                         )}
                     </InstructionContainer>
-                    {!timeIsUp && topicMessage.countdownTime > 0 && (
-                        <Countdown
-                            time={topicMessage.countdownTime}
-                            onComplete={() => {
-                                setTimeIsUp(true);
-                            }}
-                        />
-                    )}
-                    {loading && <LoadingMessage>Loading images...</LoadingMessage>}
-                    {timeIsUp && !loading && (
-                        <ImageContainer>
-                            {images.map((image, index) => (
-                                <Frame key={`image${index}`}>
-                                    <StyledImg src={image} />
-                                </Frame>
+                    {voteForPhotoMessage && (
+                        <ImagesContainer>
+                            {voteForPhotoMessage.photoUrls?.map((photo, index) => (
+                                <Photo
+                                    key={`image${index}`}
+                                    id={photo.photoId}
+                                    url={photo.url}
+                                    votingResult={
+                                        votingResults?.results.find(
+                                            result => result.photographerId === photo.photographerId
+                                        )?.points
+                                    }
+                                />
                             ))}
-                        </ImageContainer>
+                        </ImagesContainer>
+                    )}
+                    {presentFinalPhotos && (
+                        <ImagesContainer>
+                            {presentFinalPhotos.photoUrls?.map((photo, index) => (
+                                <Photo key={`finalResultimage${index}`} url={photo} />
+                            ))}
+                        </ImagesContainer>
                     )}
                 </>
             )}
@@ -101,3 +90,52 @@ const Game3: React.FunctionComponent = () => {
     );
 };
 export default Game3;
+
+function getInstruction(
+    presentFinalPhotos: FinalPhoto,
+    voteForPhotoMessage: Vote,
+    finalRound: boolean,
+    votingResults: VoteResult,
+    topic: string | undefined
+) {
+    let instruction = 'Take a picture that represents the word';
+
+    if (finalRound) {
+        instruction = 'Take three photos and tell a visual story about them afterwards';
+    }
+
+    if (voteForPhotoMessage) {
+        instruction = finalRound
+            ? 'Vote on your smartphone for the story that you liked the most'
+            : 'Vote on your smartphone for the picture that looks most like';
+    }
+
+    if (votingResults) {
+        instruction = 'Results for this round';
+    }
+
+    if (presentFinalPhotos) {
+        instruction = `${presentFinalPhotos.name} - Tell us a story about your pictures`;
+    }
+
+    return (
+        <>
+            <PictureInstruction>{instruction}</PictureInstruction>
+            {!presentFinalPhotos && !finalRound && <RandomWord>{topic}</RandomWord>}
+        </>
+    );
+}
+
+function getTime(
+    presentFinalPhotos: FinalPhoto,
+    finalRoundCountdownTime: number,
+    voteForPhotoMessage: Vote,
+    topicMessage: Topic
+) {
+    if (voteForPhotoMessage) return voteForPhotoMessage.countdownTime;
+    else if (presentFinalPhotos) return presentFinalPhotos.countdownTime;
+    else if (finalRoundCountdownTime) return finalRoundCountdownTime;
+    else if (topicMessage) return topicMessage.countdownTime;
+
+    return undefined;
+}

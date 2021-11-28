@@ -61,16 +61,17 @@ const Trash: React.FunctionComponent<TrashProps> = ({ tutorial = false, handleTu
                     if (mounted) {
                         if (tutorial) {
                             handleTutorialFinished?.(ObstacleTypes.stone);
-                        } else {
-                            solveObstacle({
-                                controllerSocket,
-                                obstacle: obstacleToUse,
-                                setObstacle,
-                                roomId,
-                                clearTimeout,
-                                handleSkip,
-                            });
+                            return;
                         }
+
+                        solveObstacle({
+                            controllerSocket,
+                            obstacle: obstacleToUse,
+                            setObstacle,
+                            roomId,
+                            clearTimeout,
+                            handleSkip,
+                        });
                     }
                 },
                 p => {

@@ -1,22 +1,14 @@
 import styled from 'styled-components';
 
-import forest from '../../images/ui/forest_mobile.svg';
-
-export const ChooseCharacterContainer = styled.div`
-    height: 100%;
-    width: 100%;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: bottom;
-    background-image: url(${forest});
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-`;
+import { StyledFullScreenContainer } from './FullScreenContainer.sc';
 
 interface Props {
     available: boolean;
 }
+
+export const ChooseCharacterContainer = styled(StyledFullScreenContainer)`
+    align-items: initial;
+`;
 
 export const Character = styled.img<Props>`
     width: 100%;

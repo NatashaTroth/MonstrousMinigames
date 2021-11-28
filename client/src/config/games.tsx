@@ -1,4 +1,3 @@
-
 import game1Demo from '../images/ui/gameDemo.png';
 
 export enum GameNames {

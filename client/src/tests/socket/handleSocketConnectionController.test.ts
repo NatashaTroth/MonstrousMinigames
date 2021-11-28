@@ -33,6 +33,10 @@ describe('Controller Socket Connection', () => {
             setCountdownTime: jest.fn(),
             setTopicMessage: jest.fn(),
             setSheepGameStarted: jest.fn(),
+            setVotingResults: jest.fn(),
+            setFinalRoundCountdownTime: jest.fn(),
+            setPresentFinalPhotos: jest.fn(),
+            resetController: jest.fn(),
         };
 
         handleSocketConnection(roomId, 'Test', false, dependencies);
