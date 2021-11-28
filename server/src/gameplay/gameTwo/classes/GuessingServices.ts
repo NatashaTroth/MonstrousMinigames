@@ -1,22 +1,33 @@
 import User from "../../../classes/user";
 import InitialParameters from "../constants/InitialParameters";
 import { GuessHints } from "../enums/GuessHints";
+import { GameTwoPlayerRank } from "../interfaces/GameTwoPlayerRank";
 
 export default class GuessingService {
     private roundCount: number;
     public counts: number[];
-    public guesses: Map<string, number[]>
-
+    public guesses: Map<string, number[]>;
+    public playerRanks: Map<string, GameTwoPlayerRank>;
     constructor(roundCount: number) {
         this.roundCount = roundCount;
         this.counts = new Array(roundCount);
         this.guesses = new Map<string, number[]>();
+        this.playerRanks = new Map<string, GameTwoPlayerRank>();
     }
 
     public init(users: User[]): void {
         users.forEach(user => {
             this.guesses.set(user.id, new Array(this.roundCount));
-        })
+            const playerRank = {
+                id: user.id,
+                name: user.name,
+                rank: 0,
+                isActive: user.active,
+                points: 0,
+                previousRank: null
+            }
+            this.playerRanks.set(user.id, playerRank);
+        });
     }
 
     public getHintForRound(round: number, userId: string): string | null {
@@ -27,7 +38,7 @@ export default class GuessingService {
         }
         return null;
     }
-    
+
     public getHint(miss: number): string {
         if (miss > 0 && miss <= InitialParameters.GOOD_GUESS_THRESHOLD) {
             return GuessHints.LOW;
@@ -83,5 +94,9 @@ export default class GuessingService {
         } else {
             return null;
         }
+    }
+
+    public getPlayerRanks() {
+        return [...this.playerRanks].map(([name, value]) => (value));
     }
 }

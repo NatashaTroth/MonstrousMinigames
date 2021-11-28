@@ -69,5 +69,25 @@ describe('GuessingService Tests', () => {
         expect(guessingService.getCountForRound(round)).toEqual(null);
     });
 
+    it('should return a PlayerRank', () => {
+        for (let i = 1; i < 4; i++) {
+            guessingService.addGuess(i, 10, user.id);
+            guessingService.saveSheepCount(i, 10);
+        }
+        const response = [
+            {
+                id: user.id,
+                name: user.name,
+                rank: 0,
+                isActive: user.active,
+                points: 0,
+                previousRank: null
+            }
+        ];
+        console.log(guessingService.getPlayerRanks())
+        expect(guessingService.getPlayerRanks()).toEqual(response);
+
+    });
+
 
 });

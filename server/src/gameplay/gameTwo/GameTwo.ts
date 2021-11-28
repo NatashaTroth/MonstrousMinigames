@@ -185,10 +185,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     reconnectPlayer(userId: string) {
         if (super.reconnectPlayer(userId)) {
             GameTwoEventEmitter.emitPlayerHasReconnected(this.roomId, userId);
-
             return true;
         }
-
         return false;
     }
 
