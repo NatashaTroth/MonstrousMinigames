@@ -146,7 +146,6 @@ describe('Taking Photo', () => {
         let eventData: undefined | VoteForPhotos;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
             if (message.type === GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS) {
-                console.log(message);
                 eventData = message;
             }
         });

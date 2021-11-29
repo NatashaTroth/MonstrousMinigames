@@ -3,7 +3,7 @@ import { MessageDataGame3 } from './MessageDataGame3';
 
 export interface VotingResult {
     photographerId: string;
-    points: number;
+    votes: number;
 }
 
 export interface VotingResultsMessage {

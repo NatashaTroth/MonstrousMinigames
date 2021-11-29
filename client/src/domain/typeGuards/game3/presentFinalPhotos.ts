@@ -5,9 +5,9 @@ export interface PresentFinalPhotosMessage {
     type: MessageTypesGame3.presentFinalPhotos;
     roomId: string;
     photographerId: string;
+    name: string;
     photoUrls: string[];
     countdownTime: number;
-    name: string;
 }
 
 export const presentFinalPhotosTypeGuard = (data: MessageDataGame3): data is PresentFinalPhotosMessage => {

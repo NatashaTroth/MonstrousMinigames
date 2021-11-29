@@ -1,14 +1,10 @@
-import React from "react";
+import React from 'react';
 
-import Countdown from "../../../../components/common/Countdown";
-import {
-    FinalPhoto, Game3Context, Topic, Vote, VoteResult
-} from "../../../../contexts/game3/Game3ContextProvider";
-import { GameContext } from "../../../../contexts/GameContextProvider";
-import {
-    ImagesContainer, InstructionContainer, PictureInstruction, RandomWord, ScreenContainer
-} from "./Game.sc";
-import Photo from "./Photo";
+import Countdown from '../../../../components/common/Countdown';
+import { FinalPhoto, Game3Context, Topic, Vote, VoteResult } from '../../../../contexts/game3/Game3ContextProvider';
+import { GameContext } from '../../../../contexts/GameContextProvider';
+import { ImagesContainer, InstructionContainer, PictureInstruction, RandomWord, ScreenContainer } from './Game.sc';
+import Photo from './Photo';
 
 const Game3: React.FunctionComponent = () => {
     const { countdownTime } = React.useContext(GameContext);
@@ -71,7 +67,7 @@ const Game3: React.FunctionComponent = () => {
                                     votingResult={
                                         votingResults?.results.find(
                                             result => result.photographerId === photo.photographerId
-                                        )?.points
+                                        )?.votes
                                     }
                                 />
                             ))}

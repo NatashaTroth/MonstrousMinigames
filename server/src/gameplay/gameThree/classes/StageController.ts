@@ -10,7 +10,7 @@ import StageEventEmitter from './StageEventEmitter';
 
 //TODO maybe also a round handler class
 export class StageController {
-    private roundIdx = -1;
+    private roundIdx = 0;
     private stageEventEmitter: StageEventEmitter;
     private stage?: Stage | null;
     private playerPoints: PlayerPoints;
@@ -24,7 +24,6 @@ export class StageController {
 
     private initStageEventEmitter() {
         this.stageEventEmitter.on(StageEventEmitter.STAGE_CHANGE_EVENT, message => {
-            // console.log('--NEW STAGE EVENT--');
             this.playerPoints.addPointsToMultiplePlayers(this.stage?.updatePlayerPoints());
             if (this.stage?.hasNextStage()) {
                 this.stage = this.stage?.switchToNextStage();
