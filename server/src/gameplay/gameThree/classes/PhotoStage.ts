@@ -31,8 +31,13 @@ export abstract class PhotoStage extends Stage {
     }
 
     private addPhoto(data: IMessagePhoto) {
-        if (this.players.find(player => player.id === data.photographerId))
+        if (
+            this.players.find(player => {
+                return player.id === data.photographerId;
+            })
+        ) {
             this.photos.addPhoto(data.photographerId, data.url);
+        }
 
         if (this.photos.havePhotosFromAllUsers(this.players.map(player => player.id))) {
             this.emitStageChangeEvent();

@@ -30,7 +30,6 @@ export class Photos {
         } else {
             const urls = this.photos.get(photographerId)!;
             if (urls.length < this.maxNumberPhotos) this.photos.set(photographerId, [...urls, url]);
-            //TODO control
         }
     }
 
