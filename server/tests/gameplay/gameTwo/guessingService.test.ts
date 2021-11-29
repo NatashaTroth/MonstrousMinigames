@@ -3,7 +3,7 @@ import User from "../../../src/classes/user";
 import { GuessHints } from "../../../src/gameplay/gameTwo/enums/GuessHints";
 import InitialParameters from "../../../src/gameplay/gameTwo/constants/InitialParameters";
 
-const user = new User('ABCD', 'socketId', 'name', 1, 'userId');
+const user = new User('ABCD', '72374', 'Franz', 1, '1');
 
 
 let guessingService: GuessingService;
@@ -14,7 +14,7 @@ describe('GuessingService Tests', () => {
     });
 
     it('should have an entry in guesses for the userId after init', () => {
-        expect(guessingService.guesses.get('userId')).not.toBeUndefined();
+        expect(guessingService.guesses.get(user.id)).not.toBeUndefined();
     });
     it('should return true after adding a guess to a user if no guess was added for the round before', () => {
         expect(guessingService.addGuess(1, 10, user.id)).toBeTruthy();
@@ -84,7 +84,39 @@ describe('GuessingService Tests', () => {
                 previousRank: null
             }
         ];
-        console.log(guessingService.getPlayerRanks())
+        expect(guessingService.getPlayerRanks()).toEqual(response);
+
+    });
+    it('should return the right ranks after guessing and calculating', () => {
+        guessingService = new GuessingService(3);
+        const user2 = new User('ABCD', '23434', 'Maria', 2, '2');
+        guessingService.init([user, user2]);
+
+
+        guessingService.addGuess(1, 10, user.id);
+        guessingService.addGuess(1, 19, user2.id);
+
+        guessingService.saveSheepCount(1, 10);
+        guessingService.calculatePlayerRanks();
+
+        const response = [
+            {
+                id: user.id,
+                name: user.name,
+                rank: 1,
+                isActive: user.active,
+                points: 3,
+                previousRank: 0
+            },
+            {
+                id: user2.id,
+                name: user2.name,
+                rank: 2,
+                isActive: user.active,
+                points: 2,
+                previousRank: 0
+            }
+        ];
         expect(guessingService.getPlayerRanks()).toEqual(response);
 
     });
