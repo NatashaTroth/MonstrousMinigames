@@ -6,10 +6,8 @@ import Button from "../../components/common/Button";
 import { characters } from "../../config/characters";
 import { GameNames } from "../../config/games";
 import { ScreenStates } from "../../config/screenStates";
-import { AudioContext } from "../../contexts/AudioContextProvider";
 import { GameContext } from "../../contexts/GameContextProvider";
 import { ScreenSocketContext, User } from "../../contexts/ScreenSocketContextProvider";
-import { handleAudioPermission } from "../../domain/audio/handlePermission";
 import handleStartGame1 from "../../domain/game1/screen/gameState/handleStartGame1";
 import handleStartGame2 from "../../domain/game2/screen/gameState/handleStartGame2";
 import handleStartClickedGame3 from "../../domain/game3/screen/gameState/handleStartClickedGame3";
@@ -26,7 +24,6 @@ import {
 
 const PlayersGetReady: React.FC = () => {
     const { screenSocket } = React.useContext(ScreenSocketContext);
-    const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
     const { roomId, connectedUsers, screenAdmin, screenState, chosenGame } = React.useContext(GameContext);
 
     const emptyGame = !connectedUsers || connectedUsers.length === 0;
@@ -34,8 +31,6 @@ const PlayersGetReady: React.FC = () => {
         !connectedUsers || connectedUsers.filter((user: User) => user.ready).length === connectedUsers.length;
 
     React.useEffect(() => {
-        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-        initialPlayLobbyMusic(true);
         if (screenAdmin) {
             screenSocket?.emit({
                 type: MessageTypes.screenState,

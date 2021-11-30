@@ -1,30 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { AccordionDetails, AccordionSummary, useMediaQuery } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import * as React from 'react';
+import { AccordionDetails, AccordionSummary, useMediaQuery } from "@material-ui/core";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import * as React from "react";
 
-import { AudioContext } from '../../contexts/AudioContextProvider';
-import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handleAudioPermission } from '../../domain/audio/handlePermission';
-import history from '../../domain/history/history';
-import { localBackend, localDevelopment } from '../../utils/constants';
-import { Routes } from '../../utils/routes';
-import Button from '../common/Button';
-import LoadingComponent from '../common/LoadingComponent';
-import Logo from '../common/Logo';
-import ConnectDialog from './ConnectDialog';
+import { ScreenSocketContext } from "../../contexts/ScreenSocketContextProvider";
+import history from "../../domain/history/history";
+import { localBackend, localDevelopment } from "../../utils/constants";
+import { Routes, screenFinishedRoute } from "../../utils/routes";
+import Button from "../common/Button";
+import LoadingComponent from "../common/LoadingComponent";
+import Logo from "../common/Logo";
+import ConnectDialog from "./ConnectDialog";
 import {
-    ConnectScreenContainer,
-    InstructionContainer,
-    LeftButtonContainer,
-    LeftContainer,
-    RightContainer,
-    SettingButtonSection,
-    StyledAccordion,
-    StyledHeadline,
-    StyledText,
-} from './ConnectScreen.sc';
-import GettingStartedDialog from './GettingStarted';
+    ConnectScreenContainer, InstructionContainer, LeftButtonContainer, LeftContainer,
+    RightContainer, SettingButtonSection, StyledAccordion, StyledHeadline, StyledText
+} from "./ConnectScreen.sc";
+import GettingStartedDialog from "./GettingStarted";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const fetch = require('node-fetch');
@@ -34,43 +25,15 @@ export const ConnectScreen: React.FunctionComponent = () => {
     const [gettingStartedDialogOpen, setGettingStartedDialogOpen] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
     const { handleSocketConnection } = React.useContext(ScreenSocketContext);
-    const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
     const displayInstruction = useMediaQuery('(min-width:860px)');
-
-    async function handleCreateNewRoom() {
-        setLoading(true);
-        const response = await fetch(
-            `${localDevelopment ? localBackend : process.env.REACT_APP_BACKEND_URL}create-room`,
-            {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }
-        );
-
-        if (response) {
-            setLoading(false);
-        }
-
-        const data = await response.json();
-        handleSocketConnection(data.roomId, 'lobby');
-        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-    }
-
-    React.useEffect(() => {
-        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-        initialPlayLobbyMusic(true);
-    }, []);
 
     async function handleJoinRoom() {
         setJoinDialogOpen(true);
-        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
     }
 
     async function handleGettingStarted() {
+        history.push(screenFinishedRoute('ADSD'));
         setGettingStartedDialogOpen(true);
-        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
     }
 
     return (
@@ -88,7 +51,13 @@ export const ConnectScreen: React.FunctionComponent = () => {
                             type="button"
                             id="new-room"
                             name="new"
-                            onClick={handleCreateNewRoom}
+                            onClick={() =>
+                                handleCreateNewRoom({
+                                    setLoading,
+                                    handleSocketConnection,
+                                    fetch,
+                                })
+                            }
                             title="Create new room"
                         >
                             Create New Room
@@ -110,24 +79,10 @@ export const ConnectScreen: React.FunctionComponent = () => {
                     </div>
 
                     <SettingButtonSection>
-                        <Button
-                            type="button"
-                            name="credits"
-                            onClick={() => {
-                                handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-                                history.push(Routes.credits);
-                            }}
-                        >
+                        <Button type="button" name="credits" onClick={() => history.push(Routes.credits)}>
                             Credits
                         </Button>
-                        <Button
-                            type="button"
-                            name="settings"
-                            onClick={() => {
-                                handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-                                history.push(Routes.settings);
-                            }}
-                        >
+                        <Button type="button" name="settings" onClick={() => history.push(Routes.settings)}>
                             Settings
                         </Button>
                     </SettingButtonSection>
@@ -159,3 +114,27 @@ export const ConnectScreen: React.FunctionComponent = () => {
         </ConnectScreenContainer>
     );
 };
+
+interface HandleCreateNewRoomProps {
+    setLoading: (val: boolean) => void;
+    handleSocketConnection: (roomId: string, route: string) => void;
+    fetch: (input: RequestInfo, init?: RequestInit | undefined) => Promise<Response>;
+}
+
+export async function handleCreateNewRoom({ setLoading, handleSocketConnection, fetch }: HandleCreateNewRoomProps) {
+    setLoading(true);
+    const response = await fetch(`${localDevelopment ? localBackend : process.env.REACT_APP_BACKEND_URL}create-room`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (response) {
+        setLoading(false);
+    }
+
+    const data = await response.json();
+
+    handleSocketConnection(data.roomId, 'lobby');
+}

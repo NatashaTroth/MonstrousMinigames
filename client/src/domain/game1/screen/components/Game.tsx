@@ -1,29 +1,19 @@
-import { Pause, PlayArrow, Stop, VolumeOff, VolumeUp } from '@material-ui/icons';
-import Phaser from 'phaser';
-import * as React from 'react';
-import { useParams } from 'react-router';
+import { Pause, PlayArrow, Stop, VolumeOff, VolumeUp } from "@material-ui/icons";
+import Phaser from "phaser";
+import * as React from "react";
+import { useParams } from "react-router";
 
-import { RouteParams } from '../../../../App';
-import { AudioContext } from '../../../../contexts/AudioContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
-import { ScreenSocketContext } from '../../../../contexts/ScreenSocketContextProvider';
-import { handleAudioPermission } from '../../../audio/handlePermission';
-import GameEventEmitter from '../../../phaser/GameEventEmitter';
-import { AudioButton, Container, PauseButton, StopButton } from './Game.sc';
-import MainScene from './MainScene';
+import { RouteParams } from "../../../../App";
+import { AudioContext2, Sound } from "../../../../contexts/AudioContext2Provider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import { ScreenSocketContext } from "../../../../contexts/ScreenSocketContextProvider";
+import GameEventEmitter from "../../../phaser/GameEventEmitter";
+import { AudioButton, Container, PauseButton, StopButton } from "./Game.sc";
+import MainScene from "./MainScene";
 
 const Game: React.FunctionComponent = () => {
     const { roomId, hasPaused, screenAdmin } = React.useContext(GameContext);
-    const {
-        pauseLobbyMusicNoMute,
-        audioPermission,
-        setAudioPermissionGranted,
-        musicIsPlaying,
-        gameAudioPlaying,
-        setGameAudioPlaying,
-        mute,
-        unMute,
-    } = React.useContext(AudioContext);
+    const { isPlaying, changeSound, togglePlaying } = React.useContext(AudioContext2);
     const { id }: RouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
 
@@ -32,18 +22,9 @@ const Game: React.FunctionComponent = () => {
     }
 
     React.useEffect(() => {
-        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-
-        if (Number(localStorage.getItem('audioVolume')) > 0) {
-            setGameAudioPlaying(true);
-        }
+        changeSound(Sound.game);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    React.useEffect(() => {
-        pauseLobbyMusicNoMute(audioPermission);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [audioPermission]);
 
     React.useEffect(() => {
         const game = new Phaser.Game({
@@ -65,16 +46,13 @@ const Game: React.FunctionComponent = () => {
     }, []);
 
     async function handleAudio() {
-        if (gameAudioPlaying) {
+        if (isPlaying) {
             GameEventEmitter.emitPauseAudioEvent();
-            setGameAudioPlaying(false);
-            mute();
-            return;
+        } else {
+            GameEventEmitter.emitPlayAudioEvent();
         }
 
-        GameEventEmitter.emitPlayAudioEvent();
-        setGameAudioPlaying(true);
-        unMute();
+        togglePlaying();
     }
 
     //TODO click on pause immediately - doesn't work because wrong gamestate, countdown still running - fix
@@ -95,7 +73,7 @@ const Game: React.FunctionComponent = () => {
                 {<Stop />}
             </StopButton>
             <AudioButton onClick={handleAudio} variant="primary">
-                {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
+                {isPlaying ? <VolumeUp /> : <VolumeOff />}
             </AudioButton>
             <div>
                 <div id="game-root" data-testid="game-container"></div>

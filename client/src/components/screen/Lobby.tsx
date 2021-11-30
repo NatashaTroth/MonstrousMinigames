@@ -1,42 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Assignment } from '@material-ui/icons';
-import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { Assignment } from "@material-ui/icons";
+import * as React from "react";
+import { useParams } from "react-router-dom";
 
-import { RouteParams } from '../../App';
-import Button from '../../components/common/Button';
-import { characters } from '../../config/characters';
-import { ScreenStates } from '../../config/screenStates';
-import { AudioContext } from '../../contexts/AudioContextProvider';
-import { GameContext } from '../../contexts/GameContextProvider';
-import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handleAudioPermission } from '../../domain/audio/handlePermission';
-import history from '../../domain/history/history';
-import { MessageTypes } from '../../utils/constants';
-import { generateQRCode } from '../../utils/generateQRCode';
-import { Routes, screenChooseGameRoute, screenLeaderboardRoute } from '../../utils/routes';
+import { RouteParams } from "../../App";
+import Button from "../../components/common/Button";
+import { characters } from "../../config/characters";
+import { ScreenStates } from "../../config/screenStates";
+import { GameContext } from "../../contexts/GameContextProvider";
+import { ScreenSocketContext } from "../../contexts/ScreenSocketContextProvider";
+import history from "../../domain/history/history";
+import { MessageTypes } from "../../utils/constants";
+import { generateQRCode } from "../../utils/generateQRCode";
+import { Routes, screenChooseGameRoute, screenLeaderboardRoute } from "../../utils/routes";
 import {
-    Character,
-    CharacterContainer,
-    ConnectedUserCharacter,
-    ConnectedUserContainer,
-    ConnectedUsers,
-    ConnectedUserStatus,
-    Content,
-    ContentContainer,
-    CopyToClipboard,
-    LeftContainer,
-    LobbyContainer,
-    QRCode,
-    QRCodeInstructions,
-    RightButtonContainer,
-    RightContainer,
-} from './Lobby.sc';
-import LobbyHeader from './LobbyHeader';
+    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer, ConnectedUsers,
+    ConnectedUserStatus, Content, ContentContainer, CopyToClipboard, LeftContainer, LobbyContainer,
+    QRCode, QRCodeInstructions, RightButtonContainer, RightContainer
+} from "./Lobby.sc";
+import LobbyHeader from "./LobbyHeader";
 
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers, screenAdmin, screenState } = React.useContext(GameContext);
-    const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
     const { id }: RouteParams = useParams();
     const navigator = window.navigator;
@@ -62,8 +47,6 @@ export const Lobby: React.FunctionComponent = () => {
     }, [roomId]);
 
     React.useEffect(() => {
-        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-        initialPlayLobbyMusic(true);
         if (screenAdmin) {
             screenSocket?.emit({
                 type: MessageTypes.screenState,
@@ -109,10 +92,7 @@ export const Lobby: React.FunctionComponent = () => {
                         </QRCode>
                         <RightButtonContainer>
                             <Button
-                                onClick={() => {
-                                    handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-                                    history.push(screenChooseGameRoute(roomId));
-                                }}
+                                onClick={() => history.push(screenChooseGameRoute(roomId))}
                                 disabled={!screenAdmin || !connectedUsers || connectedUsers?.length === 0}
                                 variant="secondary"
                                 title={
@@ -127,14 +107,7 @@ export const Lobby: React.FunctionComponent = () => {
                             </Button>
 
                             <Button onClick={() => history.push(screenLeaderboardRoute(roomId))}>Leaderboard</Button>
-                            <Button
-                                onClick={() => {
-                                    handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-                                    history.push(Routes.screen);
-                                }}
-                            >
-                                Back
-                            </Button>
+                            <Button onClick={() => history.push(Routes.screen)}>Back</Button>
                         </RightButtonContainer>
                     </RightContainer>
                 </ContentContainer>

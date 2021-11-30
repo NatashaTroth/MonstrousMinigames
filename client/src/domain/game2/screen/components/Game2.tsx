@@ -1,29 +1,19 @@
-import { Pause, PlayArrow, VolumeOff, VolumeUp } from '@material-ui/icons';
-import Phaser from 'phaser';
-import * as React from 'react';
-import { useParams } from 'react-router';
+import { Pause, PlayArrow, VolumeOff, VolumeUp } from "@material-ui/icons";
+import Phaser from "phaser";
+import * as React from "react";
+import { useParams } from "react-router";
 
-import { RouteParams } from '../../../../App';
-import { AudioContext } from '../../../../contexts/AudioContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
-import { ScreenSocketContext } from '../../../../contexts/ScreenSocketContextProvider';
-import { handleAudioPermission } from '../../../audio/handlePermission';
-import { AudioButton, Container, PauseButton } from '../../../game1/screen/components/Game.sc';
-import GameEventEmitter from '../../../phaser/GameEventEmitter';
-import SheepGameScene from './SheepGameScene';
+import { RouteParams } from "../../../../App";
+import { AudioContext } from "../../../../contexts/AudioContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import { ScreenSocketContext } from "../../../../contexts/ScreenSocketContextProvider";
+import { AudioButton, Container, PauseButton } from "../../../game1/screen/components/Game.sc";
+import GameEventEmitter from "../../../phaser/GameEventEmitter";
+import SheepGameScene from "./SheepGameScene";
 
 const Game2: React.FunctionComponent = () => {
     const { roomId, hasPaused, screenAdmin } = React.useContext(GameContext);
-    const {
-        pauseLobbyMusicNoMute,
-        audioPermission,
-        setAudioPermissionGranted,
-        musicIsPlaying,
-        gameAudioPlaying,
-        setGameAudioPlaying,
-        mute,
-        unMute,
-    } = React.useContext(AudioContext);
+    const { musicIsPlaying, gameAudioPlaying, setGameAudioPlaying } = React.useContext(AudioContext);
     const { id }: RouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
 
@@ -32,18 +22,16 @@ const Game2: React.FunctionComponent = () => {
     }
 
     React.useEffect(() => {
-        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-
         if (Number(localStorage.getItem('audioVolume')) > 0) {
             setGameAudioPlaying(true);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    React.useEffect(() => {
-        pauseLobbyMusicNoMute(audioPermission);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [audioPermission]);
+    // React.useEffect(() => {
+    //     pauseLobbyMusicNoMute(audioPermission);
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [audioPermission]);
 
     React.useEffect(() => {
         const game = new Phaser.Game({
@@ -71,11 +59,11 @@ const Game2: React.FunctionComponent = () => {
         if (gameAudioPlaying) {
             GameEventEmitter.emitPauseAudioEvent();
             setGameAudioPlaying(false);
-            mute();
+            // mute();
         } else {
             GameEventEmitter.emitPlayAudioEvent();
             setGameAudioPlaying(true);
-            unMute();
+            // unMute();
         }
     }
 

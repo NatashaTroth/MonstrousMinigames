@@ -2,12 +2,11 @@
 import * as React from "react";
 
 import { GameNames } from "../../config/games";
-import { AudioContext } from "../../contexts/AudioContextProvider";
+import { AudioContext2, Sound } from "../../contexts/AudioContext2Provider";
 import { FirebaseContext } from "../../contexts/FirebaseContextProvider";
 import { Game3Context } from "../../contexts/game3/Game3ContextProvider";
 import { GameContext } from "../../contexts/GameContextProvider";
 import { ScreenSocketContext } from "../../contexts/ScreenSocketContextProvider";
-import { handleAudioPermission } from "../../domain/audio/handlePermission";
 import { handleResetGame } from "../../domain/commonGameState/screen/handleResetGame";
 import { formatMs } from "../../utils/formatMs";
 import Button from "../common/Button";
@@ -19,7 +18,7 @@ import { Headline, LeaderBoardRow, RankTable, UnfinishedUserRow } from "./Finish
 export const FinishedScreen: React.FunctionComponent = () => {
     const { playerRanks, screenAdmin, resetGame, chosenGame, roomId } = React.useContext(GameContext);
     const { resetGame3 } = React.useContext(Game3Context);
-    const { audioPermission, setAudioPermissionGranted, initialPlayFinishedMusic } = React.useContext(AudioContext);
+    const { changeSound } = React.useContext(AudioContext2);
     const { screenSocket } = React.useContext(ScreenSocketContext);
     const { deleteImages } = React.useContext(FirebaseContext);
 
@@ -31,8 +30,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
     };
 
     React.useEffect(() => {
-        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-        initialPlayFinishedMusic(true);
+        changeSound(Sound.finished);
 
         if (chosenGame === GameNames.game3 && screenAdmin) {
             deleteImages(roomId);
