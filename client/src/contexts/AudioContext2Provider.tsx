@@ -15,7 +15,7 @@ const lobbyTracks = [
 ];
 
 type InitialTrack = { src: string; volumeFactor?: number };
-type LoadedTrack = { gainNode: GainNode; volumeFactor?: number };
+type LoadedTrack = { gainNode: GainNode; trackSource: AudioBufferSourceNode; volumeFactor?: number };
 type PlayingTracks = { name: string; tracks: LoadedTrack[] };
 
 export enum Sound {
@@ -63,13 +63,13 @@ const AudioContext2Provider: React.FunctionComponent = ({ children }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    function initializeAudio() {
+    async function initializeAudio() {
         const context = new AudioContext();
         setAudioCtx(context);
 
-        const lobby = loadTracks(lobbyTracks, context, volume, true, true);
-        const finished = loadTracks([{ src: finishedMusicFile }], context, volume);
-        const owlSounds = loadTracks([{ src: owlSoundsFile, volumeFactor: 0.15 }], context, volume);
+        const lobby = await loadTracks(lobbyTracks, context, volume, true, true);
+        const finished = await loadTracks([{ src: finishedMusicFile }], context, volume);
+        const owlSounds = await loadTracks([{ src: owlSoundsFile, volumeFactor: 0.15 }], context, volume, true);
 
         setLobbyMusic(lobby);
         setFinishedMusic(finished);
@@ -96,11 +96,7 @@ const AudioContext2Provider: React.FunctionComponent = ({ children }) => {
     const content = {
         isPlaying,
         togglePlaying: () => {
-            if (isPlaying) {
-                stop(playingTracks, audioCtx);
-            } else {
-                start(playingTracks, audioCtx);
-            }
+            isPlaying ? stop(playingTracks, audioCtx) : start(playingTracks, audioCtx);
         },
         volume,
         setVolume: (value: number) => {
@@ -172,26 +168,30 @@ function playTrack(
         trackSource.start();
     }
 
-    return { gainNode, volumeFactor };
+    // eslint-disable-next-line no-console
+    console.log(trackSource);
+
+    return { trackSource, gainNode, volumeFactor };
 }
 
 // load buffer sources for all tracks
-function loadTracks(tracks: InitialTrack[], audioCtx: AudioContext, volume: number, autoPlay = false, loop = false) {
-    const loadedTracks: LoadedTrack[] = [];
-
-    tracks.forEach(track => {
-        loadFile(track.src, audioCtx).then(loadedTrack => {
+async function loadTracks(
+    tracks: InitialTrack[],
+    audioCtx: AudioContext,
+    volume: number,
+    autoPlay = false,
+    loop = false
+) {
+    const audio = await Promise.all(
+        tracks.map(async track => {
+            const loadedTrack = await loadFile(track.src, audioCtx);
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
             }
 
-            const audio = playTrack(loadedTrack, audioCtx, volume, track.volumeFactor ?? 0, autoPlay, loop);
+            return playTrack(loadedTrack, audioCtx, volume, track.volumeFactor ?? 0, autoPlay, loop);
+        })
+    );
 
-            if (audio) {
-                loadedTracks.push(audio);
-            }
-        });
-    });
-
-    return loadedTracks;
+    return audio;
 }
