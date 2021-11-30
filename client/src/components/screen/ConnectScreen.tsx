@@ -1,21 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { AccordionDetails, AccordionSummary, useMediaQuery } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import * as React from "react";
+import { AccordionDetails, AccordionSummary, useMediaQuery } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import * as React from 'react';
 
-import { ScreenSocketContext } from "../../contexts/ScreenSocketContextProvider";
-import history from "../../domain/history/history";
-import { localBackend, localDevelopment } from "../../utils/constants";
-import { Routes, screenFinishedRoute } from "../../utils/routes";
-import Button from "../common/Button";
-import LoadingComponent from "../common/LoadingComponent";
-import Logo from "../common/Logo";
-import ConnectDialog from "./ConnectDialog";
+import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import history from '../../domain/history/history';
+import { localBackend, localDevelopment } from '../../utils/constants';
+import { Routes } from '../../utils/routes';
+import Button from '../common/Button';
+import LoadingComponent from '../common/LoadingComponent';
+import Logo from '../common/Logo';
+import ConnectDialog from './ConnectDialog';
 import {
-    ConnectScreenContainer, InstructionContainer, LeftButtonContainer, LeftContainer,
-    RightContainer, SettingButtonSection, StyledAccordion, StyledHeadline, StyledText
-} from "./ConnectScreen.sc";
-import GettingStartedDialog from "./GettingStarted";
+    ConnectScreenContainer,
+    InstructionContainer,
+    LeftButtonContainer,
+    LeftContainer,
+    RightContainer,
+    SettingButtonSection,
+    StyledAccordion,
+    StyledHeadline,
+    StyledText,
+} from './ConnectScreen.sc';
+import GettingStartedDialog from './GettingStarted';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const fetch = require('node-fetch');
@@ -32,7 +39,6 @@ export const ConnectScreen: React.FunctionComponent = () => {
     }
 
     async function handleGettingStarted() {
-        history.push(screenFinishedRoute('ADSD'));
         setGettingStartedDialogOpen(true);
     }
 

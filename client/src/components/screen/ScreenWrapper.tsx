@@ -1,10 +1,10 @@
-import * as React from "react";
-import { isMobileOnly } from "react-device-detect";
+import * as React from 'react';
+import { isMobileOnly } from 'react-device-detect';
 
-import AudioContext2Provider from "../../contexts/AudioContext2Provider";
+import AudioContextProvider from '../../contexts/AudioContextProvider';
 
 const ScreenWrapper: React.FunctionComponent = ({ children }) => {
-    return <>{isMobileOnly ? children : <AudioContext2Provider>{children}</AudioContext2Provider>}</>;
+    return <>{isMobileOnly ? children : <AudioContextProvider>{children}</AudioContextProvider>}</>;
 };
 
 export default ScreenWrapper;

@@ -1,18 +1,18 @@
-import { Settings, VolumeOff, VolumeUp } from "@material-ui/icons";
-import { History } from "history";
-import * as React from "react";
-import styled from "styled-components";
+import { Settings, VolumeOff, VolumeUp } from '@material-ui/icons';
+import { History } from 'history';
+import * as React from 'react';
+import styled from 'styled-components';
 
-import { AudioContext2 } from "../../contexts/AudioContext2Provider";
-import { Routes } from "../../utils/routes";
-import IconButton from "../common/IconButton";
+import { MyAudioContext } from '../../contexts/AudioContextProvider';
+import { Routes } from '../../utils/routes';
+import IconButton from '../common/IconButton';
 
 interface MasterHeaderProps {
     history: History;
 }
 
 const MasterHeader: React.FC<MasterHeaderProps> = ({ history }) => {
-    const { isPlaying, togglePlaying } = React.useContext(AudioContext2);
+    const { isPlaying, togglePlaying } = React.useContext(MyAudioContext);
 
     if (history.location.pathname.includes(Routes.game1)) {
         return null;

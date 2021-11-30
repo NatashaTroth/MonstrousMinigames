@@ -1,24 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import * as React from "react";
+import * as React from 'react';
 
-import { GameNames } from "../../config/games";
-import { AudioContext2, Sound } from "../../contexts/AudioContext2Provider";
-import { FirebaseContext } from "../../contexts/FirebaseContextProvider";
-import { Game3Context } from "../../contexts/game3/Game3ContextProvider";
-import { GameContext } from "../../contexts/GameContextProvider";
-import { ScreenSocketContext } from "../../contexts/ScreenSocketContextProvider";
-import { handleResetGame } from "../../domain/commonGameState/screen/handleResetGame";
-import { formatMs } from "../../utils/formatMs";
-import Button from "../common/Button";
-import { FullScreenContainer } from "../common/FullScreenStyles.sc";
-import { Instruction, InstructionContainer, InstructionText } from "../common/Instruction.sc";
-import { Label } from "../common/Label.sc";
-import { Headline, LeaderBoardRow, RankTable, UnfinishedUserRow } from "./FinishedScreen.sc";
+import { GameNames } from '../../config/games';
+import { MyAudioContext, Sound } from '../../contexts/AudioContextProvider';
+import { FirebaseContext } from '../../contexts/FirebaseContextProvider';
+import { Game3Context } from '../../contexts/game3/Game3ContextProvider';
+import { GameContext } from '../../contexts/GameContextProvider';
+import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { handleResetGame } from '../../domain/commonGameState/screen/handleResetGame';
+import { formatMs } from '../../utils/formatMs';
+import Button from '../common/Button';
+import { FullScreenContainer } from '../common/FullScreenStyles.sc';
+import { Instruction, InstructionContainer, InstructionText } from '../common/Instruction.sc';
+import { Label } from '../common/Label.sc';
+import { Headline, LeaderBoardRow, RankTable, UnfinishedUserRow } from './FinishedScreen.sc';
 
 export const FinishedScreen: React.FunctionComponent = () => {
     const { playerRanks, screenAdmin, resetGame, chosenGame, roomId } = React.useContext(GameContext);
     const { resetGame3 } = React.useContext(Game3Context);
-    const { changeSound } = React.useContext(AudioContext2);
+    const { changeSound } = React.useContext(MyAudioContext);
     const { screenSocket } = React.useContext(ScreenSocketContext);
     const { deleteImages } = React.useContext(FirebaseContext);
 
@@ -27,6 +27,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
 
     const handleBackToLobby = () => {
         handleResetGame(screenSocket, { resetGame, resetGame3 }, true);
+        changeSound(Sound.lobby);
     };
 
     React.useEffect(() => {
