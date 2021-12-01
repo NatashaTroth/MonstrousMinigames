@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { GameTwo } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/enums';
-import InitialParameters from '../../../src/gameplay/gameTwo/constants/InitialParameters';
+import Parameters from '../../../src/gameplay/gameTwo/constants/Parameters';
 import { leaderboard, roomId, users } from '../mockData';
 import { GameTwoMessageTypes } from '../../../src/gameplay/gameTwo/enums/GameTwoMessageTypes';
 import Sheep from '../../../src/gameplay/gameTwo/classes/Sheep';
@@ -33,7 +33,7 @@ describe('GameTwo Tests', () => {
     });
 
     it('should have the correct amount of sheep', async () => {
-        expect(gameTwo.sheepService.sheep.length).toBe(InitialParameters.SHEEP_COUNT);
+        expect(gameTwo.sheepService.sheep.length).toBe(Parameters.SHEEP_COUNT);
     });
 
     it('should set a user inactive after disconnecting', async () => {
@@ -110,13 +110,13 @@ describe('GameTwo Tests', () => {
         jest.useRealTimers();
 
         setTimeout(() => {
-            expect(gameTwo.getGameStateInfo().playersState[0].positionY).toBeGreaterThan(InitialParameters.PLAYERS_POSITIONS[0].y);
+            expect(gameTwo.getGameStateInfo().playersState[0].positionY).toBeGreaterThan(Parameters.PLAYERS_POSITIONS[0].y);
         }, 2000);
 
     });
 
     it('should kill sheep if message is sent and user is in radius', async () => {
-        const sheep = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x, InitialParameters.PLAYERS_POSITIONS[0].y, gameTwo.sheepService.sheep.length);
+        const sheep = new Sheep(Parameters.PLAYERS_POSITIONS[0].x, Parameters.PLAYERS_POSITIONS[0].y, gameTwo.sheepService.sheep.length);
         gameTwo.sheepService.sheep.push(sheep);
 
         const message = {
@@ -130,13 +130,13 @@ describe('GameTwo Tests', () => {
 
 
     it('should kill the closer sheep if two sheep are in radius', async () => {
-        const sheep = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x + InitialParameters.KILL_RADIUS -1, InitialParameters.PLAYERS_POSITIONS[0].y + InitialParameters.KILL_RADIUS -1, gameTwo.sheepService.sheep.length);
+        const sheep = new Sheep(Parameters.PLAYERS_POSITIONS[0].x + Parameters.KILL_RADIUS - 1, Parameters.PLAYERS_POSITIONS[0].y + Parameters.KILL_RADIUS - 1, gameTwo.sheepService.sheep.length);
         gameTwo.sheepService.sheep.push(sheep);
 
-        const sheep2 = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x + InitialParameters.KILL_RADIUS, InitialParameters.PLAYERS_POSITIONS[0].y + InitialParameters.KILL_RADIUS, gameTwo.sheepService.sheep.length);
+        const sheep2 = new Sheep(Parameters.PLAYERS_POSITIONS[0].x + Parameters.KILL_RADIUS, Parameters.PLAYERS_POSITIONS[0].y + Parameters.KILL_RADIUS, gameTwo.sheepService.sheep.length);
         gameTwo.sheepService.sheep.push(sheep2);
 
-        const sheep3 = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x + InitialParameters.KILL_RADIUS -2, InitialParameters.PLAYERS_POSITIONS[0].y + InitialParameters.KILL_RADIUS -2, gameTwo.sheepService.sheep.length);
+        const sheep3 = new Sheep(Parameters.PLAYERS_POSITIONS[0].x + Parameters.KILL_RADIUS - 2, Parameters.PLAYERS_POSITIONS[0].y + Parameters.KILL_RADIUS - 2, gameTwo.sheepService.sheep.length);
         gameTwo.sheepService.sheep.push(sheep3);
 
         const message = {
@@ -153,7 +153,7 @@ describe('GameTwo Tests', () => {
             gameTwo.players.get(users[0].id)?.setKillsLeft(0);
         }
 
-        const sheep = new Sheep(InitialParameters.PLAYERS_POSITIONS[0].x, InitialParameters.PLAYERS_POSITIONS[0].y, gameTwo.sheepService.sheep.length);
+        const sheep = new Sheep(Parameters.PLAYERS_POSITIONS[0].x, Parameters.PLAYERS_POSITIONS[0].y, gameTwo.sheepService.sheep.length);
         gameTwo.sheepService.sheep.push(sheep);
 
         const message = {
@@ -220,11 +220,11 @@ describe('GameTwo Tests', () => {
 
     //     gameTwo.players.get(users[0].id)?.setDirection(Direction.DOWN);
 
-    //     for(let i = 0; i < InitialParameters.LENGTH_Y + 10; i++){
+    //     for(let i = 0; i < Parameters.LENGTH_Y + 10; i++){
     //         gameTwo.players.get(users[0].id)?.update(i,1);
 
     //     }
-    //     expect(gameTwo.players.get(users[0].id)?.posY).toEqual(InitialParameters.LENGTH_Y);
+    //     expect(gameTwo.players.get(users[0].id)?.posY).toEqual(Parameters.LENGTH_Y);
     // });
 
     // it('should stop at the top of the screen', async () => {
@@ -255,10 +255,10 @@ describe('GameTwo Tests', () => {
 
     //     gameTwo.players.get(users[0].id)?.setDirection(Direction.RIGHT);
 
-    //     for(let i = 0; i < InitialParameters.LENGTH_X + 10; i++){
+    //     for(let i = 0; i < Parameters.LENGTH_X + 10; i++){
     //         gameTwo.players.get(users[0].id)?.update(i,1);
 
     //     }
-    //     expect(gameTwo.players.get(users[0].id)?.posX).toEqual(InitialParameters.LENGTH_X);
+    //     expect(gameTwo.players.get(users[0].id)?.posX).toEqual(Parameters.LENGTH_X);
     // });
 });
