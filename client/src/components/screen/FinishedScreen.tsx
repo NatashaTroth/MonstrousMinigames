@@ -27,7 +27,6 @@ export const FinishedScreen: React.FunctionComponent = () => {
 
     const handleBackToLobby = () => {
         handleResetGame(screenSocket, { resetGame, resetGame3 }, true);
-        changeSound(Sound.lobby);
     };
 
     React.useEffect(() => {

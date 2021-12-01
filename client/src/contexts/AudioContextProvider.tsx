@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import campfireSoundsFile from '../assets/audio/Campfire_Loop.wav';
+import gameThreeMusicFile from '../assets/audio/Game_3_Sound_Loop.wav';
 import lobbyMusicFile from '../assets/audio/LobbySound2_Loop.wav';
 import owlSoundsFile from '../assets/audio/Owl_Loop.wav';
 import finishedMusicFile from '../assets/audio/WinnerSound.wav';
@@ -17,6 +18,7 @@ const lobbyTracks = [
 ];
 const owlTracks = [{ src: new Audio(owlSoundsFile), volumeFactor: 0.15 }];
 const finishedTracks = [{ src: new Audio(finishedMusicFile) }];
+const gameThreeTracks = [{ src: new Audio(gameThreeMusicFile) }];
 
 type Track = { src: HTMLAudioElement; volumeFactor?: number; onPlay?: () => Promise<void> };
 type PlayingTracks = { name: string; tracks: Track[] };
@@ -24,7 +26,9 @@ type PlayingTracks = { name: string; tracks: Track[] };
 export enum Sound {
     lobby = 'lobby',
     finished = 'finished',
-    game = 'game',
+    game1 = 'game1',
+    game2 = 'game2',
+    game3 = 'game3',
 }
 
 export const defaultValue = {
@@ -60,6 +64,7 @@ const MyAudioContextProvider: React.FunctionComponent = ({ children }) => {
     const [lobbyMusic, setLobbyMusic] = React.useState<Track[]>(lobbyTracks);
     const [finishedMusic, setFinishedMusic] = React.useState<Track[]>(finishedTracks);
     const [owlMusic, setOwlMusic] = React.useState<Track[]>(owlTracks);
+    const [gameThreeMusic, setGameThreeMusic] = React.useState<Track[]>(gameThreeTracks);
 
     const [playingTracks, setPlayingTracks] = React.useState<PlayingTracks>({ name: '', tracks: [] });
     const [owlSoundsTimeout, setOwlSoundsTimeout] = React.useState<ReturnType<typeof setTimeout>>(
@@ -83,12 +88,14 @@ const MyAudioContextProvider: React.FunctionComponent = ({ children }) => {
         const lobby = initializeTracks(lobbyMusic, volume, true);
         const owl = initializeTracks(owlMusic, volume);
         const finished = initializeTracks(finishedMusic, volume);
+        const gameThree = initializeTracks(gameThreeMusic, volume, true);
 
         owl[0].onPlay = playOwlSounds;
 
         setLobbyMusic(lobby);
         setOwlMusic(owl);
         setFinishedMusic(finished);
+        setGameThreeMusic(gameThree);
 
         const initialMusic = { name: Sound.lobby, tracks: [...lobby, ...owl] };
         setPlayingTracks(initialMusic);
@@ -133,6 +140,7 @@ const MyAudioContextProvider: React.FunctionComponent = ({ children }) => {
             setIsPlaying,
             owlSoundsTimeout,
             owlMusic,
+            gameThreeMusic,
         }),
     };
     return <MyAudioContext.Provider value={content}>{children}</MyAudioContext.Provider>;
@@ -179,6 +187,7 @@ const play = ({ playingTracks, audioCtx, setIsPlaying }: PlayProps) => {
             }
         });
         setIsPlaying(true);
+        localStorage.setItem('playingMusic', 'true');
     }
 };
 
@@ -191,6 +200,7 @@ const pause = ({ playingTracks, audioCtx, setIsPlaying, owlSoundsTimeout }: Paus
         playingTracks.tracks.forEach(track => track.src.pause());
         clearTimeout(owlSoundsTimeout);
         setIsPlaying(false);
+        localStorage.setItem('playingMusic', 'false');
     }
 };
 
@@ -203,6 +213,7 @@ interface ChangeSoundDependencies {
     lobbyMusic: Track[];
     finishedMusic: Track[];
     owlMusic: Track[];
+    gameThreeMusic: Track[];
     volume: number;
     isPlaying: boolean;
     setIsPlaying: (val: boolean) => void;
@@ -224,7 +235,12 @@ function changeSound(dependencies: ChangeSoundDependencies) {
             setIsPlaying,
             owlSoundsTimeout,
             owlMusic,
+            gameThreeMusic,
         } = dependencies;
+
+        if (playingTracks.name === sound) {
+            return;
+        }
 
         const currentlyPlaying = isPlaying;
         pause({ playingTracks, audioCtx, setIsPlaying, owlSoundsTimeout });
@@ -235,10 +251,11 @@ function changeSound(dependencies: ChangeSoundDependencies) {
             tracks = { name: Sound.lobby, tracks: [...lobbyMusic, ...owlMusic] };
         } else if (sound === Sound.finished) {
             tracks = { name: Sound.finished, tracks: finishedMusic };
+        } else if (sound === Sound.game3) {
+            tracks = { name: Sound.game3, tracks: gameThreeMusic };
         }
 
         changeVolume(tracks.tracks, volume);
-
         setPlayingTracks(tracks);
 
         if (currentlyPlaying) {

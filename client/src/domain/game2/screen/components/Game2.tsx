@@ -22,7 +22,7 @@ const Game2: React.FunctionComponent = () => {
     }
 
     React.useEffect(() => {
-        changeSound(Sound.game);
+        changeSound(Sound.game2);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

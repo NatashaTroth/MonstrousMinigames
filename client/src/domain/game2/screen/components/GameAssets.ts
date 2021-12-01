@@ -1,5 +1,4 @@
-import game1SoundLoop from '../../../../assets/audio/Game_1_Sound_Loop.wav';
-import game1SoundStart from '../../../../assets/audio/Game_1_Sound_Start.wav';
+import game2SoundLoop from '../../../../assets/audio/Game_2_Sound_Loop.wav';
 import { defaultAvailableCharacters } from '../../../../config/characters';
 import blueMonster from '../../../../images/characters/spritesheets/monsters/blue_spritesheet.png';
 import greenMonster from '../../../../images/characters/spritesheets/monsters/green_spritesheet.png';
@@ -13,10 +12,7 @@ import { Character, CharacterAnimation, CharacterSpriteProperties } from '../../
 
 //TODO types
 
-export const audioFiles = [
-    { name: 'backgroundMusicStart', file: [game1SoundStart] },
-    { name: 'backgroundMusicLoop', file: [game1SoundLoop] },
-];
+export const audioFiles = [{ name: 'backgroundMusicLoop', file: [game2SoundLoop] }];
 
 const characterSpriteProperties: CharacterSpriteProperties = {
     frameWidth: 620,

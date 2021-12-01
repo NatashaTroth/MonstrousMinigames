@@ -5,7 +5,7 @@ export class GameAudio {
     backgroundMusicLoop: Phaser.Sound.BaseSound;
     currentMusic?: Phaser.Sound.BaseSound;
     sound: Phaser.Sound.HTML5AudioSoundManager | Phaser.Sound.NoAudioSoundManager | Phaser.Sound.WebAudioSoundManager;
-    startMuted: boolean;
+    startWithMusic: boolean;
 
     constructor(
         sound:
@@ -13,12 +13,10 @@ export class GameAudio {
             | Phaser.Sound.NoAudioSoundManager
             | Phaser.Sound.WebAudioSoundManager
     ) {
-        let oldVolumeFromLocalStorage = localStorage.getItem('audioVolume');
-        this.startMuted = false;
-        if (Number(oldVolumeFromLocalStorage) === 0) {
-            oldVolumeFromLocalStorage = localStorage.getItem('audioVolumeBefore');
-            this.startMuted = true;
-        }
+        const oldVolumeFromLocalStorage = localStorage.getItem('audioVolume');
+        const playing = localStorage.getItem('playingMusic');
+
+        this.startWithMusic = playing === 'true' ? true : false;
 
         const initialVolume = oldVolumeFromLocalStorage ? Number(oldVolumeFromLocalStorage) : 0.2;
 
@@ -42,7 +40,7 @@ export class GameAudio {
         // });
         this.backgroundMusicLoop.play({ loop: true });
 
-        if (this.startMuted) {
+        if (!this.startWithMusic) {
             this.pause();
             GameEventEmitter.emitPauseAudioEvent();
         } else {

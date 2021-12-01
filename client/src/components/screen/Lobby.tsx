@@ -1,30 +1,49 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Assignment } from "@material-ui/icons";
-import * as React from "react";
-import { useParams } from "react-router-dom";
+import { Assignment } from '@material-ui/icons';
+import * as React from 'react';
+import { useParams } from 'react-router-dom';
 
-import { RouteParams } from "../../App";
-import Button from "../../components/common/Button";
-import { characters } from "../../config/characters";
-import { ScreenStates } from "../../config/screenStates";
-import { GameContext } from "../../contexts/GameContextProvider";
-import { ScreenSocketContext } from "../../contexts/ScreenSocketContextProvider";
-import history from "../../domain/history/history";
-import { MessageTypes } from "../../utils/constants";
-import { generateQRCode } from "../../utils/generateQRCode";
-import { Routes, screenChooseGameRoute, screenLeaderboardRoute } from "../../utils/routes";
+import { RouteParams } from '../../App';
+import Button from '../../components/common/Button';
+import { characters } from '../../config/characters';
+import { ScreenStates } from '../../config/screenStates';
+import { MyAudioContext, Sound } from '../../contexts/AudioContextProvider';
+import { GameContext } from '../../contexts/GameContextProvider';
+import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import history from '../../domain/history/history';
+import { MessageTypes } from '../../utils/constants';
+import { generateQRCode } from '../../utils/generateQRCode';
+import { Routes, screenChooseGameRoute, screenLeaderboardRoute } from '../../utils/routes';
 import {
-    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer, ConnectedUsers,
-    ConnectedUserStatus, Content, ContentContainer, CopyToClipboard, LeftContainer, LobbyContainer,
-    QRCode, QRCodeInstructions, RightButtonContainer, RightContainer
-} from "./Lobby.sc";
-import LobbyHeader from "./LobbyHeader";
+    Character,
+    CharacterContainer,
+    ConnectedUserCharacter,
+    ConnectedUserContainer,
+    ConnectedUsers,
+    ConnectedUserStatus,
+    Content,
+    ContentContainer,
+    CopyToClipboard,
+    LeftContainer,
+    LobbyContainer,
+    QRCode,
+    QRCodeInstructions,
+    RightButtonContainer,
+    RightContainer,
+} from './Lobby.sc';
+import LobbyHeader from './LobbyHeader';
 
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers, screenAdmin, screenState } = React.useContext(GameContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
+    const { changeSound } = React.useContext(MyAudioContext);
     const { id }: RouteParams = useParams();
     const navigator = window.navigator;
+
+    React.useEffect(() => {
+        changeSound(Sound.lobby);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (id && !screenSocket) {
         handleSocketConnection(id, 'lobby');
