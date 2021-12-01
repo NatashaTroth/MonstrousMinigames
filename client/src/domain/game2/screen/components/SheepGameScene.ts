@@ -248,6 +248,12 @@ class SheepGameScene extends Phaser.Scene {
     updateGameState(gameStateData: GameData) {
         for (let i = 0; i < this.players.length; i++) {
             if (gameStateData.playersState[i]) {
+                // eslint-disable-next-line no-console
+                console.log(
+                    `${gameStateData.playersState[i].positionX.toString()}, ${gameStateData.playersState[
+                        i
+                    ].positionY.toString()}`
+                );
                 this.players[i].moveTo(
                     gameStateData.playersState[i].positionX,
                     gameStateData.playersState[i].positionY
