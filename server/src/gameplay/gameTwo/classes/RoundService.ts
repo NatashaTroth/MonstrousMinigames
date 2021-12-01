@@ -1,7 +1,7 @@
 import InitialParameters from "../constants/InitialParameters";
 import { Phases } from "../enums/Phases";
 import RoundEventEmitter from "./RoundEventEmitter";
-
+import { Timer } from 'timer-node';
 
 export default class RoundService {
     private roundCount: number;
@@ -11,6 +11,7 @@ export default class RoundService {
     private guessingTime: number;
     private resultsTime: number;
     private roundEventEmitter: RoundEventEmitter;
+    private timer: Timer;
 
     constructor() {
         this.roundCount = InitialParameters.ROUNDS;
@@ -20,6 +21,7 @@ export default class RoundService {
         this.round = 1;
         this.phase = Phases.COUNTING;
         this.roundEventEmitter = RoundEventEmitter.getInstance();
+        this.timer = new Timer();
     }
 
     public isCountingPhase(): boolean {
@@ -48,6 +50,8 @@ export default class RoundService {
         this.phase = Phases.GUESSING;
         this.emitRoundChange();
 
+        this.timer.clear();
+        this.timer.start();
         setTimeout(() => {
             this.resultsPhase();
         }, this.guessingTime);
