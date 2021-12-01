@@ -30,44 +30,56 @@ export default class RoundService {
         return this.phase === Phases.RESULTS;
     }
 
-    public countingPhase() {
+    public start(): void {
+        this.countingPhase();
+    }
+
+    private countingPhase(): void {
         this.phase = Phases.COUNTING;
         this.emitRoundChange();
 
+        this.timer.clear();
+        this.timer.start();
+
         setTimeout(() => {
+            this.timer.stop();
             this.guessingPhase();
-        }, Parameters.PHASE_TIMES[Phases.COUNTING]);
+        }, Parameters.PHASE_TIMES[this.phase]);
 
     }
 
-    public guessingPhase() {
+    private guessingPhase(): void {
         this.phase = Phases.GUESSING;
         this.emitRoundChange();
 
         this.timer.clear();
         this.timer.start();
-        console.log(this.timer);
+
         setTimeout(() => {
+            this.timer.stop();
             this.resultsPhase();
-        }, Parameters.PHASE_TIMES[Phases.GUESSING]);
+        }, Parameters.PHASE_TIMES[this.phase]);
 
     }
 
-    public resultsPhase() {
+    private resultsPhase(): void {
         this.phase = Phases.RESULTS;
         this.emitRoundChange();
 
+        this.timer.clear();
+        this.timer.start();
+
         setTimeout(() => {
+            this.timer.stop();
             this.round++;
             if (this.round <= this.roundCount) {
                 this.countingPhase();
             }
 
-        }, Parameters.PHASE_TIMES[Phases.RESULTS]);
+        }, Parameters.PHASE_TIMES[this.phase]);
     }
 
     private emitRoundChange(): void {
         this.roundEventEmitter.emit(RoundEventEmitter.PHASE_CHANGE_EVENT, this.round, this.phase);
     }
-
 }

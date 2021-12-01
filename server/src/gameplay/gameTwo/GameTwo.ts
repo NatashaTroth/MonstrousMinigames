@@ -103,7 +103,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     startGame(): void {
         setTimeout(() => {
             super.startGame();
-            this.roundService.countingPhase();
+            this.roundService.start();
         }, this.countdownTime);
         GameTwoEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime, this.gameName);
     }

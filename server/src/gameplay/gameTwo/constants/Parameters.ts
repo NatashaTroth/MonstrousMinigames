@@ -34,7 +34,12 @@ const KILLS_PER_ROUND = 5;
 
 const ROUNDS = 3;
 
-const PHASE_TIMES = {
+
+type phaseTimes = {
+    [key: string]: number;
+}
+
+const PHASE_TIMES: phaseTimes = {
     'counting': 10000,
     'guessing': 10000,
     'results': 10000
