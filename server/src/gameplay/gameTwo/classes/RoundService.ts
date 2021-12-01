@@ -84,7 +84,7 @@ export default class RoundService {
     }
 
 
-    public getTimeoutValue(): number {
+    public getTimeLeft(): number {
         return Parameters.PHASE_TIMES[this.phase] - this.timer.ms();
     }
 }
