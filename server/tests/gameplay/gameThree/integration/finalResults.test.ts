@@ -10,6 +10,7 @@ import {
 } from '../../../../src/gameplay/interfaces/GlobalEventMessages';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
 import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
+import { receiveMultiplePhotos } from '../gameThreeMockData';
 
 let gameThree: GameThree;
 let gameEventEmitter: GameEventEmitter;
@@ -28,6 +29,7 @@ describe('Initiate stage', () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1; //skip to final round
         stageController!.handleNewRound();
+        receiveMultiplePhotos(gameThree); // to pass no photos error in FinalPhotosStage
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         users.forEach(() => advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS));
     });
@@ -71,6 +73,7 @@ describe('Final results', () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1; //skip to final round
         stageController!.handleNewRound();
+        receiveMultiplePhotos(gameThree); // to pass no photos error in FinalPhotosStage
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         users.forEach(() => advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS));
         // add points

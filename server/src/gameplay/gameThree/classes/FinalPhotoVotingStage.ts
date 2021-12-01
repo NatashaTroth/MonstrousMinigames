@@ -15,9 +15,9 @@ export class FinalPhotosVotingStage extends VotingStage {
     //     return false;
     // }
 
-    isFinalStage(): boolean {
-        return true;
-    }
+    // isFinalStage(): boolean {
+    //     return true;
+    // }
 
     switchToNextStage() {
         return null;

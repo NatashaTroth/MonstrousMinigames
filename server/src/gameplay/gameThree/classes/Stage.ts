@@ -61,7 +61,7 @@ export abstract class Stage {
     //     return true;
     // }
 
-    isFinalStage(): boolean {
-        return false;
-    }
+    // isFinalStage(): boolean {
+    //     return false;
+    // }
 }

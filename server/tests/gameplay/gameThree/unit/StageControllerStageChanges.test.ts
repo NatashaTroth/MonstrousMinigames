@@ -80,11 +80,21 @@ describe('Stage order after countdown', () => {
         expect(stageController.currentStage!).toBeInstanceOf(FinalPhotosStage);
     });
 
+    it('should switch to null stage (finish game) after taking final photos stage if no photos were received', async () => {
+        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        expect(stageController.currentStage!).toBe(null);
+    });
+
     it('should switch to presentation stage taking final photos stage', async () => {
         stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         expect(stageController.currentStage!).toBeInstanceOf(PresentationStage);
     });
@@ -94,6 +104,7 @@ describe('Stage order after countdown', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         stageController.update(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
         expect(stageController.currentStage!).toBeInstanceOf(PresentationStage);
@@ -104,6 +115,7 @@ describe('Stage order after countdown', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         users.forEach(() => {
             stageController.update(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
@@ -116,6 +128,7 @@ describe('Stage order after countdown', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         users.forEach(() => {
             stageController.update(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
@@ -192,6 +205,7 @@ describe('Stage order before countdown over', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS - 1);
         expect(stageController.currentStage!).toBeInstanceOf(FinalPhotosStage);
     });
@@ -201,6 +215,7 @@ describe('Stage order before countdown over', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         stageController.update(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS - 1);
         expect(stageController.currentStage!).toBeInstanceOf(PresentationStage);
@@ -211,6 +226,7 @@ describe('Stage order before countdown over', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         users
             .filter(user => user.id !== users[0].id)
@@ -226,6 +242,7 @@ describe('Stage order before countdown over', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         users.forEach(() => {
             stageController.update(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
@@ -314,6 +331,7 @@ describe('Stage change events', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         stageEventEmitter.on(StageEventEmitter.STAGE_CHANGE_EVENT, () => {
             eventCalledTimes++;
@@ -328,6 +346,7 @@ describe('Stage change events', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         stageEventEmitter.on(StageEventEmitter.STAGE_CHANGE_EVENT, () => {
             eventCalledTimes++;
@@ -344,6 +363,7 @@ describe('Stage change events', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         users.forEach(() => {
             stageController.update(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
@@ -404,6 +424,7 @@ describe('Stage order after input', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         stageController.handleInput(finishPresentingMessage);
         expect(stageController.currentStage!).toBeInstanceOf(PresentationStage);
@@ -414,6 +435,7 @@ describe('Stage order after input', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         users.forEach(() => {
             stageController.handleInput(finishPresentingMessage);
@@ -426,6 +448,7 @@ describe('Stage order after input', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         users.forEach(() => {
             stageController.update(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);

@@ -26,14 +26,19 @@ export class StageController {
         this.stageEventEmitter.on(StageEventEmitter.STAGE_CHANGE_EVENT, message => {
             // console.log('NEW STAGE');
             this.playerPoints.addPointsToMultiplePlayers(this.stage?.updatePlayerPoints());
+            this.stage = this.stage?.switchToNextStage();
+            if (!this.stage) {
+                if (this.isFinalRound()) {
+                    this.stage = null;
+                    this.handleGameFinished();
+                } else this.handleNewRound();
+            } //if other stage ends round}
 
-            if (this.stage?.isFinalStage()) {
-                this.stage = null;
-                this.handleGameFinished();
-            } else {
-                this.stage = this.stage?.switchToNextStage();
-                if (!this.stage) this.handleNewRound(); //if other stage ends round
-            }
+            // if (this.stage?.isFinalStage()) {
+            //     this.stage = null;
+            //     this.handleGameFinished();
+            // } else {
+            // }
         });
     }
 

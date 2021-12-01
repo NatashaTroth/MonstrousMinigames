@@ -20,10 +20,13 @@ export class FinalPhotosStage extends PhotoStage {
 
     switchToNextStage() {
         const photoUrls: string[] = this.getPhotosUrls();
+
+        if (photoUrls.length === 0) {
+            return null;
+        }
+
         return new PresentationStage(this.roomId, this.players, photoUrls);
     }
-
-    //TODO
 
     updatePlayerPoints(): undefined | Map<string, number> {
         this.setPointPerReceivedPhoto();
