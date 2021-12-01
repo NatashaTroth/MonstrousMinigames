@@ -9,6 +9,7 @@ export default class Sheep {
     public state: string;
     public id: number;
     public direction: string;
+    public directions: string[];
     public speed: number;
 
 
@@ -19,11 +20,12 @@ export default class Sheep {
         this.id = id;
         this.state = SheepStates.ALIVE;
         this.speed = Parameters.SPEED;
+        this.directions = this.initDirections();
         this.direction = '';
     }
 
-    public init() {
-        return [...new Array(40)].map(() => SHEEP_DIRECTIONS[Math.round(Math.random() * SHEEP_DIRECTIONS.length - 1)]);
+    public initDirections(): string[] {
+        return [...new Array(40)].map(() => SHEEP_DIRECTIONS[Math.round(Math.random() * (SHEEP_DIRECTIONS.length - 1))]);
     }
 
 
