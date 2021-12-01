@@ -10,6 +10,7 @@ let gameTwo: GameTwo;
 let gameEventEmitter: GameEventEmitter;
 
 const beforeEachFunction = () => {
+    jest.spyOn(console, "log").mockImplementation();
     gameTwo = new GameTwo(roomId, leaderboard);
     jest.useFakeTimers();
 };
@@ -22,6 +23,10 @@ describe('Event Emitter', () => {
 
     beforeEach(() => {
         beforeEachFunction();
+    });
+
+    afterEach(() => {
+        gameTwo.cleanup();
     });
 
 

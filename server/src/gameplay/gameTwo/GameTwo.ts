@@ -122,10 +122,12 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     stopGameUserClosed() {
         super.stopGameUserClosed();
         GameTwoEventEmitter.emitGameHasStoppedEvent(this.roomId);
+        this.cleanup();
     }
 
     stopGameAllUsersDisconnected() {
         super.stopGameAllUsersDisconnected();
+        this.cleanup();
     }
 
     protected movePlayer(userId: string, direction: string) {
@@ -201,5 +203,9 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             }
             GameTwoEventEmitter.emitPhaseHasChanged(this.roomId, round, phase);
         });
+    }
+
+    public cleanup() {
+        this.roundEventEmitter.removeAllListeners();
     }
 }
