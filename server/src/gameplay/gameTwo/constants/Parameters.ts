@@ -34,9 +34,16 @@ const KILLS_PER_ROUND = 5;
 
 const ROUNDS = 3;
 
-const COUNTING_TIME = 10000;
-const GUESSING_TIME = 10000;
-const RESULTS_TIME = 10000;
+
+type phaseTimes = {
+    [key: string]: number;
+}
+
+const PHASE_TIMES: phaseTimes = {
+    'counting': 10000,
+    'guessing': 10000,
+    'results': 10000
+}
 
 const GOOD_GUESS_THRESHOLD = 5;
 
@@ -53,8 +60,6 @@ export default {
     KILL_RADIUS,
     KILLS_PER_ROUND,
     ROUNDS,
-    COUNTING_TIME,
-    GUESSING_TIME,
-    RESULTS_TIME,
+    PHASE_TIMES,
     GOOD_GUESS_THRESHOLD
 }

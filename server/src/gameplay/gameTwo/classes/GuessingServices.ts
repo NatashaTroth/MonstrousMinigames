@@ -1,5 +1,5 @@
 import User from "../../../classes/user";
-import InitialParameters from "../constants/InitialParameters";
+import Parameters from "../constants/Parameters";
 import { GuessHints } from "../enums/GuessHints";
 import { RankData } from "../interfaces";
 import { GameTwoPlayerRank } from "../interfaces/GameTwoPlayerRank";
@@ -41,11 +41,11 @@ export default class GuessingService {
     }
 
     public getHint(miss: number): string {
-        if (miss > 0 && miss <= InitialParameters.GOOD_GUESS_THRESHOLD) {
+        if (miss > 0 && miss <= Parameters.GOOD_GUESS_THRESHOLD) {
             return GuessHints.LOW;
         } else if (miss > 0) {
             return GuessHints.VERY_LOW;
-        } else if (miss < 0 && miss >= -1 * InitialParameters.GOOD_GUESS_THRESHOLD) {
+        } else if (miss < 0 && miss >= -1 * Parameters.GOOD_GUESS_THRESHOLD) {
             return GuessHints.HIGH;
         } else if (miss < 0) {
             return GuessHints.VERY_HIGH;
