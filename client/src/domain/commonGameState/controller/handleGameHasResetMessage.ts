@@ -1,8 +1,16 @@
-import { History } from "history";
+import { History } from 'history';
 
-import { controllerLobbyRoute } from "../../../utils/routes";
+import { controllerLobbyRoute } from '../../../utils/routes';
 
-export function handleGameHasResetMessage(history: History, roomId: string, resetController: () => void) {
-    resetController();
-    history.push(controllerLobbyRoute(roomId));
+interface Dependencies {
+    history: History;
+    resetController: () => void;
+}
+
+export function handleGameHasResetMessage(dependencies: Dependencies) {
+    return (roomId: string) => {
+        const { resetController, history } = dependencies;
+        resetController();
+        history.push(controllerLobbyRoute(roomId));
+    };
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Countdown from '../../../../components/common/Countdown';
+import { MyAudioContext, Sound } from '../../../../contexts/AudioContextProvider';
 import { FinalPhoto, Game3Context, Topic, Vote, VoteResult } from '../../../../contexts/game3/Game3ContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { ImagesContainer, InstructionContainer, PictureInstruction, RandomWord, ScreenContainer } from './Game.sc';
@@ -18,7 +19,30 @@ const Game3: React.FunctionComponent = () => {
     const [displayCountdown, setDisplayCountdown] = React.useState(true);
     const [timeToDisplay, setTimeToDisplay] = React.useState<undefined | number>(undefined);
     const { topicMessage } = React.useContext(Game3Context);
+    const { changeSound, setVolume, isPlaying, volume } = React.useContext(MyAudioContext);
     const finalRound = roundIdx === 3;
+
+    React.useEffect(() => {
+        localStorage.setItem('beforeVolume', String(volume));
+    }, []);
+
+    React.useEffect(() => {
+        changeSound(Sound.game3);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    React.useEffect(() => {
+        if (finalRound && presentFinalPhotos && isPlaying) {
+            setVolume(0.05);
+        }
+    }, [finalRound, isPlaying, presentFinalPhotos, setVolume, voteForPhotoMessage]);
+
+    React.useEffect(() => {
+        if (finalRound && voteForPhotoMessage && isPlaying) {
+            const beforeVolume = localStorage.getItem('beforeVolume');
+            setVolume(Number(beforeVolume));
+        }
+    }, [finalRound, isPlaying, setVolume, voteForPhotoMessage]);
 
     React.useEffect(() => {
         setDisplayCountdown(true);
@@ -87,7 +111,7 @@ const Game3: React.FunctionComponent = () => {
 };
 export default Game3;
 
-function getInstruction(
+export function getInstruction(
     presentFinalPhotos: FinalPhoto,
     voteForPhotoMessage: Vote,
     finalRound: boolean,
@@ -122,9 +146,9 @@ function getInstruction(
     );
 }
 
-function getTime(
+export function getTime(
     presentFinalPhotos: FinalPhoto,
-    finalRoundCountdownTime: number,
+    finalRoundCountdownTime: number | undefined,
     voteForPhotoMessage: Vote,
     topicMessage: Topic
 ) {

@@ -8,6 +8,8 @@ import {
     controllerObstacleRoute,
     controllerPlayerDeadRoute,
     controllerPlayerStunnedRoute,
+    controllerTutorialRoute,
+    controllerWindmillRoute,
     Routes,
     screenChooseGameRoute,
     screenFinishedRoute,
@@ -61,6 +63,14 @@ describe('test routing functions', () => {
 
     it('controllerObstacleRoute should return /controller/${roomId}/stone', () => {
         expect(controllerObstacleRoute(roomId, ObstacleTypes.stone)).toBe(`/controller/${roomId}/stone`);
+    });
+
+    it('controllerTutorialRoute should return /controller/${roomId}/tutorial', () => {
+        expect(controllerTutorialRoute(roomId)).toBe(`/controller/${roomId}/tutorial`);
+    });
+
+    it('controllerWindmillRoute should return /controller/${roomId}/windmill', () => {
+        expect(controllerWindmillRoute(roomId)).toBe(`/controller/${roomId}/windmill`);
     });
 
     it('screenGetReadyRoute should return /screen/${roomId}/get-ready', () => {

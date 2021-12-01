@@ -27,7 +27,12 @@ describe('handleGameHasFinishedMessage', () => {
         const history = createMemoryHistory();
         const setPlayerRank = jest.fn();
 
-        handleGameHasFinishedMessage({ roomId, playerRank, playerRanks, dependencies: { setPlayerRank }, history });
+        const withDependencies = handleGameHasFinishedMessage({
+            playerRank,
+            setPlayerRank,
+            history,
+        });
+        withDependencies({ roomId, playerRanks });
 
         expect(history.location).toHaveProperty('pathname', controllerFinishedRoute(roomId));
     });
@@ -37,12 +42,15 @@ describe('handleGameHasFinishedMessage', () => {
         const history = createMemoryHistory();
         global.sessionStorage.setItem('userId', '1');
 
-        handleGameHasFinishedMessage({
-            roomId,
+        const withDependencies = handleGameHasFinishedMessage({
             playerRank: undefined,
-            playerRanks,
-            dependencies: { setPlayerRank },
+            setPlayerRank,
             history,
+        });
+
+        withDependencies({
+            roomId,
+            playerRanks,
         });
 
         expect(setPlayerRank).toHaveBeenCalledTimes(1);
@@ -66,12 +74,15 @@ describe('handleGameHasFinishedMessage', () => {
             },
         ];
 
-        handleGameHasFinishedMessage({
-            roomId,
+        const withDependencies = handleGameHasFinishedMessage({
             playerRank: undefined,
-            playerRanks,
-            dependencies: { setPlayerRank },
+            setPlayerRank,
             history,
+        });
+
+        withDependencies({
+            roomId,
+            playerRanks,
         });
 
         expect(setPlayerRank).toHaveBeenCalledTimes(0);
@@ -82,12 +93,15 @@ describe('handleGameHasFinishedMessage', () => {
         const history = createMemoryHistory();
         global.sessionStorage.setItem('windmillTimeoutId', '1');
 
-        handleGameHasFinishedMessage({
-            roomId,
+        const withDependencies = handleGameHasFinishedMessage({
             playerRank: undefined,
-            playerRanks,
-            dependencies: { setPlayerRank },
+            setPlayerRank,
             history,
+        });
+
+        withDependencies({
+            roomId,
+            playerRanks,
         });
 
         expect(global.sessionStorage.getItem('windmillTimeoutId')).toBe(null);

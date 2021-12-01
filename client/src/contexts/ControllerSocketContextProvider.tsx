@@ -1,15 +1,26 @@
-import * as React from "react";
+import * as React from 'react';
 
-import addMovementListener from "../domain/game1/controller/gameState/addMovementListener";
-import history from "../domain/history/history";
-import { handleSetSocket } from "../domain/socket/controller/handleSetSocket";
-import { handleSocketConnection } from "../domain/socket/controller/handleSocketConnection";
-import { InMemorySocketFake } from "../domain/socket/InMemorySocketFake";
-import { Socket } from "../domain/socket/Socket";
-import { Game1Context } from "./game1/Game1ContextProvider";
-import { Game3Context } from "./game3/Game3ContextProvider";
-import { GameContext } from "./GameContextProvider";
-import { PlayerContext } from "./PlayerContextProvider";
+import { handleConnectedUsersMessage } from '../domain/commonGameState/controller/handleConnectedUsersMessage';
+import { handleGameHasFinishedMessage } from '../domain/commonGameState/controller/handleGameHasFinishedMessage';
+import { handleGameHasResetMessage } from '../domain/commonGameState/controller/handleGameHasResetMessage';
+import { handleGameHasStoppedMessage } from '../domain/commonGameState/controller/handleGameHasStoppedMessage';
+import { handleGameStartedMessage } from '../domain/commonGameState/controller/handleGameStartedMessage';
+import { handlePlayerFinishedMessage } from '../domain/commonGameState/controller/handlePlayerFinishedMessage';
+import { handleUserInitMessage } from '../domain/commonGameState/controller/handleUserInitMessage';
+import addMovementListener from '../domain/game1/controller/gameState/addMovementListener';
+import { handleApproachingObstacleMessage } from '../domain/game1/controller/gameState/handleApproachingSolvableObstacleMessage';
+import { handleObstacleMessage } from '../domain/game1/controller/gameState/handleObstacleMessage';
+import { handlePlayerDied } from '../domain/game1/controller/gameState/handlePlayerDied';
+import { handleStunnablePlayers } from '../domain/game1/controller/gameState/handleStunnablePlayers';
+import history from '../domain/history/history';
+import { handleSetSocket } from '../domain/socket/controller/handleSetSocket';
+import { handleSocketConnection } from '../domain/socket/controller/handleSocketConnection';
+import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
+import { Socket } from '../domain/socket/Socket';
+import { Game1Context } from './game1/Game1ContextProvider';
+import { Game3Context } from './game3/Game3ContextProvider';
+import { GameContext } from './GameContextProvider';
+import { PlayerContext } from './PlayerContextProvider';
 
 export const defaultValue = {
     controllerSocket: new InMemorySocketFake(),
@@ -52,7 +63,6 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
     );
 
     const {
-        setPhotos,
         setVoteForPhotoMessage,
         setRoundIdx,
         setTopicMessage,
@@ -66,7 +76,6 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setGameStarted,
         setRoomId,
         setHasPaused,
-        resetGame,
         setAvailableCharacters,
         setConnectedUsers,
         hasPaused,
@@ -81,37 +90,33 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
     }, [permission, hasPaused, playerFinished, controllerSocket]);
 
     const dependencies = {
-        setControllerSocket,
-        setPlayerNumber,
-        setPlayerFinished,
-        setObstacle,
-        setPlayerRank,
-        setGameStarted,
-        setName,
-        setAvailableCharacters,
         history,
-        resetGame,
+        setControllerSocket,
         setHasPaused,
-        setUserId,
-        setReady,
-        setPlayerDead,
-        setConnectedUsers,
-        setEarlySolvableObstacle,
-        playerRank,
         setExceededChaserPushes,
-        setStunnablePlayers,
         setChosenGame,
-        setPhotos,
         setVoteForPhotoMessage,
         setRoundIdx,
-        setCountdownTime,
         setTopicMessage,
         setVotingResults,
         setFinalRoundCountdownTime,
         setPresentFinalPhotos,
-        resetController: () => {
-            resetGame3(), resetPlayer();
-        },
+        handleUserInitMessage: handleUserInitMessage({ setPlayerNumber, setName, setUserId, setReady }),
+        handleConnectedUsersMessage: handleConnectedUsersMessage({ setAvailableCharacters, setConnectedUsers }),
+        handleGameStartedMessage: handleGameStartedMessage({ setGameStarted, history, setCountdownTime }),
+        handleGameHasStoppedMessage: handleGameHasStoppedMessage({ history }),
+        handleGameHasFinishedMessage: handleGameHasFinishedMessage({ setPlayerRank, history, playerRank }),
+        handleObstacleMessage: handleObstacleMessage({ setObstacle }),
+        handlePlayerFinishedMessage: handlePlayerFinishedMessage({ setPlayerFinished, setPlayerRank }),
+        handleStunnablePlayers: handleStunnablePlayers({ setStunnablePlayers }),
+        handlePlayerDied: handlePlayerDied({ setPlayerDead, setPlayerRank }),
+        handleGameHasResetMessage: handleGameHasResetMessage({
+            resetController: () => {
+                resetGame3(), resetPlayer();
+            },
+            history,
+        }),
+        handleApproachingObstacleMessage: handleApproachingObstacleMessage({ setEarlySolvableObstacle }),
     };
 
     const content = {

@@ -19,15 +19,14 @@ describe('handleUserInitMessage', () => {
         const setUserId = jest.fn();
         const setReady = jest.fn();
 
-        handleUserInitMessage({
-            data: mockData,
-            dependencies: {
-                setPlayerNumber,
-                setName,
-                setUserId,
-                setReady,
-            },
+        const withDependencies = handleUserInitMessage({
+            setPlayerNumber,
+            setName,
+            setUserId,
+            setReady,
         });
+
+        withDependencies(mockData);
 
         expect(setPlayerNumber).toHaveBeenCalledTimes(1);
     });

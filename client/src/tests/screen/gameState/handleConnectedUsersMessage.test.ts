@@ -8,10 +8,11 @@ describe('handleConnectedUsersMessage', () => {
 
         const data: ConnectedUsersMessage = { type: MessageTypes.connectedUsers, users: [] };
 
-        handleConnectedUsersMessage({
-            data,
-            dependencies: { setConnectedUsers },
+        const withDependencies = handleConnectedUsersMessage({
+            setConnectedUsers,
         });
+
+        withDependencies(data);
 
         expect(setConnectedUsers).toHaveBeenCalledWith(data.users);
     });

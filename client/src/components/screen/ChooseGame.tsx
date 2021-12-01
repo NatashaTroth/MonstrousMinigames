@@ -3,10 +3,8 @@ import * as React from 'react';
 
 import { Game, GameNames, games } from '../../config/games';
 import { ScreenStates } from '../../config/screenStates';
-import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
-import { handleAudioPermission } from '../../domain/audio/handlePermission';
 import history from '../../domain/history/history';
 import oliverLobby from '../../images/characters/oliverLobby.svg';
 import shakeInstructionsDemo from '../../images/ui/shakeInstructionDemo.png';
@@ -41,15 +39,9 @@ const ChooseGame: React.FunctionComponent = () => {
         lastSelectedGame ? games.find(game => game.id === lastSelectedGame) || games[0] : games[0]
     );
     const { roomId, screenAdmin, screenState, setChosenGame } = React.useContext(GameContext);
-    const { audioPermission, setAudioPermissionGranted } = React.useContext(AudioContext);
     const { screenSocket } = React.useContext(ScreenSocketContext);
 
     React.useEffect(() => {
-        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-    }, []);
-
-    React.useEffect(() => {
-        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
         if (screenAdmin) {
             screenSocket?.emit({
                 type: MessageTypes.screenState,

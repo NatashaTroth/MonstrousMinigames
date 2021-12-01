@@ -1,7 +1,7 @@
 import { SocketIOAdapter } from '../SocketIOAdapter';
 import { handleSetSocket, HandleSetSocketDependencies } from './handleSetSocket';
 
-interface HandleSocketConnDependencies extends HandleSetSocketDependencies {
+export interface HandleSocketConnDependencies extends HandleSetSocketDependencies {
     setRoomId: (val: string) => void;
 }
 

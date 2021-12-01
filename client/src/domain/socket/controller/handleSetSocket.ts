@@ -1,71 +1,54 @@
-import { History } from "history";
+import { History } from 'history';
 
-import { GameNames } from "../../../config/games";
-import { FinalPhoto, Topic, Vote, VoteResult } from "../../../contexts/game3/Game3ContextProvider";
-import { Obstacle } from "../../../contexts/PlayerContextProvider";
-import { controllerChooseCharacterRoute } from "../../../utils/routes";
-import {
-    handleConnectedUsersMessage
-} from "../../commonGameState/controller/handleConnectedUsersMessage";
-import {
-    handleGameHasFinishedMessage
-} from "../../commonGameState/controller/handleGameHasFinishedMessage";
-import {
-    handleGameHasResetMessage
-} from "../../commonGameState/controller/handleGameHasResetMessage";
-import {
-    handleGameHasStoppedMessage
-} from "../../commonGameState/controller/handleGameHasStoppedMessage";
-import {
-    handleGameStartedMessage
-} from "../../commonGameState/controller/handleGameStartedMessage";
-import { handleUserInitMessage } from "../../commonGameState/controller/handleUserInitMessage";
-import { handleSetControllerSocketGame1 } from "../../game1/controller/socket/Sockets";
-import { handleSetControllerSocketGame3 } from "../../game3/controller/socket/Sockets";
-import { handleSetCommonSocketsGame3 } from "../../game3/socket/Socket";
-import { MessageSocket } from "../../socket/MessageSocket";
-import { Socket } from "../../socket/Socket";
-import {
-    ConnectedUsersMessage, connectedUsersTypeGuard, User
-} from "../../typeGuards/connectedUsers";
-import { ErrorMessage, errorTypeGuard } from "../../typeGuards/error";
-import { finishedTypeGuard, GameHasFinishedMessage } from "../../typeGuards/finished";
-import { GameHasStartedMessage, startedTypeGuard } from "../../typeGuards/game1/started";
-import { GameSetMessage, gameSetTypeGuard } from "../../typeGuards/gameSet";
-import { GameHasPausedMessage, pausedTypeGuard } from "../../typeGuards/paused";
-import { GameHasResetMessage, resetTypeGuard } from "../../typeGuards/reset";
-import { GameHasResumedMessage, resumedTypeGuard } from "../../typeGuards/resumed";
-import { GameHasStoppedMessage, stoppedTypeGuard } from "../../typeGuards/stopped";
-import { UserInitMessage, userInitTypeGuard } from "../../typeGuards/userInit";
+import { GameNames } from '../../../config/games';
+import { FinalPhoto, Topic, Vote, VoteResult } from '../../../contexts/game3/Game3ContextProvider';
+import { controllerChooseCharacterRoute } from '../../../utils/routes';
+import { HandleGameHasFinishedMessageData } from '../../commonGameState/controller/handleGameHasFinishedMessage';
+import { HandleGameStartedData } from '../../commonGameState/controller/handleGameStartedMessage';
+import { HandlePlayerFinishedProps } from '../../commonGameState/controller/handlePlayerFinishedMessage';
+import { HandleObstacleMessageProps } from '../../game1/controller/gameState/handleObstacleMessage';
+import { HandlePlayerDiedProps } from '../../game1/controller/gameState/handlePlayerDied';
+import { handleSetControllerSocketGame1 } from '../../game1/controller/socket/Sockets';
+import { handleSetControllerSocketGame3 } from '../../game3/controller/socket/Sockets';
+import { handleSetCommonSocketsGame3 } from '../../game3/socket/Socket';
+import { MessageSocket } from '../../socket/MessageSocket';
+import { Socket } from '../../socket/Socket';
+import { ConnectedUsersMessage, connectedUsersTypeGuard } from '../../typeGuards/connectedUsers';
+import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
+import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
+import { ApproachingSolvableObstacleMessage } from '../../typeGuards/game1/approachingSolvableObstacleTypeGuard';
+import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/game1/started';
+import { StunnablePlayersMessage } from '../../typeGuards/game1/stunnablePlayers';
+import { GameSetMessage, gameSetTypeGuard } from '../../typeGuards/gameSet';
+import { GameHasPausedMessage, pausedTypeGuard } from '../../typeGuards/paused';
+import { GameHasResetMessage, resetTypeGuard } from '../../typeGuards/reset';
+import { GameHasResumedMessage, resumedTypeGuard } from '../../typeGuards/resumed';
+import { GameHasStoppedMessage, stoppedTypeGuard } from '../../typeGuards/stopped';
+import { UserInitMessage, userInitTypeGuard } from '../../typeGuards/userInit';
 
 export interface HandleSetSocketDependencies {
-    setControllerSocket: (socket: Socket) => void;
-    setPlayerNumber: (val: number) => void;
-    setPlayerFinished: (val: boolean) => void;
-    setObstacle: (roomId: string | undefined, obstacle: undefined | Obstacle) => void;
-    setPlayerRank: (val: number) => void;
-    setHasPaused: (val: boolean) => void;
-    setGameStarted: (val: boolean) => void;
-    setName: (val: string) => void;
-    setAvailableCharacters: (val: number[]) => void;
-    setUserId: (val: string) => void;
-    setReady: (val: boolean) => void;
-    setPlayerDead: (val: boolean) => void;
     history: History;
-    setConnectedUsers: (val: User[]) => void;
-    playerRank: undefined | number;
-    setEarlySolvableObstacle: (val: Obstacle | undefined) => void;
+    setControllerSocket: (socket: Socket) => void;
+    setHasPaused: (val: boolean) => void;
     setExceededChaserPushes: (val: boolean) => void;
-    setStunnablePlayers: (val: string[]) => void;
     setChosenGame: (val: GameNames) => void;
     setVoteForPhotoMessage: (val: Vote) => void;
     setRoundIdx: (roundIdx: number) => void;
-    setCountdownTime: (time: number) => void;
     setTopicMessage: (val: Topic) => void;
     setVotingResults: (val: VoteResult) => void;
     setFinalRoundCountdownTime: (time: number) => void;
     setPresentFinalPhotos: (val: FinalPhoto) => void;
-    resetController: () => void;
+    handleUserInitMessage: (data: UserInitMessage) => void;
+    handleConnectedUsersMessage: (data: ConnectedUsersMessage) => void;
+    handleGameStartedMessage: (data: HandleGameStartedData) => void;
+    handleGameHasStoppedMessage: (roomId: string) => void;
+    handleGameHasFinishedMessage: (data: HandleGameHasFinishedMessageData) => void;
+    handleObstacleMessage: (data: HandleObstacleMessageProps) => void;
+    handlePlayerFinishedMessage: (data: HandlePlayerFinishedProps) => void;
+    handleStunnablePlayers: (data: StunnablePlayersMessage) => void;
+    handlePlayerDied: (data: HandlePlayerDiedProps) => void;
+    handleGameHasResetMessage: (roomId: string) => void;
+    handleApproachingObstacleMessage: (data: ApproachingSolvableObstacleMessage) => void;
 }
 
 export function handleSetSocket(
@@ -75,27 +58,22 @@ export function handleSetSocket(
     dependencies: HandleSetSocketDependencies
 ) {
     const {
-        setControllerSocket,
-        setPlayerNumber,
-        setPlayerRank,
-        setHasPaused,
-        setGameStarted,
-        setName,
-        setAvailableCharacters,
-        setUserId,
-        setReady,
         history,
-        setConnectedUsers,
-        playerRank,
+        setControllerSocket,
+        setHasPaused,
         setChosenGame,
         setVoteForPhotoMessage,
         setRoundIdx,
-        setCountdownTime,
         setTopicMessage,
         setVotingResults,
         setFinalRoundCountdownTime,
         setPresentFinalPhotos,
-        resetController,
+        handleUserInitMessage,
+        handleConnectedUsersMessage,
+        handleGameStartedMessage,
+        handleGameHasStoppedMessage,
+        handleGameHasFinishedMessage,
+        handleGameHasResetMessage,
     } = dependencies;
 
     setControllerSocket(socket);
@@ -112,15 +90,7 @@ export function handleSetSocket(
     const gameSetSocket = new MessageSocket(gameSetTypeGuard, socket);
 
     userInitSocket.listen((data: UserInitMessage) => {
-        handleUserInitMessage({
-            data,
-            dependencies: {
-                setPlayerNumber,
-                setName,
-                setUserId,
-                setReady,
-            },
-        });
+        handleUserInitMessage(data);
     });
 
     startedSocket.listen((data: GameHasStartedMessage) =>
@@ -128,11 +98,6 @@ export function handleSetSocket(
             roomId,
             game: data.game,
             countdownTime: data.countdownTime,
-            dependencies: {
-                setGameStarted,
-                setCountdownTime,
-                history,
-            },
         })
     );
 
@@ -146,11 +111,11 @@ export function handleSetSocket(
     });
 
     stoppedSocket.listen((data: GameHasStoppedMessage) => {
-        handleGameHasStoppedMessage({ socket, roomId, dependencies: { history } });
+        handleGameHasStoppedMessage(roomId);
     });
 
     resetSocket.listen((data: GameHasResetMessage) => {
-        handleGameHasResetMessage(history, roomId, resetController);
+        handleGameHasResetMessage(roomId);
     });
 
     errorSocket.listen((data: ErrorMessage) => {
@@ -158,18 +123,13 @@ export function handleSetSocket(
     });
 
     connectedUsersSocket.listen((data: ConnectedUsersMessage) => {
-        handleConnectedUsersMessage({ data, dependencies: { setAvailableCharacters, setConnectedUsers } });
+        handleConnectedUsersMessage(data);
     });
 
     gameFinishedSocket.listen((data: GameHasFinishedMessage) => {
         handleGameHasFinishedMessage({
             roomId,
-            playerRank,
             playerRanks: data.data.playerRanks,
-            dependencies: {
-                setPlayerRank,
-            },
-            history,
         });
     });
 

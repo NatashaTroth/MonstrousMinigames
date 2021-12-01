@@ -10,12 +10,9 @@ describe('gameHasStarted function', () => {
     const game = GameNames.game3;
 
     it('handed setGameStarted should be called with true', () => {
-        handleGameStartedMessage({
-            roomId,
-            game,
-            countdownTime: 3000,
-            dependencies: { setGameStarted, history, setCountdownTime: jest.fn() },
-        });
+        const withDependencies = handleGameStartedMessage({ setGameStarted, history, setCountdownTime: jest.fn() });
+
+        withDependencies({ roomId, game, countdownTime: 3000 });
 
         expect(setGameStarted).toHaveBeenLastCalledWith(true);
     });
