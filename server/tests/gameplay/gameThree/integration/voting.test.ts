@@ -13,16 +13,10 @@ import {
 } from '../../../../src/gameplay/gameThree/interfaces/GameThreeEventMessages';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
 import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
-import { receiveMultiplePhotos } from '../gameThreeMockData';
+import { receiveMultiplePhotos, votingMessage } from '../gameThreeMockData';
 
 let gameThree: GameThree;
 let gameEventEmitter: GameEventEmitter;
-
-const message: IMessagePhotoVote = {
-    type: GameThreeMessageTypes.PHOTO_VOTE,
-    voterId: users[0].id,
-    photographerId: users[1].id,
-};
 
 describe('Voting stage', () => {
     beforeAll(() => {
@@ -51,7 +45,7 @@ describe('Voting stage', () => {
                 eventCalled = true;
             }
         });
-        gameThree.receiveInput(message);
+        gameThree.receiveInput(votingMessage);
         expect(eventCalled).toBeFalsy();
     });
 
@@ -208,7 +202,7 @@ describe('Results', () => {
 
 function receiveAllVotes() {
     users.forEach((user, idx) => {
-        const newMessage = { ...message };
+        const newMessage = { ...votingMessage };
         newMessage.voterId = user.id;
         newMessage.photographerId = users[(idx + 1) % users.length].id;
         gameThree.receiveInput({ ...newMessage });

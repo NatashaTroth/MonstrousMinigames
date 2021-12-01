@@ -5,28 +5,11 @@ import InitialParameters from '../../../../src/gameplay/gameThree/constants/Init
 import {
     GameThreeMessageTypes
 } from '../../../../src/gameplay/gameThree/enums/GameThreeMessageTypes';
-import {
-    IMessagePhoto, IMessagePhotoVote, PlayerNameId
-} from '../../../../src/gameplay/gameThree/interfaces';
-import { mockPhotoUrl, roomId, users } from '../../mockData';
+import { IMessagePhotoVote } from '../../../../src/gameplay/gameThree/interfaces';
+import { roomId, users } from '../../mockData';
+import { photoMessage, players, votingMessage } from '../gameThreeMockData';
 
 let stageController: StageController;
-const players: PlayerNameId[] = users.map(user => {
-    return { id: user.id, name: user.name };
-});
-const photoMessage: IMessagePhoto = {
-    type: GameThreeMessageTypes.PHOTO,
-    url: mockPhotoUrl,
-    photographerId: users[0].id,
-};
-const votingMessage: IMessagePhotoVote = {
-    type: GameThreeMessageTypes.PHOTO_VOTE,
-    voterId: users[0].id,
-    photographerId: users[1].id,
-};
-// const finishPresentingMessage: IMessage = {
-//     type: GameThreeMessageTypes.FINISHED_PRESENTING,
-// };
 
 describe('Initialise', () => {
     beforeEach(async () => {

@@ -32,13 +32,7 @@ export class StageController {
                     this.stage = null;
                     this.handleGameFinished();
                 } else this.handleNewRound();
-            } //if other stage ends round}
-
-            // if (this.stage?.isFinalStage()) {
-            //     this.stage = null;
-            //     this.handleGameFinished();
-            // } else {
-            // }
+            }
         });
     }
 

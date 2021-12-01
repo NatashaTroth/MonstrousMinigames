@@ -3,11 +3,7 @@ import 'reflect-metadata';
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
-import {
-    GameThreeMessageTypes
-} from '../../../../src/gameplay/gameThree/enums/GameThreeMessageTypes';
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
-import { IMessagePhoto } from '../../../../src/gameplay/gameThree/interfaces';
 import {
     GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS, GameThreeEventMessage
 } from '../../../../src/gameplay/gameThree/interfaces/GameThreeEventMessages';
@@ -16,14 +12,10 @@ import {
 } from '../../../../src/gameplay/interfaces/GlobalEventMessages';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
 import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
+import { photoMessage } from '../gameThreeMockData';
 
 let gameThree: GameThree;
 const gameEventEmitter = DI.resolve(GameEventEmitter);
-
-// let gameEventEmitter: GameEventEmitter;
-
-const mockPhotoUrl = 'https://mockPhoto.com';
-const message: IMessagePhoto = { type: GameThreeMessageTypes.PHOTO, url: mockPhotoUrl, photographerId: users[0].id };
 
 describe('Initiate stage', () => {
     beforeEach(() => {
@@ -37,7 +29,7 @@ describe('Initiate stage', () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
         users.forEach(user => {
-            const newMessage = { ...message, photographerId: user.id };
+            const newMessage = { ...photoMessage, photographerId: user.id };
             for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
                 gameThree.receiveInput(newMessage);
             }
@@ -79,7 +71,7 @@ describe('Taking Photo', () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
         users.forEach(user => {
-            const newMessage = { ...message, photographerId: user.id };
+            const newMessage = { ...photoMessage, photographerId: user.id };
             for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
                 gameThree.receiveInput(newMessage);
             }
