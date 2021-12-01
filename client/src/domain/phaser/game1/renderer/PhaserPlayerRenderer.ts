@@ -23,7 +23,6 @@ interface RendererObstacle {
 export class PhaserPlayerRenderer {
     public player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private chaser?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-    private wind?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private obstacles: RendererObstacle[];
     private skippedObstacles: RendererObstacle[];
     private playerAttention?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -385,7 +384,7 @@ export class PhaserPlayerRenderer {
     }
 
     renderWind() {
-        this.wind = handleRenderWind(this.chaser, this.scene, this.numberPlayers, this.laneHeightsPerNumberPlayers);
+        handleRenderWind(this.chaser, this.scene, this.numberPlayers, this.laneHeightsPerNumberPlayers);
     }
 }
 

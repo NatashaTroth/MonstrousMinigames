@@ -12,12 +12,13 @@ describe('gameHasStarted function', () => {
     const countdownTime = 3000;
 
     it('handed setGameStarted should be called with true', () => {
-        handleGameStartedMessage({
-            roomId,
-            game,
-            countdownTime,
-            dependencies: { setGameStarted, history, setCountdownTime: jest.fn() },
+        const withDependencies = handleGameStartedMessage({
+            setGameStarted,
+            history,
+            setCountdownTime: jest.fn(),
         });
+
+        withDependencies({ roomId, game, countdownTime });
 
         expect(setGameStarted).toHaveBeenLastCalledWith(true);
     });
@@ -26,12 +27,13 @@ describe('gameHasStarted function', () => {
         const history = createMemoryHistory();
         const game = GameNames.game1;
 
-        handleGameStartedMessage({
-            roomId,
-            game,
-            countdownTime,
-            dependencies: { setGameStarted, history, setCountdownTime: jest.fn() },
+        const withDependencies = handleGameStartedMessage({
+            setGameStarted,
+            history,
+            setCountdownTime: jest.fn(),
         });
+
+        withDependencies({ roomId, game, countdownTime });
 
         expect(history.location).toHaveProperty('pathname', controllerGame1Route(roomId));
     });
@@ -40,12 +42,13 @@ describe('gameHasStarted function', () => {
         const history = createMemoryHistory();
         const game = GameNames.game2;
 
-        handleGameStartedMessage({
-            roomId,
-            game,
-            countdownTime,
-            dependencies: { setGameStarted, history, setCountdownTime: jest.fn() },
+        const withDependencies = handleGameStartedMessage({
+            setGameStarted,
+            history,
+            setCountdownTime: jest.fn(),
         });
+
+        withDependencies({ roomId, game, countdownTime });
 
         expect(history.location).toHaveProperty('pathname', controllerGame2Route(roomId));
     });
@@ -54,12 +57,13 @@ describe('gameHasStarted function', () => {
         const history = createMemoryHistory();
         const game = GameNames.game3;
 
-        handleGameStartedMessage({
-            roomId,
-            game,
-            countdownTime,
-            dependencies: { setGameStarted, history, setCountdownTime: jest.fn() },
+        const withDependencies = handleGameStartedMessage({
+            setGameStarted,
+            history,
+            setCountdownTime: jest.fn(),
         });
+
+        withDependencies({ roomId, game, countdownTime });
 
         expect(history.location).toHaveProperty('pathname', controllerGame3Route(roomId));
     });

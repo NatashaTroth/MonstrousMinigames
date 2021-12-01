@@ -200,17 +200,17 @@ class MainScene extends Phaser.Scene {
 
         const approachingObstacle = new MessageSocket(approachingSolvableObstacleOnceTypeGuard, this.socket);
         approachingObstacle.listen((data: ApproachingSolvableObstacleOnceMessage) => {
-            this.players.find(player => player.userId === data.userId)?.handleApproachingObstacle();
+            this.players.find(player => player.player.id === data.userId)?.handleApproachingObstacle();
         });
 
         const obstacleSkipped = new MessageSocket(obstacleSkippedTypeGuard, this.socket);
         obstacleSkipped.listen((data: ObstacleSkippedMessage) => {
-            this.players.find(player => player.userId === data.userId)?.handleObstacleSkipped();
+            this.players.find(player => player.player.id === data.userId)?.handleObstacleSkipped();
         });
 
         const obstacleWillBeSolved = new MessageSocket(obstacleWillBeSolvedTypeGuard, this.socket);
         obstacleWillBeSolved.listen((data: ObstacleWillBeSolvedMessage) => {
-            this.players.find(player => player.userId === data.userId)?.destroyWarningIcon();
+            this.players.find(player => player.player.id === data.userId)?.destroyWarningIcon();
         });
 
         const phaserLoadedTimedOut = new MessageSocket(phaserLoadingTimedOutTypeGuard, this.socket);
@@ -252,10 +252,10 @@ class MainScene extends Phaser.Scene {
         const chasersPushedSocket = new MessageSocket(ChasersPushedTypeGuard, this.socket);
         const xPositions: number[] = [];
         const yPositions: number[] = [];
-        this.players.forEach(element => {
-            if (!element.dead) {
-                xPositions.push(element.coordinates.x);
-                yPositions.push(element.coordinates.x);
+        this.players.forEach(player => {
+            if (!player.player.isDead) {
+                xPositions.push(player.coordinates.x);
+                yPositions.push(player.coordinates.x);
             }
         });
 
@@ -312,27 +312,27 @@ class MainScene extends Phaser.Scene {
     }
 
     updateGameState(gameStateData: GameData) {
-        for (let i = 0; i < this.players.length; i++) {
-            if (gameStateData.playersState[i].dead) {
-                if (!this.players[i].finished) {
-                    this.players[i].handlePlayerDead();
+        this.players.forEach((player, index) => {
+            if (gameStateData.playersState[index].dead) {
+                if (!player.player.isFinished) {
+                    player.handlePlayerDead();
                 }
-            } else if (gameStateData.playersState[i].finished) {
-                if (!this.players[i].finished) {
-                    this.players[i].handlePlayerFinished();
+            } else if (gameStateData.playersState[index].finished) {
+                if (!player.player.isFinished) {
+                    player.handlePlayerFinished();
                 }
-            } else if (gameStateData.playersState[i].stunned) {
-                this.players[i].handlePlayerStunned();
+            } else if (gameStateData.playersState[index].stunned) {
+                player.handlePlayerStunned();
             } else {
-                if (this.players[i].stunned) {
-                    this.players[i].handlePlayerUnStunned();
+                if (player.player.isStunned) {
+                    player.handlePlayerUnStunned();
                 }
 
-                this.players[i].moveForward(gameStateData.playersState[i].positionX);
-                this.players[i].checkAtObstacle(gameStateData.playersState[i].atObstacle);
+                player.moveForward(gameStateData.playersState[index].positionX);
+                player.checkAtObstacle(gameStateData.playersState[index].atObstacle);
             }
-            this.players[i].setChasers(gameStateData.chasersPositionX);
-        }
+            player.setChasers(gameStateData.chasersPositionX);
+        });
 
         this.moveCamera(gameStateData.cameraPositionX);
     }

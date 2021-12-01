@@ -22,10 +22,9 @@ describe('handleConnectedUsersMessage function', () => {
         const setAvailableCharacters = jest.fn();
         const setConnectedUsers = jest.fn();
 
-        handleConnectedUsersMessage({
-            data: mockData,
-            dependencies: { setAvailableCharacters, setConnectedUsers },
-        });
+        const withDependencies = handleConnectedUsersMessage({ setAvailableCharacters, setConnectedUsers });
+
+        withDependencies(mockData);
 
         expect(setAvailableCharacters).toHaveBeenCalledTimes(1);
     });
@@ -34,10 +33,9 @@ describe('handleConnectedUsersMessage function', () => {
         const setAvailableCharacters = jest.fn();
         const setConnectedUsers = jest.fn();
 
-        handleConnectedUsersMessage({
-            data: mockData,
-            dependencies: { setAvailableCharacters, setConnectedUsers },
-        });
+        const withDependencies = handleConnectedUsersMessage({ setAvailableCharacters, setConnectedUsers });
+
+        withDependencies(mockData);
 
         expect(setConnectedUsers).toHaveBeenCalledWith(mockData.users);
     });
@@ -46,11 +44,10 @@ describe('handleConnectedUsersMessage function', () => {
         const setAvailableCharacters = jest.fn();
         const setConnectedUsers = jest.fn();
 
-        handleConnectedUsersMessage({
-            data: {
-                type: MessageTypes.connectedUsers,
-            },
-            dependencies: { setAvailableCharacters, setConnectedUsers },
+        const withDependencies = handleConnectedUsersMessage({ setAvailableCharacters, setConnectedUsers });
+
+        withDependencies({
+            type: MessageTypes.connectedUsers,
         });
 
         expect(setConnectedUsers).toHaveBeenCalledWith([]);

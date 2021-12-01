@@ -4,6 +4,7 @@ import MainScene from '../../game1/screen/components/MainScene';
 import { AnimationNameGame1 } from '../enums/AnimationName';
 import { Character, GameData } from '../gameInterfaces';
 import { Coordinates } from '../gameTypes';
+import { DomainPlayer } from './DomainPlayer';
 import { GameToScreenMapper } from './GameToScreenMapper';
 import { PlayerRenderer } from './PlayerRenderer';
 
@@ -13,15 +14,9 @@ import { PlayerRenderer } from './PlayerRenderer';
  * on the replaceable interface (PlayerRenderer) which can be mocked. With the mocked interface in combination with
  * the InMemoryPlayerRenderer, testing this class should be pretty straight forward.
  */
+
 export class Player {
-    username: string;
-    userId: string;
-    playerRunning: boolean;
-    playerAtObstacle: boolean;
-    playerCountSameDistance: number;
-    dead: boolean;
-    finished: boolean;
-    stunned: boolean;
+    player: DomainPlayer;
     renderer: PlayerRenderer;
     windowWidth: number;
     windowHeight: number;
@@ -37,16 +32,10 @@ export class Player {
         private gameToScreenMapper: GameToScreenMapper,
         public playerRenderer: PlayerRenderer
     ) {
-        this.username = gameStateData.playersState[index].name;
-        this.userId = gameStateData.playersState[index].id;
-        this.playerRunning = false;
-        this.playerAtObstacle = false;
-        this.playerCountSameDistance = 0;
-        this.dead = false;
-        this.finished = false;
-        this.stunned = false;
         this.windowWidth = scene.windowWidth;
         this.windowHeight = scene.windowHeight;
+
+        this.player = new DomainPlayer(gameStateData.playersState[index].id, gameStateData.playersState[index].name);
 
         this.renderer = playerRenderer;
 
@@ -73,7 +62,7 @@ export class Player {
             this.arrivedAtObstacle();
 
             setInterval(() => {
-                this.playerAtObstacle = false;
+                this.player.finishedObstacle();
                 this.renderer.destroyAttentionIcon();
 
                 setTimeout(() => this.arrivedAtObstacle(), 1000);
@@ -82,9 +71,9 @@ export class Player {
 
         if (localDevelopment && stunnedAnimation) {
             setInterval(() => {
-                this.stunned = false;
+                this.player.unstun();
                 this.handlePlayerStunned();
-                this.stunned = false;
+                this.player.unstun();
                 setTimeout(() => {
                     this.handlePlayerUnStunned();
                     this.startRunning();
@@ -94,12 +83,12 @@ export class Player {
     }
 
     moveForward(newXPosition: number) {
-        if (this.finished) return;
+        if (this.player.isFinished) return;
 
-        if (newXPosition == this.coordinates.x && this.playerRunning) {
+        if (newXPosition == this.coordinates.x && this.player.isMoving) {
             this.stopRunning();
         } else {
-            if (!this.playerRunning) {
+            if (!this.player.isMoving) {
                 this.startRunning();
             }
         }
@@ -109,7 +98,7 @@ export class Player {
     }
 
     checkAtObstacle(isAtObstacle: boolean) {
-        if (this.finished) return;
+        if (this.player.isFinished) return;
         if (this.justArrivedAtObstacle(isAtObstacle)) {
             this.arrivedAtObstacle();
         } else if (this.finishedObstacle(isAtObstacle)) {
@@ -137,7 +126,7 @@ export class Player {
         this.renderer.destroyCave();
         this.renderer.destroyAttentionIcon();
         this.renderer.handlePlayerDead();
-        this.dead = true;
+        this.player.died();
     }
 
     handlePlayerFinished() {
@@ -150,38 +139,38 @@ export class Player {
     }
 
     handlePlayerStunned() {
-        if (!this.stunned) {
+        if (!this.player.isStunned) {
             this.renderer.stunPlayer(this.character.animations.get(AnimationNameGame1.Stunned)!.name);
-            this.stunned = true;
+            this.player.stun();
         }
     }
 
     handlePlayerUnStunned() {
         this.renderer.stopAnimation();
-        this.stunned = false;
+        this.player.unstun();
     }
 
     private destroyPlayer() {
         this.renderer.destroyPlayer();
-        this.finished = true;
+        this.player.finished();
     }
 
     private justArrivedAtObstacle(isAtObstacle: boolean) {
-        return isAtObstacle && !this.playerAtObstacle;
+        return isAtObstacle && !this.player.isAtObstacle;
     }
 
     private finishedObstacle(isAtObstacle: boolean) {
-        return !isAtObstacle && this.playerAtObstacle;
+        return !isAtObstacle && this.player.isAtObstacle;
     }
 
     private arrivedAtObstacle(): void {
         this.stopRunning();
-        this.playerAtObstacle = true;
+        this.player.isAtObstacle = true;
         this.renderer.renderAttentionIcon();
     }
 
     private finishObstacle(): void {
-        this.playerAtObstacle = false;
+        this.player.finishedObstacle();
         this.startRunning();
         this.renderer.destroyObstacle();
         this.renderer.destroyAttentionIcon();
@@ -193,7 +182,7 @@ export class Player {
             y: this.coordinates.y,
         };
 
-        this.renderer.renderPlayer(this.index, screenCoordinates, this.character, this.username);
+        this.renderer.renderPlayer(this.index, screenCoordinates, this.character, this.player.name);
     }
 
     private setObstacles() {
@@ -234,7 +223,7 @@ export class Player {
     }
 
     setChasers(chasersPositionX: number) {
-        if (!this.dead) {
+        if (!this.player.isDead) {
             this.renderer.renderChasers(
                 this.gameToScreenMapper.mapGameMeasurementToScreen(chasersPositionX),
                 this.coordinates.y
@@ -249,11 +238,11 @@ export class Player {
     startRunning() {
         const animationName = this.character.animations.get(AnimationNameGame1.Running)?.name;
         if (animationName) this.renderer.startAnimation(animationName);
-        this.playerRunning = true;
+        this.player.startMoving();
     }
 
     stopRunning() {
         this.renderer.stopAnimation();
-        this.playerRunning = false;
+        this.player.stopMoving();
     }
 }

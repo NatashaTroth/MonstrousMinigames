@@ -28,19 +28,30 @@ const Tutorial: React.FunctionComponent<TutorialProps> = ({ history }) => {
         document.body.style.userSelect = 'none';
     }, []);
 
-    const handleTutorialFinished = (nextComponent: ComponentToTest) => {
-        if (nextComponent === 'finished') {
-            history.push(controllerLobbyRoute(roomId));
-            return;
-        }
-
-        setComponentToTest(nextComponent);
-    };
-
-    return selectAcutalTutorial({ chosenGame, handleTutorialFinished, componentToTest, history });
+    return selectAcutalTutorial({
+        chosenGame,
+        handleTutorialFinished: (nextComponent: ComponentToTest) =>
+            handleTutorialFinished(nextComponent, history, roomId, setComponentToTest),
+        componentToTest,
+        history,
+    });
 };
 
 export default Tutorial;
+
+export function handleTutorialFinished(
+    nextComponent: ComponentToTest,
+    history: History,
+    roomId: string | undefined,
+    setComponentToTest: (val: ComponentToTest) => void
+) {
+    if (nextComponent === 'finished') {
+        history.push(controllerLobbyRoute(roomId));
+        return;
+    }
+
+    setComponentToTest(nextComponent);
+}
 
 interface SelectAcutalTutorialProps {
     chosenGame: GameNames | undefined;
@@ -49,7 +60,7 @@ interface SelectAcutalTutorialProps {
     history: History;
 }
 
-function selectAcutalTutorial({
+export function selectAcutalTutorial({
     chosenGame,
     handleTutorialFinished,
     componentToTest,

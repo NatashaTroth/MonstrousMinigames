@@ -4,11 +4,11 @@ import { Settings, VolumeOff, VolumeUp } from '@material-ui/icons';
 import { cleanup } from '@testing-library/react';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount } from 'enzyme';
-import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
+import React from 'react';
 
 import MasterHeader from '../../components/common/MasterHeader';
-import { AudioContext, defaultValue } from '../../contexts/AudioContextProvider';
+import { defaultValue, MyAudioContext } from '../../contexts/AudioContextProvider';
 import history from '../../domain/history/history';
 import theme from '../../styles/theme';
 
@@ -30,9 +30,9 @@ describe('MasterHeader', () => {
     it('renders an Volume Up Icon when music is playing', () => {
         const container = mount(
             <ThemeProvider theme={theme}>
-                <AudioContext.Provider value={{ ...defaultValue, musicIsPlaying: true }}>
+                <MyAudioContext.Provider value={{ ...defaultValue, isPlaying: true }}>
                     <MasterHeader history={history} />
-                </AudioContext.Provider>
+                </MyAudioContext.Provider>
             </ThemeProvider>
         );
 
@@ -42,9 +42,9 @@ describe('MasterHeader', () => {
     it('renders an Volume Off Icon when music is playing', () => {
         const container = mount(
             <ThemeProvider theme={theme}>
-                <AudioContext.Provider value={{ ...defaultValue, musicIsPlaying: false }}>
+                <MyAudioContext.Provider value={{ ...defaultValue, isPlaying: false }}>
                     <MasterHeader history={history} />
-                </AudioContext.Provider>
+                </MyAudioContext.Provider>
             </ThemeProvider>
         );
 
@@ -54,9 +54,9 @@ describe('MasterHeader', () => {
     it('redirects to settings when settings icon is clicked', () => {
         const container = mount(
             <ThemeProvider theme={theme}>
-                <AudioContext.Provider value={{ ...defaultValue, musicIsPlaying: false }}>
+                <MyAudioContext.Provider value={{ ...defaultValue, isPlaying: false }}>
                     <MasterHeader history={history} />
-                </AudioContext.Provider>
+                </MyAudioContext.Provider>
             </ThemeProvider>
         );
 

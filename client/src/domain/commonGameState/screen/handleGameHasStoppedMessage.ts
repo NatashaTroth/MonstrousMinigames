@@ -2,14 +2,12 @@ import { History } from 'history';
 
 import { screenLobbyRoute } from '../../../utils/routes';
 
-interface HandleGameHasStoppedMessage {
-    roomId: string;
-    dependencies: {
-        history: History;
-    };
+interface Dependencies {
+    history: History;
 }
-export function handleGameHasStoppedMessage(props: HandleGameHasStoppedMessage) {
-    const { roomId, dependencies } = props;
-    const { history } = dependencies;
-    history.push(screenLobbyRoute(roomId));
+
+export function handleGameHasStoppedMessage(dependencies: Dependencies) {
+    return (roomId: string) => {
+        dependencies.history.push(screenLobbyRoute(roomId));
+    };
 }

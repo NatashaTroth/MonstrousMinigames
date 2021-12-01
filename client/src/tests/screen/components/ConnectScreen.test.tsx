@@ -1,33 +1,36 @@
 import { cleanup } from '@testing-library/react';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, shallow } from 'enzyme';
-import React from 'react';
-import { ThemeProvider } from 'styled-components';
+import { configure } from 'enzyme';
 
-import { ConnectScreen } from '../../../components/screen/ConnectScreen';
-import { defaultValue as screenDefaultValue, ScreenSocketContext } from '../../../contexts/ScreenSocketContextProvider';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
-import theme from '../../../styles/theme';
+import { handleCreateNewRoom } from '../../../components/screen/ConnectScreen';
 
 configure({ adapter: new Adapter() });
 
-afterEach(cleanup);
-describe('Screen ConnectScreen', () => {
-    const socket = new InMemorySocketFake();
-    const ConnectScreenComponent = (
-        <ThemeProvider theme={theme}>
-            <ScreenSocketContext.Provider value={{ ...screenDefaultValue, screenSocket: socket }}>
-                <ConnectScreen />
-            </ScreenSocketContext.Provider>
-        </ThemeProvider>
-    );
+export const buildSuccessfulFetch = (response: unknown) =>
+    jest.fn().mockResolvedValue({
+        json: jest.fn().mockResolvedValue(response),
+    });
 
-    // TODO
-    xit('renders given button labels', () => {
-        const buttonLabels = ['Create New Room', 'Join Room', 'About', 'Credits', 'Settings'];
-        const container = shallow(ConnectScreenComponent);
-        buttonLabels.forEach(label => {
-            expect(container.find(label)).toBeTruthy();
+export const buildFailingFetch = (error: unknown) => jest.fn().mockRejectedValue(error);
+
+afterEach(cleanup);
+
+describe('handleCreateNewRoom', () => {
+    it('handleCreateNewRoom ', async () => {
+        const roomId = 'AFSA';
+        const data = {
+            roomId,
+        };
+        const fetch = buildSuccessfulFetch(data);
+        const setLoading = jest.fn();
+        const handleSocketConnection = jest.fn();
+
+        await handleCreateNewRoom({
+            fetch,
+            setLoading,
+            handleSocketConnection,
         });
+
+        expect(handleSocketConnection).toHaveBeenCalledTimes(1);
     });
 });

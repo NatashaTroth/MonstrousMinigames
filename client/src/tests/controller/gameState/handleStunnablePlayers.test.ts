@@ -12,10 +12,11 @@ describe('handleStunnablePlayers function', () => {
     it('handed setStunnablePlayers should be called', () => {
         const setStunnablePlayers = jest.fn();
 
-        handleStunnablePlayers({
-            data: mockData,
-            dependencies: { setStunnablePlayers },
+        const withDependencies = handleStunnablePlayers({
+            setStunnablePlayers,
         });
+
+        withDependencies(mockData);
 
         expect(setStunnablePlayers).toHaveBeenLastCalledWith(mockData.stunnablePlayers);
     });

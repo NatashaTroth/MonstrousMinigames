@@ -51,11 +51,6 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [counter]);
 
-    function handleThrowPebble() {
-        setHasStone(false);
-        history.push(`${controllerObstacleRoute(roomId, ObstacleTypes.stone)}?choosePlayer=true`);
-    }
-
     function handleSolveStone() {
         setSolveStoneClicked(true);
         if (earlySolvableObstacle) {
@@ -75,7 +70,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                             <PebbleContainer>
                                 <PebbleInstructions>Click to use collected stone</PebbleInstructions>
                                 <Arrow src={arrow} />
-                                <PebbleButton onClick={handleThrowPebble}>
+                                <PebbleButton onClick={() => handleThrowPebble(setHasStone, roomId)}>
                                     <StyledPebbleImage src={pebble} />
                                 </PebbleButton>
                             </PebbleContainer>
@@ -102,3 +97,8 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
 };
 
 export default ShakeInstruction;
+
+export function handleThrowPebble(setHasStone: (val: boolean) => void, roomId: string | undefined) {
+    setHasStone(false);
+    history.push(`${controllerObstacleRoute(roomId, ObstacleTypes.stone)}?choosePlayer=true`);
+}
