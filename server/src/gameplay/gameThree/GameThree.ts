@@ -5,6 +5,7 @@ import { GameState } from '../enums';
 // import { GameState } from '../enums';
 import Game from '../Game';
 import { IGameInterface } from '../interfaces';
+import { GameType } from '../leaderboard/enums/GameType';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
 import { StageController } from './classes/StageController';
@@ -142,6 +143,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                 return result;
             });
 
+        this.leaderboard.addGameToHistory(GameType.GameThree, [...playerRanks]);
         this.gameState = GameState.Finished;
         GameThreeEventEmitter.emitGameHasFinishedEvent(this.roomId, GameState.Finished, playerRanks);
     }
