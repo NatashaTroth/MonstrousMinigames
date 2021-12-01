@@ -1,11 +1,11 @@
 import 'reflect-metadata';
-import { GameTwo } from '../../../src/gameplay';
-import { GameState } from '../../../src/gameplay/enums';
-import Parameters from '../../../src/gameplay/gameTwo/constants/Parameters';
-import { leaderboard, roomId, users } from '../mockData';
-import { GameTwoMessageTypes } from '../../../src/gameplay/gameTwo/enums/GameTwoMessageTypes';
-import Sheep from '../../../src/gameplay/gameTwo/classes/Sheep';
-import { SheepStates } from '../../../src/gameplay/gameTwo/enums/SheepStates';
+import { GameTwo } from '../../../../src/gameplay';
+import { GameState } from '../../../../src/gameplay/enums';
+import Parameters from '../../../../src/gameplay/gameTwo/constants/Parameters';
+import { leaderboard, roomId, users } from '../../mockData';
+import { GameTwoMessageTypes } from '../../../../src/gameplay/gameTwo/enums/GameTwoMessageTypes';
+import Sheep from '../../../../src/gameplay/gameTwo/classes/Sheep';
+import { SheepStates } from '../../../../src/gameplay/gameTwo/enums/SheepStates';
 // import { Direction } from '../../../src/gameplay/gameTwo/enums/Direction';
 
 let gameTwo: GameTwo;

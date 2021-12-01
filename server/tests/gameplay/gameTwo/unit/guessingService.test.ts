@@ -1,7 +1,7 @@
-import GuessingService from "../../../src/gameplay/gameTwo/classes/GuessingServices";
-import User from "../../../src/classes/user";
-import { GuessHints } from "../../../src/gameplay/gameTwo/enums/GuessHints";
-import Parameters from "../../../src/gameplay/gameTwo/constants/Parameters";
+import GuessingService from "../../../../src/gameplay/gameTwo/classes/GuessingServices";
+import User from "../../../../src/classes/user";
+import { GuessHints } from "../../../../src/gameplay/gameTwo/enums/GuessHints";
+import Parameters from "../../../../src/gameplay/gameTwo/constants/Parameters";
 
 const user = new User('ABCD', '72374', 'Franz', 1, '1');
 
