@@ -14,44 +14,38 @@ import { GameHasResumedMessage } from "../../domain/typeGuards/resumed";
 import { GameHasStoppedMessage } from "../../domain/typeGuards/stopped";
 import { UserInitMessage } from "../../domain/typeGuards/userInit";
 import { GameState, MessageTypes } from "../../utils/constants";
-import { controllerChooseCharacterRoute, controllerLobbyRoute } from "../../utils/routes";
+import { controllerChooseCharacterRoute } from "../../utils/routes";
 
 describe('handleSetSocket', () => {
     const history = createMemoryHistory();
     const roomId = 'ABCD';
 
-    const dependencies = {
-        setRoomId: jest.fn(),
-        setControllerSocket: jest.fn(),
-        setPlayerNumber: jest.fn(),
-        setPlayerFinished: jest.fn(),
-        setObstacle: jest.fn(),
-        setPlayerRank: jest.fn(),
-        setHasPaused: jest.fn(),
-        setGameStarted: jest.fn(),
-        setName: jest.fn(),
-        setAvailableCharacters: jest.fn(),
-        setUserId: jest.fn(),
-        setReady: jest.fn(),
-        setPlayerDead: jest.fn(),
+    const dependencies: HandleSetSocketDependencies = {
         history,
-        setConnectedUsers: jest.fn(),
-        playerRank: undefined,
-        setEarlySolvableObstacle: jest.fn(),
-        setExceededChaserPushes: jest.fn(),
-        setStunnablePlayers: jest.fn(),
         setChosenGame: jest.fn(),
-        setVoteForPhotoMessage: jest.fn(),
+        setControllerSocket: jest.fn(),
+        setExceededChaserPushes: jest.fn(),
+        setFinalRoundCountdownTime: jest.fn(),
+        setHasPaused: jest.fn(),
+        setPresentFinalPhotos: jest.fn(),
         setRoundIdx: jest.fn(),
         setTopicMessage: jest.fn(),
-        setCountdownTime: jest.fn(),
+        setVoteForPhotoMessage: jest.fn(),
         setVotingResults: jest.fn(),
-        setFinalRoundCountdownTime: jest.fn(),
-        setPresentFinalPhotos: jest.fn(),
-        resetController: jest.fn(),
-    } as HandleSetSocketDependencies;
+        handleConnectedUsersMessage: jest.fn(),
+        handleGameHasFinishedMessage: jest.fn(),
+        handleGameHasStoppedMessage: jest.fn(),
+        handleGameStartedMessage: jest.fn(),
+        handleUserInitMessage: jest.fn(),
+        handleGameHasResetMessage: jest.fn(),
+        handleObstacleMessage: jest.fn(),
+        handlePlayerDied: jest.fn(),
+        handlePlayerFinishedMessage: jest.fn(),
+        handleStunnablePlayers: jest.fn(),
+        handleApproachingObstacleMessage: jest.fn(),
+    };
 
-    it('when UserInitMessage was written, handed setPlayerNumber is executed', async () => {
+    it('when UserInitMessage was written, handed handleUserInitMessage is executed', async () => {
         const message: UserInitMessage = {
             name: 'Mock',
             type: MessageTypes.userInit,
@@ -63,16 +57,16 @@ describe('handleSetSocket', () => {
         };
 
         const socket = new InMemorySocketFake();
-        const setPlayerNumber = jest.fn();
+        const handleUserInitMessage = jest.fn();
 
-        handleSetSocket(socket, roomId, false, { ...dependencies, setPlayerNumber });
+        handleSetSocket(socket, roomId, false, { ...dependencies, handleUserInitMessage });
 
         await socket.emit(message);
 
-        expect(setPlayerNumber).toHaveBeenCalledTimes(1);
+        expect(handleUserInitMessage).toHaveBeenCalledTimes(1);
     });
 
-    it('when GameHasStartedMessage was written, handed setGameStarted is executed', async () => {
+    it('when GameHasStartedMessage was written, handed handleGameStartedMessage is executed', async () => {
         const message: GameHasStartedMessage = {
             type: MessageTypes.gameHasStarted,
             countdownTime: 3000,
@@ -80,13 +74,13 @@ describe('handleSetSocket', () => {
         };
 
         const socket = new InMemorySocketFake();
-        const setGameStarted = jest.fn();
+        const handleGameStartedMessage = jest.fn();
 
-        handleSetSocket(socket, roomId, false, { ...dependencies, setGameStarted });
+        handleSetSocket(socket, roomId, false, { ...dependencies, handleGameStartedMessage });
 
         await socket.emit(message);
 
-        expect(setGameStarted).toHaveBeenCalledWith(true);
+        expect(handleGameStartedMessage).toHaveBeenCalledTimes(1);
     });
 
     it('when GameHasPausedMessage was written, handed setHasPaused is executed', async () => {
@@ -119,37 +113,37 @@ describe('handleSetSocket', () => {
         expect(setHasPaused).toHaveBeenCalledWith(false);
     });
 
-    it('when GameHasStoppedMessage was written, history should be reroute to controller lobby', async () => {
+    it('when GameHasStoppedMessage was written, handed handleGameHasStoppedMessage should be called', async () => {
         const message: GameHasStoppedMessage = {
             type: MessageTypes.gameHasStopped,
         };
 
         const socket = new InMemorySocketFake();
-        const history = createMemoryHistory();
+        const handleGameHasStoppedMessage = jest.fn();
 
-        handleSetSocket(socket, roomId, false, { ...dependencies, history });
+        handleSetSocket(socket, roomId, false, { ...dependencies, handleGameHasStoppedMessage });
 
         await socket.emit(message);
 
-        expect(history.location).toHaveProperty('pathname', controllerLobbyRoute(roomId));
+        expect(handleGameHasStoppedMessage).toHaveBeenCalledTimes(1);
     });
 
-    it('when GameHasResetMessage was written, history should be reroute to controller lobby', async () => {
+    it('when GameHasResetMessage was written, handleGameHasResetMessage should be executed', async () => {
         const message: GameHasResetMessage = {
             type: MessageTypes.gameHasReset,
         };
 
         const socket = new InMemorySocketFake();
-        const history = createMemoryHistory();
+        const handleGameHasResetMessage = jest.fn();
 
-        handleSetSocket(socket, roomId, false, { ...dependencies, history });
+        handleSetSocket(socket, roomId, false, { ...dependencies, handleGameHasResetMessage });
 
         await socket.emit(message);
 
-        expect(history.location).toHaveProperty('pathname', controllerLobbyRoute(roomId));
+        expect(handleGameHasResetMessage).toHaveBeenCalledTimes(1);
     });
 
-    it('when ConnectedUsersMessage was written, handed setConnectedUsers is executed', async () => {
+    it('when ConnectedUsersMessage was written, handed handleConnectedUsersMessage is executed', async () => {
         const users = [
             {
                 id: '1',
@@ -168,16 +162,16 @@ describe('handleSetSocket', () => {
         };
 
         const socket = new InMemorySocketFake();
-        const setConnectedUsers = jest.fn();
+        const handleConnectedUsersMessage = jest.fn();
 
-        handleSetSocket(socket, roomId, false, { ...dependencies, setConnectedUsers });
+        handleSetSocket(socket, roomId, false, { ...dependencies, handleConnectedUsersMessage });
 
         await socket.emit(message);
 
-        expect(setConnectedUsers).toHaveBeenCalledWith(users);
+        expect(handleConnectedUsersMessage).toHaveBeenCalledWith(message);
     });
 
-    it('when GameHasFinishedMessage was written, handed setPlayerRank is executed and should be called with right rank', async () => {
+    it('when GameHasFinishedMessage was written, handed handleGameHasFinishedMessage is executed', async () => {
         const message: GameHasFinishedMessage = {
             type: MessageTypes.gameHasFinished,
             data: {
@@ -204,13 +198,13 @@ describe('handleSetSocket', () => {
         global.sessionStorage.setItem('userId', '1');
 
         const socket = new InMemorySocketFake();
-        const setPlayerRank = jest.fn();
+        const handleGameHasFinishedMessage = jest.fn();
 
-        handleSetSocket(socket, roomId, false, { ...dependencies, setPlayerRank });
+        handleSetSocket(socket, roomId, false, { ...dependencies, handleGameHasFinishedMessage });
 
         await socket.emit(message);
 
-        expect(setPlayerRank).toHaveBeenCalledTimes(1);
+        expect(handleGameHasFinishedMessage).toHaveBeenCalledTimes(1);
     });
 
     it('when a socket gets passed, history should be reroute to choose character route', async () => {

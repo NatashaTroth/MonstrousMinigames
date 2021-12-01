@@ -1,34 +1,39 @@
-import { History } from 'history';
+import { History } from "history";
 
-import { PlayerRank } from '../../../contexts/ScreenSocketContextProvider';
-import { controllerFinishedRoute } from '../../../utils/routes';
+import { PlayerRank } from "../../../contexts/ScreenSocketContextProvider";
+import { controllerFinishedRoute } from "../../../utils/routes";
 
-interface HandleGameHasFinishedMessage {
-    roomId: string;
+interface Dependencies {
+    setPlayerRank: (val: number) => void;
     playerRank: undefined | number;
-    playerRanks: PlayerRank[];
-    dependencies: {
-        setPlayerRank: (val: number) => void;
-    };
     history: History;
 }
-export const handleGameHasFinishedMessage = (props: HandleGameHasFinishedMessage) => {
-    const { roomId, playerRank, playerRanks, dependencies, history } = props;
-    const windmillTimeoutId = sessionStorage.getItem('windmillTimeoutId');
+export interface HandleGameHasFinishedMessageData {
+    roomId: string;
+    playerRanks: PlayerRank[];
+}
 
-    if (windmillTimeoutId) {
-        clearTimeout(Number(windmillTimeoutId));
-        sessionStorage.removeItem('windmillTimeoutId');
-    }
+export const handleGameHasFinishedMessage = (dependencies: Dependencies) => {
+    return (data: HandleGameHasFinishedMessageData) => {
+        const { roomId, playerRanks } = data;
+        const { playerRank, history, setPlayerRank } = dependencies;
 
-    if (!playerRank) {
-        const userId = sessionStorage.getItem('userId');
-        const rank = playerRanks.find(rankItem => rankItem.id === userId);
+        const windmillTimeoutId = sessionStorage.getItem('windmillTimeoutId');
 
-        if (rank && rank.rank) {
-            dependencies.setPlayerRank(rank.rank);
+        if (windmillTimeoutId) {
+            clearTimeout(Number(windmillTimeoutId));
+            sessionStorage.removeItem('windmillTimeoutId');
         }
-    }
 
-    history.push(controllerFinishedRoute(roomId));
+        if (!playerRank) {
+            const userId = sessionStorage.getItem('userId');
+            const rank = playerRanks.find(rankItem => rankItem.id === userId);
+
+            if (rank && rank.rank) {
+                setPlayerRank(rank.rank);
+            }
+        }
+
+        history.push(controllerFinishedRoute(roomId));
+    };
 };

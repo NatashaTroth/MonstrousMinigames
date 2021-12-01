@@ -1,36 +1,39 @@
-import { History } from 'history';
+import { History } from "history";
 
-import { Obstacle } from '../../../../contexts/PlayerContextProvider';
-import { handlePlayerFinishedMessage } from '../../../commonGameState/controller/handlePlayerFinishedMessage';
-import { MessageSocket } from '../../../socket/MessageSocket';
-import { Socket } from '../../../socket/Socket';
 import {
-    ApproachingSolvableObstacleMessage,
-    approachingSolvableObstacleTypeGuard,
-} from '../../../typeGuards/game1/approachingSolvableObstacleTypeGuard';
-import { exceededMaxChaserPushesTypeGuard } from '../../../typeGuards/game1/exceededMaxChaserPushes';
-import { ObstacleMessage, obstacleTypeGuard } from '../../../typeGuards/game1/obstacle';
-import { PlayerDiedMessage, playerDiedTypeGuard } from '../../../typeGuards/game1/playerDied';
-import { PlayerFinishedMessage, playerFinishedTypeGuard } from '../../../typeGuards/game1/playerFinished';
-import { playerStunnedTypeGuard } from '../../../typeGuards/game1/playerStunned';
-import { playerUnstunnedTypeGuard } from '../../../typeGuards/game1/playerUnstunned';
-import { StunnablePlayersMessage, stunnablePlayersTypeGuard } from '../../../typeGuards/game1/stunnablePlayers';
-import { handleApproachingObstacleMessage } from '../gameState/handleApproachingSolvableObstacleMessage';
-import { handleObstacleMessage } from '../gameState/handleObstacleMessage';
-import { handlePlayerDied } from '../gameState/handlePlayerDied';
-import { handlePlayerStunned } from '../gameState/handlePlayerStunned';
-import { handlePlayerUnstunned } from '../gameState/handlePlayerUnstunned';
-import { handleStunnablePlayers } from '../gameState/handleStunnablePlayers';
+    HandlePlayerFinishedProps
+} from "../../../commonGameState/controller/handlePlayerFinishedMessage";
+import { MessageSocket } from "../../../socket/MessageSocket";
+import { Socket } from "../../../socket/Socket";
+import {
+    ApproachingSolvableObstacleMessage, approachingSolvableObstacleTypeGuard
+} from "../../../typeGuards/game1/approachingSolvableObstacleTypeGuard";
+import {
+    exceededMaxChaserPushesTypeGuard
+} from "../../../typeGuards/game1/exceededMaxChaserPushes";
+import { ObstacleMessage, obstacleTypeGuard } from "../../../typeGuards/game1/obstacle";
+import { PlayerDiedMessage, playerDiedTypeGuard } from "../../../typeGuards/game1/playerDied";
+import {
+    PlayerFinishedMessage, playerFinishedTypeGuard
+} from "../../../typeGuards/game1/playerFinished";
+import { playerStunnedTypeGuard } from "../../../typeGuards/game1/playerStunned";
+import { playerUnstunnedTypeGuard } from "../../../typeGuards/game1/playerUnstunned";
+import {
+    StunnablePlayersMessage, stunnablePlayersTypeGuard
+} from "../../../typeGuards/game1/stunnablePlayers";
+import { HandleObstacleMessageProps } from "../gameState/handleObstacleMessage";
+import { HandlePlayerDiedProps } from "../gameState/handlePlayerDied";
+import { handlePlayerStunned } from "../gameState/handlePlayerStunned";
+import { handlePlayerUnstunned } from "../gameState/handlePlayerUnstunned";
 
 export interface HandleSetControllerSocketGame1Dependencies {
-    setPlayerFinished: (val: boolean) => void;
-    setObstacle: (roomId: string | undefined, obstacle: undefined | Obstacle) => void;
-    setPlayerRank: (val: number) => void;
-    setPlayerDead: (val: boolean) => void;
     history: History;
-    setEarlySolvableObstacle: (val: Obstacle | undefined) => void;
     setExceededChaserPushes: (val: boolean) => void;
-    setStunnablePlayers: (val: string[]) => void;
+    handleObstacleMessage: (data: HandleObstacleMessageProps) => void;
+    handlePlayerFinishedMessage: (data: HandlePlayerFinishedProps) => void;
+    handleStunnablePlayers: (data: StunnablePlayersMessage) => void;
+    handlePlayerDied: (data: HandlePlayerDiedProps) => void;
+    handleApproachingObstacleMessage: (data: ApproachingSolvableObstacleMessage) => void;
 }
 
 export function handleSetControllerSocketGame1(
@@ -40,14 +43,13 @@ export function handleSetControllerSocketGame1(
     dependencies: HandleSetControllerSocketGame1Dependencies
 ) {
     const {
-        setPlayerFinished,
-        setObstacle,
-        setPlayerRank,
-        setPlayerDead,
         history,
-        setEarlySolvableObstacle,
         setExceededChaserPushes,
-        setStunnablePlayers,
+        handleObstacleMessage,
+        handlePlayerFinishedMessage,
+        handleStunnablePlayers,
+        handlePlayerDied,
+        handleApproachingObstacleMessage,
     } = dependencies;
 
     const obstacleSocket = new MessageSocket(obstacleTypeGuard, socket);
@@ -63,7 +65,6 @@ export function handleSetControllerSocketGame1(
         handleObstacleMessage({
             data,
             roomId,
-            setObstacle,
         });
     });
 
@@ -72,10 +73,6 @@ export function handleSetControllerSocketGame1(
             data,
             roomId,
             playerFinished,
-            dependencies: {
-                setPlayerFinished,
-                setPlayerRank,
-            },
         });
     });
 
@@ -83,10 +80,6 @@ export function handleSetControllerSocketGame1(
         handlePlayerDied({
             data,
             roomId,
-            dependencies: {
-                setPlayerDead,
-                setPlayerRank,
-            },
         });
     });
 
@@ -99,17 +92,10 @@ export function handleSetControllerSocketGame1(
     });
 
     approachingSolvableObstacleSocket.listen((data: ApproachingSolvableObstacleMessage) => {
-        handleApproachingObstacleMessage({ data, setEarlySolvableObstacle });
+        handleApproachingObstacleMessage(data);
     });
 
     exceededMaxChaserPushesSocket.listen(() => setExceededChaserPushes(true));
 
-    stunnablePlayersSocket.listen((data: StunnablePlayersMessage) =>
-        handleStunnablePlayers({
-            data,
-            dependencies: {
-                setStunnablePlayers,
-            },
-        })
-    );
+    stunnablePlayersSocket.listen((data: StunnablePlayersMessage) => handleStunnablePlayers(data));
 }

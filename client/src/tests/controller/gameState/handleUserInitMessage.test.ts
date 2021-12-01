@@ -1,6 +1,8 @@
-import { handleUserInitMessage } from '../../../domain/commonGameState/controller/handleUserInitMessage';
-import { UserInitMessage } from '../../../domain/typeGuards/userInit';
-import { MessageTypes } from '../../../utils/constants';
+import {
+    handleUserInitMessage
+} from "../../../domain/commonGameState/controller/handleUserInitMessage";
+import { UserInitMessage } from "../../../domain/typeGuards/userInit";
+import { MessageTypes } from "../../../utils/constants";
 
 describe('handleUserInitMessage', () => {
     const mockData: UserInitMessage = {
@@ -19,15 +21,14 @@ describe('handleUserInitMessage', () => {
         const setUserId = jest.fn();
         const setReady = jest.fn();
 
-        handleUserInitMessage({
-            data: mockData,
-            dependencies: {
-                setPlayerNumber,
-                setName,
-                setUserId,
-                setReady,
-            },
+        const withDependencies = handleUserInitMessage({
+            setPlayerNumber,
+            setName,
+            setUserId,
+            setReady,
         });
+
+        withDependencies(mockData);
 
         expect(setPlayerNumber).toHaveBeenCalledTimes(1);
     });

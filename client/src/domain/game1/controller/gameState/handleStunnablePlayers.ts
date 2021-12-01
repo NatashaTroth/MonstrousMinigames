@@ -1,13 +1,11 @@
-import { StunnablePlayersMessage } from '../../../typeGuards/game1/stunnablePlayers';
+import { StunnablePlayersMessage } from "../../../typeGuards/game1/stunnablePlayers";
 
-interface HandleStunnablePlayersMessage {
-    data: StunnablePlayersMessage;
-    dependencies: {
-        setStunnablePlayers: (val: string[]) => void;
-    };
+interface Dependencies {
+    setStunnablePlayers: (val: string[]) => void;
 }
 
-export const handleStunnablePlayers = (props: HandleStunnablePlayersMessage) => {
-    const { data, dependencies } = props;
-    dependencies.setStunnablePlayers(data.stunnablePlayers);
+export const handleStunnablePlayers = (dependencies: Dependencies) => {
+    return (data: StunnablePlayersMessage) => {
+        dependencies.setStunnablePlayers(data.stunnablePlayers);
+    };
 };

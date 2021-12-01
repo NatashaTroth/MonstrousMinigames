@@ -9,7 +9,9 @@ describe('handleGameHasStoppedMessage', () => {
     it('when message type is gameHasStopped, history push should be called', () => {
         const history = createMemoryHistory();
 
-        handleGameHasStoppedMessage({ roomId, dependencies: { history } });
+        const withDependencies = handleGameHasStoppedMessage({ history });
+
+        withDependencies(roomId);
 
         expect(history.location).toHaveProperty('pathname', screenLobbyRoute(roomId));
     });

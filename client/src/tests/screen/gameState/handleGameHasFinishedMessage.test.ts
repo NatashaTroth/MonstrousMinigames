@@ -25,7 +25,8 @@ describe('handleGameHasFinishedMessage', () => {
         const setFinished = jest.fn();
         const setPlayerRanks = jest.fn();
 
-        handleGameHasFinishedMessage({ data, roomId, dependencies: { history, setFinished, setPlayerRanks } });
+        const withDependencies = handleGameHasFinishedMessage({ history, setFinished, setPlayerRanks });
+        withDependencies({ roomId, data });
 
         expect(history.location).toHaveProperty('pathname', screenFinishedRoute(roomId));
     });
@@ -35,7 +36,8 @@ describe('handleGameHasFinishedMessage', () => {
         const setFinished = jest.fn();
         const setPlayerRanks = jest.fn();
 
-        handleGameHasFinishedMessage({ data, roomId, dependencies: { history, setFinished, setPlayerRanks } });
+        const withDependencies = handleGameHasFinishedMessage({ history, setFinished, setPlayerRanks });
+        withDependencies({ roomId, data });
 
         expect(setPlayerRanks).toHaveBeenCalledWith(data.data.playerRanks);
     });
@@ -45,7 +47,8 @@ describe('handleGameHasFinishedMessage', () => {
         const setFinished = jest.fn();
         const setPlayerRanks = jest.fn();
 
-        handleGameHasFinishedMessage({ data, roomId, dependencies: { history, setFinished, setPlayerRanks } });
+        const withDependencies = handleGameHasFinishedMessage({ history, setFinished, setPlayerRanks });
+        withDependencies({ roomId, data });
 
         expect(setFinished).toHaveBeenCalledWith(true);
     });

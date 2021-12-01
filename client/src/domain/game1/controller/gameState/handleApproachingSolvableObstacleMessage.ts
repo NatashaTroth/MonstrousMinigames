@@ -1,17 +1,23 @@
-import { Obstacle } from '../../../../contexts/PlayerContextProvider';
-import { ApproachingSolvableObstacleMessage } from '../../../typeGuards/game1/approachingSolvableObstacleTypeGuard';
+import { Obstacle } from "../../../../contexts/PlayerContextProvider";
+import {
+    ApproachingSolvableObstacleMessage
+} from "../../../typeGuards/game1/approachingSolvableObstacleTypeGuard";
 
-interface HandleApproachingObstacleMessageProps {
-    data: ApproachingSolvableObstacleMessage;
+interface Dependencies {
     setEarlySolvableObstacle: (value: undefined | Obstacle) => void;
 }
 
-export function handleApproachingObstacleMessage(props: HandleApproachingObstacleMessageProps) {
-    const { data, setEarlySolvableObstacle } = props;
-    if (data.distance < 10) {
-        setEarlySolvableObstacle(undefined);
-        return;
-    }
+export function handleApproachingObstacleMessage(dependencies: Dependencies) {
+    return (data: ApproachingSolvableObstacleMessage) => {
+        if (data.distance < 10) {
+            dependencies.setEarlySolvableObstacle(undefined);
+            return;
+        }
 
-    setEarlySolvableObstacle({ id: data.obstacleId, type: data.obstacleType, distance: data.distance });
+        dependencies.setEarlySolvableObstacle({
+            id: data.obstacleId,
+            type: data.obstacleType,
+            distance: data.distance,
+        });
+    };
 }
