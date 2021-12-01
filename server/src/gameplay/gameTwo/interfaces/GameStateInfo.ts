@@ -12,5 +12,6 @@ export interface GameStateInfo extends IGameStateBase {
     lengthY: number;
     round: number;
     phase: string;
+    timeLeft: number;
     aliveSheepCounts: Array<number> | null
 }

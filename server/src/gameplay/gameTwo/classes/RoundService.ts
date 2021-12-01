@@ -82,4 +82,9 @@ export default class RoundService {
     private emitRoundChange(): void {
         this.roundEventEmitter.emit(RoundEventEmitter.PHASE_CHANGE_EVENT, this.round, this.phase);
     }
+
+
+    public getTimeoutValue(): number {
+        return Parameters.PHASE_TIMES[this.phase] - this.timer.ms();
+    }
 }

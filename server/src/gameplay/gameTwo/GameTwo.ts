@@ -64,6 +64,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             lengthY: this.lengthY,
             round: this.roundService.round,
             phase: this.roundService.phase,
+            timeLeft: this.roundService.getTimeoutValue(),
             aliveSheepCounts: this.guessingService.counts
         };
     }
