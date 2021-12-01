@@ -1,7 +1,7 @@
 import GuessingService from "../../../src/gameplay/gameTwo/classes/GuessingServices";
 import User from "../../../src/classes/user";
 import { GuessHints } from "../../../src/gameplay/gameTwo/enums/GuessHints";
-import InitialParameters from "../../../src/gameplay/gameTwo/constants/InitialParameters";
+import Parameters from "../../../src/gameplay/gameTwo/constants/Parameters";
 
 const user = new User('ABCD', '72374', 'Franz', 1, '1');
 
@@ -28,7 +28,7 @@ describe('GuessingService Tests', () => {
     });
 
     it('should return the right hint for the size of the miss', () => {
-        const threshold = InitialParameters.GOOD_GUESS_THRESHOLD;
+        const threshold = Parameters.GOOD_GUESS_THRESHOLD;
         expect(guessingService.getHint(threshold)).toEqual(GuessHints.LOW);
         expect(guessingService.getHint(threshold + 1)).toEqual(GuessHints.VERY_LOW);
         expect(guessingService.getHint(threshold * -1)).toEqual(GuessHints.HIGH);

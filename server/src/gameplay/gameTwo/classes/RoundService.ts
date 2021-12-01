@@ -1,4 +1,4 @@
-import InitialParameters from "../constants/InitialParameters";
+import Parameters from "../constants/Parameters";
 import { Phases } from "../enums/Phases";
 import RoundEventEmitter from "./RoundEventEmitter";
 import { Timer } from 'timer-node';
@@ -7,17 +7,11 @@ export default class RoundService {
     private roundCount: number;
     public round: number;
     public phase: string;
-    private countingTime: number;
-    private guessingTime: number;
-    private resultsTime: number;
     private roundEventEmitter: RoundEventEmitter;
     private timer: Timer;
 
     constructor() {
-        this.roundCount = InitialParameters.ROUNDS;
-        this.countingTime = InitialParameters.PHASE_TIMES[Phases.COUNTING];
-        this.guessingTime = InitialParameters.PHASE_TIMES[Phases.GUESSING];
-        this.resultsTime = InitialParameters.PHASE_TIMES[Phases.RESULTS];
+        this.roundCount = Parameters.ROUNDS;
         this.round = 1;
         this.phase = Phases.COUNTING;
         this.roundEventEmitter = RoundEventEmitter.getInstance();
@@ -42,7 +36,7 @@ export default class RoundService {
 
         setTimeout(() => {
             this.guessingPhase();
-        }, this.countingTime);
+        }, Parameters.PHASE_TIMES[Phases.COUNTING]);
 
     }
 
@@ -55,7 +49,7 @@ export default class RoundService {
         console.log(this.timer);
         setTimeout(() => {
             this.resultsPhase();
-        }, this.guessingTime);
+        }, Parameters.PHASE_TIMES[Phases.GUESSING]);
 
     }
 
@@ -69,7 +63,7 @@ export default class RoundService {
                 this.countingPhase();
             }
 
-        }, this.resultsTime);
+        }, Parameters.PHASE_TIMES[Phases.RESULTS]);
     }
 
     private emitRoundChange(): void {

@@ -4,7 +4,7 @@ import Game from '../Game';
 import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
-import InitialParameters from './constants/InitialParameters';
+import Parameters from './constants/Parameters';
 import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
 import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
 import GameTwoPlayer from './GameTwoPlayer';
@@ -24,25 +24,25 @@ interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateIn
 export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implements GameTwoGameInterface {
     public lengthX: number;
     public lengthY: number;
-    countdownTime = InitialParameters.COUNTDOWN_TIME;
+    countdownTime = Parameters.COUNTDOWN_TIME;
     public sheepService: SheepService;
     private roundService: RoundService;
     private roundEventEmitter: RoundEventEmitter;
     private guessingService: GuessingService;
 
-    initialPlayerPositions = InitialParameters.PLAYERS_POSITIONS;
+    initialPlayerPositions = Parameters.PLAYERS_POSITIONS;
 
     gameName = GameNames.GAME2;
 
     constructor(roomId: string, public leaderboard: Leaderboard) {
         super(roomId);
         this.gameStateMessage = GameTwoMessageTypes.GAME_STATE;
-        this.lengthX = InitialParameters.LENGTH_X;
-        this.lengthY = InitialParameters.LENGTH_Y;
-        this.sheepService = new SheepService(InitialParameters.SHEEP_COUNT);
+        this.lengthX = Parameters.LENGTH_X;
+        this.lengthY = Parameters.LENGTH_Y;
+        this.sheepService = new SheepService(Parameters.SHEEP_COUNT);
         this.roundService = new RoundService();
         this.roundEventEmitter = RoundEventEmitter.getInstance();
-        this.guessingService = new GuessingService(InitialParameters.ROUNDS);
+        this.guessingService = new GuessingService(Parameters.ROUNDS);
 
     }
 
@@ -74,7 +74,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             user.name,
             this.initialPlayerPositions[user.number].x,
             this.initialPlayerPositions[user.number].y,
-            InitialParameters.KILLS_PER_ROUND,
+            Parameters.KILLS_PER_ROUND,
             user.characterNumber
         );
         return player;
