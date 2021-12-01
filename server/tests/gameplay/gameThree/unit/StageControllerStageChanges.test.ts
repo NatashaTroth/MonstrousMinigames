@@ -16,33 +16,12 @@ import {
 } from '../../../../src/gameplay/gameThree/classes/ViewingResultsStage';
 import { VotingStage } from '../../../../src/gameplay/gameThree/classes/VotingStage';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
+import { roomId, users } from '../../mockData';
 import {
-    GameThreeMessageTypes
-} from '../../../../src/gameplay/gameThree/enums/GameThreeMessageTypes';
-import {
-    IMessagePhoto, IMessagePhotoVote, PlayerNameId
-} from '../../../../src/gameplay/gameThree/interfaces';
-import { IMessage } from '../../../../src/interfaces/messages';
-import { mockPhotoUrl, roomId, users } from '../../mockData';
+    finishPresentingMessage, photoMessage, players, receiveMultiplePhotos, votingMessage
+} from '../gameThreeMockData';
 
 let stageController: StageController;
-const players: PlayerNameId[] = users.map(user => {
-    return { id: user.id, name: user.name };
-});
-const photoMessage: IMessagePhoto = {
-    type: GameThreeMessageTypes.PHOTO,
-    url: mockPhotoUrl,
-    photographerId: users[0].id,
-};
-const votingMessage: IMessagePhotoVote = {
-    type: GameThreeMessageTypes.PHOTO_VOTE,
-    voterId: users[0].id,
-    photographerId: users[1].id,
-};
-const finishPresentingMessage: IMessage = {
-    type: GameThreeMessageTypes.FINISHED_PRESENTING,
-};
-
 let stageEventEmitter: StageEventEmitter;
 
 describe('Stage order after countdown', () => {
@@ -63,11 +42,24 @@ describe('Stage order after countdown', () => {
     });
 
     it('should switch to voting stage after taking photo', async () => {
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         expect(stageController.currentStage!).toBeInstanceOf(SinglePhotoVotingStage);
     });
 
+    it('should switch to new round (single photo stage) if no photos were sent', async () => {
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        expect(stageController.currentStage!).toBeInstanceOf(SinglePhotoStage);
+    });
+
+    it('should switch to new round (single photo stage) if only one photo was sent', async () => {
+        stageController.handleInput(photoMessage);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        expect(stageController.currentStage!).toBeInstanceOf(SinglePhotoStage);
+    });
+
     it('should switch to viewing results stage after voting', async () => {
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         expect(stageController.currentStage!).toBeInstanceOf(ViewingResultsStage);
@@ -171,12 +163,14 @@ describe('Stage order before countdown over', () => {
     });
 
     it('should not switch to viewing results stage after voting if countdown is not over', async () => {
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE - 1);
         expect(stageController.currentStage!).toBeInstanceOf(SinglePhotoVotingStage);
     });
 
     it('should not switch to taking single photo stage after not final viewing results stage if countdown is not over', async () => {
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS - 1);
@@ -184,6 +178,7 @@ describe('Stage order before countdown over', () => {
     });
 
     it('should not switch to taking final photos stage after final viewing results stage if countdown is not over', async () => {
+        receiveMultiplePhotos(stageController);
         stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
@@ -192,6 +187,7 @@ describe('Stage order before countdown over', () => {
     });
 
     it('should not switch to presentation stage taking final photos stage if countdown is not over', async () => {
+        receiveMultiplePhotos(stageController);
         stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
@@ -252,6 +248,7 @@ describe('Stage change events', () => {
     });
 
     it('should emit stage change event after taking photo', async () => {
+        receiveMultiplePhotos(stageController);
         let eventCalledTimes = 0;
         stageEventEmitter.on(StageEventEmitter.STAGE_CHANGE_EVENT, () => {
             eventCalledTimes++;
@@ -263,6 +260,7 @@ describe('Stage change events', () => {
     });
 
     it('should emit stage change event after voting', async () => {
+        receiveMultiplePhotos(stageController);
         let eventCalledTimes = 0;
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageEventEmitter.on(StageEventEmitter.STAGE_CHANGE_EVENT, () => {
@@ -273,6 +271,7 @@ describe('Stage change events', () => {
     });
 
     it('should emit stage change event after not final viewing results stage', async () => {
+        receiveMultiplePhotos(stageController);
         let eventCalledTimes = 0;
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
@@ -284,6 +283,7 @@ describe('Stage change events', () => {
     });
 
     it('should emit stage change event after final viewing results stage', async () => {
+        receiveMultiplePhotos(stageController);
         let eventCalledTimes = 0;
         stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
@@ -376,6 +376,7 @@ describe('Stage order after input', () => {
     });
 
     it('should switch to viewing results stage after receiving all votes', async () => {
+        receiveMultiplePhotos(stageController);
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         users.forEach((user, idx) => {
             const msg = { ...votingMessage, voterId: user.id, photographerId: users[(idx + 1) % users.length].id };

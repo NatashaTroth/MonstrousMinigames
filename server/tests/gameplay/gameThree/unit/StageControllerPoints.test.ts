@@ -8,7 +8,6 @@ import {
 import {
     IMessagePhoto, IMessagePhotoVote, PlayerNameId
 } from '../../../../src/gameplay/gameThree/interfaces';
-import { advanceCountdown } from '../../gameHelperFunctions';
 import { mockPhotoUrl, roomId, users } from '../../mockData';
 
 let stageController: StageController;
@@ -47,11 +46,10 @@ describe('Initialise', () => {
     });
 });
 
-describe('Single Photo Voting', () => {
+describe('Single Photo & Voting', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         stageController = new StageController(roomId, players);
-        advanceCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
     });
 
     afterEach(() => {
@@ -141,6 +139,13 @@ describe('Single Photo Voting', () => {
         });
         const userPoints = getPlayerPointsArray(stageController.getPlayerPoints());
         expect(userPoints).toEqual([1, 1, 1, 1]); //order of elements is checked as well
+    });
+
+    it('should return all vote points to only player who took a photo (if only one photo)', () => {
+        stageController.handleInput(photoMessage);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        const userPoints = getPlayerPointsArray(stageController.getPlayerPoints());
+        expect(userPoints).toEqual([users.length, 0, 0, 0]); //order of elements is checked as well
     });
 });
 

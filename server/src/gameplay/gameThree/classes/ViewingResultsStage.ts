@@ -11,13 +11,13 @@ export class ViewingResultsStage extends Stage {
         return;
     }
 
-    hasNextStage(): boolean {
-        return false;
-    }
+    // hasNextStage(): boolean {
+    //     return false;
+    // }
 
     switchToNextStage() {
         //to satisfy compiler
-        return this;
+        return null;
     }
 
     protected countdownOver() {

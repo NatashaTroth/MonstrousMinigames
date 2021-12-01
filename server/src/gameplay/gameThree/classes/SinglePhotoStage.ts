@@ -22,11 +22,34 @@ export class SinglePhotoStage extends PhotoStage {
         const photoUrls: PhotoPhotographerMapper[] = this.getPhotos().map((photoObject, idx) => {
             return { photographerId: photoObject.photographerId, photoId: idx + 1, url: photoObject.urls[0] };
         });
-        GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
-        return new SinglePhotoVotingStage(
-            this.roomId,
-            this.players,
-            photoUrls.map(photoUrlObj => photoUrlObj.photographerId)
-        );
+
+        if (photoUrls.length > 1) {
+            GameThreeEventEmitter.emitVoteForPhotos(this.roomId, photoUrls, InitialParameters.COUNTDOWN_TIME_VOTE);
+            return new SinglePhotoVotingStage(
+                this.roomId,
+                this.players,
+                photoUrls.map(photoUrlObj => photoUrlObj.photographerId)
+            );
+        } else {
+            if (photoUrls.length === 1) {
+                GameThreeEventEmitter.emitPhotoVotingResults(
+                    this.roomId,
+                    [{ photographerId: photoUrls[0].photographerId, votes: this.players.length }],
+                    InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS
+                );
+            }
+
+            return null;
+        }
+    }
+
+    updatePlayerPoints(): undefined | Map<string, number> {
+        if (this.getPhotos().length === 1) {
+            const playerPoints: Map<string, number> = new Map();
+            playerPoints.set(this.getPhotos()[0].photographerId, this.players.length);
+            return playerPoints;
+        }
+
+        return undefined;
     }
 }

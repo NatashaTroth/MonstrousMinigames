@@ -45,13 +45,13 @@ describe('Stages without next stage', () => {
         jest.clearAllMocks();
     });
 
-    it('should return itsself as the next stage when call switchToNextStage on ViewingResultsStage ', () => {
+    it('should return null as the next stage when call switchToNextStage on ViewingResultsStage ', () => {
         const viewingResultsStage = new ViewingResultsStage(roomId, players);
-        expect(viewingResultsStage.switchToNextStage()).toBe(viewingResultsStage);
+        expect(viewingResultsStage.switchToNextStage()).toBe(null);
     });
 
-    it('should return itsself as the next stage when call switchToNextStage on ViewingResultsStage ', () => {
+    it('should return null as the next stage when call switchToNextStage on ViewingResultsStage ', () => {
         const finalPhotosVotingStage = new FinalPhotosVotingStage(roomId, players);
-        expect(finalPhotosVotingStage.switchToNextStage()).toBe(finalPhotosVotingStage);
+        expect(finalPhotosVotingStage.switchToNextStage()).toBe(null);
     });
 });

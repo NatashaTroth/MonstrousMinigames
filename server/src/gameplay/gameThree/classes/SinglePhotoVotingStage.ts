@@ -20,12 +20,12 @@ export class SinglePhotoVotingStage extends VotingStage {
         return new ViewingResultsStage(this.roomId, this.players);
     }
 
-    // if only one player took a photo, they will not be able to vote, but the voting should end when all the other players have voted
-    getVoters(): string[] {
-        if (this.photographerIds.length === 1) {
-            return this.players.filter(player => player.id !== this.photographerIds[0]).map(player => player.id);
-        } else {
-            return super.getVoters();
-        }
-    }
+    // // if only one player took a photo, they will not be able to vote, but the voting should end when all the other players have voted
+    // getVoters(): string[] {
+    //     if (this.photographerIds.length === 1) {
+    //         return this.players.filter(player => player.id !== this.photographerIds[0]).map(player => player.id);
+    //     } else {
+    //         return super.getVoters();
+    //     }
+    // }
 }

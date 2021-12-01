@@ -22,7 +22,7 @@ export abstract class PhotoStage extends Stage {
         this.photos = new Photos(maxNumberPhotos);
     }
 
-    abstract switchToNextStage(): Stage;
+    abstract switchToNextStage(): Stage | null;
 
     handleInput(message: IMessage) {
         if (message.type !== GameThreeMessageTypes.PHOTO) return;

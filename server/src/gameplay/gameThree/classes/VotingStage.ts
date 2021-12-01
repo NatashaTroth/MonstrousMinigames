@@ -40,7 +40,7 @@ export abstract class VotingStage extends Stage {
         return this.players.map(player => player.id);
     }
     // abstract getVoters(): string[];
-    abstract switchToNextStage(): Stage;
+    abstract switchToNextStage(): Stage | null;
 
     protected countdownOver() {
         this.emitStageChangeEvent();

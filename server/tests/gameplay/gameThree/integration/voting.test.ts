@@ -13,6 +13,7 @@ import {
 } from '../../../../src/gameplay/gameThree/interfaces/GameThreeEventMessages';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
 import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
+import { receiveMultiplePhotos } from '../gameThreeMockData';
 
 let gameThree: GameThree;
 let gameEventEmitter: GameEventEmitter;
@@ -33,6 +34,7 @@ describe('Voting stage', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
+        receiveMultiplePhotos(gameThree);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
     });
 
@@ -98,6 +100,7 @@ describe('Results', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
+        receiveMultiplePhotos(gameThree);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
     });
 

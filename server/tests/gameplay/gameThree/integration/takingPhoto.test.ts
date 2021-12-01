@@ -9,11 +9,12 @@ import {
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
 import { IMessagePhoto } from '../../../../src/gameplay/gameThree/interfaces';
 import {
-    GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS,
-    GameThreeEventMessage, VoteForPhotos
+    GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
+    GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS, GameThreeEventMessage, VoteForPhotos
 } from '../../../../src/gameplay/gameThree/interfaces/GameThreeEventMessages';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
 import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
+import { receiveMultiplePhotos, receiveSinglePhoto } from '../gameThreeMockData';
 
 let gameThree: GameThree;
 const gameEventEmitter = DI.resolve(GameEventEmitter);
@@ -130,7 +131,33 @@ describe('Taking Photo', () => {
         expect(eventCalled).toBeFalsy();
     });
 
-    it('should emit the Voting event when taking photo countdown runs out', async () => {
+    it('should emit the Voting event when taking photo countdown runs out and multiple photos were sent', async () => {
+        let eventCalled = false;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS) {
+                eventCalled = true;
+            }
+        });
+        receiveMultiplePhotos(gameThree);
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+
+        expect(eventCalled).toBeTruthy();
+    });
+
+    it('should not emit the Voting event when taking photo countdown runs out and only one photo was sent', async () => {
+        let eventCalled = false;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS) {
+                eventCalled = true;
+            }
+        });
+        receiveSinglePhoto(gameThree);
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+
+        expect(eventCalled).toBeFalsy();
+    });
+
+    it('should not emit the Voting event when taking photo countdown runs out and no photos were sent', async () => {
         let eventCalled = false;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
             if (message.type === GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS) {
@@ -138,7 +165,30 @@ describe('Taking Photo', () => {
             }
         });
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        expect(eventCalled).toBeFalsy();
+    });
 
+    it('should not emit the new round when taking photo countdown runs out and only one photo was sent', async () => {
+        let eventCalled = false;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__NEW_ROUND) {
+                eventCalled = true;
+            }
+        });
+        receiveSinglePhoto(gameThree);
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+
+        expect(eventCalled).toBeTruthy();
+    });
+
+    it('should not emit the new round event when taking photo countdown runs out and no photos were sent', async () => {
+        let eventCalled = false;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__NEW_ROUND) {
+                eventCalled = true;
+            }
+        });
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         expect(eventCalled).toBeTruthy();
     });
 

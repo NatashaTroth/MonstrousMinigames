@@ -14,6 +14,7 @@ import {
 } from '../../../../src/gameplay/gameThree/interfaces/GameThreeEventMessages';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
 import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
+import { receiveMultiplePhotos } from '../gameThreeMockData';
 
 let gameThree: GameThree;
 const gameEventEmitter = DI.resolve(GameEventEmitter);
@@ -31,6 +32,7 @@ describe('Initiate stage', () => {
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
         gameThree['stageController']!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        receiveMultiplePhotos(gameThree);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
     });
@@ -62,6 +64,7 @@ describe('Taking Photo', () => {
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
         gameThree['stageController']!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        receiveMultiplePhotos(gameThree);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
