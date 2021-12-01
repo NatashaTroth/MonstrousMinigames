@@ -27,7 +27,7 @@ export function handleSetControllerSocketGame3(socket: Socket, dependencies: Han
     const { setVoteForPhotoMessage, setRoundIdx, setVotingResults, setPresentFinalPhotos } = dependencies;
 
     newRoundSocket.listen((data: NewRoundMessage) => {
-        setRoundIdx(data.roundIdx + 1);
+        setRoundIdx(data.roundIdx);
         setVotingResults(undefined);
         setVoteForPhotoMessage(undefined);
         history.push(controllerGame3Route(data.roomId));

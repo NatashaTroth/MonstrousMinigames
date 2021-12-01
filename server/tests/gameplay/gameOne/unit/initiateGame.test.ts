@@ -83,7 +83,6 @@ describe('Change and verify game state', () => {
     });
 
     it('initiates player with correct number of stones', () => {
-        // console.log(gameOne.players);
         const stones: Array<Obstacle> = gameOne.players
             .get('1')!
             .obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);

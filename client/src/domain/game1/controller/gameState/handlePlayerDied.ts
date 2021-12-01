@@ -1,6 +1,6 @@
-import { controllerPlayerDeadRoute } from "../../../../utils/routes";
-import history from "../../../history/history";
-import { PlayerDiedMessage } from "../../../typeGuards/game1/playerDied";
+import { controllerPlayerDeadRoute } from '../../../../utils/routes';
+import history from '../../../history/history';
+import { PlayerDiedMessage } from '../../../typeGuards/game1/playerDied';
 
 interface Dependencies {
     setPlayerDead: (val: boolean) => void;

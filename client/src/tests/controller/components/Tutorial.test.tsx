@@ -1,18 +1,16 @@
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure, mount } from "enzyme";
-import { createMemoryHistory } from "history";
-import React from "react";
-import { ThemeProvider } from "styled-components";
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure, mount } from 'enzyme';
+import { createMemoryHistory } from 'history';
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
 
-import Tutorial, {
-    handleTutorialFinished, selectAcutalTutorial
-} from "../../../components/controller/Tutorial";
-import { GameNames } from "../../../config/games";
-import { defaultValue, GameContext } from "../../../contexts/GameContextProvider";
-import TreeTrunk from "../../../domain/game1/controller/components/obstacles/TreeTrunk";
-import theme from "../../../styles/theme";
-import { ObstacleTypes } from "../../../utils/constants";
-import { controllerLobbyRoute } from "../../../utils/routes";
+import Tutorial, { handleTutorialFinished, selectAcutalTutorial } from '../../../components/controller/Tutorial';
+import { GameNames } from '../../../config/games';
+import { defaultValue, GameContext } from '../../../contexts/GameContextProvider';
+import TreeTrunk from '../../../domain/game1/controller/components/obstacles/TreeTrunk';
+import theme from '../../../styles/theme';
+import { ObstacleTypes } from '../../../utils/constants';
+import { controllerLobbyRoute } from '../../../utils/routes';
 
 configure({ adapter: new Adapter() });
 

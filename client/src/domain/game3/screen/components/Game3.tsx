@@ -91,7 +91,7 @@ const Game3: React.FunctionComponent = () => {
                                     votingResult={
                                         votingResults?.results.find(
                                             result => result.photographerId === photo.photographerId
-                                        )?.points
+                                        )?.votes
                                     }
                                 />
                             ))}

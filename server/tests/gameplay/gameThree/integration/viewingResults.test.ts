@@ -3,10 +3,9 @@ import 'reflect-metadata';
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
-import { GameThreeGameState } from '../../../../src/gameplay/gameThree/enums/GameState';
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
 import {
-    GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS, GameThreeEventMessage
+    GAME_THREE_EVENT_MESSAGE__NEW_ROUND, GameThreeEventMessage
 } from '../../../../src/gameplay/gameThree/interfaces/GameThreeEventMessages';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
 import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
@@ -14,7 +13,7 @@ import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperF
 let gameThree: GameThree;
 let gameEventEmitter: GameEventEmitter;
 
-describe('Initiate stage', () => {
+describe('Viewing Results stage', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
@@ -25,56 +24,36 @@ describe('Initiate stage', () => {
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
     });
 
     afterEach(() => {
+        gameEventEmitter.removeAllListeners();
         jest.runAllTimers();
         jest.clearAllMocks();
     });
 
-    it('should emit the PhotoVotingResults event when the viewing results stage starts', async () => {
+    it('should not emit the New Round event when viewing resutls countdown has not run out', async () => {
         let eventCalled = false;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
-            if (message.type === GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS) {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__NEW_ROUND) {
                 eventCalled = true;
             }
         });
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS - 1);
+        expect(eventCalled).toBeFalsy();
+    });
+
+    it('should emit the New Round event when viewing results countdown runs out', async () => {
+        let eventCalled = false;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__NEW_ROUND) {
+                eventCalled = true;
+            }
+        });
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
         expect(eventCalled).toBeTruthy();
     });
-});
 
-describe('Viewing results', () => {
-    beforeEach(() => {
-        Date.now = () => dateNow;
-        jest.useFakeTimers();
-        gameThree = new GameThree(roomId, leaderboard);
-        gameThree.createNewGame(users);
-        startGameAdvanceCountdown(gameThree);
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
-    });
-
-    afterEach(() => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
-    });
-
-    it('should increase roundIdx when countdown is over', async () => {
-        const initialRoundIdx = gameThree['roundIdx'];
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
-        expect(gameThree['roundIdx']).toBe(initialRoundIdx + 1);
-    });
-
-    it('should set gameThreeGameState to TakingPhoto when not the final round when countdown is over', async () => {
-        gameThree['roundIdx'] = 0;
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.TakingPhoto);
-    });
-
-    it('should set gameThreeGameState to Final when not the final round when countdown is over', async () => {
-        gameThree['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
-        expect(gameThree['gameThreeGameState']).toBe(GameThreeGameState.TakingFinalPhotos);
-    });
+    it.todo('Test correct results sent to the client');
 });

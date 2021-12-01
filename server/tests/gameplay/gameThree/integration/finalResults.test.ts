@@ -4,12 +4,7 @@ import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameState } from '../../../../src/gameplay/enums';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
-// import { GameThreeGameState } from '../../../../src/gameplay/gameThree/enums/GameState'; //TODO test
-import {
-    GameThreeMessageTypes
-} from '../../../../src/gameplay/gameThree/enums/GameThreeMessageTypes';
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
-import { IMessagePhoto } from '../../../../src/gameplay/gameThree/interfaces';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage, GlobalGameHasFinished
 } from '../../../../src/gameplay/interfaces/GlobalEventMessages';
@@ -18,9 +13,6 @@ import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperF
 
 let gameThree: GameThree;
 let gameEventEmitter: GameEventEmitter;
-
-const mockPhotoUrl = 'https://mockPhoto.com';
-const photoMessage: IMessagePhoto = { type: GameThreeMessageTypes.PHOTO, url: mockPhotoUrl, userId: users[0].id };
 
 describe('Initiate stage', () => {
     beforeAll(() => {
@@ -32,20 +24,12 @@ describe('Initiate stage', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
+        const stageController = gameThree['stageController']!;
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-        gameThree['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        gameThree['handleNewRound']();
-        users.forEach(user => {
-            for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
-                gameThree['handleInput']({ ...photoMessage, userId: user.id });
-            }
-        });
-        const numberPresentations = Array.from(gameThree.players.values()).filter(
-            player => player.finalRoundInfo.received
-        ).length;
-        for (let i = 0; i < numberPresentations; i++) {
-            advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);
-        }
+        stageController!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1; //skip to final round
+        stageController!.handleNewRound();
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        users.forEach(() => advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS));
     });
 
     afterEach(() => {
@@ -83,29 +67,20 @@ describe('Final results', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
+        const stageController = gameThree['stageController']!;
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-        gameThree['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        gameThree['handleNewRound']();
-        users.forEach(user => {
-            for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
-                gameThree['handleInput']({ ...photoMessage, userId: user.id });
-            }
-        });
-        const numberPresentations = Array.from(gameThree.players.values()).filter(
-            player => player.finalRoundInfo.received
-        ).length;
-        for (let i = 0; i < numberPresentations; i++) {
-            advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_FINAL_PHOTOS);
-        }
+        stageController!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1; //skip to final round
+        stageController!.handleNewRound();
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        users.forEach(() => advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS));
         // add points
-        Array.from(gameThree.players.values()).forEach((player, idx) => {
-            pointsArray.push(player.getTotalPoints()); // get points from before (from sending final photo)
-            for (let i = 0; i < InitialParameters.NUMBER_ROUNDS - 1; i++) {
-                player.addPoints(1, idx);
+
+        users.forEach((user, idx) => {
+            pointsArray.push(stageController['playerPoints'].getPointsFromPlayer(user.id)); // get points from before (from sending final photo)
+            for (let i = 0; i < InitialParameters.NUMBER_ROUNDS; i++) {
+                stageController['playerPoints'].addPointsToPlayer(user.id, idx);
                 pointsArray[idx] += idx;
             }
-            player.addPointsFinalRound(idx);
-            pointsArray[idx] += idx;
         });
 
         // get final results
@@ -159,6 +134,4 @@ describe('Final results', () => {
     it('should emit the rank 4', async () => {
         expect(eventData.data.playerRanks[3].rank).toBe(4);
     });
-
-    it.todo('test points better - just done for quickness here. also test when the same amount of points same rank');
 });

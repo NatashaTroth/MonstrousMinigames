@@ -1,26 +1,37 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import * as React from "react";
+import * as React from 'react';
 
-import { Game, GameNames, games } from "../../config/games";
-import { ScreenStates } from "../../config/screenStates";
-import { GameContext } from "../../contexts/GameContextProvider";
-import { ScreenSocketContext } from "../../contexts/ScreenSocketContextProvider";
-import history from "../../domain/history/history";
-import oliverLobby from "../../images/characters/oliverLobby.svg";
-import shakeInstructionsDemo from "../../images/ui/shakeInstructionDemo.png";
-import spiderDemo from "../../images/ui/spiderDemo.png";
-import trashDemo from "../../images/ui/trashDemo.png";
-import treeDemo from "../../images/ui/treeDemo.png";
-import { MessageTypes } from "../../utils/constants";
-import { Routes, screenGetReadyRoute } from "../../utils/routes";
-import Button from "../common/Button";
+import { Game, GameNames, games } from '../../config/games';
+import { ScreenStates } from '../../config/screenStates';
+import { GameContext } from '../../contexts/GameContextProvider';
+import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import history from '../../domain/history/history';
+import oliverLobby from '../../images/characters/oliverLobby.svg';
+import shakeInstructionsDemo from '../../images/ui/shakeInstructionDemo.png';
+import spiderDemo from '../../images/ui/spiderDemo.png';
+import trashDemo from '../../images/ui/trashDemo.png';
+import treeDemo from '../../images/ui/treeDemo.png';
+import { MessageTypes } from '../../utils/constants';
+import { Routes, screenGetReadyRoute } from '../../utils/routes';
+import Button from '../common/Button';
 import {
-    BackButtonContainer, Content, ControlInstruction, ControlInstructionsContainer,
-    GamePreviewContainer, GameSelectionContainer, ImageDescription, InstructionImg, LeftContainer,
-    OliverImage, PreviewImageContainer, RightContainer, SelectGameButtonContainer, Wrapper
-} from "./ChooseGame.sc";
-import { LobbyContainer } from "./Lobby.sc";
-import LobbyHeader from "./LobbyHeader";
+    BackButtonContainer,
+    Content,
+    ControlInstruction,
+    ControlInstructionsContainer,
+    GamePreviewContainer,
+    GameSelectionContainer,
+    ImageDescription,
+    InstructionImg,
+    LeftContainer,
+    OliverImage,
+    PreviewImageContainer,
+    RightContainer,
+    SelectGameButtonContainer,
+    Wrapper,
+} from './ChooseGame.sc';
+import { LobbyContainer } from './Lobby.sc';
+import LobbyHeader from './LobbyHeader';
 
 const ChooseGame: React.FunctionComponent = () => {
     const lastSelectedGame = localStorage.getItem('game');
