@@ -11,7 +11,7 @@ export abstract class VotingStage extends Stage {
     constructor(
         roomId: string,
         players: PlayerNameId[],
-        private photographerIds: string[],
+        protected photographerIds: string[],
         private pointsPerVote = 1,
         private onlyAddPointIfTookPhoto = true
     ) {
@@ -24,16 +24,22 @@ export abstract class VotingStage extends Stage {
 
         this.addVote(message as IMessagePhotoVote);
     }
+
     private addVote(data: IMessagePhotoVote) {
         if (
             this.players.find(player => player.id === data.voterId) &&
             this.players.find(player => player.id === data.photographerId)
         )
             this.votes.addVote(data.voterId, data.photographerId);
-        if (this.votes.haveVotesFromAllUsers(this.players.map(player => player.id))) {
+        if (this.votes.haveVotesFromAllUsers(this.getVoters())) {
             this.emitStageChangeEvent();
         }
     }
+
+    getVoters(): string[] {
+        return this.players.map(player => player.id);
+    }
+    // abstract getVoters(): string[];
     abstract switchToNextStage(): Stage;
 
     protected countdownOver() {
