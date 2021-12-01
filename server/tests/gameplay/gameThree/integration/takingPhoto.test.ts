@@ -3,23 +3,18 @@ import 'reflect-metadata';
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
-import {
-    GameThreeMessageTypes
-} from '../../../../src/gameplay/gameThree/enums/GameThreeMessageTypes';
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
 import { IMessagePhoto } from '../../../../src/gameplay/gameThree/interfaces';
 import {
-    GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS,
-    GameThreeEventMessage, VoteForPhotos
+    GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
+    GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS, GameThreeEventMessage, VoteForPhotos
 } from '../../../../src/gameplay/gameThree/interfaces/GameThreeEventMessages';
-import { dateNow, leaderboard, roomId, users } from '../../mockData';
+import { dateNow, leaderboard, mockPhotoUrl, roomId, users } from '../../mockData';
 import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
+import { photoMessage, receiveMultiplePhotos, receiveSinglePhoto } from '../gameThreeMockData';
 
 let gameThree: GameThree;
 const gameEventEmitter = DI.resolve(GameEventEmitter);
-
-const mockPhotoUrl = 'https://mockPhoto.com';
-const message: IMessagePhoto = { type: GameThreeMessageTypes.PHOTO, url: mockPhotoUrl, photographerId: users[0].id };
 
 describe('Initiate stage', () => {
     beforeEach(() => {
@@ -69,7 +64,7 @@ describe('Taking Photo', () => {
                 eventCalled = true;
             }
         });
-        gameThree.receiveInput(message);
+        gameThree.receiveInput(photoMessage);
         expect(eventCalled).toBeFalsy();
     });
 
@@ -81,7 +76,7 @@ describe('Taking Photo', () => {
             }
         });
         users.forEach(user => {
-            const newMessage = { ...message, photographerId: user.id };
+            const newMessage = { ...photoMessage, photographerId: user.id };
             gameThree.receiveInput(newMessage);
         });
 
@@ -96,7 +91,7 @@ describe('Taking Photo', () => {
             }
         });
         users.forEach(user => {
-            const newMessage = { ...message, photographerId: user.id };
+            const newMessage = { ...photoMessage, photographerId: user.id };
             gameThree.receiveInput(newMessage);
         });
 
@@ -111,11 +106,11 @@ describe('Taking Photo', () => {
             }
         });
         users.forEach(user => {
-            const newMessage = { ...message, photographerId: user.id };
+            const newMessage = { ...photoMessage, photographerId: user.id };
             gameThree.receiveInput(newMessage);
         });
 
-        expect(eventData!.photoUrls[0].url).toBe(message.url);
+        expect(eventData!.photoUrls[0].url).toBe(photoMessage.url);
     });
 
     it('should not emit the Voting event when taking photo countdown has not run out', async () => {
@@ -130,7 +125,33 @@ describe('Taking Photo', () => {
         expect(eventCalled).toBeFalsy();
     });
 
-    it('should emit the Voting event when taking photo countdown runs out', async () => {
+    it('should emit the Voting event when taking photo countdown runs out and multiple photos were sent', async () => {
+        let eventCalled = false;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS) {
+                eventCalled = true;
+            }
+        });
+        receiveMultiplePhotos(gameThree);
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+
+        expect(eventCalled).toBeTruthy();
+    });
+
+    it('should not emit the Voting event when taking photo countdown runs out and only one photo was sent', async () => {
+        let eventCalled = false;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS) {
+                eventCalled = true;
+            }
+        });
+        receiveSinglePhoto(gameThree);
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+
+        expect(eventCalled).toBeFalsy();
+    });
+
+    it('should not emit the Voting event when taking photo countdown runs out and no photos were sent', async () => {
         let eventCalled = false;
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
             if (message.type === GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS) {
@@ -138,7 +159,30 @@ describe('Taking Photo', () => {
             }
         });
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        expect(eventCalled).toBeFalsy();
+    });
 
+    it('should not emit the new round when taking photo countdown runs out and only one photo was sent', async () => {
+        let eventCalled = false;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__NEW_ROUND) {
+                eventCalled = true;
+            }
+        });
+        receiveSinglePhoto(gameThree);
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+
+        expect(eventCalled).toBeTruthy();
+    });
+
+    it('should not emit the new round event when taking photo countdown runs out and no photos were sent', async () => {
+        let eventCalled = false;
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__NEW_ROUND) {
+                eventCalled = true;
+            }
+        });
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         expect(eventCalled).toBeTruthy();
     });
 
@@ -153,7 +197,7 @@ describe('Taking Photo', () => {
         const photoUrls: string[] = [];
         users.forEach((user, idx) => {
             const url = `https://mockPhoto${idx}.com`;
-            const msg: IMessagePhoto = { type: message.type, photographerId: user.id, url };
+            const msg: IMessagePhoto = { type: photoMessage.type, photographerId: user.id, url };
             gameThree.receiveInput(msg);
             photoUrls.push(url);
         });
@@ -170,7 +214,7 @@ describe('Taking Photo', () => {
 
         const photographerIds: string[] = [];
         users.forEach((user, idx) => {
-            const msg: IMessagePhoto = { type: message.type, photographerId: user.id, url: mockPhotoUrl };
+            const msg: IMessagePhoto = { type: photoMessage.type, photographerId: user.id, url: mockPhotoUrl };
             gameThree.receiveInput(msg);
             photographerIds[idx] = user.id;
         });
@@ -190,7 +234,7 @@ describe('Taking Photo', () => {
         const photographerIds: string[] = [];
         const otherPlayers = Array.from(gameThree.players.values()).filter(player => player.id !== users[0].id);
         otherPlayers.forEach((user, idx) => {
-            const msg: IMessagePhoto = { type: message.type, photographerId: user.id, url: mockPhotoUrl };
+            const msg: IMessagePhoto = { type: photoMessage.type, photographerId: user.id, url: mockPhotoUrl };
             gameThree.receiveInput(msg);
             photographerIds[idx] = user.id;
         });
@@ -211,7 +255,7 @@ describe('Taking Photo', () => {
             }
         });
 
-        const msg: IMessagePhoto = { type: message.type, photographerId: 'xxxxxxx', url: mockPhotoUrl };
+        const msg: IMessagePhoto = { type: photoMessage.type, photographerId: 'xxxxxxx', url: mockPhotoUrl };
         gameThree.receiveInput(msg);
 
         expect(eventData?.photoUrls).toBe(undefined);

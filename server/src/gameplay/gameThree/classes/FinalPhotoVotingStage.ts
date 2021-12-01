@@ -11,15 +11,15 @@ export class FinalPhotosVotingStage extends VotingStage {
         GameThreeEventEmitter.emitVoteForFinalPhotos(this.roomId, InitialParameters.COUNTDOWN_TIME_VOTE, this.players);
     }
 
-    hasNextStage(): boolean {
-        return false;
-    }
+    // hasNextStage(): boolean {
+    //     return false;
+    // }
 
-    isFinalStage(): boolean {
-        return true;
-    }
+    // isFinalStage(): boolean {
+    //     return true;
+    // }
 
     switchToNextStage() {
-        return this;
+        return null;
     }
 }

@@ -37,7 +37,7 @@ export abstract class Stage {
         this.countdown.initiateCountdown(this.countdownTime);
     }
 
-    abstract switchToNextStage(): Stage;
+    abstract switchToNextStage(): Stage | null;
 
     update(timeElapsedSinceLastFrame: number) {
         this.countdown.update(timeElapsedSinceLastFrame);
@@ -57,11 +57,11 @@ export abstract class Stage {
         this.stageEventEmitter.emit(StageEventEmitter.STAGE_CHANGE_EVENT);
     }
 
-    hasNextStage(): boolean {
-        return true;
-    }
+    // hasNextStage(): boolean {
+    //     return true;
+    // }
 
-    isFinalStage(): boolean {
-        return false;
-    }
+    // isFinalStage(): boolean {
+    //     return false;
+    // }
 }

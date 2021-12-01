@@ -117,7 +117,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         super.stopGameAllUsersDisconnected();
     }
 
-    protected handleInput(message: IMessage) {
+    handleInput(message: IMessage) {
         this.stageController?.handleInput(message);
     }
 

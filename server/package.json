@@ -43,6 +43,7 @@
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "http-terminator": "^3.0.0",
+        "jest-cli": "^27.4.3",
         "nanoid": "^3.1.28",
         "node-code-generator": "^1.0.3",
         "phaser": "^3.52.0",

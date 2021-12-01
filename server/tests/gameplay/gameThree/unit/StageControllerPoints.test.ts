@@ -5,29 +5,11 @@ import InitialParameters from '../../../../src/gameplay/gameThree/constants/Init
 import {
     GameThreeMessageTypes
 } from '../../../../src/gameplay/gameThree/enums/GameThreeMessageTypes';
-import {
-    IMessagePhoto, IMessagePhotoVote, PlayerNameId
-} from '../../../../src/gameplay/gameThree/interfaces';
-import { advanceCountdown } from '../../gameHelperFunctions';
-import { mockPhotoUrl, roomId, users } from '../../mockData';
+import { IMessagePhotoVote } from '../../../../src/gameplay/gameThree/interfaces';
+import { roomId, users } from '../../mockData';
+import { photoMessage, players, votingMessage } from '../gameThreeMockData';
 
 let stageController: StageController;
-const players: PlayerNameId[] = users.map(user => {
-    return { id: user.id, name: user.name };
-});
-const photoMessage: IMessagePhoto = {
-    type: GameThreeMessageTypes.PHOTO,
-    url: mockPhotoUrl,
-    photographerId: users[0].id,
-};
-const votingMessage: IMessagePhotoVote = {
-    type: GameThreeMessageTypes.PHOTO_VOTE,
-    voterId: users[0].id,
-    photographerId: users[1].id,
-};
-// const finishPresentingMessage: IMessage = {
-//     type: GameThreeMessageTypes.FINISHED_PRESENTING,
-// };
 
 describe('Initialise', () => {
     beforeEach(async () => {
@@ -47,11 +29,10 @@ describe('Initialise', () => {
     });
 });
 
-describe('Single Photo Voting', () => {
+describe('Single Photo & Voting', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         stageController = new StageController(roomId, players);
-        advanceCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
     });
 
     afterEach(() => {
@@ -142,6 +123,13 @@ describe('Single Photo Voting', () => {
         const userPoints = getPlayerPointsArray(stageController.getPlayerPoints());
         expect(userPoints).toEqual([1, 1, 1, 1]); //order of elements is checked as well
     });
+
+    it('should return all vote points to only player who took a photo (if only one photo)', () => {
+        stageController.handleInput(photoMessage);
+        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        const userPoints = getPlayerPointsArray(stageController.getPlayerPoints());
+        expect(userPoints).toEqual([users.length, 0, 0, 0]); //order of elements is checked as well
+    });
 });
 
 describe('Point per Final Photo', () => {
@@ -186,6 +174,8 @@ describe('Point per Final Photo', () => {
 });
 
 describe('Final Voting Points', () => {
+    const pointsPerUserForReceivedPhotos = 1; // one point per player for a received photo (to pass no photos check in FinalPhotoStage switchStage())
+
     beforeEach(async () => {
         jest.useFakeTimers();
         stageController = new StageController(roomId, players);
@@ -193,6 +183,7 @@ describe('Final Voting Points', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+        receiveAllPhotos(stageController); // one point per player for a received photo (to pass no photos check in FinalPhotoStage switchStage())
         stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
         users.forEach(() => {
             stageController.update(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
@@ -227,7 +218,12 @@ describe('Final Voting Points', () => {
 
         const userPoints = getPlayerPointsArray(stageController.getPlayerPoints());
         const pointsPerVote = InitialParameters.POINTS_PER_VOTE_FINAL_ROUND;
-        expect(userPoints).toEqual([pointsPerVote, pointsPerVote, 0, 0]); //order of elements is checked as well
+        expect(userPoints).toEqual([
+            pointsPerVote + pointsPerUserForReceivedPhotos,
+            pointsPerVote + pointsPerUserForReceivedPhotos,
+            0 + pointsPerUserForReceivedPhotos,
+            0 + pointsPerUserForReceivedPhotos,
+        ]); //order of elements is checked as well
     });
 
     it('should not receive points for a vote if photographerId did not vote', async () => {
@@ -244,7 +240,7 @@ describe('Final Voting Points', () => {
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
 
         const userPoints = getPlayerPointsArray(stageController.getPlayerPoints());
-        expect(userPoints[0]).toEqual(0);
+        expect(userPoints[0]).toEqual(0 + pointsPerUserForReceivedPhotos);
     });
 
     it('should receive 3 points per vote if photographerId did not take a photo', async () => {
@@ -270,7 +266,12 @@ describe('Final Voting Points', () => {
 
         const userPoints = getPlayerPointsArray(stageController.getPlayerPoints());
         const pointsPerVote = InitialParameters.POINTS_PER_VOTE_FINAL_ROUND;
-        expect(userPoints).toEqual([pointsPerVote, pointsPerVote, 0, 0]); //order of elements is checked as well
+        expect(userPoints).toEqual([
+            pointsPerVote + pointsPerUserForReceivedPhotos,
+            pointsPerVote + pointsPerUserForReceivedPhotos,
+            0 + pointsPerUserForReceivedPhotos,
+            0 + pointsPerUserForReceivedPhotos,
+        ]); //order of elements is checked as well
     });
 
     it('should return player points (final vote points (3) each per vote)', () => {
@@ -284,7 +285,12 @@ describe('Final Voting Points', () => {
         });
         const userPoints = getPlayerPointsArray(stageController.getPlayerPoints());
         const pointsPerVote = InitialParameters.POINTS_PER_VOTE_FINAL_ROUND;
-        expect(userPoints).toEqual([pointsPerVote, pointsPerVote, pointsPerVote, pointsPerVote]); //order of elements is checked as well
+        expect(userPoints).toEqual([
+            pointsPerVote + pointsPerUserForReceivedPhotos,
+            pointsPerVote + pointsPerUserForReceivedPhotos,
+            pointsPerVote + pointsPerUserForReceivedPhotos,
+            pointsPerVote + pointsPerUserForReceivedPhotos,
+        ]); //order of elements is checked as well
     });
 });
 
