@@ -11,7 +11,8 @@ import {
     GAME_TWO_EVENT_MESSAGES,
     GameTwoEventMessage,
     GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED,
-    GAME_TWO_EVENT_MESSAGE__GUESS_HINT
+    GAME_TWO_EVENT_MESSAGE__GUESS_HINT,
+    GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS
 } from '../interfaces/GameTwoEventMessages';
 import { EventMessage } from '../../../interfaces/EventMessage';
 import Room from '../../../classes/room';
@@ -40,6 +41,7 @@ export class GameTwoMessageEmitter implements EventMessageEmitter {
         switch (message.type) {
             // send to screens
             case GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE:
+            case GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS:
                 screenNameSpace.to(room.id).emit('message', message);
                 break;
             // send to screens and controllers

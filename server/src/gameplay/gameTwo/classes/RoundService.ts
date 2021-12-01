@@ -1,25 +1,21 @@
-import InitialParameters from "../constants/InitialParameters";
+import Parameters from "../constants/Parameters";
 import { Phases } from "../enums/Phases";
 import RoundEventEmitter from "./RoundEventEmitter";
-
+import { Timer } from 'timer-node';
 
 export default class RoundService {
     private roundCount: number;
     public round: number;
     public phase: string;
-    private roundTime: number;
-    private guessingTime: number;
-    private resultsTime: number;
     private roundEventEmitter: RoundEventEmitter;
+    private timer: Timer;
 
     constructor() {
-        this.roundCount = InitialParameters.ROUNDS;
-        this.roundTime = InitialParameters.COUNTING_TIME;
-        this.guessingTime = InitialParameters.GUESSING_TIME;
-        this.resultsTime = InitialParameters.RESULTS_TIME;
+        this.roundCount = Parameters.ROUNDS;
         this.round = 1;
         this.phase = Phases.COUNTING;
         this.roundEventEmitter = RoundEventEmitter.getInstance();
+        this.timer = new Timer();
     }
 
     public isCountingPhase(): boolean {
@@ -34,41 +30,61 @@ export default class RoundService {
         return this.phase === Phases.RESULTS;
     }
 
-    public countingPhase() {
+    public start(): void {
+        this.countingPhase();
+    }
+
+    private countingPhase(): void {
         this.phase = Phases.COUNTING;
         this.emitRoundChange();
 
+        this.timer.clear();
+        this.timer.start();
+
         setTimeout(() => {
+            this.timer.stop();
             this.guessingPhase();
-        }, this.roundTime);
+        }, Parameters.PHASE_TIMES[this.phase]);
 
     }
 
-    public guessingPhase() {
+    private guessingPhase(): void {
         this.phase = Phases.GUESSING;
         this.emitRoundChange();
 
+        this.timer.clear();
+        this.timer.start();
+
         setTimeout(() => {
+            this.timer.stop();
             this.resultsPhase();
-        }, this.guessingTime);
+        }, Parameters.PHASE_TIMES[this.phase]);
 
     }
 
-    public resultsPhase() {
+    private resultsPhase(): void {
         this.phase = Phases.RESULTS;
         this.emitRoundChange();
 
+        this.timer.clear();
+        this.timer.start();
+
         setTimeout(() => {
+            this.timer.stop();
             this.round++;
             if (this.round <= this.roundCount) {
                 this.countingPhase();
             }
 
-        }, this.resultsTime);
+        }, Parameters.PHASE_TIMES[this.phase]);
     }
 
     private emitRoundChange(): void {
         this.roundEventEmitter.emit(RoundEventEmitter.PHASE_CHANGE_EVENT, this.round, this.phase);
     }
 
+
+    public getTimeLeft(): number {
+        return Parameters.PHASE_TIMES[this.phase] - this.timer.ms();
+    }
 }
