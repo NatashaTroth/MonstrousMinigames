@@ -34,7 +34,6 @@ const KILLS_PER_ROUND = 5;
 
 const ROUNDS = 3;
 
-
 type phaseTimes = {
     [key: string]: number;
 }
@@ -46,6 +45,9 @@ const PHASE_TIMES: phaseTimes = {
 }
 
 const GOOD_GUESS_THRESHOLD = 5;
+
+const SHEEP_FREEZE_MIN_MS = 500;
+const SHEEP_FREEZE_MAX_MS = 5000;
 
 
 
@@ -61,5 +63,7 @@ export default {
     KILLS_PER_ROUND,
     ROUNDS,
     PHASE_TIMES,
-    GOOD_GUESS_THRESHOLD
+    GOOD_GUESS_THRESHOLD,
+    SHEEP_FREEZE_MIN_MS,
+    SHEEP_FREEZE_MAX_MS
 }
