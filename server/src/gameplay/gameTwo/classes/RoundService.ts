@@ -71,8 +71,8 @@ export default class RoundService {
 
         setTimeout(() => {
             this.timer.stop();
-            this.round++;
-            if (this.round <= this.roundCount) {
+            if (this.round + 1 <= this.roundCount) {
+                this.round++;
                 this.countingPhase();
             }
 
