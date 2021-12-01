@@ -194,6 +194,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.roundEventEmitter.on(RoundEventEmitter.PHASE_CHANGE_EVENT, (round: number, phase: string) => {
             if (phase === Phases.GUESSING) {
                 this.guessingService.saveSheepCount(round, this.sheepService.getAliveSheepCount());
+            } else if (phase === Phases.RESULTS) {
                 this.guessingService.calculatePlayerRanks();
                 GameTwoEventEmitter.emitPlayerRanks(this.roomId, this.guessingService.getPlayerRanks())
             }
