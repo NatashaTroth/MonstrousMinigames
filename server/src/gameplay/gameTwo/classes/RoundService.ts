@@ -7,7 +7,7 @@ export default class RoundService {
     private roundCount: number;
     public round: number;
     public phase: string;
-    private roundTime: number;
+    private countingTime: number;
     private guessingTime: number;
     private resultsTime: number;
     private roundEventEmitter: RoundEventEmitter;
@@ -15,9 +15,9 @@ export default class RoundService {
 
     constructor() {
         this.roundCount = InitialParameters.ROUNDS;
-        this.roundTime = InitialParameters.COUNTING_TIME;
-        this.guessingTime = InitialParameters.GUESSING_TIME;
-        this.resultsTime = InitialParameters.RESULTS_TIME;
+        this.countingTime = InitialParameters.PHASE_TIMES[Phases.COUNTING];
+        this.guessingTime = InitialParameters.PHASE_TIMES[Phases.GUESSING];
+        this.resultsTime = InitialParameters.PHASE_TIMES[Phases.RESULTS];
         this.round = 1;
         this.phase = Phases.COUNTING;
         this.roundEventEmitter = RoundEventEmitter.getInstance();
@@ -42,7 +42,7 @@ export default class RoundService {
 
         setTimeout(() => {
             this.guessingPhase();
-        }, this.roundTime);
+        }, this.countingTime);
 
     }
 
@@ -52,6 +52,7 @@ export default class RoundService {
 
         this.timer.clear();
         this.timer.start();
+        console.log(this.timer);
         setTimeout(() => {
             this.resultsPhase();
         }, this.guessingTime);
