@@ -3,6 +3,8 @@ import { Phases } from "../enums/Phases";
 import RoundEventEmitter from "./RoundEventEmitter";
 import { Timer } from 'timer-node';
 
+const PHASES: string[] = [Phases.COUNTING, Phases.GUESSING, Phases.RESULTS];
+
 export default class RoundService {
     private roundCount: number;
     public round: number;
@@ -31,11 +33,9 @@ export default class RoundService {
     }
 
     public start(): void {
-        this.countingPhase();
+        this.runPhase();
     }
-
-    private countingPhase(): void {
-        this.phase = Phases.COUNTING;
+    private runPhase(): void {
         this.emitRoundChange();
 
         this.timer.clear();
@@ -43,40 +43,32 @@ export default class RoundService {
 
         setTimeout(() => {
             this.timer.stop();
-            this.guessingPhase();
-        }, Parameters.PHASE_TIMES[this.phase]);
-
-    }
-
-    private guessingPhase(): void {
-        this.phase = Phases.GUESSING;
-        this.emitRoundChange();
-
-        this.timer.clear();
-        this.timer.start();
-
-        setTimeout(() => {
-            this.timer.stop();
-            this.resultsPhase();
-        }, Parameters.PHASE_TIMES[this.phase]);
-
-    }
-
-    private resultsPhase(): void {
-        this.phase = Phases.RESULTS;
-        this.emitRoundChange();
-
-        this.timer.clear();
-        this.timer.start();
-
-        setTimeout(() => {
-            this.timer.stop();
-            if (this.round + 1 <= this.roundCount) {
-                this.round++;
-                this.countingPhase();
+            if (this.phase === Phases.RESULTS) {
+                if (!this.nextRound()) {
+                    return;
+                }
             }
+            this.nextPhase();
+            this.runPhase();
 
         }, Parameters.PHASE_TIMES[this.phase]);
+    }
+
+    private nextRound() {
+        if (this.round + 1 <= this.roundCount) {
+            this.round++;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private nextPhase() {
+        let pos = PHASES.indexOf(this.phase);
+        if (pos++ === PHASES.length) {
+            pos = 0;
+        }
+        this.phase = PHASES[pos]
     }
 
     private emitRoundChange(): void {
