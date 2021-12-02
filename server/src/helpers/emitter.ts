@@ -136,7 +136,7 @@ function sendMessage(type: MessageTypes | GameOneMsgType, nsps: Array<Namespace>
 //Todo natasha test
 function sendLeaderboardState(nsp: Namespace | Socket, leaderboardState: LeaderboardInfo): void {
     nsp.emit('message', {
-        type: MessageTypes.SCREEN_STATE,
+        type: MessageTypes.LEADERBOARD_STATE,
         leaderboardState,
     });
 }

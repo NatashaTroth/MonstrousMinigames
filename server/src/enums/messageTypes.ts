@@ -22,4 +22,5 @@ export enum MessageTypes {
     CHOOSE_GAME = 'chooseGame',
     GAME_SET = 'gameSet',
     CREATE = 'createGame',
+    LEADERBOARD_STATE = 'leaderboardState',
 }
