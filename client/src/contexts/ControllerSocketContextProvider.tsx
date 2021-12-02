@@ -117,19 +117,16 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
             history,
         }),
         handleApproachingObstacleMessage: handleApproachingObstacleMessage({ setEarlySolvableObstacle }),
+        setRoomId,
     };
 
     const content = {
         controllerSocket,
         setControllerSocket: (val: Socket, roomId: string) =>
-            handleSetSocket(val, roomId, playerFinished, {
-                ...dependencies,
-            }),
+            // TODO remove maybe
+            handleSetSocket(val, roomId, playerFinished, dependencies),
         handleSocketConnection: (roomId: string, name: string) => {
-            handleSocketConnection(roomId, name, playerFinished, {
-                ...dependencies,
-                setRoomId,
-            });
+            handleSocketConnection(roomId, name, playerFinished, dependencies);
         },
     };
     return <ControllerSocketContext.Provider value={content}>{children}</ControllerSocketContext.Provider>;
