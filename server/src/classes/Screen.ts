@@ -5,6 +5,7 @@ import { MessageTypes } from '../enums/messageTypes';
 import Game from '../gameplay/Game';
 import { GameOneMsgType } from '../gameplay/gameOne/enums';
 import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
+import Leaderboard from '../gameplay/leaderboard/Leaderboard';
 // import { GameThreeMessageTypes } from '../gameplay/gameThree/enums/GameThreeMessageTypes';
 // import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
 import { IMessage } from '../interfaces/messages';
@@ -39,6 +40,12 @@ class Screen {
             this.emitter.sendScreenAdmin(this.screenNamespace, this.socket.id, this.room.isAdminScreen(this.socket.id));
             //TODO natasha test
             this.emitter.sendLeaderboardState(this.screenNamespace, this.room.leaderboard.getLeaderboardInfo());
+            console.info(this.room.id + ' | Sending Leaderboard State | ' + this.socket.id);
+
+            this.room.leaderboard.addListener(Leaderboard.LEADERBOARD_UPDATED_EVENT, (leaderboard: Leaderboard) => {
+                this.emitter.sendLeaderboardState(this.screenNamespace, leaderboard.getLeaderboardInfo());
+                console.info(this.room?.id + ' | Sending Leaderboard State | ' + this.socket.id);
+            });
 
             this.socket.on('disconnect', this.onDisconnect.bind(this));
             this.socket.on('message', this.onMessage.bind(this));
@@ -115,10 +122,10 @@ class Screen {
                         this.room!.setAllScreensPhaserGameReady(false);
                         this.room!.sentAllScreensLoaded = false;
                         //TODO natasha test
-                        this.emitter.sendLeaderboardState(
-                            this.screenNamespace,
-                            this.room.leaderboard.getLeaderboardInfo()
-                        );
+                        // this.emitter.sendLeaderboardState(
+                        //     this.screenNamespace,
+                        //     this.room.leaderboard.getLeaderboardInfo()
+                        // );
 
                         this.room.resetGame().then(() => {
                             this.emitter.sendMessage(

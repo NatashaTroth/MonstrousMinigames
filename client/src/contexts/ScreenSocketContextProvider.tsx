@@ -1,13 +1,27 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { handleConnectedUsersMessage } from '../domain/commonGameState/screen/handleConnectedUsersMessage';
-import { handleGameHasFinishedMessage } from '../domain/commonGameState/screen/handleGameHasFinishedMessage';
-import { handleGameHasResetMessage } from '../domain/commonGameState/screen/handleGameHasResetMessage';
-import { handleGameHasStoppedMessage } from '../domain/commonGameState/screen/handleGameHasStoppedMessage';
-import { handleGameStartedMessage } from '../domain/commonGameState/screen/handleGameStartedMessage';
-import { handleStartPhaserGameMessage } from '../domain/commonGameState/screen/handleStartPhaserGameMessage';
-import { handleStartSheepGameMessage } from '../domain/game2/screen/gameState/handleStartSheepGameMessage';
+import {
+    handleConnectedUsersMessage
+} from '../domain/commonGameState/screen/handleConnectedUsersMessage';
+import {
+    handleGameHasFinishedMessage
+} from '../domain/commonGameState/screen/handleGameHasFinishedMessage';
+import {
+    handleGameHasResetMessage
+} from '../domain/commonGameState/screen/handleGameHasResetMessage';
+import {
+    handleGameHasStoppedMessage
+} from '../domain/commonGameState/screen/handleGameHasStoppedMessage';
+import {
+    handleGameStartedMessage
+} from '../domain/commonGameState/screen/handleGameStartedMessage';
+import {
+    handleStartPhaserGameMessage
+} from '../domain/commonGameState/screen/handleStartPhaserGameMessage';
+import {
+    handleStartSheepGameMessage
+} from '../domain/game2/screen/gameState/handleStartSheepGameMessage';
 import { handleSetSocket } from '../domain/socket/screen/handleSetSocket';
 import { handleSocketConnection } from '../domain/socket/screen/handleSocketConnection';
 import { Socket } from '../domain/socket/Socket';
@@ -71,6 +85,29 @@ export interface User {
     ready: boolean;
 }
 
+export interface GamePlayed {
+    game: GameType;
+    playerRanks: Array<PlayerRank>;
+}
+
+export enum GameType {
+    GameOne = 'The Great Monster Escape',
+    GameTwo = 'Kill sheep',
+    GameThree = 'Snapshot Marathon',
+}
+
+export interface UserPoints {
+    userId: string;
+    name: string;
+    points: number;
+    rank: number;
+}
+
+export interface LeaderboardState {
+    gameHistory: GamePlayed[];
+    userPoints: UserPoints[]; //sorted by points
+}
+
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenSocket, setScreenSocket] = React.useState<Socket>();
     const history = useHistory();
@@ -93,6 +130,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setScreenAdmin,
         setScreenState,
         setChosenGame,
+        setLeaderboardState,
         setCountdownTime,
     } = React.useContext(GameContext);
 
@@ -102,6 +140,7 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setScreenAdmin,
         setScreenState,
         setChosenGame,
+        setLeaderboardState,
         setTopicMessage,
         setRoundIdx,
         setVoteForPhotoMessage,

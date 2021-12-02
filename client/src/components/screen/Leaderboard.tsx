@@ -5,19 +5,19 @@ import { GameContext } from '../../contexts/GameContextProvider';
 import history from '../../domain/history/history';
 import Button from '../common/Button';
 import {
-    BackButtonContainer,
-    ContentBase,
-    ContentContainer,
-    FullScreenContainer,
-    Headline,
+    BackButtonContainer, ContentBase, ContentContainer, FullScreenContainer, Headline
 } from '../common/FullScreenStyles.sc';
 import { LeaderboardGrid, LeaderboardRow } from './Leaderboard.sc';
 
 const Leaderboard: React.FunctionComponent = () => {
-    const { connectedUsers } = React.useContext(GameContext);
+    const { leaderboardState } = React.useContext(GameContext); //connectedUsers
 
-    // TODO use data from server
-    const users = connectedUsers?.map(user => ({ ...user, rank: 1, points: 0 })).sort((a, b) => a.rank - b.rank) || [];
+    // const users =
+    //     connectedUsers?.map(user => {
+    //         const points = leaderboardState?.userPoints.find(userPointsElement => user.id === userPointsElement.userId);
+    //         return { ...user, rank: points?.rank || '-', points: points?.points || 0 };
+    //     }) || [];
+    const userPoints = leaderboardState?.userPoints || [];
 
     return (
         <FullScreenContainer>
@@ -36,8 +36,8 @@ const Leaderboard: React.FunctionComponent = () => {
                                 Points
                             </Grid>
                         </LeaderboardRow>
-                        {users.map((user, index) => (
-                            <LeaderboardRow key={user.id} index={index}>
+                        {userPoints.map((user, index) => (
+                            <LeaderboardRow key={user.userId} index={index}>
                                 <Grid item xs>
                                     {user.rank}
                                 </Grid>

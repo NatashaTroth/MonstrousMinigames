@@ -2,7 +2,9 @@ import { ConnectedUsersMessage } from './connectedUsers';
 import { ErrorMessage } from './error';
 import { GameHasFinishedMessage } from './finished';
 import { AllScreensPhaserGameLoadedMessage } from './game1/allScreensPhaserGameLoaded';
-import { ApproachingSolvableObstacleOnceMessage } from './game1/approachingSolvableObstacleOnceTypeGuard';
+import {
+    ApproachingSolvableObstacleOnceMessage
+} from './game1/approachingSolvableObstacleOnceTypeGuard';
 import { ApproachingSolvableObstacleMessage } from './game1/approachingSolvableObstacleTypeGuard';
 import { ChasersPushedMessage } from './game1/chasersPushed';
 import { ExceededMaxChaserPushesMessage } from './game1/exceededMaxChaserPushes';
@@ -19,6 +21,7 @@ import { PlayerUnstunnedMessage } from './game1/playerUnstunned';
 import { GameHasStartedMessage } from './game1/started';
 import { StunnablePlayersMessage } from './game1/stunnablePlayers';
 import { GameSetMessage } from './gameSet';
+import { LeaderboardStateMessage } from './leaderboardState';
 import { GameHasPausedMessage } from './paused';
 import { GameHasResetMessage } from './reset';
 import { GameHasResumedMessage } from './resumed';
@@ -60,4 +63,5 @@ export type MessageData =
     | ChasersPushedMessage
     | StunnablePlayersMessage
     | GameSetMessage
+    | LeaderboardStateMessage
     | undefined;

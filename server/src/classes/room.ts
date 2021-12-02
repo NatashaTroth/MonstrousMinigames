@@ -1,8 +1,6 @@
 import {
-    CannotStartEmptyGameError,
-    CharacterNotAvailableError,
-    GameAlreadyStartedError,
-    UsersNotReadyError,
+    CannotStartEmptyGameError, CharacterNotAvailableError, GameAlreadyStartedError,
+    UsersNotReadyError
 } from '../customErrors';
 import { GameNames } from '../enums/gameNames';
 import { Globals } from '../enums/globals';
@@ -64,6 +62,7 @@ class Room {
 
         this.users.push(user);
         this.updateUserNumbers();
+        this.leaderboard.addUser(user.id, user.name);
     }
 
     private updateUserNumbers(): void {

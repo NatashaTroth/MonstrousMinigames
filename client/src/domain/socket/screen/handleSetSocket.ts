@@ -2,8 +2,11 @@ import { History } from 'history';
 
 import { GameNames } from '../../../config/games';
 import { FinalPhoto, Topic, Vote, VoteResult } from '../../../contexts/game3/Game3ContextProvider';
+import { LeaderboardState } from '../../../contexts/ScreenSocketContextProvider';
 import { Routes } from '../../../utils/routes';
-import { HandleGameHasFinishedMessage } from '../../commonGameState/screen/handleGameHasFinishedMessage';
+import {
+    HandleGameHasFinishedMessage
+} from '../../commonGameState/screen/handleGameHasFinishedMessage';
 import { HandleGameStartedProps } from '../../commonGameState/screen/handleGameStartedMessage';
 import { handleSetScreenSocketGame3 } from '../../game3/screen/socket/Sockets';
 import { handleSetCommonSocketsGame3 } from '../../game3/socket/Socket';
@@ -15,6 +18,9 @@ import { ErrorMessage, errorTypeGuard } from '../../typeGuards/error';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../typeGuards/finished';
 import { GameHasStartedMessage, startedTypeGuard } from '../../typeGuards/game1/started';
 import { GameSetMessage, gameSetTypeGuard } from '../../typeGuards/gameSet';
+import {
+    LeaderboardStateMessage, leaderboardStateTypeGuard
+} from '../../typeGuards/leaderboardState';
 import { pausedTypeGuard } from '../../typeGuards/paused';
 import { resetTypeGuard } from '../../typeGuards/reset';
 import { resumedTypeGuard } from '../../typeGuards/resumed';
@@ -30,6 +36,7 @@ export interface HandleSetSocketDependencies {
     setScreenAdmin: (val: boolean) => void;
     setScreenState: (val: string) => void;
     setChosenGame: (val: GameNames) => void;
+    setLeaderboardState: (val: LeaderboardState) => void;
     setTopicMessage: (val: Topic) => void;
     setVoteForPhotoMessage: (val: Vote) => void;
     setVotingResults: (val: VoteResult) => void;
@@ -58,6 +65,7 @@ export function handleSetSocket(
         setScreenAdmin,
         setScreenState,
         setChosenGame,
+        setLeaderboardState,
         setTopicMessage,
         setRoundIdx,
         setVoteForPhotoMessage,
@@ -90,6 +98,7 @@ export function handleSetSocket(
     const screenStateSocket = new MessageSocket(screenStateTypeGuard, socket);
     const startedSocket = new MessageSocket(startedTypeGuard, socket);
     const gameSetSocket = new MessageSocket(gameSetTypeGuard, socket);
+    const leaderboardStateSocket = new MessageSocket(leaderboardStateTypeGuard, socket);
 
     connectedUsersSocket.listen((data: ConnectedUsersMessage) => handleConnectedUsersMessage(data));
 
@@ -123,6 +132,10 @@ export function handleSetSocket(
     });
 
     gameSetSocket.listen((data: GameSetMessage) => setChosenGame(data.game));
+
+    leaderboardStateSocket.listen((data: LeaderboardStateMessage) => {
+        setLeaderboardState(data.leaderboardState);
+    });
 
     handleSetCommonSocketsGame3(socket, {
         setTopicMessage,

@@ -49,6 +49,8 @@ export enum MessageTypes {
     startGame = 'startGame',
     stopGame = 'stopGame',
 
+    leaderboardState = 'leaderboardState',
+
     error = 'error',
 }
 
