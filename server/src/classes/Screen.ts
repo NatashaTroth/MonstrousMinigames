@@ -37,6 +37,7 @@ class Screen {
 
             this.emitter.sendConnectedUsers([this.screenNamespace], this.room);
             this.emitter.sendScreenAdmin(this.screenNamespace, this.socket.id, this.room.isAdminScreen(this.socket.id));
+            this.emitter.sendLeaderboardState(this.screenNamespace, this.room.leaderboard.getLeaderboardInfo());
 
             this.socket.on('disconnect', this.onDisconnect.bind(this));
             this.socket.on('message', this.onMessage.bind(this));
@@ -112,6 +113,11 @@ class Screen {
                         console.info(this.room.id + ' | Reset Game');
                         this.room!.setAllScreensPhaserGameReady(false);
                         this.room!.sentAllScreensLoaded = false;
+                        this.emitter.sendLeaderboardState(
+                            this.screenNamespace,
+                            this.room.leaderboard.getLeaderboardInfo()
+                        );
+
                         this.room.resetGame().then(() => {
                             this.emitter.sendMessage(
                                 MessageTypes.GAME_HAS_RESET,

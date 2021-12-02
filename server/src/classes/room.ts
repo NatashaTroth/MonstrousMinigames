@@ -1,8 +1,6 @@
 import {
-    CannotStartEmptyGameError,
-    CharacterNotAvailableError,
-    GameAlreadyStartedError,
-    UsersNotReadyError,
+    CannotStartEmptyGameError, CharacterNotAvailableError, GameAlreadyStartedError,
+    UsersNotReadyError
 } from '../customErrors';
 import { GameNames } from '../enums/gameNames';
 import { Globals } from '../enums/globals';
@@ -21,7 +19,7 @@ class Room {
     public timestamp: number;
     public game: Game;
     private state: RoomStates;
-    private leaderboard: Leaderboard;
+    public leaderboard: Leaderboard;
     public screenState: string;
     public screens: Array<ScreenInfo>;
     public firstPhaserScreenLoaded: boolean;
