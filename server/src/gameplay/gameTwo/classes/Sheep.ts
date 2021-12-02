@@ -28,8 +28,24 @@ export default class Sheep {
         return [...new Array(40)].map(() => SHEEP_DIRECTIONS[Math.round(Math.random() * (SHEEP_DIRECTIONS.length - 1))]);
     }
 
+    private setNewDirection(): void {
+        const currentDirection = this.directions.shift();
+        this.direction = currentDirection !== undefined ? currentDirection : '';
+    }
 
-    public move() {
+    public getTimeoutLength(): number {
+        return Math.round(Math.random() * (Parameters.SHEEP_FREEZE_MAX_MS - Parameters.SHEEP_FREEZE_MIN_MS)) + Parameters.SHEEP_FREEZE_MIN_MS
+    }
+
+    public update(): void {
+        setTimeout(() => {
+            this.setNewDirection();
+        }, this.getTimeoutLength());
+        this.move();
+    }
+
+
+    private move() {
         if (this.direction.startsWith(Direction.UP)) {
             if (this.posY > 0) {
                 this.posY -= this.speed;

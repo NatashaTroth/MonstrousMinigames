@@ -10,4 +10,5 @@ describe('RoundService Tests', () => {
         expect(sheep.initDirections().length).toEqual(40);
     });
 
+
 });
