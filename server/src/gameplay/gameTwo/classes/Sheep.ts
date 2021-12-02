@@ -11,6 +11,7 @@ export default class Sheep {
     public direction: string;
     public directions: string[];
     public speed: number;
+    private isMoving: boolean;
 
 
     constructor(posX: number, posY: number, id: number
@@ -22,6 +23,7 @@ export default class Sheep {
         this.speed = Parameters.SPEED;
         this.directions = this.initDirections();
         this.direction = '';
+        this.isMoving = false;
     }
 
     public initDirections(): string[] {
@@ -30,7 +32,12 @@ export default class Sheep {
 
     private setNewDirection(): void {
         const currentDirection = this.directions.shift();
-        this.direction = currentDirection !== undefined ? currentDirection : '';
+        if (currentDirection) {
+            this.direction = currentDirection;
+        } else {
+            this.directions = this.initDirections();
+            this.setNewDirection();
+        }
     }
 
     public getTimeoutLength(): number {
@@ -38,12 +45,20 @@ export default class Sheep {
     }
 
     public update(): void {
-        setTimeout(() => {
-            this.setNewDirection();
-        }, this.getTimeoutLength());
-        this.move();
+        if (this.isMoving) {
+            this.move();
+        }
     }
-
+    private cycleMoving() {
+        this.setNewDirection();
+        this.isMoving = true;
+        setTimeout(() => {
+            this.isMoving = false;
+            setTimeout(() => {
+                this.cycleMoving();
+            }, this.getTimeoutLength());
+        }, this.getTimeoutLength());
+    }
 
     private move() {
         if (this.direction.startsWith(Direction.UP)) {
