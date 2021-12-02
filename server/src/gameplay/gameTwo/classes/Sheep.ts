@@ -12,6 +12,7 @@ export default class Sheep {
     public directions: string[];
     public speed: number;
     private isMoving: boolean;
+    private interval: NodeJS.Timer | null;
 
 
     constructor(posX: number, posY: number, id: number
@@ -24,6 +25,7 @@ export default class Sheep {
         this.directions = this.initDirections();
         this.direction = '';
         this.isMoving = false;
+        this.interval = null;
     }
 
     public initDirections(): string[] {
@@ -50,14 +52,25 @@ export default class Sheep {
         }
     }
     private cycleMoving() {
-        this.setNewDirection();
-        this.isMoving = true;
-        setTimeout(() => {
-            this.isMoving = false;
+        this.interval = setInterval(() => {
+            this.setNewDirection();
+            this.isMoving = true;
             setTimeout(() => {
-                this.cycleMoving();
+                this.isMoving = false;
             }, this.getTimeoutLength());
         }, this.getTimeoutLength());
+    }
+
+    public startMoving(): void {
+        this.cycleMoving();
+    }
+
+    public stopMoving(): boolean {
+        if (this.interval) {
+            clearInterval(this.interval)
+            return true;
+        }
+        return false;
     }
 
     private move() {
