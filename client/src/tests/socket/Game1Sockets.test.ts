@@ -1,23 +1,20 @@
-import { createMemoryHistory } from "history";
+import { createMemoryHistory } from 'history';
 
 import {
-    handleSetControllerSocketGame1, HandleSetControllerSocketGame1Dependencies
-} from "../../domain/game1/controller/socket/Sockets";
-import { InMemorySocketFake } from "../../domain/socket/InMemorySocketFake";
-import {
-    ApproachingSolvableObstacleMessage
-} from "../../domain/typeGuards/game1/approachingSolvableObstacleTypeGuard";
-import {
-    ExceededMaxChaserPushesMessage
-} from "../../domain/typeGuards/game1/exceededMaxChaserPushes";
-import { ObstacleMessage } from "../../domain/typeGuards/game1/obstacle";
-import { PlayerDiedMessage } from "../../domain/typeGuards/game1/playerDied";
-import { PlayerFinishedMessage } from "../../domain/typeGuards/game1/playerFinished";
-import { PlayerStunnedMessage } from "../../domain/typeGuards/game1/playerStunned";
-import { PlayerUnstunnedMessage } from "../../domain/typeGuards/game1/playerUnstunned";
-import { StunnablePlayersMessage } from "../../domain/typeGuards/game1/stunnablePlayers";
-import { MessageTypesGame1, ObstacleTypes } from "../../utils/constants";
-import { controllerGame1Route, controllerPlayerStunnedRoute } from "../../utils/routes";
+    handleSetControllerSocketGame1,
+    HandleSetControllerSocketGame1Dependencies,
+} from '../../domain/game1/controller/socket/Sockets';
+import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
+import { ApproachingSolvableObstacleMessage } from '../../domain/typeGuards/game1/approachingSolvableObstacleTypeGuard';
+import { ExceededMaxChaserPushesMessage } from '../../domain/typeGuards/game1/exceededMaxChaserPushes';
+import { ObstacleMessage } from '../../domain/typeGuards/game1/obstacle';
+import { PlayerDiedMessage } from '../../domain/typeGuards/game1/playerDied';
+import { PlayerFinishedMessage } from '../../domain/typeGuards/game1/playerFinished';
+import { PlayerStunnedMessage } from '../../domain/typeGuards/game1/playerStunned';
+import { PlayerUnstunnedMessage } from '../../domain/typeGuards/game1/playerUnstunned';
+import { StunnablePlayersMessage } from '../../domain/typeGuards/game1/stunnablePlayers';
+import { MessageTypesGame1, ObstacleTypes } from '../../utils/constants';
+import { controllerGame1Route, controllerPlayerStunnedRoute } from '../../utils/routes';
 
 describe('handleSetSocket', () => {
     const history = createMemoryHistory();

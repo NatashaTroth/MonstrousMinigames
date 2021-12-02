@@ -5,10 +5,9 @@ import {
 } from '../../../../src/gameplay/gameThree/classes/RandomWordGenerator';
 
 let randomWordsGenerator: RandomWordGenerator;
-// const uniqueWords = ['hat', 'car', 'bus', 'blue', 'cat', 'dog'];
 const duplicateWords = ['car', 'bus', 'hat', 'hat', 'hat', 'hat'];
 
-describe('Stun player tests', () => {
+describe('Generate 3 random unique strings', () => {
     beforeEach(() => {
         randomWordsGenerator = new RandomWordGenerator();
     });
@@ -26,5 +25,18 @@ describe('Stun player tests', () => {
         expect(randomWords).toContain('car');
         expect(randomWords).toContain('hat');
         expect(randomWords).toContain('bus');
+    });
+});
+
+describe('Get Current Random Words', () => {
+    beforeEach(() => {
+        randomWordsGenerator = new RandomWordGenerator();
+    });
+
+    it('should return three strings', async () => {
+        randomWordsGenerator['wordList'] = duplicateWords;
+        const initialRandomWords = randomWordsGenerator.generateRandomWords(3);
+        const randomWords = randomWordsGenerator.getCurrentRandomWords();
+        expect(initialRandomWords).toEqual(expect.arrayContaining(randomWords));
     });
 });

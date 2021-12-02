@@ -1,7 +1,7 @@
-import { localStorage } from "../../storage/LocalStorage";
-import { sessionStorage } from "../../storage/SessionStorage";
-import { UserInitMessage } from "../../typeGuards/userInit";
-import { persistUser } from "../../user/persistUser";
+import { localStorage } from '../../storage/LocalStorage';
+import { sessionStorage } from '../../storage/SessionStorage';
+import { UserInitMessage } from '../../typeGuards/userInit';
+import { persistUser } from '../../user/persistUser';
 
 interface Dependencies {
     setPlayerNumber: (val: number) => void;

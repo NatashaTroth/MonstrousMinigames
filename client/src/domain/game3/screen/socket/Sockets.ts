@@ -25,7 +25,7 @@ export function handleSetScreenSocketGame3(socket: Socket, dependencies: HandleS
     const { setRoundIdx, setVoteForPhotoMessage, setVotingResults, setPresentFinalPhotos } = dependencies;
 
     newRoundSocket.listen((data: NewRoundMessage) => {
-        setRoundIdx(data.roundIdx + 1);
+        setRoundIdx(data.roundIdx);
         setVoteForPhotoMessage(undefined);
         setVotingResults(undefined);
     });

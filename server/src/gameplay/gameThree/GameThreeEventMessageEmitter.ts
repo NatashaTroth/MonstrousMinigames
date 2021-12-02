@@ -61,6 +61,7 @@ export class GameThreeEventMessageEmitter implements EventMessageEmitter {
             case GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN:
             case GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS:
             case GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS:
+                // console.log('Sending to all');
                 this.sendToAll(message, screenNameSpace, room);
                 this.sendToAll(message, controllerNameSpace, room);
                 break;

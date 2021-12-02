@@ -1,7 +1,5 @@
-import { Obstacle } from "../../../../contexts/PlayerContextProvider";
-import {
-    ApproachingSolvableObstacleMessage
-} from "../../../typeGuards/game1/approachingSolvableObstacleTypeGuard";
+import { Obstacle } from '../../../../contexts/PlayerContextProvider';
+import { ApproachingSolvableObstacleMessage } from '../../../typeGuards/game1/approachingSolvableObstacleTypeGuard';
 
 interface Dependencies {
     setEarlySolvableObstacle: (value: undefined | Obstacle) => void;

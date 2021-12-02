@@ -1,6 +1,6 @@
-import { History } from "history";
+import { History } from 'history';
 
-import { controllerLobbyRoute } from "../../../utils/routes";
+import { controllerLobbyRoute } from '../../../utils/routes';
 
 interface Dependencies {
     history: History;

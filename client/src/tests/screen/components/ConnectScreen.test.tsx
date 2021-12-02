@@ -1,9 +1,8 @@
-import { cleanup } from "@testing-library/react";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure } from "enzyme";
-import React from "react";
+import { cleanup } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure } from 'enzyme';
 
-import { handleCreateNewRoom } from "../../../components/screen/ConnectScreen";
+import { handleCreateNewRoom } from '../../../components/screen/ConnectScreen';
 
 configure({ adapter: new Adapter() });
 

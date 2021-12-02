@@ -1,5 +1,5 @@
-import { defaultAvailableCharacters } from "../../../config/characters";
-import { ConnectedUsersMessage, User } from "../../typeGuards/connectedUsers";
+import { defaultAvailableCharacters } from '../../../config/characters';
+import { ConnectedUsersMessage, User } from '../../typeGuards/connectedUsers';
 
 interface Dependencies {
     setAvailableCharacters: (val: number[]) => void;
