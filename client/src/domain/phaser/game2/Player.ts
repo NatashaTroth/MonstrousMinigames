@@ -14,11 +14,11 @@ export class Player {
 
     constructor(
         scene: SheepGameScene,
-        private index: number,
+        index: number,
         public coordinates: Coordinates,
-        private gameStateData: GameData,
+        gameStateData: GameData,
         private character: Character,
-        private numberPlayers: number,
+        numberPlayers: number,
         private gameToScreenMapper: GameToScreenMapper
     ) {
         this.username = gameStateData.playersState[index].name;
