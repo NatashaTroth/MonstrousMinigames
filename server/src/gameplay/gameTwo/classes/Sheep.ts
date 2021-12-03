@@ -28,11 +28,11 @@ export default class Sheep {
         this.interval = null;
     }
 
-    public initDirections(): string[] {
-        return [...new Array(40)].map(() => SHEEP_DIRECTIONS[Math.round(Math.random() * (SHEEP_DIRECTIONS.length - 1))]);
+    private initDirections(): string[] {
+        return [...new Array(Parameters.SHEEP_DIRECTIONS_COUNT)].map(() => SHEEP_DIRECTIONS[Math.round(Math.random() * (SHEEP_DIRECTIONS.length - 1))]);
     }
 
-    private setNewDirection(): void {
+    public setNewDirection(): void {
         const currentDirection = this.directions.shift();
         if (currentDirection) {
             this.direction = currentDirection;
