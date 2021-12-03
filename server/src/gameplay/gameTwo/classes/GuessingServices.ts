@@ -31,13 +31,13 @@ export default class GuessingService {
         });
     }
 
-    public getHintForRound(round: number, userId: string): string | null {
+    public getHintForRound(round: number, userId: string): string {
         const guess = this.getGuessForRound(round, userId);
         const count = this.getCountForRound(round);
         if (guess && count) {
             return this.getHint(count - guess);
         }
-        return null;
+        return '';
     }
 
     public getHint(miss: number): string {
@@ -56,12 +56,10 @@ export default class GuessingService {
 
     public addGuess(round: number, guess: number, userId: string): boolean {
         const guesses = this.guesses.get(userId);
-        if (guesses) {
-            if (!guesses[round - 1]) {
-                guesses[round - 1] = guess;
-                this.guesses.set(userId, guesses);
-                return true;
-            }
+        if (guesses && !guesses[round - 1]) {
+            guesses[round - 1] = guess;
+            this.guesses.set(userId, guesses);
+            return true;
         }
         return false;
     }

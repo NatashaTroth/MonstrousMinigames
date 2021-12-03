@@ -152,9 +152,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         if (this.roundService.isGuessingPhase() && player) {
             if (this.guessingService.addGuess(round, guess, userId)) {
                 const hint = this.guessingService.getHintForRound(round, userId);
-                if (hint) {
-                    GameTwoEventEmitter.emitGuessHint(this.roomId, player.id, hint);
-                }
+                GameTwoEventEmitter.emitGuessHint(this.roomId, player.id, hint);
             }
         }
 
