@@ -1,7 +1,9 @@
-import { History } from 'history';
+import { History } from "history";
 
-import { GameNames } from '../../../config/games';
-import { controllerGame1Route, controllerGame2Route, controllerGame3Route } from '../../../utils/routes';
+import { GameNames } from "../../../config/games";
+import {
+    controllerGame1Route, controllerGame2Route, controllerGame3Route
+} from "../../../utils/routes";
 
 interface Dependencies {
     setGameStarted: (val: boolean) => void;

@@ -1,26 +1,45 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { handleConnectedUsersMessage } from '../domain/commonGameState/controller/handleConnectedUsersMessage';
-import { handleGameHasFinishedMessage } from '../domain/commonGameState/controller/handleGameHasFinishedMessage';
-import { handleGameHasResetMessage } from '../domain/commonGameState/controller/handleGameHasResetMessage';
-import { handleGameHasStoppedMessage } from '../domain/commonGameState/controller/handleGameHasStoppedMessage';
-import { handleGameStartedMessage } from '../domain/commonGameState/controller/handleGameStartedMessage';
-import { handlePlayerFinishedMessage } from '../domain/commonGameState/controller/handlePlayerFinishedMessage';
-import { handleUserInitMessage } from '../domain/commonGameState/controller/handleUserInitMessage';
-import addMovementListener from '../domain/game1/controller/gameState/addMovementListener';
-import { handleApproachingObstacleMessage } from '../domain/game1/controller/gameState/handleApproachingSolvableObstacleMessage';
-import { handleObstacleMessage } from '../domain/game1/controller/gameState/handleObstacleMessage';
-import { handlePlayerDied } from '../domain/game1/controller/gameState/handlePlayerDied';
-import { handleStunnablePlayers } from '../domain/game1/controller/gameState/handleStunnablePlayers';
-import history from '../domain/history/history';
-import { handleSetSocket } from '../domain/socket/controller/handleSetSocket';
-import { handleSocketConnection } from '../domain/socket/controller/handleSocketConnection';
-import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
-import { Socket } from '../domain/socket/Socket';
-import { Game1Context } from './game1/Game1ContextProvider';
-import { Game3Context } from './game3/Game3ContextProvider';
-import { GameContext } from './GameContextProvider';
-import { PlayerContext } from './PlayerContextProvider';
+import {
+    handleConnectedUsersMessage
+} from "../domain/commonGameState/controller/handleConnectedUsersMessage";
+import {
+    handleGameHasFinishedMessage
+} from "../domain/commonGameState/controller/handleGameHasFinishedMessage";
+import {
+    handleGameHasResetMessage
+} from "../domain/commonGameState/controller/handleGameHasResetMessage";
+import {
+    handleGameHasStoppedMessage
+} from "../domain/commonGameState/controller/handleGameHasStoppedMessage";
+import {
+    handleGameStartedMessage
+} from "../domain/commonGameState/controller/handleGameStartedMessage";
+import {
+    handlePlayerFinishedMessage
+} from "../domain/commonGameState/controller/handlePlayerFinishedMessage";
+import { userInitHandler } from "../domain/commonGameState/controller/userInitHandler";
+import addMovementListener from "../domain/game1/controller/gameState/addMovementListener";
+import {
+    handleApproachingObstacleMessage
+} from "../domain/game1/controller/gameState/handleApproachingSolvableObstacleMessage";
+import { handleObstacleMessage } from "../domain/game1/controller/gameState/handleObstacleMessage";
+import { handlePlayerDied } from "../domain/game1/controller/gameState/handlePlayerDied";
+import {
+    handleStunnablePlayers
+} from "../domain/game1/controller/gameState/handleStunnablePlayers";
+import history from "../domain/history/history";
+import { handleSetSocket } from "../domain/socket/controller/handleSetSocket";
+import { handleSocketConnection } from "../domain/socket/controller/handleSocketConnection";
+import { InMemorySocketFake } from "../domain/socket/InMemorySocketFake";
+import { Socket } from "../domain/socket/Socket";
+import { localStorage } from "../domain/storage/LocalStorage";
+import { sessionStorage } from "../domain/storage/SessionStorage";
+import { persistUser } from "../domain/user/persistUser";
+import { Game1Context } from "./game1/Game1ContextProvider";
+import { Game3Context } from "./game3/Game3ContextProvider";
+import { GameContext } from "./GameContextProvider";
+import { PlayerContext } from "./PlayerContextProvider";
 
 export const defaultValue = {
     controllerSocket: new InMemorySocketFake(),
@@ -101,7 +120,6 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setVotingResults,
         setFinalRoundCountdownTime,
         setPresentFinalPhotos,
-        handleUserInitMessage: handleUserInitMessage({ setPlayerNumber, setName, setUserId, setReady }),
         handleConnectedUsersMessage: handleConnectedUsersMessage({ setAvailableCharacters, setConnectedUsers }),
         handleGameStartedMessage: handleGameStartedMessage({ setGameStarted, history, setCountdownTime }),
         handleGameHasStoppedMessage: handleGameHasStoppedMessage({ history }),
@@ -120,11 +138,26 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         setRoomId,
     };
 
+    const persistUserWithDependencies = persistUser({
+        localStorage,
+        sessionStorage,
+    });
+
+    const userInitHandlerWithDependencies = userInitHandler({
+        setPlayerNumber,
+        setName,
+        setUserId,
+        setReady,
+        persistUser: persistUserWithDependencies,
+    });
+
     const content = {
         controllerSocket,
-        setControllerSocket: (val: Socket, roomId: string) =>
+        setControllerSocket: (socket: Socket, roomId: string) => {
             // TODO remove maybe
-            handleSetSocket(val, roomId, playerFinished, dependencies),
+            userInitHandlerWithDependencies(socket);
+            handleSetSocket(socket, roomId, playerFinished, dependencies);
+        },
         handleSocketConnection: (roomId: string, name: string) => {
             handleSocketConnection(roomId, name, playerFinished, dependencies);
         },

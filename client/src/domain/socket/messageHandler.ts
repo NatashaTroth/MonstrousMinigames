@@ -1,15 +1,17 @@
-import { MessageSocket } from './MessageSocket';
-import { Socket } from './Socket';
+import { MessageSocket } from "./MessageSocket";
+import { Socket } from "./Socket";
 
-type MessageHandler = <Message>(
+export type MessageHandler = <Message, Dependencies>(
     typeGuard: (val: any) => val is Message,
-    action: (data: Message) => void
-) => (socket: Socket) => void;
+    action: (data: Message, dependencies: Dependencies) => void
+) => (dependencies: Dependencies) => (socket: Socket) => void;
 
 const messageHandler: MessageHandler = (typeGuard, action) => {
-    return socket => {
-        const messageSocket = new MessageSocket(typeGuard, socket);
-        messageSocket.listen(message => action(message));
+    return dependencies => {
+        return socket => {
+            const messageSocket = new MessageSocket(typeGuard, socket);
+            messageSocket.listen(message => action(message, dependencies));
+        };
     };
 };
 

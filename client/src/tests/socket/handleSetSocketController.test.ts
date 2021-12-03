@@ -1,18 +1,19 @@
-import { createMemoryHistory } from 'history';
+import { createMemoryHistory } from "history";
 
-import { GameNames } from '../../config/games';
-import { handleSetSocket, HandleSetSocketDependencies } from '../../domain/socket/controller/handleSetSocket';
-import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
-import { ConnectedUsersMessage } from '../../domain/typeGuards/connectedUsers';
-import { GameHasFinishedMessage } from '../../domain/typeGuards/finished';
-import { GameHasStartedMessage } from '../../domain/typeGuards/game1/started';
-import { GameHasPausedMessage } from '../../domain/typeGuards/paused';
-import { GameHasResetMessage } from '../../domain/typeGuards/reset';
-import { GameHasResumedMessage } from '../../domain/typeGuards/resumed';
-import { GameHasStoppedMessage } from '../../domain/typeGuards/stopped';
-import { UserInitMessage } from '../../domain/typeGuards/userInit';
-import { GameState, MessageTypes } from '../../utils/constants';
-import { controllerChooseCharacterRoute } from '../../utils/routes';
+import { GameNames } from "../../config/games";
+import {
+    handleSetSocket, HandleSetSocketDependencies
+} from "../../domain/socket/controller/handleSetSocket";
+import { InMemorySocketFake } from "../../domain/socket/InMemorySocketFake";
+import { ConnectedUsersMessage } from "../../domain/typeGuards/connectedUsers";
+import { GameHasFinishedMessage } from "../../domain/typeGuards/finished";
+import { GameHasStartedMessage } from "../../domain/typeGuards/game1/started";
+import { GameHasPausedMessage } from "../../domain/typeGuards/paused";
+import { GameHasResetMessage } from "../../domain/typeGuards/reset";
+import { GameHasResumedMessage } from "../../domain/typeGuards/resumed";
+import { GameHasStoppedMessage } from "../../domain/typeGuards/stopped";
+import { GameState, MessageTypes } from "../../utils/constants";
+import { controllerChooseCharacterRoute } from "../../utils/routes";
 
 describe('handleSetSocket', () => {
     const history = createMemoryHistory();
@@ -34,7 +35,6 @@ describe('handleSetSocket', () => {
         handleGameHasFinishedMessage: jest.fn(),
         handleGameHasStoppedMessage: jest.fn(),
         handleGameStartedMessage: jest.fn(),
-        handleUserInitMessage: jest.fn(),
         handleGameHasResetMessage: jest.fn(),
         handleObstacleMessage: jest.fn(),
         handlePlayerDied: jest.fn(),
@@ -42,27 +42,6 @@ describe('handleSetSocket', () => {
         handleStunnablePlayers: jest.fn(),
         handleApproachingObstacleMessage: jest.fn(),
     };
-
-    it('when UserInitMessage was written, handed handleUserInitMessage is executed', async () => {
-        const message: UserInitMessage = {
-            name: 'Mock',
-            type: MessageTypes.userInit,
-            userId: '1',
-            roomId,
-            isAdmin: true,
-            number: 1,
-            ready: true,
-        };
-
-        const socket = new InMemorySocketFake();
-        const handleUserInitMessage = jest.fn();
-
-        handleSetSocket(socket, roomId, false, { ...dependencies, handleUserInitMessage });
-
-        await socket.emit(message);
-
-        expect(handleUserInitMessage).toHaveBeenCalledTimes(1);
-    });
 
     it('when GameHasStartedMessage was written, handed handleGameStartedMessage is executed', async () => {
         const message: GameHasStartedMessage = {

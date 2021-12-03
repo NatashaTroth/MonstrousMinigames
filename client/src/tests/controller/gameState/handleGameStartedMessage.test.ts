@@ -1,8 +1,12 @@
-import { createMemoryHistory } from 'history';
+import { createMemoryHistory } from "history";
 
-import { GameNames } from '../../../config/games';
-import { handleGameStartedMessage } from '../../../domain/commonGameState/controller/handleGameStartedMessage';
-import { controllerGame1Route, controllerGame2Route, controllerGame3Route } from '../../../utils/routes';
+import { GameNames } from "../../../config/games";
+import {
+    handleGameStartedMessage
+} from "../../../domain/commonGameState/controller/handleGameStartedMessage";
+import {
+    controllerGame1Route, controllerGame2Route, controllerGame3Route
+} from "../../../utils/routes";
 
 describe('gameHasStarted function', () => {
     const setGameStarted = jest.fn();
