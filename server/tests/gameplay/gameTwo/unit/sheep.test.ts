@@ -1,5 +1,6 @@
 import Sheep from "../../../../src/gameplay/gameTwo/classes/Sheep";
 import Parameters from "../../../../src/gameplay/gameTwo/constants/Parameters";
+import { SheepStates } from "../../../../src/gameplay/gameTwo/enums/SheepStates";
 
 let sheep: Sheep;
 describe('RoundService Tests', () => {
@@ -32,8 +33,6 @@ describe('RoundService Tests', () => {
         const initialPosX = sheep.posX;
         const initialPosY = sheep.posY;
 
-
-
         sheep.isMoving = true;
         sheep.direction = 'W';
         sheep.update();
@@ -53,9 +52,47 @@ describe('RoundService Tests', () => {
 
     });
 
-    it('should return false if no timer is set', () => {
+    it('stopMoving should return false if no timer is set', () => {
         expect(sheep.stopMoving()).toBeFalsy();
     });
 
+    it('startMoving should return false if the sheep is not alive', () => {
+        sheep.state = SheepStates.DECOY;
+        expect(sheep.startMoving()).toBeFalsy();
+    });
+
+    it('startMoving should return false if the sheep is not alive', () => {
+        sheep.state = SheepStates.DECOY;
+        expect(sheep.startMoving()).toBeFalsy();
+    });
+
+    it('should not move if it would move outsideo of boundaries', () => {
+
+        // left border
+        sheep.posX = 0;
+        sheep.isMoving = true;
+        sheep.direction = 'W';
+        sheep.update();
+        expect(sheep.posX).toEqual(0);
+
+        // right border
+        sheep.posX = Parameters.LENGTH_X;
+        sheep.direction = 'E';
+        sheep.update();
+        expect(sheep.posX).toEqual(Parameters.LENGTH_X);
+
+        // top border
+        sheep.posY = 0;
+        sheep.direction = 'N';
+        sheep.update();
+        expect(sheep.posY).toEqual(0);
+
+        //bottom border
+        sheep.posY = Parameters.LENGTH_Y;
+        sheep.direction = 'S';
+        sheep.update();
+        expect(sheep.posY).toEqual(Parameters.LENGTH_Y);
+
+    });
 
 });

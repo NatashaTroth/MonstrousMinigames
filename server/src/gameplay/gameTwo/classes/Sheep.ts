@@ -61,8 +61,12 @@ export default class Sheep {
         }, this.getTimeoutLength());
     }
 
-    public startMoving(): void {
-        if (this.state === SheepStates.ALIVE) this.cycleMoving();
+    public startMoving(): boolean {
+        if (this.state === SheepStates.ALIVE) {
+            this.cycleMoving();
+            return true;
+        }
+        return false;
     }
 
     public stopMoving(): boolean {
