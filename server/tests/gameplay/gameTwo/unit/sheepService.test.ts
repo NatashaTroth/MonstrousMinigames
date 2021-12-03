@@ -10,7 +10,7 @@ describe('SheepService Tests', () => {
     });
 
     it('the count of alive sheep is the same as the count of total sheep if all are alive', () => {
-        expect(sheepService.getAliveSheepCount()).toEqual(sheepService.getSheep().length);
+        expect(sheepService.getAliveSheepCount()).toEqual(sheepService.sheep.length);
     });
 
     it('the count of alive sheep is 0 if all sheep are dead', () => {

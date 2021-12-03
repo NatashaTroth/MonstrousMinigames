@@ -16,12 +16,6 @@ export default class SheepService {
         this.sheepCount = sheepCount;
     }
 
-
-    public getSheep(): Sheep[] {
-        return this.sheep;
-    }
-
-
     public initSheep(): void {
         const seedrandom = require('seedrandom');
         random.use(seedrandom('sheep'));
@@ -60,6 +54,26 @@ export default class SheepService {
         });
 
         return valid;
+    }
+    public update(): void {
+        const aliveSheep = this.sheep.filter(s => s.state === SheepStates.ALIVE);
+        aliveSheep.forEach(sheep => {
+            sheep.update();
+        });
+    }
+
+    public startMoving(): void {
+        const aliveSheep = this.sheep.filter(s => s.state === SheepStates.ALIVE);
+        aliveSheep.forEach(sheep => {
+            sheep.startMoving();
+        });
+    }
+
+    public stopMoving(): void {
+        const aliveSheep = this.sheep.filter(s => s.state === SheepStates.ALIVE);
+        aliveSheep.forEach(sheep => {
+            sheep.stopMoving();
+        });
     }
 
     public killSheep(player: GameTwoPlayer): boolean {
@@ -102,9 +116,8 @@ export default class SheepService {
     }
 
     public getAliveSheepCount(): number {
-        const aliveSheep = this.sheep.filter(s => {
-            return s.state === SheepStates.ALIVE;
-        })
+        const aliveSheep = this.sheep.filter(s => s.state === SheepStates.ALIVE);
+
         return aliveSheep.length;
     }
 }
