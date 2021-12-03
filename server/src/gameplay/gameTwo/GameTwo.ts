@@ -81,7 +81,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
-        return;
+        if (this.roundService.isCountingPhase()) this.sheepService.update();
     }
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
         return;
@@ -195,7 +195,10 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     protected listenToEvents(): void {
         this.roundEventEmitter.on(RoundEventEmitter.PHASE_CHANGE_EVENT, (round: number, phase: string) => {
-            if (phase === Phases.GUESSING) {
+            if (phase === Phases.COUNTING) {
+                this.sheepService.startMoving()
+            } else if (phase === Phases.GUESSING) {
+                this.sheepService.stopMoving()
                 this.guessingService.saveSheepCount(round, this.sheepService.getAliveSheepCount());
             } else if (phase === Phases.RESULTS) {
                 this.guessingService.calculatePlayerRanks();
