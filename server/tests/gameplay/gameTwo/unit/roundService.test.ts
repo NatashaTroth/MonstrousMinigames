@@ -1,8 +1,6 @@
-import RoundService from "../../../src/gameplay/gameTwo/classes/RoundService";
-import Parameters from "../../../src/gameplay/gameTwo/constants/Parameters";
-import { Phases } from "../../../src/gameplay/gameTwo/enums/Phases";
-//import Parameters from "../../../src/gameplay/gameTwo/constants/Parameters";
-
+import RoundService from "../../../../src/gameplay/gameTwo/classes/RoundService";
+import Parameters from "../../../../src/gameplay/gameTwo/constants/Parameters";
+import { Phases } from "../../../../src/gameplay/gameTwo/enums/Phases";
 
 
 let roundService: RoundService;

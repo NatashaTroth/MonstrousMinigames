@@ -16,12 +16,6 @@ export default class SheepService {
         this.sheepCount = sheepCount;
     }
 
-
-    public getSheep(): Sheep[] {
-        return this.sheep;
-    }
-
-
     public initSheep(): void {
         const seedrandom = require('seedrandom');
         random.use(seedrandom('sheep'));
@@ -61,50 +55,68 @@ export default class SheepService {
 
         return valid;
     }
+    public update(): void {
+        const aliveSheep = this.sheep.filter(s => s.state === SheepStates.ALIVE);
+        aliveSheep.forEach(sheep => {
+            sheep.update();
+        });
+    }
 
-    public killSheep(player: GameTwoPlayer): boolean {
+    public startMoving(): void {
+        const aliveSheep = this.sheep.filter(s => s.state === SheepStates.ALIVE);
+        aliveSheep.forEach(sheep => {
+            sheep.startMoving();
+        });
+    }
 
-        const sheepInRadius = this.sheep.filter(sheep => {
+    public stopMoving(): void {
+        const aliveSheep = this.sheep.filter(s => s.state === SheepStates.ALIVE);
+        aliveSheep.forEach(sheep => {
+            sheep.stopMoving();
+        });
+    }
+
+    private getSheepInRadius(player: GameTwoPlayer): Sheep[] {
+        return this.sheep.filter(sheep => {
             return (
                 sheep.state === SheepStates.ALIVE &&
                 Math.abs(sheep.posX - player.posX) <= Parameters.KILL_RADIUS &&
                 Math.abs(sheep.posY - player.posY) <= Parameters.KILL_RADIUS
             );
         });
+    }
 
-        this.sheep.forEach(sheep => {
-            Math.abs(sheep.posX - player.posX) <= Parameters.KILL_RADIUS &&
-                Math.abs(sheep.posY - player.posY) <= Parameters.KILL_RADIUS;
+    private getClosestSheepId(player: GameTwoPlayer, sheepInRadius: Sheep[]): number {
+        let sheepId = sheepInRadius[0].id;
+        let minDistance = 1 + Parameters.KILL_RADIUS * 2;
+        let currentDistance;
+        sheepInRadius.forEach(sheep => {
+            currentDistance = Math.abs(sheep.posX - player.posX) + Math.abs(sheep.posY - player.posY);
+            if (currentDistance < minDistance) {
+                minDistance = currentDistance;
+                sheepId = sheep.id;
+            }
         });
+        return sheepId;
+    }
+    public killSheep(player: GameTwoPlayer): boolean {
+        const sheepInRadius = this.getSheepInRadius(player);
 
-        if (sheepInRadius.length < 1) {
-            return false;
-        } else if (sheepInRadius.length === 1) {
-            const sheepId = sheepInRadius[0].id;
-            this.sheep[sheepId].state = SheepStates.DECOY;
-            return true;
+        if (sheepInRadius.length < 1) return false;
+
+        let sheepId;
+        if (sheepInRadius.length === 1) {
+            sheepId = sheepInRadius[0].id;
         } else {
-            /* find the closest sheep in radius */
-            let sheepId = sheepInRadius[0].id;
-            let minDistance = 1 + Parameters.KILL_RADIUS * 2;
-            let currentDistance;
-            sheepInRadius.forEach(sheep => {
-                currentDistance = Math.abs(sheep.posX - player.posX) + Math.abs(sheep.posY - player.posY);
-                if (currentDistance < minDistance) {
-                    minDistance = currentDistance;
-                    sheepId = sheep.id;
-                }
-            });
-
-            this.sheep[sheepId].state = SheepStates.DECOY;
-            return true;
+            sheepId = this.getClosestSheepId(player, sheepInRadius);
         }
+        this.sheep[sheepId].state = SheepStates.DECOY;
+        this.sheep[sheepId].stopMoving();
+        return true;
+
     }
 
     public getAliveSheepCount(): number {
-        const aliveSheep = this.sheep.filter(s => {
-            return s.state === SheepStates.ALIVE;
-        })
-        return aliveSheep.length;
+        return this.sheep.filter(s => s.state === SheepStates.ALIVE).length;
     }
 }
