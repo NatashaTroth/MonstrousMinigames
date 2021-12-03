@@ -11,7 +11,7 @@ export default class Sheep {
     public direction: string;
     public directions: string[];
     public speed: number;
-    private isMoving: boolean;
+    public isMoving: boolean;
     private interval: NodeJS.Timer | null;
 
 

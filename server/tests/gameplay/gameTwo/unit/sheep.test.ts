@@ -18,5 +18,44 @@ describe('RoundService Tests', () => {
         expect(sheep.directions.length).toEqual(Parameters.SHEEP_DIRECTIONS_COUNT - 1);
     });
 
+    it('should have less directions after moving', () => {
+        jest.useFakeTimers();
+        sheep.startMoving();
+
+        jest.runTimersToTime(Parameters.SHEEP_FREEZE_MAX_MS * 5);
+        sheep.stopMoving();
+
+        expect(sheep.directions.length).toBeLessThan(Parameters.SHEEP_DIRECTIONS_COUNT);
+    });
+
+    it('should have the right amount of directions after running out of directions', () => {
+        let initialPosX = sheep.posX;
+        let initialPosY = sheep.posY;
+
+
+
+        sheep.isMoving = true;
+        sheep.direction = 'W';
+        sheep.update();
+        expect(sheep.posX).toBeLessThan(initialPosX);
+
+        sheep.direction = 'E';
+        sheep.update();
+        expect(sheep.posX).toEqual(initialPosX);
+
+        sheep.direction = 'N';
+        sheep.update();
+        expect(sheep.posY).toBeLessThan(initialPosY);
+
+        sheep.direction = 'S';
+        sheep.update();
+        expect(sheep.posY).toEqual(initialPosY);
+
+    });
+
+    it('should return false if no timer is set', () => {
+        expect(sheep.stopMoving()).toBeFalsy();
+    });
+
 
 });
