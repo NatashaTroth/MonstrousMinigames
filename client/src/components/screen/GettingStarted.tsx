@@ -1,7 +1,7 @@
-import { Dialog, Typography } from '@material-ui/core';
-import * as React from 'react';
+import { Dialog, Typography } from "@material-ui/core";
+import * as React from "react";
 
-import { DialogContent, StyledTypography } from './GettingStarted.sc';
+import { DialogContent, StyledTypography } from "./GettingStarted.sc";
 
 interface GettingStartedDialog {
     open: boolean;
@@ -23,7 +23,7 @@ const GettingStartedDialog: React.FunctionComponent<GettingStartedDialog> = ({ h
         >
             <DialogContent>
                 <Typography variant="h4" gutterBottom>
-                    Welcome to Monstrous Mini Games!
+                    Welcome to Monstrous Mini Games! (:
                 </Typography>
                 <StyledTypography>
                     A group of peaceful monsters have decided to spend tonight in the forest where they have set up

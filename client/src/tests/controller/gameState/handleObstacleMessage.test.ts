@@ -1,8 +1,6 @@
-import {
-    handleObstacleMessage
-} from "../../../domain/game1/controller/gameState/handleObstacleMessage";
-import { ObstacleMessage } from "../../../domain/typeGuards/game1/obstacle";
-import { MessageTypesGame1, ObstacleTypes } from "../../../utils/constants";
+import { handleObstacleMessage } from '../../../domain/game1/controller/gameState/handleObstacleMessage';
+import { ObstacleMessage } from '../../../domain/typeGuards/game1/obstacle';
+import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
 
 describe('handleObstacleMessage', () => {
     const data: ObstacleMessage = {

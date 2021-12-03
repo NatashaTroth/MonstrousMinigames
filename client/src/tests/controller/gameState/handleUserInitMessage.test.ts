@@ -1,8 +1,6 @@
-import {
-    handleUserInitMessage
-} from "../../../domain/commonGameState/controller/handleUserInitMessage";
-import { UserInitMessage } from "../../../domain/typeGuards/userInit";
-import { MessageTypes } from "../../../utils/constants";
+import { handleUserInitMessage } from '../../../domain/commonGameState/controller/handleUserInitMessage';
+import { UserInitMessage } from '../../../domain/typeGuards/userInit';
+import { MessageTypes } from '../../../utils/constants';
 
 describe('handleUserInitMessage', () => {
     const mockData: UserInitMessage = {

@@ -107,12 +107,12 @@ storage hinten - nach spiel alles löschen
 ```typescript
 {
     roomId: string;
-    photoUrls: photoPhotographerMapper[];
+    photoUrls: PhotoPhotographerMapper[];
     countdownTime: number;
 }
 
-//photoPhotographerMapper:
-export interface photoPhotographerMapper {
+//PhotoPhotographerMapper:
+export interface PhotoPhotographerMapper {
     photographerId: string;
     url: string;
 }
@@ -132,12 +132,12 @@ export interface photoPhotographerMapper {
 ```typescript
  {
     roomId: string;
-    results: votingResultsPhotographerMapper[];
+    results: VotesPhotographerMapper[];
     countdownTime: number;
 }
 
-//votingResultsPhotographerMapper:
-export interface votingResultsPhotographerMapper {
+//VotesPhotographerMapper:
+export interface VotesPhotographerMapper {
     photographerId: string;
     points: number;
 }
@@ -202,7 +202,7 @@ countdownTime: number;
     },
 }
 
-//votingResultsPhotographerMapper:
+//VotesPhotographerMapper:
 export interface GameThreePlayerRank  {
     id: string;
     name: string;
@@ -225,3 +225,9 @@ automatisch punkte wenn vorher nur 1 person in runde foto - skip vote message - 
 user deactivated
 
 add all the global messages stop game (not pause), ...
+
+also set received finalinfo true when only received 1
+
+add roundIdx in player
+
+points lost for not participating go to others

@@ -1,7 +1,7 @@
-import { History } from "history";
+import { History } from 'history';
 
-import { PlayerRank } from "../../../contexts/ScreenSocketContextProvider";
-import { controllerFinishedRoute } from "../../../utils/routes";
+import { PlayerRank } from '../../../contexts/ScreenSocketContextProvider';
+import { controllerFinishedRoute } from '../../../utils/routes';
 
 interface Dependencies {
     setPlayerRank: (val: number) => void;

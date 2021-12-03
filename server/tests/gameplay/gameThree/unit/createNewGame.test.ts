@@ -1,7 +1,5 @@
 import 'reflect-metadata';
 
-import Game from '../../../../src/gameplay/Game';
-import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
 import { leaderboard, roomId, users } from '../../mockData';
 
@@ -16,15 +14,10 @@ describe('Get game state info ', () => {
     });
 
     it('call super function', async () => {
-        const spy = jest.spyOn(Game.prototype as any, 'createNewGame').mockImplementation(() => {
+        const spy = jest.spyOn(gameThree, 'createNewGame').mockImplementation(() => {
             Promise.resolve();
         });
         gameThree.createNewGame(users);
         expect(spy).toHaveBeenCalledTimes(1);
-    });
-
-    it('creates photo topics', async () => {
-        gameThree.createNewGame(users);
-        expect(gameThree['photoTopics']!.length).toBe(InitialParameters.NUMBER_ROUNDS - 1);
     });
 });

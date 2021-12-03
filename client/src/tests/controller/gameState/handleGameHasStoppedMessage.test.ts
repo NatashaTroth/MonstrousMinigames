@@ -1,8 +1,6 @@
-import { createMemoryHistory } from "history";
+import { createMemoryHistory } from 'history';
 
-import {
-    handleGameHasStoppedMessage
-} from "../../../domain/commonGameState/controller/handleGameHasStoppedMessage";
+import { handleGameHasStoppedMessage } from '../../../domain/commonGameState/controller/handleGameHasStoppedMessage';
 
 describe('handleGameHasStoppedMessage', () => {
     const roomId = '1234';

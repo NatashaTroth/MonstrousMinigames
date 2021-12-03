@@ -1,8 +1,6 @@
-import {
-    handlePlayerFinishedMessage
-} from "../../../domain/commonGameState/controller/handlePlayerFinishedMessage";
-import { PlayerFinishedMessage } from "../../../domain/typeGuards/game1/playerFinished";
-import { MessageTypesGame1 } from "../../../utils/constants";
+import { handlePlayerFinishedMessage } from '../../../domain/commonGameState/controller/handlePlayerFinishedMessage';
+import { PlayerFinishedMessage } from '../../../domain/typeGuards/game1/playerFinished';
+import { MessageTypesGame1 } from '../../../utils/constants';
 
 beforeEach(() => {
     global.sessionStorage.clear();

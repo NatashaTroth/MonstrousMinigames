@@ -1,6 +1,6 @@
-import { handlePlayerDied } from "../../../domain/game1/controller/gameState/handlePlayerDied";
-import { PlayerDiedMessage } from "../../../domain/typeGuards/game1/playerDied";
-import { MessageTypesGame1 } from "../../../utils/constants";
+import { handlePlayerDied } from '../../../domain/game1/controller/gameState/handlePlayerDied';
+import { PlayerDiedMessage } from '../../../domain/typeGuards/game1/playerDied';
+import { MessageTypesGame1 } from '../../../utils/constants';
 
 describe('playerDied function', () => {
     let setPlayerDead: jest.Mock<any, any>;
