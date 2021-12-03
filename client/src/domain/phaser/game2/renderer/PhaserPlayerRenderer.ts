@@ -21,8 +21,6 @@ export class PhaserPlayerRenderer {
     }
 
     renderPlayer(coordinates: Coordinates, character: Character): void {
-        // eslint-disable-next-line no-console
-        console.log('render');
         if (!this.player) {
             this.renderPlayerInitially(coordinates, character.name);
             // frames:

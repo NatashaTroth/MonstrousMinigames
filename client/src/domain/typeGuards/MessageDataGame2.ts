@@ -3,6 +3,7 @@ import { GameHasFinishedMessage } from './finished';
 import { AllScreensSheepGameLoadedMessage } from './game2/allScreensSheepGameLoaded';
 import { GameStateInfoMessage } from './game2/gameStateInfo';
 import { InitialGameStateInfoMessage } from './game2/initialGameStateInfo';
+import { PhaseChangedMessage } from './game2/phaseChanged';
 import { PhaserLoadingTimedOutMessage } from './game2/phaserLoadingTimedOut';
 import { SheepGameHasStartedMessage } from './game2/started';
 import { GameHasPausedMessage } from './paused';
@@ -29,4 +30,5 @@ export type MessageDataGame2 =
     | ScreenStateMessage
     | PhaserLoadingTimedOutMessage
     | SheepGameHasStartedMessage
+    | PhaseChangedMessage
     | undefined;

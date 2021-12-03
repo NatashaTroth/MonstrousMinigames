@@ -25,6 +25,7 @@ import {
     InitialGameStateInfoMessage,
     initialGameStateInfoTypeGuard,
 } from '../../../typeGuards/game2/initialGameStateInfo';
+import { PhaseChangedMessage, phaseChangedTypeGuard } from '../../../typeGuards/game2/phaseChanged';
 import {
     PhaserLoadingTimedOutMessage,
     phaserLoadingTimedOutTypeGuard,
@@ -45,6 +46,7 @@ class SheepGameScene extends Phaser.Scene {
     posY: number;
     players: Array<Player>;
     sheep: Array<Sheep>;
+    phase: 'guessing' | 'counting' | 'results';
     gameStarted: boolean;
     paused: boolean;
     gameRenderer?: PhaserGameRenderer;
@@ -65,6 +67,7 @@ class SheepGameScene extends Phaser.Scene {
         this.posY = 0; //TODO get from backend
         this.players = [];
         this.sheep = [];
+        this.phase = 'counting';
         this.gameStarted = false;
         this.paused = false;
         this.gameEventEmitter = GameEventEmitter.getInstance();
@@ -158,8 +161,6 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     initSockets() {
-        // eslint-disable-next-line no-console
-        console.log('initSockers');
         if (!this.socket) return; //TODO - handle error - although think ok
         if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
@@ -193,6 +194,11 @@ class SheepGameScene extends Phaser.Scene {
         const gameStateInfoSocket = new MessageSocket(gameStateInfoTypeGuard, this.socket);
         gameStateInfoSocket.listen((data: GameStateInfoMessage) => {
             this.updateGameState(data.data);
+        });
+
+        const phaseChangeSocket = new MessageSocket(phaseChangedTypeGuard, this.socket);
+        phaseChangeSocket.listen((data: PhaseChangedMessage) => {
+            this.updateGamePhase(data);
         });
 
         const pausedSocket = new MessageSocket(pausedTypeGuard, this.socket);
@@ -262,6 +268,13 @@ class SheepGameScene extends Phaser.Scene {
                     this.sheep[i].renderer.destroySheep();
                 }
             }
+        }
+    }
+
+    updateGamePhase(data: PhaseChangedMessage) {
+        this.phase = data.phase;
+        if (this.phase == 'guessing') {
+            this.add.rectangle(0, 0, window.innerHeight, window.innerWidth, 0x6666ff);
         }
     }
 
