@@ -47,7 +47,7 @@ export default class Sheep {
     }
 
     public update(): void {
-        if (this.isMoving) {
+        if (this.isMoving && this.state === SheepStates.ALIVE) {
             this.move();
         }
     }
@@ -62,7 +62,7 @@ export default class Sheep {
     }
 
     public startMoving(): void {
-        this.cycleMoving();
+        if (this.state === SheepStates.ALIVE) this.cycleMoving();
     }
 
     public stopMoving(): boolean {
