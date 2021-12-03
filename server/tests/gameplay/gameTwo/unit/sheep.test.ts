@@ -29,8 +29,8 @@ describe('RoundService Tests', () => {
     });
 
     it('should have the right amount of directions after running out of directions', () => {
-        let initialPosX = sheep.posX;
-        let initialPosY = sheep.posY;
+        const initialPosX = sheep.posX;
+        const initialPosY = sheep.posY;
 
 
 
