@@ -25,10 +25,6 @@ export function handleGameStartedMessage(props: HandleGameStarted) {
     setGameStarted(true);
     setCountdownTime(countdownTime);
 
-    // DELETE
-    // eslint-disable-next-line no-console
-    console.log(GameNames);
-
     switch (game) {
         case GameNames.game1:
             history.push(controllerGame1Route(roomId));

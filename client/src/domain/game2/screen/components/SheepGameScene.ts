@@ -161,8 +161,6 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     initSockets() {
-        // eslint-disable-next-line no-console
-        console.log('initSockers');
         if (!this.socket) return; //TODO - handle error - although think ok
         if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
@@ -256,12 +254,6 @@ class SheepGameScene extends Phaser.Scene {
     updateGameState(gameStateData: GameData) {
         for (let i = 0; i < this.players.length; i++) {
             if (gameStateData.playersState[i]) {
-                // eslint-disable-next-line no-console
-                console.log(
-                    `${gameStateData.playersState[i].positionX.toString()}, ${gameStateData.playersState[
-                        i
-                    ].positionY.toString()}`
-                );
                 this.players[i].moveTo(
                     gameStateData.playersState[i].positionX,
                     gameStateData.playersState[i].positionY
@@ -280,8 +272,6 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     updateGamePhase(data: PhaseChangedMessage) {
-        // eslint-disable-next-line no-console
-        console.log(data.phase);
         this.phase = data.phase;
         if (this.phase == 'guessing') {
             this.add.rectangle(0, 0, window.innerHeight, window.innerWidth, 0x6666ff);
