@@ -1,33 +1,28 @@
 import * as React from "react";
 
-import {
-    handleConnectedUsersMessage
-} from "../domain/commonGameState/controller/handleConnectedUsersMessage";
-import {
-    handleGameHasFinishedMessage
-} from "../domain/commonGameState/controller/handleGameHasFinishedMessage";
-import {
-    handleGameHasResetMessage
-} from "../domain/commonGameState/controller/handleGameHasResetMessage";
-import {
-    handleGameHasStoppedMessage
-} from "../domain/commonGameState/controller/handleGameHasStoppedMessage";
-import {
-    handleGameStartedMessage
-} from "../domain/commonGameState/controller/handleGameStartedMessage";
+import { connectedUsersHandler } from "../domain/commonGameState/controller/connectedUsersHandler";
+import { gameFinishedHandler } from "../domain/commonGameState/controller/gameFinishedHandler";
 import {
     handlePlayerFinishedMessage
 } from "../domain/commonGameState/controller/handlePlayerFinishedMessage";
+import { resetHandler } from "../domain/commonGameState/controller/resetHandler";
+import { startedHandler } from "../domain/commonGameState/controller/startedHandler";
+import { stopHandler } from "../domain/commonGameState/controller/stopHandler";
 import { userInitHandler } from "../domain/commonGameState/controller/userInitHandler";
+import { gameSetHandler } from "../domain/commonGameState/gameSetHandler";
+import { pauseHandler } from "../domain/commonGameState/pauseHandler";
+import { resumeHandler } from "../domain/commonGameState/resumeHandler";
 import addMovementListener from "../domain/game1/controller/gameState/addMovementListener";
 import {
     handleApproachingObstacleMessage
 } from "../domain/game1/controller/gameState/handleApproachingSolvableObstacleMessage";
-import { handleObstacleMessage } from "../domain/game1/controller/gameState/handleObstacleMessage";
 import { handlePlayerDied } from "../domain/game1/controller/gameState/handlePlayerDied";
 import {
     handleStunnablePlayers
 } from "../domain/game1/controller/gameState/handleStunnablePlayers";
+import { obstacleHandler } from "../domain/game1/controller/gameState/obstacleHandler";
+import { stunnedHandler } from "../domain/game1/controller/gameState/stunnedHandler";
+import { unstunnedHandler } from "../domain/game1/controller/gameState/unstunnedHandler";
 import history from "../domain/history/history";
 import { handleSetSocket } from "../domain/socket/controller/handleSetSocket";
 import { handleSocketConnection } from "../domain/socket/controller/handleSocketConnection";
@@ -36,6 +31,7 @@ import { Socket } from "../domain/socket/Socket";
 import { localStorage } from "../domain/storage/LocalStorage";
 import { sessionStorage } from "../domain/storage/SessionStorage";
 import { persistUser } from "../domain/user/persistUser";
+import { controllerChooseCharacterRoute } from "../utils/routes";
 import { Game1Context } from "./game1/Game1ContextProvider";
 import { Game3Context } from "./game3/Game3ContextProvider";
 import { GameContext } from "./GameContextProvider";
@@ -109,31 +105,16 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
     }, [permission, hasPaused, playerFinished, controllerSocket]);
 
     const dependencies = {
-        history,
-        setControllerSocket,
-        setHasPaused,
         setExceededChaserPushes,
-        setChosenGame,
         setVoteForPhotoMessage,
         setRoundIdx,
         setTopicMessage,
         setVotingResults,
         setFinalRoundCountdownTime,
         setPresentFinalPhotos,
-        handleConnectedUsersMessage: handleConnectedUsersMessage({ setAvailableCharacters, setConnectedUsers }),
-        handleGameStartedMessage: handleGameStartedMessage({ setGameStarted, history, setCountdownTime }),
-        handleGameHasStoppedMessage: handleGameHasStoppedMessage({ history }),
-        handleGameHasFinishedMessage: handleGameHasFinishedMessage({ setPlayerRank, history, playerRank }),
-        handleObstacleMessage: handleObstacleMessage({ setObstacle }),
         handlePlayerFinishedMessage: handlePlayerFinishedMessage({ setPlayerFinished, setPlayerRank }),
         handleStunnablePlayers: handleStunnablePlayers({ setStunnablePlayers }),
         handlePlayerDied: handlePlayerDied({ setPlayerDead, setPlayerRank }),
-        handleGameHasResetMessage: handleGameHasResetMessage({
-            resetController: () => {
-                resetGame3(), resetPlayer();
-            },
-            history,
-        }),
         handleApproachingObstacleMessage: handleApproachingObstacleMessage({ setEarlySolvableObstacle }),
         setRoomId,
     };
@@ -151,12 +132,62 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         persistUser: persistUserWithDependencies,
     });
 
+    const connectedUserHandlerWithDependencies = connectedUsersHandler({
+        setAvailableCharacters,
+        setConnectedUsers,
+    });
+
+    const pausedHandlerWithDependencies = pauseHandler({
+        setHasPaused,
+    });
+
+    const resumeHandlerWithDependencies = resumeHandler({
+        setHasPaused,
+    });
+
+    const gameSetHandlerWithDependencies = gameSetHandler({
+        setChosenGame,
+    });
+
+    const stopHandlerWithDependencies = stopHandler({
+        history,
+    });
+
+    const startedHandlerWithDependencies = startedHandler({ setGameStarted, history, setCountdownTime });
+
+    const resetHandlerWithDependencies = resetHandler({
+        resetController: () => {
+            resetGame3(), resetPlayer();
+        },
+        history,
+    });
+
+    const gameFinishedHandlerWithDependencies = gameFinishedHandler({ setPlayerRank, history, playerRank });
+
+    const obstacleHandlerWithDependencies = obstacleHandler({ setObstacle });
+
+    const stunnedHandlerWithDependencies = stunnedHandler({ history });
+    const unstunnedHandlerWithDependencies = unstunnedHandler({ history });
+
     const content = {
         controllerSocket,
         setControllerSocket: (socket: Socket, roomId: string) => {
             // TODO remove maybe
+            setControllerSocket(socket);
             userInitHandlerWithDependencies(socket);
+            connectedUserHandlerWithDependencies(socket);
+            pausedHandlerWithDependencies(socket);
+            resumeHandlerWithDependencies(socket);
+            gameSetHandlerWithDependencies(socket);
+            stopHandlerWithDependencies(socket, roomId);
+            startedHandlerWithDependencies(socket, roomId);
+            resetHandlerWithDependencies(socket, roomId);
+            gameFinishedHandlerWithDependencies(socket, roomId);
+            obstacleHandlerWithDependencies(socket, roomId);
+            stunnedHandlerWithDependencies(socket, roomId);
+            unstunnedHandlerWithDependencies(socket, roomId);
             handleSetSocket(socket, roomId, playerFinished, dependencies);
+            history.push(controllerChooseCharacterRoute(roomId));
         },
         handleSocketConnection: (roomId: string, name: string) => {
             handleSocketConnection(roomId, name, playerFinished, dependencies);

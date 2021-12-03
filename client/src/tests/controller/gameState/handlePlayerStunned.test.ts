@@ -1,14 +1,24 @@
-import { createMemoryHistory } from 'history';
+import { createMemoryHistory } from "history";
 
-import { handlePlayerStunned } from '../../../domain/game1/controller/gameState/handlePlayerStunned';
+import { stunnedHandler } from "../../../domain/game1/controller/gameState/stunnedHandler";
+import { InMemorySocketFake } from "../../../domain/socket/InMemorySocketFake";
+import { PlayerStunnedMessage } from "../../../domain/typeGuards/game1/playerStunned";
+import { MessageTypesGame1 } from "../../../utils/constants";
 
-describe('handlePlayerStunned', () => {
+describe('stunnedHandler', () => {
     const roomId = '1234';
+    const message: PlayerStunnedMessage = {
+        type: MessageTypesGame1.playerStunned,
+    };
 
-    it('history push should be called with handed roomId', () => {
+    it('when PlayerStunnedMessage is written, history push should be called with handed roomId', async () => {
         const history = createMemoryHistory();
+        const socket = new InMemorySocketFake();
 
-        handlePlayerStunned(history, roomId);
+        const withDependencies = stunnedHandler({ history });
+        withDependencies(socket, roomId);
+
+        await socket.emit(message);
 
         expect(history.location).toHaveProperty('pathname', `/controller/${roomId}/stunned`);
     });

@@ -1,29 +1,25 @@
-import { createMemoryHistory } from 'history';
+
 
 import {
-    handleSetControllerSocketGame1,
-    HandleSetControllerSocketGame1Dependencies,
-} from '../../domain/game1/controller/socket/Sockets';
-import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
-import { ApproachingSolvableObstacleMessage } from '../../domain/typeGuards/game1/approachingSolvableObstacleTypeGuard';
-import { ExceededMaxChaserPushesMessage } from '../../domain/typeGuards/game1/exceededMaxChaserPushes';
-import { ObstacleMessage } from '../../domain/typeGuards/game1/obstacle';
-import { PlayerDiedMessage } from '../../domain/typeGuards/game1/playerDied';
-import { PlayerFinishedMessage } from '../../domain/typeGuards/game1/playerFinished';
-import { PlayerStunnedMessage } from '../../domain/typeGuards/game1/playerStunned';
-import { PlayerUnstunnedMessage } from '../../domain/typeGuards/game1/playerUnstunned';
-import { StunnablePlayersMessage } from '../../domain/typeGuards/game1/stunnablePlayers';
-import { MessageTypesGame1, ObstacleTypes } from '../../utils/constants';
-import { controllerGame1Route, controllerPlayerStunnedRoute } from '../../utils/routes';
+    handleSetControllerSocketGame1, HandleSetControllerSocketGame1Dependencies
+} from "../../domain/game1/controller/socket/Sockets";
+import { InMemorySocketFake } from "../../domain/socket/InMemorySocketFake";
+import {
+    ApproachingSolvableObstacleMessage
+} from "../../domain/typeGuards/game1/approachingSolvableObstacleTypeGuard";
+import {
+    ExceededMaxChaserPushesMessage
+} from "../../domain/typeGuards/game1/exceededMaxChaserPushes";
+import { PlayerDiedMessage } from "../../domain/typeGuards/game1/playerDied";
+import { PlayerFinishedMessage } from "../../domain/typeGuards/game1/playerFinished";
+import { StunnablePlayersMessage } from "../../domain/typeGuards/game1/stunnablePlayers";
+import { MessageTypesGame1, ObstacleTypes } from "../../utils/constants";
 
 describe('handleSetSocket', () => {
-    const history = createMemoryHistory();
     const roomId = 'ABCD';
 
     const dependencies: HandleSetControllerSocketGame1Dependencies = {
-        history,
         setExceededChaserPushes: jest.fn(),
-        handleObstacleMessage: jest.fn(),
         handlePlayerFinishedMessage: jest.fn(),
         handleStunnablePlayers: jest.fn(),
         handlePlayerDied: jest.fn(),
@@ -47,23 +43,6 @@ describe('handleSetSocket', () => {
         expect(handlePlayerFinishedMessage).toHaveBeenCalledTimes(1);
     });
 
-    it('when ObstacleMessage was written, handed handleObstacleMessage is executed', async () => {
-        const message: ObstacleMessage = {
-            type: MessageTypesGame1.obstacle,
-            obstacleType: ObstacleTypes.spider,
-            obstacleId: 1,
-        };
-
-        const socket = new InMemorySocketFake();
-        const handleObstacleMessage = jest.fn();
-
-        handleSetControllerSocketGame1(socket, roomId, false, { ...dependencies, handleObstacleMessage });
-
-        await socket.emit(message);
-
-        expect(handleObstacleMessage).toHaveBeenCalledTimes(1);
-    });
-
     it('when PlayerDiedMessage was written, handed handlePlayerDied is executed', async () => {
         const message: PlayerDiedMessage = {
             type: MessageTypesGame1.playerDied,
@@ -78,36 +57,6 @@ describe('handleSetSocket', () => {
         await socket.emit(message);
 
         expect(handlePlayerDied).toHaveBeenCalledTimes(1);
-    });
-
-    it('when PlayerStunnedMessage was written, history should be reroute to stunned screen', async () => {
-        const message: PlayerStunnedMessage = {
-            type: MessageTypesGame1.playerStunned,
-        };
-
-        const socket = new InMemorySocketFake();
-        const history = createMemoryHistory();
-
-        handleSetControllerSocketGame1(socket, roomId, false, { ...dependencies, history });
-
-        await socket.emit(message);
-
-        expect(history.location).toHaveProperty('pathname', controllerPlayerStunnedRoute(roomId));
-    });
-
-    it('when PlayerUnstunnedMessage was written, history should be reroute to game1 screen', async () => {
-        const message: PlayerUnstunnedMessage = {
-            type: MessageTypesGame1.playerUnstunned,
-        };
-
-        const socket = new InMemorySocketFake();
-        const history = createMemoryHistory();
-
-        handleSetControllerSocketGame1(socket, roomId, false, { ...dependencies, history });
-
-        await socket.emit(message);
-
-        expect(history.location).toHaveProperty('pathname', controllerGame1Route(roomId));
     });
 
     it('when ApproachingSolvableObstacleMessage was written, handed handleApproachingObstacleMessage is executed', async () => {
