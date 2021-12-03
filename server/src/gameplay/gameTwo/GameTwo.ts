@@ -4,7 +4,7 @@ import Game from '../Game';
 import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
-import InitialParameters from './constants/InitialParameters';
+import Parameters from './constants/Parameters';
 import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
 import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
 import GameTwoPlayer from './GameTwoPlayer';
@@ -24,25 +24,25 @@ interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateIn
 export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implements GameTwoGameInterface {
     public lengthX: number;
     public lengthY: number;
-    countdownTime = InitialParameters.COUNTDOWN_TIME;
+    countdownTime = Parameters.COUNTDOWN_TIME;
     public sheepService: SheepService;
     private roundService: RoundService;
     private roundEventEmitter: RoundEventEmitter;
     private guessingService: GuessingService;
 
-    initialPlayerPositions = InitialParameters.PLAYERS_POSITIONS;
+    initialPlayerPositions = Parameters.PLAYERS_POSITIONS;
 
     gameName = GameNames.GAME2;
 
     constructor(roomId: string, public leaderboard: Leaderboard) {
         super(roomId);
         this.gameStateMessage = GameTwoMessageTypes.GAME_STATE;
-        this.lengthX = InitialParameters.LENGTH_X;
-        this.lengthY = InitialParameters.LENGTH_Y;
-        this.sheepService = new SheepService(InitialParameters.SHEEP_COUNT);
+        this.lengthX = Parameters.LENGTH_X;
+        this.lengthY = Parameters.LENGTH_Y;
+        this.sheepService = new SheepService(Parameters.SHEEP_COUNT);
         this.roundService = new RoundService();
         this.roundEventEmitter = RoundEventEmitter.getInstance();
-        this.guessingService = new GuessingService(InitialParameters.ROUNDS);
+        this.guessingService = new GuessingService(Parameters.ROUNDS);
 
     }
 
@@ -64,6 +64,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             lengthY: this.lengthY,
             round: this.roundService.round,
             phase: this.roundService.phase,
+            timeLeft: this.roundService.getTimeLeft(),
             aliveSheepCounts: this.guessingService.counts
         };
     }
@@ -74,13 +75,13 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             user.name,
             this.initialPlayerPositions[user.number].x,
             this.initialPlayerPositions[user.number].y,
-            InitialParameters.KILLS_PER_ROUND,
+            Parameters.KILLS_PER_ROUND,
             user.characterNumber
         );
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
-        return;
+        if (this.roundService.isCountingPhase()) this.sheepService.update();
     }
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
         return;
@@ -103,7 +104,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     startGame(): void {
         setTimeout(() => {
             super.startGame();
-            this.roundService.countingPhase();
+            this.roundService.start();
         }, this.countdownTime);
         GameTwoEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime, this.gameName);
     }
@@ -121,10 +122,12 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     stopGameUserClosed() {
         super.stopGameUserClosed();
         GameTwoEventEmitter.emitGameHasStoppedEvent(this.roomId);
+        this.cleanup();
     }
 
     stopGameAllUsersDisconnected() {
         super.stopGameAllUsersDisconnected();
+        this.cleanup();
     }
 
     protected movePlayer(userId: string, direction: string) {
@@ -185,19 +188,27 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     reconnectPlayer(userId: string) {
         if (super.reconnectPlayer(userId)) {
             GameTwoEventEmitter.emitPlayerHasReconnected(this.roomId, userId);
-
             return true;
         }
-
         return false;
     }
 
     protected listenToEvents(): void {
         this.roundEventEmitter.on(RoundEventEmitter.PHASE_CHANGE_EVENT, (round: number, phase: string) => {
-            if (phase === Phases.GUESSING) {
+            if (phase === Phases.COUNTING) {
+                this.sheepService.startMoving()
+            } else if (phase === Phases.GUESSING) {
+                this.sheepService.stopMoving()
                 this.guessingService.saveSheepCount(round, this.sheepService.getAliveSheepCount());
+            } else if (phase === Phases.RESULTS) {
+                this.guessingService.calculatePlayerRanks();
+                GameTwoEventEmitter.emitPlayerRanks(this.roomId, this.guessingService.getPlayerRanks())
             }
             GameTwoEventEmitter.emitPhaseHasChanged(this.roomId, round, phase);
         });
+    }
+
+    public cleanup() {
+        this.roundEventEmitter.removeAllListeners();
     }
 }

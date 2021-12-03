@@ -10,8 +10,9 @@ import { GameTwoMessageEmitter } from './GameTwoMessageEmitter';
 import { GameStateInfo, PlayerRank } from '../interfaces';
 import {
     GAME_TWO_EVENT_MESSAGE__GUESS_HINT,
-    GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED,
+    GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED, GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS
 } from './../interfaces/GameTwoEventMessages';
+import { GameTwoPlayerRank } from '../interfaces/GameTwoPlayerRank';
 
 export default class GameTwoEventEmitter {
     private static readonly GameTwoMessageEmitter = DI.resolve(GameTwoMessageEmitter);
@@ -30,6 +31,14 @@ export default class GameTwoEventEmitter {
             roomId,
             round,
             phase,
+        });
+    }
+
+    public static emitPlayerRanks(roomId: string, playerRanks: GameTwoPlayerRank[]) {
+        this.GameTwoMessageEmitter.emit({
+            type: GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS,
+            roomId,
+            playerRanks,
         });
     }
 

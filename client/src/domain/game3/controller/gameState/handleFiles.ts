@@ -1,9 +1,9 @@
-import { FirebaseStorage, getDownloadURL, ref, uploadBytes } from "@firebase/storage";
-import { deleteObject, listAll } from "firebase/storage";
+import { FirebaseStorage, getDownloadURL, ref, uploadBytes } from '@firebase/storage';
+import { deleteObject, listAll } from 'firebase/storage';
 
-import { MessageTypesGame3 } from "../../../../utils/constants";
-import { Socket } from "../../../socket/Socket";
-import { UploadProps } from "../components/TakePicture";
+import { MessageTypesGame3 } from '../../../../utils/constants';
+import { Socket } from '../../../socket/Socket';
+import { UploadProps } from '../components/TakePicture';
 
 export default async function uploadFile(
     values: UploadProps,
@@ -24,7 +24,7 @@ export default async function uploadFile(
         if (imageUrl) {
             controllerSocket.emit({
                 type: MessageTypesGame3.photo,
-                userId,
+                photographerId: userId,
                 url: imageUrl,
             });
         }

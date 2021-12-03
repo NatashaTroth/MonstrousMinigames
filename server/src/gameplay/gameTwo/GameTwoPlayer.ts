@@ -1,5 +1,5 @@
 import Player from "../Player";
-import InitialParameters from "./constants/InitialParameters";
+import Parameters from "./constants/Parameters";
 import { Direction } from "./enums/Direction";
 
 class GameTwoPlayer extends Player {
@@ -15,7 +15,7 @@ class GameTwoPlayer extends Player {
     ) {
         super(id, name, characterNumber);
         this.direction = 'C';
-        this.speed = InitialParameters.SPEED;
+        this.speed = Parameters.SPEED;
     }
 
     update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
@@ -31,12 +31,12 @@ class GameTwoPlayer extends Player {
             }
         }
         if (this.direction.startsWith(Direction.DOWN)) {
-            if (this.posY < InitialParameters.LENGTH_Y) {
+            if (this.posY < Parameters.LENGTH_Y) {
                 this.posY += this.speed;
             }
         }
         if (this.direction.includes(Direction.RIGHT)) {
-            if (this.posX < InitialParameters.LENGTH_X) {
+            if (this.posX < Parameters.LENGTH_X) {
                 this.posX += this.speed;
             }
         }

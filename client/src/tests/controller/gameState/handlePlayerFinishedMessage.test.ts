@@ -24,48 +24,49 @@ describe('playerHasFinished function', () => {
 
     it('handed setPlayerFinished should be called with true', () => {
         const playerFinished = false;
-        handlePlayerFinishedMessage({
-            data: mockData,
-            roomId,
-            playerFinished,
-            dependencies: { setPlayerFinished, setPlayerRank },
+
+        const withDependencies = handlePlayerFinishedMessage({
+            setPlayerFinished,
+            setPlayerRank,
         });
+
+        withDependencies({ data: mockData, roomId, playerFinished });
 
         expect(setPlayerFinished).toHaveBeenLastCalledWith(true);
     });
 
     it('handed setPlayerRank should be called with passed rank', () => {
         const playerFinished = false;
-        handlePlayerFinishedMessage({
-            data: mockData,
-            roomId,
-            playerFinished,
-            dependencies: { setPlayerFinished, setPlayerRank },
+        const withDependencies = handlePlayerFinishedMessage({
+            setPlayerFinished,
+            setPlayerRank,
         });
+
+        withDependencies({ data: mockData, roomId, playerFinished });
 
         expect(setPlayerRank).toHaveBeenLastCalledWith(mockData.rank);
     });
 
     it('if player has already finished, setPlayerFinished should not be called', () => {
         const playerFinished = true;
-        handlePlayerFinishedMessage({
-            data: mockData,
-            roomId,
-            playerFinished,
-            dependencies: { setPlayerFinished, setPlayerRank },
+        const withDependencies = handlePlayerFinishedMessage({
+            setPlayerFinished,
+            setPlayerRank,
         });
+
+        withDependencies({ data: mockData, roomId, playerFinished });
 
         expect(setPlayerFinished).toHaveBeenCalledTimes(0);
     });
 
     it('if player has already finished, setPlayerRank should not be called', () => {
         const playerFinished = true;
-        handlePlayerFinishedMessage({
-            data: mockData,
-            roomId,
-            playerFinished,
-            dependencies: { setPlayerFinished, setPlayerRank },
+        const withDependencies = handlePlayerFinishedMessage({
+            setPlayerFinished,
+            setPlayerRank,
         });
+
+        withDependencies({ data: mockData, roomId, playerFinished });
 
         expect(setPlayerRank).toHaveBeenCalledTimes(0);
     });
@@ -77,12 +78,12 @@ describe('playerHasFinished function', () => {
         const playerFinished = false;
         global.sessionStorage.setItem('windmillTimeoutId', '1');
 
-        handlePlayerFinishedMessage({
-            data: mockData,
-            roomId,
-            playerFinished,
-            dependencies: { setPlayerRank, setPlayerFinished },
+        const withDependencies = handlePlayerFinishedMessage({
+            setPlayerFinished,
+            setPlayerRank,
         });
+
+        withDependencies({ data: mockData, roomId, playerFinished });
 
         expect(global.sessionStorage.getItem('windmillTimeoutId')).toBe(null);
     });

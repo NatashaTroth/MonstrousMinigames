@@ -13,11 +13,11 @@ describe('handleObstacleMessage', () => {
     const setObstacle = jest.fn();
 
     it('when message type is obstacle, handed setObstacle should be called', () => {
-        handleObstacleMessage({
-            data,
-            roomId,
+        const withDependencies = handleObstacleMessage({
             setObstacle,
         });
+
+        withDependencies({ data, roomId });
 
         expect(setObstacle).toHaveBeenCalledTimes(1);
     });

@@ -10,7 +10,9 @@ describe('handleStartPhaserGameMessage', () => {
         const history = createMemoryHistory();
         const setGameStarted = jest.fn();
 
-        handleStartPhaserGameMessage({ roomId, dependencies: { history, setGameStarted } });
+        const withDependencies = handleStartPhaserGameMessage({ history, setGameStarted });
+
+        withDependencies(roomId);
 
         expect(history.location).toHaveProperty('pathname', screenGame1Route(roomId));
     });
@@ -19,10 +21,9 @@ describe('handleStartPhaserGameMessage', () => {
         const history = createMemoryHistory();
         const setGameStarted = jest.fn();
 
-        handleStartPhaserGameMessage({
-            roomId,
-            dependencies: { history, setGameStarted },
-        });
+        const withDependencies = handleStartPhaserGameMessage({ history, setGameStarted });
+
+        withDependencies(roomId);
 
         expect(setGameStarted).toHaveBeenCalledWith(true);
     });

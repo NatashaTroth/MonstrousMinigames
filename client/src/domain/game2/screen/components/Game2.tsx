@@ -4,26 +4,16 @@ import * as React from 'react';
 import { useParams } from 'react-router';
 
 import { RouteParams } from '../../../../App';
-import { AudioContext } from '../../../../contexts/AudioContextProvider';
+import { MyAudioContext, Sound } from '../../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../../../contexts/ScreenSocketContextProvider';
-import { handleAudioPermission } from '../../../audio/handlePermission';
 import { AudioButton, Container, PauseButton } from '../../../game1/screen/components/Game.sc';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import SheepGameScene from './SheepGameScene';
 
 const Game2: React.FunctionComponent = () => {
     const { roomId, hasPaused, screenAdmin } = React.useContext(GameContext);
-    const {
-        pauseLobbyMusicNoMute,
-        audioPermission,
-        setAudioPermissionGranted,
-        musicIsPlaying,
-        gameAudioPlaying,
-        setGameAudioPlaying,
-        mute,
-        unMute,
-    } = React.useContext(AudioContext);
+    const { changeSound, isPlaying, togglePlaying } = React.useContext(MyAudioContext);
     const { id }: RouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
 
@@ -32,18 +22,9 @@ const Game2: React.FunctionComponent = () => {
     }
 
     React.useEffect(() => {
-        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-
-        if (Number(localStorage.getItem('audioVolume')) > 0) {
-            setGameAudioPlaying(true);
-        }
+        changeSound(Sound.game2);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    React.useEffect(() => {
-        pauseLobbyMusicNoMute(audioPermission);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [audioPermission]);
 
     React.useEffect(() => {
         const game = new Phaser.Game({
@@ -68,15 +49,13 @@ const Game2: React.FunctionComponent = () => {
     }, []);
 
     async function handleAudio() {
-        if (gameAudioPlaying) {
+        if (isPlaying) {
             GameEventEmitter.emitPauseAudioEvent();
-            setGameAudioPlaying(false);
-            mute();
         } else {
             GameEventEmitter.emitPlayAudioEvent();
-            setGameAudioPlaying(true);
-            unMute();
         }
+
+        togglePlaying();
     }
 
     //TODO click on pause immediately - doesn't work because wrong gamestate, countdown still running - fix
@@ -90,7 +69,7 @@ const Game2: React.FunctionComponent = () => {
                 {hasPaused ? <PlayArrow /> : <Pause />}
             </PauseButton>
             <AudioButton onClick={handleAudio} variant="primary">
-                {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
+                {isPlaying ? <VolumeUp /> : <VolumeOff />}
             </AudioButton>
             <GameContent />
         </Container>

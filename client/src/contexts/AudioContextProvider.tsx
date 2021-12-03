@@ -1,184 +1,110 @@
 import * as React from 'react';
 
 import campfireSoundsFile from '../assets/audio/Campfire_Loop.wav';
+import gameThreeMusicFile from '../assets/audio/Game_3_Sound_Loop.wav';
 import lobbyMusicFile from '../assets/audio/LobbySound2_Loop.wav';
 import owlSoundsFile from '../assets/audio/Owl_Loop.wav';
 import finishedMusicFile from '../assets/audio/WinnerSound.wav';
 import woodSoundsFile from '../assets/audio/WoodSounds_Loop.wav';
 
-export const defaultValue = {
-    audioPermission: false,
-    playing: false,
-    setPlaying: () => {
-        // do nothing
-    },
-    gameAudioPlaying: false,
-    setGameAudioPlaying: () => {
-        // do nothing
-    },
-    setAudioPermissionGranted: () => {
-        // do nothing
-    },
-    lobbyMusic: new Audio(lobbyMusicFile),
-    playLobbyMusic: () => {
-        //do nothing
-    },
-    initialPlayLobbyMusic: () => {
-        //do nothing
-    },
-    pauseLobbyMusic: () => {
-        //do nothing
-    },
-    campfireSounds: new Audio(campfireSoundsFile),
-    owlSounds: new Audio(owlSoundsFile),
-    woodSounds: new Audio(woodSoundsFile),
-    finishedMusic: new Audio(finishedMusicFile),
-    playFinishedMusic: () => {
-        //do nothing
-    },
-    initialPlayFinishedMusic: () => {
-        //do nothing
-    },
-    pauseFinishedMusic: () => {
-        //do nothing
-    },
-    pauseLobbyMusicNoMute: () => {
-        //do nothing
-    },
-    volume: 0,
-    setVolume: () => {
-        //do nothing
-    },
-    setAudioVolume: () => {
-        //do nothing
-    },
-    setAudioBeforeVolume: () => {
-        //do nothing
-    },
-    mute: () => {
-        //do nothing
-    },
-    unMute: () => {
-        //do nothing
-    },
-    musicIsPlaying: false,
-};
-interface AudioContextProps {
-    audioPermission: boolean;
-    playing: boolean;
-    gameAudioPlaying: boolean;
-    lobbyMusic: HTMLAudioElement;
-    finishedMusic: HTMLAudioElement;
-    volume: number;
-    setAudioPermissionGranted: (val: boolean) => void;
-    playLobbyMusic: (p: boolean) => void;
-    initialPlayLobbyMusic: (p: boolean) => void;
-    pauseLobbyMusic: (p: boolean) => void;
-    playFinishedMusic: (p: boolean) => void;
-    initialPlayFinishedMusic: (p: boolean) => void;
-    pauseFinishedMusic: (p: boolean) => void;
-    setPlaying: (p: boolean) => void;
-    setGameAudioPlaying: (p: boolean) => void;
-    setVolume: (v: number) => void;
-    setAudioVolume: (v: number) => void;
-    setAudioBeforeVolume: (v: number) => void;
-    pauseLobbyMusicNoMute: (p: boolean) => void;
-    mute: () => void;
-    unMute: () => void;
-    musicIsPlaying: boolean;
+interface WindowProps extends Window {
+    webkitAudioContext?: typeof AudioContext;
 }
 
-export const AudioContext = React.createContext<AudioContextProps>(defaultValue);
+const lobbyTracks = [
+    { src: new Audio(lobbyMusicFile) },
+    { src: new Audio(campfireSoundsFile), volumeFactor: 0.15 },
+    { src: new Audio(woodSoundsFile), volumeFactor: 0.3 },
+];
+const owlTracks = [{ src: new Audio(owlSoundsFile), volumeFactor: 0.15 }];
+const finishedTracks = [{ src: new Audio(finishedMusicFile) }];
+const gameThreeTracks = [{ src: new Audio(gameThreeMusicFile) }];
 
-const AudioContextProvider: React.FunctionComponent = ({ children }) => {
-    const [audioPermission, setAudioPermissionGranted] = React.useState<boolean>(false);
-    const [playing, setPlaying] = React.useState<boolean>(false);
-    const [gameAudioPlaying, setGameAudioPlaying] = React.useState<boolean>(false);
-    const [lobbyMusic, setLobbyMusic] = React.useState<HTMLAudioElement>(new Audio(lobbyMusicFile));
-    const [finishedMusic, setFinishedMusic] = React.useState<HTMLAudioElement>(new Audio(finishedMusicFile));
-    const [campfireSounds] = React.useState<HTMLAudioElement>(new Audio(campfireSoundsFile));
-    const [owlSounds] = React.useState<HTMLAudioElement>(new Audio(owlSoundsFile));
+type Track = { src: HTMLAudioElement; volumeFactor?: number; onPlay?: () => Promise<void> };
+type PlayingTracks = { name: string; tracks: Track[] };
+
+export enum Sound {
+    lobby = 'lobby',
+    finished = 'finished',
+    game1 = 'game1',
+    game2 = 'game2',
+    game3 = 'game3',
+}
+
+export const defaultValue = {
+    isPlaying: true,
+    togglePlaying: () => {
+        // do nothing
+    },
+    volume: 0.5,
+    setVolume: () => {
+        // do nothing
+    },
+    changeSound: () => {
+        // do nothing
+    },
+};
+interface MyAudioContextProps {
+    isPlaying: boolean;
+    togglePlaying: () => void;
+    volume: number;
+    setVolume: (val: number) => void;
+    changeSound: (val: Sound) => void;
+}
+
+export const MyAudioContext = React.createContext<MyAudioContextProps>(defaultValue);
+
+const MyAudioContextProvider: React.FunctionComponent = ({ children }) => {
+    const [volume, setVolume] = React.useState(
+        localStorage.getItem('audioVolume') ? Number(localStorage.getItem('audioVolume')) : defaultValue.volume
+    );
+    const [audioCtx, setAudioCtx] = React.useState<null | AudioContext>(null);
+    const [isPlaying, setIsPlaying] = React.useState(false);
+
+    const [lobbyMusic, setLobbyMusic] = React.useState<Track[]>(lobbyTracks);
+    const [finishedMusic, setFinishedMusic] = React.useState<Track[]>(finishedTracks);
+    const [owlMusic, setOwlMusic] = React.useState<Track[]>(owlTracks);
+    const [gameThreeMusic, setGameThreeMusic] = React.useState<Track[]>(gameThreeTracks);
+
+    const [playingTracks, setPlayingTracks] = React.useState<PlayingTracks>({ name: '', tracks: [] });
     const [owlSoundsTimeout, setOwlSoundsTimeout] = React.useState<ReturnType<typeof setTimeout>>(
         setTimeout(() => {
             /*do nothing*/
         }, 0)
     );
-    const [woodSounds] = React.useState<HTMLAudioElement>(new Audio(woodSoundsFile));
-    const [lobbyMusicAndSfx] = React.useState<HTMLAudioElement[]>([lobbyMusic, campfireSounds, woodSounds]);
-    const [allAudio] = React.useState<HTMLAudioElement[]>([...lobbyMusicAndSfx, finishedMusic, owlSounds]);
-
-    const [volume, setVolume] = React.useState<number>(
-        localStorage.getItem('audioVolume') ? Number(localStorage.getItem('audioVolume')) : 0.2
-    );
-    const [initialAudioSet, setInitialAudioSet] = React.useState<boolean>(false); //to make sure the audio from localstorage is used - even if useEffect is not called until after play is called
 
     React.useEffect(() => {
-        // setInitialAudio();
+        window.addEventListener('click', () => initializeAudio(), { once: true });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const setInitialAudio = () => {
-        if (!initialAudioSet) {
-            setInitialAudioSet(true);
+    async function initializeAudio() {
+        const w = window as WindowProps;
+        const AudioContext = window.AudioContext || w.webkitAudioContext;
 
-            const initialVolume = localStorage.getItem('audioVolume')
-                ? Number(localStorage.getItem('audioVolume'))
-                : 0.2;
+        const context = new AudioContext();
+        setAudioCtx(context);
 
-            changeVolume(initialVolume);
-            return initialVolume;
-        }
-        return volume;
-    };
+        const lobby = initializeTracks(lobbyMusic, volume, true);
+        const owl = initializeTracks(owlMusic, volume);
+        const finished = initializeTracks(finishedMusic, volume);
+        const gameThree = initializeTracks(gameThreeMusic, volume, true);
 
-    const changeVolume = (value: number) => {
-        allAudio.forEach(audio => {
-            audio.volume = value;
-        });
-        woodSounds.volume = Math.min(woodSounds.volume + 0.3, 1);
-        campfireSounds.volume = Math.min(woodSounds.volume + 0.15, 1);
-        owlSounds.volume = Math.min(woodSounds.volume + 0.15, 1);
-        setVolume(value);
-    };
+        owl[0].onPlay = playOwlSounds;
 
-    const updateVolumeEverywhere = (value: number) => {
-        changeVolume(value); //TODO change - laggy when change volume
-        localStorage.setItem('audioVolume', value.toString());
-    };
+        setLobbyMusic(lobby);
+        setOwlMusic(owl);
+        setFinishedMusic(finished);
+        setGameThreeMusic(gameThree);
 
-    const muteVolumeEverywhere = () => {
-        changeVolume(0);
-        localStorage.setItem('audioVolume', '0');
-        localStorage.setItem('audioVolumeBefore', volume.toString());
-    };
+        const initialMusic = { name: Sound.lobby, tracks: [...lobby, ...owl] };
+        setPlayingTracks(initialMusic);
 
-    const unMuteVolumeEverywhere = () => {
-        const newVolume = Number(localStorage.getItem('audioVolumeBefore'));
-        changeVolume(newVolume);
-        localStorage.setItem('audioVolume', newVolume.toString());
-    };
+        play({ playingTracks: initialMusic, audioCtx: context, setIsPlaying });
+    }
 
-    const playLobbyMusic = async () => {
-        try {
-            await playLobbyMusicAndSfx();
-            if (volume === 0) unMuteVolumeEverywhere();
-        } catch (e) {
-            setPlaying(false);
-        }
-    };
-
-    const playLobbyMusicAndSfx = async () => {
-        lobbyMusicAndSfx.forEach(async audio => {
-            await audio.play();
-            audio.loop = true;
-        });
-        clearTimeout(owlSoundsTimeout);
-        const timeout = setTimeout(playOwlSounds, getTimeForNextOwlSound());
-        setOwlSoundsTimeout(timeout);
-
-        setPlaying(true);
-    };
     const playOwlSounds = async () => {
-        await owlSounds.play();
+        await owlMusic[0].src.play();
         clearTimeout(owlSoundsTimeout);
         const timeout = setTimeout(playOwlSounds, getTimeForNextOwlSound());
         setOwlSoundsTimeout(timeout);
@@ -188,110 +114,152 @@ const AudioContextProvider: React.FunctionComponent = ({ children }) => {
         return Math.random() * 30000;
     };
 
-    const pauseLobbyMusic = async () => {
-        pauseLobbyMusicAndSfx();
-        if (volume > 0) muteVolumeEverywhere();
-    };
-
-    const pauseLobbyMusicAndSfx = () => {
-        lobbyMusicAndSfx.forEach(audio => {
-            audio.pause();
-        });
-        owlSounds.pause();
-        clearTimeout(owlSoundsTimeout);
-        setPlaying(false);
-    };
-
-    const playFinishedMusic = async () => {
-        try {
-            await finishedMusic.play();
-            setPlaying(true);
-
-            if (volume === 0) unMuteVolumeEverywhere();
-        } catch (e) {
-            setPlaying(false);
-        }
-    };
-
-    const pauseFinishedMusic = () => {
-        finishedMusic.pause();
-        setPlaying(false);
-        if (volume > 0) muteVolumeEverywhere();
-    };
-
     const content = {
-        audioPermission: audioPermission,
-        setAudioPermissionGranted: (p: boolean) => {
-            setAudioPermissionGranted(p);
-            setInitialAudio();
-        },
-        playing,
-        setPlaying,
-        lobbyMusic: lobbyMusic,
-        finishedMusic: finishedMusic,
-        setLobbyMusic,
-        setFinishedMusic,
-        gameAudioPlaying,
-        setGameAudioPlaying,
-        playLobbyMusic: (p: boolean) => {
-            setInitialAudio();
-            if (p && !playing) {
-                playLobbyMusic();
-            }
-        },
-        initialPlayLobbyMusic: (p: boolean) => {
-            //because audio context too slow updating
-            const initialVolume = setInitialAudio();
-            if (initialVolume > 0 && p) {
-                playLobbyMusic();
-            }
-        },
-        pauseLobbyMusic: (p: boolean) => {
-            if (p && playing) {
-                pauseLobbyMusic();
-            }
-        },
-
-        pauseLobbyMusicNoMute: (p: boolean) => {
-            if (p) {
-                // lobbyMusic.pause();
-                pauseLobbyMusicAndSfx();
-                setPlaying(false);
-            }
+        isPlaying,
+        togglePlaying: () => {
+            isPlaying
+                ? pause({ playingTracks, audioCtx, setIsPlaying, owlSoundsTimeout })
+                : play({ playingTracks, audioCtx, setIsPlaying });
         },
         volume,
-        setVolume,
-        setAudioVolume: (v: number) => {
-            // changeVolume(v);
-            // setVolume(v); //TODO change - laggy when change volume
-            // localStorage.setItem('audioVolume', v.toString());
-            updateVolumeEverywhere(v);
+        setVolume: (value: number) => {
+            changeVolume(playingTracks.tracks, value);
+            setVolume(value);
+            localStorage.setItem('audioVolume', String(value));
         },
-        setAudioBeforeVolume: (v: number) => {
-            localStorage.setItem('audioVolumeBefore', v.toString());
-        },
-        mute: () => {
-            if (volume > 0) muteVolumeEverywhere();
-        },
-        unMute: () => {
-            if (volume === 0) unMuteVolumeEverywhere();
-        },
-        musicIsPlaying: (playing || gameAudioPlaying) && audioPermission && volume > 0,
-        playFinishedMusic: () => {
-            playFinishedMusic();
-        },
-        pauseFinishedMusic: () => {
-            pauseFinishedMusic();
-        },
-        initialPlayFinishedMusic: (p: boolean) => {
-            //because audio context too slow updating
-            const initialVolume = setInitialAudio();
-            if (initialVolume > 0 && p) {
-                playFinishedMusic();
-            }
-        },
+        changeSound: changeSound({
+            isPlaying,
+            play,
+            playingTracks,
+            setPlayingTracks,
+            finishedMusic,
+            lobbyMusic,
+            pause,
+            volume,
+            audioCtx,
+            setIsPlaying,
+            owlSoundsTimeout,
+            owlMusic,
+            gameThreeMusic,
+        }),
     };
-    return <AudioContext.Provider value={content}>{children}</AudioContext.Provider>;
+    return <MyAudioContext.Provider value={content}>{children}</MyAudioContext.Provider>;
 };
 
-export default AudioContextProvider;
+export default MyAudioContextProvider;
+
+function initializeTracks(tracks: Track[], volume: number, loop = false) {
+    return tracks.map(track => {
+        changeVolume(tracks, volume);
+
+        if (loop) {
+            track.src.loop = true;
+        }
+        return track;
+    });
+}
+
+function changeVolume(tracks: Track[], volume: number) {
+    return tracks.map(track => {
+        if (volume + (track.volumeFactor ?? 0) > 1) {
+            track.src.volume = 1;
+        } else {
+            track.src.volume = volume + (track.volumeFactor ?? 0);
+        }
+
+        return track;
+    });
+}
+
+interface PlayProps {
+    playingTracks: PlayingTracks;
+    audioCtx: AudioContext | null;
+    setIsPlaying: (val: boolean) => void;
+}
+
+const play = ({ playingTracks, audioCtx, setIsPlaying }: PlayProps) => {
+    if (audioCtx) {
+        playingTracks.tracks.forEach(track => {
+            if (track.onPlay) {
+                track.onPlay();
+            } else {
+                track.src.play();
+            }
+        });
+        setIsPlaying(true);
+        localStorage.setItem('playingMusic', 'true');
+    }
+};
+
+interface PauseProps extends PlayProps {
+    owlSoundsTimeout: ReturnType<typeof setTimeout>;
+}
+
+const pause = ({ playingTracks, audioCtx, setIsPlaying, owlSoundsTimeout }: PauseProps) => {
+    if (audioCtx) {
+        playingTracks.tracks.forEach(track => track.src.pause());
+        clearTimeout(owlSoundsTimeout);
+        setIsPlaying(false);
+        localStorage.setItem('playingMusic', 'false');
+    }
+};
+
+interface ChangeSoundDependencies {
+    pause: (props: PauseProps) => void;
+    play: (props: PlayProps) => void;
+    setPlayingTracks: (val: PlayingTracks) => void;
+    playingTracks: PlayingTracks;
+    audioCtx: AudioContext | null;
+    lobbyMusic: Track[];
+    finishedMusic: Track[];
+    owlMusic: Track[];
+    gameThreeMusic: Track[];
+    volume: number;
+    isPlaying: boolean;
+    setIsPlaying: (val: boolean) => void;
+    owlSoundsTimeout: ReturnType<typeof setTimeout>;
+}
+
+function changeSound(dependencies: ChangeSoundDependencies) {
+    return (sound: Sound) => {
+        const {
+            pause,
+            play,
+            setPlayingTracks,
+            audioCtx,
+            playingTracks,
+            lobbyMusic,
+            finishedMusic,
+            volume,
+            isPlaying,
+            setIsPlaying,
+            owlSoundsTimeout,
+            owlMusic,
+            gameThreeMusic,
+        } = dependencies;
+
+        if (playingTracks.name === sound) {
+            return;
+        }
+
+        const currentlyPlaying = isPlaying;
+        pause({ playingTracks, audioCtx, setIsPlaying, owlSoundsTimeout });
+
+        let tracks: PlayingTracks = { name: '', tracks: [] };
+
+        if (sound === Sound.lobby) {
+            tracks = { name: Sound.lobby, tracks: [...lobbyMusic, ...owlMusic] };
+        } else if (sound === Sound.finished) {
+            tracks = { name: Sound.finished, tracks: finishedMusic };
+        } else if (sound === Sound.game3) {
+            tracks = { name: Sound.game3, tracks: gameThreeMusic };
+        }
+
+        changeVolume(tracks.tracks, volume);
+        setPlayingTracks(tracks);
+
+        if (currentlyPlaying) {
+            play({ playingTracks: tracks, audioCtx, setIsPlaying });
+        }
+    };
+}

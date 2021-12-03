@@ -1,8 +1,9 @@
 import { GameThree } from '../../../src/gameplay';
+import InitialParameters from '../../../src/gameplay/gameThree/constants/InitialParameters';
 
 export function startGameAdvanceCountdown(gameThree: GameThree) {
     gameThree.startGame();
-    jest.advanceTimersByTime(gameThree['countdownTimeGameStart']);
+    jest.advanceTimersByTime(InitialParameters.COUNTDOWN_TIME_GAME_START);
     // advanceCountdown(gameThree['countdownTimeGameStart']);
 }
 

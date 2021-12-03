@@ -10,8 +10,7 @@ import { GameEvents } from '../../../../src/gameplay/gameOne/interfaces';
 import {
     GAME_ONE_EVENT_MESSAGE__CHASERS_WERE_PUSHED, GAME_ONE_EVENT_MESSAGE__OBSTACLE_REACHED,
     GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
-    GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_FINISHED, GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD,
-    GameOneEventMessage
+    GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_FINISHED, GameOneEventMessage
 } from '../../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED,
@@ -577,18 +576,18 @@ describe('Chaser event', () => {
         expect(maxNrChasersEvent).toBeTruthy();
     });
 
-    it.skip('should emit a PlayerIsDead event when a chaser catches a player', async () => {
-        let playerIsDeadEvent = false;
-        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
-            if (message.type === GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD) {
-                playerIsDeadEvent = true;
-            }
-        });
-        // gameOne['runForward']('1', chasersStartPosX);
-        jest.advanceTimersByTime(1000);
-        gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
-        expect(playerIsDeadEvent).toBeTruthy();
-    });
+    // it.skip('should emit a PlayerIsDead event when a chaser catches a player', async () => {
+    //     let playerIsDeadEvent = false;
+    //     gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
+    //         if (message.type === GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD) {
+    //             playerIsDeadEvent = true;
+    //         }
+    //     });
+    //     // gameOne['runForward']('1', chasersStartPosX);
+    //     jest.advanceTimersByTime(1000);
+    //     gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
+    //     expect(playerIsDeadEvent).toBeTruthy();
+    // });
 
     it('emit game finished event when all but one player caught', async () => {
         let eventData = false;
