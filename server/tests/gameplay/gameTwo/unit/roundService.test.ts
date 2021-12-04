@@ -38,6 +38,15 @@ describe('RoundService Tests', () => {
         expect(roundService.round).toEqual(Parameters.ROUNDS);
     });
 
+    it('should be in the counting phase again after running through all phases', () => {
+        jest.useFakeTimers();
+        roundService.start();
 
+        jest.useFakeTimers();
+        jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.COUNTING]);
+        jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.GUESSING]);
+        jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.RESULTS]);
 
+        expect(roundService.phase).toEqual(Phases.COUNTING);
+    });
 });

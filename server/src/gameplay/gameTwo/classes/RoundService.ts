@@ -64,8 +64,8 @@ export default class RoundService {
     }
 
     private nextPhase() {
-        let pos = PHASES.indexOf(this.phase);
-        if (pos++ === PHASES.length) {
+        let pos = PHASES.indexOf(this.phase) + 1;
+        if (pos === PHASES.length) {
             pos = 0;
         }
         this.phase = PHASES[pos]
