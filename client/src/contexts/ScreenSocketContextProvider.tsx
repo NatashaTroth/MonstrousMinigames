@@ -1,17 +1,30 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { handleConnectedUsersMessage } from '../domain/commonGameState/screen/handleConnectedUsersMessage';
-import { handleGameHasFinishedMessage } from '../domain/commonGameState/screen/handleGameHasFinishedMessage';
-import { handleGameHasResetMessage } from '../domain/commonGameState/screen/handleGameHasResetMessage';
-import { handleGameHasStoppedMessage } from '../domain/commonGameState/screen/handleGameHasStoppedMessage';
-import { handleGameStartedMessage } from '../domain/commonGameState/screen/handleGameStartedMessage';
-import { handleStartPhaserGameMessage } from '../domain/commonGameState/screen/handleStartPhaserGameMessage';
-import { handleStartSheepGameMessage } from '../domain/game2/screen/gameState/handleStartSheepGameMessage';
-import { handleSetSocket } from '../domain/socket/screen/handleSetSocket';
-import { handleSocketConnection } from '../domain/socket/screen/handleSocketConnection';
+import { gameSetHandler } from '../domain/commonGameState/gameSetHandler';
+import { pauseHandler } from '../domain/commonGameState/pauseHandler';
+import { resumeHandler } from '../domain/commonGameState/resumeHandler';
+import { connectedUsersHandler } from '../domain/commonGameState/screen/connectedUsersHandler';
+import { finishedHandler } from '../domain/commonGameState/screen/finishedHandler';
+import { resetHandler } from '../domain/commonGameState/screen/resetHandler';
+import { screenAdminHandler } from '../domain/commonGameState/screen/screenAdminHandler';
+import { screenStateHandler } from '../domain/commonGameState/screen/screenStateHandler';
+import { startHandler } from '../domain/commonGameState/screen/startHandler';
+import { stopHandler } from '../domain/commonGameState/screen/stopHandler';
+import { startPhaserGameHandler } from '../domain/game1/screen/gameState/startPhaserGameHandler';
+import { startSheepGameHandler } from '../domain/game2/screen/gameState/startSheepGameHandler';
+import { finalRoundCountdownHandler } from '../domain/game3/controller/gameState/finalRoundCountdownHandler';
+import { topicHandler } from '../domain/game3/controller/gameState/topicHandler';
+import { votingResultsHandler } from '../domain/game3/controller/gameState/votingResultsHandler';
+import { newRoundHandler } from '../domain/game3/screen/gameState/newRoundHandler';
+import { presentFinalPhotosHandler } from '../domain/game3/screen/gameState/presentFinalPhotosHandler';
+import { voteForFinalPhotosHandler } from '../domain/game3/screen/gameState/voteForFinalPhotosHandler';
+import { voteForPhotoHandler } from '../domain/game3/screen/gameState/voteForPhotoHandler';
+import ScreenSocket from '../domain/socket/screenSocket';
 import { Socket } from '../domain/socket/Socket';
+import { SocketIOAdapter } from '../domain/socket/SocketIOAdapter';
 import { GameState } from '../utils/constants';
+import { Routes } from '../utils/routes';
 import { Game3Context } from './game3/Game3ContextProvider';
 import { GameContext } from './GameContextProvider';
 import { Obstacle } from './PlayerContextProvider';
@@ -96,45 +109,63 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
         setCountdownTime,
     } = React.useContext(GameContext);
 
-    const dependencies = {
-        setScreenSocket,
-        setHasPaused,
-        setScreenAdmin,
-        setScreenState,
-        setChosenGame,
-        setTopicMessage,
-        setRoundIdx,
-        setVoteForPhotoMessage,
-        setVotingResults,
-        setFinalRoundCountdownTime,
+    const finishedHandlerWithDependencies = finishedHandler({ setFinished, setPlayerRanks, history });
+    const topicHandlerWithDependencies = topicHandler({ setTopicMessage });
+    const votingResultsHandlerWithDependencies = votingResultsHandler({ setVotingResults });
+    const finalRoundCountdownHandlerWithDependencies = finalRoundCountdownHandler({ setFinalRoundCountdownTime });
+    const connectedUsersHandlerWithDependencies = connectedUsersHandler({ setConnectedUsers });
+    const startPhaserGameHandlerWithDependencies = startPhaserGameHandler({ setGameStarted, history });
+    const startSheepGameHandlerWithDependencies = startSheepGameHandler({ setSheepGameStarted, history });
+    const pauseHandlerWithDependencies = pauseHandler({ setHasPaused });
+    const resumeHandlerWithDependencies = resumeHandler({ setHasPaused });
+    const stopHandlerWithDependencies = stopHandler({ history });
+    const resetHandlerWithDependencies = resetHandler({ history });
+    const adminHandlerWithDependencies = screenAdminHandler({ setScreenAdmin });
+    const screenStateHandlerWithDependencies = screenStateHandler({ setScreenState });
+    const startHandlerWithDependencies = startHandler({ history, setCountdownTime, setGameStarted });
+    const gameSetHandlerWithDependencies = gameSetHandler({ setChosenGame });
+    const newRoundHandlerWithDependencies = newRoundHandler({ setRoundIdx, setVoteForPhotoMessage, setVotingResults });
+    const voteForPhotoHandlerWithDependencies = voteForPhotoHandler({ setVoteForPhotoMessage });
+    const voteForFinalPhotosHandlerWithDependencies = voteForFinalPhotosHandler({
         setPresentFinalPhotos,
-        history,
-        handleGameHasFinishedMessage: handleGameHasFinishedMessage({ setFinished, setPlayerRanks, history }),
-        handleConnectedUsersMessage: handleConnectedUsersMessage({ setConnectedUsers }),
-        handleStartPhaserGameMessage: handleStartPhaserGameMessage({ setGameStarted, history }),
-        handleStartSheepGameMessage: handleStartSheepGameMessage({ setSheepGameStarted, history }),
-        handleGameHasStoppedMessage: handleGameHasStoppedMessage({ history }),
-        handleGameHasResetMessage: handleGameHasResetMessage({ history }),
-        handleGameStartedMessage: handleGameStartedMessage({ history, setCountdownTime, setGameStarted }),
-    };
+        setVoteForPhotoMessage,
+    });
+    const presentFinalPhotosHandlerWithDependencies = presentFinalPhotosHandler({ setPresentFinalPhotos });
 
     const content = {
         screenSocket,
-        setScreenSocket: (socket: Socket, roomId: string, route: string) => {
-            handleSetSocket(
-                socket,
-                roomId,
-                {
-                    ...dependencies,
-                },
-                route
-            );
-        },
         handleSocketConnection: (roomId: string, route: string) => {
-            handleSocketConnection(roomId, route, {
-                setRoomId,
-                ...dependencies,
-            });
+            setRoomId(roomId);
+            sessionStorage.setItem('roomId', roomId);
+
+            const socket = new SocketIOAdapter(roomId, 'screen');
+
+            if (socket) {
+                setScreenSocket(socket);
+                ScreenSocket.getInstance(socket);
+
+                finishedHandlerWithDependencies(socket, roomId);
+                topicHandlerWithDependencies(socket, roomId);
+                votingResultsHandlerWithDependencies(socket, roomId);
+                finalRoundCountdownHandlerWithDependencies(socket, roomId);
+                connectedUsersHandlerWithDependencies(socket, roomId);
+                startPhaserGameHandlerWithDependencies(socket, roomId);
+                startSheepGameHandlerWithDependencies(socket, roomId);
+                pauseHandlerWithDependencies(socket, roomId);
+                resumeHandlerWithDependencies(socket, roomId);
+                stopHandlerWithDependencies(socket, roomId);
+                resetHandlerWithDependencies(socket, roomId);
+                adminHandlerWithDependencies(socket, roomId);
+                screenStateHandlerWithDependencies(socket, roomId);
+                startHandlerWithDependencies(socket, roomId);
+                gameSetHandlerWithDependencies(socket, roomId);
+                newRoundHandlerWithDependencies(socket, roomId);
+                voteForPhotoHandlerWithDependencies(socket, roomId);
+                voteForFinalPhotosHandlerWithDependencies(socket, roomId);
+                presentFinalPhotosHandlerWithDependencies(socket, roomId);
+
+                history.push(`${Routes.screen}/${roomId}/${route || Routes.lobby}`);
+            }
         },
     };
     return <ScreenSocketContext.Provider value={content}>{children}</ScreenSocketContext.Provider>;

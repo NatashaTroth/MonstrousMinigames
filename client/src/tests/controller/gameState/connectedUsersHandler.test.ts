@@ -1,18 +1,17 @@
-import {
-    connectedUsersHandler
-} from "../../../domain/commonGameState/controller/connectedUsersHandler";
-import { InMemorySocketFake } from "../../../domain/socket/InMemorySocketFake";
-import { ConnectedUsersMessage } from "../../../domain/typeGuards/connectedUsers";
-import { MessageTypes } from "../../../utils/constants";
+import { connectedUsersHandler } from '../../../domain/commonGameState/controller/connectedUsersHandler';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { ConnectedUsersMessage } from '../../../domain/typeGuards/connectedUsers';
+import { MessageTypes } from '../../../utils/constants';
 
 describe('connectedUsersHandler', () => {
+    const roomId = 'ABCD';
     const mockData: ConnectedUsersMessage = {
         type: MessageTypes.connectedUsers,
         users: [
             {
                 id: '1',
                 name: 'Test',
-                roomId: 'ABCD',
+                roomId,
                 number: 1,
                 characterNumber: 1,
                 active: true,
@@ -27,7 +26,7 @@ describe('connectedUsersHandler', () => {
         const socket = new InMemorySocketFake();
 
         const withDependencies = connectedUsersHandler({ setAvailableCharacters, setConnectedUsers });
-        withDependencies(socket);
+        withDependencies(socket, roomId);
 
         await socket.emit(mockData);
 
@@ -40,7 +39,7 @@ describe('connectedUsersHandler', () => {
         const socket = new InMemorySocketFake();
 
         const withDependencies = connectedUsersHandler({ setAvailableCharacters, setConnectedUsers });
-        withDependencies(socket);
+        withDependencies(socket, roomId);
 
         await socket.emit(mockData);
 
@@ -53,7 +52,7 @@ describe('connectedUsersHandler', () => {
         const socket = new InMemorySocketFake();
 
         const withDependencies = connectedUsersHandler({ setAvailableCharacters, setConnectedUsers });
-        withDependencies(socket);
+        withDependencies(socket, roomId);
 
         await socket.emit({
             type: MessageTypes.connectedUsers,

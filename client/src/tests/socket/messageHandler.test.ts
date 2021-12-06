@@ -1,5 +1,5 @@
-import { InMemorySocketFake } from "../../domain/socket/InMemorySocketFake";
-import messageHandler from "../../domain/socket/messageHandler";
+import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
+import messageHandler from '../../domain/socket/messageHandler';
 
 describe('messageHandler', () => {
     interface Message {
@@ -9,6 +9,7 @@ describe('messageHandler', () => {
     const message = {
         type: 'test',
     };
+    const roomId = 'SFEF';
 
     it('when message succeeds typeguard callback is executed', () => {
         const testTypeGuard = (data: any): data is Message => true;
@@ -17,7 +18,7 @@ describe('messageHandler', () => {
         const callback = jest.fn();
 
         const userInitHandler = messageHandler(testTypeGuard, callback)({});
-        userInitHandler(socket);
+        userInitHandler(socket, roomId);
 
         socket.emit(message);
 
@@ -31,7 +32,7 @@ describe('messageHandler', () => {
         const callback = jest.fn();
 
         const userInitHandler = messageHandler(testTypeGuard, callback)({});
-        userInitHandler(socket);
+        userInitHandler(socket, roomId);
 
         socket.emit(message);
 

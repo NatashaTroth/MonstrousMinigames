@@ -6,13 +6,13 @@ import { ThemeProvider } from 'styled-components';
 
 import { ConnectScreen } from '../../components/controller/ConnectScreen';
 import ControllerSocketContextProvider from '../../contexts/ControllerSocketContextProvider';
-import * as socketConnection from '../../domain/socket/controller/handleSocketConnection';
+import * as connectedUsersHandler from '../../domain/commonGameState/controller/connectedUsersHandler';
 import theme from '../../styles/theme';
 
 configure({ adapter: new Adapter() });
 
-jest.mock('../../domain/socket/controller/handleSocketConnection', () => ({
-    handleSocketConnection: jest.fn(),
+jest.mock('../../domain/commonGameState/controller/connectedUsersHandler', () => ({
+    connectedUsersHandler: jest.fn(),
 }));
 
 afterAll(() => {
@@ -21,10 +21,11 @@ afterAll(() => {
 });
 
 describe('ControllerSocketContextProvider', () => {
-    it('handleSocketConnection should be called in Context', () => {
+    it('connectedUsersHandler should be called in Context', () => {
         const history = createMemoryHistory();
         history.push('/ABDE');
         global.localStorage.setItem('name', 'Mock');
+
         const container = mount(
             <ThemeProvider theme={theme}>
                 <ControllerSocketContextProvider permission={true}>
@@ -35,6 +36,6 @@ describe('ControllerSocketContextProvider', () => {
 
         container.find('form').simulate('submit');
 
-        expect(socketConnection.handleSocketConnection).toHaveBeenCalledTimes(1);
+        expect(connectedUsersHandler.connectedUsersHandler).toHaveBeenCalledTimes(1);
     });
 });

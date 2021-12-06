@@ -1,7 +1,7 @@
-import { userInitHandler } from "../../../domain/commonGameState/controller/userInitHandler";
-import { InMemorySocketFake } from "../../../domain/socket/InMemorySocketFake";
-import { UserInitMessage } from "../../../domain/typeGuards/userInit";
-import { MessageTypes } from "../../../utils/constants";
+import { userInitHandler } from '../../../domain/commonGameState/controller/userInitHandler';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { UserInitMessage } from '../../../domain/typeGuards/userInit';
+import { MessageTypes } from '../../../utils/constants';
 
 it('when UserInitMessage was written, handed persistUser is executed', async () => {
     const roomId = 'ABDE';
@@ -29,7 +29,7 @@ it('when UserInitMessage was written, handed persistUser is executed', async () 
 
     const socket = new InMemorySocketFake();
 
-    userInitHandlerWithDependencies(socket);
+    userInitHandlerWithDependencies(socket, roomId);
 
     await socket.emit(message);
 

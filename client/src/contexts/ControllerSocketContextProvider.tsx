@@ -1,47 +1,45 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { connectedUsersHandler } from "../domain/commonGameState/controller/connectedUsersHandler";
-import { gameFinishedHandler } from "../domain/commonGameState/controller/gameFinishedHandler";
-import {
-    handlePlayerFinishedMessage
-} from "../domain/commonGameState/controller/handlePlayerFinishedMessage";
-import { resetHandler } from "../domain/commonGameState/controller/resetHandler";
-import { startedHandler } from "../domain/commonGameState/controller/startedHandler";
-import { stopHandler } from "../domain/commonGameState/controller/stopHandler";
-import { userInitHandler } from "../domain/commonGameState/controller/userInitHandler";
-import { gameSetHandler } from "../domain/commonGameState/gameSetHandler";
-import { pauseHandler } from "../domain/commonGameState/pauseHandler";
-import { resumeHandler } from "../domain/commonGameState/resumeHandler";
-import addMovementListener from "../domain/game1/controller/gameState/addMovementListener";
-import {
-    handleApproachingObstacleMessage
-} from "../domain/game1/controller/gameState/handleApproachingSolvableObstacleMessage";
-import { handlePlayerDied } from "../domain/game1/controller/gameState/handlePlayerDied";
-import {
-    handleStunnablePlayers
-} from "../domain/game1/controller/gameState/handleStunnablePlayers";
-import { obstacleHandler } from "../domain/game1/controller/gameState/obstacleHandler";
-import { stunnedHandler } from "../domain/game1/controller/gameState/stunnedHandler";
-import { unstunnedHandler } from "../domain/game1/controller/gameState/unstunnedHandler";
-import history from "../domain/history/history";
-import { handleSetSocket } from "../domain/socket/controller/handleSetSocket";
-import { handleSocketConnection } from "../domain/socket/controller/handleSocketConnection";
-import { InMemorySocketFake } from "../domain/socket/InMemorySocketFake";
-import { Socket } from "../domain/socket/Socket";
-import { localStorage } from "../domain/storage/LocalStorage";
-import { sessionStorage } from "../domain/storage/SessionStorage";
-import { persistUser } from "../domain/user/persistUser";
-import { controllerChooseCharacterRoute } from "../utils/routes";
-import { Game1Context } from "./game1/Game1ContextProvider";
-import { Game3Context } from "./game3/Game3ContextProvider";
-import { GameContext } from "./GameContextProvider";
-import { PlayerContext } from "./PlayerContextProvider";
+import { connectedUsersHandler } from '../domain/commonGameState/controller/connectedUsersHandler';
+import { gameFinishedHandler } from '../domain/commonGameState/controller/gameFinishedHandler';
+import { playerFinishedHandler } from '../domain/commonGameState/controller/handlePlayerFinishedMessage';
+import { resetHandler } from '../domain/commonGameState/controller/resetHandler';
+import { startedHandler } from '../domain/commonGameState/controller/startedHandler';
+import { stopHandler } from '../domain/commonGameState/controller/stopHandler';
+import { userInitHandler } from '../domain/commonGameState/controller/userInitHandler';
+import { gameSetHandler } from '../domain/commonGameState/gameSetHandler';
+import { pauseHandler } from '../domain/commonGameState/pauseHandler';
+import { resumeHandler } from '../domain/commonGameState/resumeHandler';
+import addMovementListener from '../domain/game1/controller/gameState/addMovementListener';
+import { approachingObstacleHandler } from '../domain/game1/controller/gameState/approachingObstacleHandler';
+import { diedHandler } from '../domain/game1/controller/gameState/diedHandler';
+import { exceededMaxChaserPushesHandler } from '../domain/game1/controller/gameState/exceededMaxChaserPushesHandler';
+import { obstacleHandler } from '../domain/game1/controller/gameState/obstacleHandler';
+import { stunnablePlayersHandler } from '../domain/game1/controller/gameState/stunnablePlayersHandler';
+import { stunnedHandler } from '../domain/game1/controller/gameState/stunnedHandler';
+import { unstunnedHandler } from '../domain/game1/controller/gameState/unstunnedHandler';
+import { finalRoundCountdownHandler } from '../domain/game3/controller/gameState/finalRoundCountdownHandler';
+import { newRoundHandler } from '../domain/game3/controller/gameState/newRoundHandler';
+import { presentFinalPhotosHandler } from '../domain/game3/controller/gameState/presentFinalPhotosHandler';
+import { topicHandler } from '../domain/game3/controller/gameState/topicHandler';
+import { voteForFinalPhotosHandler } from '../domain/game3/controller/gameState/voteForFinalPhotosHandler';
+import { voteForPhotoHandler } from '../domain/game3/controller/gameState/voteForPhotoHandler';
+import { votingResultsHandler } from '../domain/game3/controller/gameState/votingResultsHandler';
+import history from '../domain/history/history';
+import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
+import { Socket } from '../domain/socket/Socket';
+import { SocketIOAdapter } from '../domain/socket/SocketIOAdapter';
+import { localStorage } from '../domain/storage/LocalStorage';
+import { sessionStorage } from '../domain/storage/SessionStorage';
+import { persistUser } from '../domain/user/persistUser';
+import { controllerChooseCharacterRoute } from '../utils/routes';
+import { Game1Context } from './game1/Game1ContextProvider';
+import { Game3Context } from './game3/Game3ContextProvider';
+import { GameContext } from './GameContextProvider';
+import { PlayerContext } from './PlayerContextProvider';
 
 export const defaultValue = {
     controllerSocket: new InMemorySocketFake(),
-    setControllerSocket: () => {
-        // do nothing
-    },
     handleSocketConnection: () => {
         // do nothing
     },
@@ -49,7 +47,6 @@ export const defaultValue = {
 
 interface ControllerSocketContextProps {
     controllerSocket: Socket;
-    setControllerSocket: (val: Socket, roomId: string) => void;
     handleSocketConnection: (roomId: string, name: string) => void;
 }
 
@@ -104,21 +101,6 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
         }
     }, [permission, hasPaused, playerFinished, controllerSocket]);
 
-    const dependencies = {
-        setExceededChaserPushes,
-        setVoteForPhotoMessage,
-        setRoundIdx,
-        setTopicMessage,
-        setVotingResults,
-        setFinalRoundCountdownTime,
-        setPresentFinalPhotos,
-        handlePlayerFinishedMessage: handlePlayerFinishedMessage({ setPlayerFinished, setPlayerRank }),
-        handleStunnablePlayers: handleStunnablePlayers({ setStunnablePlayers }),
-        handlePlayerDied: handlePlayerDied({ setPlayerDead, setPlayerRank }),
-        handleApproachingObstacleMessage: handleApproachingObstacleMessage({ setEarlySolvableObstacle }),
-        setRoomId,
-    };
-
     const persistUserWithDependencies = persistUser({
         localStorage,
         sessionStorage,
@@ -169,28 +151,68 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
     const stunnedHandlerWithDependencies = stunnedHandler({ history });
     const unstunnedHandlerWithDependencies = unstunnedHandler({ history });
 
+    const playerFinishedHandlerWithDependencies = playerFinishedHandler({
+        setPlayerFinished,
+        setPlayerRank,
+        playerFinished,
+    });
+
+    const stunnablePlayersHandlerWithDependencies = stunnablePlayersHandler({ setStunnablePlayers });
+
+    const diedHandlerWithDependencies = diedHandler({ setPlayerDead, setPlayerRank });
+
+    const approachingObstacleHandlerWithDependencies = approachingObstacleHandler({ setEarlySolvableObstacle });
+
+    const exceededMaxChaserPushesHandlerWithDependencies = exceededMaxChaserPushesHandler({ setExceededChaserPushes });
+
+    const voteForPhotoHandlerWithDependencies = voteForPhotoHandler({ setVoteForPhotoMessage, history });
+    const newRoundHandlerWithDependencies = newRoundHandler({
+        setRoundIdx,
+        setVoteForPhotoMessage,
+        setVotingResults,
+        history,
+    });
+    const topicHandlerWithDependencies = topicHandler({ setTopicMessage });
+    const votingResultsHandlerWithDependencies = votingResultsHandler({ setVotingResults });
+    const finalRoundCountdownHandlerWithDependencies = finalRoundCountdownHandler({ setFinalRoundCountdownTime });
+    const presentFinalPhotosHandlerWithDependencies = presentFinalPhotosHandler({ setPresentFinalPhotos, history });
+    const voteForFinalPhotosHandlerWithDependencies = voteForFinalPhotosHandler({ setVoteForPhotoMessage, history });
+
     const content = {
         controllerSocket,
-        setControllerSocket: (socket: Socket, roomId: string) => {
-            // TODO remove maybe
-            setControllerSocket(socket);
-            userInitHandlerWithDependencies(socket);
-            connectedUserHandlerWithDependencies(socket);
-            pausedHandlerWithDependencies(socket);
-            resumeHandlerWithDependencies(socket);
-            gameSetHandlerWithDependencies(socket);
-            stopHandlerWithDependencies(socket, roomId);
-            startedHandlerWithDependencies(socket, roomId);
-            resetHandlerWithDependencies(socket, roomId);
-            gameFinishedHandlerWithDependencies(socket, roomId);
-            obstacleHandlerWithDependencies(socket, roomId);
-            stunnedHandlerWithDependencies(socket, roomId);
-            unstunnedHandlerWithDependencies(socket, roomId);
-            handleSetSocket(socket, roomId, playerFinished, dependencies);
-            history.push(controllerChooseCharacterRoute(roomId));
-        },
         handleSocketConnection: (roomId: string, name: string) => {
-            handleSocketConnection(roomId, name, playerFinished, dependencies);
+            setRoomId(roomId);
+
+            const socket = new SocketIOAdapter(roomId, 'controller', name);
+
+            if (socket) {
+                setControllerSocket(socket);
+                userInitHandlerWithDependencies(socket, roomId);
+                connectedUserHandlerWithDependencies(socket, roomId);
+                pausedHandlerWithDependencies(socket, roomId);
+                resumeHandlerWithDependencies(socket, roomId);
+                gameSetHandlerWithDependencies(socket, roomId);
+                stopHandlerWithDependencies(socket, roomId);
+                startedHandlerWithDependencies(socket, roomId);
+                resetHandlerWithDependencies(socket, roomId);
+                gameFinishedHandlerWithDependencies(socket, roomId);
+                obstacleHandlerWithDependencies(socket, roomId);
+                stunnedHandlerWithDependencies(socket, roomId);
+                unstunnedHandlerWithDependencies(socket, roomId);
+                playerFinishedHandlerWithDependencies(socket, roomId);
+                stunnablePlayersHandlerWithDependencies(socket, roomId);
+                diedHandlerWithDependencies(socket, roomId);
+                approachingObstacleHandlerWithDependencies(socket, roomId);
+                exceededMaxChaserPushesHandlerWithDependencies(socket, roomId);
+                voteForPhotoHandlerWithDependencies(socket, roomId);
+                newRoundHandlerWithDependencies(socket, roomId);
+                topicHandlerWithDependencies(socket, roomId);
+                votingResultsHandlerWithDependencies(socket, roomId);
+                finalRoundCountdownHandlerWithDependencies(socket, roomId);
+                presentFinalPhotosHandlerWithDependencies(socket, roomId);
+                voteForFinalPhotosHandlerWithDependencies(socket, roomId);
+            }
+            history.push(controllerChooseCharacterRoute(roomId));
         },
     };
     return <ControllerSocketContext.Provider value={content}>{children}</ControllerSocketContext.Provider>;

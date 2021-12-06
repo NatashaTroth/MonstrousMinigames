@@ -1,7 +1,7 @@
-import { resumeHandler } from "../../../domain/commonGameState/resumeHandler";
-import { InMemorySocketFake } from "../../../domain/socket/InMemorySocketFake";
-import { GameHasResumedMessage } from "../../../domain/typeGuards/resumed";
-import { MessageTypes } from "../../../utils/constants";
+import { resumeHandler } from '../../../domain/commonGameState/resumeHandler';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { GameHasResumedMessage } from '../../../domain/typeGuards/resumed';
+import { MessageTypes } from '../../../utils/constants';
 
 describe('resumeHandler', () => {
     const mockData: GameHasResumedMessage = {
@@ -13,7 +13,7 @@ describe('resumeHandler', () => {
         const socket = new InMemorySocketFake();
 
         const withDependencies = resumeHandler({ setHasPaused });
-        withDependencies(socket);
+        withDependencies(socket, 'SDFO');
 
         await socket.emit(mockData);
 

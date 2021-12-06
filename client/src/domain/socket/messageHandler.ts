@@ -1,10 +1,10 @@
-import { MessageSocket } from "./MessageSocket";
-import { Socket } from "./Socket";
+import { MessageSocket } from './MessageSocket';
+import { Socket } from './Socket';
 
 export type MessageHandler = <Message, Dependencies>(
     typeGuard: (val: any) => val is Message,
-    action: (data: Message, dependencies: Dependencies, roomId?: string) => void
-) => (dependencies: Dependencies) => (socket: Socket, roomId?: string) => void;
+    action: (data: Message, dependencies: Dependencies, roomId: string) => void
+) => (dependencies: Dependencies) => (socket: Socket, roomId: string) => void;
 
 const messageHandler: MessageHandler = (typeGuard, action) => {
     return dependencies => {

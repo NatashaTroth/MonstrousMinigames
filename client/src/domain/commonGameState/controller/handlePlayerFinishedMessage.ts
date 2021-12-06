@@ -1,25 +1,22 @@
 import { controllerFinishedRoute } from '../../../utils/routes';
 import history from '../../history/history';
-import { PlayerFinishedMessage } from '../../typeGuards/game1/playerFinished';
+import messageHandler from '../../socket/messageHandler';
+import { playerFinishedTypeGuard } from '../../typeGuards/game1/playerFinished';
 
 interface Dependencies {
     setPlayerFinished: (val: boolean) => void;
     setPlayerRank: (val: number) => void;
-}
-export interface HandlePlayerFinishedProps {
-    data: PlayerFinishedMessage;
     playerFinished: boolean;
-    roomId: string;
 }
 
-export function handlePlayerFinishedMessage(dependencies: Dependencies) {
-    return (props: HandlePlayerFinishedProps) => {
-        const { data, roomId, playerFinished } = props;
-        const { setPlayerFinished, setPlayerRank } = dependencies;
+export const playerFinishedHandler = messageHandler(
+    playerFinishedTypeGuard,
+    (message, dependencies: Dependencies, roomId) => {
+        const { setPlayerFinished, setPlayerRank, playerFinished } = dependencies;
 
         if (!playerFinished) {
             setPlayerFinished(true);
-            setPlayerRank(data.rank);
+            setPlayerRank(message.rank);
 
             const windmillTimeoutId = sessionStorage.getItem('windmillTimeoutId');
             if (windmillTimeoutId) {
@@ -29,5 +26,5 @@ export function handlePlayerFinishedMessage(dependencies: Dependencies) {
 
             history.push(controllerFinishedRoute(roomId));
         }
-    };
-}
+    }
+);

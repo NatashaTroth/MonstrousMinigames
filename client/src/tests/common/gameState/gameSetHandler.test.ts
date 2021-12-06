@@ -1,8 +1,8 @@
-import { GameNames } from "../../../config/games";
-import { gameSetHandler } from "../../../domain/commonGameState/gameSetHandler";
-import { InMemorySocketFake } from "../../../domain/socket/InMemorySocketFake";
-import { GameSetMessage } from "../../../domain/typeGuards/gameSet";
-import { MessageTypes } from "../../../utils/constants";
+import { GameNames } from '../../../config/games';
+import { gameSetHandler } from '../../../domain/commonGameState/gameSetHandler';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { GameSetMessage } from '../../../domain/typeGuards/gameSet';
+import { MessageTypes } from '../../../utils/constants';
 
 describe('gameSetHandler', () => {
     const game = GameNames.game1;
@@ -16,7 +16,7 @@ describe('gameSetHandler', () => {
         const socket = new InMemorySocketFake();
 
         const withDependencies = gameSetHandler({ setChosenGame });
-        withDependencies(socket);
+        withDependencies(socket, 'ASWR');
 
         await socket.emit(mockData);
 
