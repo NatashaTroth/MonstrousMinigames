@@ -1,16 +1,16 @@
 import Parameters from "../constants/Parameters";
 
 export default class Brightness {
-    public brightness: number;
+    public value: number;
     private interval: NodeJS.Timer | null;
 
     constructor() {
-        this.brightness = 100;
+        this.value = 100;
         this.interval = null;
     }
     private update(): void {
-        this.brightness -= Parameters.BRIGHTNESS_STEP;
-        if (this.interval && this.brightness >= 0) {
+        this.value -= Parameters.BRIGHTNESS_STEP;
+        if (this.interval && this.value >= 0) {
             this.stop();
         }
     }
