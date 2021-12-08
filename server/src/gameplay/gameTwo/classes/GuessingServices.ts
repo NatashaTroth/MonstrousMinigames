@@ -1,8 +1,8 @@
-import User from "../../../classes/user";
+import { RankData } from "../interfaces";
 import Parameters from "../constants/Parameters";
 import { GuessHints } from "../enums/GuessHints";
-import { RankData } from "../interfaces";
 import { GameTwoPlayerRank } from "../interfaces/GameTwoPlayerRank";
+import User from "../../../classes/user";
 
 export default class GuessingService {
     private roundCount: number;
@@ -94,6 +94,14 @@ export default class GuessingService {
         }
     }
 
+    public allGuessesSubmitted(round: number): boolean {
+        const count = [...this.guesses.entries()].reduce(function (result, item) {
+            if(item[1][round - 1]) return result + 1;
+            return result ;
+          }, 0);
+
+        return count === this.guesses.size;
+    }
     public getPlayerRanks() {
         return [...this.playerRanks].map(([name, value]) => (value));
     }
