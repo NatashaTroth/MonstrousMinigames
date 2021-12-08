@@ -1,7 +1,9 @@
+import { Timer } from 'timer-node';
+
 import Parameters from "../constants/Parameters";
 import { Phases } from "../enums/Phases";
+
 import RoundEventEmitter from "./RoundEventEmitter";
-import { Timer } from 'timer-node';
 
 const PHASES: string[] = [Phases.COUNTING, Phases.GUESSING, Phases.RESULTS];
 
@@ -11,6 +13,7 @@ export default class RoundService {
     public phase: string;
     private roundEventEmitter: RoundEventEmitter;
     private timer: Timer;
+    private timeout: NodeJS.Timer | null;
 
     constructor() {
         this.roundCount = Parameters.ROUNDS;
@@ -18,6 +21,7 @@ export default class RoundService {
         this.phase = Phases.COUNTING;
         this.roundEventEmitter = RoundEventEmitter.getInstance();
         this.timer = new Timer();
+        this.timeout = null;
     }
 
     public isCountingPhase(): boolean {
@@ -35,23 +39,25 @@ export default class RoundService {
     public start(): void {
         this.runPhase();
     }
+    
     private runPhase(): void {
         this.emitRoundChange();
 
         this.timer.clear();
         this.timer.start();
 
-        setTimeout(() => {
-            this.timer.stop();
-            if (this.phase === Phases.RESULTS) {
-                if (!this.nextRound()) {
-                    return;
-                }
-            }
-            this.nextPhase();
-            this.runPhase();
+        this.timeout = setTimeout(() =>  this.phaseAction(), Parameters.PHASE_TIMES[this.phase]);
+    }
 
-        }, Parameters.PHASE_TIMES[this.phase]);
+    private phaseAction(): void {
+        this.timer.stop();
+        if (this.phase === Phases.RESULTS) {
+            if (!this.nextRound()) {
+                return;
+            }
+        }
+        this.nextPhase();
+        this.runPhase();
     }
 
     private nextRound() {
@@ -78,5 +84,14 @@ export default class RoundService {
 
     public getTimeLeft(): number {
         return Parameters.PHASE_TIMES[this.phase] - this.timer.ms();
+    }
+
+    public skipPhase(): boolean {
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+            this.phaseAction();
+            return true;
+        }
+        return false;
     }
 }
