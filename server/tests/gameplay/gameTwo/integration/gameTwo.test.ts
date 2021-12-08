@@ -1,14 +1,14 @@
 import 'reflect-metadata';
-import { GameTwo } from '../../../../src/gameplay';
-import { GameState } from '../../../../src/gameplay/enums';
-import Parameters from '../../../../src/gameplay/gameTwo/constants/Parameters';
+
 import { leaderboard, roomId, users } from '../../mockData';
-import { GameTwoMessageTypes } from '../../../../src/gameplay/gameTwo/enums/GameTwoMessageTypes';
-import Sheep from '../../../../src/gameplay/gameTwo/classes/Sheep';
-import { SheepStates } from '../../../../src/gameplay/gameTwo/enums/SheepStates';
-import { Direction } from '../../../../src/gameplay/gameTwo/enums/Direction';
+import { GameTwo } from '../../../../src/gameplay';
 import GameTwoEventEmitter from '../../../../src/gameplay/gameTwo/classes/GameTwoEventEmitter';
+import Sheep from '../../../../src/gameplay/gameTwo/classes/Sheep';
+import Parameters from '../../../../src/gameplay/gameTwo/constants/Parameters';
+import { Direction } from '../../../../src/gameplay/gameTwo/enums/Direction';
+import { GameTwoMessageTypes } from '../../../../src/gameplay/gameTwo/enums/GameTwoMessageTypes';
 import { Phases } from '../../../../src/gameplay/gameTwo/enums/Phases';
+import { SheepStates } from '../../../../src/gameplay/gameTwo/enums/SheepStates';
 
 let gameTwo: GameTwo;
 
@@ -27,83 +27,6 @@ describe('GameTwo Tests', () => {
         gameTwo.cleanup();
     });
 
-    it('should have the correct new number of players', async () => {
-        expect(gameTwo.players.size).toBe(users.length);
-    });
-
-    it('should have the correct current rank', async () => {
-        expect(gameTwo['currentRank']).toBe(1);
-    });
-
-    it('should have the correct name for player 1', async () => {
-        expect(gameTwo.players.get('1')!.name).toBe(users[0].name);
-    });
-
-    it('should have the correct amount of sheep', async () => {
-        expect(gameTwo.sheepService.sheep.length).toBe(Parameters.SHEEP_COUNT);
-    });
-
-    it('should set a user inactive after disconnecting', async () => {
-        const user = users[0];
-        gameTwo.disconnectPlayer(user.id);
-
-        expect(gameTwo.players.get(user.id)?.isActive).toEqual(false);
-    });
-
-    it('should return false if trying to disconnect inactive player', async () => {
-        const user = users[0];
-        gameTwo.disconnectPlayer(user.id);
-
-        expect(gameTwo.disconnectPlayer(user.id)).toEqual(false);
-    });
-
-    it('should set a user active after reconnecting', async () => {
-        const user = users[0];
-        gameTwo.disconnectPlayer(user.id);
-        gameTwo.reconnectPlayer(user.id);
-
-        expect(gameTwo.players.get(user.id)?.isActive).toEqual(true);
-    });
-
-    it('should return false if trying to reconnect active player', async () => {
-        const user = users[0];
-
-        expect(gameTwo.reconnectPlayer(user.id)).toEqual(false);
-    });
-
-    it('should have a started GameState after starting', async () => {
-        expect(gameTwo.gameState).toEqual(GameState.Started);
-    });
-
-    it('should have a paused GameState after pausing', async () => {
-        gameTwo.pauseGame();
-        expect(gameTwo.gameState).toEqual(GameState.Paused);
-    });
-
-    it('should have a stopped GameState after stopping', async () => {
-        gameTwo.stopGame();
-        expect(gameTwo.gameState).toEqual(GameState.Stopped);
-    });
-
-    it('should have a started GameState after resuming', async () => {
-        gameTwo.pauseGame();
-        gameTwo.resumeGame();
-
-        expect(gameTwo.gameState).toEqual(GameState.Started);
-    });
-    it('should have a stopped GameState after all players disconnected', async () => {
-        users.forEach(user => {
-            gameTwo.disconnectPlayer(user.id);
-        });
-
-        expect(gameTwo.gameState).toEqual(GameState.Stopped);
-    });
-
-    it('should have a stopped GameState if closed by user', async () => {
-        gameTwo.stopGameUserClosed();
-
-        expect(gameTwo.gameState).toEqual(GameState.Stopped);
-    });
     // todo fix flakyness
     // it('should move the player if message is sent', async () => {
     //     const message = {
