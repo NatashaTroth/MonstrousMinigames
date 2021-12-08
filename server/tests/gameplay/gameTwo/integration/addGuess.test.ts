@@ -1,13 +1,18 @@
 import 'reflect-metadata';
 
-import { leaderboard, roomId, users } from '../../mockData';
+import { leaderboard, roomId } from '../../mockData';
 import { GameTwo } from '../../../../src/gameplay';
+import User from '../../../../src/classes/user';
 import GameTwoEventEmitter from '../../../../src/gameplay/gameTwo/classes/GameTwoEventEmitter';
+import RoundService from '../../../../src/gameplay/gameTwo/classes/RoundService';
 import Parameters from '../../../../src/gameplay/gameTwo/constants/Parameters';
 import { GameTwoMessageTypes } from '../../../../src/gameplay/gameTwo/enums/GameTwoMessageTypes';
 import { Phases } from '../../../../src/gameplay/gameTwo/enums/Phases';
 
 let gameTwo: GameTwo;
+const users = [new User('ABCD', '72374', 'Franz', 1, '1'),
+new User('ABCD', '345345', 'Sissi', 2, '2')];
+
 
 describe('GameTwo Guessing Tests', () => {
     beforeEach(async () => {
@@ -79,5 +84,32 @@ describe('GameTwo Guessing Tests', () => {
 
         expect(emitGuessHint).not.toHaveBeenCalled();
         emitGuessHint.mockClear();
+    });
+
+    it('should skip the guessing phase if all players submitted their guess', async () => {
+        let message = {
+            type: GameTwoMessageTypes.GUESS,
+            roomId: roomId,
+            userId: users[0].id,
+            guess: 10
+        }
+
+
+        jest.useFakeTimers();
+        jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.COUNTING] + 10)
+        gameTwo.receiveInput(message);
+
+        message = {
+            type: GameTwoMessageTypes.GUESS,
+            roomId: roomId,
+            userId: users[1].id,
+            guess: 15
+        }
+        expect(gameTwo.getGameStateInfo().phase).toEqual(Phases.GUESSING);
+
+        gameTwo.receiveInput(message);
+
+        expect(gameTwo.getGameStateInfo().phase).toEqual(Phases.RESULTS);
+
     });
 });
