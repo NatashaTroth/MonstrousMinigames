@@ -3,7 +3,7 @@ import Parameters from "../../../../src/gameplay/gameTwo/constants/Parameters";
 import { SheepStates } from "../../../../src/gameplay/gameTwo/enums/SheepStates";
 
 let sheep: Sheep;
-describe('RoundService Tests', () => {
+describe('Sheep Tests', () => {
     beforeEach(() => {
         sheep = new Sheep(50, 50, 1);
     });

@@ -15,6 +15,7 @@ import SheepService from './classes/SheepService';
 import RoundEventEmitter from './classes/RoundEventEmitter';
 import GuessingService from './classes/GuessingServices';
 import { Phases } from './enums/Phases';
+import Brightness from './classes/Brightness';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -29,6 +30,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     private roundService: RoundService;
     private roundEventEmitter: RoundEventEmitter;
     private guessingService: GuessingService;
+    private brightness: Brightness
 
     initialPlayerPositions = Parameters.PLAYERS_POSITIONS;
 
@@ -43,6 +45,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.roundService = new RoundService();
         this.roundEventEmitter = RoundEventEmitter.getInstance();
         this.guessingService = new GuessingService(Parameters.ROUNDS);
+        this.brightness = new Brightness();
 
     }
 
@@ -65,7 +68,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             round: this.roundService.round,
             phase: this.roundService.phase,
             timeLeft: this.roundService.getTimeLeft(),
-            aliveSheepCounts: this.guessingService.counts
+            aliveSheepCounts: this.guessingService.counts,
+            brightness: this.brightness.value
         };
     }
 
@@ -195,8 +199,10 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.roundEventEmitter.on(RoundEventEmitter.PHASE_CHANGE_EVENT, (round: number, phase: string) => {
             if (phase === Phases.COUNTING) {
                 this.sheepService.startMoving()
+                this.brightness.start();
             } else if (phase === Phases.GUESSING) {
                 this.sheepService.stopMoving()
+                this.brightness.stop();
                 this.guessingService.saveSheepCount(round, this.sheepService.getAliveSheepCount());
             } else if (phase === Phases.RESULTS) {
                 this.guessingService.calculatePlayerRanks();
