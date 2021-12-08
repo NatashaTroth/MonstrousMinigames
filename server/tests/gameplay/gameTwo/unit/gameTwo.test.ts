@@ -7,7 +7,7 @@ import Parameters from '../../../../src/gameplay/gameTwo/constants/Parameters';
 
 let gameTwo: GameTwo;
 
-describe('GameTwo Tests', () => {
+describe('GameTwo Unit Tests', () => {
     beforeEach(async () => {
         jest.spyOn(console, "log").mockImplementation();
         gameTwo = new GameTwo(roomId, leaderboard);
@@ -99,5 +99,14 @@ describe('GameTwo Tests', () => {
 
         expect(gameTwo.gameState).toEqual(GameState.Stopped);
     });
-  
+
+    it('should log a message if it is not implemented', async () => {
+        console.info = jest.fn();
+        const message = {
+            type: 'test',
+        }
+        gameTwo.receiveInput(message);
+        expect(console.info).toHaveBeenCalledWith(message);
+    });
+
 });
