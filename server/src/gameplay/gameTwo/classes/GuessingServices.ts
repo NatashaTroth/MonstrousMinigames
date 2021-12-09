@@ -1,8 +1,8 @@
-import User from "../../../classes/user";
+import { RankData } from "../interfaces";
 import Parameters from "../constants/Parameters";
 import { GuessHints } from "../enums/GuessHints";
-import { RankData } from "../interfaces";
 import { GameTwoPlayerRank } from "../interfaces/GameTwoPlayerRank";
+import User from "../../../classes/user";
 
 export default class GuessingService {
     private roundCount: number;
@@ -31,13 +31,13 @@ export default class GuessingService {
         });
     }
 
-    public getHintForRound(round: number, userId: string): string | null {
+    public getHintForRound(round: number, userId: string): string {
         const guess = this.getGuessForRound(round, userId);
         const count = this.getCountForRound(round);
         if (guess && count) {
             return this.getHint(count - guess);
         }
-        return null;
+        return '';
     }
 
     public getHint(miss: number): string {
@@ -56,12 +56,10 @@ export default class GuessingService {
 
     public addGuess(round: number, guess: number, userId: string): boolean {
         const guesses = this.guesses.get(userId);
-        if (guesses) {
-            if (!guesses[round - 1]) {
-                guesses[round - 1] = guess;
-                this.guesses.set(userId, guesses);
-                return true;
-            }
+        if (guesses && !guesses[round - 1]) {
+            guesses[round - 1] = guess;
+            this.guesses.set(userId, guesses);
+            return true;
         }
         return false;
     }
@@ -96,6 +94,14 @@ export default class GuessingService {
         }
     }
 
+    public allGuessesSubmitted(round: number): boolean {
+        const count = [...this.guesses.entries()].reduce(function (result, item) {
+            if(item[1][round - 1]) return result + 1;
+            return result ;
+          }, 0);
+
+        return count === this.guesses.size;
+    }
     public getPlayerRanks() {
         return [...this.playerRanks].map(([name, value]) => (value));
     }

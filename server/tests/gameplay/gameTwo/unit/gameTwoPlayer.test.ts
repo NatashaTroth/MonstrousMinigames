@@ -1,5 +1,5 @@
-import { Direction } from "../../../src/gameplay/gameTwo/enums/Direction";
-import GameTwoPlayer from "../../../src/gameplay/gameTwo/GameTwoPlayer";
+import { Direction } from "../../../../src/gameplay/gameTwo/enums/Direction";
+import GameTwoPlayer from "../../../../src/gameplay/gameTwo/GameTwoPlayer";
 
 
 let player: GameTwoPlayer;

@@ -52,7 +52,6 @@ export default class GameTwoEventEmitter {
     }
 
     public static emitGameHasStartedEvent(roomId: string, countdownTime: number, game: string) {
-        console.log("emitGameHasStarted")
         this.GameTwoMessageEmitter.emit({
             type: GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED,
             roomId,
