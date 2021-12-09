@@ -105,7 +105,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             this.roomId,
             this.getGameStateInfo()
         )
-        console.info(this.getGameStateInfo())
     }
 
     startGame(): void {
@@ -118,11 +117,13 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     pauseGame(): void {
         super.pauseGame();
+        this.roundService.pause();
         GameTwoEventEmitter.emitGameHasPausedEvent(this.roomId);
     }
 
     resumeGame(): void {
         super.resumeGame();
+        this.roundService.resume();
         GameTwoEventEmitter.emitGameHasResumedEvent(this.roomId);
     }
 
