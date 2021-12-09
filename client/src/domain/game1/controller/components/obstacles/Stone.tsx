@@ -6,7 +6,7 @@ import Button from '../../../../../components/common/Button';
 import { StyledParticles } from '../../../../../components/common/Particles.sc';
 import { ComponentToTest } from '../../../../../components/controller/Tutorial';
 import { stoneParticlesConfig } from '../../../../../config/particlesConfig';
-import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
+import { ControllerSocketContext } from '../../../../../contexts/controller/ControllerSocketContextProvider';
 import { Game1Context } from '../../../../../contexts/game1/Game1ContextProvider';
 import { GameContext } from '../../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../../contexts/PlayerContextProvider';

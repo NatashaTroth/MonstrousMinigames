@@ -7,7 +7,7 @@ import { FinishedScreen } from '../../../components/controller/FinishedScreen';
 import {
     ControllerSocketContext,
     defaultValue as controllerDefaultValue,
-} from '../../../contexts/ControllerSocketContextProvider';
+} from '../../../contexts/controller/ControllerSocketContextProvider';
 import { defaultValue as gameContextDefaultValue, GameContext } from '../../../contexts/GameContextProvider';
 import { defaultValue, PlayerContext } from '../../../contexts/PlayerContextProvider';
 import history from '../../../domain/history/history';

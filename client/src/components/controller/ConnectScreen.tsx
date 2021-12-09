@@ -2,7 +2,7 @@ import { History } from 'history';
 import * as React from 'react';
 import Frame from 'react-frame-component';
 
-import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
+import { ControllerSocketContext } from '../../contexts/controller/ControllerSocketContextProvider';
 import Button from '../common/Button';
 import { ConnectScreenContainer, FormContainer, inputStyles, LabelStyles, wrapperStyles } from './ConnectScreen.sc';
 

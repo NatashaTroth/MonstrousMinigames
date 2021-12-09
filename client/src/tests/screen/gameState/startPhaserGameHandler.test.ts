@@ -1,6 +1,11 @@
+import { renderHook } from '@testing-library/react-hooks';
 import { createMemoryHistory } from 'history';
+import React from 'react';
 
-import { startPhaserGameHandler } from '../../../domain/game1/screen/gameState/startPhaserGameHandler';
+import {
+    startPhaserGameHandler,
+    useStartPhaserGameHandler,
+} from '../../../domain/game1/screen/gameState/startPhaserGameHandler';
 import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
 import { StartPhaserGameMessage } from '../../../domain/typeGuards/startPhaserGame';
 import { MessageTypesGame1 } from '../../../utils/constants';
@@ -36,5 +41,37 @@ describe('startPhaserGameHandler', () => {
         await socket.emit(message);
 
         expect(setGameStarted).toHaveBeenCalledWith(true);
+    });
+});
+
+describe('useStartPhaserGameHandler', () => {
+    const context = React.useContext;
+
+    afterEach(() => {
+        React.useContext = context;
+    });
+
+    it('handed handler should be called', () => {
+        const startPhaserGameHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        const mockUseContext = jest.fn().mockImplementation(() => ({
+            roomId: 'ALEK',
+        }));
+
+        React.useContext = mockUseContext;
+
+        renderHook(() => useStartPhaserGameHandler(socket, startPhaserGameHandler));
+
+        expect(startPhaserGameHandler).toHaveBeenCalledTimes(1);
+    });
+
+    it('handed handler should not be called if there is no roomId', () => {
+        const startPhaserGameHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        renderHook(() => useStartPhaserGameHandler(socket, startPhaserGameHandler));
+
+        expect(startPhaserGameHandler).toHaveBeenCalledTimes(0);
     });
 });

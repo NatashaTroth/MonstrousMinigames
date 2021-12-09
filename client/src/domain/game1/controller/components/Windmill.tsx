@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 import { ComponentToTest } from '../../../../components/controller/Tutorial';
-import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
+import { ControllerSocketContext } from '../../../../contexts/controller/ControllerSocketContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import windmill from '../../../../images/ui/pinwheel.svg';
 import windmillWood from '../../../../images/ui/pinwheel2.svg';

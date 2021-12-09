@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import history from '../domain/history/history';
-import { InMemorySocketFake } from '../domain/socket/InMemorySocketFake';
-import { Socket } from '../domain/socket/Socket';
-import { SocketIOAdapter } from '../domain/socket/SocketIOAdapter';
-import { controllerChooseCharacterRoute } from '../utils/routes';
-import { GameContext } from './GameContextProvider';
+import history from '../../domain/history/history';
+import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
+import { Socket } from '../../domain/socket/Socket';
+import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
+import { controllerChooseCharacterRoute } from '../../utils/routes';
+import { GameContext } from '../GameContextProvider';
 import { useGame1Handler } from './useGame1Handler';
 import { useGame2Handler } from './useGame2Handler';
 import { useGame3Handler } from './useGame3Handler';

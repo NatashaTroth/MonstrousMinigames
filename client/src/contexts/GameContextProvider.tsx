@@ -1,10 +1,10 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { defaultAvailableCharacters } from "../config/characters";
-import { GameNames } from "../config/games";
-import { ScreenStates } from "../config/screenStates";
-import { User } from "../domain/typeGuards/connectedUsers";
-import { PlayerRank } from "./ScreenSocketContextProvider";
+import { defaultAvailableCharacters } from '../config/characters';
+import { GameNames } from '../config/games';
+import { ScreenStates } from '../config/screenStates';
+import { User } from '../domain/typeGuards/connectedUsers';
+import { PlayerRank } from './screen/ScreenSocketContextProvider';
 
 export const defaultValue = {
     finished: false,

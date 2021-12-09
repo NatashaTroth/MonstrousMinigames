@@ -2,7 +2,7 @@ import { History } from 'history';
 import * as React from 'react';
 
 import { GameNames } from '../../config/games';
-import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
+import { ControllerSocketContext } from '../../contexts/controller/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import { sendUserReady } from '../../domain/commonGameState/controller/sendUserReady';

@@ -4,7 +4,10 @@ import { ThemeProvider } from 'styled-components';
 
 import { FinishedScreen } from '../../../components/screen/FinishedScreen';
 import { defaultValue, GameContext } from '../../../contexts/GameContextProvider';
-import { defaultValue as screenDefaultValue, ScreenSocketContext } from '../../../contexts/ScreenSocketContextProvider';
+import {
+    defaultValue as screenDefaultValue,
+    ScreenSocketContext,
+} from '../../../contexts/screen/ScreenSocketContextProvider';
 import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
 import theme from '../../../styles/theme';
 import { formatMs } from '../../../utils/formatMs';

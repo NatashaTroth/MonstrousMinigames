@@ -1,7 +1,9 @@
+import { renderHook } from '@testing-library/react-hooks';
 import { createMemoryHistory } from 'history';
+import React from 'react';
 
 import { GameNames } from '../../../config/games';
-import { startHandler } from '../../../domain/commonGameState/screen/startHandler';
+import { startHandler, useStartHandler } from '../../../domain/commonGameState/screen/startHandler';
 import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasStartedMessage } from '../../../domain/typeGuards/game1/started';
 import { MessageTypes } from '../../../utils/constants';
@@ -27,5 +29,37 @@ describe('startHandler', () => {
         await socket.emit(message);
 
         expect(setGameStarted).toHaveBeenLastCalledWith(true);
+    });
+});
+
+describe('useStartHandler', () => {
+    const context = React.useContext;
+
+    afterEach(() => {
+        React.useContext = context;
+    });
+
+    it('handed handler should be called', () => {
+        const startHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        const mockUseContext = jest.fn().mockImplementation(() => ({
+            roomId: 'ALEK',
+        }));
+
+        React.useContext = mockUseContext;
+
+        renderHook(() => useStartHandler(socket, startHandler));
+
+        expect(startHandler).toHaveBeenCalledTimes(1);
+    });
+
+    it('handed handler should not be called if there is no roomId', () => {
+        const startHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        renderHook(() => useStartHandler(socket, startHandler));
+
+        expect(startHandler).toHaveBeenCalledTimes(0);
     });
 });

@@ -1,8 +1,12 @@
 import { History } from 'history';
+import React from 'react';
 
-import { PlayerRank } from '../../../contexts/ScreenSocketContextProvider';
+import { GameContext } from '../../../contexts/GameContextProvider';
+import { PlayerRank } from '../../../contexts/screen/ScreenSocketContextProvider';
 import { screenFinishedRoute } from '../../../utils/routes';
+import history from '../../history/history';
 import messageHandler from '../../socket/messageHandler';
+import { Socket } from '../../socket/Socket';
 import { finishedTypeGuard } from '../../typeGuards/finished';
 
 interface Dependencies {
@@ -17,3 +21,14 @@ export const finishedHandler = messageHandler(finishedTypeGuard, (message, depen
     setPlayerRanks(message.data.playerRanks);
     history.push(screenFinishedRoute(roomId));
 });
+
+export const useFinishedHandler = (socket: Socket, handler = finishedHandler) => {
+    const { roomId, setFinished, setPlayerRanks } = React.useContext(GameContext);
+
+    React.useEffect(() => {
+        if (!roomId) return;
+
+        const finishedHandlerWithDependencies = handler({ setFinished, setPlayerRanks, history });
+        finishedHandlerWithDependencies(socket, roomId);
+    }, [handler, roomId, setFinished, setPlayerRanks, socket]);
+};

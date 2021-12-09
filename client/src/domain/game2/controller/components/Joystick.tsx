@@ -6,7 +6,7 @@ import { IJoystickUpdateEvent } from 'react-joystick-component/build/lib/Joystic
 import Button from '../../../../components/common/Button';
 import FullScreenContainer from '../../../../components/common/FullScreenContainer';
 import { Instruction } from '../../../../components/common/Instruction.sc';
-import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
+import { ControllerSocketContext } from '../../../../contexts/controller/ControllerSocketContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import { MessageTypesGame2 } from '../../../../utils/constants';

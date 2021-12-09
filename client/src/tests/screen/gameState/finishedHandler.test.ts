@@ -1,6 +1,8 @@
+import { renderHook } from '@testing-library/react-hooks';
 import { createMemoryHistory } from 'history';
+import React from 'react';
 
-import { finishedHandler } from '../../../domain/commonGameState/screen/finishedHandler';
+import { finishedHandler, useFinishedHandler } from '../../../domain/commonGameState/screen/finishedHandler';
 import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasFinishedMessage } from '../../../domain/typeGuards/finished';
 import { GameState, MessageTypes } from '../../../utils/constants';
@@ -61,5 +63,37 @@ describe('finishedHandler', () => {
         await socket.emit(data);
 
         expect(setFinished).toHaveBeenCalledWith(true);
+    });
+});
+
+describe('useFinishedHandler', () => {
+    const context = React.useContext;
+
+    afterEach(() => {
+        React.useContext = context;
+    });
+
+    it('handed handler should be called', () => {
+        const finishedHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        const mockUseContext = jest.fn().mockImplementation(() => ({
+            roomId: 'ALEK',
+        }));
+
+        React.useContext = mockUseContext;
+
+        renderHook(() => useFinishedHandler(socket, finishedHandler));
+
+        expect(finishedHandler).toHaveBeenCalledTimes(1);
+    });
+
+    it('handed handler should not be called if there is no roomId', () => {
+        const finishedHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        renderHook(() => useFinishedHandler(socket, finishedHandler));
+
+        expect(finishedHandler).toHaveBeenCalledTimes(0);
     });
 });

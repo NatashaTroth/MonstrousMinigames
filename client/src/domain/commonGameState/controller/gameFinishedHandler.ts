@@ -3,7 +3,7 @@ import React from 'react';
 
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
-import { PlayerRank } from '../../../contexts/ScreenSocketContextProvider';
+import { PlayerRank } from '../../../contexts/screen/ScreenSocketContextProvider';
 import { controllerFinishedRoute } from '../../../utils/routes';
 import history from '../../history/history';
 import messageHandler from '../../socket/messageHandler';
