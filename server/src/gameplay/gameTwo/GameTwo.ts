@@ -100,7 +100,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         super.createNewGame(users);
         this.sheepService.initSheep();
         this.guessingService.init(users);
-        this.setPlayersMoving();
         this.listenToEvents();
         GameTwoEventEmitter.emitInitialGameStateInfoUpdate(
             this.roomId,
@@ -210,9 +209,12 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     protected listenToEvents(): void {
         this.roundEventEmitter.on(RoundEventEmitter.PHASE_CHANGE_EVENT, (round: number, phase: string) => {
             if (phase === Phases.COUNTING) {
+                this.setPlayersMoving();
                 this.sheepService.startMoving()
                 this.brightness.start();
             } else if (phase === Phases.GUESSING) {
+                // reset player position
+                this.stopPlayersMoving();
                 this.sheepService.stopMoving()
                 this.brightness.stop();
                 this.guessingService.saveSheepCount(round, this.sheepService.getAliveSheepCount());
