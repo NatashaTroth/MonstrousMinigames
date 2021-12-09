@@ -119,6 +119,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         super.pauseGame();
         this.roundService.pause();
         this.sheepService.stopMoving();
+        this.brightness.stop();
         GameTwoEventEmitter.emitGameHasPausedEvent(this.roomId);
     }
 
@@ -126,6 +127,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         super.resumeGame();
         this.roundService.resume();
         this.sheepService.startMoving();
+        this.brightness.start(false);
         GameTwoEventEmitter.emitGameHasResumedEvent(this.roomId);
     }
 
