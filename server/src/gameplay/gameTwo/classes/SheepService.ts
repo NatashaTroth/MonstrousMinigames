@@ -1,7 +1,10 @@
 import random from 'random';
+
+import GameTwoPlayer from '../GameTwoPlayer';
+import { SheepData } from '../interfaces';
 import Parameters from '../constants/Parameters';
 import { SheepStates } from '../enums/SheepStates';
-import GameTwoPlayer from '../GameTwoPlayer';
+
 import Sheep from "./Sheep";
 
 
@@ -118,5 +121,11 @@ export default class SheepService {
 
     public getAliveSheepCount(): number {
         return this.sheep.filter(s => s.state === SheepStates.ALIVE).length;
+    }
+
+    public getSheepData(): SheepData[] {
+        return this.sheep.map(sheep => {
+            return sheep.getData()
+        })
     }
 }

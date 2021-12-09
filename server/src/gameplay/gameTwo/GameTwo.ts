@@ -64,7 +64,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 isActive: player.isActive,
                 characterNumber: player.characterNumber,
             })),
-            sheep: this.sheepService.sheep,
+            sheep: this.sheepService.getSheepData(),
             lengthX: this.lengthX,
             lengthY: this.lengthY,
             round: this.roundService.round,
@@ -105,6 +105,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             this.roomId,
             this.getGameStateInfo()
         )
+        console.info(this.getGameStateInfo())
     }
 
     startGame(): void {
@@ -159,7 +160,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             if (this.guessingService.addGuess(round, guess, userId)) {
                 const hint = this.guessingService.getHintForRound(round, userId);
                 GameTwoEventEmitter.emitGuessHint(this.roomId, player.id, hint);
-                if(this.guessingService.allGuessesSubmitted(round)) this.roundService.skipPhase();
+                if (this.guessingService.allGuessesSubmitted(round)) this.roundService.skipPhase();
             }
         }
 

@@ -1,6 +1,7 @@
-import { SheepStates } from "../enums/SheepStates";
-import { Direction } from "../enums/Direction";
+import { SheepData } from "../interfaces";
 import Parameters from "../constants/Parameters";
+import { Direction } from "../enums/Direction";
+import { SheepStates } from "../enums/SheepStates";
 
 const SHEEP_DIRECTIONS: string[] = [Direction.UP, Direction.UP_RIGHT, Direction.RIGHT, Direction.DOWN_RIGHT, Direction.DOWN, Direction.DOWN_LEFT, Direction.LEFT, Direction.UP_LEFT];
 export default class Sheep {
@@ -97,6 +98,15 @@ export default class Sheep {
             if (this.posX > 0) {
                 this.posX -= this.speed;
             }
+        }
+    }
+
+    public getData(): SheepData {
+        return {
+            id: this.id,
+            posX: this.posX,
+            posY: this.posY,
+            state: this.state
         }
     }
 }

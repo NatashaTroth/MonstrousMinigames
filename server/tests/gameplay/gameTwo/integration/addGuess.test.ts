@@ -4,7 +4,6 @@ import { leaderboard, roomId } from '../../mockData';
 import { GameTwo } from '../../../../src/gameplay';
 import User from '../../../../src/classes/user';
 import GameTwoEventEmitter from '../../../../src/gameplay/gameTwo/classes/GameTwoEventEmitter';
-import RoundService from '../../../../src/gameplay/gameTwo/classes/RoundService';
 import Parameters from '../../../../src/gameplay/gameTwo/constants/Parameters';
 import { GameTwoMessageTypes } from '../../../../src/gameplay/gameTwo/enums/GameTwoMessageTypes';
 import { Phases } from '../../../../src/gameplay/gameTwo/enums/Phases';
