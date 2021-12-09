@@ -1,4 +1,7 @@
-import { resumeHandler } from '../../../domain/commonGameState/resumeHandler';
+import { renderHook } from '@testing-library/react-hooks';
+import React from 'react';
+
+import { resumeHandler, useResumeHandler } from '../../../domain/commonGameState/resumeHandler';
 import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasResumedMessage } from '../../../domain/typeGuards/resumed';
 import { MessageTypes } from '../../../utils/constants';
@@ -18,5 +21,37 @@ describe('resumeHandler', () => {
         await socket.emit(mockData);
 
         expect(setHasPaused).toHaveBeenCalledWith(false);
+    });
+});
+
+describe('useResumeHandler', () => {
+    const context = React.useContext;
+
+    afterEach(() => {
+        React.useContext = context;
+    });
+
+    it('handed handler should be called', () => {
+        const resumeHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        const mockUseContext = jest.fn().mockImplementation(() => ({
+            roomId: 'ALEK',
+        }));
+
+        React.useContext = mockUseContext;
+
+        renderHook(() => useResumeHandler(socket, resumeHandler));
+
+        expect(resumeHandler).toHaveBeenCalledTimes(1);
+    });
+
+    it('handed handler should not be called if there is no roomId', () => {
+        const resumeHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        renderHook(() => useResumeHandler(socket, resumeHandler));
+
+        expect(resumeHandler).toHaveBeenCalledTimes(0);
     });
 });

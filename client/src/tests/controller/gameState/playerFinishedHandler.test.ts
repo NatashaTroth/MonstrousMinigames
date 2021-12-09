@@ -1,4 +1,10 @@
-import { playerFinishedHandler } from '../../../domain/commonGameState/controller/handlePlayerFinishedMessage';
+import { renderHook } from '@testing-library/react-hooks';
+import React from 'react';
+
+import {
+    playerFinishedHandler,
+    usePlayerFinishedHandler,
+} from '../../../domain/commonGameState/controller/handlePlayerFinishedMessage';
 import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
 import { PlayerFinishedMessage } from '../../../domain/typeGuards/game1/playerFinished';
 import { MessageTypesGame1 } from '../../../utils/constants';
@@ -105,5 +111,37 @@ describe('playerFinishedHandler', () => {
         await socket.emit(mockData);
 
         expect(global.sessionStorage.getItem('windmillTimeoutId')).toBe(null);
+    });
+});
+
+describe('usePlayerFinishedHandler', () => {
+    const context = React.useContext;
+
+    afterEach(() => {
+        React.useContext = context;
+    });
+
+    it('handed handler should be called', () => {
+        const playerFinishedHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        const mockUseContext = jest.fn().mockImplementation(() => ({
+            roomId: 'ALEK',
+        }));
+
+        React.useContext = mockUseContext;
+
+        renderHook(() => usePlayerFinishedHandler(socket, playerFinishedHandler));
+
+        expect(playerFinishedHandler).toHaveBeenCalledTimes(1);
+    });
+
+    it('handed handler should not be called if there is no roomId', () => {
+        const playerFinishedHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        renderHook(() => usePlayerFinishedHandler(socket, playerFinishedHandler));
+
+        expect(playerFinishedHandler).toHaveBeenCalledTimes(0);
     });
 });

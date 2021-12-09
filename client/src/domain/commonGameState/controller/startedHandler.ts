@@ -1,11 +1,13 @@
-import { History } from "history";
+import { History } from 'history';
+import React from 'react';
 
-import { GameNames } from "../../../config/games";
-import {
-    controllerGame1Route, controllerGame2Route, controllerGame3Route
-} from "../../../utils/routes";
-import messageHandler from "../../socket/messageHandler";
-import { startedTypeGuard } from "../../typeGuards/game1/started";
+import { GameNames } from '../../../config/games';
+import { GameContext } from '../../../contexts/GameContextProvider';
+import { controllerGame1Route, controllerGame2Route, controllerGame3Route } from '../../../utils/routes';
+import history from '../../history/history';
+import messageHandler from '../../socket/messageHandler';
+import { Socket } from '../../socket/Socket';
+import { startedTypeGuard } from '../../typeGuards/game1/started';
 
 interface Dependencies {
     setGameStarted: (val: boolean) => void;
@@ -42,3 +44,15 @@ export const startedHandler = messageHandler(startedTypeGuard, (message, depende
             return;
     }
 });
+
+export const useStartedHandler = (socket: Socket, handler = startedHandler) => {
+    const { roomId, setGameStarted, setCountdownTime } = React.useContext(GameContext);
+
+    React.useEffect(() => {
+        if (!roomId) return;
+
+        const startedHandlerWithDependencies = handler({ setGameStarted, history, setCountdownTime });
+
+        startedHandlerWithDependencies(socket, roomId);
+    }, [handler, roomId, setCountdownTime, setGameStarted, socket]);
+};

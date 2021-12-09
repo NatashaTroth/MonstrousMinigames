@@ -1,6 +1,12 @@
+import React from 'react';
+
+import { Game1Context } from '../../../contexts/game1/Game1ContextProvider';
+import { GameContext } from '../../../contexts/GameContextProvider';
+import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import { controllerFinishedRoute } from '../../../utils/routes';
 import history from '../../history/history';
 import messageHandler from '../../socket/messageHandler';
+import { Socket } from '../../socket/Socket';
 import { playerFinishedTypeGuard } from '../../typeGuards/game1/playerFinished';
 
 interface Dependencies {
@@ -28,3 +34,22 @@ export const playerFinishedHandler = messageHandler(
         }
     }
 );
+
+export const usePlayerFinishedHandler = (socket: Socket, handler = playerFinishedHandler) => {
+    const { roomId } = React.useContext(GameContext);
+    const { setPlayerRank } = React.useContext(PlayerContext);
+    const { setPlayerFinished, playerFinished } = React.useContext(Game1Context);
+
+    React.useEffect(() => {
+        if (!roomId) return;
+
+        // Check if Game1 or not
+        const playerFinishedHandlerWithDependencies = handler({
+            setPlayerFinished,
+            setPlayerRank,
+            playerFinished,
+        });
+
+        playerFinishedHandlerWithDependencies(socket, roomId);
+    }, [handler, playerFinished, roomId, setPlayerFinished, setPlayerRank, socket]);
+};

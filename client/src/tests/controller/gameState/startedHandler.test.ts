@@ -1,13 +1,13 @@
-import { createMemoryHistory } from "history";
+import { renderHook } from '@testing-library/react-hooks';
+import { createMemoryHistory } from 'history';
+import React from 'react';
 
-import { GameNames } from "../../../config/games";
-import { startedHandler } from "../../../domain/commonGameState/controller/startedHandler";
-import { InMemorySocketFake } from "../../../domain/socket/InMemorySocketFake";
-import { GameHasStartedMessage } from "../../../domain/typeGuards/game1/started";
-import { MessageTypes } from "../../../utils/constants";
-import {
-    controllerGame1Route, controllerGame2Route, controllerGame3Route
-} from "../../../utils/routes";
+import { GameNames } from '../../../config/games';
+import { startedHandler, useStartedHandler } from '../../../domain/commonGameState/controller/startedHandler';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { GameHasStartedMessage } from '../../../domain/typeGuards/game1/started';
+import { MessageTypes } from '../../../utils/constants';
+import { controllerGame1Route, controllerGame2Route, controllerGame3Route } from '../../../utils/routes';
 
 describe('startedHandler', () => {
     const setGameStarted = jest.fn();
@@ -83,5 +83,37 @@ describe('startedHandler', () => {
         await socket.emit({ ...message, game });
 
         expect(history.location).toHaveProperty('pathname', controllerGame3Route(roomId));
+    });
+});
+
+describe('useStartedHandler', () => {
+    const context = React.useContext;
+
+    afterEach(() => {
+        React.useContext = context;
+    });
+
+    it('handed handler should be called', () => {
+        const startedHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        const mockUseContext = jest.fn().mockImplementation(() => ({
+            roomId: 'ALEK',
+        }));
+
+        React.useContext = mockUseContext;
+
+        renderHook(() => useStartedHandler(socket, startedHandler));
+
+        expect(startedHandler).toHaveBeenCalledTimes(1);
+    });
+
+    it('handed handler should not be called if there is no roomId', () => {
+        const startedHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        renderHook(() => useStartedHandler(socket, startedHandler));
+
+        expect(startedHandler).toHaveBeenCalledTimes(0);
     });
 });

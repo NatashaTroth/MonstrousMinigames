@@ -1,4 +1,7 @@
-import { diedHandler } from '../../../domain/game1/controller/gameState/diedHandler';
+import { renderHook } from '@testing-library/react-hooks';
+import React from 'react';
+
+import { diedHandler, useDiedHandler } from '../../../domain/game1/controller/gameState/diedHandler';
 import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
 import { PlayerDiedMessage } from '../../../domain/typeGuards/game1/playerDied';
 import { MessageTypesGame1 } from '../../../utils/constants';
@@ -44,5 +47,37 @@ describe('diedHandler', () => {
         await socket.emit(mockData);
 
         expect(setPlayerRank).toHaveBeenLastCalledWith(mockData.rank);
+    });
+});
+
+describe('useDiedHandler', () => {
+    const context = React.useContext;
+
+    afterEach(() => {
+        React.useContext = context;
+    });
+
+    it('handed handler should be called', () => {
+        const diedHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        const mockUseContext = jest.fn().mockImplementation(() => ({
+            roomId: 'ALEK',
+        }));
+
+        React.useContext = mockUseContext;
+
+        renderHook(() => useDiedHandler(socket, diedHandler));
+
+        expect(diedHandler).toHaveBeenCalledTimes(1);
+    });
+
+    it('handed handler should not be called if there is no roomId', () => {
+        const diedHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        renderHook(() => useDiedHandler(socket, diedHandler));
+
+        expect(diedHandler).toHaveBeenCalledTimes(0);
     });
 });

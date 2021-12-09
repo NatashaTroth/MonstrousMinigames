@@ -1,4 +1,10 @@
-import { approachingObstacleHandler } from '../../../domain/game1/controller/gameState/approachingObstacleHandler';
+import { renderHook } from '@testing-library/react-hooks';
+import React from 'react';
+
+import {
+    approachingObstacleHandler,
+    useApproachingObstacleHandler,
+} from '../../../domain/game1/controller/gameState/approachingObstacleHandler';
 import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
 import { ApproachingSolvableObstacleMessage } from '../../../domain/typeGuards/game1/approachingSolvableObstacleTypeGuard';
 import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
@@ -44,5 +50,37 @@ describe('approachingObstacleHandler', () => {
         });
 
         expect(setEarlySolvableObstacle).toHaveBeenCalledWith(undefined);
+    });
+});
+
+describe('useApproachingObstacleHandler', () => {
+    const context = React.useContext;
+
+    afterEach(() => {
+        React.useContext = context;
+    });
+
+    it('handed handler should be called', () => {
+        const approachingObstacleHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        const mockUseContext = jest.fn().mockImplementation(() => ({
+            roomId: 'ALEK',
+        }));
+
+        React.useContext = mockUseContext;
+
+        renderHook(() => useApproachingObstacleHandler(socket, approachingObstacleHandler));
+
+        expect(approachingObstacleHandler).toHaveBeenCalledTimes(1);
+    });
+
+    it('handed handler should not be called if there is no roomId', () => {
+        const approachingObstacleHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        renderHook(() => useApproachingObstacleHandler(socket, approachingObstacleHandler));
+
+        expect(approachingObstacleHandler).toHaveBeenCalledTimes(0);
     });
 });

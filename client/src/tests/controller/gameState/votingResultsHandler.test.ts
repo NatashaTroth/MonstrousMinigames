@@ -1,4 +1,10 @@
-import { votingResultsHandler } from '../../../domain/game3/controller/gameState/votingResultsHandler';
+import { renderHook } from '@testing-library/react-hooks';
+import React from 'react';
+
+import {
+    useVotingResultsHandler,
+    votingResultsHandler,
+} from '../../../domain/game3/controller/gameState/votingResultsHandler';
 import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
 import { VotingResultsMessage } from '../../../domain/typeGuards/game3/votingResults';
 import { MessageTypesGame3 } from '../../../utils/constants';
@@ -22,5 +28,37 @@ describe('votingResultsHandler', () => {
         await socket.emit(message);
 
         expect(setVotingResults).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('useVotingResultsHandler', () => {
+    const context = React.useContext;
+
+    afterEach(() => {
+        React.useContext = context;
+    });
+
+    it('handed handler should be called', () => {
+        const votingResultsHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        const mockUseContext = jest.fn().mockImplementation(() => ({
+            roomId: 'ALEK',
+        }));
+
+        React.useContext = mockUseContext;
+
+        renderHook(() => useVotingResultsHandler(socket, votingResultsHandler));
+
+        expect(votingResultsHandler).toHaveBeenCalledTimes(1);
+    });
+
+    it('handed handler should not be called if there is no roomId', () => {
+        const votingResultsHandler = jest.fn();
+        const socket = new InMemorySocketFake();
+
+        renderHook(() => useVotingResultsHandler(socket, votingResultsHandler));
+
+        expect(votingResultsHandler).toHaveBeenCalledTimes(0);
     });
 });
