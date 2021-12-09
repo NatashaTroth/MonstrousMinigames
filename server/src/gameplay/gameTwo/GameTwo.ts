@@ -100,6 +100,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         super.createNewGame(users);
         this.sheepService.initSheep();
         this.guessingService.init(users);
+        this.setPlayersMoving();
         this.listenToEvents();
         GameTwoEventEmitter.emitInitialGameStateInfoUpdate(
             this.roomId,
@@ -118,6 +119,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     pauseGame(): void {
         super.pauseGame();
         this.roundService.pause();
+        this.stopPlayersMoving();
         this.sheepService.stopMoving();
         this.brightness.stop();
         GameTwoEventEmitter.emitGameHasPausedEvent(this.roomId);
@@ -126,6 +128,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     resumeGame(): void {
         super.resumeGame();
         this.roundService.resume();
+        this.setPlayersMoving();
         this.sheepService.startMoving();
         this.brightness.start(false);
         GameTwoEventEmitter.emitGameHasResumedEvent(this.roomId);
@@ -223,5 +226,12 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     public cleanup() {
         this.roundEventEmitter.removeAllListeners();
+    }
+
+    protected stopPlayersMoving(): void {
+        [...this.players].forEach(player => player[1].moving = false)
+    }
+    protected setPlayersMoving(): void {
+        [...this.players].forEach(player => player[1].moving = true)
     }
 }

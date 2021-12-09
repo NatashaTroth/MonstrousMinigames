@@ -1,10 +1,11 @@
 import Player from "../Player";
+
 import Parameters from "./constants/Parameters";
 import { Direction } from "./enums/Direction";
 
 class GameTwoPlayer extends Player {
     public direction: string;
-    public speed: number;
+    public moving: boolean;
     constructor(
         public id: string,
         name: string,
@@ -15,11 +16,11 @@ class GameTwoPlayer extends Player {
     ) {
         super(id, name, characterNumber);
         this.direction = 'C';
-        this.speed = Parameters.SPEED;
+        this.moving = false;
     }
 
     update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
-        this.move();
+        if (this.moving) this.move();
     }
     public move() {
         if (this.direction === Direction.STOP) {
@@ -27,22 +28,22 @@ class GameTwoPlayer extends Player {
         }
         if (this.direction.startsWith(Direction.UP)) {
             if (this.posY > 0) {
-                this.posY -= this.speed;
+                this.posY -= Parameters.SPEED;
             }
         }
         if (this.direction.startsWith(Direction.DOWN)) {
             if (this.posY < Parameters.LENGTH_Y) {
-                this.posY += this.speed;
+                this.posY += Parameters.SPEED;
             }
         }
         if (this.direction.includes(Direction.RIGHT)) {
             if (this.posX < Parameters.LENGTH_X) {
-                this.posX += this.speed;
+                this.posX += Parameters.SPEED;
             }
         }
         if (this.direction.includes(Direction.LEFT)) {
             if (this.posX > 0) {
-                this.posX -= this.speed;
+                this.posX -= Parameters.SPEED;
             }
         }
     }
