@@ -8,7 +8,7 @@ export default class Brightness {
         this.value = 100;
         this.interval = null;
     }
-    protected update(): void {
+    private update(): void {
         this.value -= Parameters.BRIGHTNESS_STEP;
         if (this.value <= 0) {
             this.value = 0;
@@ -16,8 +16,8 @@ export default class Brightness {
         }
     }
 
-    start(): void {
-        this.resetValue();
+    start(reset = true): void {
+        if (reset) this.resetValue();
         setTimeout(() => {
             this.interval = setInterval(() => this.update(), Parameters.BRIGHTNESS_INTERVAL);
 
@@ -33,7 +33,7 @@ export default class Brightness {
         return false;
     }
 
-    resetValue(): void {
+    private resetValue(): void {
         this.value = 100;
     }
 }
