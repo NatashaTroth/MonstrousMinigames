@@ -118,12 +118,14 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     pauseGame(): void {
         super.pauseGame();
         this.roundService.pause();
+        this.sheepService.stopMoving();
         GameTwoEventEmitter.emitGameHasPausedEvent(this.roomId);
     }
 
     resumeGame(): void {
         super.resumeGame();
         this.roundService.resume();
+        this.sheepService.startMoving();
         GameTwoEventEmitter.emitGameHasResumedEvent(this.roomId);
     }
 
