@@ -39,7 +39,6 @@ describe('RoundService Tests', () => {
     });
 
     it('should be in the counting phase again after running through all phases', () => {
-        jest.useFakeTimers();
         roundService.start();
 
         jest.useFakeTimers();
@@ -48,5 +47,16 @@ describe('RoundService Tests', () => {
         jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.RESULTS]);
 
         expect(roundService.phase).toEqual(Phases.COUNTING);
+    });
+
+    it('should skip a phase on skipPhase', () => {
+        jest.useFakeTimers();
+        roundService.start();
+        jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.COUNTING]);
+        roundService.skipPhase();
+        expect(roundService.phase).toEqual(Phases.RESULTS);
+        roundService.skipPhase();
+        expect(roundService.phase).toEqual(Phases.COUNTING);
+        expect(roundService.round).toEqual(2);
     });
 });

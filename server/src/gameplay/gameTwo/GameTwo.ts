@@ -1,21 +1,23 @@
-import User from '../../classes/user';
-import { IMessage } from '../../interfaces/messages';
 import Game from '../Game';
+import Player from '../Player';
 import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
-import Player from '../Player';
-import Parameters from './constants/Parameters';
-import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
-import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
+import User from '../../classes/user';
+import { GameNames } from '../../enums/gameNames';
+import { IMessage } from '../../interfaces/messages';
+
 import GameTwoPlayer from './GameTwoPlayer';
 import { GameStateInfo } from './interfaces';
-import { GameNames } from '../../enums/gameNames';
+
+import Brightness from './classes/Brightness';
+import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
+import GuessingService from './classes/GuessingServices';
+import RoundEventEmitter from './classes/RoundEventEmitter';
 import RoundService from './classes/RoundService';
 import SheepService from './classes/SheepService';
-import RoundEventEmitter from './classes/RoundEventEmitter';
-import GuessingService from './classes/GuessingServices';
+import Parameters from './constants/Parameters';
+import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
 import { Phases } from './enums/Phases';
-import Brightness from './classes/Brightness';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -62,7 +64,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 isActive: player.isActive,
                 characterNumber: player.characterNumber,
             })),
-            sheep: this.sheepService.sheep,
+            sheep: this.sheepService.getSheepData(),
             lengthX: this.lengthX,
             lengthY: this.lengthY,
             round: this.roundService.round,
@@ -103,6 +105,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             this.roomId,
             this.getGameStateInfo()
         )
+        console.info(this.getGameStateInfo())
     }
 
     startGame(): void {
@@ -157,6 +160,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             if (this.guessingService.addGuess(round, guess, userId)) {
                 const hint = this.guessingService.getHintForRound(round, userId);
                 GameTwoEventEmitter.emitGuessHint(this.roomId, player.id, hint);
+                if (this.guessingService.allGuessesSubmitted(round)) this.roundService.skipPhase();
             }
         }
 

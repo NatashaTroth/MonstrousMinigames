@@ -1,7 +1,7 @@
-import GuessingService from "../../../../src/gameplay/gameTwo/classes/GuessingServices";
 import User from "../../../../src/classes/user";
-import { GuessHints } from "../../../../src/gameplay/gameTwo/enums/GuessHints";
+import GuessingService from "../../../../src/gameplay/gameTwo/classes/GuessingServices";
 import Parameters from "../../../../src/gameplay/gameTwo/constants/Parameters";
+import { GuessHints } from "../../../../src/gameplay/gameTwo/enums/GuessHints";
 
 const user = new User('ABCD', '72374', 'Franz', 1, '1');
 
@@ -92,7 +92,6 @@ describe('GuessingService Tests', () => {
         const user2 = new User('ABCD', '23434', 'Maria', 2, '2');
         guessingService.init([user, user2]);
 
-
         guessingService.addGuess(1, 10, user.id);
         guessingService.addGuess(1, 19, user2.id);
 
@@ -120,6 +119,28 @@ describe('GuessingService Tests', () => {
         expect(guessingService.getPlayerRanks()).toEqual(response);
 
     });
+
+    it('allGuessesSubmitted() should return true if every user submitted a guess in the round', () => {
+        guessingService = new GuessingService(3);
+        const user2 = new User('ABCD', '23434', 'Maria', 2, '2');
+        guessingService.init([user, user2]);
+
+        guessingService.addGuess(1, 10, user.id);
+        guessingService.addGuess(1, 19, user2.id);
+
+        expect(guessingService.allGuessesSubmitted(1)).toBeTruthy();
+    });
+
+    it('allGuessesSubmitted() should return false if not every user submitted a guess in the round', () => {
+        guessingService = new GuessingService(3);
+        const user2 = new User('ABCD', '23434', 'Maria', 2, '2');
+        guessingService.init([user, user2]);
+
+        guessingService.addGuess(1, 10, user.id);
+
+        expect(guessingService.allGuessesSubmitted(1)).toBeFalsy();
+    });
+
 
 
 });
