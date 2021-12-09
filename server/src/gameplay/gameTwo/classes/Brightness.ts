@@ -17,11 +17,15 @@ export default class Brightness {
     }
 
     start(reset = true): void {
-        if (reset) this.resetValue();
-        setTimeout(() => {
-            this.interval = setInterval(() => this.update(), Parameters.BRIGHTNESS_INTERVAL);
+        if (reset) {
+            this.resetValue();
+            setTimeout(() => {
+                this.interval = setInterval(() => this.update(), Parameters.BRIGHTNESS_INTERVAL);
 
-        }, Parameters.BRIGHTNESS_TIMEOUT);
+            }, Parameters.BRIGHTNESS_TIMEOUT);
+        } else {
+            this.interval = setInterval(() => this.update(), Parameters.BRIGHTNESS_INTERVAL);
+        }
     }
 
 
