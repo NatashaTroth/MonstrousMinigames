@@ -59,4 +59,29 @@ describe('RoundService Tests', () => {
         expect(roundService.phase).toEqual(Phases.COUNTING);
         expect(roundService.round).toEqual(2);
     });
+
+    it('should pause a phase on pause', () => {
+        jest.useFakeTimers();
+        roundService.start();
+        jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.COUNTING]);
+        roundService.pause();
+        jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.GUESSING]);
+
+        expect(roundService.phase).toEqual(Phases.GUESSING);
+    });
+
+    it('should pause and resume a phase', () => {
+        jest.useFakeTimers();
+        roundService.start();
+        jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.COUNTING]);
+        roundService.pause();
+        jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.GUESSING]);
+        roundService.resume();
+        jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.GUESSING]);
+
+        expect(roundService.phase).toEqual(Phases.RESULTS);
+    });
+
+
+
 });

@@ -39,6 +39,17 @@ export default class RoundService {
     public start(): void {
         this.runPhase();
     }
+
+    public pause(): void {
+        if(this.timeout){
+            clearTimeout(this.timeout);
+        }
+    }
+    
+    public resume(): void {
+        this.timeout = setTimeout(() =>  this.phaseAction(), this.getTimeLeft());
+    }
+    
     
     private runPhase(): void {
         this.emitRoundChange();
