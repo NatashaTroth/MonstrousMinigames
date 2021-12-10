@@ -51,6 +51,19 @@ describe('Brightness Tests', () => {
         expect(brightness.value).toEqual(100);
     });
 
+    it('should not have a timeout after resuming', () => {
+        jest.useFakeTimers();
+        brightness.start();
+        jest.advanceTimersByTime(Parameters.BRIGHTNESS_TIMEOUT + 10);
+        brightness.stop();
+        const value = brightness.value;
+        jest.advanceTimersByTime(100);
+        brightness.start(false);
+        jest.advanceTimersByTime(100);
+
+        expect(brightness.value).toBeLessThan(value);
+    });
+
     it('value should should be 0 again at the end', () => {
         jest.useFakeTimers();
         brightness.start();

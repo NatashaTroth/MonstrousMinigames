@@ -1,11 +1,11 @@
-import { Direction } from "../../../../src/gameplay/gameTwo/enums/Direction";
 import GameTwoPlayer from "../../../../src/gameplay/gameTwo/GameTwoPlayer";
+import { Direction } from "../../../../src/gameplay/gameTwo/enums/Direction";
 
 
 let player: GameTwoPlayer;
 describe('GameTwoPlyer Tests', () => {
     beforeEach(() => {
-        player = new GameTwoPlayer('X', 'John', 10, 10, 3, 1);
+        player = new GameTwoPlayer('X', 'John', 1, 3, 1);
     });
 
     it('initial direction should be C', () => {
@@ -21,7 +21,7 @@ describe('GameTwoPlyer Tests', () => {
         player.move();
 
         expect(player.posX).toEqual(initialPositionX);
-        expect(player.posX).toEqual(initialPositionY);
+        expect(player.posY).toEqual(initialPositionY);
     });
 
     it('should have a y-pos lower 1 than the initial positon when moving up once', () => {
@@ -100,6 +100,20 @@ describe('GameTwoPlyer Tests', () => {
 
         expect(player.posX).toEqual(initialPositionX + 1);
         expect(player.posY).toEqual(initialPositionY - 1);
+    });
+
+    it('should have the initial position after setting player position', () => {
+        const initialPositionX = player.posX;
+        const initialPositionY = player.posY;
+
+        player.direction = Direction.UP_RIGHT;
+        player.move();
+        player.move();
+
+        player.setPlayerPosition();
+
+        expect(player.posX).toEqual(initialPositionX);
+        expect(player.posY).toEqual(initialPositionY);
     });
 
 });

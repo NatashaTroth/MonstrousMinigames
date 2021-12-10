@@ -23,24 +23,6 @@ describe('GameTwo Movement Tests', () => {
     afterEach(() => {
         gameTwo.cleanup();
     });
-
-    // todo fix flakyness
-    // it('should move the player if message is sent', async () => {
-    //     const message = {
-    //         type: GameTwoMessageTypes.MOVE,
-    //         roomId: roomId,
-    //         direction: 'S',
-    //         userId: users[0].id
-    //     };
-    //     gameTwo.receiveInput(message);
-
-    //     jest.useRealTimers();
-
-    //     setTimeout(() => {
-    //         expect(gameTwo.getGameStateInfo().playersState[0].positionY).toBeGreaterThan(Parameters.PLAYERS_POSITIONS[0].y);
-    //     }, 3000);
-    // });
-
     it('should return to previous state if moving one step in every direction', async () => {
         let posX = gameTwo.players.get(users[0].id)?.posX;
         if (!posX) {
@@ -131,5 +113,35 @@ describe('GameTwo Movement Tests', () => {
         gameTwo.receiveInput(message);
 
         expect(gameTwo.players.get(users[0].id)?.direction).not.toEqual(direction);
+    });
+
+
+    it('player should not move when the game is paused', async () => {
+        gameTwo.players.get(users[0].id)?.setDirection(Direction.LEFT);
+
+        let initialX = gameTwo.players.get(users[0].id)?.posX;
+        if(!initialX){
+            initialX = 0;
+        }
+        gameTwo.pauseGame();
+
+        gameTwo.players.get(users[0].id)?.update(1, 1);
+        
+        expect(gameTwo.players.get(users[0].id)?.posX).toEqual(initialX);
+    });
+
+    it('player should move when the game is resumed', async () => {
+        gameTwo.players.get(users[0].id)?.setDirection(Direction.LEFT);
+
+        let initialX = gameTwo.players.get(users[0].id)?.posX;
+        if(!initialX){
+            initialX = 0;
+        }
+        gameTwo.pauseGame();
+        gameTwo.resumeGame();
+
+        gameTwo.players.get(users[0].id)?.update(1, 1);
+        
+        expect(gameTwo.players.get(users[0].id)?.posX).toBeLessThan(initialX);
     });
 });
