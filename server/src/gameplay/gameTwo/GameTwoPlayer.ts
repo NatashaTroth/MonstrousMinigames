@@ -6,17 +6,20 @@ import { Direction } from "./enums/Direction";
 class GameTwoPlayer extends Player {
     public direction: string;
     public moving: boolean;
+    public posX: number;
+    public posY: number;
     constructor(
         public id: string,
         name: string,
-        public posX: number,
-        public posY: number,
+        private number: number,
         public killsLeft: number,
         public characterNumber: number
     ) {
         super(id, name, characterNumber);
         this.direction = 'C';
         this.moving = false;
+        this.posX = this.getPlayerPositionX();
+        this.posY = this.getPlayerPositionY();
     }
 
     update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
@@ -47,11 +50,23 @@ class GameTwoPlayer extends Player {
             }
         }
     }
+    public setPlayerPosition(): void {
+        this.posX = this.getPlayerPositionX();
+        this.posY = this.getPlayerPositionY();
+    }
+    private getPlayerPositionX(): number {
+        return Parameters.PLAYERS_POSITIONS[this.number].x;
+    }
 
-    public setDirection(direction: string) {
+    private getPlayerPositionY(): number {
+        return Parameters.PLAYERS_POSITIONS[this.number].y;
+    }
+
+
+    public setDirection(direction: string): void {
         this.direction = direction;
     }
-    public setKillsLeft(killsLeft: number) {
+    public setKillsLeft(killsLeft: number): void {
         this.killsLeft = killsLeft;
     }
 }
