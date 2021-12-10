@@ -62,7 +62,6 @@ class GameTwoPlayer extends Player {
         return Parameters.PLAYERS_POSITIONS[this.number].y;
     }
 
-
     public setDirection(direction: string): void {
         this.direction = direction;
     }

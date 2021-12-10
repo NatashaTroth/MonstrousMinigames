@@ -102,4 +102,18 @@ describe('GameTwoPlyer Tests', () => {
         expect(player.posY).toEqual(initialPositionY - 1);
     });
 
+    it('should have the initial position after setting player position', () => {
+        const initialPositionX = player.posX;
+        const initialPositionY = player.posY;
+
+        player.direction = Direction.UP_RIGHT;
+        player.move();
+        player.move();
+
+        player.setPlayerPosition();
+
+        expect(player.posX).toEqual(initialPositionX);
+        expect(player.posY).toEqual(initialPositionY);
+    });
+
 });
