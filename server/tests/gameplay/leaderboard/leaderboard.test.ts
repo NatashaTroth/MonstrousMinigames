@@ -47,48 +47,46 @@ describe('Add user(s)', () => {
 
     it('Adds a new user with correct id', async () => {
         leaderboard.addUser(user.id, user.name);
-        expect(leaderboard.userPoints[user.id].userId).toBe(user.id);
+        expect(leaderboard.userPoints.get(user.id)!.userId).toBe(user.id);
     });
 
     it('Adds a new user with correct name', async () => {
         leaderboard.addUser(user.id, user.name);
-        expect(leaderboard.userPoints[user.id].name).toBe(user.name);
+        expect(leaderboard.userPoints.get(user.id)!.name).toBe(user.name);
     });
 
     it('Adds a new user with 0 points', async () => {
         leaderboard.addUser(user.id, user.name);
-        expect(leaderboard.userPoints[user.id].points).toBe(0);
+        expect(leaderboard.userPoints.get(user.id)!.points).toBe(0);
     });
 
     it('Adds multiple users', async () => {
         users.forEach(user => {
             leaderboard.addUser(user.id, user.name);
         });
-        expect(leaderboard.userPoints).toMatchObject({
-            '1': {
-                userId: users[0].id,
-                name: users[0].name,
-                points: 0,
-                rank: 0,
-            },
-            '2': {
-                userId: users[1].id,
-                name: users[1].name,
-                points: 0,
-                rank: 0,
-            },
-            '3': {
-                userId: users[2].id,
-                name: users[2].name,
-                points: 0,
-                rank: 0,
-            },
-            '4': {
-                userId: users[3].id,
-                name: users[3].name,
-                points: 0,
-                rank: 0,
-            },
+        expect(leaderboard.userPoints.get('1')).toMatchObject({
+            userId: users[0].id,
+            name: users[0].name,
+            points: 0,
+            rank: 0,
+        });
+        expect(leaderboard.userPoints.get('2')).toMatchObject({
+            userId: users[1].id,
+            name: users[1].name,
+            points: 0,
+            rank: 0,
+        });
+        expect(leaderboard.userPoints.get('3')).toMatchObject({
+            userId: users[2].id,
+            name: users[2].name,
+            points: 0,
+            rank: 0,
+        });
+        expect(leaderboard.userPoints.get('4')).toMatchObject({
+            userId: users[3].id,
+            name: users[3].name,
+            points: 0,
+            rank: 0,
         });
     });
 });
@@ -117,19 +115,17 @@ describe('Add Game to Game History', () => {
         leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
 
         console.log(JSON.stringify(leaderboard.getLeaderboardInfo()));
-        expect(leaderboard.userPoints).toMatchObject({
-            '1': {
-                points: 5,
-            },
-            '2': {
-                points: 3,
-            },
-            '3': {
-                points: 2,
-            },
-            '4': {
-                points: 1,
-            },
+        expect(leaderboard.userPoints.get('1')).toMatchObject({
+            points: 5,
+        });
+        expect(leaderboard.userPoints.get('2')).toMatchObject({
+            points: 3,
+        });
+        expect(leaderboard.userPoints.get('3')).toMatchObject({
+            points: 2,
+        });
+        expect(leaderboard.userPoints.get('4')).toMatchObject({
+            points: 1,
         });
     });
 
@@ -163,7 +159,7 @@ describe('Add Game to Game History', () => {
             });
             leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
             expect(addUserPointsSpy).toHaveBeenCalledTimes(playerRanks.length);
-            expect(leaderboard.userPoints[users[0].id].points).toBe(
+            expect(leaderboard.userPoints.get(users[0].id)!.points).toBe(
                 leaderboard.rankPointsDictionary[playerRanks[0].rank]
             );
         });
@@ -171,9 +167,9 @@ describe('Add Game to Game History', () => {
         it('Adds and updates user points object when new points are added and user was not yet added', async () => {
             const addUserSpy = jest.spyOn(Leaderboard.prototype as any, 'addUser');
             //check userPoints is empty
-            expect(Object.keys(leaderboard.userPoints).length).toBe(0);
+            expect(leaderboard.userPoints.size).toBe(0);
             leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
-            expect(Object.keys(leaderboard.userPoints).length).toBe(4);
+            expect(leaderboard.userPoints.size).toBe(4);
             expect(addUserSpy).toHaveBeenCalledTimes(playerRanks.length);
         });
     });
@@ -198,19 +194,21 @@ describe('Add Game to Game History', () => {
 
             // leaderboard.updateUserPointsAfterGame(playerRanks);
             // expect(leaderboard.userPoints[user.id].points).toBe(points);
-            expect(leaderboard.userPoints).toMatchObject({
-                '1': {
-                    points: 5,
-                },
-                '2': {
-                    points: 3,
-                },
-                '3': {
-                    points: 2,
-                },
-                '4': {
-                    points: 1,
-                },
+
+            expect(leaderboard.userPoints.get('1')).toMatchObject({
+                points: 5,
+            });
+
+            expect(leaderboard.userPoints.get('2')).toMatchObject({
+                points: 3,
+            });
+
+            expect(leaderboard.userPoints.get('3')).toMatchObject({
+                points: 2,
+            });
+
+            expect(leaderboard.userPoints.get('4')).toMatchObject({
+                points: 1,
             });
         });
 
@@ -223,19 +221,20 @@ describe('Add Game to Game History', () => {
 
             // leaderboard.updateUserPointsAfterGame(playerRanks);
             // expect(leaderboard.userPoints[user.id].points).toBe(points);
-            expect(leaderboard.userPoints).toMatchObject({
-                '1': {
-                    points: 0,
-                },
-                '2': {
-                    points: 3,
-                },
-                '3': {
-                    points: 0,
-                },
-                '4': {
-                    points: 1,
-                },
+            expect(leaderboard.userPoints.get('1')).toMatchObject({
+                points: 0,
+            });
+
+            expect(leaderboard.userPoints.get('2')).toMatchObject({
+                points: 3,
+            });
+
+            expect(leaderboard.userPoints.get('3')).toMatchObject({
+                points: 0,
+            });
+
+            expect(leaderboard.userPoints.get('4')).toMatchObject({
+                points: 1,
             });
         });
         it('Updates user points object when new points are added with duplicate ranks', async () => {
@@ -247,19 +246,20 @@ describe('Add Game to Game History', () => {
             leaderboard.addGameToHistory(GameType.GameOne, playerRanks2);
             expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(2);
 
-            expect(leaderboard.userPoints).toMatchObject({
-                '1': {
-                    points: 5 + 3,
-                },
-                '2': {
-                    points: 3 + 1,
-                },
-                '3': {
-                    points: 2 + 5,
-                },
-                '4': {
-                    points: 1 + 3,
-                },
+            expect(leaderboard.userPoints.get('1')).toMatchObject({
+                points: 5 + 3,
+            });
+
+            expect(leaderboard.userPoints.get('2')).toMatchObject({
+                points: 3 + 1,
+            });
+
+            expect(leaderboard.userPoints.get('3')).toMatchObject({
+                points: 2 + 5,
+            });
+
+            expect(leaderboard.userPoints.get('4')).toMatchObject({
+                points: 1 + 3,
             });
         });
     });
