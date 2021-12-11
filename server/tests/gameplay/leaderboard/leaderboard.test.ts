@@ -1,5 +1,6 @@
 import User from '../../../src/classes/user';
 import { IPlayerRank } from '../../../src/gameplay/interfaces/IPlayerRank';
+import RankPoints from '../../../src/gameplay/leaderboard/classes/RankPoints';
 import { GameType } from '../../../src/gameplay/leaderboard/enums/GameType';
 import { LeaderboardInfo } from '../../../src/gameplay/leaderboard/interfaces';
 import Leaderboard from '../../../src/gameplay/leaderboard/Leaderboard';
@@ -114,7 +115,6 @@ describe('Add Game to Game History', () => {
     it('Updates user points object when new points are added with duplicate ranks', async () => {
         leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
 
-        console.log(JSON.stringify(leaderboard.getLeaderboardInfo()));
         expect(leaderboard.userPoints.get('1')).toMatchObject({
             points: 5,
         });
@@ -160,7 +160,7 @@ describe('Add Game to Game History', () => {
             leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
             expect(addUserPointsSpy).toHaveBeenCalledTimes(playerRanks.length);
             expect(leaderboard.userPoints.get(users[0].id)!.points).toBe(
-                leaderboard.rankPointsDictionary[playerRanks[0].rank]
+                RankPoints.getPointsFromRank(playerRanks[0].rank)
             );
         });
 

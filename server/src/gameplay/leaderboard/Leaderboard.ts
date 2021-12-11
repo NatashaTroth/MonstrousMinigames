@@ -2,10 +2,9 @@ import { EventEmitter } from 'stream';
 
 import { localDevelopment } from '../../../constants';
 // import { PlayerRank as GameOnePlayerRank } from '../GameOne/interfaces';
-import { HashTable } from '../interfaces';
 import { IPlayerRank } from '../interfaces/IPlayerRank';
+import RankPoints from './classes/RankPoints';
 import { GameType } from './enums/GameType';
-import rankPointsDictionary from './globalVars/rankPointsDictionary';
 import { GamePlayed, LeaderboardInfo, UserPoints } from './interfaces';
 import { gameHistory, userPoints } from './mockData';
 
@@ -15,14 +14,13 @@ export default class Leaderboard extends EventEmitter {
     public static readonly LEADERBOARD_UPDATED_EVENT = 'leaderboardUpdatedEvent';
     gameHistory: GamePlayed[];
     userPoints: Map<string, UserPoints>; //<userId, userPoints>
-    // userPoints: HashTable<UserPoints>;
-    rankPointsDictionary: HashTable<number>; //dicionary[rank] = points
+
+    // rankPointsDictionary: HashTable<number>; //dicionary[rank] = points
 
     constructor(private roomId: string) {
         super();
         this.gameHistory = [];
         this.userPoints = new Map<string, UserPoints>();
-        this.rankPointsDictionary = rankPointsDictionary;
     }
 
     addUser(userId: string, username: string): void {
@@ -78,7 +76,7 @@ export default class Leaderboard extends EventEmitter {
         playerRanks.forEach(playerRank => {
             // if (!Object.prototype.hasOwnProperty.call(this.userPoints, playerRank.id))
             if (playerRank.finished) {
-                this.addUserPoints(playerRank.id, playerRank.name, this.rankPointsDictionary[playerRank.rank]);
+                this.addUserPoints(playerRank.id, playerRank.name, RankPoints.getPointsFromRank(playerRank.rank));
             }
         });
     }
