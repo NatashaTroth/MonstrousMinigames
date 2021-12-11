@@ -1,27 +1,13 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import {
-    handleConnectedUsersMessage
-} from '../domain/commonGameState/screen/handleConnectedUsersMessage';
-import {
-    handleGameHasFinishedMessage
-} from '../domain/commonGameState/screen/handleGameHasFinishedMessage';
-import {
-    handleGameHasResetMessage
-} from '../domain/commonGameState/screen/handleGameHasResetMessage';
-import {
-    handleGameHasStoppedMessage
-} from '../domain/commonGameState/screen/handleGameHasStoppedMessage';
-import {
-    handleGameStartedMessage
-} from '../domain/commonGameState/screen/handleGameStartedMessage';
-import {
-    handleStartPhaserGameMessage
-} from '../domain/commonGameState/screen/handleStartPhaserGameMessage';
-import {
-    handleStartSheepGameMessage
-} from '../domain/game2/screen/gameState/handleStartSheepGameMessage';
+import { handleConnectedUsersMessage } from '../domain/commonGameState/screen/handleConnectedUsersMessage';
+import { handleGameHasFinishedMessage } from '../domain/commonGameState/screen/handleGameHasFinishedMessage';
+import { handleGameHasResetMessage } from '../domain/commonGameState/screen/handleGameHasResetMessage';
+import { handleGameHasStoppedMessage } from '../domain/commonGameState/screen/handleGameHasStoppedMessage';
+import { handleGameStartedMessage } from '../domain/commonGameState/screen/handleGameStartedMessage';
+import { handleStartPhaserGameMessage } from '../domain/commonGameState/screen/handleStartPhaserGameMessage';
+import { handleStartSheepGameMessage } from '../domain/game2/screen/gameState/handleStartSheepGameMessage';
 import { handleSetSocket } from '../domain/socket/screen/handleSetSocket';
 import { handleSocketConnection } from '../domain/socket/screen/handleSocketConnection';
 import { Socket } from '../domain/socket/Socket';
@@ -54,6 +40,7 @@ export interface PlayerRank {
     isActive: boolean;
     dead?: boolean;
     points?: number;
+    votes?: number;
 }
 
 export interface PlayerState {

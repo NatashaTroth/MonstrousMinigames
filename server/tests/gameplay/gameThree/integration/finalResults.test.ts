@@ -136,5 +136,3 @@ describe('Final results', () => {
         expect(eventData.data.playerRanks[3].rank).toBe(4);
     });
 });
-
-it.todo('TEST POINTs!!');
