@@ -1,5 +1,6 @@
 import { Dialog } from '@material-ui/core';
 import * as React from 'react';
+import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
 
 import { GameContext } from '../../contexts/GameContextProvider';
@@ -28,7 +29,7 @@ const PausedDialog: React.FunctionComponent = ({ children }) => {
             >
                 <DialogContent>
                     <h3>Game has paused</h3>
-                    <Button onClick={handleResume}>Resume</Button>
+                    {!isMobile && <Button onClick={handleResume}>Resume</Button>}
                 </DialogContent>
             </StyledDialog>
             {children}
