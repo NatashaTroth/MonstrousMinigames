@@ -15,6 +15,7 @@ describe('Screen Socket Connection', () => {
             setHasPaused: jest.fn(),
             setScreenAdmin: jest.fn(),
             setScreenState: jest.fn(),
+            setLeaderboardState: jest.fn(),
             setChosenGame: jest.fn(),
             setTopicMessage: jest.fn(),
             setVoteForPhotoMessage: jest.fn(),
