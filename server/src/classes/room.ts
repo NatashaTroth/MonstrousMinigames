@@ -4,15 +4,16 @@ import {
     GameAlreadyStartedError,
     UsersNotReadyError,
 } from '../customErrors';
+import { GameOne, GameTwo } from '../gameplay';
 import { GameNames } from '../enums/gameNames';
 import { Globals } from '../enums/globals';
 import { ScreenStates } from '../enums/screenStates';
-import { GameOne, GameTwo } from '../gameplay';
-import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
 import Game from '../gameplay/Game';
+import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
+import { ScreenInfo } from '../interfaces/interfaces';
 import GameThree from '../gameplay/gameThree/GameThree';
 import Leaderboard from '../gameplay/leaderboard/Leaderboard';
-import { ScreenInfo } from '../interfaces/interfaces';
+
 import User from './user';
 
 class Room {
@@ -139,22 +140,18 @@ class Room {
         }
     }
 
-    public createNewGame(game?: Game) {
+    public createNewGame() {
         if (this.users.length === 0) {
             throw new CannotStartEmptyGameError();
         }
         if (this.hasNotReadyUsers()) {
             throw new UsersNotReadyError();
         }
-        if (game) {
-            this.game = game;
-            this.game.leaderboard = this.leaderboard;
-        }
+
         this.setState(RoomStates.CREATED);
 
         this.game.createNewGame(this.users);
         this.updateTimestamp();
-        // return this.game.getGameStateInfo();
     }
 
     public allPhaserGamesReady() {
@@ -194,8 +191,8 @@ class Room {
     }
 
     public async resetGame() {
-        this.users = this.getActiveUsers();
         this.clearInactiveUsers();
+        this.users = this.getActiveUsers();
         this.setOpen();
     }
 
@@ -208,7 +205,7 @@ class Room {
         });
     }
 
-    private setState(state: RoomStates): void {
+    public setState(state: RoomStates): void {
         this.state = state;
     }
 
@@ -259,13 +256,10 @@ class Room {
     }
     public removeScreen(screenId: string): void {
         const index = this.screens.findIndex(element => element.id === screenId);
-        // const index = this.screens.indexOf({ id: screenId });
         this.screens.splice(index, 1);
     }
     public isAdminScreen(screenId: string): boolean {
-        //TODO test
         return this.screens.findIndex(element => element.id === screenId) === 0;
-        // return this.screens.indexOf({ id: screenId }) === 0;
     }
     public getAdminScreenId(): string {
         return this.screens[0]?.id;
