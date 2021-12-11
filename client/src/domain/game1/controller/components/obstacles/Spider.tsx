@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import Button from '../../../../../components/common/Button';
 import { ComponentToTest } from '../../../../../components/controller/Tutorial';
-import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
+import { ControllerSocketContext } from '../../../../../contexts/controller/ControllerSocketContextProvider';
 import { Game1Context, Obstacle } from '../../../../../contexts/game1/Game1ContextProvider';
 import { GameContext } from '../../../../../contexts/GameContextProvider';
 import { MessageTypesGame1, ObstacleTypes } from '../../../../../utils/constants';

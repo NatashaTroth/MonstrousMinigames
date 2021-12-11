@@ -5,6 +5,10 @@ import { MessageTypesGame3 } from '../../../../utils/constants';
 import { Socket } from '../../../socket/Socket';
 import { UploadProps } from '../components/TakePicture';
 
+interface RemoteStorage {
+    uploadImage: (path: string, picture: File) => Promise<string>;
+}
+
 export default async function uploadFile(
     values: UploadProps,
     storage: FirebaseStorage | undefined,
@@ -17,6 +21,7 @@ export default async function uploadFile(
     if (!values.picture) return false;
 
     if (storage && roomId) {
+        // move to Adapter
         const storageRef = ref(storage, `${roomId}/${roundIdx}/${userId}${uploadedImagesCount}.jpg`);
         const uploadedImage = await uploadBytes(storageRef, values.picture);
         const imageUrl = await getDownloadURL(uploadedImage.ref);

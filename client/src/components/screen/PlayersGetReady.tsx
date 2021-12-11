@@ -7,7 +7,7 @@ import { characters } from '../../config/characters';
 import { GameNames } from '../../config/games';
 import { ScreenStates } from '../../config/screenStates';
 import { GameContext } from '../../contexts/GameContextProvider';
-import { ScreenSocketContext, User } from '../../contexts/ScreenSocketContextProvider';
+import { ScreenSocketContext } from '../../contexts/screen/ScreenSocketContextProvider';
 import handleStartGame1 from '../../domain/game1/screen/gameState/handleStartGame1';
 import handleStartGame2 from '../../domain/game2/screen/gameState/handleStartGame2';
 import handleStartClickedGame3 from '../../domain/game3/screen/gameState/handleStartClickedGame3';
@@ -27,6 +27,14 @@ import {
     Content,
     GetReadyBackground,
 } from './PlayersGetReady.sc';
+
+interface User {
+    id: string;
+    name: string;
+    roomId: string;
+    number: number;
+    ready: boolean;
+}
 
 const PlayersGetReady: React.FC = () => {
     const { screenSocket } = React.useContext(ScreenSocketContext);

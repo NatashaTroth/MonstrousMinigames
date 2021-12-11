@@ -3,12 +3,12 @@ import 'jest-styled-components';
 import { cleanup } from '@testing-library/react';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount, shallow } from 'enzyme';
-import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { createMemoryHistory } from 'history';
+import React from 'react';
 
 import { checkRoomCode, ConnectScreen, IFrameContent } from '../../../components/controller/ConnectScreen';
-import { ControllerSocketContext, defaultValue } from '../../../contexts/ControllerSocketContextProvider';
+import { ControllerSocketContext, defaultValue } from '../../../contexts/controller/ControllerSocketContextProvider';
 import history from '../../../domain/history/history';
 import theme from '../../../styles/theme';
 

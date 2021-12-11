@@ -1,25 +1,28 @@
+import React from 'react';
+
+import { Game1Context } from '../../../contexts/game1/Game1ContextProvider';
+import { GameContext } from '../../../contexts/GameContextProvider';
+import { PlayerContext } from '../../../contexts/PlayerContextProvider';
 import { controllerFinishedRoute } from '../../../utils/routes';
 import history from '../../history/history';
-import { PlayerFinishedMessage } from '../../typeGuards/game1/playerFinished';
+import messageHandler from '../../socket/messageHandler';
+import { Socket } from '../../socket/Socket';
+import { playerFinishedTypeGuard } from '../../typeGuards/game1/playerFinished';
 
 interface Dependencies {
     setPlayerFinished: (val: boolean) => void;
     setPlayerRank: (val: number) => void;
-}
-export interface HandlePlayerFinishedProps {
-    data: PlayerFinishedMessage;
     playerFinished: boolean;
-    roomId: string;
 }
 
-export function handlePlayerFinishedMessage(dependencies: Dependencies) {
-    return (props: HandlePlayerFinishedProps) => {
-        const { data, roomId, playerFinished } = props;
-        const { setPlayerFinished, setPlayerRank } = dependencies;
+export const playerFinishedHandler = messageHandler(
+    playerFinishedTypeGuard,
+    (message, dependencies: Dependencies, roomId) => {
+        const { setPlayerFinished, setPlayerRank, playerFinished } = dependencies;
 
         if (!playerFinished) {
             setPlayerFinished(true);
-            setPlayerRank(data.rank);
+            setPlayerRank(message.rank);
 
             const windmillTimeoutId = sessionStorage.getItem('windmillTimeoutId');
             if (windmillTimeoutId) {
@@ -29,5 +32,24 @@ export function handlePlayerFinishedMessage(dependencies: Dependencies) {
 
             history.push(controllerFinishedRoute(roomId));
         }
-    };
-}
+    }
+);
+
+export const usePlayerFinishedHandler = (socket: Socket, handler = playerFinishedHandler) => {
+    const { roomId } = React.useContext(GameContext);
+    const { setPlayerRank } = React.useContext(PlayerContext);
+    const { setPlayerFinished, playerFinished } = React.useContext(Game1Context);
+
+    React.useEffect(() => {
+        if (!roomId) return;
+
+        // Check if Game1 or not
+        const playerFinishedHandlerWithDependencies = handler({
+            setPlayerFinished,
+            setPlayerRank,
+            playerFinished,
+        });
+
+        playerFinishedHandlerWithDependencies(socket, roomId);
+    }, [handler, playerFinished, roomId, setPlayerFinished, setPlayerRank, socket]);
+};

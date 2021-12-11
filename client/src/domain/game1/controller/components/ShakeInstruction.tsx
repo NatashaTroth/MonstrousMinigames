@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import FullScreenContainer from '../../../../components/common/FullScreenContainer';
-import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
+import { ControllerSocketContext } from '../../../../contexts/controller/ControllerSocketContextProvider';
 import { Game1Context } from '../../../../contexts/game1/Game1ContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import pebble from '../../../../images/obstacles/stone/pebble.svg';

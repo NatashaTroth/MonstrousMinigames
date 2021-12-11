@@ -10,7 +10,7 @@ import IconButton from '../../components/common/IconButton';
 import { Label } from '../../components/common/Label.sc';
 import { carouselOptions } from '../../config/carouselOptions';
 import { Character as CharacterInterface, characterDictionary, characters } from '../../config/characters';
-import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
+import { ControllerSocketContext } from '../../contexts/controller/ControllerSocketContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { PlayerContext } from '../../contexts/PlayerContextProvider';
 import history from '../../domain/history/history';
