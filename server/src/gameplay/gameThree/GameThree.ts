@@ -128,16 +128,16 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             return {
                 id: player.id,
                 name: player.name,
-                points: playerPoints.get(player.id) || 0,
+                votes: playerPoints.get(player.id) || 0,
                 rank: 0,
                 isActive: player.isActive,
             };
         });
 
         playerRanks
-            .sort((a, b) => b.points - a.points)
+            .sort((a, b) => b.votes - a.votes)
             .map(result => {
-                const rank = this.rankSuccessfulUser(result.points);
+                const rank = this.rankSuccessfulUser(result.votes);
                 this.players.get(result.id)!.rank = rank;
                 result.rank = rank;
                 return result;

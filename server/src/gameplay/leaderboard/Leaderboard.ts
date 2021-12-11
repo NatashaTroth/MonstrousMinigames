@@ -42,7 +42,12 @@ export default class Leaderboard extends EventEmitter {
         this.gameHistory.push({
             game,
             playerRanks: playerRanks.map(playerRank => {
-                return { ...playerRank }; //TODO add points
+                let points = 0;
+
+                if (playerRank.finished) {
+                    points = RankPoints.getPointsFromRank(playerRank.rank);
+                }
+                return { ...playerRank, points };
             }),
         });
         this.updateUserPointsAfterGame(playerRanks);
@@ -74,7 +79,6 @@ export default class Leaderboard extends EventEmitter {
 
     private updateUserPointsAfterGame(playerRanks: IPlayerRank[]): void {
         playerRanks.forEach(playerRank => {
-            // if (!Object.prototype.hasOwnProperty.call(this.userPoints, playerRank.id))
             if (playerRank.finished) {
                 this.addUserPoints(playerRank.id, playerRank.name, RankPoints.getPointsFromRank(playerRank.rank));
             }

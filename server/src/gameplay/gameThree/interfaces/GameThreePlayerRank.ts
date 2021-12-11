@@ -5,5 +5,5 @@ export interface GameThreePlayerRank extends IPlayerRank {
     name: string;
     rank: number;
     isActive: boolean;
-    points: number;
+    votes: number;
 }

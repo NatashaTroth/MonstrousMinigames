@@ -9,4 +9,5 @@ export interface GameOnePlayerRank extends IPlayerRank {
     totalTimeInMs: number;
     positionX: number;
     isActive: boolean;
+    points?: number;
 }

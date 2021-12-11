@@ -7,6 +7,7 @@ import Leaderboard from '../../../src/gameplay/leaderboard/Leaderboard';
 import { roomId, users } from '../mockData';
 
 let leaderboard: Leaderboard;
+let playerRanks: Array<IPlayerRank>;
 
 function createPlayerRanksArray(users: Array<User>, rankArray: Array<number>): Array<IPlayerRank> {
     let rankIndex = 0;
@@ -93,7 +94,6 @@ describe('Add user(s)', () => {
 });
 
 describe('Add Game to Game History', () => {
-    let playerRanks: Array<IPlayerRank>;
     beforeEach(() => {
         leaderboard = new Leaderboard(roomId);
         users.forEach(user => {
@@ -110,6 +110,23 @@ describe('Add Game to Game History', () => {
     it('adds the playerRanks object to the history object', async () => {
         leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
         expect(leaderboard.gameHistory[0].playerRanks).toMatchObject(playerRanks);
+    });
+
+    it('Adds points to game history', async () => {
+        leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
+
+        expect(leaderboard.gameHistory[0].playerRanks[0]).toMatchObject({
+            points: 5,
+        });
+        expect(leaderboard.gameHistory[0].playerRanks[1]).toMatchObject({
+            points: 3,
+        });
+        expect(leaderboard.gameHistory[0].playerRanks[2]).toMatchObject({
+            points: 2,
+        });
+        expect(leaderboard.gameHistory[0].playerRanks[3]).toMatchObject({
+            points: 1,
+        });
     });
 
     it('Updates user points object when new points are added with duplicate ranks', async () => {
@@ -142,125 +159,123 @@ describe('Add Game to Game History', () => {
         expect(leaderboard.gameHistory[0].playerRanks[0].name).toBe(users[0].name);
         expect(leaderboard.gameHistory[1].playerRanks[0].name).toBe(newUserName);
     });
+});
 
-    describe('Add User Points', () => {
-        beforeEach(() => {
-            leaderboard = new Leaderboard(roomId);
+describe('Add User Points', () => {
+    beforeEach(() => {
+        leaderboard = new Leaderboard(roomId);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('Updates user points object when new points are added', async () => {
+        const addUserPointsSpy = jest.spyOn(Leaderboard.prototype as any, 'addUserPoints');
+        users.forEach(user => {
+            leaderboard.addUser(user.id, user.name);
+        });
+        leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
+        expect(addUserPointsSpy).toHaveBeenCalledTimes(playerRanks.length);
+        expect(leaderboard.userPoints.get(users[0].id)!.points).toBe(RankPoints.getPointsFromRank(playerRanks[0].rank));
+    });
+
+    it('Adds and updates user points object when new points are added and user was not yet added', async () => {
+        const addUserSpy = jest.spyOn(Leaderboard.prototype as any, 'addUser');
+        //check userPoints is empty
+        expect(leaderboard.userPoints.size).toBe(0);
+        leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
+        expect(leaderboard.userPoints.size).toBe(4);
+        expect(addUserSpy).toHaveBeenCalledTimes(playerRanks.length);
+    });
+});
+
+describe('Create and add User Points after Game', () => {
+    let updateUserPointsAfterGameSpy: any;
+    beforeEach(() => {
+        leaderboard = new Leaderboard(roomId);
+        users.forEach(user => {
+            leaderboard.addUser(user.id, user.name);
+        });
+        updateUserPointsAfterGameSpy = jest.spyOn(Leaderboard.prototype as any, 'updateUserPointsAfterGame');
+    });
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('Updates user points object when the first points are added', async () => {
+        const playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
+        leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
+        expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(1);
+
+        // leaderboard.updateUserPointsAfterGame(playerRanks);
+        // expect(leaderboard.userPoints[user.id].points).toBe(points);
+
+        expect(leaderboard.userPoints.get('1')).toMatchObject({
+            points: 5,
         });
 
-        afterEach(() => {
-            jest.clearAllMocks();
+        expect(leaderboard.userPoints.get('2')).toMatchObject({
+            points: 3,
         });
 
-        it('Updates user points object when new points are added', async () => {
-            const addUserPointsSpy = jest.spyOn(Leaderboard.prototype as any, 'addUserPoints');
-            users.forEach(user => {
-                leaderboard.addUser(user.id, user.name);
-            });
-            leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
-            expect(addUserPointsSpy).toHaveBeenCalledTimes(playerRanks.length);
-            expect(leaderboard.userPoints.get(users[0].id)!.points).toBe(
-                RankPoints.getPointsFromRank(playerRanks[0].rank)
-            );
+        expect(leaderboard.userPoints.get('3')).toMatchObject({
+            points: 2,
         });
 
-        it('Adds and updates user points object when new points are added and user was not yet added', async () => {
-            const addUserSpy = jest.spyOn(Leaderboard.prototype as any, 'addUser');
-            //check userPoints is empty
-            expect(leaderboard.userPoints.size).toBe(0);
-            leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
-            expect(leaderboard.userPoints.size).toBe(4);
-            expect(addUserSpy).toHaveBeenCalledTimes(playerRanks.length);
+        expect(leaderboard.userPoints.get('4')).toMatchObject({
+            points: 1,
         });
     });
 
-    describe('Create and add User Points after Game', () => {
-        let updateUserPointsAfterGameSpy: any;
-        beforeEach(() => {
-            leaderboard = new Leaderboard(roomId);
-            users.forEach(user => {
-                leaderboard.addUser(user.id, user.name);
-            });
-            updateUserPointsAfterGameSpy = jest.spyOn(Leaderboard.prototype as any, 'updateUserPointsAfterGame');
-        });
-        afterEach(() => {
-            jest.clearAllMocks();
-        });
+    it('does not add points to players that did not finish the game', async () => {
+        const playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
+        playerRanks[0].finished = false; // player 1
+        playerRanks[2].finished = false; // player 3
+        leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
+        expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(1);
 
-        it('Updates user points object when the first points are added', async () => {
-            const playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
-            leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
-            expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(1);
-
-            // leaderboard.updateUserPointsAfterGame(playerRanks);
-            // expect(leaderboard.userPoints[user.id].points).toBe(points);
-
-            expect(leaderboard.userPoints.get('1')).toMatchObject({
-                points: 5,
-            });
-
-            expect(leaderboard.userPoints.get('2')).toMatchObject({
-                points: 3,
-            });
-
-            expect(leaderboard.userPoints.get('3')).toMatchObject({
-                points: 2,
-            });
-
-            expect(leaderboard.userPoints.get('4')).toMatchObject({
-                points: 1,
-            });
+        // leaderboard.updateUserPointsAfterGame(playerRanks);
+        // expect(leaderboard.userPoints[user.id].points).toBe(points);
+        expect(leaderboard.userPoints.get('1')).toMatchObject({
+            points: 0,
         });
 
-        it('does not add points to players that did not finish the game', async () => {
-            const playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
-            playerRanks[0].finished = false; // player 1
-            playerRanks[2].finished = false; // player 3
-            leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
-            expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(1);
-
-            // leaderboard.updateUserPointsAfterGame(playerRanks);
-            // expect(leaderboard.userPoints[user.id].points).toBe(points);
-            expect(leaderboard.userPoints.get('1')).toMatchObject({
-                points: 0,
-            });
-
-            expect(leaderboard.userPoints.get('2')).toMatchObject({
-                points: 3,
-            });
-
-            expect(leaderboard.userPoints.get('3')).toMatchObject({
-                points: 0,
-            });
-
-            expect(leaderboard.userPoints.get('4')).toMatchObject({
-                points: 1,
-            });
+        expect(leaderboard.userPoints.get('2')).toMatchObject({
+            points: 3,
         });
-        it('Updates user points object when new points are added with duplicate ranks', async () => {
-            const playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
-            leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
-            expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(1);
 
-            const playerRanks2 = createPlayerRanksArray(users, [2, 4, 1, 2]);
-            leaderboard.addGameToHistory(GameType.GameOne, playerRanks2);
-            expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(2);
+        expect(leaderboard.userPoints.get('3')).toMatchObject({
+            points: 0,
+        });
 
-            expect(leaderboard.userPoints.get('1')).toMatchObject({
-                points: 5 + 3,
-            });
+        expect(leaderboard.userPoints.get('4')).toMatchObject({
+            points: 1,
+        });
+    });
+    it('Updates user points object when new points are added with duplicate ranks', async () => {
+        const playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
+        leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
+        expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(1);
 
-            expect(leaderboard.userPoints.get('2')).toMatchObject({
-                points: 3 + 1,
-            });
+        const playerRanks2 = createPlayerRanksArray(users, [2, 4, 1, 2]);
+        leaderboard.addGameToHistory(GameType.GameOne, playerRanks2);
+        expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(2);
 
-            expect(leaderboard.userPoints.get('3')).toMatchObject({
-                points: 2 + 5,
-            });
+        expect(leaderboard.userPoints.get('1')).toMatchObject({
+            points: 5 + 3,
+        });
 
-            expect(leaderboard.userPoints.get('4')).toMatchObject({
-                points: 1 + 3,
-            });
+        expect(leaderboard.userPoints.get('2')).toMatchObject({
+            points: 3 + 1,
+        });
+
+        expect(leaderboard.userPoints.get('3')).toMatchObject({
+            points: 2 + 5,
+        });
+
+        expect(leaderboard.userPoints.get('4')).toMatchObject({
+            points: 1 + 3,
         });
     });
 });
