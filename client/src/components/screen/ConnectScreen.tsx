@@ -12,15 +12,8 @@ import LoadingComponent from '../common/LoadingComponent';
 import Logo from '../common/Logo';
 import ConnectDialog from './ConnectDialog';
 import {
-    ConnectScreenContainer,
-    InstructionContainer,
-    LeftButtonContainer,
-    LeftContainer,
-    RightContainer,
-    SettingButtonSection,
-    StyledAccordion,
-    StyledHeadline,
-    StyledText,
+    ConnectScreenContainer, InstructionContainer, LeftButtonContainer, LeftContainer,
+    RightContainer, SettingButtonSection, StyledAccordion, StyledHeadline, StyledText
 } from './ConnectScreen.sc';
 import GettingStartedDialog from './GettingStarted';
 

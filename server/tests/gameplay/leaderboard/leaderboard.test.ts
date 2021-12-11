@@ -115,6 +115,8 @@ describe('Add Game to Game History', () => {
 
     it('Updates user points object when new points are added with duplicate ranks', async () => {
         leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
+
+        console.log(JSON.stringify(leaderboard.getLeaderboardInfo()));
         expect(leaderboard.userPoints).toMatchObject({
             '1': {
                 points: 5,

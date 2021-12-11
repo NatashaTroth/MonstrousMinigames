@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 export const LeaderboardGrid = styled(Grid)`
     && {
         flex-direction: column;
+        width: 100%;
     }
 `;
 
@@ -14,7 +15,6 @@ interface RowProps {
 export const LeaderboardRow = styled.div<RowProps>`
     display: flex;
     padding: 25px 0;
-
     ${({ header = false, theme }) =>
         header &&
         css`
@@ -23,11 +23,10 @@ export const LeaderboardRow = styled.div<RowProps>`
             color: white;
             background-color: ${darken(theme.palette.secondary.main, 0.2)};
         `}
-
     ${({ index, theme }) =>
         index &&
         index % 2 !== 0 &&
         css`
             background-color: ${darken(theme.palette.secondary.main, 0.1)};
-        `}
+        `};
 `;
