@@ -16,33 +16,7 @@ import {
     BackButtonContainer, ContentBase, ContentContainer, FullScreenContainer, Headline
 } from '../common/FullScreenStyles.sc';
 import { LeaderboardGrid, LeaderboardRow } from './Leaderboard.sc';
-
-interface TabPanelProps {
-    children?: React.ReactNode;
-    dir?: string;
-    index: any;
-    value: any;
-}
-
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`full-width-tabpanel-${index}`}
-            aria-labelledby={`full-width-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={3}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-}
+import { TabPanel } from './TabPanel';
 
 function a11yProps(index: any) {
     return {
@@ -60,9 +34,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Leaderboard: React.FunctionComponent = () => {
     const { leaderboardState } = React.useContext(GameContext); //connectedUsers
-
     const leaderboardStateMock: LeaderboardState = JSON.parse(
-        ' {"roomId":"xxx","gameHistory":[{"game":"The Great Monster Escape","playerRanks":[{"id":"1","name":"Harry","rank":1,"finished":true,"isActive":true},{"id":"2","name":"Ron","rank":2,"finished":true,"isActive":true},{"id":"3","name":"James","rank":3,"finished":true,"isActive":true},{"id":"4","name":"Luna","rank":4,"finished":true,"isActive":true}]}],"userPoints":[{"userId":"1","name":"Harry","points":5,"rank":0},{"userId":"2","name":"Ron","points":3,"rank":0},{"userId":"3","name":"James","points":2,"rank":0},{"userId":"4","name":"Luna","points":1,"rank":0}]}'
+        ' {"roomId":"xxx","gameHistory":[{"game":"The Great Monster Escape","playerRanks":[{"id":"1","name":"Harry","rank":1,"finished":true,"isActive":true, "points":5},{"id":"2","name":"Ron","rank":2,"finished":true,"isActive":true, "points":4},{"id":"3","name":"James","rank":3,"finished":true,"isActive":true, "points":3},{"id":"4","name":"Luna","rank":4,"finished":true,"isActive":true, "points":2}]}],"userPoints":[{"userId":"1","name":"Harry","points":5,"rank":1},{"userId":"2","name":"Ron","points":3,"rank":2},{"userId":"3","name":"James","points":2,"rank":3},{"userId":"4","name":"Luna","points":1,"rank":4}]}'
     );
 
     // const users =
@@ -71,6 +44,7 @@ const Leaderboard: React.FunctionComponent = () => {
     //         return { ...user, rank: points?.rank || '-', points: points?.points || 0 };
     //     }) || [];
     const userPoints = leaderboardStateMock?.userPoints || [];
+    const gameHistory = leaderboardStateMock?.gameHistory || [];
     const classes = useStyles();
 
     const theme = useTheme();
@@ -89,28 +63,26 @@ const Leaderboard: React.FunctionComponent = () => {
             <ContentContainer>
                 <ContentBase>
                     <Headline>Leaderboard</Headline>
-                    <AppBar position="static" color="default">
-                        <Tabs
-                            value={value}
-                            onChange={handleChange}
-                            // indicatorColor={darken(theme.palette.secondary.main, 0.2)}
-                            textColor="primary"
-                            variant="fullWidth"
-                            aria-label="full width tabs example"
-                            TabIndicatorProps={{ style: { background: darken(theme.palette.secondary.main, 0.2) } }}
-                            // inkBarStyle={{ background: 'black' }}
-                            // inkBarStyle={{ style: { background: darken(theme.palette.secondary.main, 0.2) } }}
+
+                    <div className={classes.root}>
+                        <AppBar position="static" color="default">
+                            <Tabs
+                                value={value}
+                                onChange={handleChange}
+                                indicatorColor="primary"
+                                textColor="primary"
+                                variant="fullWidth"
+                                aria-label="full width tabs example"
+                            >
+                                <Tab label="Points" {...a11yProps(0)} />
+                                <Tab label="Game History" {...a11yProps(1)} />
+                            </Tabs>
+                        </AppBar>
+                        <SwipeableViews
+                            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                            index={value}
+                            onChangeIndex={handleChangeIndex}
                         >
-                            <Tab label="Points" {...a11yProps(0)} />
-                            <Tab label="GameHistory" {...a11yProps(1)} />
-                        </Tabs>
-                    </AppBar>
-                    <SwipeableViews
-                        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                        index={value}
-                        onChangeIndex={handleChangeIndex}
-                    >
-                        <div className={classes.root}>
                             <TabPanel value={value} index={0} dir={theme.direction}>
                                 {/* HEEEREHEEEREHEEEREHEEEREHEEEREHEEEREHEEEREHEEERE */}
                                 <LeaderboardGrid container>
@@ -140,11 +112,41 @@ const Leaderboard: React.FunctionComponent = () => {
                                     ))}
                                 </LeaderboardGrid>
                             </TabPanel>
-                        </div>
-                        {/* <TabPanel value={value} index={1} dir={theme.direction}>
-                            Item Two
-                        </TabPanel> */}
-                    </SwipeableViews>
+                            <TabPanel value={value} index={1} dir={theme.direction}>
+                                {gameHistory.map((gamePlayed, index) => (
+                                    <div key={index}>
+                                        {gamePlayed.game}
+                                        <LeaderboardGrid container>
+                                            <LeaderboardRow header>
+                                                <Grid item xs>
+                                                    Rank
+                                                </Grid>
+                                                <Grid item xs>
+                                                    Name
+                                                </Grid>
+                                                <Grid item xs>
+                                                    Points
+                                                </Grid>
+                                            </LeaderboardRow>
+                                            {gamePlayed.playerRanks.map((playerRank, playerIdx) => (
+                                                <LeaderboardRow key={playerIdx} index={playerIdx}>
+                                                    <Grid item xs>
+                                                        {playerRank.rank}
+                                                    </Grid>
+                                                    <Grid item xs>
+                                                        {playerRank.name}
+                                                    </Grid>
+                                                    <Grid item xs>
+                                                        {playerRank.points}
+                                                    </Grid>
+                                                </LeaderboardRow>
+                                            ))}
+                                        </LeaderboardGrid>
+                                    </div>
+                                ))}
+                            </TabPanel>
+                        </SwipeableViews>
+                    </div>
                 </ContentBase>
             </ContentContainer>
             <BackButtonContainer>
