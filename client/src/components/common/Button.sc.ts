@@ -24,10 +24,12 @@ export const StyledButtonBase = styled.button<ButtonProps>`
     outline: transparent;
 
     &:not([disabled]) {
-        &:hover {
-            box-shadow: calc(${({ theme }) => theme.boxShadowDepth} * 1px)
-                calc(${({ theme }) => theme.boxShadowDepth} * 1px) 0 ${({ theme }) => theme.palette.secondary.dark};
-            background: ${({ theme }) => theme.palette.secondary.main};
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                box-shadow: calc(${({ theme }) => theme.boxShadowDepth} * 1px)
+                    calc(${({ theme }) => theme.boxShadowDepth} * 1px) 0 ${({ theme }) => theme.palette.secondary.dark};
+                background: ${({ theme }) => theme.palette.secondary.main};
+            }
         }
 
         &:active {
