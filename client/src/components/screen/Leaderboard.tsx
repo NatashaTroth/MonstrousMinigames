@@ -18,7 +18,7 @@ import {
 import { LeaderboardGrid, LeaderboardRow } from './Leaderboard.sc';
 import { TabPanel } from './TabPanel';
 
-function a11yProps(index: any) {
+function a11yProps(index: number) {
     return {
         id: `full-width-tab-${index}`,
         'aria-controls': `full-width-tabpanel-${index}`,

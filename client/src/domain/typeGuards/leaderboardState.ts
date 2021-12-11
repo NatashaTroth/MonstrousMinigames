@@ -1,4 +1,4 @@
-import { GameStateData, LeaderboardState } from '../../contexts/ScreenSocketContextProvider';
+import { LeaderboardState } from '../../contexts/ScreenSocketContextProvider';
 import { MessageTypes } from '../../utils/constants';
 import { MessageData } from './MessageData';
 
