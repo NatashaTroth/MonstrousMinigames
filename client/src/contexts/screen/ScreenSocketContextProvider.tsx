@@ -35,7 +35,6 @@ export interface PlayerRank {
     positionX?: number;
     isActive: boolean;
     dead?: boolean;
-    // TODO weg?
     points?: number;
     votes?: number;
 }
