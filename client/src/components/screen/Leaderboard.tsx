@@ -1,12 +1,13 @@
 import { Grid } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 
 import { GameContext } from '../../contexts/GameContextProvider';
+import { GameType, LeaderboardState } from '../../contexts/ScreenSocketContextProvider';
 import history from '../../domain/history/history';
 import Button from '../common/Button';
 import {
@@ -16,7 +17,13 @@ import {
     FullScreenContainer,
     Headline,
 } from '../common/FullScreenStyles.sc';
-import { LeaderboardGrid, LeaderboardRow } from './Leaderboard.sc';
+import {
+    GameHistory,
+    GameHistoryHeadline,
+    LeaderboardGrid,
+    LeaderboardRow,
+    LeaderboardWrapper,
+} from './Leaderboard.sc';
 import { TabPanel } from './TabPanel';
 
 function a11yProps(index: number) {
@@ -26,27 +33,41 @@ function a11yProps(index: number) {
     };
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        // backgroundColor: theme.palette.background.paper,
-        width: 750,
-    },
-}));
+// TODO remove
+const leaderboardStateMock: LeaderboardState = {
+    gameHistory: [
+        {
+            game: GameType.GameOne,
+            playerRanks: [
+                { id: '1', name: 'Harry', rank: 1, finished: true, isActive: true, points: 5 },
+                { id: '2', name: 'Ron', rank: 2, finished: true, isActive: true, points: 4 },
+                { id: '3', name: 'James', rank: 3, finished: true, isActive: true, points: 3 },
+                { id: '4', name: 'Luna', rank: 4, finished: true, isActive: true, points: 2 },
+            ],
+        },
+        {
+            game: GameType.GameTwo,
+            playerRanks: [
+                { id: '1', name: 'Harry', rank: 1, finished: true, isActive: true, points: 5 },
+                { id: '2', name: 'Ron', rank: 2, finished: true, isActive: true, points: 4 },
+                { id: '3', name: 'James', rank: 3, finished: true, isActive: true, points: 3 },
+                { id: '4', name: 'Luna', rank: 4, finished: true, isActive: true, points: 2 },
+            ],
+        },
+    ],
+    userPoints: [
+        { userId: '1', name: 'Harry', points: 5, rank: 1 },
+        { userId: '2', name: 'Ron', points: 3, rank: 2 },
+        { userId: '3', name: 'James', points: 2, rank: 3 },
+        { userId: '4', name: 'Luna', points: 1, rank: 4 },
+    ],
+};
 
 const Leaderboard: React.FunctionComponent = () => {
-    const { leaderboardState } = React.useContext(GameContext); //connectedUsers
-    // const leaderboardStateMock: LeaderboardState = JSON.parse(
-    //     ' {"roomId":"xxx","gameHistory":[{"game":"The Great Monster Escape","playerRanks":[{"id":"1","name":"Harry","rank":1,"finished":true,"isActive":true, "points":5},{"id":"2","name":"Ron","rank":2,"finished":true,"isActive":true, "points":4},{"id":"3","name":"James","rank":3,"finished":true,"isActive":true, "points":3},{"id":"4","name":"Luna","rank":4,"finished":true,"isActive":true, "points":2}]}],"userPoints":[{"userId":"1","name":"Harry","points":5,"rank":1},{"userId":"2","name":"Ron","points":3,"rank":2},{"userId":"3","name":"James","points":2,"rank":3},{"userId":"4","name":"Luna","points":1,"rank":4}]}'
-    // );
+    const { leaderboardState } = React.useContext(GameContext);
 
-    // const users =
-    //     connectedUsers?.map(user => {
-    //         const points = leaderboardState?.userPoints.find(userPointsElement => user.id === userPointsElement.userId);
-    //         return { ...user, rank: points?.rank || '-', points: points?.points || 0 };
-    //     }) || [];
-    const userPoints = leaderboardState?.userPoints || [];
-    const gameHistory = leaderboardState?.gameHistory || [];
-    const classes = useStyles();
+    const userPoints = leaderboardState?.userPoints ?? leaderboardStateMock.userPoints;
+    const gameHistory = leaderboardState?.gameHistory ?? leaderboardStateMock.gameHistory;
 
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
@@ -65,7 +86,7 @@ const Leaderboard: React.FunctionComponent = () => {
                 <ContentBase>
                     <Headline>Leaderboard</Headline>
 
-                    <div className={classes.root}>
+                    <LeaderboardWrapper>
                         <AppBar position="static" color="default">
                             <Tabs
                                 value={value}
@@ -85,7 +106,6 @@ const Leaderboard: React.FunctionComponent = () => {
                             onChangeIndex={handleChangeIndex}
                         >
                             <TabPanel value={value} index={0} dir={theme.direction}>
-                                {/* HEEEREHEEEREHEEEREHEEEREHEEEREHEEEREHEEEREHEEERE */}
                                 <LeaderboardGrid container>
                                     <LeaderboardRow header>
                                         <Grid item xs>
@@ -115,8 +135,8 @@ const Leaderboard: React.FunctionComponent = () => {
                             </TabPanel>
                             <TabPanel value={value} index={1} dir={theme.direction}>
                                 {gameHistory.map((gamePlayed, index) => (
-                                    <div key={index}>
-                                        {gamePlayed.game}
+                                    <GameHistory key={index}>
+                                        <GameHistoryHeadline>{gamePlayed.game}</GameHistoryHeadline>
                                         <LeaderboardGrid container>
                                             <LeaderboardRow header>
                                                 <Grid item xs>
@@ -143,11 +163,11 @@ const Leaderboard: React.FunctionComponent = () => {
                                                 </LeaderboardRow>
                                             ))}
                                         </LeaderboardGrid>
-                                    </div>
+                                    </GameHistory>
                                 ))}
                             </TabPanel>
                         </SwipeableViews>
-                    </div>
+                    </LeaderboardWrapper>
                 </ContentBase>
             </ContentContainer>
             <BackButtonContainer>

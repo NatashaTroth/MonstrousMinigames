@@ -90,23 +90,22 @@ const theme = createMuiTheme({
 
         MuiTab: {
             root: {
-                backgroundColor: '#a8833f', //'#a7bdb1',
-                border: '1px solid black',
+                backgroundColor: '#a8833f',
+                border: 'none',
             },
-            // wrapper: {
-            //     backgroundColor: '#a7bdb1',
-            //     // border: '1px solid black',
-            // },
             textColorPrimary: {
                 color: '#000000',
+                '&.Mui-selected': {
+                    color: 'white',
+                    fontWeight: 700,
+                },
             },
         },
-
-        // MuiTouchRipple: {
-        //     root: {
-        //         backgroundColor: '#000000',
-        //     },
-        // },
+        MuiTabs: {
+            indicator: {
+                backgroundColor: 'white',
+            },
+        },
     },
 });
 
