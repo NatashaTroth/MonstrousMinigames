@@ -1,19 +1,20 @@
-import { darken, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
-import Box from '@material-ui/core/Box';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 
 import { GameContext } from '../../contexts/GameContextProvider';
-import { LeaderboardState } from '../../contexts/ScreenSocketContextProvider';
 import history from '../../domain/history/history';
 import Button from '../common/Button';
 import {
-    BackButtonContainer, ContentBase, ContentContainer, FullScreenContainer, Headline
+    BackButtonContainer,
+    ContentBase,
+    ContentContainer,
+    FullScreenContainer,
+    Headline,
 } from '../common/FullScreenStyles.sc';
 import { LeaderboardGrid, LeaderboardRow } from './Leaderboard.sc';
 import { TabPanel } from './TabPanel';
@@ -34,17 +35,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Leaderboard: React.FunctionComponent = () => {
     const { leaderboardState } = React.useContext(GameContext); //connectedUsers
-    const leaderboardStateMock: LeaderboardState = JSON.parse(
-        ' {"roomId":"xxx","gameHistory":[{"game":"The Great Monster Escape","playerRanks":[{"id":"1","name":"Harry","rank":1,"finished":true,"isActive":true, "points":5},{"id":"2","name":"Ron","rank":2,"finished":true,"isActive":true, "points":4},{"id":"3","name":"James","rank":3,"finished":true,"isActive":true, "points":3},{"id":"4","name":"Luna","rank":4,"finished":true,"isActive":true, "points":2}]}],"userPoints":[{"userId":"1","name":"Harry","points":5,"rank":1},{"userId":"2","name":"Ron","points":3,"rank":2},{"userId":"3","name":"James","points":2,"rank":3},{"userId":"4","name":"Luna","points":1,"rank":4}]}'
-    );
+    // const leaderboardStateMock: LeaderboardState = JSON.parse(
+    //     ' {"roomId":"xxx","gameHistory":[{"game":"The Great Monster Escape","playerRanks":[{"id":"1","name":"Harry","rank":1,"finished":true,"isActive":true, "points":5},{"id":"2","name":"Ron","rank":2,"finished":true,"isActive":true, "points":4},{"id":"3","name":"James","rank":3,"finished":true,"isActive":true, "points":3},{"id":"4","name":"Luna","rank":4,"finished":true,"isActive":true, "points":2}]}],"userPoints":[{"userId":"1","name":"Harry","points":5,"rank":1},{"userId":"2","name":"Ron","points":3,"rank":2},{"userId":"3","name":"James","points":2,"rank":3},{"userId":"4","name":"Luna","points":1,"rank":4}]}'
+    // );
 
     // const users =
     //     connectedUsers?.map(user => {
     //         const points = leaderboardState?.userPoints.find(userPointsElement => user.id === userPointsElement.userId);
     //         return { ...user, rank: points?.rank || '-', points: points?.points || 0 };
     //     }) || [];
-    const userPoints = leaderboardStateMock?.userPoints || [];
-    const gameHistory = leaderboardStateMock?.gameHistory || [];
+    const userPoints = leaderboardState?.userPoints || [];
+    const gameHistory = leaderboardState?.gameHistory || [];
     const classes = useStyles();
 
     const theme = useTheme();

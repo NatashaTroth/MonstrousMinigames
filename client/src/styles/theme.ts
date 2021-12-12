@@ -87,6 +87,26 @@ const theme = createMuiTheme({
                 fontSize: 30,
             },
         },
+
+        MuiTab: {
+            root: {
+                backgroundColor: '#a8833f', //'#a7bdb1',
+                border: '1px solid black',
+            },
+            // wrapper: {
+            //     backgroundColor: '#a7bdb1',
+            //     // border: '1px solid black',
+            // },
+            textColorPrimary: {
+                color: '#000000',
+            },
+        },
+
+        // MuiTouchRipple: {
+        //     root: {
+        //         backgroundColor: '#000000',
+        //     },
+        // },
     },
 });
 

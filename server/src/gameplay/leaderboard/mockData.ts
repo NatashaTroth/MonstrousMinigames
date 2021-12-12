@@ -17,6 +17,7 @@ export const gameHistory = [
                 rank: 1,
                 finished: true,
                 isActive: true,
+                points: 5,
             },
             {
                 id: '2',
@@ -24,6 +25,7 @@ export const gameHistory = [
                 rank: 2,
                 finished: true,
                 isActive: true,
+                points: 3,
             },
             {
                 id: '3',
@@ -31,6 +33,7 @@ export const gameHistory = [
                 rank: 3,
                 finished: true,
                 isActive: true,
+                points: 2,
             },
             {
                 id: '4',
@@ -38,6 +41,7 @@ export const gameHistory = [
                 rank: 4,
                 finished: true,
                 isActive: true,
+                points: 1,
             },
         ],
     },
