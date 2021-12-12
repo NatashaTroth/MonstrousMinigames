@@ -1,7 +1,10 @@
 import 'reflect-metadata';
+
 import User from '../../src/classes/user';
+import NoRoomCodeAvailableError from '../../src/customErrors/NoRoomCodeAvailableError';
 import { Globals } from '../../src/enums/globals';
 import RoomService from '../../src/services/roomService';
+
 
 describe('RoomService', () => {
     let rs: RoomService;
@@ -66,5 +69,23 @@ describe('RoomService', () => {
         room.timestamp = Date.now() - ((Globals.ROOM_TIME_OUT_HOURS - 1) * 360000)
         rs.cleanupRooms()
         expect(rs.roomCodes).not.toContain(room.id)
+    });
+
+    it('startGame should return a gameState with roomId', () => {
+        const room = rs.createRoom();
+        const user = new User(room.id, '1', 'Robert');
+        user.setReady(true)
+        room.addUser(user);
+        expect(rs.startGame(room)?.roomId).toEqual(room.id);
+    });
+
+    it('should throw a NoRoomCodeAvailableError if it runs out of roomcodes', () => {
+        rs.createRoom();
+        rs.createRoom();
+        rs.createRoom();
+        rs.createRoom();
+        rs.createRoom();
+    
+        expect(() => rs.createRoom()).toThrowError(NoRoomCodeAvailableError);
     });
 });
