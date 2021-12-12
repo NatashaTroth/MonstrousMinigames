@@ -1,13 +1,18 @@
 import 'reflect-metadata';
 
-import Room from '../../src/classes/room';
-import User from '../../src/classes/user';
-import { GameAlreadyStartedError } from '../../src/customErrors';
-import CannotStartEmptyGameError from '../../src/customErrors/CannotStartEmptyGameError';
-import { Globals } from '../../src/enums/globals';
-import { GameOne } from '../../src/gameplay';
-import { MaxNumberUsersExceededError } from '../../src/gameplay/customErrors';
+import { CharacterNotAvailableError, GameAlreadyStartedError, UsersNotReadyError } from '../../src/customErrors';
+import { GameOne, GameThree, GameTwo } from '../../src/gameplay';
 import { clearTimersAndIntervals } from '../gameplay/gameOne/gameOneHelperFunctions';
+import Room, { RoomStates } from '../../src/classes/room';
+import User from '../../src/classes/user';
+import CannotStartEmptyGameError from '../../src/customErrors/CannotStartEmptyGameError';
+import { GameNames } from '../../src/enums/gameNames';
+import { Globals } from '../../src/enums/globals';
+import { ScreenStates } from '../../src/enums/screenStates';
+import Game from '../../src/gameplay/Game';
+import { MaxNumberUsersExceededError } from '../../src/gameplay/customErrors';
+import { GameState } from '../../src/gameplay/enums';
+import Parameters from '../../src/gameplay/gameTwo/constants/Parameters';
 
 describe('Room ID', () => {
     it("creates a room with id 'ABCD'", () => {
@@ -112,11 +117,139 @@ describe('Room: Users', () => {
             room.addUser(user3);
         }).toThrow(GameAlreadyStartedError);
     });
+
     it('should throw an CannotStartEmptyGameError if a game without players is started', () => {
         room.removeUser(user1);
         room.removeUser(user2);
         expect(() => {
             room.createNewGame();
         }).toThrow(CannotStartEmptyGameError);
+    });
+
+    it('should throw an UsersNotReadyError if a game without players is started', () => {
+        room.removeUser(user1);
+
+        expect(() => {
+            room.createNewGame();
+        }).toThrow(UsersNotReadyError);
+    });
+
+    it('should have the right game instance on game set', () => {
+        room.setGame(GameNames.GAME1);
+        expect(room.game).toBeInstanceOf(GameOne);
+
+        room.setGame(GameNames.GAME2);
+        expect(room.game).toBeInstanceOf(GameTwo);
+
+        room.setGame(GameNames.GAME3);
+        expect(room.game).toBeInstanceOf(GameThree);
+    });
+
+    it('should call setState created on game creation', () => {
+        user1.setReady(true);
+        user2.setReady(true);
+
+        const setState = jest.spyOn(Room.prototype, "setState");
+
+        room.createNewGame();
+        expect(setState).toHaveBeenCalledWith(RoomStates.CREATED);
+        expect(room.isCreated()).toBeTruthy();
+
+        setState.mockClear();
+    });
+
+    it('should call stopGameUserClosed on stopGame', () => {
+        user1.setReady(true);
+        user2.setReady(true);
+
+        const stopGameUserClosed = jest.spyOn(Game.prototype, "stopGameUserClosed");
+        room.setGame(GameNames.GAME2);
+        room.createNewGame();
+
+        room.startGame();
+        jest.useFakeTimers();
+
+        jest.advanceTimersByTime(Parameters.COUNTDOWN_TIME)
+
+        room.stopGame();
+        expect(stopGameUserClosed).toHaveBeenCalled()
+        stopGameUserClosed.mockClear();
+    });
+
+    it('should have game with gameState Paused on pauseGame', () => {
+        user1.setReady(true);
+        user2.setReady(true);
+
+        room.setGame(GameNames.GAME2);
+        room.createNewGame();
+
+        room.startGame();
+        jest.useFakeTimers();
+
+        jest.advanceTimersByTime(Parameters.COUNTDOWN_TIME)
+
+        room.pauseGame();
+        expect(room.game.gameState).toEqual(GameState.Paused)
+    });
+
+    it('should have game with gameState Started on resumeGame', () => {
+        user1.setReady(true);
+        user2.setReady(true);
+
+        room.setGame(GameNames.GAME2);
+        room.createNewGame();
+
+        room.startGame();
+        jest.useFakeTimers();
+
+        jest.advanceTimersByTime(Parameters.COUNTDOWN_TIME)
+
+        room.pauseGame();
+        room.resumeGame();
+
+        expect(room.game.gameState).toEqual(GameState.Started)
+    });
+
+    it('should call clear on resetGame', () => {
+        user1.setActive(false);
+        user2.setReady(true);
+        const clear = jest.spyOn(User.prototype, "clear");
+
+        room.resetGame();
+        expect(clear).toHaveBeenCalled()
+        clear.mockClear();
+    });
+
+
+    it('isFinished should return true after setFinished', () => {
+        expect(room.isFinished()).toBeFalsy();
+        room.setFinished();
+        expect(room.isFinished()).toBeTruthy();
+    });
+
+    it('isPaused should return true after setPaused', () => {
+        expect(room.isPaused()).toBeFalsy();
+        room.setPaused();
+        expect(room.isPaused()).toBeTruthy();
+    });
+
+    it('should throw an CharacterNotAvailableError a chosen character is not available', () => {
+        room.setUserCharacter(user1, 1);
+        expect(() => {
+            room.setUserCharacter(user2, 1);
+        }).toThrow(CharacterNotAvailableError);
+    });
+
+    it('should get the right admin screen id', () => {
+        expect(room.getAdminScreenId()).toEqual(undefined);
+        room.addScreen('one');
+        expect(room.getAdminScreenId()).toEqual('one');
+        room.addScreen('two');
+        expect(room.getAdminScreenId()).toEqual('one');
+    });
+
+    it('should be able to set and get a screen state', () => { 
+        room.setScreenState(ScreenStates.LOBBY);
+        expect(room.getScreenState()).toEqual(ScreenStates.LOBBY);
     });
 });

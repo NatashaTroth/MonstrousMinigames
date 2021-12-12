@@ -11,7 +11,7 @@ import { Router } from 'react-router-dom';
 import {
     ControllerSocketContext,
     defaultValue as socketDefaultValue,
-} from '../../../contexts/ControllerSocketContextProvider';
+} from '../../../contexts/controller/ControllerSocketContextProvider';
 import { defaultValue as game1DefaultValue, Game1Context } from '../../../contexts/game1/Game1ContextProvider';
 import { defaultValue as gameDefaultValue, GameContext } from '../../../contexts/GameContextProvider';
 import { defaultValue as playerDefaultValue, PlayerContext } from '../../../contexts/PlayerContextProvider';

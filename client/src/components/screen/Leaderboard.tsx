@@ -7,7 +7,7 @@ import React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 
 import { GameContext } from '../../contexts/GameContextProvider';
-import { GameType, LeaderboardState } from '../../contexts/ScreenSocketContextProvider';
+import { GameType, LeaderboardState } from '../../contexts/screen/ScreenSocketContextProvider';
 import history from '../../domain/history/history';
 import Button from '../common/Button';
 import {

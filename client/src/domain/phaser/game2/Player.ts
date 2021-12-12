@@ -14,11 +14,11 @@ export class Player {
 
     constructor(
         scene: SheepGameScene,
-        private index: number,
+        index: number,
         public coordinates: Coordinates,
-        private gameStateData: GameData,
+        gameStateData: GameData,
         private character: Character,
-        private numberPlayers: number,
+        numberPlayers: number,
         private gameToScreenMapper: GameToScreenMapper
     ) {
         this.username = gameStateData.playersState[index].name;
@@ -42,15 +42,12 @@ export class Player {
 
         this.coordinates.x = newXPosition;
         this.coordinates.y = newYPosition;
-        this.renderer.movePlayerTo(
-            this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
-            this.coordinates.y
-        );
+        this.renderer.movePlayerTo(this.coordinates.y, this.coordinates.y);
     }
 
     private setPlayer() {
         const screenCoordinates = {
-            x: this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
+            x: this.coordinates.x,
             y: this.coordinates.y,
         };
 

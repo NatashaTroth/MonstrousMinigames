@@ -9,7 +9,7 @@ import { characters } from '../../config/characters';
 import { ScreenStates } from '../../config/screenStates';
 import { MyAudioContext, Sound } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
-import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { ScreenSocketContext } from '../../contexts/screen/ScreenSocketContextProvider';
 import history from '../../domain/history/history';
 import { MessageTypes } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';

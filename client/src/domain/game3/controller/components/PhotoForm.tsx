@@ -1,10 +1,11 @@
-import { Typography } from "@material-ui/core";
-import React from "react";
-import { Field, FieldRenderProps, Form } from "react-final-form";
+import { Typography } from '@material-ui/core';
+import React from 'react';
+import { Field, FieldRenderProps, Form } from 'react-final-form';
+import styled from 'styled-components';
 
-import Button from "../../../../components/common/Button";
-import { UploadProps } from "./TakePicture";
-import { StyledImg, StyledLabel, UploadWrapper } from "./TakePicture.sc";
+import Button from '../../../../components/common/Button';
+import { UploadProps } from './TakePicture';
+import { StyledImg, StyledLabel, UploadWrapper } from './TakePicture.sc';
 
 interface PhotoFormProps {
     upload: (values: UploadProps) => void;
@@ -31,7 +32,7 @@ const PhotoForm: React.FunctionComponent<PhotoFormProps> = ({ upload, preview, s
                     )}
                     fullWidth
                 />
-                <Button type="submit" disabled={!values.picture} size="small">
+                <Button type="submit" disabled={!values.picture} variant="secondary">
                     Upload
                 </Button>
             </form>
@@ -56,8 +57,12 @@ const FileInput: React.FC<FileInputProps> = ({ input: { value, onChange, ...inpu
 
     return (
         <UploadWrapper>
-            {preview && <StyledImg src={preview} alt="" />}
-            <Button>
+            {preview && (
+                <PreviewContainer>
+                    <StyledImg src={preview} alt="" />
+                </PreviewContainer>
+            )}
+            <Button size="small">
                 <StyledLabel>
                     <input
                         type="file"
@@ -72,3 +77,8 @@ const FileInput: React.FC<FileInputProps> = ({ input: { value, onChange, ...inpu
         </UploadWrapper>
     );
 };
+
+const PreviewContainer = styled.div`
+    display: flex;
+    justify-content: center;
+`;

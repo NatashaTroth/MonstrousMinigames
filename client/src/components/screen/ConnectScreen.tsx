@@ -3,7 +3,7 @@ import { AccordionDetails, AccordionSummary, useMediaQuery } from '@material-ui/
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import * as React from 'react';
 
-import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { ScreenSocketContext } from '../../contexts/screen/ScreenSocketContextProvider';
 import history from '../../domain/history/history';
 import { localBackend, localDevelopment } from '../../utils/constants';
 import { Routes } from '../../utils/routes';
@@ -12,8 +12,15 @@ import LoadingComponent from '../common/LoadingComponent';
 import Logo from '../common/Logo';
 import ConnectDialog from './ConnectDialog';
 import {
-    ConnectScreenContainer, InstructionContainer, LeftButtonContainer, LeftContainer,
-    RightContainer, SettingButtonSection, StyledAccordion, StyledHeadline, StyledText
+    ConnectScreenContainer,
+    InstructionContainer,
+    LeftButtonContainer,
+    LeftContainer,
+    RightContainer,
+    SettingButtonSection,
+    StyledAccordion,
+    StyledHeadline,
+    StyledText,
 } from './ConnectScreen.sc';
 import GettingStartedDialog from './GettingStarted';
 

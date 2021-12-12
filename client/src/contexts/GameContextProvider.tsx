@@ -4,7 +4,7 @@ import { defaultAvailableCharacters } from '../config/characters';
 import { GameNames } from '../config/games';
 import { ScreenStates } from '../config/screenStates';
 import { User } from '../domain/typeGuards/connectedUsers';
-import { LeaderboardState, PlayerRank } from './ScreenSocketContextProvider';
+import { LeaderboardState, PlayerRank } from './screen/ScreenSocketContextProvider';
 
 export const defaultValue = {
     finished: false,

@@ -91,6 +91,7 @@ export enum MessageTypesGame2 {
     gameState = 'game2/gameState',
     movePlayer = 'game2/move',
     killSheep = 'game2/kill',
+    phaseChanged = 'game2/PhaseHasChanged',
 }
 
 export const enum MessageTypesGame3 {

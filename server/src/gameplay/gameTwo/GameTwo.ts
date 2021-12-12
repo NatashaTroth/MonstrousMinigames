@@ -1,19 +1,22 @@
-import User from '../../classes/user';
-import { IMessage } from '../../interfaces/messages';
 import Game from '../Game';
+import Player from '../Player';
 import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
-import Player from '../Player';
-import Parameters from './constants/Parameters';
-import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
-import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
+import User from '../../classes/user';
+import { GameNames } from '../../enums/gameNames';
+import { IMessage } from '../../interfaces/messages';
+
 import GameTwoPlayer from './GameTwoPlayer';
 import { GameStateInfo } from './interfaces';
-import { GameNames } from '../../enums/gameNames';
+
+import Brightness from './classes/Brightness';
+import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
+import GuessingService from './classes/GuessingServices';
+import RoundEventEmitter from './classes/RoundEventEmitter';
 import RoundService from './classes/RoundService';
 import SheepService from './classes/SheepService';
-import RoundEventEmitter from './classes/RoundEventEmitter';
-import GuessingService from './classes/GuessingServices';
+import Parameters from './constants/Parameters';
+import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
 import { Phases } from './enums/Phases';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
@@ -29,8 +32,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     private roundService: RoundService;
     private roundEventEmitter: RoundEventEmitter;
     private guessingService: GuessingService;
-
-    initialPlayerPositions = Parameters.PLAYERS_POSITIONS;
+    private brightness: Brightness
 
     gameName = GameNames.GAME2;
 
@@ -43,6 +45,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.roundService = new RoundService();
         this.roundEventEmitter = RoundEventEmitter.getInstance();
         this.guessingService = new GuessingService(Parameters.ROUNDS);
+        this.brightness = new Brightness();
 
     }
 
@@ -59,13 +62,14 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 isActive: player.isActive,
                 characterNumber: player.characterNumber,
             })),
-            sheep: this.sheepService.sheep,
+            sheep: this.sheepService.getSheepData(),
             lengthX: this.lengthX,
             lengthY: this.lengthY,
             round: this.roundService.round,
             phase: this.roundService.phase,
             timeLeft: this.roundService.getTimeLeft(),
-            aliveSheepCounts: this.guessingService.counts
+            aliveSheepCounts: this.guessingService.counts,
+            brightness: this.brightness.value
         };
     }
 
@@ -73,15 +77,14 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         const player = new GameTwoPlayer(
             user.id,
             user.name,
-            this.initialPlayerPositions[user.number].x,
-            this.initialPlayerPositions[user.number].y,
+            user.number,
             Parameters.KILLS_PER_ROUND,
             user.characterNumber
         );
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
-        return;
+        if (this.roundService.isCountingPhase()) this.sheepService.update();
     }
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
         return;
@@ -111,11 +114,19 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     pauseGame(): void {
         super.pauseGame();
+        this.roundService.pause();
+        this.stopPlayersMoving();
+        this.sheepService.stopMoving();
+        this.brightness.stop();
         GameTwoEventEmitter.emitGameHasPausedEvent(this.roomId);
     }
 
     resumeGame(): void {
         super.resumeGame();
+        this.roundService.resume();
+        this.setPlayersMoving();
+        this.sheepService.startMoving();
+        this.brightness.start(false);
         GameTwoEventEmitter.emitGameHasResumedEvent(this.roomId);
     }
 
@@ -152,9 +163,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         if (this.roundService.isGuessingPhase() && player) {
             if (this.guessingService.addGuess(round, guess, userId)) {
                 const hint = this.guessingService.getHintForRound(round, userId);
-                if (hint) {
-                    GameTwoEventEmitter.emitGuessHint(this.roomId, player.id, hint);
-                }
+                GameTwoEventEmitter.emitGuessHint(this.roomId, player.id, hint);
+                if (this.guessingService.allGuessesSubmitted(round)) this.roundService.skipPhase();
             }
         }
 
@@ -195,7 +205,15 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     protected listenToEvents(): void {
         this.roundEventEmitter.on(RoundEventEmitter.PHASE_CHANGE_EVENT, (round: number, phase: string) => {
-            if (phase === Phases.GUESSING) {
+            if (phase === Phases.COUNTING) {
+                this.setPlayersMoving();
+                this.sheepService.startMoving()
+                this.brightness.start();
+            } else if (phase === Phases.GUESSING) {
+                this.stopPlayersMoving();
+                this.resetPlayerPositions();
+                this.sheepService.stopMoving();
+                this.brightness.stop();
                 this.guessingService.saveSheepCount(round, this.sheepService.getAliveSheepCount());
             } else if (phase === Phases.RESULTS) {
                 this.guessingService.calculatePlayerRanks();
@@ -207,5 +225,17 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     public cleanup() {
         this.roundEventEmitter.removeAllListeners();
+    }
+
+    protected stopPlayersMoving(): void {
+        [...this.players].forEach(player => player[1].moving = false)
+    }
+
+    protected setPlayersMoving(): void {
+        [...this.players].forEach(player => player[1].moving = true)
+    }
+
+    protected resetPlayerPositions(): void {
+        [...this.players].forEach(player => player[1].setPlayerPosition())
     }
 }

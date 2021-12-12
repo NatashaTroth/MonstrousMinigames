@@ -6,7 +6,7 @@ import { MyAudioContext, Sound } from '../../contexts/AudioContextProvider';
 import { FirebaseContext } from '../../contexts/FirebaseContextProvider';
 import { Game3Context } from '../../contexts/game3/Game3ContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
-import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { ScreenSocketContext } from '../../contexts/screen/ScreenSocketContextProvider';
 import { handleResetGame } from '../../domain/commonGameState/screen/handleResetGame';
 import { formatMs } from '../../utils/formatMs';
 import Button from '../common/Button';
