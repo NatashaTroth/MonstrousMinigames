@@ -1,26 +1,35 @@
 import 'reflect-metadata';
 
 import dotenv from 'dotenv';
+
 import express from 'express';
+
 import client from 'socket.io-client';
+
 import { Server as HttpServer } from 'http';
 
+import DI, { DI_EVENT_MESSAGE_EMITTERS } from '../../src/di';
 import GameEventEmitter from '../../src/classes/GameEventEmitter';
 import { GlobalEventMessageEmitter } from '../../src/classes/GlobalEventMessageEmitter';
 import Server from '../../src/classes/Server';
 import SocketIOServer from '../../src/classes/SocketIOServer';
 import { GameAlreadyStartedError, InvalidRoomCodeError } from '../../src/customErrors/';
 import { MessageTypes } from '../../src/enums/messageTypes';
-import { GameOneEventMessageEmitter } from '../../src/gameplay/gameOne/GameOneEventMessageEmitter';
 import emitter from '../../src/helpers/emitter';
 import ConnectionHandler from '../../src/services/connectionHandler';
 import RoomService from '../../src/services/roomService';
+import { GameOneEventMessageEmitter } from '../../src/gameplay/gameOne/GameOneEventMessageEmitter';
+import { GameTwoMessageEmitter } from '../../src/gameplay/gameTwo/classes/GameTwoMessageEmitter';
+// import { GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE } from '../../src/gameplay/gameTwo/interfaces/GameTwoEventMessages';
 
 dotenv.config({
     path: '.env',
 });
 
 const PORT = process.env.TEST_PORT || 5050;
+
+DI.register(DI_EVENT_MESSAGE_EMITTERS, { useToken: GameTwoMessageEmitter });
+
 
 describe('connectionHandler', () => {
     let rs: RoomService;
@@ -316,5 +325,59 @@ describe('connectionHandler', () => {
                 });
             }
         });
+    // });
+    // it('should send and log GameAlreadyStartedError if new user joins a started game', async done => {
+    //     const username = 'John';
+    //     const room = rs.getRoomById(roomCode);
+    //     //const consoleSpy = jest.spyOn(console, 'log');
+    //     const handleGameEvents = jest.spyOn(ConnectionHandler.prototype, 'handleGameEvents');
+    //     const emitInitialGameStateInfoUpdate = jest.spyOn(GameTwoEventEmitter, 'emitInitialGameStateInfoUpdate');
+
+
+
+    //     controller = client(`http://${url}/controller?roomId=${roomCode}&name=${username}&userId=`, {
+    //         secure: true,
+    //         reconnection: true,
+    //         rejectUnauthorized: false,
+    //         reconnectionDelayMax: 5000,
+    //     });
+    //     screen = client(`http://${url}/screen?roomId=${roomCode}`, {
+    //         secure: true,
+    //         reconnection: true,
+    //         rejectUnauthorized: false,
+    //         reconnectionDelayMax: 5000,
+    //     });
+
+    //     screen.on('message', (msg: any) => {
+    //         console.log(msg)
+
+    //         if (msg.type === GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE) {
+    //             expect(emitInitialGameStateInfoUpdate).toHaveBeenCalled();
+    //              done();
+    //          }
+    //     });
+
+    //     controller.on('message', (msg: any) => {
+    //         // console.log(msg)
+    //         if (msg.type === MessageTypes.USER_INIT) {
+    //             room.users[0].setReady(true);
+    //             room.setGame(GameNames.GAME2);
+    //             expect(room.game).toBeInstanceOf(GameTwo);
+
+    //             room.createNewGame();
+    //             room.startGame()
+
+    //             expect(emitInitialGameStateInfoUpdate).toHaveBeenCalled();
+
+    //         }else if (msg.type === GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE) {
+    //            // expect(handleGameEvents).toHaveBeenCalled();
+    //             done();
+    //         }
+    //     });
+
+
+
+
+
     });
 });

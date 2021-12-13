@@ -48,7 +48,7 @@ describe('RoomService', () => {
 
     it('should reuse the room code after it was closed and closed rooms were cleared', () => {
         const room = rs.createRoom();
-        for(let i = 1; i < 5; i++){
+        for (let i = 1; i < 5; i++) {
             rs.createRoom()
         }
         room.setClosed()
@@ -65,7 +65,7 @@ describe('RoomService', () => {
 
     it(`should not close rooms that are not older than ${Globals.ROOM_TIME_OUT_HOURS} hours`, () => {
         const room = rs.createRoom();
-        
+
         room.timestamp = Date.now() - ((Globals.ROOM_TIME_OUT_HOURS - 1) * 360000)
         rs.cleanupRooms()
         expect(rs.roomCodes).not.toContain(room.id)
@@ -80,12 +80,7 @@ describe('RoomService', () => {
     });
 
     it('should throw a NoRoomCodeAvailableError if it runs out of roomcodes', () => {
-        rs.createRoom();
-        rs.createRoom();
-        rs.createRoom();
-        rs.createRoom();
-        rs.createRoom();
-    
+        for (let i = 0; i < 5; i++)  rs.createRoom();
         expect(() => rs.createRoom()).toThrowError(NoRoomCodeAvailableError);
     });
 });
