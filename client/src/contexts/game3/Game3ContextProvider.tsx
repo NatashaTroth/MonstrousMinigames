@@ -70,7 +70,7 @@ const Game3ContextProvider: React.FunctionComponent = ({ children }) => {
     const [topicMessage, setTopicMessage] = React.useState<Topic>(defaultValue.topicMessage);
     const [voteForPhotoMessage, setVoteForPhotoMessage] = React.useState<Vote>(defaultValue.voteForPhotoMessage);
     const [photos, setPhotos] = React.useState<string[]>([]);
-    const [votingResults, setVotingResults] = React.useState<VoteResult>(defaultValue.voteForPhotoMessage);
+    const [votingResults, setVotingResults] = React.useState<VoteResult>(defaultValue.votingResults);
     const [finalRoundCountdownTime, setFinalRoundCountdownTime] = React.useState<number | undefined>(
         defaultValue.finalRoundCountdownTime
     );
@@ -96,7 +96,7 @@ const Game3ContextProvider: React.FunctionComponent = ({ children }) => {
             setTopicMessage(defaultValue.topicMessage);
             setVoteForPhotoMessage(defaultValue.voteForPhotoMessage);
             setPhotos([]);
-            setVotingResults(defaultValue.voteForPhotoMessage);
+            setVotingResults(defaultValue.votingResults);
             setFinalRoundCountdownTime(defaultValue.finalRoundCountdownTime);
             setPresentFinalPhotos(defaultValue.presentFinalPhotos);
         },

@@ -28,7 +28,7 @@ export const NoPermissions: React.FunctionComponent<NoPermissionProps> = ({
 
 const Container = styled(StyledFullScreenContainer)`
     color: white;
-    font-size: 700;
+    font-weight: 700;
 `;
 
 const Text = styled.div`
