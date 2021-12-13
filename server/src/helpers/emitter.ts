@@ -6,6 +6,7 @@ import { GameNames } from '../enums/gameNames';
 import { MessageTypes } from '../enums/messageTypes';
 import { GameOneMsgType } from '../gameplay/gameOne/enums';
 import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
+import { LeaderboardInfo } from '../gameplay/leaderboard/interfaces';
 
 function sendUserInit(socket: Socket, user: User, room: Room): void {
     socket.emit('message', {
@@ -132,6 +133,14 @@ function sendMessage(type: MessageTypes | GameOneMsgType, nsps: Array<Namespace>
     });
 }
 
+//Todo natasha test
+function sendLeaderboardState(nsp: Namespace | Socket, leaderboardState: LeaderboardInfo): void {
+    nsp.emit('message', {
+        type: MessageTypes.LEADERBOARD_STATE,
+        leaderboardState,
+    });
+}
+
 // function sendPlayerExceededMaxNumberChaserPushes(
 //     nsp: Namespace,
 //     user: User,
@@ -156,4 +165,5 @@ export default {
     sendScreenAdmin,
     sendScreenState,
     sendGameSet,
+    sendLeaderboardState,
 };

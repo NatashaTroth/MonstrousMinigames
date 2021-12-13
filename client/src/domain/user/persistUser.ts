@@ -1,5 +1,5 @@
-import { Storage } from "../storage/Storage";
-import { UserInitMessage } from "../typeGuards/userInit";
+import { Storage } from '../storage/Storage';
+import { UserInitMessage } from '../typeGuards/userInit';
 
 export function persistUser(dependencies: { localStorage: Storage; sessionStorage: Storage }) {
     return (data: UserInitMessage) => {

@@ -14,6 +14,7 @@
         "@types/react": "^16.9.53",
         "@types/react-beforeunload": "^2.1.0",
         "@types/react-dom": "^16.9.8",
+        "@types/react-swipeable-views": "^0.13.1",
         "@types/wav": "^1.0.0",
         "ansi-styles": "^5.1.0",
         "es6-promise": "^4.2.8",
@@ -37,6 +38,7 @@
         "react-player": "^2.9.0",
         "react-router-dom": "^5.2.0",
         "react-scripts": "^4.0.3",
+        "react-swipeable-views": "^0.14.0",
         "typescript": "^4.0.3"
     },
     "scripts": {

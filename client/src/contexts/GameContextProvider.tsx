@@ -4,7 +4,7 @@ import { defaultAvailableCharacters } from '../config/characters';
 import { GameNames } from '../config/games';
 import { ScreenStates } from '../config/screenStates';
 import { User } from '../domain/typeGuards/connectedUsers';
-import { PlayerRank } from './screen/ScreenSocketContextProvider';
+import { LeaderboardState, PlayerRank } from './screen/ScreenSocketContextProvider';
 
 export const defaultValue = {
     finished: false,
@@ -50,6 +50,10 @@ export const defaultValue = {
     setChosenGame: () => {
         // do nothing
     },
+    leaderboardState: undefined,
+    setLeaderboardState: () => {
+        // do nothing
+    },
     tutorial: false,
     setTutorial: () => {
         // do nothing
@@ -89,6 +93,8 @@ interface GameContextProps {
     setHasPaused: (val: boolean) => void;
     chosenGame: undefined | GameNames;
     setChosenGame: (val: undefined | GameNames) => void;
+    leaderboardState: undefined | LeaderboardState;
+    setLeaderboardState: (val: undefined | LeaderboardState) => void;
     tutorial: boolean;
     setTutorial: (val: boolean) => void;
     screenAdmin: boolean;
@@ -112,6 +118,7 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [countdownTime, setCountdownTime] = React.useState<number>(0);
     const [hasPaused, setHasPaused] = React.useState<boolean>(false);
     const [chosenGame, setChosenGame] = React.useState<undefined | GameNames>();
+    const [leaderboardState, setLeaderboardState] = React.useState<undefined | LeaderboardState>();
     const [tutorial, setTutorial] = React.useState(true);
     const [screenAdmin, setScreenAdmin] = React.useState<boolean>(false);
     const [screenState, setScreenState] = React.useState<string>(ScreenStates.lobby);
@@ -149,6 +156,8 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setHasPaused,
         chosenGame,
         setChosenGame,
+        leaderboardState,
+        setLeaderboardState,
         tutorial,
         setTutorial,
         screenAdmin,
