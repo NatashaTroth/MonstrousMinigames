@@ -1,12 +1,14 @@
-import { depthDictionary } from '../../../config/depthDictionary';
-import { designDevelopment, localDevelopment, ObstacleTypes, stunnedAnimation } from '../../../utils/constants';
-import MainScene from '../../game1/screen/components/MainScene';
-import { AnimationNameGame1 } from '../enums/AnimationName';
-import { Character, GameData } from '../gameInterfaces';
-import { Coordinates } from '../gameTypes';
-import { DomainPlayer } from './DomainPlayer';
-import { GameToScreenMapper } from './GameToScreenMapper';
-import { PlayerRenderer } from './PlayerRenderer';
+import { depthDictionary } from "../../../config/depthDictionary";
+import {
+    designDevelopment, localDevelopment, ObstacleTypes, stunnedAnimation
+} from "../../../utils/constants";
+import MainScene from "../../game1/screen/components/MainScene";
+import { AnimationNameGame1 } from "../enums/AnimationName";
+import { Character, GameData } from "../gameInterfaces";
+import { Coordinates } from "../gameTypes";
+import { DomainPlayer } from "./DomainPlayer";
+import { GameToScreenMapper } from "./GameToScreenMapper";
+import { PlayerRenderer } from "./PlayerRenderer";
 
 /**
  * This is the main player class where all the business functionality should be implemented (eg. what happens when a
@@ -77,8 +79,8 @@ export class Player {
                 setTimeout(() => {
                     this.handlePlayerUnStunned();
                     this.startRunning();
-                }, 4000);
-            }, 8000);
+                }, 10000);
+            }, 10000);
         }
     }
 
@@ -152,6 +154,7 @@ export class Player {
 
     handleReset() {
         this.renderer.destroyEverything();
+        // this.character.animations.delete(AnimationNameGame1.Running);
     }
 
     private destroyPlayer() {
@@ -241,7 +244,7 @@ export class Player {
 
     startRunning() {
         const animationName = this.character.animations.get(AnimationNameGame1.Running)?.name;
-        if (animationName) this.renderer.startAnimation(animationName);
+        this.renderer?.startAnimation(animationName);
         this.player.startMoving();
     }
 

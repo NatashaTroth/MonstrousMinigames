@@ -1,4 +1,4 @@
-import { Character } from '../gameInterfaces';
+import { Character } from "../gameInterfaces";
 
 export interface PlayerRenderer {
     renderBackground: (
@@ -39,7 +39,7 @@ export interface PlayerRenderer {
     ) => void;
     renderChasers: (screenMeasurement: number, y: number) => void;
     renderCave: (screenMeasurement: number, y: number) => void;
-    startAnimation: (animationName: string) => void;
+    startAnimation: (animationName: string | undefined) => void;
     renderWind: () => void;
     destroyEverything: () => void;
 }

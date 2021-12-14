@@ -1,20 +1,21 @@
-import { Pause, PlayArrow, Stop, VolumeOff, VolumeUp } from '@material-ui/icons';
-import * as React from 'react';
-import { useParams } from 'react-router';
+import { Pause, PlayArrow, Stop, VolumeOff, VolumeUp } from "@material-ui/icons";
+import * as React from "react";
+import { useParams } from "react-router";
 
-import { RouteParams } from '../../../../App';
-import { MyAudioContext, Sound } from '../../../../contexts/AudioContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
-import { ScreenSocketContext } from '../../../../contexts/screen/ScreenSocketContextProvider';
-import { Game1 } from '../../../phaser/game1/Game1';
-import GameEventEmitter from '../../../phaser/GameEventEmitter';
-import { AudioButton, Container, PauseButton, StopButton } from './Game.sc';
+import { RouteParams } from "../../../../App";
+import { MyAudioContext, Sound } from "../../../../contexts/AudioContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import { ScreenSocketContext } from "../../../../contexts/screen/ScreenSocketContextProvider";
+import { Game1 } from "../../../phaser/game1/Game1";
+import GameEventEmitter from "../../../phaser/GameEventEmitter";
+import { AudioButton, Container, PauseButton, StopButton } from "./Game.sc";
 
 const Game: React.FunctionComponent = () => {
-    const { roomId, hasPaused, screenAdmin } = React.useContext(GameContext);
+    const { roomId, hasPaused, screenAdmin, playCount } = React.useContext(GameContext);
     const { isPlaying, changeSound, togglePlaying } = React.useContext(MyAudioContext);
     const { id }: RouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
+    const gameContainer = `${roomId}${playCount}`;
 
     if (id && !screenSocket) {
         handleSocketConnection(id, 'game1');
@@ -26,33 +27,8 @@ const Game: React.FunctionComponent = () => {
     }, []);
 
     React.useEffect(() => {
-        const game = Game1.getInstance();
+        const game = new Game1(gameContainer);
         game.game.scene.start('MainScene', { roomId, socket: screenSocket, screenAdmin });
-        // const parent = 'game-root';
-        // document.getElementById(parent)?.remove();
-        // const gameContainer = document.createElement('div');
-        // gameContainer.setAttribute('id', parent);
-        // gameContainer.setAttribute('data-testid', 'game-container');
-
-        // const gameWrapper = document.getElementById('gameWrapper');
-        // gameWrapper?.appendChild(gameContainer);
-
-        // const game = new Phaser.Game({
-        //     parent,
-        //     type: Phaser.WEBGL,
-        //     width: '100%',
-        //     height: '100%',
-        //     backgroundColor: '#000b18',
-        //     physics: {
-        //         default: 'arcade',
-        //         arcade: {
-        //             debug: false,
-        //         },
-        //     },
-        // });
-
-        // game.scene.add('MainScene', MainScene, false);
-        // game.scene.start('MainScene', { roomId, socket: screenSocket, screenAdmin });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -86,8 +62,8 @@ const Game: React.FunctionComponent = () => {
             <AudioButton onClick={handleAudio} variant="primary">
                 {isPlaying ? <VolumeUp /> : <VolumeOff />}
             </AudioButton>
-            <div id="gameWrapper">
-                <div id="game-root" />
+            <div>
+                <div id={gameContainer} />
             </div>
         </Container>
     );

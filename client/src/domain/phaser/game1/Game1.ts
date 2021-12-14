@@ -1,12 +1,11 @@
-import MainScene from '../../game1/screen/components/MainScene';
+import MainScene from "../../game1/screen/components/MainScene";
 
 export class Game1 {
-    private static instance: Game1;
     public game: Phaser.Game;
 
-    private constructor() {
+    constructor(parent: string) {
         this.game = new Phaser.Game({
-            parent: 'game-root',
+            parent,
             type: Phaser.WEBGL,
             width: '100%',
             height: '100%',
@@ -19,14 +18,6 @@ export class Game1 {
             },
         });
 
-        this.game.scene.add('MainScene', MainScene, false);
-    }
-
-    public static getInstance(): Game1 {
-        if (!Game1.instance) {
-            Game1.instance = new Game1();
-        }
-
-        return Game1.instance;
+        this.game.scene.add('MainScene', new MainScene(), false);
     }
 }
