@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
-import ScreenSocket from '../../domain/socket/screenSocket';
 import { Socket } from '../../domain/socket/Socket';
 import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
 import { Routes } from '../../utils/routes';
@@ -83,7 +82,6 @@ const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
 
             if (socket) {
                 setScreenSocket(socket);
-                ScreenSocket.getInstance(socket);
 
                 history.push(`${Routes.screen}/${roomId}/${route || Routes.lobby}`);
             }

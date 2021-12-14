@@ -241,12 +241,19 @@ class MainScene extends Phaser.Scene {
         const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
         gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
             this.gameAudio?.stopMusic();
+            this.scene.get('MainScene').scene.restart();
+            this.scene.restart();
             history.push(screenFinishedRoute(this.roomId));
         });
 
         const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);
         stoppedSocket.listen((data: GameHasStoppedMessage) => {
             this.gameAudio?.stopMusic();
+            this.players.forEach(player => {
+                player.handleReset();
+            });
+            this.scene.get('MainScene').scene.restart();
+            this.scene.restart();
         });
 
         const chasersPushedSocket = new MessageSocket(ChasersPushedTypeGuard, this.socket);
@@ -313,23 +320,23 @@ class MainScene extends Phaser.Scene {
 
     updateGameState(gameStateData: GameData) {
         this.players.forEach((player, index) => {
-            if (gameStateData.playersState[index].dead) {
+            if (gameStateData.playersState[index]?.dead) {
                 if (!player.player.isFinished) {
                     player.handlePlayerDead();
                 }
-            } else if (gameStateData.playersState[index].finished) {
+            } else if (gameStateData.playersState[index]?.finished) {
                 if (!player.player.isFinished) {
                     player.handlePlayerFinished();
                 }
-            } else if (gameStateData.playersState[index].stunned) {
+            } else if (gameStateData.playersState[index]?.stunned) {
                 player.handlePlayerStunned();
             } else {
                 if (player.player.isStunned) {
                     player.handlePlayerUnStunned();
                 }
 
-                player.moveForward(gameStateData.playersState[index].positionX);
-                player.checkAtObstacle(gameStateData.playersState[index].atObstacle);
+                player.moveForward(gameStateData.playersState[index]?.positionX);
+                player.checkAtObstacle(gameStateData.playersState[index]?.atObstacle);
             }
             player.setChasers(gameStateData.chasersPositionX);
         });

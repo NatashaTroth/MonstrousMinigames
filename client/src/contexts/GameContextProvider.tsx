@@ -54,7 +54,7 @@ export const defaultValue = {
     setLeaderboardState: () => {
         // do nothing
     },
-    tutorial: false,
+    tutorial: true,
     setTutorial: () => {
         // do nothing
     },
@@ -109,18 +109,18 @@ export const GameContext = React.createContext<GameContextProps>(defaultValue);
 
 const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [playerRanks, setPlayerRanks] = React.useState<undefined | PlayerRank[]>();
-    const [finished, setFinished] = React.useState<boolean>(false);
-    const [gameStarted, setGameStarted] = React.useState<boolean>(false);
-    const [sheepGameStarted, setSheepGameStarted] = React.useState<boolean>(false);
+    const [finished, setFinished] = React.useState<boolean>(defaultValue.finished);
+    const [gameStarted, setGameStarted] = React.useState<boolean>(defaultValue.gameStarted);
+    const [sheepGameStarted, setSheepGameStarted] = React.useState<boolean>(defaultValue.sheepGameStarted);
     const [roomId, setRoomId] = React.useState<undefined | string>();
     const [connectedUsers, setConnectedUsers] = React.useState<undefined | User[]>();
-    const [showInstructions, setShowInstructions] = React.useState<boolean>(true);
-    const [countdownTime, setCountdownTime] = React.useState<number>(0);
-    const [hasPaused, setHasPaused] = React.useState<boolean>(false);
+    const [showInstructions, setShowInstructions] = React.useState<boolean>(defaultValue.showInstructions);
+    const [countdownTime, setCountdownTime] = React.useState<number>(defaultValue.countdownTime);
+    const [hasPaused, setHasPaused] = React.useState<boolean>(defaultValue.hasPaused);
     const [chosenGame, setChosenGame] = React.useState<undefined | GameNames>();
     const [leaderboardState, setLeaderboardState] = React.useState<undefined | LeaderboardState>();
-    const [tutorial, setTutorial] = React.useState(true);
-    const [screenAdmin, setScreenAdmin] = React.useState<boolean>(false);
+    const [tutorial, setTutorial] = React.useState(defaultValue.tutorial);
+    const [screenAdmin, setScreenAdmin] = React.useState<boolean>(defaultValue.screenAdmin);
     const [screenState, setScreenState] = React.useState<string>(ScreenStates.lobby);
     const [availableCharacters, setAvailableCharacters] = React.useState<number[]>(defaultAvailableCharacters);
 
@@ -142,9 +142,13 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         connectedUsers,
         setConnectedUsers,
         resetGame: () => {
-            setFinished(false);
-            setGameStarted(false);
-            setSheepGameStarted(false);
+            setPlayerRanks(defaultValue.playerRanks);
+            setFinished(defaultValue.finished);
+            setGameStarted(defaultValue.gameStarted);
+            setSheepGameStarted(defaultValue.sheepGameStarted);
+            setShowInstructions(defaultValue.showInstructions);
+            setHasPaused(defaultValue.hasPaused);
+            setTutorial(defaultValue.tutorial);
         },
         showInstructions,
         setShowInstructions,

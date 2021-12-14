@@ -41,4 +41,5 @@ export interface PlayerRenderer {
     renderCave: (screenMeasurement: number, y: number) => void;
     startAnimation: (animationName: string) => void;
     renderWind: () => void;
+    destroyEverything: () => void;
 }

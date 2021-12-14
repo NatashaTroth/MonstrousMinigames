@@ -107,6 +107,9 @@ export class InMemoryPlayerRenderer implements PlayerRenderer {
             ) => {
                 // do nothing
             };
+            mockDestroyEverything?: () => {
+                // do nothing
+            };
         }
     ) {}
 
@@ -209,5 +212,9 @@ export class InMemoryPlayerRenderer implements PlayerRenderer {
 
     renderWind() {
         this.mocks.mockRenderWind?.();
+    }
+
+    destroyEverything() {
+        this.mocks.mockDestroyEverything?.();
     }
 }

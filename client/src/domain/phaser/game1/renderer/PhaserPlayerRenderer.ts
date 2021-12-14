@@ -378,11 +378,20 @@ export class PhaserPlayerRenderer {
         this.player?.play(animationName);
     }
     stopAnimation() {
-        this.player?.anims.stop();
+        this.player?.anims?.stop();
     }
 
     renderWind() {
         handleRenderWind(this.chaser, this.scene, this.numberPlayers, this.laneHeightsPerNumberPlayers);
+    }
+
+    destroyEverything() {
+        this.destroyChaser();
+        this.destroyAttentionIcon();
+        this.destroyCave();
+        this.destroyObstacle();
+        this.destroyWarningIcon();
+        this.destroyPlayer();
     }
 }
 

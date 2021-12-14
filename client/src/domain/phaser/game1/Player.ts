@@ -150,6 +150,10 @@ export class Player {
         this.player.unstun();
     }
 
+    handleReset() {
+        this.renderer.destroyEverything();
+    }
+
     private destroyPlayer() {
         this.renderer.destroyPlayer();
         this.player.finished();

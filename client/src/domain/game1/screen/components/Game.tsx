@@ -28,6 +28,31 @@ const Game: React.FunctionComponent = () => {
     React.useEffect(() => {
         const game = Game1.getInstance();
         game.game.scene.start('MainScene', { roomId, socket: screenSocket, screenAdmin });
+        // const parent = 'game-root';
+        // document.getElementById(parent)?.remove();
+        // const gameContainer = document.createElement('div');
+        // gameContainer.setAttribute('id', parent);
+        // gameContainer.setAttribute('data-testid', 'game-container');
+
+        // const gameWrapper = document.getElementById('gameWrapper');
+        // gameWrapper?.appendChild(gameContainer);
+
+        // const game = new Phaser.Game({
+        //     parent,
+        //     type: Phaser.WEBGL,
+        //     width: '100%',
+        //     height: '100%',
+        //     backgroundColor: '#000b18',
+        //     physics: {
+        //         default: 'arcade',
+        //         arcade: {
+        //             debug: false,
+        //         },
+        //     },
+        // });
+
+        // game.scene.add('MainScene', MainScene, false);
+        // game.scene.start('MainScene', { roomId, socket: screenSocket, screenAdmin });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -61,8 +86,8 @@ const Game: React.FunctionComponent = () => {
             <AudioButton onClick={handleAudio} variant="primary">
                 {isPlaying ? <VolumeUp /> : <VolumeOff />}
             </AudioButton>
-            <div>
-                <div id="game-root" data-testid="game-container"></div>
+            <div id="gameWrapper">
+                <div id="game-root" />
             </div>
         </Container>
     );
