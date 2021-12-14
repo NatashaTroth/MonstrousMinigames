@@ -1,6 +1,4 @@
-import {
-    LeaderboardStateMessage, leaderboardStateTypeGuard
-} from '../../domain/typeGuards/leaderboardState';
+import { LeaderboardStateMessage, leaderboardStateTypeGuard } from '../../domain/typeGuards/leaderboardState';
 import { MessageTypes } from '../../utils/constants';
 
 describe('finished TypeGuard', () => {

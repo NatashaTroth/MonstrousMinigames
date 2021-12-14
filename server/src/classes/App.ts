@@ -1,6 +1,8 @@
 import { singleton } from 'tsyringe';
-import ClearRoomCronJob from './ClearRoomCronJob';
+
 import ConnectionHandler from '../services/connectionHandler';
+
+import ClearRoomCronJob from './ClearRoomCronJob';
 
 @singleton()
 class App {
@@ -11,6 +13,12 @@ class App {
 
     run() {
         this.connectionHandler.handle();
+        if (!process.env.LOCAL_DEVELOPMENT) {
+            this.clearRoomCronJob.start();
+        }
+    }
+    shutdown() {
+        this.connectionHandler.shutdown();
         if (!process.env.LOCAL_DEVELOPMENT) {
             this.clearRoomCronJob.start();
         }

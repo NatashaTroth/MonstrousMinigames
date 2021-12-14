@@ -14,6 +14,9 @@ describe('RoundService Tests', () => {
         jest.useRealTimers();
     });
 
+    afterAll(async () => {
+        await new Promise<void>(resolve => setTimeout(() => resolve(), 3000));
+      });
 
     it('should have the counting phase as the initial phase', () => {
         expect(roundService.isCountingPhase()).toBeTruthy();
@@ -45,8 +48,11 @@ describe('RoundService Tests', () => {
         jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.COUNTING]);
         jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.GUESSING]);
         jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.RESULTS]);
+        
 
         expect(roundService.phase).toEqual(Phases.COUNTING);
+        roundService.pause();
+        jest.clearAllTimers();
     });
 
     it('should skip a phase on skipPhase', () => {

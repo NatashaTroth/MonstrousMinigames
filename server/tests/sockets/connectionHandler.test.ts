@@ -1,8 +1,11 @@
 import 'reflect-metadata';
 
 import dotenv from 'dotenv';
+
 import express from 'express';
+
 import client from 'socket.io-client';
+
 import { Server as HttpServer } from 'http';
 
 import GameEventEmitter from '../../src/classes/GameEventEmitter';
@@ -11,29 +14,30 @@ import Server from '../../src/classes/Server';
 import SocketIOServer from '../../src/classes/SocketIOServer';
 import { GameAlreadyStartedError, InvalidRoomCodeError } from '../../src/customErrors/';
 import { MessageTypes } from '../../src/enums/messageTypes';
-import { GameOneEventMessageEmitter } from '../../src/gameplay/gameOne/GameOneEventMessageEmitter';
 import emitter from '../../src/helpers/emitter';
 import ConnectionHandler from '../../src/services/connectionHandler';
 import RoomService from '../../src/services/roomService';
+import { GameOneEventMessageEmitter } from '../../src/gameplay/gameOne/GameOneEventMessageEmitter';
 
 dotenv.config({
     path: '.env',
 });
 
 const PORT = process.env.TEST_PORT || 5050;
+let rs: RoomService;
+let ch: ConnectionHandler;
+const url = `localhost:${PORT}`;
+let roomCode: string;
+let controller: SocketIOClient.Socket;
+let screen: SocketIOClient.Socket;
+let gameEventEmitter: GameEventEmitter;
+
+let server: HttpServer;
+
+const app = express();
 
 describe('connectionHandler', () => {
-    let rs: RoomService;
-    let ch: ConnectionHandler;
-    const url = `localhost:${PORT}`;
-    let roomCode: string;
-    let controller: SocketIOClient.Socket;
-    let screen: SocketIOClient.Socket;
-    let gameEventEmitter: GameEventEmitter;
 
-    let server: HttpServer;
-
-    const app = express();
 
     beforeEach(done => {
         server = new HttpServer(app);
