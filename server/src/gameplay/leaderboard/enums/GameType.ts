@@ -1,3 +1,5 @@
 export enum GameType {
-    GameOne = 'Catch Food Game',
+    GameOne = 'The Great Monster Escape',
+    GameTwo = 'Kill sheep',
+    GameThree = 'Snapshot Marathon',
 }

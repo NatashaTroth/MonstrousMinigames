@@ -101,25 +101,23 @@ describe('Final results', () => {
     });
 
     it('should emit the points sorted in descending order', async () => {
-        expect(eventData.data.playerRanks.map(result => result.points)).toStrictEqual(
-            pointsArray.sort((a, b) => b - a)
-        );
+        expect(eventData.data.playerRanks.map(result => result.votes)).toStrictEqual(pointsArray.sort((a, b) => b - a));
     });
 
     it('should emit the points sorted in descending order (0 and 1st place)', async () => {
-        expect(eventData.data.playerRanks[0].points).toBeGreaterThanOrEqual(eventData.data.playerRanks[1].points);
+        expect(eventData.data.playerRanks[0].votes).toBeGreaterThanOrEqual(eventData.data.playerRanks[1].votes);
     });
 
     it('should emit the points sorted in descending order (1st and 2nd place)', async () => {
-        expect(eventData.data.playerRanks[1].points).toBeGreaterThanOrEqual(eventData.data.playerRanks[2].points);
+        expect(eventData.data.playerRanks[1].votes).toBeGreaterThanOrEqual(eventData.data.playerRanks[2].votes);
     });
 
     it('should emit the points sorted in descending order (2nd and 3rd place)', async () => {
-        expect(eventData.data.playerRanks[2].points).toBeGreaterThanOrEqual(eventData.data.playerRanks[3].points);
+        expect(eventData.data.playerRanks[2].votes).toBeGreaterThanOrEqual(eventData.data.playerRanks[3].votes);
     });
 
     it('should emit the points sorted in descending order (2nd and 3rd place)', async () => {
-        expect(eventData.data.playerRanks[2].points).toBeGreaterThanOrEqual(eventData.data.playerRanks[3].points);
+        expect(eventData.data.playerRanks[2].votes).toBeGreaterThanOrEqual(eventData.data.playerRanks[3].votes);
     });
 
     it('should emit the rank 1', async () => {

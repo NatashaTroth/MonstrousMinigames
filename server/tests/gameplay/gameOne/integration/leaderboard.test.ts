@@ -14,7 +14,7 @@ import { clearTimersAndIntervals, startAndFinishGame } from '../gameOneHelperFun
 
 let gameOne: GameOne;
 
-describe('Leaderboard tests for Catch Food Game', () => {
+describe('Leaderboard tests for Game One', () => {
     let leaderboard: Leaderboard;
     let gameEventEmitter: GameEventEmitter;
 

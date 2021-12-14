@@ -49,6 +49,8 @@ export enum MessageTypes {
     startGame = 'startGame',
     stopGame = 'stopGame',
 
+    leaderboardState = 'leaderboardState',
+
     error = 'error',
 }
 
@@ -110,4 +112,7 @@ export const localDevelopment = false; //the one in constants.ts on the server
 export const designDevelopment = false; //so that phaser game doesn't start, but loads
 export const stunnedAnimation = false; //renders stunned animation every so often
 
-export const localBackend = 'http://localhost:5000/';
+const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT || 5000;
+// eslint-disable-next-line no-console
+console.log(process.env);
+export const localBackend = `http://localhost:${BACKEND_PORT}/`;

@@ -87,6 +87,25 @@ const theme = createMuiTheme({
                 fontSize: 30,
             },
         },
+
+        MuiTab: {
+            root: {
+                backgroundColor: '#a8833f',
+                border: 'none',
+            },
+            textColorPrimary: {
+                color: '#000000',
+                '&.Mui-selected': {
+                    color: 'white',
+                    fontWeight: 700,
+                },
+            },
+        },
+        MuiTabs: {
+            indicator: {
+                backgroundColor: 'white',
+            },
+        },
     },
 });
 

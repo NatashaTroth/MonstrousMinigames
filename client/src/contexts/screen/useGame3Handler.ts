@@ -1,4 +1,3 @@
-
 import { useFinalRoundCountdownHandler } from '../../domain/game3/controller/gameState/finalRoundCountdownHandler';
 import { useTopicHandler } from '../../domain/game3/controller/gameState/topicHandler';
 import { useVotingResultsHandler } from '../../domain/game3/controller/gameState/votingResultsHandler';

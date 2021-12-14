@@ -1,9 +1,7 @@
-import { Chip, Typography } from "@material-ui/core";
-import styled, { keyframes } from "styled-components";
+import { Typography } from '@material-ui/core';
+import styled, { css } from 'styled-components';
 
-import {
-    StyledFullScreenContainer
-} from "../../../../components/controller/FullScreenContainer.sc";
+import { StyledFullScreenContainer } from '../../../../components/controller/FullScreenContainer.sc';
 
 export const StyledImg = styled.img`
     display: flex;
@@ -19,19 +17,36 @@ export const InstructionContainer = styled.div`
     margin: 20px 0;
 `;
 
-export const PictureInstruction = styled(Typography)`
+interface Props {
+    small?: boolean;
+}
+
+export const PictureInstruction = styled(Typography)<Props>`
     font-size: 30px;
     color: ${({ theme }) => theme.palette.primary.main};
     font-weight: 700;
     font-style: italic;
-    margin-bottom: 30px;
+    margin: 30px 0;
     padding: 0 60px;
+
+    ${({ small = false }) =>
+        small &&
+        css`
+            font-size: 20px;
+            margin: 20px 0;
+        `}
 `;
 
-export const RandomWord = styled(Typography)`
+export const RandomWord = styled(Typography)<Props>`
     font-size: 40px;
     color: ${({ theme }) => theme.palette.secondary.main};
     font-weight: 700;
+
+    ${({ small = false }) =>
+        small &&
+        css`
+            font-size: 25px;
+        `}
 `;
 
 export const ScreenContainer = styled(StyledFullScreenContainer)`
@@ -44,7 +59,7 @@ export const ImagesContainer = styled.div`
     display: flex;
     width: 100%;
     justify-content: space-around;
-    height: 70%;
+    height: 50%;
 `;
 
 export const ImageContainer = styled.div`
@@ -52,12 +67,12 @@ export const ImageContainer = styled.div`
     flex-direction: column;
     width: 20%;
     align-items: center;
-    height: 90%;
+    height: 80%;
 `;
 
 export const Frame = styled.div`
     width: 100%;
-    height: 70%;
+    height: 80%;
     display: flex;
     align-items: center;
     padding: 20px;
@@ -65,35 +80,4 @@ export const Frame = styled.div`
     background-position: center;
     box-shadow: inset 0 0px rgba(255, 255, 255, 0.1), inset 2px -15px 30px rgba(0, 0, 0, 0.4),
         2px 2px 5px rgba(0, 0, 0, 0.3);
-`;
-
-const slideIn = keyframes`
-    0% {
-        transform: translateY(+1000px);
-        opacity: 1;
-    }
-
-    50% {
-        transform: translateY(-500px);
-        opacity: 1;
-    }
-
-    100% {
-        transform: translateY(-500px);
-        opacity: 0;
-    }
-`;
-
-export const StyledChip = styled(Chip)`
-    && {
-        animation-duration: 8s;
-        animation-iteration-count: 1;
-        animation-name: ${slideIn};
-        transform-origin: origin;
-        transition: 4s;
-        animation-timing-function: ease;
-        box-shadow: ${({ theme }) => `4px 4px 0 ${theme.colors.progressBarGreen}}`};
-        animation-fill-mode: forwards;
-        position: absolute;
-    }
 `;

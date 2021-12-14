@@ -22,7 +22,7 @@ class Room {
     public timestamp: number;
     public game: Game;
     private state: RoomStates;
-    private leaderboard: Leaderboard;
+    public leaderboard: Leaderboard;
     public screenState: string;
     public screens: Array<ScreenInfo>;
     public firstPhaserScreenLoaded: boolean;
@@ -65,6 +65,7 @@ class Room {
 
         this.users.push(user);
         this.updateUserNumbers();
+        this.leaderboard.addUser(user.id, user.name);
     }
 
     private updateUserNumbers(): void {

@@ -70,9 +70,9 @@ export const FinishedScreen: React.FunctionComponent = () => {
                                 )}
                             </>
                         )}
-                        {player.points && (
+                        {player.votes && (
                             <Instruction variant="light">
-                                <InstructionText>{player.points}</InstructionText>
+                                <InstructionText>{player.votes}</InstructionText>
                             </Instruction>
                         )}
                     </LeaderBoardRow>

@@ -29,7 +29,6 @@ export class StageController {
             this.stage = this.stage?.switchToNextStage();
             if (!this.stage) {
                 if (this.isFinalRound()) {
-                    this.stage = null;
                     this.handleGameFinished();
                 } else this.handleNewRound();
             }
