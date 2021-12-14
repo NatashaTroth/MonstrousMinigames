@@ -13,6 +13,9 @@ describe('RoomService', () => {
         rs = new RoomService(5);
         done();
     });
+    afterAll(async () => {
+        await new Promise<void>(resolve => setTimeout(() => resolve(), 1000));
+      });
 
     it('should create a roomService with 20 roomCodes', () => {
         const count = 2;
