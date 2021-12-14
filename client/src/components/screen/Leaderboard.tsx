@@ -11,18 +11,10 @@ import { GameType, LeaderboardState } from '../../contexts/screen/ScreenSocketCo
 import history from '../../domain/history/history';
 import Button from '../common/Button';
 import {
-    BackButtonContainer,
-    ContentBase,
-    ContentContainer,
-    FullScreenContainer,
-    Headline,
+    BackButtonContainer, ContentBase, ContentContainer, FullScreenContainer, Headline
 } from '../common/FullScreenStyles.sc';
 import {
-    GameHistory,
-    GameHistoryHeadline,
-    LeaderboardGrid,
-    LeaderboardRow,
-    LeaderboardWrapper,
+    GameHistory, GameHistoryHeadline, LeaderboardGrid, LeaderboardRow, LeaderboardWrapper
 } from './Leaderboard.sc';
 import { TabPanel } from './TabPanel';
 
@@ -33,41 +25,11 @@ function a11yProps(index: number) {
     };
 }
 
-// TODO remove
-const leaderboardStateMock: LeaderboardState = {
-    gameHistory: [
-        {
-            game: GameType.GameOne,
-            playerRanks: [
-                { id: '1', name: 'Harry', rank: 1, finished: true, isActive: true, points: 5 },
-                { id: '2', name: 'Ron', rank: 2, finished: true, isActive: true, points: 4 },
-                { id: '3', name: 'James', rank: 3, finished: true, isActive: true, points: 3 },
-                { id: '4', name: 'Luna', rank: 4, finished: true, isActive: true, points: 2 },
-            ],
-        },
-        {
-            game: GameType.GameTwo,
-            playerRanks: [
-                { id: '1', name: 'Harry', rank: 1, finished: true, isActive: true, points: 5 },
-                { id: '2', name: 'Ron', rank: 2, finished: true, isActive: true, points: 4 },
-                { id: '3', name: 'James', rank: 3, finished: true, isActive: true, points: 3 },
-                { id: '4', name: 'Luna', rank: 4, finished: true, isActive: true, points: 2 },
-            ],
-        },
-    ],
-    userPoints: [
-        { userId: '1', name: 'Harry', points: 5, rank: 1 },
-        { userId: '2', name: 'Ron', points: 3, rank: 2 },
-        { userId: '3', name: 'James', points: 2, rank: 3 },
-        { userId: '4', name: 'Luna', points: 1, rank: 4 },
-    ],
-};
-
 const Leaderboard: React.FunctionComponent = () => {
     const { leaderboardState } = React.useContext(GameContext);
 
-    const userPoints = leaderboardState?.userPoints ?? leaderboardStateMock.userPoints;
-    const gameHistory = leaderboardState?.gameHistory ?? leaderboardStateMock.gameHistory;
+    const userPoints = leaderboardState?.userPoints ?? [];
+    const gameHistory = leaderboardState?.gameHistory ?? [];
 
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
