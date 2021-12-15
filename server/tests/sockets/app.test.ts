@@ -1,44 +1,19 @@
 import 'reflect-metadata';
 
-import dotenv from 'dotenv';
-
 import client from 'socket.io-client';
 
 import axios from 'axios';
 
-import DI, { DI_CRON_JOB_CLEANUP, DI_EVENT_MESSAGE_EMITTERS, DI_EXPRESS_PORT, DI_ROOM_NUMBER } from '../../src/di';
-import App from '../../src/classes/App';
-import { GlobalEventMessageEmitter } from '../../src/classes/GlobalEventMessageEmitter';
-import { Globals } from '../../src/enums/globals';
-import { GameOneEventMessageEmitter } from '../../src/gameplay/gameOne/GameOneEventMessageEmitter';
-import { GameTwoMessageEmitter } from '../../src/gameplay/gameTwo/classes/GameTwoMessageEmitter';
-
-// import { GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE } from '../../src/gameplay/gameTwo/interfaces/GameTwoEventMessages';
-
-dotenv.config({
-    path: '.env',
-});
+import initApp from '../../src/initApp';
 
 const PORT = 5561;
-
-DI.register(DI_ROOM_NUMBER, { useValue: 100 });
-DI.register(DI_EXPRESS_PORT, { useValue: PORT });
-DI.register(DI_CRON_JOB_CLEANUP, { useValue: Globals.CRON_JOB_CLEANUP });
-
-// *************** Event Messengers *******
-DI.register(DI_EVENT_MESSAGE_EMITTERS, { useToken: GlobalEventMessageEmitter });
-DI.register(DI_EVENT_MESSAGE_EMITTERS, { useToken: GameOneEventMessageEmitter });
-DI.register(DI_EVENT_MESSAGE_EMITTERS, { useToken: GameTwoMessageEmitter });
-
-
-let app = DI.resolve(App);
 
 const url = `localhost:${PORT}`;
 let roomCode: string;
 let controller: SocketIOClient.Socket;
 
 
-app = DI.resolve(App);
+const app = initApp(PORT);
 app.run();
 
 describe('App Tests:', () => {
