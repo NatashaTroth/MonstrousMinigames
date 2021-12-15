@@ -1,16 +1,16 @@
-import { Namespace, Socket } from 'socket.io';
+import { Namespace, Socket } from "socket.io";
 
-import { GameNames } from '../enums/gameNames';
-import { MessageTypes } from '../enums/messageTypes';
-import Game from '../gameplay/Game';
-import { GameOneMsgType } from '../gameplay/gameOne/enums';
-import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
-import Leaderboard from '../gameplay/leaderboard/Leaderboard';
+import { GameNames } from "../enums/gameNames";
+import { MessageTypes } from "../enums/messageTypes";
+import Game from "../gameplay/Game";
+import { GameOneMsgType } from "../gameplay/gameOne/enums";
+import { GameTwoMessageTypes } from "../gameplay/gameTwo/enums/GameTwoMessageTypes";
+import Leaderboard from "../gameplay/leaderboard/Leaderboard";
 // import { GameThreeMessageTypes } from '../gameplay/gameThree/enums/GameThreeMessageTypes';
 // import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
-import { IMessage } from '../interfaces/messages';
-import RoomService from '../services/roomService';
-import Room from './room';
+import { IMessage } from "../interfaces/messages";
+import RoomService from "../services/roomService";
+import Room from "./room";
 
 class Screen {
     protected roomId?: string;
@@ -113,7 +113,21 @@ class Screen {
                 case MessageTypes.STOP_GAME:
                     if (this.room?.isPlaying() || this.room?.isPaused()) {
                         console.info(this.room.id + ' | Stop Game');
+                        this.room!.setAllScreensPhaserGameReady(false);
+                        this.room!.sentAllScreensLoaded = false;
                         this.room.stopGame();
+
+                        this.room.resetGame().then(() => {
+                            this.emitter.sendMessage(
+                                MessageTypes.GAME_HAS_RESET,
+                                [this.controllerNamespace, this.screenNamespace],
+                                this.room!.id
+                            );
+                            this.emitter.sendConnectedUsers(
+                                [this.controllerNamespace, this.screenNamespace],
+                                this.room!
+                            );
+                        });
                     }
                     break;
                 case MessageTypes.BACK_TO_LOBBY:
