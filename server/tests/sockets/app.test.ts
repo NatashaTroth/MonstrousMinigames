@@ -43,7 +43,8 @@ app.run();
 
 describe('App Tests:', () => {
     beforeEach(done => {
-
+        console.log = jest.fn();
+        console.info = jest.fn();
         done();
     });
 
