@@ -38,7 +38,9 @@ import PlayerStunned from './domain/game1/controller/components/PlayerStunned';
 import ShakeInstruction from './domain/game1/controller/components/ShakeInstruction';
 import Windmill from './domain/game1/controller/components/Windmill';
 import Game from './domain/game1/screen/components/Game';
+import Guess from './domain/game2/controller/components/Guess';
 import Joystick from './domain/game2/controller/components/Joystick';
+import Results from './domain/game2/controller/components/Results';
 import Game2 from './domain/game2/screen/components/Game2';
 import PresentFinalPhotos from './domain/game3/controller/components/PresentFinalPhotos';
 import TakePicture from './domain/game3/controller/components/TakePicture';
@@ -180,6 +182,17 @@ const App: React.FunctionComponent = () => {
                                                                         component={Game2}
                                                                         exact
                                                                     />
+                                                                    <Route
+                                                                        path={Routes.controllerGuess}
+                                                                        component={Guess}
+                                                                        exact
+                                                                    />
+                                                                    <Route
+                                                                        path={Routes.controllerResults}
+                                                                        component={Results}
+                                                                        exact
+                                                                    />
+
                                                                     {/*----------------- Game 3 -----------------*/}
                                                                     <Route
                                                                         path={Routes.controllerGame3}

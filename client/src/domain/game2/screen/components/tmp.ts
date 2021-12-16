@@ -36,10 +36,11 @@ import { SheepGameHasStartedMessage, sheepGameStartedTypeGuard } from '../../../
 import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
+//import { handleSetControllerSocketGame2 } from '../socket/Sockets';
 import { audioFiles, characters, images } from './GameAssets';
 
 const windowHeight = window.innerHeight;
-class SheepGameScene extends Phaser.Scene {
+class SheepGameSceneTmp extends Phaser.Scene {
     windowWidth: number;
     windowHeight: number;
     roomId: string;
@@ -62,7 +63,7 @@ class SheepGameScene extends Phaser.Scene {
     allScreensLoaded: boolean;
 
     constructor() {
-        super('SheepGameScene');
+        super('SheepGameSceneTmp');
         this.windowWidth = 0;
         this.windowHeight = 0;
         this.roomId = sessionStorage.getItem('roomId') || '';
@@ -85,7 +86,7 @@ class SheepGameScene extends Phaser.Scene {
         this.camera = this.cameras.main;
         this.socket = data.socket;
         this.screenAdmin = data.screenAdmin;
-        this.gameRenderer = new PhaserGameRenderer(this);
+        //this.gameRenderer = new PhaserGameRenderer(this);
         //this.initSockets();
         this.initiateEventEmitters();
 
@@ -297,34 +298,37 @@ class SheepGameScene extends Phaser.Scene {
                 sheep.renderer.setSheepVisible(true);
             });
         }
+        if (this.socket) {
+            //handleSetControllerSocketGame2(this.socket, data.phase);
+        }
     }
 
     private createPlayer(index: number, gameStateData: GameData) {
         const character = characters[gameStateData.playersState[index].characterNumber];
         const numberPlayers = gameStateData.playersState.length;
-        const player = new Player(
-            this,
-            index,
-            { x: gameStateData.playersState[index].positionX, y: gameStateData.playersState[index].positionY },
-            gameStateData,
-            character,
-            numberPlayers,
-            this.gameToScreenMapper!
-        );
-        this.players.push(player);
+        // const player = new Player(
+        //     this,
+        //     index,
+        //     { x: gameStateData.playersState[index].positionX, y: gameStateData.playersState[index].positionY },
+        //     gameStateData,
+        //     character,
+        //     numberPlayers,
+        //     this.gameToScreenMapper!
+        // );
+        // this.players.push(player);
     }
 
     private createSheep(index: number, gameStateData: GameData) {
         const numberOfSheep = gameStateData.sheep.length;
-        const sheep = new Sheep(
-            this,
-            index,
-            { x: gameStateData.sheep[index].posX, y: gameStateData.sheep[index].posY },
-            gameStateData,
-            numberOfSheep,
-            this.gameToScreenMapper!
-        );
-        this.sheep.push(sheep);
+        // const sheep = new Sheep(
+        //     this,
+        //     index,
+        //     { x: gameStateData.sheep[index].posX, y: gameStateData.sheep[index].posY },
+        //     gameStateData,
+        //     numberOfSheep,
+        //     this.gameToScreenMapper!
+        // );
+        // this.sheep.push(sheep);
     }
 
     private createGameCountdown(countdownTime: number) {
@@ -393,4 +397,4 @@ class SheepGameScene extends Phaser.Scene {
     // }
 }
 
-export default SheepGameScene;
+export default SheepGameSceneTmp;

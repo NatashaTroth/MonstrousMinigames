@@ -60,6 +60,10 @@ export class PhaserSheepRenderer {
         this.sheep?.destroy();
     }
 
+    setSheepVisible(isVisible: boolean) {
+        this.sheep?.setVisible(isVisible);
+    }
+
     placeDecoy() {
         this.sheep?.setTexture('sheepDecoy');
     }
