@@ -95,6 +95,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
+        this.resetPlayerPositions();
         this.sheepService.initSheep();
         this.guessingService.init(users);
         this.listenToEvents();
