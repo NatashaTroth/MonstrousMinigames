@@ -1,6 +1,7 @@
 import { History } from 'history';
 import React from 'react';
 
+import { Game1Context } from '../../../contexts/game1/Game1ContextProvider';
 import { Game3Context } from '../../../contexts/game3/Game3ContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
@@ -23,6 +24,7 @@ export const resetHandler = messageHandler(resetTypeGuard, (message, dependencie
 
 export const useResetHandler = (socket: Socket, handler = resetHandler) => {
     const { roomId } = React.useContext(GameContext);
+    const { resetGame1 } = React.useContext(Game1Context);
     const { resetGame3 } = React.useContext(Game3Context);
     const { resetPlayer } = React.useContext(PlayerContext);
 
@@ -31,11 +33,13 @@ export const useResetHandler = (socket: Socket, handler = resetHandler) => {
 
         const resetHandlerWithDependencies = handler({
             resetController: () => {
-                resetGame3(), resetPlayer();
+                resetGame1();
+                resetGame3();
+                resetPlayer();
             },
             history,
         });
 
         resetHandlerWithDependencies(socket, roomId);
-    }, [handler, resetGame3, resetPlayer, roomId, socket]);
+    }, [handler, resetGame1, resetGame3, resetPlayer, roomId, socket]);
 };

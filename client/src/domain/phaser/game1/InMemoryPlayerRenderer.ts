@@ -1,5 +1,5 @@
-import { Character } from '../gameInterfaces';
-import { PlayerRenderer } from './PlayerRenderer';
+import { Character } from "../gameInterfaces";
+import { PlayerRenderer } from "./PlayerRenderer";
 
 export class InMemoryPlayerRenderer implements PlayerRenderer {
     constructor(
@@ -69,7 +69,7 @@ export class InMemoryPlayerRenderer implements PlayerRenderer {
                 // do nothing
             };
             mockStartAnimation?: (
-                a: string
+                a: string | undefined
             ) => {
                 // do nothing
             };
@@ -105,6 +105,9 @@ export class InMemoryPlayerRenderer implements PlayerRenderer {
                 d: string,
                 e: number
             ) => {
+                // do nothing
+            };
+            mockDestroyEverything?: () => {
                 // do nothing
             };
         }
@@ -203,11 +206,15 @@ export class InMemoryPlayerRenderer implements PlayerRenderer {
         this.mocks.mockRenderCave?.(screenMeasurement, y);
     }
 
-    startAnimation(animationName: string) {
+    startAnimation(animationName: string | undefined) {
         this.mocks.mockStartAnimation?.(animationName);
     }
 
     renderWind() {
         this.mocks.mockRenderWind?.();
+    }
+
+    destroyEverything() {
+        this.mocks.mockDestroyEverything?.();
     }
 }
