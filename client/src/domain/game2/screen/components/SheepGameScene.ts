@@ -286,6 +286,7 @@ class SheepGameScene extends Phaser.Scene {
 
         this.phase = data.phase;
         if (this.phase == GamePhases.guessing) {
+            resultText.setVisible(false);
             this.sheep.forEach(sheep => {
                 sheep.renderer.setSheepVisible(false);
             });
