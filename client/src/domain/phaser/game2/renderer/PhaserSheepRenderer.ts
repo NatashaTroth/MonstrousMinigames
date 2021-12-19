@@ -17,14 +17,15 @@ export class PhaserSheepRenderer {
     constructor(private scene: SheepGameScene) {}
 
     preload() {
+        // TODO: fix animations
         // 0 - 4: right
         // 5 - 9: left
         // 10 - 13: forward
         // 14 - 17: back
-        this.initiateAnimation('sheepSpritesheet', 'sheep_walkRight', { start: 0, end: 4 });
-        this.initiateAnimation('sheepSpritesheet', 'sheep_walkLeft', { start: 5, end: 9 });
-        this.initiateAnimation('sheepSpritesheet', 'sheep_walkForward', { start: 10, end: 13 });
-        this.initiateAnimation('sheepSpritesheet', 'sheep_walkBack', { start: 14, end: 17 });
+        // this.initiateAnimation('sheepSpritesheet', 'sheep_walkRight', { start: 0, end: 4 });
+        // this.initiateAnimation('sheepSpritesheet', 'sheep_walkLeft', { start: 5, end: 9 });
+        // this.initiateAnimation('sheepSpritesheet', 'sheep_walkForward', { start: 10, end: 13 });
+        // this.initiateAnimation('sheepSpritesheet', 'sheep_walkBack', { start: 14, end: 17 });
     }
 
     renderSheep(sheep: Sheep) {
@@ -38,19 +39,19 @@ export class PhaserSheepRenderer {
     moveSheep(plusX?: number, plusY?: number) {
         if (plusY) {
             if (plusY > 0) {
-                this.sheep?.play('sheep_walkForward');
+                //this.sheep?.play('sheep_walkForward');
             }
             if (plusY < 0) {
-                this.sheep?.play('sheep_walkBack');
+                //this.sheep?.play('sheep_walkBack');
             }
             this.sheep?.setY(this.sheep?.y + plusY);
         }
         if (plusX) {
             if (plusX > 0) {
-                this.sheep?.play('sheep_walkRight');
+                //this.sheep?.play('sheep_walkRight');
             }
             if (plusX < 0) {
-                this.sheep?.play('sheep_walkLeft');
+                //this.sheep?.play('sheep_walkLeft');
             }
             this.sheep?.setX(this.sheep?.x + plusX);
         }

@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 import { depthDictionary } from '../../../../config/depthDictionary';
-import { GamePhases } from '../../../../contexts/game2/Game2ContextProvider';
+import { GamePhases, PlayerRank } from '../../../../contexts/game2/Game2ContextProvider';
 import sheepSpritesheet from '../../../../images/characters/spritesheets/sheep/sheep_spritesheet.png';
 import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2 } from '../../../../utils/constants';
 import { screenFinishedRoute } from '../../../../utils/routes';
@@ -32,6 +32,7 @@ import {
     PhaserLoadingTimedOutMessage,
     phaserLoadingTimedOutTypeGuard,
 } from '../../../typeGuards/game2/phaserLoadingTimedOut';
+import { PlayerRanksMessage, playerRanksTypeGuard } from '../../../typeGuards/game2/playerRanks';
 import { SheepGameHasStartedMessage, sheepGameStartedTypeGuard } from '../../../typeGuards/game2/started';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
@@ -60,6 +61,7 @@ class SheepGameScene extends Phaser.Scene {
     gameToScreenMapper?: GameToScreenMapper;
     firstGameStateReceived: boolean;
     allScreensLoaded: boolean;
+    playerRanks: PlayerRank[];
 
     constructor() {
         super('SheepGameScene');
@@ -77,6 +79,7 @@ class SheepGameScene extends Phaser.Scene {
         this.screenAdmin = false;
         this.firstGameStateReceived = false;
         this.allScreensLoaded = false;
+        this.playerRanks = [];
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
@@ -204,6 +207,11 @@ class SheepGameScene extends Phaser.Scene {
             this.updateGamePhase(data);
         });
 
+        const playerRanksSocket = new MessageSocket(playerRanksTypeGuard, this.socket);
+        playerRanksSocket.listen((data: PlayerRanksMessage) => {
+            this.updatePlayerRanks(data);
+        });
+
         const pausedSocket = new MessageSocket(pausedTypeGuard, this.socket);
         pausedSocket.listen((data: GameHasPausedMessage) => {
             this.pauseGame();
@@ -286,6 +294,7 @@ class SheepGameScene extends Phaser.Scene {
 
         this.phase = data.phase;
         if (this.phase == GamePhases.guessing) {
+            resultText.setVisible(false);
             this.sheep.forEach(sheep => {
                 sheep.renderer.setSheepVisible(false);
             });
@@ -297,6 +306,10 @@ class SheepGameScene extends Phaser.Scene {
                 sheep.renderer.setSheepVisible(true);
             });
         }
+    }
+
+    updatePlayerRanks(data: PlayerRanksMessage) {
+        this.playerRanks = data.playerRanks;
     }
 
     private createPlayer(index: number, gameStateData: GameData) {
