@@ -92,6 +92,7 @@ export enum MessageTypesGame2 {
     movePlayer = 'game2/move',
     killSheep = 'game2/kill',
     phaseChanged = 'game2/PhaseHasChanged',
+    playerRanks = 'game2/playerRanks',
 }
 
 export const enum MessageTypesGame3 {

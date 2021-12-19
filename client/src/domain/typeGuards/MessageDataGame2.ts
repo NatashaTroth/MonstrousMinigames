@@ -5,6 +5,7 @@ import { GameStateInfoMessage } from './game2/gameStateInfo';
 import { InitialGameStateInfoMessage } from './game2/initialGameStateInfo';
 import { PhaseChangedMessage } from './game2/phaseChanged';
 import { PhaserLoadingTimedOutMessage } from './game2/phaserLoadingTimedOut';
+import { PlayerRanksMessage } from './game2/playerRanks';
 import { SheepGameHasStartedMessage } from './game2/started';
 import { GameHasPausedMessage } from './paused';
 import { GameHasResetMessage } from './reset';
@@ -31,4 +32,5 @@ export type MessageDataGame2 =
     | PhaserLoadingTimedOutMessage
     | SheepGameHasStartedMessage
     | PhaseChangedMessage
+    | PlayerRanksMessage
     | undefined;
