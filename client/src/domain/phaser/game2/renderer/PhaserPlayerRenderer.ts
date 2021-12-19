@@ -27,10 +27,11 @@ export class PhaserPlayerRenderer {
             // 0-3: forward
             // 4-7: left
             // 8-11: right
-            // TODO: missing walking back animation
-            this.initiateAnimation(character.name, character.name + +'_walkForward', { start: 0, end: 3 });
-            this.initiateAnimation(character.name, character.name + +'_walkLeft', { start: 4, end: 7 });
-            this.initiateAnimation(character.name, character.name + +'_walkRight', { start: 8, end: 11 });
+            // TODO: fix animations, missing walking back animation
+
+            // this.initiateAnimation(character.name, character.name + +'_walkForward', { start: 0, end: 3 });
+            // this.initiateAnimation(character.name, character.name + +'_walkLeft', { start: 4, end: 7 });
+            // this.initiateAnimation(character.name, character.name + +'_walkRight', { start: 8, end: 11 });
         } else {
             this.player.x = coordinates.x;
             this.player.y = coordinates.y;
