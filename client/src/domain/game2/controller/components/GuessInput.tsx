@@ -3,23 +3,42 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import Button from '../../../../components/common/Button';
+import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
+import { ScreenSocketContext } from '../../../../contexts/screen/ScreenSocketContextProvider';
+import { MessageTypesGame2 } from '../../../../utils/constants';
 
 const GuessInput: React.FunctionComponent = () => {
     const [submitted, setSubmitted] = useState(false);
 
     //const { roomId } = React.useContext(GameContext);
-    //const { userId } = React.useContext(PlayerContext);
+    const { userId } = React.useContext(PlayerContext);
+    const { screenSocket } = React.useContext(ScreenSocketContext);
+
+    let userGuess = 0;
+
+    function handleChange(e: React.FormEvent<HTMLInputElement>) {
+        e.preventDefault();
+        userGuess = +e.currentTarget.value;
+    }
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setSubmitted(true);
-        // TODO: submit guess
+        screenSocket?.emit({
+            type: MessageTypesGame2.guess,
+            userId: userId,
+            guess: userGuess,
+        });
     }
 
     return (
         <Container>
             <form onSubmit={(e: React.FormEvent) => handleSubmit(e)}>
-                <input type="number" pattern="[0-9]*" />
+                <input
+                    type="number"
+                    pattern="[0-9]*"
+                    onChange={(e: React.FormEvent<HTMLInputElement>) => handleChange(e)}
+                ></input>
                 <br />
                 <br />
                 {submitted ? (
