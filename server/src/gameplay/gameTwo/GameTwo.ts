@@ -6,6 +6,7 @@ import Leaderboard from '../leaderboard/Leaderboard';
 import User from '../../classes/user';
 import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
+import { GameType } from '../leaderboard/enums/GameType';
 
 import GameTwoPlayer from './GameTwoPlayer';
 import { GameStateInfo } from './interfaces';
@@ -233,7 +234,11 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     handleGameFinished() {
         const playerRanks = this.guessingService.getPlayerRanks();
-        GameTwoEventEmitter.emitGameHasFinishedEvent(this.roomId, GameState.Finished, playerRanks);
+
+        this.leaderboard.addGameToHistory(GameType.GameTwo, [...playerRanks]);
+        this.gameState = GameState.Finished;
+
+        GameTwoEventEmitter.emitGameHasFinishedEvent(this.roomId, this.gameState, playerRanks);
         return
     }
 
