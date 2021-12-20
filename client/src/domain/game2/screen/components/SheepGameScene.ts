@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 
-import { depthDictionary } from '../../../../config/depthDictionary';
 import { GamePhases, PlayerRank } from '../../../../contexts/game2/Game2ContextProvider';
 import sheepSpritesheet from '../../../../images/characters/spritesheets/sheep/sheep_spritesheet.png';
 import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2 } from '../../../../utils/constants';
@@ -284,25 +283,15 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     updateGamePhase(data: PhaseChangedMessage) {
-        const resultText = this.add.text(
-            window.innerWidth / 2,
-            window.innerHeight / 2,
-            `The correct answer was ${this.sheep.length}`
-        );
-        resultText.setDepth(depthDictionary.player);
-        resultText.setVisible(false);
-
         this.phase = data.phase;
         if (this.phase == GamePhases.guessing) {
-            resultText.setVisible(false);
             this.sheep.forEach(sheep => {
                 sheep.renderer.setSheepVisible(false);
             });
         } else if (this.phase == GamePhases.results) {
-            resultText.setVisible(true);
+            //TODO
         } else {
             this.sheep.forEach(sheep => {
-                resultText.setVisible(false);
                 sheep.renderer.setSheepVisible(true);
             });
         }
