@@ -9,8 +9,9 @@ import { GameTwoMessageTypes } from '../../../../src/gameplay/gameTwo/enums/Game
 import { Phases } from '../../../../src/gameplay/gameTwo/enums/Phases';
 
 let gameTwo: GameTwo;
-const users = [new User('ABCD', '72374', 'Franz', 1, '1'),
-new User('ABCD', '345345', 'Sissi', 2, '2')];
+
+const users = [new User('ABCD', '72374', 'Franz', 1, '1', 1),
+new User('ABCD', '345345', 'Sissi', 2, '2', 2)];
 
 
 describe('GameTwo Guessing Tests', () => {

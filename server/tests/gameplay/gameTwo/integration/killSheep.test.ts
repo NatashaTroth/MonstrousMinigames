@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { leaderboard, roomId, users } from '../../mockData';
+import { leaderboard, roomId, usersWithNumbers } from '../../mockData';
 import { GameTwo } from '../../../../src/gameplay';
 import Sheep from '../../../../src/gameplay/gameTwo/classes/Sheep';
 import Parameters from '../../../../src/gameplay/gameTwo/constants/Parameters';
@@ -8,7 +8,7 @@ import { GameTwoMessageTypes } from '../../../../src/gameplay/gameTwo/enums/Game
 import { SheepStates } from '../../../../src/gameplay/gameTwo/enums/SheepStates';
 
 let gameTwo: GameTwo;
-
+const users = usersWithNumbers;
 describe('GameTwo Sheep Tests', () => {
     beforeEach(async () => {
         jest.spyOn(console, "log").mockImplementation();

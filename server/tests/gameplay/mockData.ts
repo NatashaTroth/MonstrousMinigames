@@ -1,13 +1,21 @@
 /* istanbul ignore file */
 import User from '../../src/classes/user';
-import Leaderboard from '../../src/gameplay/leaderboard/Leaderboard';
 import { IMessage } from '../../src/interfaces/messages';
+import Leaderboard from '../../src/gameplay/leaderboard/Leaderboard';
 
 export const users: Array<User> = [
     new User('xxx', 'iii', 'Harry', 2, '1'),
     new User('xxx', 'iii', 'Ron', 1, '2'),
     new User('xxx', 'iii', 'James', 4, '3'),
     new User('xxx', 'iii', 'Luna', 3, '4'),
+];
+
+
+export const usersWithNumbers: Array<User> = [
+    new User('xxx', 'iii', 'Harry', 2, '1', 1),
+    new User('xxx', 'iii', 'Ron', 1, '2', 2),
+    new User('xxx', 'iii', 'James', 4, '3', 3),
+    new User('xxx', 'iii', 'Luna', 3, '4', 4),
 ];
 
 export const roomId = 'xxx';

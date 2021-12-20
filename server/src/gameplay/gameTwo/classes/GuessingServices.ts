@@ -25,7 +25,8 @@ export default class GuessingService {
                 rank: 0,
                 isActive: user.active,
                 points: 0,
-                previousRank: null
+                previousRank: null,
+                finishedRank: true
             }
             this.playerRanks.set(user.id, playerRank);
         });
