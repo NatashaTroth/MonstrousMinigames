@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { handleReroute } from '../../domain/game1/controller/gameState/handleRerouteAtObstacle';
+import history from '../../domain/history/history';
 import { ObstacleTypes, TrashType } from '../../utils/constants';
 
 export const defaultValue = {
@@ -79,7 +80,7 @@ const Game1ContextProvider: React.FunctionComponent = ({ children }) => {
         obstacle,
         setObstacle: (roomId: string | undefined, val: undefined | Obstacle) => {
             setObstacle(val);
-            reroute = handleReroute(reroute, val, roomId);
+            reroute = handleReroute(reroute, val, roomId, history);
         },
         dead,
         setPlayerDead,

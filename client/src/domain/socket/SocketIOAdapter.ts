@@ -17,7 +17,6 @@ export class SocketIOAdapter implements Socket {
     constructor(public roomId: string, public device: 'controller' | 'screen', public name?: string) {
         this.socket = this.connect();
         this.connectionPromise = new Promise(resolve => {
-            // TODO check error case
             this.socket.on('connect', () => resolve());
         });
     }

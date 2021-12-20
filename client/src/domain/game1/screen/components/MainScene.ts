@@ -1,54 +1,51 @@
-import Phaser from "phaser";
+import Phaser from 'phaser';
 
-import chasersSpritesheet from "../../../../images/characters/spritesheets/chasers/chasers_spritesheet.png";
-import windSpritesheet from "../../../../images/characters/spritesheets/chasers/wind_spritesheet.png";
+import chasersSpritesheet from '../../../../images/characters/spritesheets/chasers/chasers_spritesheet.png';
+import windSpritesheet from '../../../../images/characters/spritesheets/chasers/wind_spritesheet.png';
+import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1 } from '../../../../utils/constants';
+import { screenFinishedRoute, screenLobbyRoute } from '../../../../utils/routes';
+import history from '../../../history/history';
+import { GameToScreenMapper } from '../../../phaser/game1/GameToScreenMapper';
+import { initialGameInput } from '../../../phaser/game1/initialGameInput';
+import { Player } from '../../../phaser/game1/Player';
+import { PhaserPlayerRenderer } from '../../../phaser/game1/renderer/PhaserPlayerRenderer';
+import { GameAudio } from '../../../phaser/GameAudio';
+import GameEventEmitter from '../../../phaser/GameEventEmitter';
+import { GameEventTypes } from '../../../phaser/GameEventTypes';
+import { GameData } from '../../../phaser/gameInterfaces';
+import { PhaserGameRenderer } from '../../../phaser/renderer/PhaserGameRenderer';
+import { MessageSocket } from '../../../socket/MessageSocket';
+import { Socket } from '../../../socket/Socket';
+import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
 import {
-    designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1
-} from "../../../../utils/constants";
-import { screenFinishedRoute } from "../../../../utils/routes";
-import history from "../../../history/history";
-import { GameToScreenMapper } from "../../../phaser/game1/GameToScreenMapper";
-import { initialGameInput } from "../../../phaser/game1/initialGameInput";
-import { Player } from "../../../phaser/game1/Player";
-import { PhaserPlayerRenderer } from "../../../phaser/game1/renderer/PhaserPlayerRenderer";
-import { GameAudio } from "../../../phaser/GameAudio";
-import GameEventEmitter from "../../../phaser/GameEventEmitter";
-import { GameEventTypes } from "../../../phaser/GameEventTypes";
-import { GameData } from "../../../phaser/gameInterfaces";
-import { PhaserGameRenderer } from "../../../phaser/renderer/PhaserGameRenderer";
-import { MessageSocket } from "../../../socket/MessageSocket";
-import { Socket } from "../../../socket/Socket";
-import { finishedTypeGuard, GameHasFinishedMessage } from "../../../typeGuards/finished";
+    AllScreensPhaserGameLoadedMessage,
+    allScreensPhaserGameLoadedTypeGuard,
+} from '../../../typeGuards/game1/allScreensPhaserGameLoaded';
 import {
-    AllScreensPhaserGameLoadedMessage, allScreensPhaserGameLoadedTypeGuard
-} from "../../../typeGuards/game1/allScreensPhaserGameLoaded";
+    ApproachingSolvableObstacleOnceMessage,
+    approachingSolvableObstacleOnceTypeGuard,
+} from '../../../typeGuards/game1/approachingSolvableObstacleOnceTypeGuard';
+import { ChasersPushedMessage, ChasersPushedTypeGuard } from '../../../typeGuards/game1/chasersPushed';
+import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../../typeGuards/game1/gameStateInfo';
 import {
-    ApproachingSolvableObstacleOnceMessage, approachingSolvableObstacleOnceTypeGuard
-} from "../../../typeGuards/game1/approachingSolvableObstacleOnceTypeGuard";
+    InitialGameStateInfoMessage,
+    initialGameStateInfoTypeGuard,
+} from '../../../typeGuards/game1/initialGameStateInfo';
+import { ObstacleSkippedMessage, obstacleSkippedTypeGuard } from '../../../typeGuards/game1/obstacleSkipped';
 import {
-    ChasersPushedMessage, ChasersPushedTypeGuard
-} from "../../../typeGuards/game1/chasersPushed";
+    ObstacleWillBeSolvedMessage,
+    obstacleWillBeSolvedTypeGuard,
+} from '../../../typeGuards/game1/obstacleWillBeSolved';
 import {
-    GameStateInfoMessage, gameStateInfoTypeGuard
-} from "../../../typeGuards/game1/gameStateInfo";
-import {
-    InitialGameStateInfoMessage, initialGameStateInfoTypeGuard
-} from "../../../typeGuards/game1/initialGameStateInfo";
-import {
-    ObstacleSkippedMessage, obstacleSkippedTypeGuard
-} from "../../../typeGuards/game1/obstacleSkipped";
-import {
-    ObstacleWillBeSolvedMessage, obstacleWillBeSolvedTypeGuard
-} from "../../../typeGuards/game1/obstacleWillBeSolved";
-import {
-    PhaserLoadingTimedOutMessage, phaserLoadingTimedOutTypeGuard
-} from "../../../typeGuards/game1/phaserLoadingTimedOut";
-import { GameHasStartedMessage, startedTypeGuard } from "../../../typeGuards/game1/started";
-import { GameHasPausedMessage, pausedTypeGuard } from "../../../typeGuards/paused";
-import { GameHasResumedMessage, resumedTypeGuard } from "../../../typeGuards/resumed";
-import { GameHasStoppedMessage, stoppedTypeGuard } from "../../../typeGuards/stopped";
-import { moveLanesToCenter } from "../gameState/moveLanesToCenter";
-import { audioFiles, characters, fireworkFlares, images } from "./GameAssets";
+    PhaserLoadingTimedOutMessage,
+    phaserLoadingTimedOutTypeGuard,
+} from '../../../typeGuards/game1/phaserLoadingTimedOut';
+import { GameHasStartedMessage, startedTypeGuard } from '../../../typeGuards/game1/started';
+import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
+import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
+import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
+import { moveLanesToCenter } from '../gameState/moveLanesToCenter';
+import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
 class MainScene extends Phaser.Scene {
     windowWidth: number;
@@ -218,7 +215,7 @@ class MainScene extends Phaser.Scene {
 
         const phaserLoadedTimedOut = new MessageSocket(phaserLoadingTimedOutTypeGuard, this.socket);
         phaserLoadedTimedOut.listen((data: PhaserLoadingTimedOutMessage) => {
-            //TODO handle ?
+            history.push(screenLobbyRoute(this.roomId));
         });
 
         const startedGame = new MessageSocket(startedTypeGuard, this.socket);
@@ -277,11 +274,6 @@ class MainScene extends Phaser.Scene {
 
         //TODO
         // gameHasReset
-
-        // if ((data.type == 'error' && data.msg !== undefined) || !data.data) {
-        //     this.handleError(data.msg);
-        //     return;
-        // }
     }
 
     initiateEventEmitters() {

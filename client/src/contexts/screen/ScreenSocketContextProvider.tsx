@@ -38,29 +38,6 @@ export interface PlayerRank {
     votes?: number;
 }
 
-export interface GamePlayed {
-    game: GameType;
-    playerRanks: PlayerRank[];
-}
-
-export enum GameType {
-    GameOne = 'The Great Monster Escape',
-    GameTwo = 'Kill sheep',
-    GameThree = 'Snapshot Marathon',
-}
-
-export interface UserPoints {
-    userId: string;
-    name: string;
-    points: number;
-    rank: number;
-}
-
-export interface LeaderboardState {
-    gameHistory: GamePlayed[];
-    userPoints: UserPoints[]; //sorted by points
-}
-
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenSocket, setScreenSocket] = React.useState<Socket>(new InMemorySocketFake());
 
