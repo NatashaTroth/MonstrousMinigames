@@ -239,7 +239,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.gameState = GameState.Finished;
 
         GameTwoEventEmitter.emitGameHasFinishedEvent(this.roomId, this.gameState, playerRanks);
-        return
     }
 
     public cleanup() {

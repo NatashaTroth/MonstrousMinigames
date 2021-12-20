@@ -81,7 +81,8 @@ describe('GuessingService Tests', () => {
                 rank: 0,
                 isActive: user.active,
                 points: 0,
-                previousRank: null
+                previousRank: null,
+                finishedRank: true
             }
         ];
         expect(guessingService.getPlayerRanks()).toEqual(response);
@@ -105,7 +106,8 @@ describe('GuessingService Tests', () => {
                 rank: 1,
                 isActive: user.active,
                 points: 3,
-                previousRank: 0
+                previousRank: 0,
+                finishedRank: true
             },
             {
                 id: user2.id,
@@ -113,7 +115,8 @@ describe('GuessingService Tests', () => {
                 rank: 2,
                 isActive: user.active,
                 points: 2,
-                previousRank: 0
+                previousRank: 0,
+                finishedRank: true
             }
         ];
         expect(guessingService.getPlayerRanks()).toEqual(response);
