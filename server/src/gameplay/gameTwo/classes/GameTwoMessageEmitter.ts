@@ -9,7 +9,8 @@ import {
     GameTwoEventMessage,
     GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED,
     GAME_TWO_EVENT_MESSAGE__GUESS_HINT,
-    GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS
+    GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS,
+    GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS
 } from '../interfaces/GameTwoEventMessages';
 import { GlobalEventMessage } from '../../interfaces/GlobalEventMessages';
 import { IGameStateBase } from '../../interfaces/IGameStateBase';
@@ -45,6 +46,7 @@ export class GameTwoMessageEmitter implements EventMessageEmitter {
                 break;
             // send to screens and controllers
             case GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED:
+            case GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS:
                 screenNameSpace.to(room.id).emit('message', message);
                 controllerNameSpace.to(room.id).emit('message', message);
                 break;

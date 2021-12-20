@@ -10,7 +10,7 @@ import { GameTwoMessageEmitter } from './GameTwoMessageEmitter';
 import { GameStateInfo, PlayerRank } from '../interfaces';
 import {
     GAME_TWO_EVENT_MESSAGE__GUESS_HINT,
-    GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED, GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS
+    GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED, GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS, GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS
 } from './../interfaces/GameTwoEventMessages';
 import { GameTwoPlayerRank } from '../interfaces/GameTwoPlayerRank';
 
@@ -48,6 +48,15 @@ export default class GameTwoEventEmitter {
             roomId,
             userId,
             hint,
+        });
+    }
+
+    public static emitRemainingKills(roomId: string, userId: string, remainingKills: number) {
+        this.GameTwoMessageEmitter.emit({
+            type: GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS,
+            roomId,
+            userId,
+            remainingKills,
         });
     }
 
