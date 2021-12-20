@@ -23,6 +23,7 @@ describe('GameTwo Sheep Tests', () => {
     });
 
     afterEach(() => {
+        jest.clearAllTimers();
         gameTwo.cleanup();
     });
 
@@ -106,8 +107,5 @@ describe('GameTwo Sheep Tests', () => {
         gameTwo.receiveInput(message);
 
         expect(emitRemainingKills).toHaveBeenCalledWith(roomId, users[0].id, Parameters.KILLS_PER_ROUND - 1);
-
-
-
     });
 });

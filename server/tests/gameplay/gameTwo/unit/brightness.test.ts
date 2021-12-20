@@ -7,6 +7,10 @@ describe('Brightness Tests', () => {
         brightness = new Brightness();
     });
 
+    afterEach(() => {
+        jest.clearAllTimers();
+    });
+
     it('should have an initial value of 100', () => {
         expect(brightness.value).toEqual(100);
     });

@@ -20,6 +20,7 @@ describe('GameTwo Unit Tests', () => {
     });
 
     afterEach(() => {
+        jest.clearAllTimers();
         gameTwo.cleanup();
     });
 
