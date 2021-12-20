@@ -57,7 +57,7 @@ export class PhaserGameRenderer {
             ranksText = ranksText.concat(`${i + 1}. ${ranks[i]}\n`);
         }
 
-        // TODO: leaderboard, formatting
+        // TODO: formatting
         const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
         const screenCenterHeight = this.scene.cameras.main.worldView.y + this.scene.cameras.main.height / 2;
         this.playerRanksText = this.scene.make.text({
@@ -67,6 +67,8 @@ export class PhaserGameRenderer {
             style: {
                 ...loadingTextStyleProperties,
                 fontSize: `${20}px`,
+                color: colors.orange,
+                fontStyle: 'bold',
             },
         });
         this.playerRanksText.setOrigin(0.5);
