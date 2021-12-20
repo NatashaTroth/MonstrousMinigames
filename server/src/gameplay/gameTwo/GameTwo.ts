@@ -180,6 +180,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 this.killSheep(message.userId!);
                 break;
             case GameTwoMessageTypes.GUESS:
+                console.info(message)
                 this.handleGuess(message.userId!, message.guess!);
                 break;
             default:
