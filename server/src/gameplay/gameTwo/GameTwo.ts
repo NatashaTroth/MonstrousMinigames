@@ -1,5 +1,6 @@
 import Game from '../Game';
 import Player from '../Player';
+import { GameState } from '../enums';
 import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
 import User from '../../classes/user';
@@ -231,6 +232,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     }
 
     handleGameFinished() {
+        const playerRanks = this.guessingService.getPlayerRanks();
+        GameTwoEventEmitter.emitGameHasFinishedEvent(this.roomId, GameState.Finished, playerRanks);
         return
     }
 
