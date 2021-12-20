@@ -169,6 +169,10 @@ export class PhaserGameRenderer {
     destroyCountdown() {
         this.countdownText?.destroy();
     }
+
+    destroyLeaderboard() {
+        this.playerRanksText?.destroy();
+    }
 }
 
 export function handleRenderCountdown(scene: Scene, countdownText: GameObjectText | undefined, text: string) {

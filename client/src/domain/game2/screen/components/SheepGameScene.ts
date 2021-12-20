@@ -291,6 +291,7 @@ class SheepGameScene extends Phaser.Scene {
         } else if (this.phase == GamePhases.results) {
             //TODO
         } else {
+            this.gameRenderer?.destroyLeaderboard();
             this.sheep.forEach(sheep => {
                 sheep.renderer.setSheepVisible(true);
             });
@@ -300,6 +301,11 @@ class SheepGameScene extends Phaser.Scene {
     updatePlayerRanks(data: PlayerRanksMessage) {
         this.playerRanks = data.playerRanks;
         this.gameRenderer?.renderLeaderboard(this.playerRanks);
+        this.controllerSocket?.emit({
+            type: MessageTypesGame2.playerRanks,
+            roomId: this.roomId,
+            playerRanks: data.playerRanks,
+        });
     }
 
     private createPlayer(index: number, gameStateData: GameData) {
