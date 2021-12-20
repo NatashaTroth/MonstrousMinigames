@@ -299,6 +299,7 @@ class SheepGameScene extends Phaser.Scene {
 
     updatePlayerRanks(data: PlayerRanksMessage) {
         this.playerRanks = data.playerRanks;
+        this.gameRenderer?.renderLeaderboard(this.playerRanks);
     }
 
     private createPlayer(index: number, gameStateData: GameData) {

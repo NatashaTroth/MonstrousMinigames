@@ -3,6 +3,7 @@
 import Phaser, { GameObjects } from 'phaser';
 
 import { depthDictionary } from '../../../config/depthDictionary';
+import { PlayerRank } from '../../../contexts/game2/Game2ContextProvider';
 import { designDevelopment } from '../../../utils/constants';
 import { getRandomInt } from '../../../utils/getRandomInt';
 import MainScene from '../../game1/screen/components/MainScene';
@@ -29,6 +30,7 @@ export class PhaserGameRenderer {
     loadingText?: Phaser.GameObjects.Text;
     percentText?: Phaser.GameObjects.Text;
     assetText?: Phaser.GameObjects.Text; //only for local dev -> to see which assets take long to load
+    playerRanksText?: Phaser.GameObjects.Text;
 
     constructor(private scene: MainScene | SheepGameScene) {
         this.scene = scene;
@@ -40,6 +42,29 @@ export class PhaserGameRenderer {
 
     renderCountdown(text: string) {
         this.countdownText = handleRenderCountdown(this.scene, this.countdownText, text);
+        this.countdownText.setDepth(depthDictionary.player);
+    }
+
+    renderLeaderboard(data: PlayerRank[]) {
+        const ranks: string[] = [];
+        data.forEach(element => {
+            ranks.push(element.name);
+        });
+        const ranksText = `${ranks[0]} in the lead`;
+        // TODO: leaderboard, formatting
+        const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
+        const screenCenterHeight = this.scene.cameras.main.worldView.y + this.scene.cameras.main.height / 2;
+        this.playerRanksText = this.scene.make.text({
+            x: screenCenterWidth,
+            y: screenCenterHeight - this.progressBoxHeight,
+            text: ranksText,
+            style: {
+                ...loadingTextStyleProperties,
+                fontSize: `${20}px`,
+            },
+        });
+        this.playerRanksText.setOrigin(0.5);
+        this.playerRanksText.setDepth(depthDictionary.percentText);
     }
 
     renderLoadingScreen() {
