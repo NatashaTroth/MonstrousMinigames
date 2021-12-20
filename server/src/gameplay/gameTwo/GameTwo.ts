@@ -178,11 +178,11 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 this.movePlayer(message.userId!, message.direction!);
                 break;
             case GameTwoMessageTypes.KILL:
-                console.info(message)
+                // console.info(message)
                 this.killSheep(message.userId!);
                 break;
             case GameTwoMessageTypes.GUESS:
-                console.info(message)
+                // console.info(message)
                 this.handleGuess(message.userId!, message.guess!);
                 break;
             default:
@@ -225,6 +225,13 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             }
             GameTwoEventEmitter.emitPhaseHasChanged(this.roomId, round, phase);
         });
+
+        this.roundEventEmitter.on(RoundEventEmitter.GAME_FINISHED_EVENT, () => this.handleGameFinished());
+
+    }
+
+    handleGameFinished() {
+        return
     }
 
     public cleanup() {
