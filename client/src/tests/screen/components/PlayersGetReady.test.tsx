@@ -116,7 +116,7 @@ describe('Screen PlayersGetReady', () => {
         expect(button).toBeDisabled();
     });
 
-    xit('if start button is clicked the onclick method is called', () => {
+    it('if start button is clicked the onclick method is called', () => {
         const { container } = render(
             <ThemeProvider theme={theme}>
                 <GameContext.Provider value={{ ...defaultValue, connectedUsers, screenAdmin: true, roomId }}>

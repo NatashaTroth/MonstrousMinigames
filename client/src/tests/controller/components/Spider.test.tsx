@@ -16,9 +16,16 @@ import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
 
 configure({ adapter: new Adapter() });
 
-afterEach(cleanup);
+afterEach(() => {
+    jest.clearAllMocks();
+    cleanup();
+});
 
 describe('Spider', () => {
+    window.AudioContext = jest.fn().mockImplementation(() => {
+        return {};
+    });
+
     it('renders a LinearProgressBar', () => {
         const container = mount(
             <ThemeProvider theme={theme}>
