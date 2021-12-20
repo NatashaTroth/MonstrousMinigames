@@ -174,9 +174,11 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     protected handleInput(message: IMessage) {
         switch (message.type) {
             case GameTwoMessageTypes.MOVE:
+                //console.info(message)
                 this.movePlayer(message.userId!, message.direction!);
                 break;
             case GameTwoMessageTypes.KILL:
+                console.info(message)
                 this.killSheep(message.userId!);
                 break;
             case GameTwoMessageTypes.GUESS:

@@ -2,6 +2,7 @@ import { ErrorMessage } from './error';
 import { GameHasFinishedMessage } from './finished';
 import { AllScreensSheepGameLoadedMessage } from './game2/allScreensSheepGameLoaded';
 import { GameStateInfoMessage } from './game2/gameStateInfo';
+import { GuessHintMessage } from './game2/guessHint';
 import { InitialGameStateInfoMessage } from './game2/initialGameStateInfo';
 import { PhaseChangedMessage } from './game2/phaseChanged';
 import { PhaserLoadingTimedOutMessage } from './game2/phaserLoadingTimedOut';
@@ -33,4 +34,5 @@ export type MessageDataGame2 =
     | SheepGameHasStartedMessage
     | PhaseChangedMessage
     | PlayerRanksMessage
+    | GuessHintMessage
     | undefined;
