@@ -1,13 +1,16 @@
 import 'reflect-metadata';
-import GameEventEmitter from '../../../src/classes/GameEventEmitter';
+
+import { leaderboard, roomId, usersWithNumbers } from '../mockData';
 import DI from '../../../src/di';
 import { GameTwo } from '../../../src/gameplay';
+import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED, GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
-import { leaderboard, roomId, users } from '../mockData';
 
 
 let gameTwo: GameTwo;
 let gameEventEmitter: GameEventEmitter;
+const users = usersWithNumbers;
+
 
 const beforeEachFunction = () => {
     jest.spyOn(console, "log").mockImplementation();
