@@ -14,8 +14,8 @@ npm:server:
         - cd server/
         - echo "Running npm ci ..."
         - npm ci
-    except:
-        - /^frontend-.*$/
+    # except:
+    #     - /^frontend-.*$/
 
 lint:server:
     stage: lint
@@ -26,7 +26,7 @@ lint:server:
         - echo "Linting.."
         - npm run lint
     except:
-        - /^frontend-.*$/
+        # - /^frontend-.*$/
         - staging
 
 test-unit:server:
@@ -38,7 +38,7 @@ test-unit:server:
         - echo "Testing.."
         - npm run test:unit
     except:
-        - /^frontend-.*$/
+        # - /^frontend-.*$/
         - staging
 
 test-integration:server:
@@ -51,7 +51,7 @@ test-integration:server:
         - npm run test:integration
         # - ./node_modules/.bin/jest ./
     except:
-        - /^frontend-.*$/
+        # - /^frontend-.*$/
         - staging
 
 tests-other:server:
@@ -64,7 +64,7 @@ tests-other:server:
         - npm run test:other
         # - ./node_modules/.bin/jest ./
     except:
-        - /^frontend-.*$/
+        # - /^frontend-.*$/
         - staging
 
 # --- Deployment ---

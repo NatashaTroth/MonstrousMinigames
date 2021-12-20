@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 
+import { depthDictionary } from '../../../../config/depthDictionary';
+import { GamePhases, PlayerRank } from '../../../../contexts/game2/Game2ContextProvider';
 import sheepSpritesheet from '../../../../images/characters/spritesheets/sheep/sheep_spritesheet.png';
 import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2 } from '../../../../utils/constants';
 import { screenFinishedRoute } from '../../../../utils/routes';
@@ -30,6 +32,7 @@ import {
     PhaserLoadingTimedOutMessage,
     phaserLoadingTimedOutTypeGuard,
 } from '../../../typeGuards/game2/phaserLoadingTimedOut';
+import { PlayerRanksMessage, playerRanksTypeGuard } from '../../../typeGuards/game2/playerRanks';
 import { SheepGameHasStartedMessage, sheepGameStartedTypeGuard } from '../../../typeGuards/game2/started';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
 import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
@@ -42,11 +45,12 @@ class SheepGameScene extends Phaser.Scene {
     windowHeight: number;
     roomId: string;
     socket?: Socket;
+    controllerSocket?: Socket;
     posX: number;
     posY: number;
     players: Array<Player>;
     sheep: Array<Sheep>;
-    phase: 'guessing' | 'counting' | 'results';
+    phase: GamePhases;
     gameStarted: boolean;
     paused: boolean;
     gameRenderer?: PhaserGameRenderer;
@@ -57,6 +61,7 @@ class SheepGameScene extends Phaser.Scene {
     gameToScreenMapper?: GameToScreenMapper;
     firstGameStateReceived: boolean;
     allScreensLoaded: boolean;
+    playerRanks: PlayerRank[];
 
     constructor() {
         super('SheepGameScene');
@@ -67,13 +72,14 @@ class SheepGameScene extends Phaser.Scene {
         this.posY = 0; //TODO get from backend
         this.players = [];
         this.sheep = [];
-        this.phase = 'counting';
+        this.phase = GamePhases.counting;
         this.gameStarted = false;
         this.paused = false;
         this.gameEventEmitter = GameEventEmitter.getInstance();
         this.screenAdmin = false;
         this.firstGameStateReceived = false;
         this.allScreensLoaded = false;
+        this.playerRanks = [];
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
@@ -201,6 +207,11 @@ class SheepGameScene extends Phaser.Scene {
             this.updateGamePhase(data);
         });
 
+        const playerRanksSocket = new MessageSocket(playerRanksTypeGuard, this.socket);
+        playerRanksSocket.listen((data: PlayerRanksMessage) => {
+            this.updatePlayerRanks(data);
+        });
+
         const pausedSocket = new MessageSocket(pausedTypeGuard, this.socket);
         pausedSocket.listen((data: GameHasPausedMessage) => {
             this.pauseGame();
@@ -262,6 +273,7 @@ class SheepGameScene extends Phaser.Scene {
         }
         for (let i = 0; i < this.sheep.length; i++) {
             if (gameStateData.sheep[i]) {
+                this.sheep[i].renderer.moveSheep(gameStateData.sheep[i].posX, gameStateData.sheep[i].posY);
                 if (gameStateData.sheep[i].state && gameStateData.sheep[i].state == SheepState.DECOY) {
                     this.sheep[i].renderer.placeDecoy();
                 } else if (gameStateData.sheep[i].state == SheepState.DEAD) {
@@ -272,10 +284,32 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     updateGamePhase(data: PhaseChangedMessage) {
+        const resultText = this.add.text(
+            window.innerWidth / 2,
+            window.innerHeight / 2,
+            `The correct answer was ${this.sheep.length}`
+        );
+        resultText.setDepth(depthDictionary.player);
+        resultText.setVisible(false);
+
         this.phase = data.phase;
-        if (this.phase == 'guessing') {
-            this.add.rectangle(0, 0, window.innerHeight, window.innerWidth, 0x6666ff);
+        if (this.phase == GamePhases.guessing) {
+            resultText.setVisible(false);
+            this.sheep.forEach(sheep => {
+                sheep.renderer.setSheepVisible(false);
+            });
+        } else if (this.phase == GamePhases.results) {
+            resultText.setVisible(true);
+        } else {
+            this.sheep.forEach(sheep => {
+                resultText.setVisible(false);
+                sheep.renderer.setSheepVisible(true);
+            });
         }
+    }
+
+    updatePlayerRanks(data: PlayerRanksMessage) {
+        this.playerRanks = data.playerRanks;
     }
 
     private createPlayer(index: number, gameStateData: GameData) {
