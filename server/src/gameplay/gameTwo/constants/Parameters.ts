@@ -4,7 +4,7 @@ const COUNTDOWN_TIME = 3000;
 const LENGTH_X = 1800;
 const LENGTH_Y = 700;
 
-const SPEED = 1;
+const SPEED = 2;
 
 const PLAYERS_POSITIONS = [
     {
@@ -39,7 +39,7 @@ type phaseTimes = {
 }
 
 const PHASE_TIMES: phaseTimes = {
-    'counting': 10000,
+    'counting': 100000,
     'guessing': 10000,
     'results': 10000
 }

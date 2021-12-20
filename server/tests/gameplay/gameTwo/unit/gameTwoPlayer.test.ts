@@ -1,4 +1,5 @@
 import GameTwoPlayer from "../../../../src/gameplay/gameTwo/GameTwoPlayer";
+import Parameters from "../../../../src/gameplay/gameTwo/constants/Parameters";
 import { Direction } from "../../../../src/gameplay/gameTwo/enums/Direction";
 
 
@@ -24,38 +25,38 @@ describe('GameTwoPlyer Tests', () => {
         expect(player.posY).toEqual(initialPositionY);
     });
 
-    it('should have a y-pos lower 1 than the initial positon when moving up once', () => {
+    it(`should have a y-pos lower ${Parameters.SPEED} than the initial positon when moving up once`, () => {
         const initialPositionY = player.posY;
 
         player.direction = Direction.UP;
         player.move();
 
-        expect(player.posY).toEqual(initialPositionY - 1);
+        expect(player.posY).toEqual(initialPositionY - Parameters.SPEED);
     });
 
-    it('should have a y-pos higher 1 than the initial positon when moving down once', () => {
+    it(`should have a y-pos higher ${Parameters.SPEED} than the initial positon when moving down once`, () => {
         const initialPositionY = player.posY;
 
         player.direction = Direction.DOWN;
         player.move();
 
-        expect(player.posY).toEqual(initialPositionY + 1);
+        expect(player.posY).toEqual(initialPositionY + Parameters.SPEED);
     });
-    it('should have a x-pos lower 1 than the initial positon when moving left once', () => {
+    it(`should have a x-pos lower ${Parameters.SPEED} than the initial positon when moving left once`, () => {
         const initialPositionX = player.posX;
 
         player.direction = Direction.LEFT;
         player.move();
 
-        expect(player.posX).toEqual(initialPositionX - 1);
+        expect(player.posX).toEqual(initialPositionX - Parameters.SPEED);
     });
-    it('should have a x-pos higher 1 than the initial positon when moving right once', () => {
+    it(`should have a x-pos higher ${Parameters.SPEED} than the initial positon when moving right once`, () => {
         const initialPositionX = player.posX;
 
         player.direction = Direction.RIGHT;
         player.move();
 
-        expect(player.posX).toEqual(initialPositionX + 1);
+        expect(player.posX).toEqual(initialPositionX + Parameters.SPEED);
     });
 
     it('should have higher x and y value on down-right movement', () => {
@@ -65,8 +66,8 @@ describe('GameTwoPlyer Tests', () => {
         player.direction = Direction.DOWN_RIGHT;
         player.move();
 
-        expect(player.posX).toEqual(initialPositionX + 1);
-        expect(player.posY).toEqual(initialPositionY + 1);
+        expect(player.posX).toEqual(initialPositionX + Parameters.SPEED);
+        expect(player.posY).toEqual(initialPositionY + Parameters.SPEED);
     });
 
     it('should have lower x and y value on up-left movement', () => {
@@ -76,8 +77,8 @@ describe('GameTwoPlyer Tests', () => {
         player.direction = Direction.UP_LEFT;
         player.move();
 
-        expect(player.posX).toEqual(initialPositionX - 1);
-        expect(player.posY).toEqual(initialPositionY - 1);
+        expect(player.posX).toEqual(initialPositionX - Parameters.SPEED);
+        expect(player.posY).toEqual(initialPositionY - Parameters.SPEED);
     });
 
     it('should have lower x and higher y value on down-left movement', () => {
@@ -87,8 +88,8 @@ describe('GameTwoPlyer Tests', () => {
         player.direction = Direction.DOWN_LEFT;
         player.move();
 
-        expect(player.posX).toEqual(initialPositionX - 1);
-        expect(player.posY).toEqual(initialPositionY + 1);
+        expect(player.posX).toEqual(initialPositionX - Parameters.SPEED);
+        expect(player.posY).toEqual(initialPositionY + Parameters.SPEED);
     });
 
     it('should have higher x and lower y value on up-right movement', () => {
@@ -98,8 +99,8 @@ describe('GameTwoPlyer Tests', () => {
         player.direction = Direction.UP_RIGHT;
         player.move();
 
-        expect(player.posX).toEqual(initialPositionX + 1);
-        expect(player.posY).toEqual(initialPositionY - 1);
+        expect(player.posX).toEqual(initialPositionX + Parameters.SPEED);
+        expect(player.posY).toEqual(initialPositionY - Parameters.SPEED);
     });
 
     it('should have the initial position after setting player position', () => {
