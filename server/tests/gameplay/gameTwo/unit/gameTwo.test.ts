@@ -1,11 +1,12 @@
 import 'reflect-metadata';
 
-import { leaderboard, roomId, users } from '../../mockData';
+import { leaderboard, roomId, usersWithNumbers } from '../../mockData';
 import { GameTwo } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
 import Parameters from '../../../../src/gameplay/gameTwo/constants/Parameters';
 
 let gameTwo: GameTwo;
+const users = usersWithNumbers;
 
 describe('GameTwo Unit Tests', () => {
     beforeEach(async () => {

@@ -55,11 +55,11 @@ class GameTwoPlayer extends Player {
         this.posY = this.getPlayerPositionY();
     }
     private getPlayerPositionX(): number {
-        return Parameters.PLAYERS_POSITIONS[this.number].x;
+        return Parameters.PLAYERS_POSITIONS[this.number - 1].x;
     }
 
     private getPlayerPositionY(): number {
-        return Parameters.PLAYERS_POSITIONS[this.number].y;
+        return Parameters.PLAYERS_POSITIONS[this.number - 1].y;
     }
 
     public setDirection(direction: string): void {
