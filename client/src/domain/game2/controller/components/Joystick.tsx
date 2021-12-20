@@ -7,7 +7,6 @@ import Button from '../../../../components/common/Button';
 import FullScreenContainer from '../../../../components/common/FullScreenContainer';
 import { Instruction } from '../../../../components/common/Instruction.sc';
 import { ControllerSocketContext } from '../../../../contexts/controller/ControllerSocketContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import { MessageTypesGame2 } from '../../../../utils/constants';
 import { Countdown } from '../../../game1/controller/components/ShakeInstruction.sc';
@@ -23,9 +22,9 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
         sessionStorage.getItem('countdownTime') ? Number(sessionStorage.getItem('countdownTime')) / 1000 : null
     );
 
-    const { roomId } = React.useContext(GameContext);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { userId } = React.useContext(PlayerContext);
+    let direction: string | undefined = 'C';
 
     React.useEffect(() => {
         if (counter !== null && counter !== undefined) {
@@ -49,8 +48,6 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                 return 'W';
             case 'RIGHT':
                 return 'E';
-            case 'CENTER':
-                return 'C';
         }
     }
 
@@ -63,12 +60,24 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
 
     function handleMove(event: IJoystickUpdateEvent) {
         if (event.direction) {
-            controllerSocket.emit({
-                type: MessageTypesGame2.movePlayer,
-                userId: userId,
-                direction: getDirection(event.direction.toString()),
-            });
+            const newDirection = getDirection(event.direction);
+            if (direction != newDirection) {
+                direction = newDirection;
+                controllerSocket.emit({
+                    type: MessageTypesGame2.movePlayer,
+                    userId: userId,
+                    direction: direction,
+                });
+            }
         }
+    }
+
+    function handleStop() {
+        controllerSocket.emit({
+            type: MessageTypesGame2.movePlayer,
+            userId: userId,
+            direction: 'C',
+        });
     }
 
     return (
@@ -85,6 +94,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                                 baseColor="grey"
                                 stickColor="white"
                                 move={handleMove.bind(this)}
+                                stop={handleStop.bind(this)}
                             ></Joystick>
                         </JoystickContainer>
                         <KillSheepButtonContainer>
