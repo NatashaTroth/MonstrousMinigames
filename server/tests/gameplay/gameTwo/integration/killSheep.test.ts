@@ -6,6 +6,8 @@ import Sheep from '../../../../src/gameplay/gameTwo/classes/Sheep';
 import Parameters from '../../../../src/gameplay/gameTwo/constants/Parameters';
 import { GameTwoMessageTypes } from '../../../../src/gameplay/gameTwo/enums/GameTwoMessageTypes';
 import { SheepStates } from '../../../../src/gameplay/gameTwo/enums/SheepStates';
+import GameTwoEventEmitter from '../../../../src/gameplay/gameTwo/classes/GameTwoEventEmitter';
+
 
 let gameTwo: GameTwo;
 const users = usersWithNumbers;
@@ -57,7 +59,7 @@ describe('GameTwo Sheep Tests', () => {
         expect(gameTwo.sheepService.sheep[sheep3.id].state).toEqual(SheepStates.DECOY);
     });
 
-    it('should kill sheep if user has no kills left', async () => {
+    it('should not kill sheep if user has no kills left', async () => {
         if (gameTwo.players.get(users[0].id)) {
             gameTwo.players.get(users[0].id)?.setKillsLeft(0);
         }
@@ -86,5 +88,26 @@ describe('GameTwo Sheep Tests', () => {
             return sheep.state === SheepStates.DECOY;
         })
         expect(decoySheep.length).toEqual(0);
+    });
+
+    it('should not kill sheep if user is not in radius', async () => {
+
+        const sheep = new Sheep(Parameters.PLAYERS_POSITIONS[0].x, Parameters.PLAYERS_POSITIONS[0].y, gameTwo.sheepService.sheep.length);
+        gameTwo.sheepService.sheep.push(sheep);
+
+        const message = {
+            type: GameTwoMessageTypes.KILL,
+            roomId: roomId,
+            userId: users[0].id
+        }
+
+        const emitRemainingKills = jest.spyOn(GameTwoEventEmitter, "emitRemainingKills");
+
+        gameTwo.receiveInput(message);
+
+        expect(emitRemainingKills).toHaveBeenCalledWith(roomId, users[0].id, Parameters.KILLS_PER_ROUND - 1);
+
+
+
     });
 });

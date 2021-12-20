@@ -155,6 +155,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         if (this.roundService.isCountingPhase() && player && player.killsLeft > 0) {
             if (this.sheepService.killSheep(player)) {
                 player.killsLeft--;
+                GameTwoEventEmitter.emitRemainingKills(this.roomId, userId, player.killsLeft);
             }
         }
     }
@@ -212,27 +213,39 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     protected listenToEvents(): void {
         this.roundEventEmitter.on(RoundEventEmitter.PHASE_CHANGE_EVENT, (round: number, phase: string) => {
             if (phase === Phases.COUNTING) {
-                this.setPlayersMoving();
-                this.sheepService.startMoving()
-                this.brightness.start();
+                this.initCountingPhase();
             } else if (phase === Phases.GUESSING) {
-                this.stopPlayersMoving();
-                this.resetPlayerPositions();
-                this.sheepService.stopMoving();
-                this.brightness.stop();
-                this.guessingService.saveSheepCount(round, this.sheepService.getAliveSheepCount());
+                this.initGuessingPhase(round);
             } else if (phase === Phases.RESULTS) {
-                this.guessingService.calculatePlayerRanks();
-                GameTwoEventEmitter.emitPlayerRanks(this.roomId, this.guessingService.getPlayerRanks())
+                this.initResultsPhase();
             }
             GameTwoEventEmitter.emitPhaseHasChanged(this.roomId, round, phase);
         });
 
         this.roundEventEmitter.on(RoundEventEmitter.GAME_FINISHED_EVENT, () => this.handleGameFinished());
-
     }
 
-    handleGameFinished() {
+    protected initCountingPhase(): void {
+        this.setPlayersMoving();
+        this.emitPlayerRemainingKills();
+        this.sheepService.startMoving()
+        this.brightness.start();
+    }
+
+    protected initGuessingPhase(round: number): void {
+        this.stopPlayersMoving();
+        this.resetPlayerPositions();
+        this.sheepService.stopMoving();
+        this.brightness.stop();
+        this.guessingService.saveSheepCount(round, this.sheepService.getAliveSheepCount());
+    }
+
+    protected initResultsPhase(): void {
+        this.guessingService.calculatePlayerRanks();
+        GameTwoEventEmitter.emitPlayerRanks(this.roomId, this.guessingService.getPlayerRanks())
+    }
+
+    protected handleGameFinished(): void {
         const playerRanks = this.guessingService.getPlayerRanks();
 
         this.leaderboard.addGameToHistory(GameType.GameTwo, [...playerRanks]);
@@ -246,14 +259,18 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     }
 
     protected stopPlayersMoving(): void {
-        [...this.players].forEach(player => player[1].moving = false)
+        [...this.players].forEach(player => player[1].moving = false);
     }
 
     protected setPlayersMoving(): void {
-        [...this.players].forEach(player => player[1].moving = true)
+        [...this.players].forEach(player => player[1].moving = true);
     }
 
     protected resetPlayerPositions(): void {
-        [...this.players].forEach(player => player[1].setPlayerPosition())
+        [...this.players].forEach(player => player[1].setPlayerPosition());
+    }
+
+    protected emitPlayerRemainingKills(): void {
+        [...this.players].forEach(player => GameTwoEventEmitter.emitRemainingKills(this.roomId, player[0], player[1].killsLeft));
     }
 }
