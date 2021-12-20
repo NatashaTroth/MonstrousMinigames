@@ -26,6 +26,7 @@ describe('GameTwo Guessing Tests', () => {
     });
 
     afterEach(() => {
+        jest.clearAllTimers();
         gameTwo.cleanup();
     });
 

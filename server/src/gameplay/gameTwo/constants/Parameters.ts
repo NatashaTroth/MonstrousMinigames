@@ -40,7 +40,7 @@ type phaseTimes = {
 
 const PHASE_TIMES: phaseTimes = {
     'counting': 100000,
-    'guessing': 10000,
+    'guessing': 15000,
     'results': 10000
 }
 
