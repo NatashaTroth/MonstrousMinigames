@@ -3,16 +3,19 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import Button from '../../../../components/common/Button';
+import { ControllerSocketContext } from '../../../../contexts/controller/ControllerSocketContextProvider';
+import { Game2Context } from '../../../../contexts/game2/Game2ContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
-import { ScreenSocketContext } from '../../../../contexts/screen/ScreenSocketContextProvider';
 import { MessageTypesGame2 } from '../../../../utils/constants';
+import { Instructions } from '../../../game3/controller/components/Game3Styles.sc';
 
 const GuessInput: React.FunctionComponent = () => {
     const [submitted, setSubmitted] = useState(false);
 
     //const { roomId } = React.useContext(GameContext);
     const { userId } = React.useContext(PlayerContext);
-    const { screenSocket } = React.useContext(ScreenSocketContext);
+    const { controllerSocket } = React.useContext(ControllerSocketContext);
+    const { guessHint } = React.useContext(Game2Context);
 
     let userGuess = 0;
 
@@ -24,7 +27,7 @@ const GuessInput: React.FunctionComponent = () => {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setSubmitted(true);
-        screenSocket?.emit({
+        controllerSocket?.emit({
             type: MessageTypesGame2.guess,
             userId: userId,
             guess: userGuess,
@@ -48,6 +51,7 @@ const GuessInput: React.FunctionComponent = () => {
                 ) : (
                     <Button type="submit">Submit</Button>
                 )}
+                <Instructions>{guessHint}</Instructions>
             </form>
         </Container>
     );

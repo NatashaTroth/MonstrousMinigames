@@ -31,7 +31,7 @@ export interface GameTwoPlayerRanks {
     playerRanks: GameTwoPlayerRank[];
 }
 
-export interface GameTwoIPhaseHasChanged {
+export interface GameTwoPhaseHasChanged {
     type: typeof GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED;
     roomId: string;
     round: number;
@@ -41,6 +41,6 @@ export interface GameTwoIPhaseHasChanged {
 
 export type GameTwoEventMessage =
     | GameTwoInitialGameState
-    | GameTwoIPhaseHasChanged
+    | GameTwoPhaseHasChanged
     | GameTwoGuessHint
     | GameTwoPlayerRanks;
