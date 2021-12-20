@@ -1,10 +1,12 @@
 import Game from '../Game';
 import Player from '../Player';
+import { GameState } from '../enums';
 import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
 import User from '../../classes/user';
 import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
+import { GameType } from '../leaderboard/enums/GameType';
 
 import GameTwoPlayer from './GameTwoPlayer';
 import { GameStateInfo } from './interfaces';
@@ -178,11 +180,11 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 this.movePlayer(message.userId!, message.direction!);
                 break;
             case GameTwoMessageTypes.KILL:
-                console.info(message)
+                // console.info(message)
                 this.killSheep(message.userId!);
                 break;
             case GameTwoMessageTypes.GUESS:
-                console.info(message)
+                // console.info(message)
                 this.handleGuess(message.userId!, message.guess!);
                 break;
             default:
@@ -225,6 +227,18 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             }
             GameTwoEventEmitter.emitPhaseHasChanged(this.roomId, round, phase);
         });
+
+        this.roundEventEmitter.on(RoundEventEmitter.GAME_FINISHED_EVENT, () => this.handleGameFinished());
+
+    }
+
+    handleGameFinished() {
+        const playerRanks = this.guessingService.getPlayerRanks();
+
+        this.leaderboard.addGameToHistory(GameType.GameTwo, [...playerRanks]);
+        this.gameState = GameState.Finished;
+
+        GameTwoEventEmitter.emitGameHasFinishedEvent(this.roomId, this.gameState, playerRanks);
     }
 
     public cleanup() {
