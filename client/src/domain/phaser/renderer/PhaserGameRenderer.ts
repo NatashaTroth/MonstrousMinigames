@@ -50,7 +50,13 @@ export class PhaserGameRenderer {
         data.forEach(element => {
             ranks.push(element.name);
         });
-        const ranksText = `${ranks[0]} in the lead`;
+
+        let ranksText = `LEADERBOARD\n`;
+
+        for (let i = 0; i < ranks.length; i++) {
+            ranksText = ranksText.concat(`${i + 1}. ${ranks[i]}\n`);
+        }
+
         // TODO: leaderboard, formatting
         const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
         const screenCenterHeight = this.scene.cameras.main.worldView.y + this.scene.cameras.main.height / 2;
