@@ -36,25 +36,9 @@ export class PhaserSheepRenderer {
         }
     }
 
-    moveSheep(plusX?: number, plusY?: number) {
-        if (plusY) {
-            if (plusY > 0) {
-                //this.sheep?.play('sheep_walkForward');
-            }
-            if (plusY < 0) {
-                //this.sheep?.play('sheep_walkBack');
-            }
-            this.sheep?.setY(this.sheep?.y + plusY);
-        }
-        if (plusX) {
-            if (plusX > 0) {
-                //this.sheep?.play('sheep_walkRight');
-            }
-            if (plusX < 0) {
-                //this.sheep?.play('sheep_walkLeft');
-            }
-            this.sheep?.setX(this.sheep?.x + plusX);
-        }
+    moveSheep(posX?: number, posY?: number) {
+        this.sheep?.setY(posY);
+        this.sheep?.setX(posX);
     }
 
     destroySheep() {
