@@ -10,14 +10,11 @@ import { GameOneEventMessageEmitter } from './gameplay/gameOne/GameOneEventMessa
 import { GameThreeEventMessageEmitter } from './gameplay/gameThree/GameThreeEventMessageEmitter';
 import { GameTwoMessageEmitter } from './gameplay/gameTwo/classes/GameTwoMessageEmitter';
 
-function initApp(port = 5000): App {
-    // *************** Env ********************
-    const PORT = port;
-    const roomCount: number = parseInt(`${process.env.ROOM_COUNT}`, 10) || 1000;
+function initApp(port = 5000, roomCount = 1000): App {
 
     // *************** DI Configs *************
     DI.register(DI_ROOM_NUMBER, { useValue: roomCount });
-    DI.register(DI_EXPRESS_PORT, { useValue: PORT });
+    DI.register(DI_EXPRESS_PORT, { useValue: port });
     DI.register(DI_CRON_JOB_CLEANUP, { useValue: Globals.CRON_JOB_CLEANUP });
 
     // *************** Event Messengers *******

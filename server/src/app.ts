@@ -7,7 +7,6 @@ dotenv.config({
     path: '.env',
 });
 
-const port = Number(process.env.PORT);
-
+const port: number = parseInt(`${process.env.PORT}`, 10) || 5000;
 const app = initApp(port);
 app.run();
