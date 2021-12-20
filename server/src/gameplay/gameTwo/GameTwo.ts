@@ -227,6 +227,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     protected initCountingPhase(): void {
         this.setPlayersMoving();
+        this.emitPlayerRemainingKills();
         this.sheepService.startMoving()
         this.brightness.start();
     }
@@ -258,14 +259,18 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     }
 
     protected stopPlayersMoving(): void {
-        [...this.players].forEach(player => player[1].moving = false)
+        [...this.players].forEach(player => player[1].moving = false);
     }
 
     protected setPlayersMoving(): void {
-        [...this.players].forEach(player => player[1].moving = true)
+        [...this.players].forEach(player => player[1].moving = true);
     }
 
     protected resetPlayerPositions(): void {
-        [...this.players].forEach(player => player[1].setPlayerPosition())
+        [...this.players].forEach(player => player[1].setPlayerPosition());
+    }
+
+    protected emitPlayerRemainingKills(): void {
+        [...this.players].forEach(player => GameTwoEventEmitter.emitRemainingKills(this.roomId, player[0], player[1].killsLeft));
     }
 }
