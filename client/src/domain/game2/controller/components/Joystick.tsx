@@ -62,6 +62,8 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
     }
 
     function handleMove(event: IJoystickUpdateEvent) {
+        // eslint-disable-next-line no-console
+        console.log(event.direction);
         if (event.direction) {
             controllerSocket.emit({
                 type: MessageTypesGame2.movePlayer,
@@ -69,6 +71,16 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                 direction: getDirection(event.direction.toString()),
             });
         }
+    }
+
+    function handleStop() {
+        // eslint-disable-next-line no-console
+        console.log('C');
+        controllerSocket.emit({
+            type: MessageTypesGame2.movePlayer,
+            userId: userId,
+            direction: 'C',
+        });
     }
 
     return (
@@ -85,6 +97,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                                 baseColor="grey"
                                 stickColor="white"
                                 move={handleMove.bind(this)}
+                                stop={handleStop.bind(this)}
                             ></Joystick>
                         </JoystickContainer>
                         <KillSheepButtonContainer>
