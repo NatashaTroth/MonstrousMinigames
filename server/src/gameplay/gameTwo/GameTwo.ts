@@ -29,13 +29,13 @@ interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateIn
 export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implements GameTwoGameInterface {
     public lengthX: number;
     public lengthY: number;
-    countdownTime = Parameters.COUNTDOWN_TIME;
     public sheepService: SheepService;
     private roundService: RoundService;
     private roundEventEmitter: RoundEventEmitter;
     private guessingService: GuessingService;
-    private brightness: Brightness
+    private brightness: Brightness;
 
+    countdownTime = Parameters.COUNTDOWN_TIME;
     gameName = GameNames.GAME2;
 
     constructor(roomId: string, public leaderboard: Leaderboard) {
@@ -95,6 +95,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         return;
     }
 
+    // *************** game events *************
+
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
         this.resetPlayerPositions();
@@ -144,6 +146,47 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.cleanup();
     }
 
+    disconnectPlayer(userId: string) {
+        if (super.disconnectPlayer(userId)) {
+            GameTwoEventEmitter.emitPlayerHasDisconnected(this.roomId, userId);
+            return true;
+        }
+
+        return false;
+    }
+
+    reconnectPlayer(userId: string) {
+        if (super.reconnectPlayer(userId)) {
+            GameTwoEventEmitter.emitPlayerHasReconnected(this.roomId, userId);
+            return true;
+        }
+        return false;
+    }
+
+    public cleanup() {
+        this.roundEventEmitter.removeAllListeners();
+    }
+
+    // *************** input messages *************
+    protected handleInput(message: IMessage) {
+        switch (message.type) {
+            case GameTwoMessageTypes.MOVE:
+                //console.info(message)
+                this.movePlayer(message.userId!, message.direction!);
+                break;
+            case GameTwoMessageTypes.KILL:
+                // console.info(message)
+                this.killSheep(message.userId!);
+                break;
+            case GameTwoMessageTypes.GUESS:
+                // console.info(message)
+                this.handleGuess(message.userId!, message.guess!);
+                break;
+            default:
+                console.info(message);
+        }
+    }
+
     protected movePlayer(userId: string, direction: string) {
         const player = this.players.get(userId)!;
         if (this.roundService.isCountingPhase() && player) {
@@ -174,41 +217,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     }
 
-    protected handleInput(message: IMessage) {
-        switch (message.type) {
-            case GameTwoMessageTypes.MOVE:
-                //console.info(message)
-                this.movePlayer(message.userId!, message.direction!);
-                break;
-            case GameTwoMessageTypes.KILL:
-                // console.info(message)
-                this.killSheep(message.userId!);
-                break;
-            case GameTwoMessageTypes.GUESS:
-                // console.info(message)
-                this.handleGuess(message.userId!, message.guess!);
-                break;
-            default:
-                console.info(message);
-        }
-    }
-
-    disconnectPlayer(userId: string) {
-        if (super.disconnectPlayer(userId)) {
-            GameTwoEventEmitter.emitPlayerHasDisconnected(this.roomId, userId);
-            return true;
-        }
-
-        return false;
-    }
-
-    reconnectPlayer(userId: string) {
-        if (super.reconnectPlayer(userId)) {
-            GameTwoEventEmitter.emitPlayerHasReconnected(this.roomId, userId);
-            return true;
-        }
-        return false;
-    }
+    // *************** phases *************
 
     protected listenToEvents(): void {
         this.roundEventEmitter.on(RoundEventEmitter.PHASE_CHANGE_EVENT, (round: number, phase: string) => {
@@ -254,9 +263,9 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         GameTwoEventEmitter.emitGameHasFinishedEvent(this.roomId, this.gameState, playerRanks);
     }
 
-    public cleanup() {
-        this.roundEventEmitter.removeAllListeners();
-    }
+
+
+    // *************** players *************
 
     protected stopPlayersMoving(): void {
         [...this.players].forEach(player => player[1].moving = false);
