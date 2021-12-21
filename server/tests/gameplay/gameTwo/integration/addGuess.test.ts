@@ -26,6 +26,7 @@ describe('GameTwo Guessing Tests', () => {
     });
 
     afterEach(() => {
+        jest.clearAllTimers();
         gameTwo.cleanup();
     });
 
@@ -94,9 +95,11 @@ describe('GameTwo Guessing Tests', () => {
             guess: 10
         }
 
-
         jest.useFakeTimers();
+        console.info(gameTwo.getGameStateInfo().phase)
         jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.COUNTING] + 10)
+        console.info(gameTwo.getGameStateInfo().phase)
+
         gameTwo.receiveInput(message);
 
         message = {

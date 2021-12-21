@@ -64,6 +64,7 @@ export default class RoundService {
         this.timer.stop();
         if (this.phase === Phases.RESULTS) {
             if (!this.nextRound()) {
+                this.emitGameFinished();
                 return;
             }
         }
@@ -90,6 +91,10 @@ export default class RoundService {
 
     private emitRoundChange(): void {
         this.roundEventEmitter.emit(RoundEventEmitter.PHASE_CHANGE_EVENT, this.round, this.phase);
+    }
+
+    private emitGameFinished(): void {
+        this.roundEventEmitter.emit(RoundEventEmitter.GAME_FINISHED_EVENT);
     }
 
 

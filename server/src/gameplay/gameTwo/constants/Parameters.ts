@@ -4,7 +4,7 @@ const COUNTDOWN_TIME = 3000;
 const LENGTH_X = 1800;
 const LENGTH_Y = 700;
 
-const SPEED = 1;
+const SPEED = 2;
 
 const PLAYERS_POSITIONS = [
     {
@@ -29,7 +29,7 @@ const MARGIN = 20;
 
 const SHEEP_COUNT = 50;
 
-const KILL_RADIUS = 5;
+const KILL_RADIUS = 50;
 const KILLS_PER_ROUND = 5;
 
 const ROUNDS = 3;
@@ -39,8 +39,8 @@ type phaseTimes = {
 }
 
 const PHASE_TIMES: phaseTimes = {
-    'counting': 10000,
-    'guessing': 10000,
+    'counting': 20000,
+    'guessing': 15000,
     'results': 10000
 }
 

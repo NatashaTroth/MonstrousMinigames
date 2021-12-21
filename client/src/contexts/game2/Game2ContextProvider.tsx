@@ -30,6 +30,11 @@ export const defaultValue = {
         // do nothing
     },
 
+    guessHint: '',
+    setGuessHint: () => {
+        // do nothing
+    },
+
     phase: GamePhases.counting,
     setPhase: () => {
         // do nothing
@@ -46,6 +51,8 @@ interface Game2ContextProps {
     setPlayerRanks: (playerRanks: PlayerRank[]) => void;
     phase: GamePhases;
     setPhase: (val: GamePhases) => void;
+    guessHint: string;
+    setGuessHint: (val: string) => void;
     resetGame2: () => void;
 }
 
@@ -53,16 +60,21 @@ export const Game2Context = React.createContext<Game2ContextProps>(defaultValue)
 
 const Game2ContextProvider: React.FunctionComponent = ({ children }) => {
     const [phase, setPhase] = React.useState<GamePhases>(defaultValue.phase);
+    const [guessHint, setGuessHint] = React.useState<string>(defaultValue.guessHint);
     const [playerRanks, setPlayerRanks] = React.useState<PlayerRank[]>(defaultValue.playerRanks);
 
     const content = {
         phase,
         setPhase,
 
+        guessHint,
+        setGuessHint,
+
         playerRanks,
         setPlayerRanks,
 
         resetGame2: () => {
+            setGuessHint(defaultValue.guessHint);
             setPhase(defaultValue.phase);
             setPlayerRanks(defaultValue.playerRanks);
         },
