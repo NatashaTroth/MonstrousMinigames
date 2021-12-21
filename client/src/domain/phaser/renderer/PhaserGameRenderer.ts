@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 //TODO can be used by all phaser games!!
 
 import Phaser, { GameObjects } from 'phaser';
@@ -45,6 +46,7 @@ export class PhaserGameRenderer {
     renderLoadingScreen() {
         //progress bar: https://gamedevacademy.org/creating-a-preloading-screen-in-phaser-3/?a=13#Loading_Our_Assets
 
+        console.log('Rendering loading screen');
         //loading bar
         this.progressBar = this.scene.add.graphics();
         this.progressBox = this.scene.add.graphics();

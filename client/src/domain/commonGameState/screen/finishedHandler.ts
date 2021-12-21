@@ -19,7 +19,7 @@ export const finishedHandler = messageHandler(finishedTypeGuard, (message, depen
     const { setFinished, setPlayerRanks, history } = dependencies;
     setFinished(true);
     setPlayerRanks(message.data.playerRanks);
-    history.push(screenFinishedRoute(roomId));
+    history.push(screenFinishedRoute(roomId)); //TODO
 });
 
 export const useFinishedHandler = (socket: Socket, handler = finishedHandler) => {

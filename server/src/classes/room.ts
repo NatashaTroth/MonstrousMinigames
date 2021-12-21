@@ -1,19 +1,16 @@
 import {
-    CannotStartEmptyGameError,
-    CharacterNotAvailableError,
-    GameAlreadyStartedError,
-    UsersNotReadyError,
+    CannotStartEmptyGameError, CharacterNotAvailableError, GameAlreadyStartedError,
+    UsersNotReadyError
 } from '../customErrors';
-import { GameOne, GameTwo } from '../gameplay';
 import { GameNames } from '../enums/gameNames';
 import { Globals } from '../enums/globals';
 import { ScreenStates } from '../enums/screenStates';
-import Game from '../gameplay/Game';
+import { GameOne, GameTwo } from '../gameplay';
 import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
-import { ScreenInfo } from '../interfaces/interfaces';
+import Game from '../gameplay/Game';
 import GameThree from '../gameplay/gameThree/GameThree';
 import Leaderboard from '../gameplay/leaderboard/Leaderboard';
-
+import { ScreenInfo } from '../interfaces/interfaces';
 import User from './user';
 
 class Room {
@@ -21,7 +18,7 @@ class Room {
     public users: Array<User>;
     public timestamp: number;
     public game: Game;
-    private state: RoomStates;
+    public state: RoomStates; //TODO make private again
     public leaderboard: Leaderboard;
     public screenState: string;
     public screens: Array<ScreenInfo>;
@@ -142,17 +139,18 @@ class Room {
     }
 
     public createNewGame() {
+        console.log('start creating new game');
         if (this.users.length === 0) {
             throw new CannotStartEmptyGameError();
         }
         if (this.hasNotReadyUsers()) {
             throw new UsersNotReadyError();
         }
-
         this.setState(RoomStates.CREATED);
 
         this.game.createNewGame(this.users);
         this.updateTimestamp();
+        console.log('creating');
     }
 
     public allPhaserGamesReady() {

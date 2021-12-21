@@ -1,16 +1,17 @@
-import Phaser from "phaser";
+/* eslint-disable no-console */
+import Phaser from 'phaser';
 
-import { depthDictionary } from "../../../../config/depthDictionary";
-import { fireworkFlares } from "../../../game1/screen/components/GameAssets";
-import MainScene from "../../../game1/screen/components/MainScene";
-import { moveLanesToCenter } from "../../../game1/screen/gameState/moveLanesToCenter";
-import * as colors from "../../colors";
-import { Character, CharacterAnimation } from "../../gameInterfaces";
-import { CharacterAnimationFrames } from "../../gameInterfaces/Character";
-import { Coordinates } from "../../gameTypes";
-import { Scene } from "../../Scene";
-import { SpriteWithDynamicBody } from "../../SpriteWithDynamicBody";
-import { sharedTextStyleProperties } from "../../textStyleProperties";
+import { depthDictionary } from '../../../../config/depthDictionary';
+import { fireworkFlares } from '../../../game1/screen/components/GameAssets';
+import MainScene from '../../../game1/screen/components/MainScene';
+import { moveLanesToCenter } from '../../../game1/screen/gameState/moveLanesToCenter';
+import * as colors from '../../colors';
+import { Character, CharacterAnimation } from '../../gameInterfaces';
+import { CharacterAnimationFrames } from '../../gameInterfaces/Character';
+import { Coordinates } from '../../gameTypes';
+import { Scene } from '../../Scene';
+import { SpriteWithDynamicBody } from '../../SpriteWithDynamicBody';
+import { sharedTextStyleProperties } from '../../textStyleProperties';
 
 /**
  * this is an incomplete PlayerRenderer adapter which contains all the phaser logic. This class might only be tested via
@@ -39,6 +40,7 @@ export class PhaserPlayerRenderer {
         private numberPlayers: number,
         private laneHeightsPerNumberPlayers: number[]
     ) {
+        console.log('New phaser renderer');
         this.obstacles = [];
         this.skippedObstacles = [];
         this.particles = [];
@@ -99,6 +101,8 @@ export class PhaserPlayerRenderer {
 
             i++;
         }
+        // eslint-disable-next-line no-console
+        console.log(this.backgroundElements);
     }
 
     private calcWidthKeepAspectRatio(bg: Phaser.GameObjects.Image | Phaser.GameObjects.TileSprite, laneHeight: number) {
