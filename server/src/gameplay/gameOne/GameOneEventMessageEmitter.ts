@@ -1,15 +1,17 @@
 import { singleton } from 'tsyringe';
 
+import Game from '../Game';
+import Player from '../Player';
+import { GlobalEventMessage } from '../interfaces/GlobalEventMessages';
+import { IGameStateBase } from '../interfaces/IGameStateBase';
 import GameEventEmitter from '../../classes/GameEventEmitter';
 import Room from '../../classes/room';
 import User from '../../classes/user';
 import { EventMessage } from '../../interfaces/EventMessage';
 import { EventMessageEmitter } from '../../interfaces/EventMessageEmitter';
-import Game from '../Game';
-import { GlobalEventMessage } from '../interfaces/GlobalEventMessages';
-import { IGameStateBase } from '../interfaces/IGameStateBase';
-import Player from '../Player';
+
 import { NamespaceAdapter } from './interfaces';
+
 import {
     GAME_ONE_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE,
     GAME_ONE_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE_ONCE,
@@ -71,5 +73,8 @@ export class GameOneEventMessageEmitter implements EventMessageEmitter {
                 screenNameSpace.to(room.id).emit('message', message);
                 break;
         }
+    }
+    removeAllListeners(): void {
+        this.gameEventEmitter.removeAllListeners();
     }
 }

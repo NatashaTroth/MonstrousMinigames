@@ -60,4 +60,7 @@ export class GameTwoMessageEmitter implements EventMessageEmitter {
                 break;
         }
     }
+    removeAllListeners(): void {
+        this.gameEventEmitter.removeAllListeners();
+    }
 }
