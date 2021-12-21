@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../domain/socket/InMemorySocketFake';
 import { Socket } from '../../domain/socket/Socket';
 import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
 import { Routes } from '../../utils/routes';
@@ -39,7 +39,7 @@ export interface PlayerRank {
 }
 
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {
-    const [screenSocket, setScreenSocket] = React.useState<Socket>(new InMemorySocketFake());
+    const [screenSocket, setScreenSocket] = React.useState<Socket>(new FakeInMemorySocket());
 
     useGameHandler(screenSocket);
     useGame1Handler(screenSocket);

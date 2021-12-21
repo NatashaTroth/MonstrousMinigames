@@ -5,7 +5,7 @@ import {
     connectedUsersHandler,
     useConnectedUsersHandler,
 } from '../../../domain/commonGameState/controller/connectedUsersHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { ConnectedUsersMessage } from '../../../domain/typeGuards/connectedUsers';
 import { MessageTypes } from '../../../utils/constants';
 
@@ -29,7 +29,7 @@ describe('connectedUsersHandler', () => {
     it('when ConnectedUsersMessage is emitted, handed setAvailableCharacters should be called', async () => {
         const setAvailableCharacters = jest.fn();
         const setConnectedUsers = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = connectedUsersHandler({ setAvailableCharacters, setConnectedUsers });
         withDependencies(socket, roomId);
@@ -42,7 +42,7 @@ describe('connectedUsersHandler', () => {
     it('when ConnectedUsersMessage is emitted, handed setConnectedUsers should be called', async () => {
         const setAvailableCharacters = jest.fn();
         const setConnectedUsers = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = connectedUsersHandler({ setAvailableCharacters, setConnectedUsers });
         withDependencies(socket, roomId);
@@ -55,7 +55,7 @@ describe('connectedUsersHandler', () => {
     it('when ConnectedUsersMessage is emitted, handed setConnectedUsers should be called with empty array', async () => {
         const setAvailableCharacters = jest.fn();
         const setConnectedUsers = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = connectedUsersHandler({ setAvailableCharacters, setConnectedUsers });
         withDependencies(socket, roomId);
@@ -77,7 +77,7 @@ describe('useConnectedUsersHandler', () => {
 
     it('handed handler should be called', () => {
         const connectedUsersHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -92,7 +92,7 @@ describe('useConnectedUsersHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const connectedUsersHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useConnectedUsersHandler(socket, connectedUsersHandler));
 

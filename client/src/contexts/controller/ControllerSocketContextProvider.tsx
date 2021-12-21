@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import history from '../../domain/history/history';
-import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../domain/socket/InMemorySocketFake';
 import { Socket } from '../../domain/socket/Socket';
 import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
 import { controllerChooseCharacterRoute } from '../../utils/routes';
@@ -12,7 +12,7 @@ import { useGame3Handler } from './useGame3Handler';
 import { useGameHandler } from './useGameHandler';
 
 export const defaultValue = {
-    controllerSocket: new InMemorySocketFake(),
+    controllerSocket: new FakeInMemorySocket(),
     handleSocketConnection: () => {
         // do nothing
     },
@@ -35,7 +35,7 @@ const ControllerSocketContextProvider: React.FunctionComponent<ControllerSocketC
 }) => {
     const { setRoomId } = React.useContext(GameContext);
 
-    const [controllerSocket, setControllerSocket] = React.useState<Socket>(new InMemorySocketFake());
+    const [controllerSocket, setControllerSocket] = React.useState<Socket>(new FakeInMemorySocket());
 
     useGameHandler(controllerSocket);
     useGame1Handler(controllerSocket, permission);

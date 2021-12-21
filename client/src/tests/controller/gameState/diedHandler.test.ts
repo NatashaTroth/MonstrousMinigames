@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import React from 'react';
 
 import { diedHandler, useDiedHandler } from '../../../domain/game1/controller/gameState/diedHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { PlayerDiedMessage } from '../../../domain/typeGuards/game1/playerDied';
 import { MessageTypesGame1 } from '../../../utils/constants';
 
@@ -22,7 +22,7 @@ describe('diedHandler', () => {
     });
 
     it('handed playerDied should be called with true', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const withDependencies = diedHandler({
             setPlayerDead,
             setPlayerRank,
@@ -36,7 +36,7 @@ describe('diedHandler', () => {
     });
 
     it('handed setPlayerRank should be called with passed rank', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const withDependencies = diedHandler({
             setPlayerDead,
             setPlayerRank,
@@ -59,7 +59,7 @@ describe('useDiedHandler', () => {
 
     it('handed handler should be called', () => {
         const diedHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -74,7 +74,7 @@ describe('useDiedHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const diedHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useDiedHandler(socket, diedHandler));
 

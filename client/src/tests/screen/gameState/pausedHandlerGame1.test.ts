@@ -1,5 +1,5 @@
 import { pausedHandler } from '../../../domain/game1/screen/gameState/pausedHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasPausedMessage } from '../../../domain/typeGuards/paused';
 import { MessageTypes } from '../../../utils/constants';
 
@@ -9,7 +9,7 @@ describe('pauseHandler Game1', () => {
     };
 
     it('when message type is gameHasPaused, music pause should be called', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const pauseMusic = jest.fn();
 
         const scene = {

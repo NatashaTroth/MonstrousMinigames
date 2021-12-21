@@ -20,32 +20,35 @@ export class RemoteStorageAdapter implements RemoteStorage {
     }
 
     async deleteImages(path: string) {
-        deleteFolderContents(path, this.storage);
+        await deleteFolderContents(path, this.storage);
     }
 }
 
-function deleteFolderContents(path: string, storage: FirebaseStorage) {
+async function deleteFolderContents(path: string, storage: FirebaseStorage) {
     const storageRef = ref(storage, path);
-    listAll(storageRef)
-        .then(dir => {
-            dir.items.forEach(fileRef => {
-                deleteFile(storageRef.fullPath, fileRef.name, storage);
-            });
-            dir.prefixes.forEach(folderRef => {
-                deleteFolderContents(folderRef.fullPath, storage);
-            });
-        })
-        .catch(error => {
-            // eslint-disable-next-line no-console
-            console.log(error);
-        });
+    try {
+        const dir = await listAll(storageRef);
+        await Promise.all(
+            dir.items.map(fileRef => {
+                return deleteFile(storageRef.fullPath, fileRef.name, storage);
+            })
+        );
+        await Promise.all(
+            dir.prefixes.map(folderRef => {
+                return deleteFolderContents(folderRef.fullPath, storage);
+            })
+        );
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+    }
 }
 
-function deleteFile(pathToFile: string, fileName: string, storage: FirebaseStorage) {
+async function deleteFile(pathToFile: string, fileName: string, storage: FirebaseStorage) {
     const childRef = ref(storage, `${pathToFile}/${fileName}`);
 
     // Delete the file
-    deleteObject(childRef).catch(error => {
+    await deleteObject(childRef).catch(error => {
         // eslint-disable-next-line no-console
         console.log(error);
     });

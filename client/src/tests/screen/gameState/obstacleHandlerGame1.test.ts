@@ -3,7 +3,7 @@ import {
     obstacleSkippedHandler,
     obstacleWillBeSolvedHandler,
 } from '../../../domain/game1/screen/gameState/obstacleHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { ApproachingSolvableObstacleOnceMessage } from '../../../domain/typeGuards/game1/approachingSolvableObstacleOnceTypeGuard';
 import { ObstacleSkippedMessage } from '../../../domain/typeGuards/game1/obstacleSkipped';
 import { ObstacleWillBeSolvedMessage } from '../../../domain/typeGuards/game1/obstacleWillBeSolved';
@@ -19,7 +19,7 @@ describe('approachingObstacleHandler Game1', () => {
     };
 
     it('when message type is approachingSolvableObstacleOnce, handleApproachingObstacle pause should be called', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const handleApproachingObstacle = jest.fn();
 
         const players = [
@@ -48,7 +48,7 @@ describe('obstacleSkippedHandler Game1', () => {
     };
 
     it('when message type is obstacleSkipped, handleObstacleSkipped pause should be called', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const handleObstacleSkipped = jest.fn();
 
         const players = [
@@ -77,7 +77,7 @@ describe('obstacleWillBeSolvedHandler Game1', () => {
     };
 
     it('when message type is obstacleWillBeSolved, destroyWarningIcon pause should be called', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const destroyWarningIcon = jest.fn();
 
         const players = [

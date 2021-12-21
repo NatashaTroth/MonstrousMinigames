@@ -6,7 +6,7 @@ import {
     leaderboardStateHandler,
     useLeaderboardStateHandler,
 } from '../../../domain/commonGameState/screen/leaderboardStateHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { LeaderboardStateMessage } from '../../../domain/typeGuards/leaderboardState';
 import { MessageTypes } from '../../../utils/constants';
 
@@ -46,7 +46,7 @@ describe('leaderboardStateHandler', () => {
 
     it('when LeaderboardStateMessage is written, setLeaderboardState should be called', async () => {
         const setLeaderboardState = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = leaderboardStateHandler({ setLeaderboardState });
         withDependencies(socket, roomId);
@@ -66,7 +66,7 @@ describe('useLeaderboardStateHandler', () => {
 
     it('handed handler should be called', () => {
         const leaderboardStateHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -81,7 +81,7 @@ describe('useLeaderboardStateHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const leaderboardStateHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useLeaderboardStateHandler(socket, leaderboardStateHandler));
 

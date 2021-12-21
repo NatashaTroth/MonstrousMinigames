@@ -1,5 +1,5 @@
 import { resumeHandler } from '../../../domain/game1/screen/gameState/resumeHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasResumedMessage } from '../../../domain/typeGuards/resumed';
 import { MessageTypes } from '../../../utils/constants';
 
@@ -9,7 +9,7 @@ describe('resumeHandler Game1', () => {
     };
 
     it('when message type is gameHasResumed, music resume should be called', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const resumeMusic = jest.fn();
 
         const scene = {

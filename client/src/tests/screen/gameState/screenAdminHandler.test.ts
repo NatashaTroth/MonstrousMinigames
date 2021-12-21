@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import React from 'react';
 
 import { screenAdminHandler, useScreenAdminHandler } from '../../../domain/commonGameState/screen/screenAdminHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { ScreenAdminMessage } from '../../../domain/typeGuards/screenAdmin';
 import { MessageTypes } from '../../../utils/constants';
 
@@ -15,7 +15,7 @@ describe('screenAdminHandler', () => {
 
     it('when ScreenAdminMessage is written, setScreenAdmin should be called', async () => {
         const setScreenAdmin = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = screenAdminHandler({ setScreenAdmin });
         withDependencies(socket, roomId);
@@ -35,7 +35,7 @@ describe('useScreenAdminHandler', () => {
 
     it('handed handler should be called', () => {
         const screenAdminHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -50,7 +50,7 @@ describe('useScreenAdminHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const screenAdminHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useScreenAdminHandler(socket, screenAdminHandler));
 

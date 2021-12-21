@@ -6,7 +6,7 @@ import {
     startPhaserGameHandler,
     useStartPhaserGameHandler,
 } from '../../../domain/game1/screen/gameState/startPhaserGameHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { StartPhaserGameMessage } from '../../../domain/typeGuards/startPhaserGame';
 import { MessageTypesGame1 } from '../../../utils/constants';
 import { screenGame1Route } from '../../../utils/routes';
@@ -20,7 +20,7 @@ describe('startPhaserGameHandler', () => {
     it('when phaser game has started, history push should be called', async () => {
         const history = createMemoryHistory();
         const setGameStarted = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = startPhaserGameHandler({ history, setGameStarted });
 
@@ -33,7 +33,7 @@ describe('startPhaserGameHandler', () => {
     it('handed setGameStarted should be called with true', async () => {
         const history = createMemoryHistory();
         const setGameStarted = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = startPhaserGameHandler({ history, setGameStarted });
 
@@ -53,7 +53,7 @@ describe('useStartPhaserGameHandler', () => {
 
     it('handed handler should be called', () => {
         const startPhaserGameHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -68,7 +68,7 @@ describe('useStartPhaserGameHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const startPhaserGameHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useStartPhaserGameHandler(socket, startPhaserGameHandler));
 

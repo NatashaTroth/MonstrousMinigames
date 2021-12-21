@@ -1,11 +1,11 @@
 import { initSockets } from '../../../domain/game1/screen/gameState/initSockets';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { InitialGameStateInfoMessage } from '../../../domain/typeGuards/game1/initialGameStateInfo';
 import { MessageTypesGame1 } from '../../../utils/constants';
 
 describe('initSockets', () => {
     const roomId = 'SKES';
-    const socket = new InMemorySocketFake();
+    const socket = new FakeInMemorySocket();
     const scene = {
         camera: { setBackgroundColor: jest.fn() },
         gameRenderer: { destroyLoadingScreen: jest.fn() },

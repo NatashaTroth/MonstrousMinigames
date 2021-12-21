@@ -1,6 +1,6 @@
 import { Socket } from './Socket';
 
-export class InMemorySocketFake implements Socket {
+export class FakeInMemorySocket implements Socket {
     constructor(public callbacks: Array<<T>(val: T) => void> = [], public emitedVals: unknown[] = []) {}
 
     async listen(callback: <T>(val: T) => void) {

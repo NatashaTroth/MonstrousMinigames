@@ -1,5 +1,5 @@
 import { initialGameStateHandler } from '../../../domain/game1/screen/gameState/initialGameStateHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { InitialGameStateInfoMessage } from '../../../domain/typeGuards/game1/initialGameStateInfo';
 import { MessageTypesGame1 } from '../../../utils/constants';
 
@@ -18,7 +18,7 @@ describe('initialGameStateHandler Game1', () => {
     };
 
     it('when message type is initialGameState, initiateGame should be called', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const initiateGame = jest.fn();
 
         const dependencies = {
@@ -40,7 +40,7 @@ describe('initialGameStateHandler Game1', () => {
     });
 
     it('when message type is initialGameState, and screen is amdin, sendStartGame should be called', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const sendStartGame = jest.fn();
 
         const dependencies = {

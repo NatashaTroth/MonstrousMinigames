@@ -1,5 +1,5 @@
 import { allScreensPhaserGameLoadedHandler } from '../../../domain/game1/screen/gameState/allScreensPhaserGameLoadedHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { AllScreensPhaserGameLoadedMessage } from '../../../domain/typeGuards/game1/allScreensPhaserGameLoaded';
 import { MessageTypesGame1 } from '../../../utils/constants';
 
@@ -9,7 +9,7 @@ describe('allScreensPhaserGameLoadedHandler Game1', () => {
     };
 
     it('when message type is allScreensPhaserGameLoaded, sendCreateNewGame should be called', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const sendCreateNewGame = jest.fn();
 
         const withDependencies = allScreensPhaserGameLoadedHandler({ screenAdmin: true, sendCreateNewGame });
@@ -21,7 +21,7 @@ describe('allScreensPhaserGameLoadedHandler Game1', () => {
     });
 
     it('when message type is allScreensPhaserGameLoaded,when screen is not admin, sendCreateNewGame should not be called', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const sendCreateNewGame = jest.fn();
 
         const withDependencies = allScreensPhaserGameLoadedHandler({ screenAdmin: false, sendCreateNewGame });

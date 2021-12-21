@@ -17,7 +17,7 @@ import { defaultValue as gameDefaultValue, GameContext } from '../../../contexts
 import { defaultValue as playerDefaultValue, PlayerContext } from '../../../contexts/PlayerContextProvider';
 import Stone from '../../../domain/game1/controller/components/obstacles/Stone';
 import { StyledStone } from '../../../domain/game1/controller/components/obstacles/Stone.sc';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import theme from '../../../styles/theme';
 import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
 import { controllerObstacleRoute } from '../../../utils/routes';
@@ -79,7 +79,7 @@ describe('Stone', () => {
         const stunnablePlayers = ['2'];
         const history = createMemoryHistory();
         history.push(`${controllerObstacleRoute(roomId, ObstacleTypes.stone)}?choosePlayer=true`);
-        const controllerSocket = new InMemorySocketFake();
+        const controllerSocket = new FakeInMemorySocket();
         const userId = '1';
 
         const container = mount(
@@ -131,7 +131,7 @@ describe('Stone', () => {
         ];
         const stunnablePlayers = ['2'];
         const history = createMemoryHistory();
-        const controllerSocket = new InMemorySocketFake();
+        const controllerSocket = new FakeInMemorySocket();
         const userId = '1';
 
         const container = mount(
@@ -185,7 +185,7 @@ describe('Stone', () => {
         ];
         const stunnablePlayers = ['2'];
         const history = createMemoryHistory();
-        const controllerSocket = new InMemorySocketFake();
+        const controllerSocket = new FakeInMemorySocket();
         const userId = '1';
         const obstacle = {
             id: 1,
@@ -244,7 +244,7 @@ describe('Stone', () => {
         ];
         const stunnablePlayers = ['2'];
         const history = createMemoryHistory();
-        const controllerSocket = new InMemorySocketFake();
+        const controllerSocket = new FakeInMemorySocket();
         const userId = '1';
         const obstacle = {
             id: 1,

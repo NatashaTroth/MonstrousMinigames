@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { handleReroute } from '../../domain/game1/controller/gameState/handleRerouteAtObstacle';
 import history from '../../domain/history/history';
 import { ObstacleTypes, TrashType } from '../../utils/constants';
+import { controllerGame1Route, controllerObstacleRoute } from '../../utils/routes';
 
 export const defaultValue = {
     obstacle: undefined,
@@ -65,6 +65,8 @@ interface Game1ContextProps {
 
 export const Game1Context = React.createContext<Game1ContextProps>(defaultValue);
 
+let obstacleHelper: undefined | Obstacle = undefined;
+
 const Game1ContextProvider: React.FunctionComponent = ({ children }) => {
     const [obstacle, setObstacle] = React.useState<undefined | Obstacle>();
     const [playerFinished, setPlayerFinished] = React.useState<boolean>(defaultValue.playerFinished);
@@ -74,13 +76,18 @@ const Game1ContextProvider: React.FunctionComponent = ({ children }) => {
     const [exceededChaserPushes, setExceededChaserPushes] = React.useState(defaultValue.exceededChaserPushes);
     const [stunnablePlayers, setStunnablePlayers] = React.useState<string[]>([]);
 
-    let reroute = true;
-
     const content = {
         obstacle,
         setObstacle: (roomId: string | undefined, val: undefined | Obstacle) => {
-            setObstacle(val);
-            reroute = handleReroute(reroute, val, roomId, history);
+            if (val && obstacleHelper?.id !== val?.id) {
+                setObstacle(val);
+                obstacleHelper = val;
+                history.push(controllerObstacleRoute(roomId, val.type)!);
+            } else if (!val && obstacleHelper) {
+                setObstacle(val);
+                obstacleHelper = val;
+                history.push(controllerGame1Route(roomId));
+            }
         },
         dead,
         setPlayerDead,

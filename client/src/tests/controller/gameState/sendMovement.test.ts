@@ -1,10 +1,10 @@
 import { sendMovement } from '../../../domain/game1/controller/gameState/sendMovement';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { MessageTypesGame1 } from '../../../utils/constants';
 
 describe('sendMovement function', () => {
     it('when game is running, runForward should be emitted', () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         sendMovement(socket, false);
 
@@ -12,7 +12,7 @@ describe('sendMovement function', () => {
     });
 
     it('when game is paused, nothing should be emitted', () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         sendMovement(socket, true);
 
