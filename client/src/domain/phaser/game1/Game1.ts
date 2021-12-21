@@ -61,27 +61,28 @@ export class Game1 {
     restartScene() {
         console.log('Restarting SCENE');
         const scene = this.game.scene.getScene(this.getSceneName());
-        scene.scene.stop();
-        scene.scene.start();
-        // scene.scene.launch();
-        // this.scene?.scene.launch();
+        scene.scene.restart();
         // this.scene!.scene.restart();
+        // this.scene?.scene.launch();
         // this.sceneInstanceCounter++;
         // console.log(this.getSceneName());
         // this.game?.scene.add(this.getSceneName(), new MainScene(), false);
     }
 
     startScene(roomId: string | undefined, socket: Socket | undefined, screenAdmin: boolean) {
+        // console.log('got scene??');
+        // console.log(this.game.scene.getScene(this.getSceneName()));
         if (!this.game.scene.getScene(this.getSceneName())) {
             this.addScene();
-            // this.game.scene.start(this.getSceneName(), { roomId, socket, screenAdmin });
+            // console.log('Starting SCENE');
+            this.game.scene.start(this.getSceneName(), { roomId, socket, screenAdmin });
+        } else {
+            // console.log('Restarting SCENE');
+
+            this.game.scene.getScene(this.getSceneName()).scene.restart({ roomId, socket, screenAdmin });
+            // this.restartScene();
         }
-        // else {
-        //     const scene = this.game.scene.getScene(this.getSceneName());
-        //     scene.scene.stop();
-        //     scene.scene.restart({ roomId, socket, screenAdmin });
-        // }
-        this.game.scene.start(this.getSceneName(), { roomId, socket, screenAdmin });
+        // console.log('this.scene = ', this.scene);
     }
 
     // removeScene() {

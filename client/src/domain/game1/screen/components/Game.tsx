@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Pause, PlayArrow, Stop, VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 import { useParams } from 'react-router';
@@ -28,19 +27,7 @@ const Game: React.FunctionComponent = () => {
     }, []);
 
     React.useEffect(() => {
-        // console.log('HERE');
-        // const gameContainer = document.getElementById('game-container');
-        // const rootElement = document.getElementById('root');
-        // if (rootElement) {
-        //     console.log('Deleting root element');
-        //     rootElement.remove();
-        //     const newRootElement = document.createElement('div');
-        //     newRootElement.setAttribute('id', 'root');
-        //     gameContainer?.appendChild(newRootElement);
-        // }
-
         // const game = new Game1(gameContainer);
-        // const game = Game1.getInstance('root');
         const game = Game1.getInstance(gameContainer);
         // game.game!.scene.start('MainScene', { roomId, socket: screenSocket, screenAdmin });
         game.startScene(roomId, screenSocket, screenAdmin);
@@ -49,7 +36,7 @@ const Game: React.FunctionComponent = () => {
         // return () => {
         //     game.removeScene();
         // };
-    }, [playCount]);
+    }, []);
 
     async function handleAudio() {
         if (isPlaying) {
@@ -81,9 +68,8 @@ const Game: React.FunctionComponent = () => {
             <AudioButton onClick={handleAudio} variant="primary">
                 {isPlaying ? <VolumeUp /> : <VolumeOff />}
             </AudioButton>
-            <div id="game-container">
+            <div>
                 <div id={gameContainer} />
-                {/* <div id="root" /> */}
             </div>
         </Container>
     );

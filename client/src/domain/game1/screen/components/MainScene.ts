@@ -3,9 +3,7 @@ import Phaser from 'phaser';
 
 import chasersSpritesheet from '../../../../images/characters/spritesheets/chasers/chasers_spritesheet.png';
 import windSpritesheet from '../../../../images/characters/spritesheets/chasers/wind_spritesheet.png';
-import {
-    designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1
-} from '../../../../utils/constants';
+import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1 } from '../../../../utils/constants';
 import { screenFinishedRoute } from '../../../../utils/routes';
 import history from '../../../history/history';
 import { Game1 } from '../../../phaser/game1/Game1';
@@ -22,28 +20,27 @@ import { MessageSocket } from '../../../socket/MessageSocket';
 import { Socket } from '../../../socket/Socket';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
 import {
-    AllScreensPhaserGameLoadedMessage, allScreensPhaserGameLoadedTypeGuard
+    AllScreensPhaserGameLoadedMessage,
+    allScreensPhaserGameLoadedTypeGuard,
 } from '../../../typeGuards/game1/allScreensPhaserGameLoaded';
 import {
-    ApproachingSolvableObstacleOnceMessage, approachingSolvableObstacleOnceTypeGuard
+    ApproachingSolvableObstacleOnceMessage,
+    approachingSolvableObstacleOnceTypeGuard,
 } from '../../../typeGuards/game1/approachingSolvableObstacleOnceTypeGuard';
+import { ChasersPushedMessage, ChasersPushedTypeGuard } from '../../../typeGuards/game1/chasersPushed';
+import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../../typeGuards/game1/gameStateInfo';
 import {
-    ChasersPushedMessage, ChasersPushedTypeGuard
-} from '../../../typeGuards/game1/chasersPushed';
-import {
-    GameStateInfoMessage, gameStateInfoTypeGuard
-} from '../../../typeGuards/game1/gameStateInfo';
-import {
-    InitialGameStateInfoMessage, initialGameStateInfoTypeGuard
+    InitialGameStateInfoMessage,
+    initialGameStateInfoTypeGuard,
 } from '../../../typeGuards/game1/initialGameStateInfo';
+import { ObstacleSkippedMessage, obstacleSkippedTypeGuard } from '../../../typeGuards/game1/obstacleSkipped';
 import {
-    ObstacleSkippedMessage, obstacleSkippedTypeGuard
-} from '../../../typeGuards/game1/obstacleSkipped';
-import {
-    ObstacleWillBeSolvedMessage, obstacleWillBeSolvedTypeGuard
+    ObstacleWillBeSolvedMessage,
+    obstacleWillBeSolvedTypeGuard,
 } from '../../../typeGuards/game1/obstacleWillBeSolved';
 import {
-    PhaserLoadingTimedOutMessage, phaserLoadingTimedOutTypeGuard
+    PhaserLoadingTimedOutMessage,
+    phaserLoadingTimedOutTypeGuard,
 } from '../../../typeGuards/game1/phaserLoadingTimedOut';
 import { GameHasStartedMessage, startedTypeGuard } from '../../../typeGuards/game1/started';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
@@ -75,7 +72,6 @@ class MainScene extends Phaser.Scene {
     firstGameStateReceived: boolean;
     allScreensLoaded: boolean;
     sceneCreatedTime: string;
-    socketsInitiated = false;
 
     constructor() {
         // const sceneKey = Game1.getInstance('', false).getSceneName(); //TODO remove if key is static
@@ -102,53 +98,22 @@ class MainScene extends Phaser.Scene {
         this.allScreensLoaded = false;
 
         this.sceneCreatedTime = Date.now().toString();
-        // this.setAllVars() //TODO use to remove duplicate code
 
-        this.initiateEventEmitters();
-        // this.initSockets();
-
-        // // eslint-disable-next-line no-console
-        // console.log(this);
-    }
-
-    resetAllVars() {
-        // this.windowWidth = 0;
-        // this.windowHeight = 0;
-
-        // this.roomId = sessionStorage.getItem('roomId') || '';
-        // this.posX = 50;
-        // this.plusX = 40;
-        // this.posY = 0;
-        // this.plusY = 110;
-        this.players = [];
-        // this.trackLength = 5000;
-        this.gameStarted = false;
-        this.paused = false;
-        // this.cameraSpeed = 2;
-        // this.gameEventEmitter = GameEventEmitter.getInstance();
-        // this.screenAdmin = false;
-        this.firstGameStateReceived = false;
-        this.allScreensLoaded = false;
-
-        this.sceneCreatedTime = Date.now().toString();
-
-        // this.cameras.main.destroy();
-        // this.cameras.main = this.cameras.add(0, 0, 0, 0);
+        // eslint-disable-next-line no-console
+        console.log(this);
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
-        this.resetAllVars();
         console.log('In Main scene init');
         this.camera = this.cameras.main;
-        //TODO reset camera position?
         this.windowWidth = this.cameras.main.width;
         this.windowHeight = this.cameras.main.height;
         this.posY = this.windowHeight / 2 - 50;
         this.socket = data.socket;
         this.screenAdmin = data.screenAdmin;
         this.gameRenderer = new PhaserGameRenderer(this);
-
-        if (!this.socketsInitiated) this.initSockets();
+        this.initSockets();
+        this.initiateEventEmitters();
 
         if (this.roomId === '' && data.roomId !== undefined) {
             this.roomId = data.roomId;
@@ -156,18 +121,7 @@ class MainScene extends Phaser.Scene {
     }
 
     preload(): void {
-        //TODO DEELTE
-        // setTimeout(() => {
-        //     this.socket?.emit({
-        //         type: MessageTypesGame1.phaserLoaded,
-        //         roomId: this.roomId,
-        //     });
-        // }, 3000);
-        //
-
         console.log('In Main scene preload');
-        console.log(this.load.isReady());
-        console.log(this.load.isLoading());
 
         this.gameRenderer?.renderLoadingScreen();
 
@@ -185,12 +139,11 @@ class MainScene extends Phaser.Scene {
 
         //once all the files are done loading
         this.load.on('complete', () => {
-            console.log('PRELOAD COMPLETE');
-            // this.gameRenderer?.updateLoadingScreenFinishedPreloading();
-            // this.socket?.emit({
-            //     type: MessageTypesGame1.phaserLoaded,
-            //     roomId: this.roomId,
-            // });
+            this.gameRenderer?.updateLoadingScreenFinishedPreloading();
+            this.socket?.emit({
+                type: MessageTypesGame1.phaserLoaded,
+                roomId: this.roomId,
+            });
         });
 
         audioFiles.forEach(audio => this.load.audio(audio.name, audio.file));
@@ -224,15 +177,6 @@ class MainScene extends Phaser.Scene {
 
     create() {
         console.log('In Main scene create');
-        this.gameRenderer?.updateLoadingScreenFinishedPreloading();
-        // TODO not sure if to move back to preload event on complete listener
-        this.socket?.emit({
-            type: MessageTypesGame1.phaserLoaded,
-            roomId: this.roomId,
-        });
-        // this.initiateGame(initialGameInput); //TODO just for testing
-
-        // setTimeout(() => {}, 3000);
 
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
@@ -243,8 +187,6 @@ class MainScene extends Phaser.Scene {
     }
 
     sendCreateNewGame() {
-        // console.log("Admin: " , this.screenAdmin)
-        console.log('Sending createNewGame');
         this.socket?.emit({
             type: MessageTypes.createGame,
             roomId: this.roomId,
@@ -256,13 +198,11 @@ class MainScene extends Phaser.Scene {
     }
 
     initSockets() {
-        this.socketsInitiated = true;
         console.log('init sockets');
         if (!this.socket) return;
         if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
-                console.log(data);
                 this.gameRenderer?.destroyLoadingScreen();
                 this.gameStarted = true;
                 this.initiateGame(data.data);
@@ -273,8 +213,6 @@ class MainScene extends Phaser.Scene {
 
         const allScreensPhaserGameLoaded = new MessageSocket(allScreensPhaserGameLoadedTypeGuard, this.socket);
         allScreensPhaserGameLoaded.listen((data: AllScreensPhaserGameLoadedMessage) => {
-            console.log('REceived all screens loaded');
-            console.log('Admin: ', this.screenAdmin);
             if (this.screenAdmin) this.sendCreateNewGame();
         });
 
@@ -321,29 +259,19 @@ class MainScene extends Phaser.Scene {
         const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
         gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
             this.gameAudio?.stopMusic();
-            // this.players.forEach(player => {
-            //     player.handleReset();
-            // });
-            this.scene.stop();
-
-            // setTimeout(() => this.scene.start(), 1000);
             // this.scene.get('MainScene').scene.restart();
             // this.scene.restart();
-            // history.push(screenFinishedRoute(this.roomId));
+            history.push(screenFinishedRoute(this.roomId));
         });
 
         const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);
         stoppedSocket.listen((data: GameHasStoppedMessage) => {
             this.gameAudio?.stopMusic();
-            this.scene.stop();
-
-            console.log('GAME STOOOPPPPPPEEEEDD');
-
-            // this.players.forEach(player => {
-            //     player.handleReset();
-            // });
-            // this.scene.get('MainScene').scene.restart();
-            // this.scene.restart();
+            this.players.forEach(player => {
+                player.handleReset();
+            });
+            this.scene.get('MainScene').scene.restart();
+            this.scene.restart();
         });
 
         const chasersPushedSocket = new MessageSocket(ChasersPushedTypeGuard, this.socket);
@@ -392,7 +320,6 @@ class MainScene extends Phaser.Scene {
     initiateGame(gameStateData: GameData) {
         console.log('INITIATING GAME');
         console.log(this.sceneCreatedTime);
-        console.log(JSON.stringify(gameStateData));
         this.gameToScreenMapper = new GameToScreenMapper(gameStateData.playersState[0].positionX, this.windowWidth);
         this.trackLength = gameStateData.trackLength;
 
@@ -407,11 +334,8 @@ class MainScene extends Phaser.Scene {
             this.createPlayer(i, gameStateData);
         }
 
-        console.log(this.camera);
-        if (this.camera) {
+        if (this.camera)
             this.camera.scrollX = this.gameToScreenMapper.mapGameMeasurementToScreen(gameStateData.cameraPositionX);
-            console.log(this.camera.scrollX);
-        }
     }
 
     updateGameState(gameStateData: GameData) {

@@ -59,7 +59,6 @@ class Screen {
         if (!this.room!.sentAllScreensLoaded) {
             this.room!.sentAllScreensLoaded = true;
             if (this.room?.allScreensLoadedTimeout) clearTimeout(this.room.allScreensLoadedTimeout);
-            console.log('SENDING all screens loaded');
             this.emitter.sendAllScreensPhaserGameLoaded([this.screenNamespace], this.room!, game);
         }
 
@@ -73,7 +72,6 @@ class Screen {
     }
 
     private onMessage(message: IMessage) {
-        console.log(message);
         try {
             switch (message.type) {
                 case MessageTypes.CHOOSE_GAME:
@@ -92,9 +90,6 @@ class Screen {
                 case MessageTypes.START:
                     if (this.room?.isCreated() && this.room.isAdminScreen(this.socket.id)) {
                         this.room.startGame();
-
-                        this.room!.setAllScreensPhaserGameReady(false);
-                        this.room!.sentAllScreensLoaded = false;
 
                         this.room.game.addListener(Game.EVT_FRAME_READY, (game: Game) => {
                             if (this.room?.isPlaying() && this.room?.game.sendGameStateUpdates) {
@@ -118,8 +113,8 @@ class Screen {
                 case MessageTypes.STOP_GAME:
                     if (this.room?.isPlaying() || this.room?.isPaused()) {
                         console.info(this.room.id + ' | Stop Game');
-                        // this.room!.setAllScreensPhaserGameReady(false);
-                        // this.room!.sentAllScreensLoaded = false;
+                        this.room!.setAllScreensPhaserGameReady(false);
+                        this.room!.sentAllScreensLoaded = false;
                         this.room.stopGame();
 
                         this.room.resetGame().then(() => {
@@ -172,9 +167,7 @@ class Screen {
                     }
                     break;
                 case MessageTypes.CREATE:
-                    console.log('handling Create game msg');
-                    //TODO natasha can then delete is.finished (only when restarting game without goinjg to finished screen)
-                    if (this.room?.isOpen() || (this.room?.isFinished() && this.room.isAdminScreen(this.socket.id))) {
+                    if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
                         this.room.createNewGame();
                     }
                     break;
@@ -184,7 +177,6 @@ class Screen {
                 //         this.room.createNewGame();
                 //     }
                 case GameOneMsgType.PHASER_GAME_LOADED:
-                    console.log('Received phaser game loaded');
                     this.room?.setScreenPhaserGameReady(this.socket.id, true);
                     if (this.room && !this.room?.firstPhaserScreenLoaded) {
                         this.room.firstPhaserScreenLoaded = true;

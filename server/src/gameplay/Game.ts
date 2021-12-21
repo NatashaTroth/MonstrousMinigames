@@ -37,7 +37,6 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     }
 
     createNewGame(users: User[]) {
-        console.log('In GAME.ts creeate new game');
         verifyGameState(this.gameState, [GameState.Initialised, GameState.Finished, GameState.Stopped]);
         this.beforeCreateNewGame();
         if (users.length > this.maxNumberOfPlayers) {
