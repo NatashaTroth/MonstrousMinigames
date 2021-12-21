@@ -1,6 +1,7 @@
 import history from '../../../history/history';
+import { GameData } from '../../../phaser/gameInterfaces/GameData';
 import { Socket } from '../../../socket/Socket';
-import MainScene, { handleStartGame } from '../components/MainScene';
+import { handleStartGame } from '../components/MainScene';
 import { allScreensPhaserGameLoadedHandler, sendCreateNewGame } from './allScreensPhaserGameLoadedHandler';
 import { chasersPushedHandler } from './chasersPushedHandler';
 import { gameFinishedHandler } from './gameFinishedHandler';
@@ -13,6 +14,37 @@ import { resumeHandler } from './resumeHandler';
 import { startedHandler } from './startedHandler';
 import { stoppedHandler } from './stoppedHandler';
 
+interface Player {
+    player: {
+        id: string;
+    };
+    renderer: {
+        renderWind: () => void;
+    };
+    handleApproachingObstacle: () => void;
+    handleObstacleSkipped: () => void;
+    destroyWarningIcon: () => void;
+    handleReset: () => void;
+    startRunning: () => void;
+    stopRunning: () => void;
+}
+interface MainScene {
+    camera?: { setBackgroundColor: (val: string) => void };
+    gameRenderer?: { destroyLoadingScreen: () => void };
+    initiateGame: (data: GameData) => void;
+    updateGameState: (data: GameData) => void;
+    createGameCountdown: (data: number) => void;
+    players: Player[];
+    gameAudio?: { stopMusic: () => void; pause: () => void; resume: () => void };
+    scene: {
+        restart: () => void;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        get: (name: string) => any;
+        pause: () => void;
+        resume: () => void;
+    };
+    paused: boolean;
+}
 interface InitSocketsProps {
     socket: Socket | undefined;
     screenAdmin: boolean;
@@ -33,7 +65,7 @@ export function initSockets({ socket, screenAdmin, roomId, scene }: InitSocketsP
 
     const allScreensPhaserGameLoadedHandlerWithDependencies = allScreensPhaserGameLoadedHandler({
         screenAdmin: screenAdmin,
-        sendCreateNewGame: () => sendCreateNewGame(socket!, roomId),
+        sendCreateNewGame: () => sendCreateNewGame(socket, roomId),
     });
 
     const approachingObstacleHandlerWithDependencies = approachingObstacleHandler({
