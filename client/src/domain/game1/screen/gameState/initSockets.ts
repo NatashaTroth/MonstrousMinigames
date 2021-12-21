@@ -1,3 +1,4 @@
+import { designDevelopment } from '../../../../utils/constants';
 import history from '../../../history/history';
 import { GameData } from '../../../phaser/gameInterfaces/GameData';
 import { Socket } from '../../../socket/Socket';
@@ -55,13 +56,17 @@ interface InitSocketsProps {
 export function initSockets({ socket, screenAdmin, roomId, scene }: InitSocketsProps) {
     if (!socket || !roomId) return;
 
-    const initialGameStateHandlerWithDependencies = initialGameStateHandler({
-        screenAdmin: screenAdmin,
-        sendStartGame: () => handleStartGame(socket, roomId),
-        initiateGame: data => scene.initiateGame(data),
-        camera: scene.camera,
-        gameRenderer: scene.gameRenderer,
-    });
+    if (!designDevelopment) {
+        const initialGameStateHandlerWithDependencies = initialGameStateHandler({
+            screenAdmin: screenAdmin,
+            sendStartGame: () => handleStartGame(socket, roomId),
+            initiateGame: data => scene.initiateGame(data),
+            camera: scene.camera,
+            gameRenderer: scene.gameRenderer,
+        });
+
+        initialGameStateHandlerWithDependencies(socket);
+    }
 
     const allScreensPhaserGameLoadedHandlerWithDependencies = allScreensPhaserGameLoadedHandler({
         screenAdmin: screenAdmin,
@@ -111,7 +116,6 @@ export function initSockets({ socket, screenAdmin, roomId, scene }: InitSocketsP
         players: scene.players,
     });
 
-    initialGameStateHandlerWithDependencies(socket);
     allScreensPhaserGameLoadedHandlerWithDependencies(socket);
     approachingObstacleHandlerWithDependencies(socket);
     obstacleSkippedHandlerWithDependencies(socket);

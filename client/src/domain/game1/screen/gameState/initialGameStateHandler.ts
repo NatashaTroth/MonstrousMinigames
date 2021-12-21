@@ -1,3 +1,4 @@
+import { designDevelopment } from '../../../../utils/constants';
 import { GameData } from '../../../phaser/gameInterfaces';
 import messageHandler from '../../../socket/messageHandler';
 import { initialGameStateInfoTypeGuard } from '../../../typeGuards/game1/initialGameStateInfo';
@@ -25,7 +26,7 @@ export const initialGameStateHandler = messageHandler(
         dependencies.initiateGame(message.data);
         dependencies.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');
 
-        if (dependencies.screenAdmin) {
+        if (dependencies.screenAdmin && !designDevelopment) {
             dependencies.sendStartGame();
         }
     }

@@ -2,8 +2,9 @@ import Phaser from 'phaser';
 
 import chasersSpritesheet from '../../../../images/characters/spritesheets/chasers/chasers_spritesheet.png';
 import windSpritesheet from '../../../../images/characters/spritesheets/chasers/wind_spritesheet.png';
-import { designDevelopment, MessageTypes, MessageTypesGame1 } from '../../../../utils/constants';
+import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1 } from '../../../../utils/constants';
 import { GameToScreenMapper } from '../../../phaser/game1/GameToScreenMapper';
+import { initialGameInput } from '../../../phaser/game1/initialGameInput';
 import { Player } from '../../../phaser/game1/Player';
 import { PhaserPlayerRenderer } from '../../../phaser/game1/renderer/PhaserPlayerRenderer';
 import { GameAudio } from '../../../phaser/GameAudio';
@@ -142,6 +143,10 @@ class MainScene extends Phaser.Scene {
     create() {
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
+
+        if (localDevelopment && designDevelopment) {
+            this.initiateGame(initialGameInput);
+        }
     }
 
     sendStartGame() {
@@ -176,7 +181,9 @@ class MainScene extends Phaser.Scene {
     }
 
     initiateGame(gameStateData: GameData) {
-        this.gameStarted = true;
+        if (!localDevelopment && !designDevelopment) {
+            this.gameStarted = true;
+        }
 
         this.gameToScreenMapper = new GameToScreenMapper(gameStateData.playersState[0].positionX, this.windowWidth);
         this.trackLength = gameStateData.trackLength;
