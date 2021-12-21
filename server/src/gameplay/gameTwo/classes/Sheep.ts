@@ -84,33 +84,43 @@ export default class Sheep {
                 if (this.posY - this.speed / 2 >= 0 && this.posX - this.speed / 2 >= 0) {
                     this.posY -= this.speed;
                     this.posX -= this.speed;
+                } else {
+                    this.setNewDirection();
                 }
                 break;
             case Direction.UP:
                 if (this.posY - this.speed >= 0) {
                     this.posY -= this.speed;
-                }
-                break;
+                } else {
+                    this.setNewDirection();
+                } break;
             case Direction.UP_RIGHT:
                 if (this.posY - this.speed / 2 >= 0 && this.posX + this.speed / 2 < + Parameters.LENGTH_X) {
                     this.posY -= this.speed;
                     this.posX += this.speed;
+                } else {
+                    this.setNewDirection();
                 }
                 break;
             case Direction.RIGHT:
                 if (this.posX + this.speed <= Parameters.LENGTH_X) {
                     this.posX += this.speed;
-                }
-                break;
+                } else {
+                    this.setNewDirection();
+                } break;
             case Direction.DOWN_RIGHT:
                 if (this.posY + this.speed / 2 <= Parameters.LENGTH_Y && this.posX + this.speed / 2 <= Parameters.LENGTH_X) {
                     this.posY += this.speed;
                     this.posX += this.speed;
+                } else {
+                    this.setNewDirection();
                 }
                 break;
             case Direction.DOWN:
                 if (this.posY + this.speed <= Parameters.LENGTH_Y) {
                     this.posY += this.speed;
+                } else {
+                    this.setNewDirection();
                 }
                 break;
             case Direction.DOWN_LEFT:
@@ -122,6 +132,8 @@ export default class Sheep {
             case Direction.LEFT:
                 if (this.posX - this.speed >= 0) {
                     this.posX -= this.speed;
+                } else {
+                    this.setNewDirection();
                 }
                 break;
         }

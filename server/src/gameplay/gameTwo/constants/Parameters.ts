@@ -46,7 +46,7 @@ const PHASE_TIMES: phaseTimes = {
     'results': 5000
 }
 
-const GOOD_GUESS_THRESHOLD = 5;
+const GOOD_GUESS_THRESHOLD = 3;
 
 const SHEEP_FREEZE_MIN_MS = 500;
 const SHEEP_FREEZE_MAX_MS = 5000;
