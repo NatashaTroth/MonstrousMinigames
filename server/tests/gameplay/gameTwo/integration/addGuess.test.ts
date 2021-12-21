@@ -96,9 +96,7 @@ describe('GameTwo Guessing Tests', () => {
         }
 
         jest.useFakeTimers();
-        console.info(gameTwo.getGameStateInfo().phase)
         jest.advanceTimersByTime(Parameters.PHASE_TIMES[Phases.COUNTING] + 10)
-        console.info(gameTwo.getGameStateInfo().phase)
 
         gameTwo.receiveInput(message);
 

@@ -5,6 +5,8 @@ const LENGTH_X = 1800;
 const LENGTH_Y = 700;
 
 const SPEED = 2;
+const SNEAKING_SPEED = 1;
+
 
 const PLAYERS_POSITIONS = [
     {
@@ -62,6 +64,7 @@ export default {
     LENGTH_X,
     LENGTH_Y,
     SPEED,
+    SNEAKING_SPEED,
     PLAYERS_POSITIONS,
     MARGIN,
     SHEEP_COUNT,
