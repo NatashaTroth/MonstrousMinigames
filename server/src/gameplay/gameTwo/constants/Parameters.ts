@@ -29,24 +29,24 @@ const PLAYERS_POSITIONS = [
 
 const MARGIN = 20;
 
-const SHEEP_COUNT = 50;
+const SHEEP_COUNT = 65;
 
 const KILL_RADIUS = 50;
 const KILLS_PER_ROUND = 5;
 
-const ROUNDS = 3;
+const ROUNDS = 5;
 
 type phaseTimes = {
     [key: string]: number;
 }
 
 const PHASE_TIMES: phaseTimes = {
-    'counting': 20000,
+    'counting': 30000,
     'guessing': 15000,
-    'results': 10000
+    'results': 5000
 }
 
-const GOOD_GUESS_THRESHOLD = 5;
+const GOOD_GUESS_THRESHOLD = 3;
 
 const SHEEP_FREEZE_MIN_MS = 500;
 const SHEEP_FREEZE_MAX_MS = 5000;

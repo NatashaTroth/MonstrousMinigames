@@ -31,27 +31,76 @@ class GameTwoPlayer extends Player {
     }
 
     public move() {
-        if (this.direction === Direction.STOP) {
-            return;
-        }
-        if (this.direction.startsWith(Direction.UP)) {
-            if (this.posY - this.speed >= 0) {
-                this.posY -= this.speed;
-            }
-        }
-        if (this.direction.startsWith(Direction.DOWN)) {
-            if (this.posY + this.speed <= Parameters.LENGTH_Y) {
-                this.posY += this.speed;
-            }
-        }
-        if (this.direction.includes(Direction.RIGHT)) {
-            if (this.posX + this.speed <= Parameters.LENGTH_X) {
-                this.posX += this.speed;
-            }
-        }
-        if (this.direction.includes(Direction.LEFT)) {
-            if (this.posX - this.speed >= 0) {
-                this.posX -= this.speed;
+        // if (this.direction === Direction.STOP) {
+        //     return;
+        // }
+        // if (this.direction.startsWith(Direction.UP)) {
+        //     if (this.posY - this.speed >= 0) {
+        //         this.posY -= this.speed;
+        //     }
+        // }
+        // if (this.direction.startsWith(Direction.DOWN)) {
+        //     if (this.posY + this.speed <= Parameters.LENGTH_Y) {
+        //         this.posY += this.speed;
+        //     }
+        // }
+        // if (this.direction.includes(Direction.RIGHT)) {
+        //     if (this.posX + this.speed <= Parameters.LENGTH_X) {
+        //         this.posX += this.speed;
+        //     }
+        // }
+        // if (this.direction.includes(Direction.LEFT)) {
+        //     if (this.posX - this.speed >= 0) {
+        //         this.posX -= this.speed;
+        //     }
+        // }
+
+        if (this.direction !== Direction.STOP) {
+            switch (this.direction) {
+                case Direction.UP_LEFT:
+                    if (this.posY - this.speed / 2 >= 0 && this.posX - this.speed / 2 >= 0) {
+                        this.posY -= this.speed;
+                        this.posX -= this.speed;
+                    }
+                    break;
+                case Direction.UP:
+                    if (this.posY - this.speed >= 0) {
+                        this.posY -= this.speed;
+                    }
+                    break;
+                case Direction.UP_RIGHT:
+                    if (this.posY - this.speed / 2 >= 0 && this.posX + this.speed / 2 <+ Parameters.LENGTH_X) {
+                        this.posY -= this.speed;
+                        this.posX += this.speed;
+                    }
+                    break;
+                case Direction.RIGHT:
+                    if (this.posX + this.speed <= Parameters.LENGTH_X) {
+                        this.posX += this.speed;
+                    }
+                    break;
+                case Direction.DOWN_RIGHT:
+                    if (this.posY + this.speed / 2 <= Parameters.LENGTH_Y && this.posX + this.speed / 2 <= Parameters.LENGTH_X) {
+                        this.posY += this.speed;
+                        this.posX += this.speed;
+                    }
+                    break;
+                case Direction.DOWN:
+                    if (this.posY + this.speed <= Parameters.LENGTH_Y) {
+                        this.posY += this.speed;
+                    }
+                    break;
+                case Direction.DOWN_LEFT:
+                    if (this.posY + this.speed / 2 <= Parameters.LENGTH_Y && this.posX - this.speed / 2 >= 0) {
+                        this.posY += this.speed;
+                        this.posX -= this.speed;
+                    }
+                    break;
+                case Direction.LEFT:
+                    if (this.posX - this.speed >= 0) {
+                        this.posX -= this.speed;
+                    }
+                    break;
             }
         }
     }
@@ -84,6 +133,12 @@ class GameTwoPlayer extends Player {
     }
     public setKillsLeft(killsLeft: number): void {
         this.killsLeft = killsLeft;
+    }
+
+    public resetPlayer(): void {
+        this.setPlayerPosition()
+        this.setDirection(Direction.STOP);
+        this.setKillsLeft(Parameters.KILLS_PER_ROUND);
     }
 }
 export default GameTwoPlayer;
