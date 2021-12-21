@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks';
 import React from 'react';
 
-import { GameType } from '../../../contexts/screen/ScreenSocketContextProvider';
+import { GameType } from '../../../contexts/GameContextProvider';
 import {
     leaderboardStateHandler,
     useLeaderboardStateHandler,
