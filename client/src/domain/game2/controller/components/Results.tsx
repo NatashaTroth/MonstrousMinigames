@@ -6,33 +6,12 @@ import { Instructions, ScreenContainer } from '../../../game3/controller/compone
 const Guess: React.FunctionComponent = () => {
     //const { ... } = React.useContext(Game2Context);
     //const { controllerSocket } = React.useContext(ControllerSocketContext);
-    const { playerRanks } = React.useContext(Game2Context);
-
-    const rankList = playerRanks.map(element => (
-        <tr key={element.rank}>
-            <td>
-                <Instructions>{element.name}</Instructions>
-            </td>
-            <td>
-                <Instructions>{element.rank}</Instructions>
-            </td>
-        </tr>
-    ));
+    const { guessHint } = React.useContext(Game2Context);
 
     //TODO: return actual rank
     return (
         <ScreenContainer>
-            <table>
-                <tr>
-                    <th>
-                        <Instructions>Name</Instructions>
-                    </th>
-                    <th>
-                        <Instructions>Rank</Instructions>
-                    </th>
-                </tr>
-                {rankList}
-            </table>
+            <Instructions>{`Hint: ${guessHint}`}</Instructions>
         </ScreenContainer>
     );
 };
