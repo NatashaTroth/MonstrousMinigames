@@ -38,19 +38,6 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [counter]);
 
-    function getDirection(direction: string) {
-        switch (direction) {
-            case 'FORWARD':
-                return 'N';
-            case 'BACKWARD':
-                return 'S';
-            case 'LEFT':
-                return 'W';
-            case 'RIGHT':
-                return 'E';
-        }
-    }
-
     function getDirectionforPos(x: number, y: number) {
         if (Math.abs(x) < 20 && Math.abs(y) < 20) {
             return 'C';
@@ -86,10 +73,6 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
     }
 
     function handleMove(event: IJoystickUpdateEvent) {
-        if (event.x && event.y) {
-            // eslint-disable-next-line no-console
-            console.log(`${event.x} , ${event.y} , ${getDirectionforPos(event.x, event.y)}`);
-        }
         if (event.x && event.y) {
             const newDirection = getDirectionforPos(event.x, event.y);
             if (direction != newDirection) {

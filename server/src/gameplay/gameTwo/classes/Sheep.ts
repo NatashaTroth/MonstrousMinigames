@@ -79,25 +79,51 @@ export default class Sheep {
     }
 
     private move() {
-        if (this.direction.startsWith(Direction.UP)) {
-            if (this.posY > 0) {
-                this.posY -= this.speed;
-            }
-        }
-        if (this.direction.startsWith(Direction.DOWN)) {
-            if (this.posY < Parameters.LENGTH_Y) {
-                this.posY += this.speed;
-            }
-        }
-        if (this.direction.includes(Direction.RIGHT)) {
-            if (this.posX < Parameters.LENGTH_X) {
-                this.posX += this.speed;
-            }
-        }
-        if (this.direction.includes(Direction.LEFT)) {
-            if (this.posX > 0) {
-                this.posX -= this.speed;
-            }
+        switch (this.direction) {
+            case Direction.UP_LEFT:
+                if (this.posY - this.speed / 2 >= 0 && this.posX - this.speed / 2 >= 0) {
+                    this.posY -= this.speed;
+                    this.posX -= this.speed;
+                }
+                break;
+            case Direction.UP:
+                if (this.posY - this.speed >= 0) {
+                    this.posY -= this.speed;
+                }
+                break;
+            case Direction.UP_RIGHT:
+                if (this.posY - this.speed / 2 >= 0 && this.posX + this.speed / 2 < + Parameters.LENGTH_X) {
+                    this.posY -= this.speed;
+                    this.posX += this.speed;
+                }
+                break;
+            case Direction.RIGHT:
+                if (this.posX + this.speed <= Parameters.LENGTH_X) {
+                    this.posX += this.speed;
+                }
+                break;
+            case Direction.DOWN_RIGHT:
+                if (this.posY + this.speed / 2 <= Parameters.LENGTH_Y && this.posX + this.speed / 2 <= Parameters.LENGTH_X) {
+                    this.posY += this.speed;
+                    this.posX += this.speed;
+                }
+                break;
+            case Direction.DOWN:
+                if (this.posY + this.speed <= Parameters.LENGTH_Y) {
+                    this.posY += this.speed;
+                }
+                break;
+            case Direction.DOWN_LEFT:
+                if (this.posY + this.speed / 2 <= Parameters.LENGTH_Y && this.posX - this.speed / 2 >= 0) {
+                    this.posY += this.speed;
+                    this.posX -= this.speed;
+                }
+                break;
+            case Direction.LEFT:
+                if (this.posX - this.speed >= 0) {
+                    this.posX -= this.speed;
+                }
+                break;
         }
     }
 
