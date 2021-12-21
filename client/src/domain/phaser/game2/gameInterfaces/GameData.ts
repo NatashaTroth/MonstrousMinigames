@@ -8,4 +8,5 @@ export interface GameData {
     lengthX: number;
     lengthY: number;
     roomId: string;
+    brightness: number;
 }

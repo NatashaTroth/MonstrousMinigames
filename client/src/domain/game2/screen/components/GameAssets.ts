@@ -5,7 +5,7 @@ import greenMonster from '../../../../images/characters/spritesheets/monsters/gr
 import orangeMonster from '../../../../images/characters/spritesheets/monsters/orange_spritesheet.png';
 import pinkMonster from '../../../../images/characters/spritesheets/monsters/pink_spritesheet.png';
 import sheepDecoy from '../../../../images/characters/spritesheets/sheep/sheep_decoy.png';
-import forest2 from '../../../../images/ui/forest2.png';
+import grass from '../../../../images/ui/grass.png';
 import { AnimationNameGame2 } from '../../../phaser/enums/AnimationName';
 import { Character, CharacterAnimation, CharacterSpriteProperties } from '../../../phaser/gameInterfaces';
 
@@ -40,6 +40,6 @@ export const characters: Character[] = characterFiles.map((file, idx) => {
 
 // obstacle textures have to have the same name as obstacle type - lowercase
 export const images = [
-    { name: 'forest2', file: forest2 },
+    { name: 'grass', file: grass },
     { name: 'sheepDecoy', file: sheepDecoy },
 ];

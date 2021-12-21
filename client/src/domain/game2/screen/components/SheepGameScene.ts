@@ -61,6 +61,7 @@ class SheepGameScene extends Phaser.Scene {
     firstGameStateReceived: boolean;
     allScreensLoaded: boolean;
     playerRanks: PlayerRank[];
+    brightness: number;
 
     constructor() {
         super('SheepGameScene');
@@ -79,6 +80,7 @@ class SheepGameScene extends Phaser.Scene {
         this.firstGameStateReceived = false;
         this.allScreensLoaded = false;
         this.playerRanks = [];
+        this.brightness = 100;
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
@@ -280,6 +282,7 @@ class SheepGameScene extends Phaser.Scene {
                 }
             }
         }
+        this.brightness = gameStateData.brightness;
     }
 
     updateGamePhase(data: PhaseChangedMessage) {
