@@ -31,7 +31,7 @@ const MARGIN = 20;
 
 const SHEEP_COUNT = 50;
 
-const KILL_RADIUS = 5;
+const KILL_RADIUS = 50;
 const KILLS_PER_ROUND = 5;
 
 const ROUNDS = 3;
