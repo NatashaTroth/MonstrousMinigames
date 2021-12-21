@@ -20,7 +20,6 @@ import SheepService from './classes/SheepService';
 import Parameters from './constants/Parameters';
 import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
 import { Phases } from './enums/Phases';
-import { Direction } from './enums/Direction';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -279,8 +278,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     protected resetPlayers(): void {
         [...this.players].forEach(player => {
-            player[1].setPlayerPosition()
-            player[1].setDirection(Direction.STOP);
+            player[1].resetPlayer();
         });
     }
 

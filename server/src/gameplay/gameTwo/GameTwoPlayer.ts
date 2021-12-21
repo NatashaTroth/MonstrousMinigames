@@ -134,5 +134,11 @@ class GameTwoPlayer extends Player {
     public setKillsLeft(killsLeft: number): void {
         this.killsLeft = killsLeft;
     }
+
+    public resetPlayer(): void {
+        this.setPlayerPosition()
+        this.setDirection(Direction.STOP);
+        this.setKillsLeft(Parameters.KILLS_PER_ROUND);
+    }
 }
 export default GameTwoPlayer;
