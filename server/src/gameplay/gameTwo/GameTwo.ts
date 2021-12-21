@@ -20,6 +20,7 @@ import SheepService from './classes/SheepService';
 import Parameters from './constants/Parameters';
 import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
 import { Phases } from './enums/Phases';
+import { Direction } from './enums/Direction';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -99,7 +100,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
-        this.resetPlayerPositions();
+        this.resetPlayers();
         this.sheepService.initSheep();
         this.guessingService.init(users);
         this.listenToEvents();
@@ -244,7 +245,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     protected initGuessingPhase(round: number): void {
         this.stopPlayersMoving();
-        this.resetPlayerPositions();
+        this.resetPlayers();
         this.sheepService.stopMoving();
         this.brightness.stop();
         this.guessingService.saveSheepCount(round, this.sheepService.getAliveSheepCount());
@@ -276,8 +277,11 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         [...this.players].forEach(player => player[1].moving = true);
     }
 
-    protected resetPlayerPositions(): void {
-        [...this.players].forEach(player => player[1].setPlayerPosition());
+    protected resetPlayers(): void {
+        [...this.players].forEach(player => {
+            player[1].setPlayerPosition()
+            player[1].setDirection(Direction.STOP);
+        });
     }
 
     protected emitPlayerRemainingKills(): void {
