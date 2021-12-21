@@ -1,0 +1,43 @@
+import { stoppedHandler } from '../../../domain/game1/screen/gameState/stoppedHandler';
+import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { GameHasStoppedMessage } from '../../../domain/typeGuards/stopped';
+import { MessageTypes } from '../../../utils/constants';
+
+describe('stoppedHandler Game1', () => {
+    const message: GameHasStoppedMessage = {
+        type: MessageTypes.gameHasStopped,
+    };
+
+    it('when message type is gameHasStopped, stopMusic should be called', async () => {
+        const socket = new InMemorySocketFake();
+        const stopMusic = jest.fn();
+
+        const scene = {
+            players: [
+                {
+                    handleReset: jest.fn(),
+                },
+            ],
+            gameAudio: {
+                stopMusic,
+            },
+            scene: {
+                restart: jest.fn(),
+                get: jest.fn(),
+            },
+        };
+
+        scene.scene.get.mockReturnValue({
+            scene: {
+                restart: jest.fn(),
+            },
+        });
+
+        const withDependencies = stoppedHandler({ scene });
+
+        withDependencies(socket);
+        await socket.emit(message);
+
+        expect(stopMusic).toHaveBeenCalledTimes(1);
+    });
+});
