@@ -2,7 +2,8 @@ import Phaser from 'phaser';
 
 import { depthDictionary } from '../../../../config/depthDictionary';
 import SheepGameScene from '../../../game2/screen/components/SheepGameScene';
-import { Character, CharacterAnimationFrames } from '../../gameInterfaces/Character';
+import { Character } from '../../gameInterfaces';
+import { CharacterAnimationFrames } from '../../gameInterfaces/Character';
 import { Coordinates } from '../../gameTypes';
 
 /**
@@ -12,6 +13,7 @@ import { Coordinates } from '../../gameTypes';
 
 export class PhaserPlayerRenderer {
     private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    private character?: Character;
 
     constructor(private scene: SheepGameScene) {}
 
@@ -21,6 +23,7 @@ export class PhaserPlayerRenderer {
     }
 
     renderPlayer(coordinates: Coordinates, character: Character): void {
+        this.character = character;
         if (!this.player) {
             this.renderPlayerInitially(coordinates, character.name);
             // frames:
@@ -29,9 +32,9 @@ export class PhaserPlayerRenderer {
             // 8-11: right
             // TODO: fix animations, missing walking back animation
 
-            // this.initiateAnimation(character.name, character.name + +'_walkForward', { start: 0, end: 3 });
-            // this.initiateAnimation(character.name, character.name + +'_walkLeft', { start: 4, end: 7 });
-            // this.initiateAnimation(character.name, character.name + +'_walkRight', { start: 8, end: 11 });
+            this.initiateAnimation(character.name, character.name.concat('_walkForward'), { start: 0, end: 3 });
+            this.initiateAnimation(character.name, character.name.concat('_walkLeft'), { start: 4, end: 7 });
+            this.initiateAnimation(character.name, character.name.concat('_walkRight'), { start: 8, end: 11 });
         } else {
             this.player.x = coordinates.x;
             this.player.y = coordinates.y;
@@ -42,10 +45,54 @@ export class PhaserPlayerRenderer {
         this.player?.destroy();
     }
 
+    getMoveDirection(oldX: number, oldY: number, newX: number, newY: number) {
+        if (newX == oldX) {
+            //move up/down
+            if (oldY < newY) {
+                return 'up';
+            } else if (oldY > newY) {
+                return 'down';
+            }
+            return 'stand';
+        }
+        if (newY == oldY) {
+            //move left/right
+            if (oldX < newX) {
+                return 'right';
+            } else if (oldY > newY) {
+                return 'left';
+            }
+            return 'stand';
+        }
+        return 'stand';
+    }
+
     movePlayerTo(newXPosition: number, newYPosition: number) {
         if (this.player) {
+            const direction = this.getMoveDirection(this.player?.x, this.player?.y, newXPosition, newYPosition);
             this.player.x = newXPosition;
             this.player.y = newYPosition;
+
+            if (this.character) {
+                if (!this.player?.anims.isPlaying) {
+                    switch (direction) {
+                        case 'down':
+                            this.startAnimation(this.character.name.concat('_walkForward'));
+                            break;
+                        case 'left':
+                            this.startAnimation(this.character.name.concat('_walkLeft'));
+                            break;
+                        case 'right':
+                            this.startAnimation(this.character.name.concat('_walkRight'));
+                            break;
+                        case 'up':
+                            this.startAnimation(this.character.name.concat('_walkForward'));
+                            break; // TODO: create animation
+                        default:
+                            this.stopAnimation();
+                    }
+                }
+            }
         }
     }
 
@@ -77,26 +124,5 @@ export class PhaserPlayerRenderer {
     }
     stopAnimation() {
         this.player?.anims.stop();
-    }
-
-    movePlayer(character: Character, plusX?: number, plusY?: number) {
-        if (plusY) {
-            if (plusY > 0) {
-                this.player?.play(`${character.name}_walkForward`);
-            }
-            if (plusY < 0) {
-                this.player?.play(`${character.name}_walkBack`);
-            }
-            this.player?.setY(this.player?.y + plusY);
-        }
-        if (plusX) {
-            if (plusX > 0) {
-                this.player?.play(`${character.name}_walkRight`);
-            }
-            if (plusX < 0) {
-                this.player?.play(`${character.name}_walkLeft`);
-            }
-            this.player?.setX(this.player?.x + plusX);
-        }
     }
 }
