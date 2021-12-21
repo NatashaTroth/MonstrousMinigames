@@ -1,5 +1,8 @@
-import { MessageTypesGame2 } from '../../../utils/constants';
-import { PhaserLoadingTimedOutMessage, phaserLoadingTimedOutTypeGuard } from './phaserLoadingTimedOut';
+import {
+    PhaserLoadingTimedOutMessage,
+    phaserLoadingTimedOutTypeGuard,
+} from '../../domain/typeGuards/game2/phaserLoadingTimedOut';
+import { MessageTypesGame2 } from '../../utils/constants';
 
 describe('sheep paused TypeGuard', () => {
     it('when type is paused, it should return true', () => {

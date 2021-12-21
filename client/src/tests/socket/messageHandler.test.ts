@@ -1,4 +1,4 @@
-import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../domain/socket/InMemorySocketFake';
 import messageHandler from '../../domain/socket/messageHandler';
 
 describe('messageHandler', () => {
@@ -14,7 +14,7 @@ describe('messageHandler', () => {
     it('when message succeeds typeguard callback is executed', () => {
         const testTypeGuard = (data: any): data is Message => true;
 
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const callback = jest.fn();
 
         const userInitHandler = messageHandler(testTypeGuard, callback)({});
@@ -28,7 +28,7 @@ describe('messageHandler', () => {
     it('when message fails typeguard callback is executed', () => {
         const testTypeGuard = (data: any): data is Message => false;
 
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const callback = jest.fn();
 
         const userInitHandler = messageHandler(testTypeGuard, callback)({});

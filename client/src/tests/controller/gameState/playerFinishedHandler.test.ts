@@ -5,7 +5,7 @@ import {
     playerFinishedHandler,
     usePlayerFinishedHandler,
 } from '../../../domain/commonGameState/controller/handlePlayerFinishedMessage';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { PlayerFinishedMessage } from '../../../domain/typeGuards/game1/playerFinished';
 import { MessageTypesGame1 } from '../../../utils/constants';
 
@@ -31,7 +31,7 @@ describe('playerFinishedHandler', () => {
 
     it('handed setPlayerFinished should be called with true', async () => {
         const playerFinished = false;
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = playerFinishedHandler({
             setPlayerFinished,
@@ -47,7 +47,7 @@ describe('playerFinishedHandler', () => {
 
     it('handed setPlayerRank should be called with passed rank', async () => {
         const playerFinished = false;
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = playerFinishedHandler({
             setPlayerFinished,
@@ -63,7 +63,7 @@ describe('playerFinishedHandler', () => {
 
     it('if player has already finished, setPlayerFinished should not be called', async () => {
         const playerFinished = true;
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = playerFinishedHandler({
             setPlayerFinished,
@@ -79,7 +79,7 @@ describe('playerFinishedHandler', () => {
 
     it('if player has already finished, setPlayerRank should not be called', async () => {
         const playerFinished = true;
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = playerFinishedHandler({
             setPlayerFinished,
@@ -96,7 +96,7 @@ describe('playerFinishedHandler', () => {
     it('stomeTimeoutId should be remove from sessionStorage', async () => {
         const setPlayerRank = jest.fn();
         const setPlayerFinished = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const playerFinished = false;
         global.sessionStorage.setItem('windmillTimeoutId', '1');
@@ -123,7 +123,7 @@ describe('usePlayerFinishedHandler', () => {
 
     it('handed handler should be called', () => {
         const playerFinishedHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -138,7 +138,7 @@ describe('usePlayerFinishedHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const playerFinishedHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => usePlayerFinishedHandler(socket, playerFinishedHandler));
 

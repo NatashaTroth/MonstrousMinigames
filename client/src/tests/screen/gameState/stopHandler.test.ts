@@ -1,10 +1,12 @@
 import { renderHook } from '@testing-library/react-hooks';
+import { createMemoryHistory } from 'history';
 import React from 'react';
 
-import { useStopHandler } from '../../../domain/commonGameState/screen/stopHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { stopHandler, useStopHandler } from '../../../domain/commonGameState/screen/stopHandler';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasStoppedMessage } from '../../../domain/typeGuards/stopped';
 import { MessageTypes } from '../../../utils/constants';
+import { screenLobbyRoute } from '../../../utils/routes';
 
 describe('stopHandler', () => {
     const roomId = '1234';
@@ -12,18 +14,20 @@ describe('stopHandler', () => {
         type: MessageTypes.gameHasStopped,
     };
 
-    it.todo('when message type is gameHasStopped, history push should be called'); // TODO
-    // it.skip('when message type is gameHasStopped, history push should be called', async () => {
-    //     const history = createMemoryHistory();
-    //     const socket = new InMemorySocketFake();
+    it('when message type is gameHasStopped, history push should be called', async () => {
+        const history = createMemoryHistory();
+        const socket = new FakeInMemorySocket();
 
-    //     // const withDependencies = stopHandler({ history, setPlayCount, playCount });
+        const setPlayCount = jest.fn();
+        const playCount = 0;
 
-    //     withDependencies(socket, roomId);
-    //     await socket.emit(message);
+        const withDependencies = stopHandler({ history, setPlayCount, playCount });
 
-    //     expect(history.location).toHaveProperty('pathname', screenLobbyRoute(roomId));
-    // });
+        withDependencies(socket, roomId);
+        await socket.emit(message);
+
+        expect(history.location).toHaveProperty('pathname', screenLobbyRoute(roomId));
+    });
 });
 
 describe('useStopHandler', () => {
@@ -35,7 +39,7 @@ describe('useStopHandler', () => {
 
     it('handed handler should be called', () => {
         const stopHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -50,7 +54,7 @@ describe('useStopHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const stopHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useStopHandler(socket, stopHandler));
 

@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import React from 'react';
 
 import { resumeHandler, useResumeHandler } from '../../../domain/commonGameState/resumeHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasResumedMessage } from '../../../domain/typeGuards/resumed';
 import { MessageTypes } from '../../../utils/constants';
 
@@ -13,7 +13,7 @@ describe('resumeHandler', () => {
 
     it('when GameHasResumedMessage is emitted, handed setHasPause should be called with false', async () => {
         const setHasPaused = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = resumeHandler({ setHasPaused });
         withDependencies(socket, 'SDFO');
@@ -33,7 +33,7 @@ describe('useResumeHandler', () => {
 
     it('handed handler should be called', () => {
         const resumeHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -48,7 +48,7 @@ describe('useResumeHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const resumeHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useResumeHandler(socket, resumeHandler));
 

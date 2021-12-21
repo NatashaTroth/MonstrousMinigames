@@ -13,7 +13,7 @@ import ChooseCharacter, {
     CustomLeftArrow,
     CustomRightArrow,
 } from '../../../components/controller/ChooseCharacter';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import theme from '../../../styles/theme';
 import { MessageTypes } from '../../../utils/constants';
 
@@ -93,7 +93,7 @@ describe('CustomLeftArrow', () => {
 
 describe('chooseCharacterClick', () => {
     const props = {
-        controllerSocket: new InMemorySocketFake(),
+        controllerSocket: new FakeInMemorySocket(),
         setCharacter: jest.fn(),
         roomId: 'EDFS',
         actualCharacter: 0,
@@ -102,7 +102,7 @@ describe('chooseCharacterClick', () => {
     };
 
     it('should emit new character number to socket', () => {
-        const controllerSocket = new InMemorySocketFake();
+        const controllerSocket = new FakeInMemorySocket();
 
         chooseCharacterClick({ ...props, controllerSocket });
 

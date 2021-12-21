@@ -1,10 +1,32 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { defaultAvailableCharacters } from "../config/characters";
-import { GameNames } from "../config/games";
-import { ScreenStates } from "../config/screenStates";
-import { User } from "../domain/typeGuards/connectedUsers";
-import { LeaderboardState, PlayerRank } from "./screen/ScreenSocketContextProvider";
+import { defaultAvailableCharacters } from '../config/characters';
+import { GameNames } from '../config/games';
+import { ScreenStates } from '../config/screenStates';
+import { User } from '../domain/typeGuards/connectedUsers';
+import { PlayerRank } from './screen/ScreenSocketContextProvider';
+
+export enum GameType {
+    GameOne = 'The Great Monster Escape',
+    GameTwo = 'Kill sheep',
+    GameThree = 'Snapshot Marathon',
+}
+
+export interface UserPoints {
+    userId: string;
+    name: string;
+    points: number;
+    rank: number;
+}
+export interface GamePlayed {
+    game: GameType;
+    playerRanks: PlayerRank[];
+}
+
+export interface LeaderboardState {
+    gameHistory: GamePlayed[];
+    userPoints: UserPoints[]; //sorted by points
+}
 
 export const defaultValue = {
     finished: false,

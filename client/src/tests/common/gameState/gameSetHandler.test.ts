@@ -3,7 +3,7 @@ import React from 'react';
 
 import { GameNames } from '../../../config/games';
 import { gameSetHandler, useGameSetHandler } from '../../../domain/commonGameState/gameSetHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { GameSetMessage } from '../../../domain/typeGuards/gameSet';
 import { MessageTypes } from '../../../utils/constants';
 
@@ -16,7 +16,7 @@ describe('gameSetHandler', () => {
 
     it('when GameSetMessage is emitted, handed setChosenGame should be called with emitted game', async () => {
         const setChosenGame = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = gameSetHandler({ setChosenGame });
         withDependencies(socket, 'ASWR');
@@ -36,7 +36,7 @@ describe('useGameSetHandler', () => {
 
     it('handed handler should be called', () => {
         const gameSetHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -51,7 +51,7 @@ describe('useGameSetHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const gameSetHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useGameSetHandler(socket, gameSetHandler));
 

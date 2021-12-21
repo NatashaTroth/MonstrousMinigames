@@ -3,7 +3,7 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 
 import { resetHandler, useResetHandler } from '../../../domain/commonGameState/controller/resetHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasResetMessage } from '../../../domain/typeGuards/reset';
 import { MessageTypes } from '../../../utils/constants';
 
@@ -16,7 +16,7 @@ describe('resetHandler', () => {
     it('when GameHasResetMessage is emitted, history push should be called with handed roomId', async () => {
         const history = createMemoryHistory();
         const resetController = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = resetHandler({ history, resetController });
         withDependencies(socket, roomId);
@@ -36,7 +36,7 @@ describe('useResetHandler', () => {
 
     it('handed handler should be called', () => {
         const resetHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -51,7 +51,7 @@ describe('useResetHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const resetHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useResetHandler(socket, resetHandler));
 
