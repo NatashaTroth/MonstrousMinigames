@@ -1,16 +1,17 @@
 //TODO Events/Messages 3
 import { singleton } from 'tsyringe';
 
-import GameEventEmitter from '../../classes/GameEventEmitter';
-import Room from '../../classes/room';
-// import User from '../../classes/user';
-import { EventMessage } from '../../interfaces/EventMessage';
-import { EventMessageEmitter } from '../../interfaces/EventMessageEmitter';
 import Game from '../Game';
+import Player from '../Player';
 import { GlobalEventMessage } from '../interfaces/GlobalEventMessages';
 import { IGameStateBase } from '../interfaces/IGameStateBase';
-import Player from '../Player';
+import GameEventEmitter from '../../classes/GameEventEmitter';
+import Room from '../../classes/room';
+import { EventMessage } from '../../interfaces/EventMessage';
+import { EventMessageEmitter } from '../../interfaces/EventMessageEmitter';
+
 import { NamespaceAdapter } from './interfaces';
+
 import {
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
     GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS, GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
@@ -69,5 +70,8 @@ export class GameThreeEventMessageEmitter implements EventMessageEmitter {
     }
     private sendToAll(message: GameThreeEventMessage, nameSpace: NamespaceAdapter, room: Room) {
         nameSpace.to(room.id).emit('message', message);
+    }
+    removeAllListeners(): void {
+        this.gameEventEmitter.removeAllListeners();
     }
 }
