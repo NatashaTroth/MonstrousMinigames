@@ -54,8 +54,8 @@ export class PhaserSheepRenderer {
     }
 
     private renderSheepInitially(coordinates: Coordinates) {
-        this.sheep = this.scene.physics.add.sprite(coordinates.x, coordinates.y, 'sheep');
-        this.sheep.setScale(0.025);
+        this.sheep = this.scene.physics.add.sprite(coordinates.x, coordinates.y, 'sheepSpritesheet');
+        this.sheep.setScale(0.5);
         this.sheep.setDepth(depthDictionary.sheep);
         this.sheep.setCollideWorldBounds(true);
     }

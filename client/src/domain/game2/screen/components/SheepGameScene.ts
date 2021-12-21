@@ -131,8 +131,8 @@ class SheepGameScene extends Phaser.Scene {
         });
 
         this.load.spritesheet('sheepSpritesheet', sheepSpritesheet, {
-            frameWidth: 2480,
-            frameHeight: 2480,
+            frameWidth: 124,
+            frameHeight: 124,
             startFrame: 0,
             endFrame: 17,
         });
