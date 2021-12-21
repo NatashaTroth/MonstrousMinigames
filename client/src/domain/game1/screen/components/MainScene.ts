@@ -1,54 +1,53 @@
-import Phaser from "phaser";
+/* eslint-disable no-console */
+import Phaser from 'phaser';
 
-import chasersSpritesheet from "../../../../images/characters/spritesheets/chasers/chasers_spritesheet.png";
-import windSpritesheet from "../../../../images/characters/spritesheets/chasers/wind_spritesheet.png";
+import chasersSpritesheet from '../../../../images/characters/spritesheets/chasers/chasers_spritesheet.png';
+import windSpritesheet from '../../../../images/characters/spritesheets/chasers/wind_spritesheet.png';
+import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1 } from '../../../../utils/constants';
+import { screenFinishedRoute } from '../../../../utils/routes';
+import history from '../../../history/history';
+import { Game1 } from '../../../phaser/game1/Game1';
+import { GameToScreenMapper } from '../../../phaser/game1/GameToScreenMapper';
+import { initialGameInput } from '../../../phaser/game1/initialGameInput';
+import { Player } from '../../../phaser/game1/Player';
+import { PhaserPlayerRenderer } from '../../../phaser/game1/renderer/PhaserPlayerRenderer';
+import { GameAudio } from '../../../phaser/GameAudio';
+import GameEventEmitter from '../../../phaser/GameEventEmitter';
+import { GameEventTypes } from '../../../phaser/GameEventTypes';
+import { GameData } from '../../../phaser/gameInterfaces';
+import { PhaserGameRenderer } from '../../../phaser/renderer/PhaserGameRenderer';
+import { MessageSocket } from '../../../socket/MessageSocket';
+import { Socket } from '../../../socket/Socket';
+import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
 import {
-    designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1
-} from "../../../../utils/constants";
-import { screenFinishedRoute } from "../../../../utils/routes";
-import history from "../../../history/history";
-import { GameToScreenMapper } from "../../../phaser/game1/GameToScreenMapper";
-import { initialGameInput } from "../../../phaser/game1/initialGameInput";
-import { Player } from "../../../phaser/game1/Player";
-import { PhaserPlayerRenderer } from "../../../phaser/game1/renderer/PhaserPlayerRenderer";
-import { GameAudio } from "../../../phaser/GameAudio";
-import GameEventEmitter from "../../../phaser/GameEventEmitter";
-import { GameEventTypes } from "../../../phaser/GameEventTypes";
-import { GameData } from "../../../phaser/gameInterfaces";
-import { PhaserGameRenderer } from "../../../phaser/renderer/PhaserGameRenderer";
-import { MessageSocket } from "../../../socket/MessageSocket";
-import { Socket } from "../../../socket/Socket";
-import { finishedTypeGuard, GameHasFinishedMessage } from "../../../typeGuards/finished";
+    AllScreensPhaserGameLoadedMessage,
+    allScreensPhaserGameLoadedTypeGuard,
+} from '../../../typeGuards/game1/allScreensPhaserGameLoaded';
 import {
-    AllScreensPhaserGameLoadedMessage, allScreensPhaserGameLoadedTypeGuard
-} from "../../../typeGuards/game1/allScreensPhaserGameLoaded";
+    ApproachingSolvableObstacleOnceMessage,
+    approachingSolvableObstacleOnceTypeGuard,
+} from '../../../typeGuards/game1/approachingSolvableObstacleOnceTypeGuard';
+import { ChasersPushedMessage, ChasersPushedTypeGuard } from '../../../typeGuards/game1/chasersPushed';
+import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../../typeGuards/game1/gameStateInfo';
 import {
-    ApproachingSolvableObstacleOnceMessage, approachingSolvableObstacleOnceTypeGuard
-} from "../../../typeGuards/game1/approachingSolvableObstacleOnceTypeGuard";
+    InitialGameStateInfoMessage,
+    initialGameStateInfoTypeGuard,
+} from '../../../typeGuards/game1/initialGameStateInfo';
+import { ObstacleSkippedMessage, obstacleSkippedTypeGuard } from '../../../typeGuards/game1/obstacleSkipped';
 import {
-    ChasersPushedMessage, ChasersPushedTypeGuard
-} from "../../../typeGuards/game1/chasersPushed";
+    ObstacleWillBeSolvedMessage,
+    obstacleWillBeSolvedTypeGuard,
+} from '../../../typeGuards/game1/obstacleWillBeSolved';
 import {
-    GameStateInfoMessage, gameStateInfoTypeGuard
-} from "../../../typeGuards/game1/gameStateInfo";
-import {
-    InitialGameStateInfoMessage, initialGameStateInfoTypeGuard
-} from "../../../typeGuards/game1/initialGameStateInfo";
-import {
-    ObstacleSkippedMessage, obstacleSkippedTypeGuard
-} from "../../../typeGuards/game1/obstacleSkipped";
-import {
-    ObstacleWillBeSolvedMessage, obstacleWillBeSolvedTypeGuard
-} from "../../../typeGuards/game1/obstacleWillBeSolved";
-import {
-    PhaserLoadingTimedOutMessage, phaserLoadingTimedOutTypeGuard
-} from "../../../typeGuards/game1/phaserLoadingTimedOut";
-import { GameHasStartedMessage, startedTypeGuard } from "../../../typeGuards/game1/started";
-import { GameHasPausedMessage, pausedTypeGuard } from "../../../typeGuards/paused";
-import { GameHasResumedMessage, resumedTypeGuard } from "../../../typeGuards/resumed";
-import { GameHasStoppedMessage, stoppedTypeGuard } from "../../../typeGuards/stopped";
-import { moveLanesToCenter } from "../gameState/moveLanesToCenter";
-import { audioFiles, characters, fireworkFlares, images } from "./GameAssets";
+    PhaserLoadingTimedOutMessage,
+    phaserLoadingTimedOutTypeGuard,
+} from '../../../typeGuards/game1/phaserLoadingTimedOut';
+import { GameHasStartedMessage, startedTypeGuard } from '../../../typeGuards/game1/started';
+import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
+import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
+import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
+import { moveLanesToCenter } from '../gameState/moveLanesToCenter';
+import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
 class MainScene extends Phaser.Scene {
     windowWidth: number;
@@ -72,9 +71,14 @@ class MainScene extends Phaser.Scene {
     gameToScreenMapper?: GameToScreenMapper;
     firstGameStateReceived: boolean;
     allScreensLoaded: boolean;
+    sceneCreatedTime: string;
 
     constructor() {
-        super('MainScene');
+        // const sceneKey = Game1.getInstance('', false).getSceneName(); //TODO remove if key is static
+        super(Game1.SCENE_NAME);
+        // super('MainScene');
+        console.log('MAIN SCENE CONSTRUCTOR');
+        console.log(Game1.SCENE_NAME);
         this.windowWidth = 0;
         this.windowHeight = 0;
 
@@ -92,9 +96,15 @@ class MainScene extends Phaser.Scene {
         this.screenAdmin = false;
         this.firstGameStateReceived = false;
         this.allScreensLoaded = false;
+
+        this.sceneCreatedTime = Date.now().toString();
+
+        // eslint-disable-next-line no-console
+        console.log(this);
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
+        console.log('In Main scene init');
         this.camera = this.cameras.main;
         this.windowWidth = this.cameras.main.width;
         this.windowHeight = this.cameras.main.height;
@@ -111,6 +121,8 @@ class MainScene extends Phaser.Scene {
     }
 
     preload(): void {
+        console.log('In Main scene preload');
+
         this.gameRenderer?.renderLoadingScreen();
 
         // emitted every time a file has been loaded
@@ -164,6 +176,8 @@ class MainScene extends Phaser.Scene {
     }
 
     create() {
+        console.log('In Main scene create');
+
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
 
@@ -184,6 +198,7 @@ class MainScene extends Phaser.Scene {
     }
 
     initSockets() {
+        console.log('init sockets');
         if (!this.socket) return;
         if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
@@ -303,6 +318,8 @@ class MainScene extends Phaser.Scene {
     }
 
     initiateGame(gameStateData: GameData) {
+        console.log('INITIATING GAME');
+        console.log(this.sceneCreatedTime);
         this.gameToScreenMapper = new GameToScreenMapper(gameStateData.playersState[0].positionX, this.windowWidth);
         this.trackLength = gameStateData.trackLength;
 
