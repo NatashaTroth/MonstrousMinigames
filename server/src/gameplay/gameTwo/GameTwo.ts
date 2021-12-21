@@ -172,7 +172,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         switch (message.type) {
             case GameTwoMessageTypes.MOVE:
                 //console.info(message)
-                this.movePlayer(message.userId!, message.direction!);
+                this.movePlayer(message.userId!, message.direction!, message.sneaking);
                 break;
             case GameTwoMessageTypes.KILL:
                 // console.info(message)
@@ -187,9 +187,10 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         }
     }
 
-    protected movePlayer(userId: string, direction: string) {
+    protected movePlayer(userId: string, direction: string, sneaking = false) {
         const player = this.players.get(userId)!;
         if (this.roundService.isCountingPhase() && player) {
+            if (player.sneaking !== sneaking) player.setSneaking(sneaking);
             player.direction = direction;
         }
     }
