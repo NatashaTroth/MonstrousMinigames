@@ -35,7 +35,10 @@ export class Sheep {
     }
 
     moveSheep(posX: number, posY: number) {
-        this.renderer.moveSheep(posX, posY);
+        this.renderer.moveSheep(
+            this.gameToScreenMapper.mapGameMeasurementToScreen(posX),
+            this.gameToScreenMapper.mapGameMeasurementToScreen(posY)
+        );
     }
 
     stopRunning() {

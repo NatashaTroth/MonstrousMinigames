@@ -251,9 +251,9 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     initiateGame(gameStateData: GameData) {
-        this.gameToScreenMapper = new GameToScreenMapper(gameStateData.playersState[0].positionX, this.windowWidth, 0);
+        this.gameToScreenMapper = new GameToScreenMapper(gameStateData.lengthX, this.windowWidth);
 
-        this.physics.world.setBounds(0, 0, 7500, windowHeight);
+        this.physics.world.setBounds(0, 0, this.windowWidth, windowHeight);
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);
@@ -276,7 +276,10 @@ class SheepGameScene extends Phaser.Scene {
         }
         for (let i = 0; i < this.sheep.length; i++) {
             if (gameStateData.sheep[i]) {
-                this.sheep[i].renderer.moveSheep(gameStateData.sheep[i].posX, gameStateData.sheep[i].posY);
+                this.sheep[i].renderer.moveSheep(
+                    this.gameToScreenMapper?.mapGameMeasurementToScreen(gameStateData.sheep[i].posX),
+                    this.gameToScreenMapper?.mapGameMeasurementToScreen(gameStateData.sheep[i].posY)
+                );
                 if (gameStateData.sheep[i].state && gameStateData.sheep[i].state == SheepState.DECOY) {
                     this.sheep[i].renderer.placeDecoy();
                 } else if (gameStateData.sheep[i].state == SheepState.DEAD) {
