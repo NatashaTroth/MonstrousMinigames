@@ -13,6 +13,7 @@ export const depthDictionary = {
     caveInFront: 45,
     chaser: 50,
     grass: 52,
+    brightnessOverlay: 53,
     attention: 55,
     flares: 60,
     nameTag: 75,

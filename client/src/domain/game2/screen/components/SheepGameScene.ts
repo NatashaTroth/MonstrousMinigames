@@ -1,22 +1,22 @@
 import Phaser from 'phaser';
 
-import { GamePhases, PlayerRank } from '../../../../contexts/game2/Game2ContextProvider';
-import sheepSpritesheet from '../../../../images/characters/spritesheets/sheep/sheep_spritesheet.png';
-import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2 } from '../../../../utils/constants';
-import { screenFinishedRoute } from '../../../../utils/routes';
 import history from '../../../history/history';
-import { GameData } from '../../../phaser/game2/gameInterfaces/GameData';
-import { GameToScreenMapper } from '../../../phaser/game2/GameToScreenMapper';
-import { initialGameInput } from '../../../phaser/game2/initialGameInput';
-import { Player } from '../../../phaser/game2/Player';
-import { Sheep, SheepState } from '../../../phaser/game2/Sheep';
 import { GameAudio } from '../../../phaser/GameAudio';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import { GameEventTypes } from '../../../phaser/GameEventTypes';
-import { PhaserGameRenderer } from '../../../phaser/renderer/PhaserGameRenderer';
 import { MessageSocket } from '../../../socket/MessageSocket';
 import { Socket } from '../../../socket/Socket';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
+import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
+import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
+import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
+import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2 } from '../../../../utils/constants';
+import { screenFinishedRoute } from '../../../../utils/routes';
+import { GameToScreenMapper } from '../../../phaser/game2/GameToScreenMapper';
+import { Player } from '../../../phaser/game2/Player';
+import { Sheep, SheepState } from '../../../phaser/game2/Sheep';
+import { initialGameInput } from '../../../phaser/game2/initialGameInput';
+import { PhaserGameRenderer } from '../../../phaser/renderer/PhaserGameRenderer';
 import {
     AllScreensSheepGameLoadedMessage,
     allScreensSheepGameLoadedTypeGuard,
@@ -33,9 +33,11 @@ import {
 } from '../../../typeGuards/game2/phaserLoadingTimedOut';
 import { PlayerRanksMessage, playerRanksTypeGuard } from '../../../typeGuards/game2/playerRanks';
 import { SheepGameHasStartedMessage, sheepGameStartedTypeGuard } from '../../../typeGuards/game2/started';
-import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
-import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
-import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
+import { GamePhases, PlayerRank } from '../../../../contexts/game2/Game2ContextProvider';
+import { GameData } from '../../../phaser/game2/gameInterfaces/GameData';
+import { GameTwoRenderer } from '../../../phaser/game2/renderer/GameTwoRenderer';
+import sheepSpritesheet from '../../../../images/characters/spritesheets/sheep/sheep_spritesheet.png';
+
 import { audioFiles, characters, images } from './GameAssets';
 
 const windowHeight = window.innerHeight;
@@ -61,6 +63,7 @@ class SheepGameScene extends Phaser.Scene {
     firstGameStateReceived: boolean;
     allScreensLoaded: boolean;
     playerRanks: PlayerRank[];
+    gameTwoRenderer: GameTwoRenderer;
     brightness: number;
 
     constructor() {
@@ -80,6 +83,7 @@ class SheepGameScene extends Phaser.Scene {
         this.firstGameStateReceived = false;
         this.allScreensLoaded = false;
         this.playerRanks = [];
+        this.gameTwoRenderer = new GameTwoRenderer(this);
         this.brightness = 100;
     }
 
@@ -261,6 +265,7 @@ class SheepGameScene extends Phaser.Scene {
         for (let i = 0; i < gameStateData.sheep.length; i++) {
             this.createSheep(i, gameStateData);
         }
+        this.gameTwoRenderer.renderBrightnessOverlay(this.windowWidth, this.windowWidth);
     }
 
     updateGameState(gameStateData: GameData) {
@@ -282,7 +287,13 @@ class SheepGameScene extends Phaser.Scene {
                 }
             }
         }
+        // eslint-disable-next-line no-console
+        console.log(1 - (gameStateData.brightness / 100));
+
+        // eslint-disable-next-line no-console
+        console.log(this.gameTwoRenderer.brightnessOverlay?.alpha);
         this.brightness = gameStateData.brightness;
+        this.gameTwoRenderer?.updateBrightnessOverlay((gameStateData.brightness / 100));
     }
 
     updateGamePhase(data: PhaseChangedMessage) {
