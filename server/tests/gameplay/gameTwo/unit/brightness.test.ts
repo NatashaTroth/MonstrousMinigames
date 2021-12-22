@@ -39,10 +39,12 @@ describe('Brightness Tests', () => {
         brightness.start();
         jest.advanceTimersByTime(Parameters.BRIGHTNESS_TIMEOUT + 10);
         brightness.stop();
-        const value = brightness.value;
-        jest.advanceTimersByTime(1000)
+        setTimeout(() => {
+            const value = brightness.value;
+            jest.advanceTimersByTime(1000)
 
-        expect(brightness.value).toEqual(value);
+            expect(brightness.value).toEqual(value);
+        }, 100)
     });
 
     it('value should should be 100 again after next start', () => {

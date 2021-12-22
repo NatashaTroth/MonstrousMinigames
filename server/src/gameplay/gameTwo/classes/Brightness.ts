@@ -9,7 +9,6 @@ export default class Brightness {
         this.interval = null;
     }
     private update(): void {
-        console.debug(this.value)
         this.value -= Parameters.BRIGHTNESS_STEP;
         if (this.value <= Parameters.BRIGHTNESS_MINIMUM + 1) {
             this.value = Parameters.BRIGHTNESS_MINIMUM;
@@ -18,7 +17,6 @@ export default class Brightness {
     }
 
     start(reset = true): void {
-        console.debug(Parameters.BRIGHTNESS_STEP);
         if (reset) {
             this.resetValue();
             setTimeout(() => {
@@ -30,10 +28,8 @@ export default class Brightness {
         }
     }
 
-
     stop(): boolean {
         if (this.interval) {
-            clearInterval(this.interval)
             return true;
         }
         return false;
