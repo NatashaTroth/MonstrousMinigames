@@ -52,7 +52,7 @@ const Game3: React.FunctionComponent = () => {
 
     return (
         <ScreenContainer>
-            <PictureInstruction size={voteForPhotoMessage ? true : false}>
+            <PictureInstruction size={voteForPhotoMessage ? 'small' : 'default'}>
                 {finalRound ? 'Final Round' : `Round ${roundIdx}`}
             </PictureInstruction>
             {!displayCountdown && timeToDisplay && !votingResults && (
@@ -140,9 +140,9 @@ export function getInstruction(
 
     return (
         <>
-            <PictureInstruction size={voteForPhotoMessage ? true : false}>{instruction}</PictureInstruction>
+            <PictureInstruction size={voteForPhotoMessage ? 'small' : 'default'}>{instruction}</PictureInstruction>
             {!presentFinalPhotos && !finalRound && (
-                <RandomWord size={voteForPhotoMessage ? true : false}>{topic}</RandomWord>
+                <RandomWord size={voteForPhotoMessage ? 'small' : 'default'}>{topic}</RandomWord>
             )}
         </>
     );

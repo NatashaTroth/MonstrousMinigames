@@ -40,7 +40,7 @@ describe('PresentFinalPhotos', () => {
     });
 
     it('renders instructions when it is the users turn', async () => {
-        const givenText = "It's your turn!";
+        const givenText = "It's your turn! Tell a short story about the photos on the screen";
         const presentFinalPhotos = { photographerId: '1', name: 'Mock', photoUrls: [], countdownTime: 2000 };
         const { container } = render(
             <ThemeProvider theme={theme}>

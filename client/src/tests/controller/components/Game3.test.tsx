@@ -96,7 +96,8 @@ describe('getInstruction', () => {
     });
 
     it('should render final round instruction when final round is true', () => {
-        const givenText = 'Take three photos and tell a visual story about them afterwards';
+        const givenText =
+            'Take three photos. Later you will receive random photos from all uploaded photos. Use your imagination and present a short story about it.';
         const { container } = render(
             <ThemeProvider theme={theme}>
                 {getInstruction(undefined, undefined, true, undefined, undefined)}
@@ -119,7 +120,7 @@ describe('getInstruction', () => {
 
     it('should render instruction with name in final presentation round', () => {
         const presentFinalPhotos = { name: 'Jack', photographerId: '1', photoUrls: [], countdownTime: 200 };
-        const givenText = `${presentFinalPhotos.name} - Tell us a story about your pictures`;
+        const givenText = `${presentFinalPhotos.name} - Tell us a story about the pictures on the screen`;
         const { container } = render(
             <ThemeProvider theme={theme}>
                 {getInstruction(presentFinalPhotos, undefined, false, undefined, undefined)}
