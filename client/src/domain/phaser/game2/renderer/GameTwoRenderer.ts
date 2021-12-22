@@ -5,6 +5,7 @@ import SheepGameScene from '../../../game2/screen/components/SheepGameScene';
 
 export class GameTwoRenderer {
     brightnessOverlay?: Phaser.GameObjects.Rectangle;
+    guessText?: Phaser.GameObjects.Text;
 
     constructor(private scene: SheepGameScene) {}
 
