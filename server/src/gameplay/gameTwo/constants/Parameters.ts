@@ -1,8 +1,8 @@
 
 const COUNTDOWN_TIME = 3000;
 
-const LENGTH_X = 1800;
-const LENGTH_Y = 1000;
+const LENGTH_X = 1200;
+const LENGTH_Y = 900;
 
 const SPEED = 2;
 const SNEAKING_SPEED = 1;
@@ -42,7 +42,7 @@ type phaseTimes = {
 }
 
 const PHASE_TIMES: phaseTimes = {
-    'counting': 30000,
+    'counting': 50000,
     'guessing': 10000,
     'results': 5000
 }
@@ -54,7 +54,7 @@ const SHEEP_FREEZE_MAX_MS = 5000;
 
 const SHEEP_DIRECTIONS_COUNT = 40;
 
-const BRIGHTNESS_TIMEOUT = 3000;
+const BRIGHTNESS_TIMEOUT = 10000;
 const BRIGHTNESS_INTERVAL = 10;
 const BRIGHTNESS_MINIMUM = 10;
 
