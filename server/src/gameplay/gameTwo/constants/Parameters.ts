@@ -2,28 +2,29 @@
 const COUNTDOWN_TIME = 3000;
 
 const LENGTH_X = 1800;
-const LENGTH_Y = 700;
+const LENGTH_Y = 1000;
 
 const SPEED = 2;
 const SNEAKING_SPEED = 1;
 
+const PLAYER_MARGIN = 100;
 
 const PLAYERS_POSITIONS = [
     {
-        x: 100,
-        y: 100
+        x: PLAYER_MARGIN,
+        y: PLAYER_MARGIN
     },
     {
-        x: 1700,
-        y: 600
+        x: LENGTH_X - PLAYER_MARGIN,
+        y: LENGTH_Y - PLAYER_MARGIN
     },
     {
-        x: 1700,
-        y: 100
+        x: LENGTH_X - PLAYER_MARGIN,
+        y: PLAYER_MARGIN
     },
     {
-        x: 100,
-        y: 600
+        x: PLAYER_MARGIN,
+        y: LENGTH_Y - PLAYER_MARGIN
     }
 ];
 

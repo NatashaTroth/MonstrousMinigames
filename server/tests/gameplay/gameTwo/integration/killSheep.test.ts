@@ -14,7 +14,7 @@ const users = usersWithNumbers;
 describe('GameTwo Sheep Tests', () => {
     beforeEach(async () => {
         jest.spyOn(console, "log").mockImplementation();
-        gameTwo = new GameTwo(roomId, leaderboard);
+        gameTwo = new GameTwo(roomId, leaderboard, 10);
         jest.useFakeTimers();
 
         gameTwo.createNewGame(users);
@@ -25,6 +25,10 @@ describe('GameTwo Sheep Tests', () => {
     afterEach(() => {
         jest.clearAllTimers();
         gameTwo.cleanup();
+    });
+
+    it('should have the right number of sheep', async () => {
+        expect(gameTwo.sheepService.sheep.length).toEqual(10);
     });
 
     it('should kill sheep if message is sent and user is in radius', async () => {
@@ -48,8 +52,9 @@ describe('GameTwo Sheep Tests', () => {
         const sheep2 = new Sheep(Parameters.PLAYERS_POSITIONS[0].x + Parameters.KILL_RADIUS, Parameters.PLAYERS_POSITIONS[0].y + Parameters.KILL_RADIUS, gameTwo.sheepService.sheep.length);
         gameTwo.sheepService.sheep.push(sheep2);
 
-        const sheep3 = new Sheep(Parameters.PLAYERS_POSITIONS[0].x + Parameters.KILL_RADIUS - 2, Parameters.PLAYERS_POSITIONS[0].y + Parameters.KILL_RADIUS - 2, gameTwo.sheepService.sheep.length);
+        const sheep3 = new Sheep(Parameters.PLAYERS_POSITIONS[0].x + Parameters.KILL_RADIUS - 3, Parameters.PLAYERS_POSITIONS[0].y + Parameters.KILL_RADIUS - 3, gameTwo.sheepService.sheep.length);
         gameTwo.sheepService.sheep.push(sheep3);
+        gameTwo.sheepService.stopMoving();
 
         const message = {
             type: GameTwoMessageTypes.KILL,
