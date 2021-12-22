@@ -26,7 +26,7 @@ export class Player {
 
         this.renderer = new PhaserPlayerRenderer(scene);
 
-        this.renderer.renderSheepBackground(window.innerWidth, window.innerHeight);
+        this.renderer.renderSheepBackground(window.innerWidth, this.gameToScreenMapper.getMappedGameHeight() + 50); //+100 so bottom of character/sheep don't hang over edge
         this.setPlayer();
     }
 
@@ -39,8 +39,8 @@ export class Player {
             }
         }
 
-        this.coordinates.x = this.gameToScreenMapper.mapGameMeasurementToScreen(newXPosition);
-        this.coordinates.y = this.gameToScreenMapper.mapGameMeasurementToScreen(newYPosition);
+        this.coordinates.x = newXPosition;
+        this.coordinates.y = newYPosition;
         this.renderer.movePlayerTo(
             this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
             this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.y)

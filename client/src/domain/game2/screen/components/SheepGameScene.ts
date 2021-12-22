@@ -39,7 +39,6 @@ import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/res
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
 import { audioFiles, characters, images } from './GameAssets';
 
-const windowHeight = window.innerHeight;
 class SheepGameScene extends Phaser.Scene {
     windowWidth: number;
     windowHeight: number;
@@ -100,11 +99,13 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     preload(): void {
-        this.gameRenderer?.renderLoadingScreen();
-        // emitted every time a file has been loaded
-        this.load.on('progress', (value: number) => {
-            this.gameRenderer?.updateLoadingScreenPercent(value);
-        });
+        if (!designDevelopment) {
+            this.gameRenderer?.renderLoadingScreen();
+            // emitted every time a file has been loaded
+            this.load.on('progress', (value: number) => {
+                this.gameRenderer?.updateLoadingScreenPercent(value);
+            });
+        }
 
         if (designDevelopment) {
             // emitted every time a file has been loaded
@@ -180,7 +181,6 @@ class SheepGameScene extends Phaser.Scene {
                 // third message -> start Game
                 if (this.screenAdmin && !designDevelopment) this.sendStartGame();
             });
-            // this.firstGameStateReceived = true;
         }
 
         // second message -> createGame
@@ -251,9 +251,14 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     initiateGame(gameStateData: GameData) {
-        this.gameToScreenMapper = new GameToScreenMapper(gameStateData.lengthX, this.windowWidth);
+        this.gameToScreenMapper = new GameToScreenMapper(
+            gameStateData.lengthX,
+            this.windowWidth,
+            gameStateData.lengthY,
+            this.windowHeight
+        );
 
-        this.physics.world.setBounds(0, 0, this.windowWidth, windowHeight);
+        this.physics.world.setBounds(0, 0, this.windowWidth, this.windowHeight);
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);

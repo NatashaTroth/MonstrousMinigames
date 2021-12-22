@@ -10,6 +10,7 @@ export interface PlayersState {
     name: string;
     obstacles: ObstacleDetails[];
     positionX: number;
+    positionY?: number;
     rank: number;
     characterNumber: number;
     stunned: boolean;
