@@ -67,7 +67,7 @@ export class PhaserGameRenderer {
             text: ranksText,
             style: {
                 ...loadingTextStyleProperties,
-                fontSize: `${20}px`,
+                fontSize: `${40}px`,
                 color: colors.orange,
                 fontStyle: 'bold',
             },
@@ -88,7 +88,7 @@ export class PhaserGameRenderer {
                     text: 'How many sheep are there?\nEnter your guess on your device.',
                     style: {
                         ...loadingTextStyleProperties,
-                        fontSize: `${20}px`,
+                        fontSize: `${40}px`,
                         color: colors.orange,
                         fontStyle: 'bold',
                     },
