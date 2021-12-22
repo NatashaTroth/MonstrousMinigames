@@ -1,10 +1,10 @@
-import 'reflect-metadata';
+import "reflect-metadata";
 
-import { GameOne } from '../../../../src/gameplay';
-import { GameState } from '../../../../src/gameplay/enums';
-import { GameOneMsgType } from '../../../../src/gameplay/gameOne/enums';
-import { IMessageStunPlayer } from '../../../../src/gameplay/gameOne/interfaces/messageStunPlayer';
-import { leaderboard, mockMessage, roomId } from '../../mockData';
+import { GameOne } from "../../../../src/gameplay";
+import { GameState } from "../../../../src/gameplay/enums";
+import { GameOneMsgType } from "../../../../src/gameplay/gameOne/enums";
+import { IMessageStunPlayer } from "../../../../src/gameplay/gameOne/interfaces/messageStunPlayer";
+import { leaderboard, mockMessage, roomId } from "../../mockData";
 
 let gameOne: GameOne;
 
@@ -54,20 +54,27 @@ describe('Handle Input Method', () => {
         const spy = jest.spyOn(GameOne.prototype as any, 'stunPlayer').mockImplementation(() => {
             Promise.resolve();
         });
-        const message = { ...mockMessage };
+        const message: IMessageStunPlayer = { type: GameOneMsgType.STUN_PLAYER, receivingUserId: '1' };
 
-        message.type = GameOneMsgType.STUN_PLAYER;
         gameOne['handleInput'](message);
         expect(spy).toBeCalledTimes(1);
+    });
+
+    it('should call not the stunPlayer method when the Message is of type STUN_PLAYER and no receivingUserId is given', async () => {
+        const spy = jest.spyOn(GameOne.prototype as any, 'stunPlayer').mockImplementation(() => {
+            Promise.resolve();
+        });
+        const message = { type: GameOneMsgType.STUN_PLAYER };
+
+        gameOne['handleInput'](message);
+        expect(spy).toBeCalledTimes(0);
     });
 
     it('should call not the stunPlayer method when the Message is of type STUN_PLAYER and the user id is the receiving', async () => {
         const spy = jest.spyOn(GameOne.prototype as any, 'stunPlayer').mockImplementation(() => {
             Promise.resolve();
         });
-        const message: IMessageStunPlayer = { type: GameOneMsgType.STUN_PLAYER, receivingUserId: '1' };
-        message.type = GameOneMsgType.STUN_PLAYER;
-        message.receivingUserId = '1';
+        const message: IMessageStunPlayer = { type: GameOneMsgType.STUN_PLAYER, receivingUserId: '1', userId: '1' };
 
         gameOne['handleInput'](message);
         expect(spy).toBeCalledTimes(0);
