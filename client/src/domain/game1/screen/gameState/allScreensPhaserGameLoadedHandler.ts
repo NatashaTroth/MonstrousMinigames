@@ -1,7 +1,9 @@
 import { MessageTypes } from '../../../../utils/constants';
 import messageHandler from '../../../socket/messageHandler';
 import { Socket } from '../../../socket/Socket';
-import { allScreensPhaserGameLoadedTypeGuard } from '../../../typeGuards/game1/allScreensPhaserGameLoaded';
+import {
+    allScreensPhaserGameLoadedTypeGuard
+} from '../../../typeGuards/game1/allScreensPhaserGameLoaded';
 
 interface Dependencies {
     screenAdmin: boolean;
@@ -11,6 +13,9 @@ interface Dependencies {
 export const allScreensPhaserGameLoadedHandler = messageHandler(
     allScreensPhaserGameLoadedTypeGuard,
     (message, dependencies: Dependencies) => {
+        // eslint-disable-next-line no-console
+        console.log('Received allScreensPhaserGameLoadedHandler');
+
         if (dependencies.screenAdmin) {
             dependencies.sendCreateNewGame();
         }

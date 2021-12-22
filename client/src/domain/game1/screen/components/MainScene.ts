@@ -173,6 +173,7 @@ class MainScene extends Phaser.Scene {
     }
 
     initSockets() {
+        console.log('in initSockets');
         initSockets({
             socket: this.socket,
             screenAdmin: this.screenAdmin,

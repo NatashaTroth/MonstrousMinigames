@@ -59,6 +59,8 @@ interface InitSocketsProps {
 }
 
 export function initSockets({ socket, screenAdmin, roomId, scene }: InitSocketsProps) {
+    // eslint-disable-next-line no-console
+    console.log('INITIATING SOCKETS');
     if (!socket || !roomId) return;
 
     if (!designDevelopment) {
