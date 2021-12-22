@@ -80,6 +80,7 @@ const Stone: React.FunctionComponent<StoneProps> = ({ history, tutorial, handleT
         if (counter === limit && tutorial) {
             handleTutorialFinished?.('windmill');
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [counter]);
 
     const handleCollected = () => {

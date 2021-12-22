@@ -1,17 +1,15 @@
 import 'reflect-metadata';
 
 import client from 'socket.io-client';
-
 import axios from 'axios';
 
 import initApp from '../../src/initApp';
 
-const PORT = 5561;
+const PORT = 4501;
 
 const url = `localhost:${PORT}`;
 let roomCode: string;
 let controller: SocketIOClient.Socket;
-
 
 const app = initApp(PORT);
 app.run();
@@ -37,14 +35,13 @@ describe('App Tests:', () => {
             return resp.data ? resp.data.roomId : '1234';
         });
         done();
-
     });
 
     it('should get a room code on request', async done => {
         await axios.get(`http://${url}/create-room`).then(resp => {
+            console.log('hi');
             expect(resp.data.roomId).not.toBeNull();
             done();
-
         });
     });
     it('should send a message of type userinit with the given username on connection', async done => {

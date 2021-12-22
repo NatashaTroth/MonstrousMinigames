@@ -1,5 +1,5 @@
 import handleStartClickedGame3 from '../../../domain/game3/screen/gameState/handleStartClickedGame3';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { MessageTypes } from '../../../utils/constants';
 
 beforeEach(() => {
@@ -8,7 +8,7 @@ beforeEach(() => {
 
 describe('handleStartClickedGame3 function', () => {
     it('createGame should be emitted first', () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const roomId = 'ABCD';
 
         global.sessionStorage.setItem('roomId', roomId);
@@ -19,7 +19,7 @@ describe('handleStartClickedGame3 function', () => {
     });
 
     it('startGame should be emitted second', () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const roomId = 'ABCD';
 
         global.sessionStorage.setItem('roomId', roomId);

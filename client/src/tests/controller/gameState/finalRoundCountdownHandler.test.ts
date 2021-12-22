@@ -5,7 +5,7 @@ import {
     finalRoundCountdownHandler,
     useFinalRoundCountdownHandler,
 } from '../../../domain/game3/controller/gameState/finalRoundCountdownHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { FinalRoundCountdownMessage } from '../../../domain/typeGuards/game3/finalRoundCountdown';
 import { MessageTypesGame3 } from '../../../utils/constants';
 
@@ -19,7 +19,7 @@ describe('finalRoundCountdownHandler', () => {
 
     it('when FinalRoundCountdownMessage is written, setFinalRoundCountdownTime should be called', async () => {
         const setFinalRoundCountdownTime = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = finalRoundCountdownHandler({ setFinalRoundCountdownTime });
         withDependencies(socket, roomId);
@@ -39,7 +39,7 @@ describe('useFinalRoundCountdownHandler', () => {
 
     it('handed handler should be called', () => {
         const finalRoundCountdownHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -54,7 +54,7 @@ describe('useFinalRoundCountdownHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const finalRoundCountdownHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useFinalRoundCountdownHandler(socket, finalRoundCountdownHandler));
 

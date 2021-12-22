@@ -1,5 +1,5 @@
 import { sendMovementToController } from '../../../domain/game1/controller/gameState/addMovementListener';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 
 describe('test sendMovementToController function', () => {
     it('sendMovementToController should call handed sendMovement function', async () => {
@@ -11,7 +11,7 @@ describe('test sendMovementToController function', () => {
         };
         const playerFinished = false;
         const hasPaused = false;
-        const controllerSocket = new InMemorySocketFake();
+        const controllerSocket = new FakeInMemorySocket();
         const sendMovement = jest.fn();
 
         sendMovementToController(e, playerFinished, controllerSocket, hasPaused, sendMovement);

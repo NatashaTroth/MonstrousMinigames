@@ -1,5 +1,8 @@
-import { MessageTypesGame2 } from '../../../utils/constants';
-import { AllScreensSheepGameLoadedMessage, allScreensSheepGameLoadedTypeGuard } from './allScreensSheepGameLoaded';
+import {
+    AllScreensSheepGameLoadedMessage,
+    allScreensSheepGameLoadedTypeGuard,
+} from '../../domain/typeGuards/game2/allScreensSheepGameLoaded';
+import { MessageTypesGame2 } from '../../utils/constants';
 
 describe('allScreensPhaserGameLoaded TypeGuard', () => {
     it('when type is started, it should return true', () => {

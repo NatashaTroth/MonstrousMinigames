@@ -125,7 +125,7 @@ function startGame(game: GameNames, screenSocket: Socket) {
     }
 }
 
-function canStartGame(
+export function canStartGame(
     emptyGame: boolean,
     usersReady: boolean,
     connectedUsers: User[] | undefined,

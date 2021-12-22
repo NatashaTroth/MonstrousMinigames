@@ -48,7 +48,6 @@ const Game: React.FunctionComponent = () => {
         togglePlaying();
     }
 
-    //TODO click on pause immediately - doesn't work because wrong gamestate, countdown still running - fix
     async function handlePause() {
         GameEventEmitter.emitPauseResumeEvent();
     }

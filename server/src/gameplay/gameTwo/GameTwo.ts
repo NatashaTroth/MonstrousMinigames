@@ -29,13 +29,13 @@ interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateIn
 export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implements GameTwoGameInterface {
     public lengthX: number;
     public lengthY: number;
-    countdownTime = Parameters.COUNTDOWN_TIME;
     public sheepService: SheepService;
     private roundService: RoundService;
     private roundEventEmitter: RoundEventEmitter;
     private guessingService: GuessingService;
-    private brightness: Brightness
+    private brightness: Brightness;
 
+    countdownTime = Parameters.COUNTDOWN_TIME;
     gameName = GameNames.GAME2;
 
     constructor(roomId: string, public leaderboard: Leaderboard) {
@@ -95,9 +95,11 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         return;
     }
 
+    // *************** game events *************
+
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
-        this.resetPlayerPositions();
+        this.resetPlayers();
         this.sheepService.initSheep();
         this.guessingService.init(users);
         this.listenToEvents();
@@ -144,9 +146,51 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.cleanup();
     }
 
-    protected movePlayer(userId: string, direction: string) {
+    disconnectPlayer(userId: string) {
+        if (super.disconnectPlayer(userId)) {
+            GameTwoEventEmitter.emitPlayerHasDisconnected(this.roomId, userId);
+            return true;
+        }
+
+        return false;
+    }
+
+    reconnectPlayer(userId: string) {
+        if (super.reconnectPlayer(userId)) {
+            GameTwoEventEmitter.emitPlayerHasReconnected(this.roomId, userId);
+            return true;
+        }
+        return false;
+    }
+
+    public cleanup() {
+        this.roundEventEmitter.removeAllListeners();
+    }
+
+    // *************** input messages *************
+    protected handleInput(message: IMessage) {
+        switch (message.type) {
+            case GameTwoMessageTypes.MOVE:
+                //console.info(message)
+                this.movePlayer(message.userId!, message.direction!, message.sneaking);
+                break;
+            case GameTwoMessageTypes.KILL:
+                // console.info(message)
+                this.killSheep(message.userId!);
+                break;
+            case GameTwoMessageTypes.GUESS:
+                // console.info(message)
+                this.handleGuess(message.userId!, message.guess!);
+                break;
+            default:
+                console.info(message);
+        }
+    }
+
+    protected movePlayer(userId: string, direction: string, sneaking = false) {
         const player = this.players.get(userId)!;
         if (this.roundService.isCountingPhase() && player) {
+            if (player.sneaking !== sneaking) player.setSneaking(sneaking);
             player.direction = direction;
         }
     }
@@ -155,6 +199,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         if (this.roundService.isCountingPhase() && player && player.killsLeft > 0) {
             if (this.sheepService.killSheep(player)) {
                 player.killsLeft--;
+                GameTwoEventEmitter.emitRemainingKills(this.roomId, userId, player.killsLeft);
             }
         }
     }
@@ -173,66 +218,44 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     }
 
-    protected handleInput(message: IMessage) {
-        switch (message.type) {
-            case GameTwoMessageTypes.MOVE:
-                //console.info(message)
-                this.movePlayer(message.userId!, message.direction!);
-                break;
-            case GameTwoMessageTypes.KILL:
-                // console.info(message)
-                this.killSheep(message.userId!);
-                break;
-            case GameTwoMessageTypes.GUESS:
-                // console.info(message)
-                this.handleGuess(message.userId!, message.guess!);
-                break;
-            default:
-                console.info(message);
-        }
-    }
-
-    disconnectPlayer(userId: string) {
-        if (super.disconnectPlayer(userId)) {
-            GameTwoEventEmitter.emitPlayerHasDisconnected(this.roomId, userId);
-            return true;
-        }
-
-        return false;
-    }
-
-    reconnectPlayer(userId: string) {
-        if (super.reconnectPlayer(userId)) {
-            GameTwoEventEmitter.emitPlayerHasReconnected(this.roomId, userId);
-            return true;
-        }
-        return false;
-    }
+    // *************** phases *************
 
     protected listenToEvents(): void {
         this.roundEventEmitter.on(RoundEventEmitter.PHASE_CHANGE_EVENT, (round: number, phase: string) => {
             if (phase === Phases.COUNTING) {
-                this.setPlayersMoving();
-                this.sheepService.startMoving()
-                this.brightness.start();
+                this.initCountingPhase();
             } else if (phase === Phases.GUESSING) {
-                this.stopPlayersMoving();
-                this.resetPlayerPositions();
-                this.sheepService.stopMoving();
-                this.brightness.stop();
-                this.guessingService.saveSheepCount(round, this.sheepService.getAliveSheepCount());
+                this.initGuessingPhase(round);
             } else if (phase === Phases.RESULTS) {
-                this.guessingService.calculatePlayerRanks();
-                GameTwoEventEmitter.emitPlayerRanks(this.roomId, this.guessingService.getPlayerRanks())
+                this.initResultsPhase();
             }
             GameTwoEventEmitter.emitPhaseHasChanged(this.roomId, round, phase);
         });
 
         this.roundEventEmitter.on(RoundEventEmitter.GAME_FINISHED_EVENT, () => this.handleGameFinished());
-
     }
 
-    handleGameFinished() {
+    protected initCountingPhase(): void {
+        this.setPlayersMoving();
+        this.emitPlayerRemainingKills();
+        this.sheepService.startMoving()
+        this.brightness.start();
+    }
+
+    protected initGuessingPhase(round: number): void {
+        this.stopPlayersMoving();
+        this.resetPlayers();
+        this.sheepService.stopMoving();
+        this.brightness.stop();
+        this.guessingService.saveSheepCount(round, this.sheepService.getAliveSheepCount());
+    }
+
+    protected initResultsPhase(): void {
+        this.guessingService.calculatePlayerRanks();
+        GameTwoEventEmitter.emitPlayerRanks(this.roomId, this.guessingService.getPlayerRanks())
+    }
+
+    protected handleGameFinished(): void {
         const playerRanks = this.guessingService.getPlayerRanks();
 
         this.leaderboard.addGameToHistory(GameType.GameTwo, [...playerRanks]);
@@ -241,19 +264,25 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         GameTwoEventEmitter.emitGameHasFinishedEvent(this.roomId, this.gameState, playerRanks);
     }
 
-    public cleanup() {
-        this.roundEventEmitter.removeAllListeners();
-    }
+
+
+    // *************** players *************
 
     protected stopPlayersMoving(): void {
-        [...this.players].forEach(player => player[1].moving = false)
+        [...this.players].forEach(player => player[1].moving = false);
     }
 
     protected setPlayersMoving(): void {
-        [...this.players].forEach(player => player[1].moving = true)
+        [...this.players].forEach(player => player[1].moving = true);
     }
 
-    protected resetPlayerPositions(): void {
-        [...this.players].forEach(player => player[1].setPlayerPosition())
+    protected resetPlayers(): void {
+        [...this.players].forEach(player => {
+            player[1].resetPlayer();
+        });
+    }
+
+    protected emitPlayerRemainingKills(): void {
+        [...this.players].forEach(player => GameTwoEventEmitter.emitRemainingKills(this.roomId, player[0], player[1].killsLeft));
     }
 }

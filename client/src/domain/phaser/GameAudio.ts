@@ -1,7 +1,6 @@
 import GameEventEmitter from './GameEventEmitter';
 
 export class GameAudio {
-    // backgroundMusicStart: Phaser.Sound.BaseSound;
     backgroundMusicLoop: Phaser.Sound.BaseSound;
     currentMusic?: Phaser.Sound.BaseSound;
     sound: Phaser.Sound.HTML5AudioSoundManager | Phaser.Sound.NoAudioSoundManager | Phaser.Sound.WebAudioSoundManager;
@@ -21,10 +20,7 @@ export class GameAudio {
         const initialVolume = oldVolumeFromLocalStorage ? Number(oldVolumeFromLocalStorage) : 0.2;
 
         this.sound = sound;
-        // this.backgroundMusicStart = this.sound.add('backgroundMusicStart', {
-        //     volume: initialVolume,
-        // });
-        // this.currentMusic = this.backgroundMusicStart;
+
         this.backgroundMusicLoop = this.sound.add('backgroundMusicLoop', {
             volume: initialVolume,
         });
@@ -33,11 +29,6 @@ export class GameAudio {
     }
 
     initAudio() {
-        // this.backgroundMusicStart.play({ loop: false });
-        // this.backgroundMusicStart.once('complete', () => {
-        //     this.backgroundMusicLoop.play({ loop: true });
-        //     this.currentMusic = this.backgroundMusicLoop;
-        // });
         this.backgroundMusicLoop.play({ loop: true });
 
         if (!this.startWithMusic) {
@@ -49,7 +40,6 @@ export class GameAudio {
     }
 
     stopMusic() {
-        // this.backgroundMusicStart?.stop();
         this.backgroundMusicLoop?.stop();
     }
 

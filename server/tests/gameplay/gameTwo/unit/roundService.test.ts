@@ -9,14 +9,9 @@ describe('RoundService Tests', () => {
         roundService = new RoundService();
     });
 
-
     afterEach(() => {
-        jest.useRealTimers();
+        jest.clearAllTimers();
     });
-
-    afterAll(async () => {
-        await new Promise<void>(resolve => setTimeout(() => resolve(), 3000));
-      });
 
     it('should have the counting phase as the initial phase', () => {
         expect(roundService.isCountingPhase()).toBeTruthy();

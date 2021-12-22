@@ -22,10 +22,6 @@ export class PhaserSheepRenderer {
         // 5 - 9: left
         // 10 - 13: forward
         // 14 - 17: back
-        // this.initiateAnimation('sheepSpritesheet', 'sheep_walkRight', { start: 0, end: 4 });
-        // this.initiateAnimation('sheepSpritesheet', 'sheep_walkLeft', { start: 5, end: 9 });
-        // this.initiateAnimation('sheepSpritesheet', 'sheep_walkForward', { start: 10, end: 13 });
-        // this.initiateAnimation('sheepSpritesheet', 'sheep_walkBack', { start: 14, end: 17 });
     }
 
     renderSheep(sheep: Sheep) {
@@ -36,25 +32,16 @@ export class PhaserSheepRenderer {
         }
     }
 
-    moveSheep(plusX?: number, plusY?: number) {
-        if (plusY) {
-            if (plusY > 0) {
-                //this.sheep?.play('sheep_walkForward');
+    moveSheep(posX?: number, posY?: number) {
+        if (posX && this.sheep) {
+            if (posX > this.sheep.x) {
+                this.startAnimation('sheep_walkRight');
+            } else {
+                this.stopAnimation();
             }
-            if (plusY < 0) {
-                //this.sheep?.play('sheep_walkBack');
-            }
-            this.sheep?.setY(this.sheep?.y + plusY);
         }
-        if (plusX) {
-            if (plusX > 0) {
-                //this.sheep?.play('sheep_walkRight');
-            }
-            if (plusX < 0) {
-                //this.sheep?.play('sheep_walkLeft');
-            }
-            this.sheep?.setX(this.sheep?.x + plusX);
-        }
+        this.sheep?.setY(posY);
+        this.sheep?.setX(posX);
     }
 
     destroySheep() {
@@ -70,8 +57,12 @@ export class PhaserSheepRenderer {
     }
 
     private renderSheepInitially(coordinates: Coordinates) {
-        this.sheep = this.scene.physics.add.sprite(coordinates.x, coordinates.y, 'sheep');
-        this.sheep.setScale(0.025);
+        this.initiateAnimation('sheepSpritesheet', 'sheep_walkRight', { start: 0, end: 4 });
+        this.initiateAnimation('sheepSpritesheet', 'sheep_walkLeft', { start: 5, end: 9 });
+        this.initiateAnimation('sheepSpritesheet', 'sheep_walkForward', { start: 10, end: 13 });
+        this.initiateAnimation('sheepSpritesheet', 'sheep_walkBack', { start: 14, end: 17 });
+        this.sheep = this.scene.physics.add.sprite(coordinates.x, coordinates.y, 'sheepSpritesheet');
+        this.sheep.setScale(0.5);
         this.sheep.setDepth(depthDictionary.sheep);
         this.sheep.setCollideWorldBounds(true);
     }
@@ -79,7 +70,7 @@ export class PhaserSheepRenderer {
     private initiateAnimation(spritesheetName: string, animationName: string, frames: CharacterAnimationFrames) {
         this.scene.anims.create({
             key: animationName,
-            frames: this.scene.anims.generateFrameNumbers(spritesheetName, frames),
+            frames: this.scene.anims.generateFrameNumbers(spritesheetName, { start: 0, end: 4 }),
             frameRate: 6,
             repeat: -1,
         });

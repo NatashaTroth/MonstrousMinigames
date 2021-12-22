@@ -3,7 +3,7 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 
 import { finishedHandler, useFinishedHandler } from '../../../domain/commonGameState/screen/finishedHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasFinishedMessage } from '../../../domain/typeGuards/finished';
 import { GameState, MessageTypes } from '../../../utils/constants';
 import { screenFinishedRoute } from '../../../utils/routes';
@@ -27,7 +27,7 @@ describe('finishedHandler', () => {
         const history = createMemoryHistory();
         const setFinished = jest.fn();
         const setPlayerRanks = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = finishedHandler({ history, setFinished, setPlayerRanks });
         withDependencies(socket, roomId);
@@ -41,7 +41,7 @@ describe('finishedHandler', () => {
         const history = createMemoryHistory();
         const setFinished = jest.fn();
         const setPlayerRanks = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = finishedHandler({ history, setFinished, setPlayerRanks });
         withDependencies(socket, roomId);
@@ -55,7 +55,7 @@ describe('finishedHandler', () => {
         const history = createMemoryHistory();
         const setFinished = jest.fn();
         const setPlayerRanks = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = finishedHandler({ history, setFinished, setPlayerRanks });
         withDependencies(socket, roomId);
@@ -75,7 +75,7 @@ describe('useFinishedHandler', () => {
 
     it('handed handler should be called', () => {
         const finishedHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -90,7 +90,7 @@ describe('useFinishedHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const finishedHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useFinishedHandler(socket, finishedHandler));
 

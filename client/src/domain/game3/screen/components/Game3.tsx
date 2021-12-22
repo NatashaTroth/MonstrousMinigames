@@ -24,6 +24,7 @@ const Game3: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         localStorage.setItem('beforeVolume', String(volume));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     React.useEffect(() => {
@@ -55,7 +56,7 @@ const Game3: React.FunctionComponent = () => {
 
     return (
         <ScreenContainer>
-            <PictureInstruction small={!!voteForPhotoMessage}>
+            <PictureInstruction size={voteForPhotoMessage ? true : false}>
                 {finalRound ? 'Final Round' : `Round ${roundIdx}`}
             </PictureInstruction>
             {!displayCountdown && timeToDisplay && !votingResults && (
@@ -142,8 +143,10 @@ export function getInstruction(
 
     return (
         <>
-            <PictureInstruction small={!!voteForPhotoMessage}>{instruction}</PictureInstruction>
-            {!presentFinalPhotos && !finalRound && <RandomWord small={!!voteForPhotoMessage}>{topic}</RandomWord>}
+            <PictureInstruction size={voteForPhotoMessage ? true : false}>{instruction}</PictureInstruction>
+            {!presentFinalPhotos && !finalRound && (
+                <RandomWord size={voteForPhotoMessage ? true : false}>{topic}</RandomWord>
+            )}
         </>
     );
 }

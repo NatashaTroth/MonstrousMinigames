@@ -41,6 +41,7 @@ class ConnectionHandler {
         this.socketIOServer.socketIo.close();
         this.socketIOServer.socketIo.removeAllListeners();
         this.gameEventEmitter.removeAllListeners();
+        this.eventMessageEmitters.forEach(emitter => emitter.removeAllListeners());
     }
     private handleControllers() {
         this.controllerNamespace.on('connection', (socket: Socket) => {

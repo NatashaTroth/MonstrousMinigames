@@ -5,11 +5,14 @@ export const GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE = 'game2/ini
 export const GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED = 'game2/PhaseHasChanged';
 export const GAME_TWO_EVENT_MESSAGE__GUESS_HINT = 'game2/guessHint';
 export const GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS = 'game2/playerRanks';
+export const GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS = 'game2/remainingKills';
 
 export const GAME_TWO_EVENT_MESSAGES = [
     GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
     GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED,
     GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS,
+    GAME_TWO_EVENT_MESSAGE__GUESS_HINT,
+    GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS
 ];
 
 export interface GameTwoInitialGameState {
@@ -39,8 +42,17 @@ export interface GameTwoPhaseHasChanged {
 }
 
 
+export interface GameTwoRemainingKills {
+    type: typeof GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS;
+    roomId: string;
+    userId: string;
+    remainingKills: number;
+}
+
+
 export type GameTwoEventMessage =
     | GameTwoInitialGameState
     | GameTwoPhaseHasChanged
     | GameTwoGuessHint
-    | GameTwoPlayerRanks;
+    | GameTwoPlayerRanks
+    | GameTwoRemainingKills;

@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import React from 'react';
 
 import { pauseHandler, usePauseHandler } from '../../../domain/commonGameState/pauseHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasPausedMessage } from '../../../domain/typeGuards/paused';
 import { MessageTypes } from '../../../utils/constants';
 
@@ -13,7 +13,7 @@ describe('pauseHandler', () => {
 
     it('when GameHasPausedMessage is emitted, handed setHasPause should be called with true', async () => {
         const setHasPaused = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = pauseHandler({ setHasPaused });
         withDependencies(socket, 'SSWG');
@@ -33,7 +33,7 @@ describe('usePauseHandler', () => {
 
     it('handed handler should be called', () => {
         const pauseHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -48,7 +48,7 @@ describe('usePauseHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const pauseHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => usePauseHandler(socket, pauseHandler));
 

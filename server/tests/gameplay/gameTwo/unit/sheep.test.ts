@@ -8,6 +8,10 @@ describe('Sheep Tests', () => {
         sheep = new Sheep(50, 50, 1);
     });
 
+    afterEach(() => {
+        jest.clearAllTimers();
+    });
+
     it('should have the right amount of directions in the begining', () => {
         expect(sheep.directions.length).toEqual(Parameters.SHEEP_DIRECTIONS_COUNT);
     });

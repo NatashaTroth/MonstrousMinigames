@@ -11,13 +11,13 @@ import {
 import { defaultValue as gameContextDefaultValue, GameContext } from '../../../contexts/GameContextProvider';
 import { defaultValue, PlayerContext } from '../../../contexts/PlayerContextProvider';
 import history from '../../../domain/history/history';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import theme from '../../../styles/theme';
 
 afterEach(cleanup);
 
 describe('Controller FinishedScreen', () => {
-    const socket = new InMemorySocketFake();
+    const socket = new FakeInMemorySocket();
 
     const FinishedScreenComponent = (
         <ThemeProvider theme={theme}>

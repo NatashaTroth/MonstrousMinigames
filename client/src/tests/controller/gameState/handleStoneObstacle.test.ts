@@ -10,7 +10,7 @@ import {
     handleImmediateThrow,
     handleThrow,
 } from '../../../domain/game1/controller/gameState/handleStoneObstacle';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
 
 configure({ adapter: new Adapter() });
@@ -25,7 +25,7 @@ describe('handleCollectStone', () => {
     };
 
     it('when handleCollectedStone is called, solved message should be emitted to socket', () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const setHasStone = jest.fn();
         const setEarlySolvableObstacle = jest.fn();
         const resetBodyStyles = jest.fn();
@@ -52,7 +52,7 @@ describe('handleThrow', () => {
     const userId = '2';
 
     it('when handleThrow is called, stunPlayer message should be emitted to socket', () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const setEarlySolvableObstacle = jest.fn();
         const resetBodyStyles = jest.fn();
 
@@ -82,7 +82,7 @@ describe('handleImmediateThrow', () => {
     };
 
     it('when handleImmediateThrow is called, obstacleSolved message should be emitted to socket', () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const setEarlySolvableObstacle = jest.fn();
         const resetBodyStyles = jest.fn();
 

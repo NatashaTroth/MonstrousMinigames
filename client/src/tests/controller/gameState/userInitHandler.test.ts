@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import React from 'react';
 
 import { userInitHandler, useUserInitHandler } from '../../../domain/commonGameState/controller/userInitHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { UserInitMessage } from '../../../domain/typeGuards/userInit';
 import { MessageTypes } from '../../../utils/constants';
 
@@ -30,7 +30,7 @@ it('when UserInitMessage was written, handed persistUser is executed', async () 
 
     const userInitHandlerWithDependencies = userInitHandler(dependencies);
 
-    const socket = new InMemorySocketFake();
+    const socket = new FakeInMemorySocket();
 
     userInitHandlerWithDependencies(socket, roomId);
 
@@ -48,7 +48,7 @@ describe('useUserInitHandler', () => {
 
     it('handed handler should be called', () => {
         const userInitHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -63,7 +63,7 @@ describe('useUserInitHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const userInitHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useUserInitHandler(socket, userInitHandler));
 

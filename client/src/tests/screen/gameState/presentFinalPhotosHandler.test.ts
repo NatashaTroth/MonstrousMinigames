@@ -5,7 +5,7 @@ import {
     presentFinalPhotosHandler,
     usePresentFinalPhotosHandler,
 } from '../../../domain/game3/screen/gameState/presentFinalPhotosHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { PresentFinalPhotosMessage } from '../../../domain/typeGuards/game3/presentFinalPhotos';
 import { MessageTypesGame3 } from '../../../utils/constants';
 
@@ -22,7 +22,7 @@ describe('presentFinalPhotosHandler', () => {
 
     it('when PresentFinalPhotosMessage is written, setPresentFinalPhotos should be called', async () => {
         const setPresentFinalPhotos = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = presentFinalPhotosHandler({ setPresentFinalPhotos });
         withDependencies(socket, roomId);
@@ -42,7 +42,7 @@ describe('usePresentFinalPhotosHandler', () => {
 
     it('handed handler should be called', () => {
         const presentFinalPhotosHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -57,7 +57,7 @@ describe('usePresentFinalPhotosHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const presentFinalPhotosHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => usePresentFinalPhotosHandler(socket, presentFinalPhotosHandler));
 

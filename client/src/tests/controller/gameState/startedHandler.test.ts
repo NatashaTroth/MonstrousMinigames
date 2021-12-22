@@ -4,7 +4,7 @@ import React from 'react';
 
 import { GameNames } from '../../../config/games';
 import { startedHandler, useStartedHandler } from '../../../domain/commonGameState/controller/startedHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasStartedMessage } from '../../../domain/typeGuards/game1/started';
 import { MessageTypes } from '../../../utils/constants';
 import { controllerGame1Route, controllerGame2Route, controllerGame3Route } from '../../../utils/routes';
@@ -21,7 +21,7 @@ describe('startedHandler', () => {
     };
 
     it('when GameHasStartedMessage is emmitted, handed setGameStarted should be called with true', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const withDependencies = startedHandler({
             setGameStarted,
             history,
@@ -35,7 +35,7 @@ describe('startedHandler', () => {
     });
 
     it('when game is game1, history should redirect to game1', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const history = createMemoryHistory();
         const game = GameNames.game1;
 
@@ -52,7 +52,7 @@ describe('startedHandler', () => {
     });
 
     it('when game is game2, history should redirect to game2', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const history = createMemoryHistory();
         const game = GameNames.game2;
 
@@ -69,7 +69,7 @@ describe('startedHandler', () => {
     });
 
     it('when game is game3, history should redirect to game3', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const history = createMemoryHistory();
         const game = GameNames.game3;
 
@@ -95,7 +95,7 @@ describe('useStartedHandler', () => {
 
     it('handed handler should be called', () => {
         const startedHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -110,7 +110,7 @@ describe('useStartedHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const startedHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useStartedHandler(socket, startedHandler));
 

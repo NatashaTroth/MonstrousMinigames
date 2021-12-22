@@ -7,7 +7,7 @@ import Room from '../../../../src/classes/room';
 import { GameState } from '../../../../src/gameplay/enums';
 import { NamespaceAdapter, PlayerRank } from '../../../../src/gameplay/gameTwo/interfaces';
 import { GameTwoMessageEmitter } from '../../../../src/gameplay/gameTwo/classes/GameTwoMessageEmitter';
-import { GameTwoGuessHint, GameTwoInitialGameState, GameTwoPhaseHasChanged, GameTwoPlayerRanks, GAME_TWO_EVENT_MESSAGE__GUESS_HINT, GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED, GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS } from '../../../../src/gameplay/gameTwo/interfaces/GameTwoEventMessages';
+import { GameTwoGuessHint, GameTwoInitialGameState, GameTwoPhaseHasChanged, GameTwoPlayerRanks, GameTwoRemainingKills, GAME_TWO_EVENT_MESSAGE__GUESS_HINT, GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED, GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS, GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS } from '../../../../src/gameplay/gameTwo/interfaces/GameTwoEventMessages';
 
 
 let gameTwo: GameTwo;
@@ -178,7 +178,20 @@ describe('Handle function send to screens', () => {
         expect(screenSpaceEmit).not.toHaveBeenCalled();
         expect(controllerSpaceEmit).toHaveBeenCalledWith('message', message);
         expect(controllerSpaceTo).toHaveBeenCalledWith(room.users[0].socketId);
+    });
 
+    it(`should emit ${GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS} for a single controller`, () => {
+        const message: GameTwoRemainingKills = {
+            type: GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS,
+            roomId,
+            userId: users[0].id,
+            remainingKills: 3
+        };
+
+        gameTwoMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
+        expect(screenSpaceEmit).not.toHaveBeenCalled();
+        expect(controllerSpaceEmit).toHaveBeenCalledWith('message', message);
+        expect(controllerSpaceTo).toHaveBeenCalledWith(room.users[0].socketId);
     });
 
 });
