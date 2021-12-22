@@ -27,7 +27,7 @@ import {
 
 @singleton()
 export class GameOneEventMessageEmitter implements EventMessageEmitter {
-    constructor(private readonly gameEventEmitter: GameEventEmitter) {}
+    constructor(private readonly gameEventEmitter: GameEventEmitter) { }
 
     emit(message: GameOneEventMessage | GlobalEventMessage): void {
         this.gameEventEmitter.emit(GameEventEmitter.EVENT_MESSAGE_EVENT, message);
@@ -52,11 +52,15 @@ export class GameOneEventMessageEmitter implements EventMessageEmitter {
             case GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_FINISHED:
             case GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD:
             case GAME_ONE_EVENT_MESSAGE__PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES:
-                user = room.getUserById(message.userId);
-                if (!user) {
-                    break;
+                try {
+                    user = room.getUserById(message.userId);
+                    if (!user) {
+                        break;
+                    }
+                    controllerNameSpace.to(user.socketId).emit('message', message);
+                } catch (e) {
+                    console.error(e);
                 }
-                controllerNameSpace.to(user.socketId).emit('message', message);
                 break;
 
             //send to room's controllers
