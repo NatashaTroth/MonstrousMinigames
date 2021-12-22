@@ -1,5 +1,6 @@
 import Brightness from "../../../../src/gameplay/gameTwo/classes/Brightness";
 import Parameters from "../../../../src/gameplay/gameTwo/constants/Parameters";
+import { Phases } from "../../../../src/gameplay/gameTwo/enums/Phases";
 
 let brightness: Brightness;
 describe('Brightness Tests', () => {
@@ -38,10 +39,12 @@ describe('Brightness Tests', () => {
         brightness.start();
         jest.advanceTimersByTime(Parameters.BRIGHTNESS_TIMEOUT + 10);
         brightness.stop();
-        const value = brightness.value;
-        jest.advanceTimersByTime(1000)
+        setTimeout(() => {
+            const value = brightness.value;
+            jest.advanceTimersByTime(1000)
 
-        expect(brightness.value).toEqual(value);
+            expect(brightness.value).toEqual(value);
+        }, 100)
     });
 
     it('value should should be 100 again after next start', () => {
@@ -68,12 +71,12 @@ describe('Brightness Tests', () => {
         expect(brightness.value).toBeLessThan(value);
     });
 
-    it('value should should be 0 again at the end', () => {
+    it(`value should should be #{Parameters.BRIGHTNESS_MINIMUM} again at the end`, () => {
         jest.useFakeTimers();
         brightness.start();
 
-        jest.advanceTimersByTime(Parameters.BRIGHTNESS_TIMEOUT + 100000);
+        jest.advanceTimersByTime(Parameters.BRIGHTNESS_TIMEOUT + Parameters.PHASE_TIMES[Phases.COUNTING]);
 
-        expect(brightness.value).toEqual(0);
+        expect(brightness.value).toEqual(Parameters.BRIGHTNESS_MINIMUM);
     });
 });

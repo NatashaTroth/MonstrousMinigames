@@ -63,7 +63,6 @@ class SheepGameScene extends Phaser.Scene {
     allScreensLoaded: boolean;
     playerRanks: PlayerRank[];
     gameTwoRenderer: GameTwoRenderer;
-    brightness: number;
 
     constructor() {
         super('SheepGameScene');
@@ -83,7 +82,6 @@ class SheepGameScene extends Phaser.Scene {
         this.allScreensLoaded = false;
         this.playerRanks = [];
         this.gameTwoRenderer = new GameTwoRenderer(this);
-        this.brightness = 100;
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
@@ -264,7 +262,7 @@ class SheepGameScene extends Phaser.Scene {
         for (let i = 0; i < gameStateData.sheep.length; i++) {
             this.createSheep(i, gameStateData);
         }
-        this.gameTwoRenderer.renderBrightnessOverlay(this.windowWidth, this.windowWidth);
+        this.gameTwoRenderer.renderBrightnessOverlay(this.windowWidth, this.windowHeight);
     }
 
     updateGameState(gameStateData: GameData) {
@@ -286,7 +284,6 @@ class SheepGameScene extends Phaser.Scene {
                 }
             }
         }
-        this.brightness = gameStateData.brightness;
         this.gameTwoRenderer?.updateBrightnessOverlay(gameStateData.brightness);
     }
 
