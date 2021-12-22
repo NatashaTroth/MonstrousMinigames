@@ -7,7 +7,6 @@ import { ControllerSocketContext } from '../../../../contexts/controller/Control
 import { Game2Context } from '../../../../contexts/game2/Game2ContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import { MessageTypesGame2 } from '../../../../utils/constants';
-import { Instructions } from '../../../game3/controller/components/Game3Styles.sc';
 
 const GuessInput: React.FunctionComponent = () => {
     const [submitted, setSubmitted] = useState(false);
@@ -51,7 +50,6 @@ const GuessInput: React.FunctionComponent = () => {
                 ) : (
                     <Button type="submit">Submit</Button>
                 )}
-                <Instructions>{guessHint}</Instructions>
             </form>
         </Container>
     );

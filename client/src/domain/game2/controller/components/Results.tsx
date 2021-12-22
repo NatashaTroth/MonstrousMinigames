@@ -9,11 +9,13 @@ const Guess: React.FunctionComponent = () => {
     const { guessHint } = React.useContext(Game2Context);
 
     // eslint-disable-next-line no-console
-    console.log(guessHint)
-    
+    console.log(guessHint);
+
     return (
         <ScreenContainer>
-            <Instructions>{`Hint: ${guessHint}`}</Instructions>
+            <Instructions>
+                {guessHint == '' ? "Don't forget to enter a guess" : `Your last guess was ${guessHint}`}
+            </Instructions>
         </ScreenContainer>
     );
 };
