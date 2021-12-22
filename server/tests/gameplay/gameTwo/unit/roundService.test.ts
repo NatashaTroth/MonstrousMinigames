@@ -1,3 +1,4 @@
+import RoundEventEmitter from "../../../../src/gameplay/gameTwo/classes/RoundEventEmitter";
 import RoundService from "../../../../src/gameplay/gameTwo/classes/RoundService";
 import Parameters from "../../../../src/gameplay/gameTwo/constants/Parameters";
 import { Phases } from "../../../../src/gameplay/gameTwo/enums/Phases";
@@ -6,7 +7,7 @@ import { Phases } from "../../../../src/gameplay/gameTwo/enums/Phases";
 let roundService: RoundService;
 describe('RoundService Tests', () => {
     beforeEach(() => {
-        roundService = new RoundService();
+        roundService = new RoundService(new RoundEventEmitter());
     });
 
     afterEach(() => {

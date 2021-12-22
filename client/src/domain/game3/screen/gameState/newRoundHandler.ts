@@ -12,7 +12,7 @@ interface Dependencies {
     setVotingResults: (val: VoteResult) => void;
 }
 
-export const newRoundHandler = messageHandler(newRoundTypeGuard, (message, dependencies: Dependencies) => {
+export const newRoundHandler = messageHandler(newRoundTypeGuard, (message, dependencies: Dependencies, roomId) => {
     const { setRoundIdx, setVoteForPhotoMessage, setVotingResults } = dependencies;
     setRoundIdx(message.roundIdx);
     setVoteForPhotoMessage(undefined);

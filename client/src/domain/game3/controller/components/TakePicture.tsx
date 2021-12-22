@@ -31,7 +31,6 @@ const TakePicture: React.FunctionComponent = () => {
     };
 
     const finalRound = roundIdx === 3;
-
     const timeToDisplay = finalRoundCountdownTime
         ? finalRoundCountdownTime
         : topicMessage
