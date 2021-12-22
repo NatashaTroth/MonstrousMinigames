@@ -18,7 +18,7 @@ export class PhaserPlayerRenderer {
     constructor(private scene: SheepGameScene) {}
 
     renderBackground() {
-        const bg = this.scene.add.image(0, 0, 'forest2'); //TODO: replace bg image
+        const bg = this.scene.add.image(0, 0, 'grass'); //TODO: replace bg image
         bg.setScale(0.4);
     }
 
@@ -97,7 +97,7 @@ export class PhaserPlayerRenderer {
     }
 
     renderSheepBackground(width: number, height: number) {
-        const element = this.scene.add.image(0, 0, 'forest2');
+        const element = this.scene.add.image(0, 0, 'grass');
         element.setDisplaySize(width, height);
         element.setOrigin(0, 0);
         element.setDepth(depthDictionary.sky);
