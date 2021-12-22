@@ -8,13 +8,13 @@ import {
     defaultValue as screenDefaultValue,
     ScreenSocketContext,
 } from '../../../contexts/screen/ScreenSocketContextProvider';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import theme from '../../../styles/theme';
 import { formatMs } from '../../../utils/formatMs';
 
 afterEach(cleanup);
 describe('Screen FinishedScreen', () => {
-    const socket = new InMemorySocketFake();
+    const socket = new FakeInMemorySocket();
     const FinishedScreenComponent = (
         <ThemeProvider theme={theme}>
             <ScreenSocketContext.Provider value={{ ...screenDefaultValue, screenSocket: socket }}>

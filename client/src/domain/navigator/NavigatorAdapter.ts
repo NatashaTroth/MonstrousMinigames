@@ -6,6 +6,7 @@ export class NavigatorAdapter implements Navigator {
     };
 
     constructor() {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         this.mediaDevices = (global.navigator as any).mediaDevices;
     }
 }

@@ -1,5 +1,8 @@
-import { GameState, MessageTypesGame2 } from '../../../utils/constants';
-import { InitialGameStateInfoMessage, initialGameStateInfoTypeGuard } from './initialGameStateInfo';
+import {
+    InitialGameStateInfoMessage,
+    initialGameStateInfoTypeGuard,
+} from '../../domain/typeGuards/game2/initialGameStateInfo';
+import { GameState, MessageTypesGame2 } from '../../utils/constants';
 
 describe('initial sheep game state info TypeGuard', () => {
     it('when type is paused, it should return true', () => {

@@ -5,7 +5,7 @@ import {
     useVoteForPhotoHandler,
     voteForPhotoHandler,
 } from '../../../domain/game3/screen/gameState/voteForPhotoHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { VoteForPhotoMessage } from '../../../domain/typeGuards/game3/voteForPhotos';
 import { MessageTypesGame3 } from '../../../utils/constants';
 
@@ -20,7 +20,7 @@ describe('voteForPhotoHandler', () => {
 
     it('when VoteForPhotoMessage is written, setVoteForPhotoMessage should be called', async () => {
         const setVoteForPhotoMessage = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = voteForPhotoHandler({ setVoteForPhotoMessage });
         withDependencies(socket, roomId);
@@ -40,7 +40,7 @@ describe('useVoteForPhotoHandler', () => {
 
     it('handed handler should be called', () => {
         const voteForPhotoHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -55,7 +55,7 @@ describe('useVoteForPhotoHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const voteForPhotoHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useVoteForPhotoHandler(socket, voteForPhotoHandler));
 

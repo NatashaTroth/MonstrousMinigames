@@ -6,7 +6,7 @@ import {
     startSheepGameHandler,
     useStartSheepGameHandler,
 } from '../../../domain/game2/screen/gameState/startSheepGameHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { StartSheepGameMessage } from '../../../domain/typeGuards/startSheepGame';
 import { MessageTypesGame2 } from '../../../utils/constants';
 
@@ -20,7 +20,7 @@ describe('startSheepGameHandler', () => {
     it('when VoteForPhotoMessage is written, setSheepGameStarted should be called', async () => {
         const setSheepGameStarted = jest.fn();
         const history = createMemoryHistory();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = startSheepGameHandler({ setSheepGameStarted, history });
         withDependencies(socket, roomId);
@@ -40,7 +40,7 @@ describe('useStartSheepGameHandler', () => {
 
     it('handed handler should be called', () => {
         const startSheepGameHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -55,7 +55,7 @@ describe('useStartSheepGameHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const startSheepGameHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useStartSheepGameHandler(socket, startSheepGameHandler));
 

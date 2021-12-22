@@ -116,5 +116,4 @@ export const designDevelopment = false; //so that phaser game doesn't start, but
 export const stunnedAnimation = false; //renders stunned animation every so often
 
 const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT || 5000;
-
 export const localBackend = `http://localhost:${BACKEND_PORT}/`;

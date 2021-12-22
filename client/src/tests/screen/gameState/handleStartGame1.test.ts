@@ -1,5 +1,5 @@
 import handleStartGame1 from '../../../domain/game1/screen/gameState/handleStartGame1';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { MessageTypesGame1 } from '../../../utils/constants';
 
 beforeEach(() => {
@@ -8,7 +8,7 @@ beforeEach(() => {
 
 describe('handleStartGame1', () => {
     it('startPhaserGame should be emitted to socket', () => {
-        const screenSocket = new InMemorySocketFake();
+        const screenSocket = new FakeInMemorySocket();
         const roomId = 'ABCD';
         const userId = '1';
 

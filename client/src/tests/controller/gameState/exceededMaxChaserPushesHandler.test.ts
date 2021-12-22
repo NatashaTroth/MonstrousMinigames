@@ -5,7 +5,7 @@ import {
     exceededMaxChaserPushesHandler,
     useExceededMaxChaserPushesHandler,
 } from '../../../domain/game1/controller/gameState/exceededMaxChaserPushesHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { ExceededMaxChaserPushesMessage } from '../../../domain/typeGuards/game1/exceededMaxChaserPushes';
 import { MessageTypesGame1 } from '../../../utils/constants';
 
@@ -16,7 +16,7 @@ describe('exceededMaxChaserPushesHandler', () => {
 
     it('handed setExceeded should be called', async () => {
         const setExceededChaserPushes = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = exceededMaxChaserPushesHandler({
             setExceededChaserPushes,
@@ -39,7 +39,7 @@ describe('useExceededMaxChaserPushesHandler', () => {
 
     it('handed handler should be called', () => {
         const exceededMaxChaserPushesHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -54,7 +54,7 @@ describe('useExceededMaxChaserPushesHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const exceededMaxChaserPushesHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useExceededMaxChaserPushesHandler(socket, exceededMaxChaserPushesHandler));
 

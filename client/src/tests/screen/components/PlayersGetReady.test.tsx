@@ -4,7 +4,8 @@ import { cleanup, fireEvent, queryAllByText, queryByText, render } from '@testin
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 
-import PlayersGetReady from '../../../components/screen/PlayersGetReady';
+import PlayersGetReady, { canStartGame } from '../../../components/screen/PlayersGetReady';
+import { GameNames } from '../../../config/games';
 import { defaultValue, GameContext } from '../../../contexts/GameContextProvider';
 import theme from '../../../styles/theme';
 
@@ -116,7 +117,7 @@ describe('Screen PlayersGetReady', () => {
         expect(button).toBeDisabled();
     });
 
-    xit('if start button is clicked the onclick method is called', () => {
+    it('if start button is clicked the onclick method is called', () => {
         const { container } = render(
             <ThemeProvider theme={theme}>
                 <GameContext.Provider value={{ ...defaultValue, connectedUsers, screenAdmin: true, roomId }}>
@@ -133,5 +134,41 @@ describe('Screen PlayersGetReady', () => {
             fireEvent.click(button);
             expect(onClick).toHaveBeenCalled();
         }
+    });
+});
+
+describe('canStartGame', () => {
+    it('should return false for canStart, when no users and no chosen game are given', () => {
+        const result = canStartGame(true, false, undefined, undefined);
+
+        expect(result).toEqual(expect.objectContaining({ canStart: false }));
+    });
+
+    it('should return true for canStart, when all players ready and chosen game is one', () => {
+        const result = canStartGame(false, true, [], GameNames.game1);
+
+        expect(result).toEqual(expect.objectContaining({ canStart: true }));
+    });
+
+    it('should return false for canStart, when chosen game is 3 and connected users are less than 3', () => {
+        const result = canStartGame(false, true, [], GameNames.game3);
+
+        expect(result).toEqual(expect.objectContaining({ canStart: false }));
+    });
+
+    it('should return true for canStart, when chosen game is 3 and connected users are 3', () => {
+        const roomId = 'AKES';
+        const result = canStartGame(
+            false,
+            true,
+            [
+                { id: '1', name: 'test', roomId, number: 1, ready: true },
+                { id: '1', name: 'test', roomId, number: 1, ready: true },
+                { id: '1', name: 'test', roomId, number: 1, ready: true },
+            ],
+            GameNames.game3
+        );
+
+        expect(result).toEqual(expect.objectContaining({ canStart: true }));
     });
 });

@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import React from 'react';
 
 import { obstacleHandler, useObstacleHandler } from '../../../domain/game1/controller/gameState/obstacleHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { ObstacleMessage } from '../../../domain/typeGuards/game1/obstacle';
 import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
 
@@ -16,7 +16,7 @@ describe('obstacleHandler', () => {
 
     it('when ObstacleMessage is written, handed setObstacle should be called', async () => {
         const setObstacle = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = obstacleHandler({
             setObstacle,
@@ -39,7 +39,7 @@ describe('useObstacleHandler', () => {
 
     it('handed handler should be called', () => {
         const obstacleHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -54,7 +54,7 @@ describe('useObstacleHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const obstacleHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useObstacleHandler(socket, obstacleHandler));
 
