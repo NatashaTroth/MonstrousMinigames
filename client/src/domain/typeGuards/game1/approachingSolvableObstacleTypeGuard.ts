@@ -9,4 +9,6 @@ export interface ApproachingSolvableObstacleMessage {
 }
 
 export const approachingSolvableObstacleTypeGuard = (data: MessageData): data is ApproachingSolvableObstacleMessage =>
-    (data as ApproachingSolvableObstacleMessage).type === MessageTypesGame1.approachingSolvableObstacle;
+// TODO delete console
+    // eslint-disable-next-line no-console
+    {console.log(data); return (data as ApproachingSolvableObstacleMessage).type === MessageTypesGame1.approachingSolvableObstacle};

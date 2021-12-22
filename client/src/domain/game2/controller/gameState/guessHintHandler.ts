@@ -1,20 +1,21 @@
-import { History } from 'history';
 import React from 'react';
 
 import { Game2Context } from '../../../../contexts/game2/Game2ContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
-import history from '../../../history/history';
 import messageHandler from '../../../socket/messageHandler';
 import { Socket } from '../../../socket/Socket';
 import { guessHintTypeGuard } from '../../../typeGuards/game2/guessHint';
 
 interface Dependencies {
     setGuessHint: (val: string) => void;
-    history: History;
 }
 
 export const guessHintHandler = messageHandler(guessHintTypeGuard, (message, dependencies: Dependencies) => {
-    dependencies.setGuessHint(message.hint);
+    const { setGuessHint } = dependencies;
+    setGuessHint(message.hint)
+
+    // eslint-disable-next-line no-console
+    console.log(message.hint)
 });
 
 export const useGuessHintHandler = (socket: Socket, handler = guessHintHandler) => {
@@ -23,7 +24,8 @@ export const useGuessHintHandler = (socket: Socket, handler = guessHintHandler) 
 
     React.useEffect(() => {
         if (!roomId) return;
-        const guessHintHandlerWithDependencies = handler({ setGuessHint, history });
+        
+        const guessHintHandlerWithDependencies = handler({ setGuessHint });
         guessHintHandlerWithDependencies(socket, roomId);
     }, [handler, roomId, setGuessHint, socket]);
 };
