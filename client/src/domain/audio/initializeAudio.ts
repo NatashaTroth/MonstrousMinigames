@@ -59,7 +59,9 @@ export async function initializeAudio({
     const initialMusic = { name: Sound.lobby, tracks: [...lobby, ...owl] };
     setPlayingTracks(initialMusic);
 
-    play({ playingTracks: initialMusic, audioCtx: context, setIsPlaying });
+    if (localStorage.getItem('playingMusic') !== 'false') {
+        play({ playingTracks: initialMusic, audioCtx: context, setIsPlaying });
+    }
 }
 
 export function initializeTracks(tracks: Track[], volume: number, loop = false) {
