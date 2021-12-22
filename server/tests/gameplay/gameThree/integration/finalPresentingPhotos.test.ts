@@ -35,6 +35,7 @@ describe('Taking Photo', () => {
         users.forEach(user => {
             const newMessage = { ...message, photographerId: user.id };
             for (let i = 0; i < InitialParameters.NUMBER_FINAL_PHOTOS; i++) {
+                newMessage.url = `https://mockPhoto${user.id}-${i}.com`;
                 gameThree.receiveInput(newMessage);
             }
         });
