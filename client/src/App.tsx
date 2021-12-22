@@ -25,6 +25,7 @@ import ScreenWrapper from './components/screen/ScreenWrapper';
 import ControllerSocketContextProvider from './contexts/controller/ControllerSocketContextProvider';
 import FirebaseContextProvider from './contexts/FirebaseContextProvider';
 import Game1ContextProvider from './contexts/game1/Game1ContextProvider';
+import Game2ContextProvider from './contexts/game2/Game2ContextProvider';
 import Game3ContextProvider from './contexts/game3/Game3ContextProvider';
 import GameContextProvider from './contexts/GameContextProvider';
 import PlayerContextProvider from './contexts/PlayerContextProvider';
@@ -82,6 +83,7 @@ const App: React.FunctionComponent = () => {
                                     <GameContextProvider>
                                         <PlayerContextProvider>
                                             <Game1ContextProvider>
+                                                <Game2ContextProvider>
                                                 <Game3ContextProvider>
                                                     <ScreenSocketContextProvider>
                                                         <ControllerSocketContextProvider
@@ -275,6 +277,7 @@ const App: React.FunctionComponent = () => {
                                                         </ControllerSocketContextProvider>
                                                     </ScreenSocketContextProvider>
                                                 </Game3ContextProvider>
+                                                </Game2ContextProvider>
                                             </Game1ContextProvider>
                                         </PlayerContextProvider>
                                     </GameContextProvider>
