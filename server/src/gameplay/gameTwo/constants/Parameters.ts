@@ -42,7 +42,7 @@ type phaseTimes = {
 
 const PHASE_TIMES: phaseTimes = {
     'counting': 30000,
-    'guessing': 15000,
+    'guessing': 10000,
     'results': 5000
 }
 
@@ -53,9 +53,13 @@ const SHEEP_FREEZE_MAX_MS = 5000;
 
 const SHEEP_DIRECTIONS_COUNT = 40;
 
-const BRIGHTNESS_STEP = 0.01;
+//const BRIGHTNESS_STEP = 0.01;
 const BRIGHTNESS_TIMEOUT = 3000;
 const BRIGHTNESS_INTERVAL = 10;
+const BRIGHTNESS_MINIMUM = 10;
+
+const BRIGHTNESS_STEP = (100 - BRIGHTNESS_MINIMUM) / ((PHASE_TIMES['counting'] - BRIGHTNESS_TIMEOUT) / BRIGHTNESS_INTERVAL)
+
 
 
 
@@ -78,5 +82,6 @@ export default {
     SHEEP_DIRECTIONS_COUNT,
     BRIGHTNESS_STEP,
     BRIGHTNESS_TIMEOUT,
-    BRIGHTNESS_INTERVAL
+    BRIGHTNESS_INTERVAL,
+    BRIGHTNESS_MINIMUM
 }
