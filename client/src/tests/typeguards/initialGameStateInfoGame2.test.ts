@@ -15,6 +15,7 @@ describe('initial sheep game state info TypeGuard', () => {
                 sheep: [],
                 lengthX: 0,
                 lengthY: 0,
+                brightness: 100,
             },
         };
 

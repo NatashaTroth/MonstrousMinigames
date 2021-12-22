@@ -9,6 +9,7 @@ import { GameData } from '../../../phaser/game2/gameInterfaces/GameData';
 import { GameToScreenMapper } from '../../../phaser/game2/GameToScreenMapper';
 import { initialGameInput } from '../../../phaser/game2/initialGameInput';
 import { Player } from '../../../phaser/game2/Player';
+import { GameTwoRenderer } from '../../../phaser/game2/renderer/GameTwoRenderer';
 import { Sheep, SheepState } from '../../../phaser/game2/Sheep';
 import { GameAudio } from '../../../phaser/GameAudio';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
@@ -61,6 +62,8 @@ class SheepGameScene extends Phaser.Scene {
     firstGameStateReceived: boolean;
     allScreensLoaded: boolean;
     playerRanks: PlayerRank[];
+    gameTwoRenderer: GameTwoRenderer;
+    brightness: number;
 
     constructor() {
         super('SheepGameScene');
@@ -79,6 +82,8 @@ class SheepGameScene extends Phaser.Scene {
         this.firstGameStateReceived = false;
         this.allScreensLoaded = false;
         this.playerRanks = [];
+        this.gameTwoRenderer = new GameTwoRenderer(this);
+        this.brightness = 100;
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
@@ -259,6 +264,7 @@ class SheepGameScene extends Phaser.Scene {
         for (let i = 0; i < gameStateData.sheep.length; i++) {
             this.createSheep(i, gameStateData);
         }
+        this.gameTwoRenderer.renderBrightnessOverlay(this.windowWidth, this.windowWidth);
     }
 
     updateGameState(gameStateData: GameData) {
@@ -280,6 +286,8 @@ class SheepGameScene extends Phaser.Scene {
                 }
             }
         }
+        this.brightness = gameStateData.brightness;
+        this.gameTwoRenderer?.updateBrightnessOverlay(gameStateData.brightness);
     }
 
     updateGamePhase(data: PhaseChangedMessage) {

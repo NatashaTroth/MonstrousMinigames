@@ -17,4 +17,5 @@ export const initialGameInput = {
     lengthX: 250,
     lengthY: 200,
     gameState: 'CREATED',
+    brightness: 100,
 };
