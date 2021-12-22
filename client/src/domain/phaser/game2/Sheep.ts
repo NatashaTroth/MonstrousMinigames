@@ -33,8 +33,8 @@ export class Sheep {
         this.renderer = new PhaserSheepRenderer(scene);
         this.renderer.renderSheep(
             {
-                x: this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
-                y: this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.y),
+                x: this.gameToScreenMapper.mapGameXMeasurementToScreen(this.coordinates.x),
+                y: this.gameToScreenMapper.mapGameYMeasurementToScreen(this.coordinates.y),
             },
             this.state
         );
@@ -42,8 +42,8 @@ export class Sheep {
 
     moveSheep(posX: number, posY: number) {
         this.renderer.moveSheep(
-            this.gameToScreenMapper.mapGameMeasurementToScreen(posX),
-            this.gameToScreenMapper.mapGameMeasurementToScreen(posY)
+            this.gameToScreenMapper.mapGameXMeasurementToScreen(posX),
+            this.gameToScreenMapper.mapGameYMeasurementToScreen(posY)
         );
     }
 

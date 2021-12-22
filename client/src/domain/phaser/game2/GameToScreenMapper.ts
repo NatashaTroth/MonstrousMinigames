@@ -1,8 +1,10 @@
 export class GameToScreenMapper {
-    private screenPercentOfGameWidth: number;
-    private screenPercentOfGameHeight: number;
+    private screenPercentageOfGameWidth: number;
 
-    constructor(private gameWidth: number, windowWidth: number, private gameHeight: number, windowHeight: number) {
+    private widthPaddingPercentage = 0.05; // sum of total adding at sides
+    heightPadding = 20;
+
+    constructor(gameWidth: number, private windowWidth: number, private gameHeight: number, windowHeight: number) {
         // Screen Positions
         //window.innerWidth / 2 ... x %
 
@@ -11,18 +13,23 @@ export class GameToScreenMapper {
 
         //screenpercent: 0.5088888888888888, windowwidth: 916, gamewidth: 1800
 
-        this.screenPercentOfGameWidth = (1 / gameWidth) * windowWidth;
-        this.screenPercentOfGameHeight = (1 / gameHeight) * windowHeight;
+        this.screenPercentageOfGameWidth = (1 / gameWidth) * (windowWidth * (1 - this.widthPaddingPercentage)); //for padding
     }
 
-    mapGameMeasurementToScreen(value: number) {
-        return value * this.screenPercentOfGameWidth;
+    mapGameXMeasurementToScreen(value: number) {
+        return value * this.screenPercentageOfGameWidth + (this.windowWidth * this.widthPaddingPercentage) / 3; //add 1/3 more padding to right because of scrollbar
+    }
+
+    mapGameYMeasurementToScreen(value: number) {
+        return value * this.screenPercentageOfGameWidth + this.getScreenYOffset();
     }
 
     getMappedGameHeight() {
-        return this.mapGameMeasurementToScreen(this.gameHeight); //* this.screenPercentOfGameHeight;
+        return this.mapGameXMeasurementToScreen(this.gameHeight);
     }
-    mapGameMeasurementToScreenHeight(value: number) {
-        return value * this.screenPercentOfGameHeight;
+
+    getScreenYOffset() {
+        //To render at the bottom of the screen
+        return window.innerHeight - this.getMappedGameHeight() - this.heightPadding;
     }
 }

@@ -258,7 +258,12 @@ class SheepGameScene extends Phaser.Scene {
             this.windowHeight
         );
 
-        this.physics.world.setBounds(0, 0, this.windowWidth, this.windowHeight);
+        this.physics.world.setBounds(
+            0,
+            this.gameToScreenMapper.getScreenYOffset() - 150, //- 200, -> so that monster can go to the top of the field, but does not work, probably because backend stops at position 0
+            this.windowWidth,
+            this.gameToScreenMapper.getMappedGameHeight() + 150 // + 200
+        );
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);
@@ -282,8 +287,8 @@ class SheepGameScene extends Phaser.Scene {
         for (let i = 0; i < this.sheep.length; i++) {
             if (gameStateData.sheep[i]) {
                 this.sheep[i].renderer.moveSheep(
-                    this.gameToScreenMapper?.mapGameMeasurementToScreen(gameStateData.sheep[i].posX),
-                    this.gameToScreenMapper?.mapGameMeasurementToScreen(gameStateData.sheep[i].posY)
+                    this.gameToScreenMapper?.mapGameXMeasurementToScreen(gameStateData.sheep[i].posX),
+                    this.gameToScreenMapper?.mapGameYMeasurementToScreen(gameStateData.sheep[i].posY)
                 );
                 if (gameStateData.sheep[i].state && gameStateData.sheep[i].state == SheepState.DECOY) {
                     this.sheep[i].renderer.placeDecoy();
