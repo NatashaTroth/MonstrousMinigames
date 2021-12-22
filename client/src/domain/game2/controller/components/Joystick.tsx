@@ -7,9 +7,11 @@ import Button from '../../../../components/common/Button';
 import FullScreenContainer from '../../../../components/common/FullScreenContainer';
 import { Instruction } from '../../../../components/common/Instruction.sc';
 import { ControllerSocketContext } from '../../../../contexts/controller/ControllerSocketContextProvider';
+import { Game2Context } from '../../../../contexts/game2/Game2ContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import { MessageTypesGame2 } from '../../../../utils/constants';
 import { Countdown } from '../../../game1/controller/components/ShakeInstruction.sc';
+import { Instructions } from '../../../game3/controller/components/Game3Styles.sc';
 import { Storage } from '../../../storage/Storage';
 import { JoystickContainer, KillSheepButtonContainer } from './Joystick.sc';
 
@@ -94,6 +96,8 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
         });
     }
 
+    const { remainingKills } = React.useContext(Game2Context);
+
     return (
         <FullScreenContainer>
             <Container>
@@ -101,6 +105,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                     <Countdown>{counter}</Countdown>
                 ) : (
                     <>
+                        <Instructions>Remaining Kills: {remainingKills}</Instructions>
                         <Instruction>Use the Joystick to Move</Instruction>
                         <JoystickContainer>
                             <Joystick

@@ -8,9 +8,6 @@ const Guess: React.FunctionComponent = () => {
     //const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { guessHint } = React.useContext(Game2Context);
 
-    // eslint-disable-next-line no-console
-    console.log(guessHint);
-
     return (
         <ScreenContainer>
             <Instructions>

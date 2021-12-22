@@ -35,6 +35,11 @@ export const defaultValue = {
         // do nothing
     },
 
+    remainingKills: 0,
+    setRemainingKills: () => {
+        // do nothing
+    },
+
     phase: GamePhases.counting,
     setPhase: () => {
         // do nothing
@@ -53,6 +58,8 @@ interface Game2ContextProps {
     setPhase: (val: GamePhases) => void;
     guessHint: string;
     setGuessHint: (val: string) => void;
+    remainingKills: number;
+    setRemainingKills: (val: number) => void;
     resetGame2: () => void;
 }
 
@@ -61,6 +68,7 @@ export const Game2Context = React.createContext<Game2ContextProps>(defaultValue)
 const Game2ContextProvider: React.FunctionComponent = ({ children }) => {
     const [phase, setPhase] = React.useState<GamePhases>(defaultValue.phase);
     const [guessHint, setGuessHint] = React.useState<string>(defaultValue.guessHint);
+    const [remainingKills, setRemainingKills] = React.useState<number>(defaultValue.remainingKills);
     const [playerRanks, setPlayerRanks] = React.useState<PlayerRank[]>(defaultValue.playerRanks);
 
     const content = {
@@ -70,6 +78,9 @@ const Game2ContextProvider: React.FunctionComponent = ({ children }) => {
         guessHint,
         setGuessHint,
 
+        remainingKills,
+        setRemainingKills,
+
         playerRanks,
         setPlayerRanks,
 
@@ -77,6 +88,7 @@ const Game2ContextProvider: React.FunctionComponent = ({ children }) => {
             setGuessHint(defaultValue.guessHint);
             setPhase(defaultValue.phase);
             setPlayerRanks(defaultValue.playerRanks);
+            setRemainingKills(defaultValue.remainingKills);
         },
     };
     return <Game2Context.Provider value={content}>{children}</Game2Context.Provider>;
