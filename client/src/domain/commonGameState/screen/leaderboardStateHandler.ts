@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { GameContext } from '../../../contexts/GameContextProvider';
-import { LeaderboardState } from '../../../contexts/screen/ScreenSocketContextProvider';
+import { GameContext, LeaderboardState } from '../../../contexts/GameContextProvider';
 import messageHandler from '../../socket/messageHandler';
 import { Socket } from '../../socket/Socket';
 import { leaderboardStateTypeGuard } from '../../typeGuards/leaderboardState';

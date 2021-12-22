@@ -4,7 +4,7 @@ import React from 'react';
 
 import { GameNames } from '../../../config/games';
 import { startHandler, useStartHandler } from '../../../domain/commonGameState/screen/startHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasStartedMessage } from '../../../domain/typeGuards/game1/started';
 import { MessageTypes } from '../../../utils/constants';
 
@@ -21,7 +21,7 @@ describe('startHandler', () => {
     };
 
     it('handed setGameStarted should be called with true', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
         const withDependencies = startHandler({ setGameStarted, history, setCountdownTime: jest.fn() });
 
         withDependencies(socket, roomId);
@@ -41,7 +41,7 @@ describe('useStartHandler', () => {
 
     it('handed handler should be called', () => {
         const startHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -56,7 +56,7 @@ describe('useStartHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const startHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useStartHandler(socket, startHandler));
 

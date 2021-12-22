@@ -10,7 +10,7 @@ import plastic from '../../../../../images/obstacles/trash/plastic.svg';
 import { defaultValue, Game1Context } from '../../../contexts/game1/Game1ContextProvider';
 import LinearProgressBar from '../../../domain/game1/controller/components/obstacles/LinearProgressBar';
 import Trash, { generateRandomArray, solveObstacle } from '../../../domain/game1/controller/components/obstacles/Trash';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import food from '../../../images/obstacles/trash/food.svg';
 import paper from '../../../images/obstacles/trash/paper.svg';
 import theme from '../../../styles/theme';
@@ -127,7 +127,7 @@ describe('generateRandomArray', () => {
 
 describe('solveObstacle', () => {
     it('obstacleSolved should be emitted to socket', () => {
-        const controllerSocket = new InMemorySocketFake();
+        const controllerSocket = new FakeInMemorySocket();
         const obstacle = { id: 1, type: ObstacleTypes.trash };
 
         solveObstacle({

@@ -3,7 +3,7 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 
 import { unstunnedHandler, useUnstunnedHandler } from '../../../domain/game1/controller/gameState/unstunnedHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { PlayerUnstunnedMessage } from '../../../domain/typeGuards/game1/playerUnstunned';
 import { MessageTypesGame1 } from '../../../utils/constants';
 
@@ -15,7 +15,7 @@ describe('unstunnedHandler', () => {
 
     it('when PlayerUnstunnedMessage is written, history push should be called with handed roomId', async () => {
         const history = createMemoryHistory();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = unstunnedHandler({ history });
         withDependencies(socket, roomId);
@@ -35,7 +35,7 @@ describe('useUnstunnedHandler', () => {
 
     it('handed handler should be called', () => {
         const unstunnedHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -50,7 +50,7 @@ describe('useUnstunnedHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const unstunnedHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useUnstunnedHandler(socket, unstunnedHandler));
 

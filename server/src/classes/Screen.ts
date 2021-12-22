@@ -3,13 +3,12 @@ import { Namespace, Socket } from 'socket.io';
 import { GameNames } from '../enums/gameNames';
 import { MessageTypes } from '../enums/messageTypes';
 import Game from '../gameplay/Game';
-import { GameOneMsgType } from '../gameplay/gameOne/enums';
-import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
-import Leaderboard from '../gameplay/leaderboard/Leaderboard';
-// import { GameThreeMessageTypes } from '../gameplay/gameThree/enums/GameThreeMessageTypes';
-// import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
 import { IMessage } from '../interfaces/messages';
 import RoomService from '../services/roomService';
+import { GameOneMsgType } from '../gameplay/gameOne/enums';
+import Leaderboard from '../gameplay/leaderboard/Leaderboard';
+import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
+
 import Room from './room';
 
 class Screen {
@@ -71,7 +70,7 @@ class Screen {
         }
     }
 
-    private onMessage(message: IMessage) {
+    onMessage(message: IMessage) {
         try {
             switch (message.type) {
                 case MessageTypes.CHOOSE_GAME:
@@ -171,11 +170,6 @@ class Screen {
                         this.room.createNewGame();
                     }
                     break;
-                // case GameThreeMessageTypes.CREATE:
-                //     if (this.room?.isOpen() && this.room.isAdminScreen(this.socket.id)) {
-                //         this.room.setGame(GameNames.GAME3);
-                //         this.room.createNewGame();
-                //     }
                 case GameOneMsgType.PHASER_GAME_LOADED:
                     this.room?.setScreenPhaserGameReady(this.socket.id, true);
                     if (this.room && !this.room?.firstPhaserScreenLoaded) {

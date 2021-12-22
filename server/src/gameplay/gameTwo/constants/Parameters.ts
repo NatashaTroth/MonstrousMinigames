@@ -4,7 +4,9 @@ const COUNTDOWN_TIME = 3000;
 const LENGTH_X = 1800;
 const LENGTH_Y = 700;
 
-const SPEED = 1;
+const SPEED = 2;
+const SNEAKING_SPEED = 1;
+
 
 const PLAYERS_POSITIONS = [
     {
@@ -27,24 +29,24 @@ const PLAYERS_POSITIONS = [
 
 const MARGIN = 20;
 
-const SHEEP_COUNT = 50;
+const SHEEP_COUNT = 65;
 
-const KILL_RADIUS = 5;
+const KILL_RADIUS = 50;
 const KILLS_PER_ROUND = 5;
 
-const ROUNDS = 3;
+const ROUNDS = 5;
 
 type phaseTimes = {
     [key: string]: number;
 }
 
 const PHASE_TIMES: phaseTimes = {
-    'counting': 10000,
-    'guessing': 10000,
-    'results': 10000
+    'counting': 30000,
+    'guessing': 15000,
+    'results': 5000
 }
 
-const GOOD_GUESS_THRESHOLD = 5;
+const GOOD_GUESS_THRESHOLD = 3;
 
 const SHEEP_FREEZE_MIN_MS = 500;
 const SHEEP_FREEZE_MAX_MS = 5000;
@@ -62,6 +64,7 @@ export default {
     LENGTH_X,
     LENGTH_Y,
     SPEED,
+    SNEAKING_SPEED,
     PLAYERS_POSITIONS,
     MARGIN,
     SHEEP_COUNT,

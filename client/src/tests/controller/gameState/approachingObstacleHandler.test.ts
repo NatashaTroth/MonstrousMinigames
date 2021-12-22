@@ -5,7 +5,7 @@ import {
     approachingObstacleHandler,
     useApproachingObstacleHandler,
 } from '../../../domain/game1/controller/gameState/approachingObstacleHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { ApproachingSolvableObstacleMessage } from '../../../domain/typeGuards/game1/approachingSolvableObstacleTypeGuard';
 import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
 
@@ -21,7 +21,7 @@ describe('approachingObstacleHandler', () => {
     const setEarlySolvableObstacle = jest.fn();
 
     it('when message type is approachingSolvableObstacle, handed setEarlySolvableObstacle should be called', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = approachingObstacleHandler({
             setEarlySolvableObstacle,
@@ -36,7 +36,7 @@ describe('approachingObstacleHandler', () => {
 
     it('when data distance is less than 10, handed setEarlySolvableObstacle should be called with undefined', async () => {
         const setEarlySolvableObstacle = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = approachingObstacleHandler({
             setEarlySolvableObstacle,
@@ -62,7 +62,7 @@ describe('useApproachingObstacleHandler', () => {
 
     it('handed handler should be called', () => {
         const approachingObstacleHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -77,7 +77,7 @@ describe('useApproachingObstacleHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const approachingObstacleHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useApproachingObstacleHandler(socket, approachingObstacleHandler));
 

@@ -15,7 +15,7 @@ import {
     ObstacleItem,
     TouchContainer,
 } from '../../../domain/game1/controller/components/obstacles/TreeTrunk.sc';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import theme from '../../../styles/theme';
 import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
 
@@ -107,7 +107,7 @@ describe('TreeTrunk', () => {
 
 describe('solveObstacle', () => {
     it('obstacleSolved should be emitted to socket', () => {
-        const controllerSocket = new InMemorySocketFake();
+        const controllerSocket = new FakeInMemorySocket();
         const obstacle = { id: 1, type: ObstacleTypes.treeStump };
 
         solveObstacle({

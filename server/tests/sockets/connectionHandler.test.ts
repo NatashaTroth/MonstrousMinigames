@@ -10,6 +10,7 @@ import { Server as HttpServer } from 'http';
 
 import GameEventEmitter from '../../src/classes/GameEventEmitter';
 import { GlobalEventMessageEmitter } from '../../src/classes/GlobalEventMessageEmitter';
+import Screen from '../../src/classes/Screen';
 import Server from '../../src/classes/Server';
 import SocketIOServer from '../../src/classes/SocketIOServer';
 import { GameAlreadyStartedError, InvalidRoomCodeError } from '../../src/customErrors/';
@@ -33,6 +34,7 @@ let screen: SocketIOClient.Socket;
 let gameEventEmitter: GameEventEmitter;
 
 let server: HttpServer;
+let socket: SocketIOServer;
 
 const app = express();
 
@@ -48,12 +50,12 @@ describe('connectionHandler', () => {
         server.listen(PORT, () => {
             rs = new RoomService(100);
             roomCode = rs.createRoom()?.id;
-
+            socket = new SocketIOServer({
+                httpServer: server,
+                app: app,
+            } as Server);
             ch = new ConnectionHandler(
-                new SocketIOServer({
-                    httpServer: server,
-                    app: app,
-                } as Server),
+                socket,
                 rs,
                 gameEventEmitter,
                 [new GlobalEventMessageEmitter(gameEventEmitter), new GameOneEventMessageEmitter(gameEventEmitter)]
@@ -63,18 +65,29 @@ describe('connectionHandler', () => {
         });
     });
 
-    afterAll(done => {
+    afterAll(async done => {
+        app.removeAllListeners();
+        client.Socket.removeAllListeners();
         ch.shutdown();
-
+        server.removeAllListeners();
         server.listening ? server.close(() => done()) : done();
+
+        done();
+
     });
     afterEach(async done => {
         controller.close();
+        controller.removeAllListeners();
         if (screen) screen.close();
+        if (screen) screen.removeAllListeners();
+        gameEventEmitter.removeAllListeners();
 
         jest.clearAllMocks();
+        jest.clearAllTimers();
         ch.shutdown();
 
+
+        server.removeAllListeners();
         server.listening ? server.close(() => done()) : done();
         done();
     });
@@ -186,7 +199,7 @@ describe('connectionHandler', () => {
                         expect(user.socketId).toEqual(controller2.id);
                         expect(user.active).toEqual(true);
 
-                        controller2.close();
+                        controller2.removeAllListeners();
                         done();
                     }
                 });
@@ -274,7 +287,6 @@ describe('connectionHandler', () => {
 
         controller.on('message', (msg: any) => {
             expect(emitterSpy).toHaveBeenCalled();
-
             done();
         });
     });
@@ -324,5 +336,68 @@ describe('connectionHandler', () => {
                 });
             }
         });
+    });
+
+    it('room should have 1 screen on screen connect and no screen on disconnect', async done => {
+        const room = rs.getRoomById(roomCode);
+        screen = client(`http://${url}/screen?roomId=${roomCode}`, {
+            secure: true,
+            reconnection: true,
+            rejectUnauthorized: false,
+            reconnectionDelayMax: 5000,
+        });
+        setTimeout(() => {
+            expect(room.screens[0].id).toEqual(screen.id);
+            screen.disconnect();
+            setTimeout(() => {
+                expect(room.screens.length).toEqual(0);
+                done();
+            }, 100);
+        }, 100);
+    });
+
+    it('should call Screen init function on screen socket connect', async done => {
+        const screenInit = jest.spyOn(Screen.prototype, "init");
+
+        screen = client(`http://${url}/screen?roomId=${roomCode}`, {
+            secure: true,
+            reconnection: true,
+            rejectUnauthorized: false,
+            reconnectionDelayMax: 5000,
+        });
+
+
+        setTimeout(() => {
+            expect(screenInit).toHaveBeenCalled();
+            screenInit.mockClear();
+            done();
+        }, 100);
+    });
+
+
+    it('should call Screen onMessage function with message', async done => {
+        const onMessage = jest.spyOn(Screen.prototype, "onMessage");
+
+        screen = client(`http://${url}/screen?roomId=${roomCode}`, {
+            secure: true,
+            reconnection: true,
+            rejectUnauthorized: false,
+            reconnectionDelayMax: 5000,
+        });
+
+        const message = {
+            type: MessageTypes.SCREEN_STATE,
+            state: "choose-game",
+        }
+
+        setTimeout(() => {
+            screen.send(message);
+            setTimeout(() => {
+                expect(onMessage).toHaveBeenCalledWith(message);
+                onMessage.mockClear();
+                done();
+            }, 200);
+            done();
+        }, 100);
     });
 });

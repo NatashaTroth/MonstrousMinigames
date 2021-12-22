@@ -1,15 +1,16 @@
 import { Namespace } from 'socket.io';
+
 import { singleton } from 'tsyringe';
 
-import GameEventEmitter from '../../classes/GameEventEmitter';
-import Room from '../../classes/room';
-// import User from '../../classes/user';
-import { EventMessage } from '../../interfaces/EventMessage';
-import { EventMessageEmitter } from '../../interfaces/EventMessageEmitter';
 import Game from '../Game';
+import Player from '../Player';
 import { GlobalEventMessage } from '../interfaces/GlobalEventMessages';
 import { IGameStateBase } from '../interfaces/IGameStateBase';
-import Player from '../Player';
+import GameEventEmitter from '../../classes/GameEventEmitter';
+import Room from '../../classes/room';
+import { EventMessage } from '../../interfaces/EventMessage';
+import { EventMessageEmitter } from '../../interfaces/EventMessageEmitter';
+
 import {
     GAME_NUMBER_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, GAME_NUMBER_EVENT_MESSAGES,
     GameNumberEventMessage
@@ -18,7 +19,7 @@ import {
 //TODO !!!!: REGISTER IN app.ts (DEPENDENCY INJECTION)
 @singleton()
 export class GameNumberEventMessageEmitter implements EventMessageEmitter {
-    constructor(private readonly gameEventEmitter: GameEventEmitter) {}
+    constructor(private readonly gameEventEmitter: GameEventEmitter) { }
 
     emit(message: GameNumberEventMessage | GlobalEventMessage): void {
         this.gameEventEmitter.emit(GameEventEmitter.EVENT_MESSAGE_EVENT, message);
@@ -48,5 +49,9 @@ export class GameNumberEventMessageEmitter implements EventMessageEmitter {
                 screenNameSpace.to(room.id).emit('message', message);
                 break;
         }
+
+    }
+    removeAllListeners(): void {
+        this.gameEventEmitter.removeAllListeners();
     }
 }

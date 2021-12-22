@@ -40,6 +40,7 @@ const Windmill: React.FunctionComponent<WindmillProps> = ({ tutorial = false, ha
         const touchContainer = document.getElementById('touchContainer');
         touchContainer?.addEventListener('touchmove', handleTouchMove);
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         function handleTouchMove(e: any) {
             e.preventDefault();
 

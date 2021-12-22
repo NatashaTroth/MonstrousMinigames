@@ -1,10 +1,10 @@
 import { sendUserReady } from '../../../domain/commonGameState/controller/sendUserReady';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { MessageTypes } from '../../../utils/constants';
 
 describe('sendUserReady function', () => {
     it('userReady should be emitted', () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         sendUserReady(socket);
 

@@ -1,9 +1,9 @@
-import { InMemorySocketFake } from '../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../domain/socket/InMemorySocketFake';
 import { MessageSocket } from '../../domain/socket/MessageSocket';
 
 describe('InMemorySocket', () => {
     it('when data was written, registered callback is called', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const callback = jest.fn();
         await socket.listen(callback);
@@ -12,7 +12,7 @@ describe('InMemorySocket', () => {
     });
 
     it('when relevant message was written, then listen is executed', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const callback = jest.fn();
 
@@ -25,7 +25,7 @@ describe('InMemorySocket', () => {
     });
 
     it('when relevant message was written, then listen is executed', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const callback = jest.fn();
 
@@ -38,7 +38,7 @@ describe('InMemorySocket', () => {
     });
 
     it('when relevant message was written, then listen is executed', async () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const callback = jest.fn();
 

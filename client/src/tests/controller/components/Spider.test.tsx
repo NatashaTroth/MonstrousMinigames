@@ -10,15 +10,22 @@ import { defaultValue, Game1Context } from '../../../contexts/game1/Game1Context
 import LinearProgressBar from '../../../domain/game1/controller/components/obstacles/LinearProgressBar';
 import Spider, { solveObstacle } from '../../../domain/game1/controller/components/obstacles/Spider';
 import { Navigator, UserMediaProps } from '../../../domain/navigator/Navigator';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import theme from '../../../styles/theme';
 import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
 
 configure({ adapter: new Adapter() });
 
-afterEach(cleanup);
+afterEach(() => {
+    jest.clearAllMocks();
+    cleanup();
+});
 
 describe('Spider', () => {
+    window.AudioContext = jest.fn().mockImplementation(() => {
+        return {};
+    });
+
     it('renders a LinearProgressBar', () => {
         const container = mount(
             <ThemeProvider theme={theme}>
@@ -55,7 +62,7 @@ describe('Spider', () => {
 
 describe('solveObstacle', () => {
     it('obstacleSolved should be emitted to socket', () => {
-        const controllerSocket = new InMemorySocketFake();
+        const controllerSocket = new FakeInMemorySocket();
         const obstacle = { id: 1, type: ObstacleTypes.spider };
 
         solveObstacle({

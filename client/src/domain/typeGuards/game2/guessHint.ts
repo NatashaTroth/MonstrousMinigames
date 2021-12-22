@@ -3,6 +3,8 @@ import { MessageDataGame2 } from '../MessageDataGame2';
 
 export interface GuessHintMessage {
     type: MessageTypesGame2.guessHint;
+    roomId: string;
+    userId: string;
     hint: string;
 }
 

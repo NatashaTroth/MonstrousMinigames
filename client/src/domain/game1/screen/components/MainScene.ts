@@ -4,8 +4,6 @@ import Phaser from 'phaser';
 import chasersSpritesheet from '../../../../images/characters/spritesheets/chasers/chasers_spritesheet.png';
 import windSpritesheet from '../../../../images/characters/spritesheets/chasers/wind_spritesheet.png';
 import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1 } from '../../../../utils/constants';
-import { screenFinishedRoute } from '../../../../utils/routes';
-import history from '../../../history/history';
 import { Game1 } from '../../../phaser/game1/Game1';
 import { GameToScreenMapper } from '../../../phaser/game1/GameToScreenMapper';
 import { initialGameInput } from '../../../phaser/game1/initialGameInput';
@@ -16,36 +14,8 @@ import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import { GameEventTypes } from '../../../phaser/GameEventTypes';
 import { GameData } from '../../../phaser/gameInterfaces';
 import { PhaserGameRenderer } from '../../../phaser/renderer/PhaserGameRenderer';
-import { MessageSocket } from '../../../socket/MessageSocket';
 import { Socket } from '../../../socket/Socket';
-import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
-import {
-    AllScreensPhaserGameLoadedMessage,
-    allScreensPhaserGameLoadedTypeGuard,
-} from '../../../typeGuards/game1/allScreensPhaserGameLoaded';
-import {
-    ApproachingSolvableObstacleOnceMessage,
-    approachingSolvableObstacleOnceTypeGuard,
-} from '../../../typeGuards/game1/approachingSolvableObstacleOnceTypeGuard';
-import { ChasersPushedMessage, ChasersPushedTypeGuard } from '../../../typeGuards/game1/chasersPushed';
-import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../../typeGuards/game1/gameStateInfo';
-import {
-    InitialGameStateInfoMessage,
-    initialGameStateInfoTypeGuard,
-} from '../../../typeGuards/game1/initialGameStateInfo';
-import { ObstacleSkippedMessage, obstacleSkippedTypeGuard } from '../../../typeGuards/game1/obstacleSkipped';
-import {
-    ObstacleWillBeSolvedMessage,
-    obstacleWillBeSolvedTypeGuard,
-} from '../../../typeGuards/game1/obstacleWillBeSolved';
-import {
-    PhaserLoadingTimedOutMessage,
-    phaserLoadingTimedOutTypeGuard,
-} from '../../../typeGuards/game1/phaserLoadingTimedOut';
-import { GameHasStartedMessage, startedTypeGuard } from '../../../typeGuards/game1/started';
-import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
-import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
-import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
+import { initSockets } from '../gameState/initSockets';
 import { moveLanesToCenter } from '../gameState/moveLanesToCenter';
 import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
@@ -58,7 +28,7 @@ class MainScene extends Phaser.Scene {
     plusX: number;
     posY: number;
     plusY: number;
-    players: Array<Player>;
+    players: Player[];
     trackLength: number;
     gameStarted: boolean;
     paused: boolean;
@@ -112,6 +82,16 @@ class MainScene extends Phaser.Scene {
         this.socket = data.socket;
         this.screenAdmin = data.screenAdmin;
         this.gameRenderer = new PhaserGameRenderer(this);
+
+        const xPositions: number[] = [];
+        const yPositions: number[] = [];
+        this.players.forEach(player => {
+            if (!player.player.isDead) {
+                xPositions.push(player.coordinates.x);
+                yPositions.push(player.coordinates.x);
+            }
+        });
+
         this.initSockets();
         this.initiateEventEmitters();
 
@@ -186,117 +166,32 @@ class MainScene extends Phaser.Scene {
         }
     }
 
-    sendCreateNewGame() {
-        this.socket?.emit({
-            type: MessageTypes.createGame,
-            roomId: this.roomId,
-        });
-    }
-
     sendStartGame() {
         handleStartGame(this.socket, this.roomId);
     }
 
     initSockets() {
-        console.log('init sockets');
-        if (!this.socket) return;
-        if (!designDevelopment) {
-            const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
-            initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
-                this.gameRenderer?.destroyLoadingScreen();
-                this.gameStarted = true;
-                this.initiateGame(data.data);
-                this.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');
-                if (this.screenAdmin && !designDevelopment) this.sendStartGame();
-            });
-        }
-
-        const allScreensPhaserGameLoaded = new MessageSocket(allScreensPhaserGameLoadedTypeGuard, this.socket);
-        allScreensPhaserGameLoaded.listen((data: AllScreensPhaserGameLoadedMessage) => {
-            if (this.screenAdmin) this.sendCreateNewGame();
-        });
-
-        const approachingObstacle = new MessageSocket(approachingSolvableObstacleOnceTypeGuard, this.socket);
-        approachingObstacle.listen((data: ApproachingSolvableObstacleOnceMessage) => {
-            this.players.find(player => player.player.id === data.userId)?.handleApproachingObstacle();
-        });
-
-        const obstacleSkipped = new MessageSocket(obstacleSkippedTypeGuard, this.socket);
-        obstacleSkipped.listen((data: ObstacleSkippedMessage) => {
-            this.players.find(player => player.player.id === data.userId)?.handleObstacleSkipped();
-        });
-
-        const obstacleWillBeSolved = new MessageSocket(obstacleWillBeSolvedTypeGuard, this.socket);
-        obstacleWillBeSolved.listen((data: ObstacleWillBeSolvedMessage) => {
-            this.players.find(player => player.player.id === data.userId)?.destroyWarningIcon();
-        });
-
-        const phaserLoadedTimedOut = new MessageSocket(phaserLoadingTimedOutTypeGuard, this.socket);
-        phaserLoadedTimedOut.listen((data: PhaserLoadingTimedOutMessage) => {
-            //TODO handle ?
-        });
-
-        const startedGame = new MessageSocket(startedTypeGuard, this.socket);
-        startedGame.listen((data: GameHasStartedMessage) => {
-            this.createGameCountdown(data.countdownTime);
-        });
-
-        const gameStateInfoSocket = new MessageSocket(gameStateInfoTypeGuard, this.socket);
-        gameStateInfoSocket.listen((data: GameStateInfoMessage) => {
-            this.updateGameState(data.data);
-        });
-
-        const pausedSocket = new MessageSocket(pausedTypeGuard, this.socket);
-        pausedSocket.listen((data: GameHasPausedMessage) => {
-            this.pauseGame();
-        });
-
-        const resumedSocket = new MessageSocket(resumedTypeGuard, this.socket);
-        resumedSocket.listen((data: GameHasResumedMessage) => {
-            this.resumeGame();
-        });
-
-        const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
-        gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
-            this.gameAudio?.stopMusic();
-            // this.scene.get('MainScene').scene.restart();
-            // this.scene.restart();
-            history.push(screenFinishedRoute(this.roomId));
-        });
-
-        const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);
-        stoppedSocket.listen((data: GameHasStoppedMessage) => {
-            this.gameAudio?.stopMusic();
-            this.players.forEach(player => {
-                player.handleReset();
-            });
-            this.scene.get('MainScene').scene.restart();
-            this.scene.restart();
-        });
-
-        const chasersPushedSocket = new MessageSocket(ChasersPushedTypeGuard, this.socket);
-        const xPositions: number[] = [];
-        const yPositions: number[] = [];
-        this.players.forEach(player => {
-            if (!player.player.isDead) {
-                xPositions.push(player.coordinates.x);
-                yPositions.push(player.coordinates.x);
-            }
-        });
-
-        chasersPushedSocket.listen((data: ChasersPushedMessage) => {
-            this.players.forEach(player => {
-                player.renderer.renderWind();
-            });
-        });
-
         //TODO
-        // gameHasReset
-
-        // if ((data.type == 'error' && data.msg !== undefined) || !data.data) {
-        //     this.handleError(data.msg);
-        //     return;
-        // }
+        //         gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
+        //             this.gameAudio?.stopMusic();
+        //             // this.scene.get('MainScene').scene.restart();
+        //             // this.scene.restart();
+        //             history.push(screenFinishedRoute(this.roomId));
+        //         });
+        //   stoppedSocket.listen((data: GameHasStoppedMessage) => {
+        //             this.gameAudio?.stopMusic();
+        //             this.players.forEach(player => {
+        //                 player.handleReset();
+        //             });
+        //             this.scene.get('MainScene').scene.restart();
+        //             this.scene.restart();
+        //         });
+        initSockets({
+            socket: this.socket,
+            screenAdmin: this.screenAdmin,
+            scene: this,
+            roomId: this.roomId,
+        });
     }
 
     initiateEventEmitters() {
@@ -320,6 +215,10 @@ class MainScene extends Phaser.Scene {
     initiateGame(gameStateData: GameData) {
         console.log('INITIATING GAME');
         console.log(this.sceneCreatedTime);
+        if (!localDevelopment && !designDevelopment) {
+            this.gameStarted = true;
+        }
+
         this.gameToScreenMapper = new GameToScreenMapper(gameStateData.playersState[0].positionX, this.windowWidth);
         this.trackLength = gameStateData.trackLength;
 
@@ -397,7 +296,7 @@ class MainScene extends Phaser.Scene {
         this.players.push(player);
     }
 
-    private createGameCountdown(countdownTime: number) {
+    createGameCountdown(countdownTime: number) {
         const decrementCounter = (counter: number) => counter - 1000;
         let countdownValue = countdownTime;
 
@@ -417,24 +316,6 @@ class MainScene extends Phaser.Scene {
 
         updateCountdown();
         const countdownInterval = setInterval(updateCountdown, 1000);
-    }
-
-    private pauseGame() {
-        this.paused = true;
-        this.players.forEach(player => {
-            player.stopRunning();
-        });
-        this.scene.pause();
-        this.gameAudio?.pause();
-    }
-
-    private resumeGame() {
-        this.paused = false;
-        this.players.forEach(player => {
-            player.startRunning();
-        });
-        this.scene.resume();
-        this.gameAudio?.resume();
     }
 
     handlePauseResumeButton() {

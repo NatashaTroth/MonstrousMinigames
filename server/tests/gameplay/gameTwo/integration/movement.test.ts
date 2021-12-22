@@ -21,6 +21,7 @@ describe('GameTwo Movement Tests', () => {
     });
 
     afterEach(() => {
+        jest.clearAllTimers();
         gameTwo.cleanup();
     });
     it('should return to previous state if moving one step in every direction', async () => {

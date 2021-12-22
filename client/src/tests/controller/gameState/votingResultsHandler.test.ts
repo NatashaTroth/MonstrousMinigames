@@ -5,7 +5,7 @@ import {
     useVotingResultsHandler,
     votingResultsHandler,
 } from '../../../domain/game3/controller/gameState/votingResultsHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { VotingResultsMessage } from '../../../domain/typeGuards/game3/votingResults';
 import { MessageTypesGame3 } from '../../../utils/constants';
 
@@ -20,7 +20,7 @@ describe('votingResultsHandler', () => {
 
     it('when VotingResultsMessage is written, setVotingResults should be called', async () => {
         const setVotingResults = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = votingResultsHandler({ setVotingResults });
         withDependencies(socket, roomId);
@@ -40,7 +40,7 @@ describe('useVotingResultsHandler', () => {
 
     it('handed handler should be called', () => {
         const votingResultsHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -55,7 +55,7 @@ describe('useVotingResultsHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const votingResultsHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useVotingResultsHandler(socket, votingResultsHandler));
 

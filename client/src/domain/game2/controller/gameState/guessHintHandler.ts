@@ -23,8 +23,7 @@ export const useGuessHintHandler = (socket: Socket, handler = guessHintHandler) 
 
     React.useEffect(() => {
         if (!roomId) return;
-
-        const presentFinalPhotosHandlerWithDependencies = handler({ setGuessHint, history });
-        presentFinalPhotosHandlerWithDependencies(socket, roomId);
+        const guessHintHandlerWithDependencies = handler({ setGuessHint, history });
+        guessHintHandlerWithDependencies(socket, roomId);
     }, [handler, roomId, setGuessHint, socket]);
 };

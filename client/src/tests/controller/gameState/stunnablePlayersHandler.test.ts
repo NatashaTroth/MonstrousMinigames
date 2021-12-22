@@ -5,7 +5,7 @@ import {
     stunnablePlayersHandler,
     useStunnablePlayersHandler,
 } from '../../../domain/game1/controller/gameState/stunnablePlayersHandler';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { StunnablePlayersMessage } from '../../../domain/typeGuards/game1/stunnablePlayers';
 import { MessageTypesGame1 } from '../../../utils/constants';
 
@@ -18,7 +18,7 @@ describe('stunnablePlayersHandler', () => {
 
     it('handed setStunnablePlayers should be called', async () => {
         const setStunnablePlayers = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const withDependencies = stunnablePlayersHandler({
             setStunnablePlayers,
@@ -41,7 +41,7 @@ describe('useStunnablePlayersHandler', () => {
 
     it('handed handler should be called', () => {
         const stunnablePlayersHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         const mockUseContext = jest.fn().mockImplementation(() => ({
             roomId: 'ALEK',
@@ -56,7 +56,7 @@ describe('useStunnablePlayersHandler', () => {
 
     it('handed handler should not be called if there is no roomId', () => {
         const stunnablePlayersHandler = jest.fn();
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         renderHook(() => useStunnablePlayersHandler(socket, stunnablePlayersHandler));
 

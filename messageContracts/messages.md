@@ -103,6 +103,21 @@ example:
 }
 ```
 
+### game2/remainingKills
+
+- send the remaining kills 
+- sent to the individual controller
+
+example:
+
+```json
+{
+    "type": "game2/remainingKills",
+    "remainingKills": 2,
+    "
+}
+```
+
 ---
 
 ## Server → Screen
@@ -507,7 +522,8 @@ example:
 {
   "type": "game2/move",
   "userId": "XXxXX",
-  "direction": "S"
+  "direction": "S",
+  "sneaking" false
 }
 ```
 

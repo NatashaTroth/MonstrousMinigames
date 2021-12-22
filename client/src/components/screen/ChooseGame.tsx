@@ -5,6 +5,7 @@ import { Game, GameNames, games } from '../../config/games';
 import { ScreenStates } from '../../config/screenStates';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/screen/ScreenSocketContextProvider';
+import { handleStartGameClick } from '../../domain/commonGameState/screen/handleStartGameClick';
 import history from '../../domain/history/history';
 import oliverLobby from '../../images/characters/oliverLobby.svg';
 import shakeInstructionsDemo from '../../images/ui/shakeInstructionDemo.png';
@@ -12,7 +13,7 @@ import spiderDemo from '../../images/ui/spiderDemo.png';
 import trashDemo from '../../images/ui/trashDemo.png';
 import treeDemo from '../../images/ui/treeDemo.png';
 import { MessageTypes } from '../../utils/constants';
-import { Routes, screenGetReadyRoute } from '../../utils/routes';
+import { Routes } from '../../utils/routes';
 import Button from '../common/Button';
 import {
     BackButtonContainer,
@@ -65,18 +66,6 @@ const ChooseGame: React.FunctionComponent = () => {
         }
     }, [screenState]);
 
-    function handleStartGameClick() {
-        setChosenGame(selectedGame.id);
-        if (screenAdmin) {
-            localStorage.setItem('game', selectedGame.id);
-            screenSocket?.emit({
-                type: MessageTypes.chooseGame,
-                game: selectedGame.id,
-            });
-        }
-        history.push(screenGetReadyRoute(roomId));
-    }
-
     return (
         <LobbyContainer>
             <Content>
@@ -116,7 +105,15 @@ const ChooseGame: React.FunctionComponent = () => {
                             {screenAdmin && (
                                 <Button
                                     variant="secondary"
-                                    onClick={handleStartGameClick}
+                                    onClick={() =>
+                                        handleStartGameClick(
+                                            setChosenGame,
+                                            selectedGame,
+                                            roomId,
+                                            screenAdmin,
+                                            screenSocket
+                                        )
+                                    }
                                     fullwidth
                                 >{`Start ${selectedGame.name}`}</Button>
                             )}

@@ -1,5 +1,5 @@
 import { handleResetGame } from '../../../domain/commonGameState/screen/handleResetGame';
-import { InMemorySocketFake } from '../../../domain/socket/InMemorySocketFake';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { MessageTypes } from '../../../utils/constants';
 
 describe('handleResetGame', () => {
@@ -7,7 +7,7 @@ describe('handleResetGame', () => {
     const resetGame3 = jest.fn();
 
     it('when message porperty is set, backToLobby should be emitted', () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         handleResetGame(
             socket,
@@ -22,7 +22,7 @@ describe('handleResetGame', () => {
     });
 
     it('when message porperty is not set, nothing should be emitted', () => {
-        const socket = new InMemorySocketFake();
+        const socket = new FakeInMemorySocket();
 
         handleResetGame(socket, {
             resetGame,

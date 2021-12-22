@@ -7,14 +7,21 @@ import React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 
 import { GameContext } from '../../contexts/GameContextProvider';
-import { GameType, LeaderboardState } from '../../contexts/screen/ScreenSocketContextProvider';
 import history from '../../domain/history/history';
 import Button from '../common/Button';
 import {
-    BackButtonContainer, ContentBase, ContentContainer, FullScreenContainer, Headline
+    BackButtonContainer,
+    ContentBase,
+    ContentContainer,
+    FullScreenContainer,
+    Headline,
 } from '../common/FullScreenStyles.sc';
 import {
-    GameHistory, GameHistoryHeadline, LeaderboardGrid, LeaderboardRow, LeaderboardWrapper
+    GameHistory,
+    GameHistoryHeadline,
+    LeaderboardGrid,
+    LeaderboardRow,
+    LeaderboardWrapper,
 } from './Leaderboard.sc';
 import { TabPanel } from './TabPanel';
 
