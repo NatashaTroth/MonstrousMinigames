@@ -1,8 +1,11 @@
 import * as React from 'react';
 
+import { deleteFiles } from '../../domain/game3/controller/gameState/handleFiles';
 import { Photographer } from '../../domain/typeGuards/game3/voteForFinalPhotos';
 import { PhotoUserMapper } from '../../domain/typeGuards/game3/voteForPhotos';
 import { VotingResult } from '../../domain/typeGuards/game3/votingResults';
+import { FirebaseContext } from '../FirebaseContextProvider';
+import { GameContext } from '../GameContextProvider';
 
 export const defaultValue = {
     roundIdx: 1,
@@ -75,6 +78,8 @@ const Game3ContextProvider: React.FunctionComponent = ({ children }) => {
         defaultValue.finalRoundCountdownTime
     );
     const [presentFinalPhotos, setPresentFinalPhotos] = React.useState<FinalPhoto>(defaultValue.presentFinalPhotos);
+    const { storage } = React.useContext(FirebaseContext);
+    const { roomId, screenAdmin } = React.useContext(GameContext);
 
     const content = {
         roundIdx,
@@ -99,6 +104,9 @@ const Game3ContextProvider: React.FunctionComponent = ({ children }) => {
             setVotingResults(defaultValue.votingResults);
             setFinalRoundCountdownTime(defaultValue.finalRoundCountdownTime);
             setPresentFinalPhotos(defaultValue.presentFinalPhotos);
+            if (screenAdmin) {
+                deleteFiles(storage, roomId);
+            }
         },
     };
     return <Game3Context.Provider value={content}>{children}</Game3Context.Provider>;

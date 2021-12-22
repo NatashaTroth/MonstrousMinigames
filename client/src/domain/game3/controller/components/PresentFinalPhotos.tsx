@@ -25,7 +25,11 @@ const PresentFinalPhotos: React.FunctionComponent = () => {
                     <Countdown time={countdownTime} size="small" keyValue={presentFinalPhotos!.photographerId} />
                 </CountdownContainer>
             )}
-            <Instructions>{playersTurn ? "It's your turn!" : 'Listen to the other players'}</Instructions>
+            <Instructions>
+                {playersTurn
+                    ? "It's your turn! Tell a short story about the photos on the screen"
+                    : 'Listen to the other players'}
+            </Instructions>
         </ScreenContainer>
     );
 };

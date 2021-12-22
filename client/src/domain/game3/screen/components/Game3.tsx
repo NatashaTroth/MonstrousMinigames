@@ -23,12 +23,8 @@ const Game3: React.FunctionComponent = () => {
     const finalRound = roundIdx === 3;
 
     React.useEffect(() => {
-        localStorage.setItem('beforeVolume', String(volume));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    React.useEffect(() => {
         changeSound(Sound.game3);
+        localStorage.setItem('beforeVolume', String(volume));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -124,7 +120,8 @@ export function getInstruction(
     let instruction = 'Take a picture that represents the word';
 
     if (finalRound) {
-        instruction = 'Take three photos and tell a visual story about them afterwards';
+        instruction =
+            'Take three photos. Later you will receive random photos from all uploaded photos. Use your imagination and present a short story about it.';
     }
 
     if (voteForPhotoMessage) {
@@ -138,7 +135,7 @@ export function getInstruction(
     }
 
     if (presentFinalPhotos) {
-        instruction = `${presentFinalPhotos.name} - Tell us a story about your pictures`;
+        instruction = `${presentFinalPhotos.name} - Tell us a story about the pictures on the screen`;
     }
 
     return (

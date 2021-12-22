@@ -4,7 +4,6 @@ import * as React from 'react';
 import { GameNames } from '../../config/games';
 import { MyAudioContext, Sound } from '../../contexts/AudioContextProvider';
 import { FirebaseContext } from '../../contexts/FirebaseContextProvider';
-import { Game3Context } from '../../contexts/game3/Game3ContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/screen/ScreenSocketContextProvider';
 import { handleResetGame } from '../../domain/commonGameState/screen/handleResetGame';
@@ -16,8 +15,7 @@ import { Label } from '../common/Label.sc';
 import { Headline, LeaderBoardRow, RankTable, UnfinishedUserRow } from './FinishedScreen.sc';
 
 export const FinishedScreen: React.FunctionComponent = () => {
-    const { playerRanks, screenAdmin, resetGame, chosenGame, roomId } = React.useContext(GameContext);
-    const { resetGame3 } = React.useContext(Game3Context);
+    const { playerRanks, screenAdmin, chosenGame, roomId } = React.useContext(GameContext);
     const { changeSound } = React.useContext(MyAudioContext);
     const { screenSocket } = React.useContext(ScreenSocketContext);
     const { deleteImages } = React.useContext(FirebaseContext);
@@ -26,7 +24,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
     const sortedPlayerRanks = playerRanks?.filter(playerRank => !playerRank.dead).sort((a, b) => a.rank! - b.rank!);
 
     const handleBackToLobby = () => {
-        handleResetGame(screenSocket, { resetGame, resetGame3 }, true);
+        handleResetGame(screenSocket);
     };
 
     React.useEffect(() => {
@@ -70,7 +68,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
                                 )}
                             </>
                         )}
-                        {player.votes && (
+                        {player.votes !== undefined && player.votes !== null && (
                             <Instruction variant="light">
                                 <InstructionText>{player.votes}</InstructionText>
                             </Instruction>
