@@ -25,7 +25,7 @@ export const games: Game[] = [
         id: GameNames.game2,
         name: 'Sheep World',
         image: game1Demo,
-        imageDescription: 'Kill sheep',
+        imageDescription: 'Eat sheep',
     },
     {
         id: GameNames.game3,

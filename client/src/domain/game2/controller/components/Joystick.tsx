@@ -112,7 +112,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                             ></Joystick>
                         </JoystickContainer>
                         <KillSheepButtonContainer>
-                            <Button onClick={emitKillMessage}>Kill Sheep</Button>
+                            <Button onClick={emitKillMessage}>Eat Sheep</Button>
                         </KillSheepButtonContainer>
                     </>
                 )}
