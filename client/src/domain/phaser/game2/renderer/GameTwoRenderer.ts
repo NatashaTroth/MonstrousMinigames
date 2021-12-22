@@ -6,7 +6,7 @@ import SheepGameScene from '../../../game2/screen/components/SheepGameScene';
 export class GameTwoRenderer {
     brightnessOverlay?: Phaser.GameObjects.Rectangle;
 
-    constructor(private scene: SheepGameScene) { }
+    constructor(private scene: SheepGameScene) {}
 
     renderBrightnessOverlay(width: number, height: number) {
         this.brightnessOverlay = this.scene.add.rectangle(0, 0, width, height, 0x000000, 0);
@@ -14,7 +14,7 @@ export class GameTwoRenderer {
         this.brightnessOverlay.setDisplaySize(width, height);
         this.brightnessOverlay.setOrigin(0, 0);
     }
-    updateBrightnessOverlay(alpha: number) {
-        this.brightnessOverlay?.setAlpha(alpha);
+    updateBrightnessOverlay(brightness: number) {
+        this.brightnessOverlay?.setAlpha(1 - brightness / 100);
     }
 }
