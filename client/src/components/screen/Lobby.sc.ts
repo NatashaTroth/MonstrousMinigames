@@ -1,5 +1,5 @@
 import { Button, Typography } from '@material-ui/core';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import forest from '../../images/ui/forest.svg';
 
@@ -148,16 +148,28 @@ export const LeftContainer = styled.div`
     }
 `;
 
-export const QRCode = styled.div`
-    border-radius: 10px;
-    background-color: ${({ theme }) => theme.colors.qRCodeBackground};
+interface QRCodeProps {
+    size?: 'fullscreen' | 'default';
+}
+
+export const QRCode = styled.div<QRCodeProps>`
     display: flex;
     flex-direction: column;
-    padding: 10px;
 
-    @media (min-width: 1060px) {
-        width: 60%;
-    }
+    ${({ size = 'default' }) =>
+        size === 'fullscreen'
+            ? css`
+                  width: 100%;
+                  align-items: center;
+              `
+            : css`
+                  @media (min-width: 1060px) {
+                      width: 60%;
+                  }
+                  padding: 10px;
+                  border-radius: 10px;
+                  background-color: ${({ theme }) => theme.colors.qRCodeBackground};
+              `}
 `;
 
 export const CopyToClipboard = styled(Button)`
@@ -176,5 +188,41 @@ export const QRCodeInstructions = styled(Typography)`
 export const RightButtonContainer = styled.div`
     div:not(:last-child) {
         margin-bottom: 20px;
+    }
+`;
+
+export const FullScreenIcon = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+`;
+
+export const DialogContent = styled.div`
+    border-radius: 10px;
+    background-color: ${({ theme }) => theme.colors.qRCodeBackground};
+    color: white;
+    display: flex;
+    width: 100%;
+    height: 100%;
+`;
+
+export const ContentWrapper = styled.div`
+    padding: 40px 60px;
+    display: flex;
+    width: 100%;
+`;
+
+export const QRCodeWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+    height: 100%;
+    width: 100%;
+
+    canvas {
+        display: flex !important;
+        width: auto !important;
+        height: 100% !important;
     }
 `;

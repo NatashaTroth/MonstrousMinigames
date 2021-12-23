@@ -37,7 +37,8 @@ describe('GameTwo Unit Tests', () => {
     });
 
     it('should have the correct amount of sheep', async () => {
-        expect(gameTwo.sheepService.sheep.length).toBe(Parameters.SHEEP_COUNT);
+        expect(gameTwo.sheepService.sheep.length).toBeLessThanOrEqual(Parameters.MAX_SHEEP_COUNT);
+        expect(gameTwo.sheepService.sheep.length).toBeGreaterThanOrEqual(Parameters.MIN_SHEEP_COUNT);
     });
 
     it('should set a user inactive after disconnecting', async () => {

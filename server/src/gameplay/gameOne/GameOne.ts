@@ -133,7 +133,10 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
                 this.playerWantsToSolveObstacle(message.userId!, (message as IMessageObstacle).obstacleId);
                 break;
             case GameOneMsgType.STUN_PLAYER:
-                if ((message as IMessageStunPlayer).receivingUserId) {
+                if (
+                    !(message as IMessageStunPlayer).receivingUserId ||
+                    (message as IMessageStunPlayer).receivingUserId === message.userId
+                ) {
                     break;
                 }
                 this.stunPlayer((message as IMessageStunPlayer).receivingUserId, message.userId!);

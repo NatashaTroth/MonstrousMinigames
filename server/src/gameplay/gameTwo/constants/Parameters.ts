@@ -1,35 +1,37 @@
 
 const COUNTDOWN_TIME = 3000;
 
-const LENGTH_X = 1800;
-const LENGTH_Y = 700;
+const LENGTH_X = 1200;
+const LENGTH_Y = 900;
 
 const SPEED = 2;
 const SNEAKING_SPEED = 1;
 
+const PLAYER_MARGIN = 100;
 
 const PLAYERS_POSITIONS = [
     {
-        x: 100,
-        y: 100
+        x: PLAYER_MARGIN,
+        y: PLAYER_MARGIN
     },
     {
-        x: 1700,
-        y: 600
+        x: LENGTH_X - PLAYER_MARGIN,
+        y: LENGTH_Y - PLAYER_MARGIN
     },
     {
-        x: 1700,
-        y: 100
+        x: LENGTH_X - PLAYER_MARGIN,
+        y: PLAYER_MARGIN
     },
     {
-        x: 100,
-        y: 600
+        x: PLAYER_MARGIN,
+        y: LENGTH_Y - PLAYER_MARGIN
     }
 ];
 
 const MARGIN = 20;
 
-const SHEEP_COUNT = 65;
+const MIN_SHEEP_COUNT = 50;
+const MAX_SHEEP_COUNT = 75;
 
 const KILL_RADIUS = 50;
 const KILLS_PER_ROUND = 5;
@@ -41,7 +43,7 @@ type phaseTimes = {
 }
 
 const PHASE_TIMES: phaseTimes = {
-    'counting': 30000,
+    'counting': 50000,
     'guessing': 10000,
     'results': 5000
 }
@@ -53,7 +55,7 @@ const SHEEP_FREEZE_MAX_MS = 5000;
 
 const SHEEP_DIRECTIONS_COUNT = 40;
 
-const BRIGHTNESS_TIMEOUT = 3000;
+const BRIGHTNESS_TIMEOUT = 10000;
 const BRIGHTNESS_INTERVAL = 10;
 const BRIGHTNESS_MINIMUM = 10;
 
@@ -68,7 +70,8 @@ export default {
     SNEAKING_SPEED,
     PLAYERS_POSITIONS,
     MARGIN,
-    SHEEP_COUNT,
+    MIN_SHEEP_COUNT,
+    MAX_SHEEP_COUNT,
     KILL_RADIUS,
     KILLS_PER_ROUND,
     ROUNDS,

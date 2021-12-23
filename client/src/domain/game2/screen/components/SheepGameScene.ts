@@ -306,8 +306,10 @@ class SheepGameScene extends Phaser.Scene {
             this.sheep.forEach(sheep => {
                 sheep.renderer.setSheepVisible(false);
             });
+            this.gameRenderer?.renderGuessText(true);
         } else if (this.phase == GamePhases.results) {
-            //TODO
+            this.gameRenderer?.renderGuessText(false);
+            // TODO
         } else {
             this.gameRenderer?.destroyLeaderboard();
             this.sheep.forEach(sheep => {
