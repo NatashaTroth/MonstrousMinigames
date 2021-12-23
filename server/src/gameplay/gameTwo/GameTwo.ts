@@ -38,13 +38,13 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     countdownTime = Parameters.COUNTDOWN_TIME;
     gameName = GameNames.GAME2;
 
-    constructor(roomId: string, public leaderboard: Leaderboard, sheepCount = Parameters.SHEEP_COUNT) {
+    constructor(roomId: string, public leaderboard: Leaderboard, minSheepCount = Parameters.MIN_SHEEP_COUNT, maxSheepCount = Parameters.MAX_SHEEP_COUNT) {
         super(roomId);
         this.gameStateMessage = GameTwoMessageTypes.GAME_STATE;
         this.lengthX = Parameters.LENGTH_X;
         this.lengthY = Parameters.LENGTH_Y;
         this.roundEventEmitter = new RoundEventEmitter();
-        this.sheepService = new SheepService(sheepCount);
+        this.sheepService = new SheepService(minSheepCount, maxSheepCount);
         this.roundService = new RoundService(this.roundEventEmitter);
         this.guessingService = new GuessingService(Parameters.ROUNDS);
         this.brightness = new Brightness();
