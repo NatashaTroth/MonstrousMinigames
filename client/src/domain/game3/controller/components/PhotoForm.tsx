@@ -4,14 +4,15 @@ import { Field, FieldRenderProps, Form } from 'react-final-form';
 import styled from 'styled-components';
 
 import Button from '../../../../components/common/Button';
+import { StyledButton, StyledImg, StyledLabel, UploadWrapper } from './PhotoForm.sc';
 import { UploadProps } from './TakePicture';
-import { StyledImg, StyledLabel, UploadWrapper } from './TakePicture.sc';
 
 interface PhotoFormProps {
     upload: (values: UploadProps) => void;
     preview: string | undefined;
     setPreview: (val: string | undefined) => void;
 }
+
 const PhotoForm: React.FunctionComponent<PhotoFormProps> = ({ upload, preview, setPreview }) => (
     <Form
         mode="add"
@@ -32,9 +33,9 @@ const PhotoForm: React.FunctionComponent<PhotoFormProps> = ({ upload, preview, s
                     )}
                     fullWidth
                 />
-                <Button type="submit" disabled={!values.picture} variant="secondary">
+                <StyledButton type="submit" disabled={!values.picture}>
                     Upload
-                </Button>
+                </StyledButton>
             </form>
         )}
     />

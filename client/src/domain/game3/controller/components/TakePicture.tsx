@@ -9,6 +9,7 @@ import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import uploadFile from '../gameState/handleFiles';
 import { CountdownContainer, Instructions, ScreenContainer } from './Game3Styles.sc';
 import PhotoForm from './PhotoForm';
+import { RandomWord } from './TakePicture.sc';
 
 export interface UploadProps {
     picture: File | undefined;
@@ -44,6 +45,7 @@ const TakePicture: React.FunctionComponent = () => {
                     <Countdown time={timeToDisplay} size="small" />
                 </CountdownContainer>
             )}
+            {!displayCountdown && <RandomWord>{topicMessage?.topic}</RandomWord>}
             <Instructions>{finalRound ? 'Final Round' : `Round ${roundIdx}`}</Instructions>
             {displayCountdown ? (
                 <>
