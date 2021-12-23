@@ -25,6 +25,7 @@ export class PhaserGameRenderer {
     progressBoxWidth: number;
     progressBoxHeight: number;
     countdownText?: Phaser.GameObjects.Text;
+    loadingScreenBackground?: Phaser.GameObjects.Graphics;
     progressBox?: Phaser.GameObjects.Graphics;
     progressBar?: Phaser.GameObjects.Graphics;
     loadingText?: Phaser.GameObjects.Text;
@@ -77,6 +78,9 @@ export class PhaserGameRenderer {
 
     renderLoadingScreen() {
         //progress bar: https://gamedevacademy.org/creating-a-preloading-screen-in-phaser-3/?a=13#Loading_Our_Assets
+
+        this.loadingScreenBackground = this.scene.add.graphics();
+        this.loadingScreenBackground.fillStyle(0x000b18);
 
         //loading bar
         this.progressBar = this.scene.add.graphics();
@@ -163,6 +167,7 @@ export class PhaserGameRenderer {
         this.percentText?.destroy();
         this.progressBox?.destroy();
         this.progressBar?.destroy();
+        this.loadingScreenBackground?.destroy();
         if (designDevelopment) this.assetText?.destroy();
     }
 
