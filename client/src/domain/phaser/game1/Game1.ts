@@ -74,10 +74,10 @@ export class Game1 {
         // console.log(this.game.scene.getScene(this.getSceneName()));
         if (!this.game.scene.getScene(this.getSceneName())) {
             this.addScene();
-            // console.log('Starting SCENE');
+            console.log('Starting SCENE');
             this.game.scene.start(this.getSceneName(), { roomId, socket, screenAdmin });
         } else {
-            // console.log('Restarting SCENE');
+            console.log('Restarting SCENE');
 
             this.game.scene.getScene(this.getSceneName()).scene.restart({ roomId, socket, screenAdmin });
             // this.restartScene();

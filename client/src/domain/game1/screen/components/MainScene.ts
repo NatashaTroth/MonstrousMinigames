@@ -42,6 +42,7 @@ class MainScene extends Phaser.Scene {
     firstGameStateReceived: boolean;
     allScreensLoaded: boolean;
     sceneCreatedTime: string;
+    socketsInitiated = false;
 
     constructor() {
         // const sceneKey = Game1.getInstance('', false).getSceneName(); //TODO remove if key is static
@@ -68,14 +69,45 @@ class MainScene extends Phaser.Scene {
         this.allScreensLoaded = false;
 
         this.sceneCreatedTime = Date.now().toString();
+        // this.setAllVars() //TODO use to remove duplicate code
 
-        // eslint-disable-next-line no-console
-        console.log(this);
+        this.initiateEventEmitters();
+        // this.initSockets();
+
+        // // eslint-disable-next-line no-console
+        // console.log(this);
+    }
+
+    resetAllVars() {
+        // this.windowWidth = 0;
+        // this.windowHeight = 0;
+
+        // this.roomId = sessionStorage.getItem('roomId') || '';
+        // this.posX = 50;
+        // this.plusX = 40;
+        // this.posY = 0;
+        // this.plusY = 110;
+        this.players = [];
+        // this.trackLength = 5000;
+        this.gameStarted = false;
+        this.paused = false;
+        // this.cameraSpeed = 2;
+        // this.gameEventEmitter = GameEventEmitter.getInstance();
+        // this.screenAdmin = false;
+        this.firstGameStateReceived = false;
+        this.allScreensLoaded = false;
+
+        this.sceneCreatedTime = Date.now().toString();
+
+        // this.cameras.main.destroy();
+        // this.cameras.main = this.cameras.add(0, 0, 0, 0);
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
+        this.resetAllVars();
         console.log('In Main scene init');
         this.camera = this.cameras.main;
+        //TODO reset camera position?
         this.windowWidth = this.cameras.main.width;
         this.windowHeight = this.cameras.main.height;
         this.posY = this.windowHeight / 2 - 50;
@@ -83,17 +115,7 @@ class MainScene extends Phaser.Scene {
         this.screenAdmin = data.screenAdmin;
         this.gameRenderer = new PhaserGameRenderer(this);
 
-        const xPositions: number[] = [];
-        const yPositions: number[] = [];
-        this.players.forEach(player => {
-            if (!player.player.isDead) {
-                xPositions.push(player.coordinates.x);
-                yPositions.push(player.coordinates.x);
-            }
-        });
-
-        this.initSockets();
-        this.initiateEventEmitters();
+        if (!this.socketsInitiated) this.initSockets();
 
         if (this.roomId === '' && data.roomId !== undefined) {
             this.roomId = data.roomId;
@@ -118,13 +140,9 @@ class MainScene extends Phaser.Scene {
         }
 
         //once all the files are done loading
-        this.load.on('complete', () => {
-            this.gameRenderer?.updateLoadingScreenFinishedPreloading();
-            this.socket?.emit({
-                type: MessageTypesGame1.phaserLoaded,
-                roomId: this.roomId,
-            });
-        });
+        // this.load.on('complete', () => {
+
+        // });
 
         audioFiles.forEach(audio => this.load.audio(audio.name, audio.file));
 
@@ -157,6 +175,11 @@ class MainScene extends Phaser.Scene {
 
     create() {
         console.log('In Main scene create');
+        this.gameRenderer?.updateLoadingScreenFinishedPreloading();
+        this.socket?.emit({
+            type: MessageTypesGame1.phaserLoaded,
+            roomId: this.roomId,
+        });
 
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
@@ -171,6 +194,7 @@ class MainScene extends Phaser.Scene {
     }
 
     initSockets() {
+        this.socketsInitiated = true;
         //TODO
         //         gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
         //             this.gameAudio?.stopMusic();
