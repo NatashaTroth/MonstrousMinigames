@@ -69,12 +69,12 @@ staging:client:
 production:client:
     stage: production
     variables:
-        REACT_APP_FRONTEND_URL: 'https://monsters-6baec.web.app/'
+        REACT_APP_FRONTEND_URL: 'https://monstrous-minigames.web.app/'
         REACT_APP_BACKEND_URL: 'https://monstrous-minigames.herokuapp.com/'
         DEPLOYMENT_DESTINATION: production
     environment:
         name: production-client
-        url: https://monsters-6baec.web.app/
+        url: https://monstrous-minigames.web.app/
     script:
         - *deployment-script
 
