@@ -23,7 +23,6 @@ export class Sheep {
         private index: number,
         public coordinates: Coordinates,
         private gameStateData: GameData,
-        private numberPlayers: number,
         private gameToScreenMapper: GameToScreenMapper
     ) {
         this.state = SheepState.ALIVE;
