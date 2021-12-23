@@ -344,13 +344,11 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     private createSheep(index: number, gameStateData: GameData) {
-        const numberOfSheep = gameStateData.sheep.length;
         const sheep = new Sheep(
             this,
             index,
             { x: gameStateData.sheep[index].posX, y: gameStateData.sheep[index].posY },
             gameStateData,
-            numberOfSheep,
             this.gameToScreenMapper!
         );
         this.sheep.push(sheep);

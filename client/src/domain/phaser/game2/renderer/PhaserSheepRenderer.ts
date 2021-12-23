@@ -13,6 +13,7 @@ import { SheepState } from '../Sheep';
 
 export class PhaserSheepRenderer {
     private sheep?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    private direction?: string;
 
     constructor(private scene: SheepGameScene) {}
 
@@ -24,6 +25,33 @@ export class PhaserSheepRenderer {
         // 14 - 17: back
     }
 
+    getMoveDirection(oldX: number, oldY: number, newX?: number, newY?: number) {
+        if (newX == oldX) {
+            //move up/down
+            if (newY) {
+                if (oldY < newY) {
+                    return 'down';
+                } else if (oldY > newY) {
+                    return 'up';
+                }
+                return 'stand';
+            }
+        }
+
+        if (newY == oldY) {
+            if (newX) {
+                //move left/right
+                if (oldX < newX) {
+                    return 'right';
+                } else if (oldX > newX) {
+                    return 'left';
+                }
+                return 'stand';
+            }
+        }
+        return 'stand';
+    }
+
     renderSheep(coordinates: Coordinates, state: SheepState) {
         if (state == SheepState.ALIVE) {
             this.renderSheepInitially(coordinates);
@@ -33,15 +61,30 @@ export class PhaserSheepRenderer {
     }
 
     moveSheep(posX?: number, posY?: number) {
-        if (posX && this.sheep) {
-            if (posX > this.sheep.x) {
-                this.startAnimation('sheep_walkRight');
-            } else {
-                this.stopAnimation();
+        if (this.sheep) {
+            const newDirection = this.getMoveDirection(this.sheep.x, this.sheep.y, posX, posY);
+            if (newDirection != this.direction) {
+                this.direction = newDirection;
+                switch (this.direction) {
+                    case 'down':
+                        this.startAnimation('sheep_walkForward');
+                        break;
+                    case 'left':
+                        this.startAnimation('sheep_walkLeft');
+                        break;
+                    case 'right':
+                        this.startAnimation('sheep_walkRight');
+                        break;
+                    case 'up':
+                        this.startAnimation('sheep_walkBackward');
+                        break; // TODO: create diagonal animations
+                    default:
+                        this.stopAnimation();
+                }
             }
         }
-        this.sheep?.setY(posY);
 
+        this.sheep?.setY(posY);
         this.sheep?.setX(posX);
     }
 
@@ -58,11 +101,11 @@ export class PhaserSheepRenderer {
     }
 
     private renderSheepInitially(coordinates: Coordinates) {
+        this.sheep = this.scene.physics.add.sprite(coordinates.x, coordinates.y, 'sheepSpritesheet');
         this.initiateAnimation('sheepSpritesheet', 'sheep_walkRight', { start: 0, end: 4 });
         this.initiateAnimation('sheepSpritesheet', 'sheep_walkLeft', { start: 5, end: 9 });
-        this.initiateAnimation('sheepSpritesheet', 'sheep_walkForward', { start: 10, end: 13 });
-        this.initiateAnimation('sheepSpritesheet', 'sheep_walkBack', { start: 14, end: 17 });
-        this.sheep = this.scene.physics.add.sprite(coordinates.x, coordinates.y, 'sheepSpritesheet');
+        this.initiateAnimation('sheepSpritesheet', 'sheep_walkForward', { start: 10, end: 14 });
+        this.initiateAnimation('sheepSpritesheet', 'sheep_walkBackward', { start: 15, end: 18 });
         this.sheep.setScale(0.5);
 
         this.sheep.setDepth(depthDictionary.sheep);
@@ -72,7 +115,7 @@ export class PhaserSheepRenderer {
     private initiateAnimation(spritesheetName: string, animationName: string, frames: CharacterAnimationFrames) {
         this.scene.anims.create({
             key: animationName,
-            frames: this.scene.anims.generateFrameNumbers(spritesheetName, { start: 0, end: 4 }),
+            frames: this.scene.anims.generateFrameNumbers(spritesheetName, frames),
             frameRate: 6,
             repeat: -1,
         });
