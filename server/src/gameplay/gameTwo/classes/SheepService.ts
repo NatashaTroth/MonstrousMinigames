@@ -13,10 +13,10 @@ export default class SheepService {
     private currentSheepId: number;
     private sheepCount: number;
 
-    constructor(sheepCount: number) {
+    constructor(minSheepCount: number, maxSheepCount: number) {
         this.sheep = [];
         this.currentSheepId = 0;
-        this.sheepCount = sheepCount;
+        this.sheepCount = Math.round(Math.random() * (maxSheepCount - minSheepCount)) + minSheepCount;
     }
 
     public initSheep(): void {

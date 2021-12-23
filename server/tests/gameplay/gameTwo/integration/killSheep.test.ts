@@ -14,7 +14,7 @@ const users = usersWithNumbers;
 describe('GameTwo Sheep Tests', () => {
     beforeEach(async () => {
         jest.spyOn(console, "log").mockImplementation();
-        gameTwo = new GameTwo(roomId, leaderboard, 10);
+        gameTwo = new GameTwo(roomId, leaderboard, 10, 10);
         jest.useFakeTimers();
 
         gameTwo.createNewGame(users);

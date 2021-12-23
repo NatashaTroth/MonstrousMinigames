@@ -6,7 +6,12 @@ import { SheepStates } from "../../../../src/gameplay/gameTwo/enums/SheepStates"
 let sheepService: SheepService;
 describe('SheepService Tests', () => {
     beforeEach(() => {
-        sheepService = new SheepService(50);
+        sheepService = new SheepService(50, 50);
+    });
+
+    it('the count of alive sheep is the same as the count of total sheep if all are alive', () => {
+        sheepService.initSheep();
+        expect(sheepService.getAliveSheepCount()).toEqual(50);
     });
 
     it('the count of alive sheep is the same as the count of total sheep if all are alive', () => {

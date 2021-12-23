@@ -30,7 +30,8 @@ const PLAYERS_POSITIONS = [
 
 const MARGIN = 20;
 
-const SHEEP_COUNT = 65;
+const MIN_SHEEP_COUNT = 50;
+const MAX_SHEEP_COUNT = 75;
 
 const KILL_RADIUS = 50;
 const KILLS_PER_ROUND = 5;
@@ -69,7 +70,8 @@ export default {
     SNEAKING_SPEED,
     PLAYERS_POSITIONS,
     MARGIN,
-    SHEEP_COUNT,
+    MIN_SHEEP_COUNT,
+    MAX_SHEEP_COUNT,
     KILL_RADIUS,
     KILLS_PER_ROUND,
     ROUNDS,
