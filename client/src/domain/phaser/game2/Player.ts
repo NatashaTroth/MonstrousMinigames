@@ -1,5 +1,4 @@
 import SheepGameScene from '../../game2/screen/components/SheepGameScene';
-import { AnimationNameGame2 } from '../enums/AnimationName';
 import { GameData } from '../game2/gameInterfaces/GameData';
 import { Character } from '../gameInterfaces/Character';
 import { Coordinates } from '../gameTypes/Coordinates';
@@ -26,8 +25,13 @@ export class Player {
         this.playerRunning = false;
 
         this.renderer = new PhaserPlayerRenderer(scene);
-
-        this.renderer.renderSheepBackground(window.innerWidth, window.innerHeight);
+        const yPadding = 30; //padding, so bottom of character/sheep don't hang over edge
+        this.renderer.renderSheepBackground(
+            0,
+            this.gameToScreenMapper.getScreenYOffset() - yPadding,
+            window.innerWidth,
+            this.gameToScreenMapper.getMappedGameHeight() + yPadding * 2
+        );
         this.setPlayer();
     }
 
@@ -42,21 +46,22 @@ export class Player {
 
         this.coordinates.x = newXPosition;
         this.coordinates.y = newYPosition;
-        this.renderer.movePlayerTo(this.coordinates.x, this.coordinates.y);
+        this.renderer.movePlayerTo(
+            this.gameToScreenMapper.mapGameXMeasurementToScreen(this.coordinates.x),
+            this.gameToScreenMapper.mapGameYMeasurementToScreen(this.coordinates.y)
+        );
     }
 
     private setPlayer() {
         const screenCoordinates = {
-            x: this.coordinates.x,
-            y: this.coordinates.y,
+            x: this.gameToScreenMapper.mapGameXMeasurementToScreen(this.coordinates.x),
+            y: this.gameToScreenMapper.mapGameYMeasurementToScreen(this.coordinates.y),
         };
 
         this.renderer.renderPlayer(screenCoordinates, this.character);
     }
 
     startRunning() {
-        const animationName = this.character.animations.get(AnimationNameGame2.Running)?.name;
-        //if (animationName) this.renderer.startAnimation(animationName);
         this.playerRunning = true;
     }
 

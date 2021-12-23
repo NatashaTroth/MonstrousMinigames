@@ -18,7 +18,7 @@ export const InstructionContainer = styled.div`
 `;
 
 interface Props {
-    size?: boolean;
+    size?: 'small' | 'default';
 }
 
 export const PictureInstruction = styled(Typography)<Props>`
@@ -29,8 +29,8 @@ export const PictureInstruction = styled(Typography)<Props>`
     margin: 30px 0;
     padding: 0 60px;
 
-    ${({ size = false }) =>
-        size &&
+    ${({ size = 'default' }) =>
+        size === 'small' &&
         css`
             font-size: 20px;
             margin: 20px 0;
@@ -42,8 +42,8 @@ export const RandomWord = styled(Typography)<Props>`
     color: ${({ theme }) => theme.palette.secondary.main};
     font-weight: 700;
 
-    ${({ size = false }) =>
-        size &&
+    ${({ size = 'default' }) =>
+        size === 'small' &&
         css`
             font-size: 25px;
         `}

@@ -33,7 +33,8 @@ const Game2: React.FunctionComponent = () => {
             width: '100%',
             height: '100%',
             // backgroundColor: '#081919',
-            backgroundColor: '#000b18',
+            // backgroundColor: '#000b18',
+            backgroundColor: '#b9ebff',
             physics: {
                 default: 'arcade',
                 arcade: {

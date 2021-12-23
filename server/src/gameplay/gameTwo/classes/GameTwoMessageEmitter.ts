@@ -52,12 +52,15 @@ export class GameTwoMessageEmitter implements EventMessageEmitter {
             // send to single user's controller
             case GAME_TWO_EVENT_MESSAGE__GUESS_HINT:
             case GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS:
-                user = room.getUserById(message.userId);
-                if (!user) {
-                    break;
+                try {
+                    user = room.getUserById(message.userId);
+                    if (!user) {
+                        break;
+                    }
+                    controllerNameSpace.to(user.socketId).emit('message', message);
+                } catch (e) {
+                    console.error(e);
                 }
-                controllerNameSpace.to(user.socketId).emit('message', message);
-                break;
         }
     }
     removeAllListeners(): void {

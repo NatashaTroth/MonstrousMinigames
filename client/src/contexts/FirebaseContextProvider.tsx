@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getStorage } from 'firebase/storage';
 import * as React from 'react';
 
-import { firebaseConfig } from '../config/firebaseConfig';
+import { firebaseConfigProduction, firebaseConfigStaging } from '../config/firebaseConfig';
 import { deleteFiles } from '../domain/game3/controller/gameState/handleFiles';
 import { RemoteStorage, RemoteStorageAdapter } from '../domain/storage/RemoteStorage';
 
@@ -24,7 +24,9 @@ const FirebaseContextProvider: React.FunctionComponent = ({ children }) => {
     const [storage, setStorage] = React.useState<RemoteStorage | undefined>();
 
     React.useEffect(() => {
-        const firebaseApp = initializeApp(firebaseConfig);
+        const firebaseApp = initializeApp(
+            process.env.NODE_ENV === 'production' ? firebaseConfigProduction : firebaseConfigStaging
+        );
         const firebaseStorage = getStorage(firebaseApp);
         setStorage(new RemoteStorageAdapter(firebaseStorage));
     }, []);

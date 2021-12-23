@@ -9,6 +9,7 @@ import { GameData } from '../../../phaser/game2/gameInterfaces/GameData';
 import { GameToScreenMapper } from '../../../phaser/game2/GameToScreenMapper';
 import { initialGameInput } from '../../../phaser/game2/initialGameInput';
 import { Player } from '../../../phaser/game2/Player';
+import { GameTwoRenderer } from '../../../phaser/game2/renderer/GameTwoRenderer';
 import { Sheep, SheepState } from '../../../phaser/game2/Sheep';
 import { GameAudio } from '../../../phaser/GameAudio';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
@@ -38,7 +39,6 @@ import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/res
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
 import { audioFiles, characters, images } from './GameAssets';
 
-const windowHeight = window.innerHeight;
 class SheepGameScene extends Phaser.Scene {
     windowWidth: number;
     windowHeight: number;
@@ -61,6 +61,7 @@ class SheepGameScene extends Phaser.Scene {
     firstGameStateReceived: boolean;
     allScreensLoaded: boolean;
     playerRanks: PlayerRank[];
+    gameTwoRenderer: GameTwoRenderer;
 
     constructor() {
         super('SheepGameScene');
@@ -79,6 +80,7 @@ class SheepGameScene extends Phaser.Scene {
         this.firstGameStateReceived = false;
         this.allScreensLoaded = false;
         this.playerRanks = [];
+        this.gameTwoRenderer = new GameTwoRenderer(this);
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
@@ -97,11 +99,13 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     preload(): void {
-        this.gameRenderer?.renderLoadingScreen();
-        // emitted every time a file has been loaded
-        this.load.on('progress', (value: number) => {
-            this.gameRenderer?.updateLoadingScreenPercent(value);
-        });
+        if (!designDevelopment) {
+            this.gameRenderer?.renderLoadingScreen();
+            // emitted every time a file has been loaded
+            this.load.on('progress', (value: number) => {
+                this.gameRenderer?.updateLoadingScreenPercent(value);
+            });
+        }
 
         if (designDevelopment) {
             // emitted every time a file has been loaded
@@ -177,7 +181,6 @@ class SheepGameScene extends Phaser.Scene {
                 // third message -> start Game
                 if (this.screenAdmin && !designDevelopment) this.sendStartGame();
             });
-            // this.firstGameStateReceived = true;
         }
 
         // second message -> createGame
@@ -248,9 +251,19 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     initiateGame(gameStateData: GameData) {
-        this.gameToScreenMapper = new GameToScreenMapper(gameStateData.playersState[0].positionX, this.windowWidth, 0);
+        this.gameToScreenMapper = new GameToScreenMapper(
+            gameStateData.lengthX,
+            this.windowWidth,
+            gameStateData.lengthY,
+            this.windowHeight
+        );
 
-        this.physics.world.setBounds(0, 0, 7500, windowHeight);
+        this.physics.world.setBounds(
+            0,
+            this.gameToScreenMapper.getScreenYOffset() - 150, //- 200, -> so that monster can go to the top of the field, but does not work, probably because backend stops at position 0
+            this.windowWidth,
+            this.gameToScreenMapper.getMappedGameHeight() + 150 // + 200
+        );
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);
@@ -259,6 +272,7 @@ class SheepGameScene extends Phaser.Scene {
         for (let i = 0; i < gameStateData.sheep.length; i++) {
             this.createSheep(i, gameStateData);
         }
+        this.gameTwoRenderer.renderBrightnessOverlay(this.windowWidth, this.windowHeight);
     }
 
     updateGameState(gameStateData: GameData) {
@@ -272,7 +286,10 @@ class SheepGameScene extends Phaser.Scene {
         }
         for (let i = 0; i < this.sheep.length; i++) {
             if (gameStateData.sheep[i]) {
-                this.sheep[i].renderer.moveSheep(gameStateData.sheep[i].posX, gameStateData.sheep[i].posY);
+                this.sheep[i].renderer.moveSheep(
+                    this.gameToScreenMapper?.mapGameXMeasurementToScreen(gameStateData.sheep[i].posX),
+                    this.gameToScreenMapper?.mapGameYMeasurementToScreen(gameStateData.sheep[i].posY)
+                );
                 if (gameStateData.sheep[i].state && gameStateData.sheep[i].state == SheepState.DECOY) {
                     this.sheep[i].renderer.placeDecoy();
                 } else if (gameStateData.sheep[i].state == SheepState.DEAD) {
@@ -280,6 +297,7 @@ class SheepGameScene extends Phaser.Scene {
                 }
             }
         }
+        this.gameTwoRenderer?.updateBrightnessOverlay(gameStateData.brightness);
     }
 
     updateGamePhase(data: PhaseChangedMessage) {
@@ -288,8 +306,10 @@ class SheepGameScene extends Phaser.Scene {
             this.sheep.forEach(sheep => {
                 sheep.renderer.setSheepVisible(false);
             });
+            this.gameRenderer?.renderGuessText(true);
         } else if (this.phase == GamePhases.results) {
-            //TODO
+            this.gameRenderer?.renderGuessText(false);
+            // TODO
         } else {
             this.gameRenderer?.destroyLeaderboard();
             this.sheep.forEach(sheep => {
@@ -324,13 +344,11 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     private createSheep(index: number, gameStateData: GameData) {
-        const numberOfSheep = gameStateData.sheep.length;
         const sheep = new Sheep(
             this,
             index,
             { x: gameStateData.sheep[index].posX, y: gameStateData.sheep[index].posY },
             gameStateData,
-            numberOfSheep,
             this.gameToScreenMapper!
         );
         this.sheep.push(sheep);

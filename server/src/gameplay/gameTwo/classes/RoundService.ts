@@ -15,11 +15,11 @@ export default class RoundService {
     private timer: Timer;
     private timeout: NodeJS.Timer | null;
 
-    constructor() {
+    constructor(roundEventEmitter: RoundEventEmitter) {
         this.roundCount = Parameters.ROUNDS;
         this.round = 1;
         this.phase = Phases.COUNTING;
-        this.roundEventEmitter = RoundEventEmitter.getInstance();
+        this.roundEventEmitter = roundEventEmitter;
         this.timer = new Timer();
         this.timeout = null;
     }

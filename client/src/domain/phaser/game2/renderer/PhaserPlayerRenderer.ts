@@ -14,11 +14,12 @@ import { Coordinates } from '../../gameTypes';
 export class PhaserPlayerRenderer {
     private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private character?: Character;
+    private direction?: string;
 
     constructor(private scene: SheepGameScene) {}
 
     renderBackground() {
-        const bg = this.scene.add.image(0, 0, 'forest2'); //TODO: replace bg image
+        const bg = this.scene.add.image(0, 0, 'grass'); //TODO: replace bg image
         bg.setScale(0.4);
     }
 
@@ -49,9 +50,9 @@ export class PhaserPlayerRenderer {
         if (newX == oldX) {
             //move up/down
             if (oldY < newY) {
-                return 'up';
-            } else if (oldY > newY) {
                 return 'down';
+            } else if (oldY > newY) {
+                return 'up';
             }
             return 'stand';
         }
@@ -59,7 +60,7 @@ export class PhaserPlayerRenderer {
             //move left/right
             if (oldX < newX) {
                 return 'right';
-            } else if (oldY > newY) {
+            } else if (oldX > newX) {
                 return 'left';
             }
             return 'stand';
@@ -69,13 +70,14 @@ export class PhaserPlayerRenderer {
 
     movePlayerTo(newXPosition: number, newYPosition: number) {
         if (this.player) {
-            const direction = this.getMoveDirection(this.player?.x, this.player?.y, newXPosition, newYPosition);
+            const newDirection = this.getMoveDirection(this.player?.x, this.player?.y, newXPosition, newYPosition);
             this.player.x = newXPosition;
             this.player.y = newYPosition;
 
             if (this.character) {
-                if (!this.player?.anims.isPlaying) {
-                    switch (direction) {
+                if (this.direction != newDirection) {
+                    this.direction = newDirection;
+                    switch (this.direction) {
                         case 'down':
                             this.startAnimation(this.character.name.concat('_walkForward'));
                             break;
@@ -86,8 +88,8 @@ export class PhaserPlayerRenderer {
                             this.startAnimation(this.character.name.concat('_walkRight'));
                             break;
                         case 'up':
-                            this.startAnimation(this.character.name.concat('_walkForward'));
-                            break; // TODO: create animation
+                            //this.startAnimation(this.character.name.concat('_walkBackward'));
+                            break; // TODO: create backwards & diagonal animations
                         default:
                             this.stopAnimation();
                     }
@@ -96,8 +98,8 @@ export class PhaserPlayerRenderer {
         }
     }
 
-    renderSheepBackground(width: number, height: number) {
-        const element = this.scene.add.image(0, 0, 'forest2');
+    renderSheepBackground(x: number, y: number, width: number, height: number) {
+        const element = this.scene.add.image(x, y, 'grass');
         element.setDisplaySize(width, height);
         element.setOrigin(0, 0);
         element.setDepth(depthDictionary.sky);
