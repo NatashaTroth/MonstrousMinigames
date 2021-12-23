@@ -15,10 +15,10 @@ const Game3: React.FunctionComponent = () => {
         votingResults,
         finalRoundCountdownTime,
         presentFinalPhotos,
+        topicMessage,
     } = React.useContext(Game3Context);
     const [displayCountdown, setDisplayCountdown] = React.useState(true);
     const [timeToDisplay, setTimeToDisplay] = React.useState<undefined | number>(undefined);
-    const { topicMessage } = React.useContext(Game3Context);
     const { changeSound, setVolume, isPlaying, volume } = React.useContext(MyAudioContext);
     const finalRound = roundIdx === 3;
 

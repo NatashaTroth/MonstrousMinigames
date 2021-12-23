@@ -26,8 +26,9 @@ const Button: React.FunctionComponent<ButtonProps> = ({
     fullwidth = false,
     title,
     size,
+    ...props
 }) => (
-    <Container>
+    <Container {...props}>
         <Tooltip title={title || ''}>
             <span>
                 <StyledButton
