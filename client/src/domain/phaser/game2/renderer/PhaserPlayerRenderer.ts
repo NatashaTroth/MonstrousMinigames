@@ -96,8 +96,8 @@ export class PhaserPlayerRenderer {
         }
     }
 
-    renderSheepBackground(width: number, height: number) {
-        const element = this.scene.add.image(0, 0, 'grass');
+    renderSheepBackground(x: number, y: number, width: number, height: number) {
+        const element = this.scene.add.image(x, y, 'grass');
         element.setDisplaySize(width, height);
         element.setOrigin(0, 0);
         element.setDepth(depthDictionary.sky);

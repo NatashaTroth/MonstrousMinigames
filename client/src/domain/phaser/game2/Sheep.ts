@@ -31,13 +31,19 @@ export class Sheep {
         //this.coordinates = gameStateData.sheep[index].coordinates;
 
         this.renderer = new PhaserSheepRenderer(scene);
-        this.renderer.renderSheep(this);
+        this.renderer.renderSheep(
+            {
+                x: this.gameToScreenMapper.mapGameXMeasurementToScreen(this.coordinates.x),
+                y: this.gameToScreenMapper.mapGameYMeasurementToScreen(this.coordinates.y),
+            },
+            this.state
+        );
     }
 
     moveSheep(posX: number, posY: number) {
         this.renderer.moveSheep(
-            this.gameToScreenMapper.mapGameMeasurementToScreen(posX),
-            this.gameToScreenMapper.mapGameMeasurementToScreen(posY)
+            this.gameToScreenMapper.mapGameXMeasurementToScreen(posX),
+            this.gameToScreenMapper.mapGameYMeasurementToScreen(posY)
         );
     }
 
