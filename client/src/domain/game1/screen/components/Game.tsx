@@ -11,11 +11,10 @@ import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import { AudioButton, Container, PauseButton, StopButton } from './Game.sc';
 
 const Game: React.FunctionComponent = () => {
-    const { roomId, hasPaused, screenAdmin, playCount } = React.useContext(GameContext);
+    const { roomId, hasPaused, screenAdmin } = React.useContext(GameContext);
     const { isPlaying, changeSound, togglePlaying } = React.useContext(MyAudioContext);
     const { id }: RouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
-    const gameContainer = `${roomId}${playCount}`;
 
     if (id && !screenSocket) {
         handleSocketConnection(id, 'game1');
@@ -23,19 +22,21 @@ const Game: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         changeSound(Sound.game1);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
-    React.useEffect(() => {
-        // const game = new Game1(gameContainer);
-        const game = Game1.getInstance(gameContainer);
-        // game.game!.scene.start('MainScene', { roomId, socket: screenSocket, screenAdmin });
+        const container = document.getElementById('phaserWrapper');
+        if (container) {
+            container.style.display = 'block';
+        }
+
+        const game = Game1.getInstance(`phaserGameContainer`);
         game.startScene(roomId, screenSocket, screenAdmin);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
 
-        // return () => {
-        //     game.removeScene();
-        // };
+        return () => {
+            const container = document.getElementById('phaserWrapper');
+            if (container) {
+                container.style.display = 'none';
+            }
+        };
     }, []);
 
     async function handleAudio() {
@@ -67,9 +68,6 @@ const Game: React.FunctionComponent = () => {
             <AudioButton onClick={handleAudio} variant="primary">
                 {isPlaying ? <VolumeUp /> : <VolumeOff />}
             </AudioButton>
-            <div>
-                <div id={gameContainer} />
-            </div>
         </Container>
     );
 };

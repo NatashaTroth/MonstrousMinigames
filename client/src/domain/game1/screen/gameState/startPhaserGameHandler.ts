@@ -17,7 +17,6 @@ export const startPhaserGameHandler = messageHandler(
     startPhaserGameTypeGuard,
     (message, dependencies: Dependencies, roomId) => {
         const { setGameStarted, history } = dependencies;
-
         setGameStarted(true);
         history.push(screenGame1Route(roomId));
     }
