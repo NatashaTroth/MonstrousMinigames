@@ -14,6 +14,7 @@ import { Sheep, SheepState } from '../../../phaser/game2/Sheep';
 import { GameAudio } from '../../../phaser/GameAudio';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import { GameEventTypes } from '../../../phaser/GameEventTypes';
+import { PhaserGame } from '../../../phaser/PhaserGame';
 import { PhaserGameRenderer } from '../../../phaser/renderer/PhaserGameRenderer';
 import { MessageSocket } from '../../../socket/MessageSocket';
 import { Socket } from '../../../socket/Socket';
@@ -64,7 +65,7 @@ class SheepGameScene extends Phaser.Scene {
     gameTwoRenderer: GameTwoRenderer;
 
     constructor() {
-        super('SheepGameScene');
+        super(PhaserGame.SCENE_NAME_GAME_2);
         this.windowWidth = 0;
         this.windowHeight = 0;
         this.roomId = sessionStorage.getItem('roomId') || '';

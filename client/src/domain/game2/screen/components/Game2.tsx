@@ -1,5 +1,4 @@
 import { Pause, PlayArrow, VolumeOff, VolumeUp } from '@material-ui/icons';
-import Phaser from 'phaser';
 import * as React from 'react';
 import { useParams } from 'react-router';
 
@@ -9,7 +8,7 @@ import { GameContext } from '../../../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../../../contexts/screen/ScreenSocketContextProvider';
 import { AudioButton, Container, PauseButton } from '../../../game1/screen/components/Game.sc';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
-import SheepGameScene from './SheepGameScene';
+import { PhaserGame } from '../../../phaser/PhaserGame';
 
 const Game2: React.FunctionComponent = () => {
     const { roomId, hasPaused, screenAdmin } = React.useContext(GameContext);
@@ -27,23 +26,37 @@ const Game2: React.FunctionComponent = () => {
     }, []);
 
     React.useEffect(() => {
-        const game = new Phaser.Game({
-            parent: 'sheep-game',
-            type: Phaser.WEBGL,
-            width: '100%',
-            height: '100%',
-            // backgroundColor: '#081919',
-            // backgroundColor: '#000b18',
-            backgroundColor: '#b9ebff',
-            physics: {
-                default: 'arcade',
-                arcade: {
-                    debug: false,
-                },
-            },
-        });
-        game.scene.add('SheepGameScene', SheepGameScene, false); //socket: ScreenSocket.getInstance(socket)
-        game.scene.start('SheepGameScene', { roomId, socket: screenSocket, screenAdmin });
+        const container = document.getElementById('phaserWrapper');
+        if (container) {
+            container.style.display = 'block';
+        }
+
+        const game = PhaserGame.getInstance(`phaserGameContainer`);
+        game.startGame2Scene(roomId, screenSocket, screenAdmin);
+
+        return () => {
+            const container = document.getElementById('phaserWrapper');
+            if (container) {
+                container.style.display = 'none';
+            }
+        };
+        // const game = new Phaser.Game({
+        //     parent: 'sheep-game',
+        //     type: Phaser.WEBGL,
+        //     width: '100%',
+        //     height: '100%',
+        //     // backgroundColor: '#081919',
+        //     // backgroundColor: '#000b18',
+        //     backgroundColor: '#b9ebff',
+        //     physics: {
+        //         default: 'arcade',
+        //         arcade: {
+        //             debug: false,
+        //         },
+        //     },
+        // });
+        // game.scene.add('SheepGameScene', SheepGameScene, false); //socket: ScreenSocket.getInstance(socket)
+        // game.scene.start('SheepGameScene', { roomId, socket: screenSocket, screenAdmin });
 
         // game.world.setBounds(0,0,7500, window.innerHeight)
         // eslint-disable-next-line react-hooks/exhaustive-deps
