@@ -22,9 +22,13 @@ describe('gameFinishedHandler Game1', () => {
         const socket = new FakeInMemorySocket();
         const history = createMemoryHistory();
         const stopMusic = jest.fn();
+        const stopScene = jest.fn();
         const scene = {
             gameAudio: {
                 stopMusic,
+            },
+            scene: {
+                stop: stopScene,
             },
         };
 
