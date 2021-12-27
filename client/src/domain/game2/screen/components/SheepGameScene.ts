@@ -3,8 +3,6 @@ import Phaser from 'phaser';
 import { GamePhases, PlayerRank } from '../../../../contexts/game2/Game2ContextProvider';
 import sheepSpritesheet from '../../../../images/characters/spritesheets/sheep/sheep_spritesheet.png';
 import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2 } from '../../../../utils/constants';
-import { screenFinishedRoute } from '../../../../utils/routes';
-import history from '../../../history/history';
 import { GameData } from '../../../phaser/game2/gameInterfaces/GameData';
 import { GameToScreenMapper } from '../../../phaser/game2/GameToScreenMapper';
 import { initialGameInput } from '../../../phaser/game2/initialGameInput';
@@ -46,8 +44,6 @@ class SheepGameScene extends Phaser.Scene {
     roomId: string;
     socket?: Socket;
     controllerSocket?: Socket;
-    posX: number;
-    posY: number;
     players: Array<Player>;
     sheep: Array<Sheep>;
     phase: GamePhases;
@@ -63,14 +59,13 @@ class SheepGameScene extends Phaser.Scene {
     allScreensLoaded: boolean;
     playerRanks: PlayerRank[];
     gameTwoRenderer: GameTwoRenderer;
+    socketsInitiated: boolean;
 
     constructor() {
         super(PhaserGame.SCENE_NAME_GAME_2);
         this.windowWidth = 0;
         this.windowHeight = 0;
         this.roomId = sessionStorage.getItem('roomId') || '';
-        this.posX = 0;
-        this.posY = 0; //TODO get from backend
         this.players = [];
         this.sheep = [];
         this.phase = GamePhases.counting;
@@ -82,9 +77,24 @@ class SheepGameScene extends Phaser.Scene {
         this.allScreensLoaded = false;
         this.playerRanks = [];
         this.gameTwoRenderer = new GameTwoRenderer(this);
+        this.socketsInitiated = false;
+        this.initiateEventEmitters();
+    }
+
+    resetSceneVariables() {
+        this.socketsInitiated = false;
+        this.players = [];
+        this.sheep = [];
+        this.phase = GamePhases.counting;
+        this.gameStarted = false;
+        this.paused = false;
+        this.firstGameStateReceived = false;
+        this.allScreensLoaded = false;
+        this.playerRanks = [];
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
+        this.resetSceneVariables();
         this.windowWidth = this.cameras.main.width;
         this.windowHeight = this.cameras.main.height;
         this.camera = this.cameras.main;
@@ -92,7 +102,7 @@ class SheepGameScene extends Phaser.Scene {
         this.screenAdmin = data.screenAdmin;
         this.gameRenderer = new PhaserGameRenderer(this);
         //this.initSockets();
-        this.initiateEventEmitters();
+        if (!this.socketsInitiated) this.initSockets();
 
         if (this.roomId === '' && data.roomId !== undefined) {
             this.roomId = data.roomId;
@@ -115,16 +125,6 @@ class SheepGameScene extends Phaser.Scene {
             });
         }
 
-        //once all the files are done loading
-        this.load.on('complete', () => {
-            this.gameRenderer?.updateLoadingScreenFinishedPreloading();
-            // first message sent
-            this.socket?.emit({
-                type: MessageTypesGame2.phaserLoaded,
-                roomId: this.roomId,
-            });
-        });
-
         audioFiles.forEach(audio => this.load.audio(audio.name, audio.file));
 
         characters.forEach(character => {
@@ -144,10 +144,15 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     create() {
+        this.gameRenderer?.updateLoadingScreenFinishedPreloading();
+        // first message sent
+        this.socket?.emit({
+            type: MessageTypesGame2.phaserLoaded,
+            roomId: this.roomId,
+        });
+
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
-        this.initSockets();
-        this.initiateEventEmitters();
 
         if (localDevelopment && designDevelopment) {
             this.initiateGame(initialGameInput);
@@ -172,6 +177,7 @@ class SheepGameScene extends Phaser.Scene {
 
     initSockets() {
         if (!this.socket) return; //TODO - handle error - although think ok
+        this.socketsInitiated = true;
         if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
@@ -187,6 +193,8 @@ class SheepGameScene extends Phaser.Scene {
         // second message -> createGame
         const allScreensSheepGameLoaded = new MessageSocket(allScreensSheepGameLoadedTypeGuard, this.socket);
         allScreensSheepGameLoaded.listen((data: AllScreensSheepGameLoadedMessage) => {
+            // eslint-disable-next-line no-console
+            console.log('AllScreensLoaded2');
             if (this.screenAdmin) this.sendCreateNewGame();
         });
 
@@ -228,12 +236,14 @@ class SheepGameScene extends Phaser.Scene {
         const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
         gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
             this.gameAudio?.stopMusic();
-            history.push(screenFinishedRoute(this.roomId));
+            this.scene.stop();
+            // history.push(screenFinishedRoute(this.roomId));
         });
 
         const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);
         stoppedSocket.listen((data: GameHasStoppedMessage) => {
             this.gameAudio?.stopMusic();
+            this.scene.stop();
         });
     }
 
