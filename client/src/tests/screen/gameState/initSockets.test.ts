@@ -30,7 +30,7 @@ describe('initSockets', () => {
         ],
         gameAudio: { stopMusic: jest.fn(), pause: jest.fn(), resume: jest.fn() },
         scene: {
-            restart: jest.fn(),
+            stop: jest.fn(),
             get: jest.fn(),
             pause: jest.fn(),
             resume: jest.fn(),

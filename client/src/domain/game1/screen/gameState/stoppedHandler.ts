@@ -9,7 +9,7 @@ interface MainScene {
     players: Player[];
     gameAudio?: { stopMusic: () => void };
     scene: {
-        restart: () => void;
+        stop: () => void;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         get: (name: string) => any;
     };
@@ -20,12 +20,6 @@ interface Dependencies {
 }
 export const stoppedHandler = messageHandler(stoppedTypeGuard, (message, dependencies: Dependencies) => {
     const { scene } = dependencies;
-
     scene.gameAudio?.stopMusic();
-    scene.players.forEach(player => {
-        player.handleReset();
-    });
-
-    scene.scene.get('MainScene').scene.restart();
-    scene.scene.restart();
+    scene.scene.stop();
 });

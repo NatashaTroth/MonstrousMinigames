@@ -18,10 +18,7 @@ describe('stopHandler', () => {
         const history = createMemoryHistory();
         const socket = new FakeInMemorySocket();
 
-        const setPlayCount = jest.fn();
-        const playCount = 0;
-
-        const withDependencies = stopHandler({ history, setPlayCount, playCount });
+        const withDependencies = stopHandler({ history });
 
         withDependencies(socket, roomId);
         await socket.emit(message);

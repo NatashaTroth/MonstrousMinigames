@@ -22,14 +22,14 @@ describe('stoppedHandler Game1', () => {
                 stopMusic,
             },
             scene: {
-                restart: jest.fn(),
+                stop: jest.fn(),
                 get: jest.fn(),
             },
         };
 
         scene.scene.get.mockReturnValue({
             scene: {
-                restart: jest.fn(),
+                stop: jest.fn(),
             },
         });
 

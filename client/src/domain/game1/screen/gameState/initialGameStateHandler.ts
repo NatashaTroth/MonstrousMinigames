@@ -22,7 +22,6 @@ interface Dependencies {
 export const initialGameStateHandler = messageHandler(
     initialGameStateInfoTypeGuard,
     (message, dependencies: Dependencies) => {
-        dependencies.gameRenderer?.destroyLoadingScreen();
         dependencies.initiateGame(message.data);
         dependencies.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');
 
