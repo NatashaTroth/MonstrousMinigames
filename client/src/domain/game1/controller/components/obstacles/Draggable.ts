@@ -44,7 +44,7 @@ export function initializeInteractListeners(
 
     interact('.dropzone').dropzone({
         accept: `#${actualItem}`,
-        overlap: 1,
+        overlap: 0.25,
 
         ondropactivate: function (event) {
             // add active dropzone feedback
