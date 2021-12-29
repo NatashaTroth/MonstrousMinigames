@@ -1,3 +1,4 @@
+import { PhaserGame } from '../../../phaser/PhaserGame';
 import messageHandler from '../../../socket/messageHandler';
 import { resumedTypeGuard } from '../../../typeGuards/resumed';
 
@@ -19,6 +20,7 @@ interface Dependencies {
 }
 
 export const resumeHandler = messageHandler(resumedTypeGuard, (message, dependencies: Dependencies) => {
+    if (PhaserGame.getInstance().currentScene !== PhaserGame.SCENE_NAME_GAME_1) return;
     const { scene } = dependencies;
 
     scene.paused = false;

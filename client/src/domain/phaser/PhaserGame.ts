@@ -4,6 +4,7 @@ import { Socket } from '../socket/Socket';
 
 export class PhaserGame {
     private game: Phaser.Game;
+    public currentScene?: string;
 
     private static instance: PhaserGame;
     public static SCENE_NAME_GAME_1 = 'MainSceneGame1';
@@ -25,7 +26,7 @@ export class PhaserGame {
         });
     }
 
-    public static getInstance(parent: string, newInstance = false): PhaserGame {
+    public static getInstance(parent = '', newInstance = false): PhaserGame {
         if (!PhaserGame.instance || newInstance) {
             PhaserGame.instance = new PhaserGame(parent);
         }
@@ -37,6 +38,9 @@ export class PhaserGame {
         if (!this.game.scene.getScene(PhaserGame.SCENE_NAME_GAME_1))
             this.game.scene.add(PhaserGame.SCENE_NAME_GAME_1, MainSceneGame1, false);
 
+        // this.game.scene.stop(PhaserGame.SCENE_NAME_GAME_2);
+
+        this.currentScene = PhaserGame.SCENE_NAME_GAME_1;
         this.game.scene.start(PhaserGame.SCENE_NAME_GAME_1, { roomId, socket, screenAdmin });
     }
 
@@ -44,6 +48,9 @@ export class PhaserGame {
         if (!this.game.scene.getScene(PhaserGame.SCENE_NAME_GAME_2))
             this.game.scene.add(PhaserGame.SCENE_NAME_GAME_2, SheepGameScene, false);
 
+        // this.game.scene.stop(PhaserGame.SCENE_NAME_GAME_1);
+
+        this.currentScene = PhaserGame.SCENE_NAME_GAME_2;
         this.game.scene.start(PhaserGame.SCENE_NAME_GAME_2, { roomId, socket, screenAdmin });
     }
 }
