@@ -40,26 +40,6 @@ const Game2: React.FunctionComponent = () => {
                 container.style.display = 'none';
             }
         };
-        // const game = new Phaser.Game({
-        //     parent: 'sheep-game',
-        //     type: Phaser.WEBGL,
-        //     width: '100%',
-        //     height: '100%',
-        //     // backgroundColor: '#081919',
-        //     // backgroundColor: '#000b18',
-        //     backgroundColor: '#b9ebff',
-        //     physics: {
-        //         default: 'arcade',
-        //         arcade: {
-        //             debug: false,
-        //         },
-        //     },
-        // });
-        // game.scene.add('SheepGameScene', SheepGameScene, false); //socket: ScreenSocket.getInstance(socket)
-        // game.scene.start('SheepGameScene', { roomId, socket: screenSocket, screenAdmin });
-
-        // game.world.setBounds(0,0,7500, window.innerHeight)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     async function handleAudio() {
