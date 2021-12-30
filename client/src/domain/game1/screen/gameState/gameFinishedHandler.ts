@@ -14,9 +14,12 @@ interface Dependencies {
         };
     };
     history: History;
+    currentScene?: string;
 }
+
 export const gameFinishedHandler = messageHandler(finishedTypeGuard, (message, dependencies: Dependencies) => {
-    if (PhaserGame.getInstance().currentScene !== PhaserGame.SCENE_NAME_GAME_1) return;
-    dependencies.scene.gameAudio?.stopMusic();
-    dependencies.scene.scene.stop();
+    const { scene, currentScene = PhaserGame.getInstance().currentScene } = dependencies;
+    if (currentScene !== PhaserGame.SCENE_NAME_GAME_1) return;
+    scene.gameAudio?.stopMusic();
+    scene.scene.stop();
 });

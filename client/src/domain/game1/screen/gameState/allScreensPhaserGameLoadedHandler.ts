@@ -12,8 +12,6 @@ export const allScreensPhaserGameLoadedHandler = messageHandler(
     allScreensPhaserGameLoadedTypeGuard,
     (message, dependencies: Dependencies) => {
         if (dependencies.screenAdmin) {
-            // eslint-disable-next-line no-console
-            console.log('AllScreensLoaded1');
             dependencies.sendCreateNewGame();
         }
     }

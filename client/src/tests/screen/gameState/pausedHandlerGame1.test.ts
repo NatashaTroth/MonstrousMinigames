@@ -1,4 +1,5 @@
 import { pausedHandler } from '../../../domain/game1/screen/gameState/pausedHandler';
+import { PhaserGame } from '../../../domain/phaser/PhaserGame';
 import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasPausedMessage } from '../../../domain/typeGuards/paused';
 import { MessageTypes } from '../../../utils/constants';
@@ -27,7 +28,7 @@ describe('pauseHandler Game1', () => {
             paused: false,
         };
 
-        const withDependencies = pausedHandler({ scene });
+        const withDependencies = pausedHandler({ scene, currentScene: PhaserGame.SCENE_NAME_GAME_1 });
 
         withDependencies(socket);
         await socket.emit(message);

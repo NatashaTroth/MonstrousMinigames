@@ -17,11 +17,12 @@ interface MainScene {
 
 interface Dependencies {
     scene: MainScene;
+    currentScene?: string;
 }
 
 export const resumeHandler = messageHandler(resumedTypeGuard, (message, dependencies: Dependencies) => {
-    if (PhaserGame.getInstance().currentScene !== PhaserGame.SCENE_NAME_GAME_1) return;
-    const { scene } = dependencies;
+    const { scene, currentScene = PhaserGame.getInstance().currentScene } = dependencies;
+    if (currentScene !== PhaserGame.SCENE_NAME_GAME_1) return;
 
     scene.paused = false;
     scene.players.forEach(player => {

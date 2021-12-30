@@ -1,4 +1,5 @@
 import { resumeHandler } from '../../../domain/game1/screen/gameState/resumeHandler';
+import { PhaserGame } from '../../../domain/phaser/PhaserGame';
 import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasResumedMessage } from '../../../domain/typeGuards/resumed';
 import { MessageTypes } from '../../../utils/constants';
@@ -27,7 +28,7 @@ describe('resumeHandler Game1', () => {
             paused: true,
         };
 
-        const withDependencies = resumeHandler({ scene });
+        const withDependencies = resumeHandler({ scene, currentScene: PhaserGame.SCENE_NAME_GAME_1 });
 
         withDependencies(socket);
         await socket.emit(message);
