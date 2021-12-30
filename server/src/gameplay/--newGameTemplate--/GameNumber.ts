@@ -19,7 +19,6 @@ export default class GameNumber extends Game<GameNumberPlayer, GameStateInfo> im
     constructor(roomId: string, public leaderboard: Leaderboard) {
         super(roomId);
 
-        console.log('game created');
         console.info(this);
     }
 
