@@ -1,16 +1,7 @@
+import { IconButton } from '@material-ui/core';
 import styled from 'styled-components';
 
 import { OrangeBase } from '../common/CommonStyles.sc';
-
-export const CloseButtonContainer = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-`;
-
-export const DialogContent = styled.div`
-    padding: 30px;
-`;
 
 export const GameSelectionContainer = styled.div`
     display: flex;
@@ -83,45 +74,62 @@ interface PreviewImageContainer {
     src: string;
 }
 
-export const PreviewImageContainer = styled.div<PreviewImageContainer>`
-    margin-top: 30px;
+export const PreviewImage = styled.div<PreviewImageContainer>`
     background-image: url(${({ src }) => src});
     width: 100%;
-    height: 30%;
+    height: 100%;
     background-size: cover;
     background-position: bottom;
+`;
+
+export const PreviewImageContainer = styled.div`
+    display: flex;
+    width: 100%;
+    height: 30%;
+    margin-top: 30px;
 `;
 
 export const ImageDescription = styled.div`
     background: ${({ theme }) => theme.palette.secondary.dark};
     color: white;
     font-size: 18px;
-    padding: 10px 0;
     display: flex;
     justify-content: center;
     font-weight: 600;
+    align-items: center;
+    padding: 10px 20px;
+    height: 8%;
+    letter-spacing: 1px;
+    line-height: 1.5;
 `;
 
 export const ControlInstructionsContainer = styled.div`
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: calc(62% - 75px);
+    margin-top: 10px;
 `;
 
 export const ControlInstruction = styled.div`
+    color: black;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100%;
-    margin: 10px 0;
-    font-size: 14px;
-    font-weight: 400;
+    align-items: flex-start;
+    font-size: 16px;
+    font-weight: 700;
     width: 100%;
+    letter-spacing: 1px;
+    line-height: 1.5;
 `;
 
 export const InstructionImg = styled.img`
+    margin: 20px;
     display: flex;
-    width: 60%;
-    margin-top: 20px;
+    width: 100%;
+    object-fit: contain;
+    height: 90%;
 `;
 
 export const Wrapper = styled.div`
@@ -129,4 +137,29 @@ export const Wrapper = styled.div`
     flex-direction: column;
     align-items: center;
     width: 18%;
+`;
+
+export const ImagesContainer = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+    height: 80%;
+`;
+
+export const ImageWrapper = styled.div`
+    display: flex;
+    width: 20%;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+`;
+
+export const TextWrapper = styled.div`
+    display: flex;
+    margin-bottom: 20px;
+`;
+
+export const InfoButton = styled(IconButton)`
+    color: inherit;
 `;

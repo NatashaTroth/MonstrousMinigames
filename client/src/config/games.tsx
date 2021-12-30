@@ -1,3 +1,4 @@
+import game3Demo from '../images/ui/game3Demo.png';
 import game1Demo from '../images/ui/gameDemo.png';
 
 export enum GameNames {
@@ -30,7 +31,7 @@ export const games: Game[] = [
     {
         id: GameNames.game3,
         name: 'Snapshot Marathon',
-        image: game1Demo,
-        imageDescription: 'Take photos',
+        image: game3Demo,
+        imageDescription: 'Join a safari and shoot photos matching the given word',
     },
 ];

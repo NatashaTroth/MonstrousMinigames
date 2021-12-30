@@ -5,7 +5,7 @@ import { GameContext } from '../../../../contexts/GameContextProvider';
 import { Socket } from '../../../socket/Socket';
 import { sendMovement } from './sendMovement';
 
-export default function addMovementListener(controllerSocket: Socket, hasPaused: boolean, playerFinished: boolean) {
+function addMovementListener(controllerSocket: Socket, hasPaused: boolean, playerFinished: boolean) {
     window.addEventListener('devicemotion', e =>
         sendMovementToController(e, playerFinished, controllerSocket, hasPaused, sendMovement)
     );

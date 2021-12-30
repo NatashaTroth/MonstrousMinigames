@@ -2,7 +2,7 @@ import styled, { keyframes } from 'styled-components';
 
 import forest from '../../../../../images/ui/forest_mobile.svg';
 
-export const swing = keyframes`
+const swing = keyframes`
     0% {
         transform: rotate(0);
     }
@@ -20,7 +20,7 @@ export const swing = keyframes`
     }
 `;
 
-export const eyeRollLeft = keyframes`
+const eyeRollLeft = keyframes`
     0% {
         transform: rotate(720deg);
     }
@@ -30,7 +30,7 @@ export const eyeRollLeft = keyframes`
     }
 `;
 
-export const eyeRollRight = keyframes`
+const eyeRollRight = keyframes`
     0% {
         transform: rotate(0);
     }

@@ -3,9 +3,7 @@ import Phaser from 'phaser';
 
 import chasersSpritesheet from '../../../../images/characters/spritesheets/chasers/chasers_spritesheet.png';
 import windSpritesheet from '../../../../images/characters/spritesheets/chasers/wind_spritesheet.png';
-import {
-    designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1
-} from '../../../../utils/constants';
+import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1 } from '../../../../utils/constants';
 import { Game1 } from '../../../phaser/game1/Game1';
 import { GameToScreenMapper } from '../../../phaser/game1/GameToScreenMapper';
 import { initialGameInput } from '../../../phaser/game1/initialGameInput';
@@ -314,6 +312,6 @@ export function handleStartGame(socket: Socket | undefined, roomId: string | und
     });
 }
 
-export function handleStop(socket: Socket | undefined) {
+function handleStop(socket: Socket | undefined) {
     socket?.emit({ type: MessageTypes.stopGame });
 }

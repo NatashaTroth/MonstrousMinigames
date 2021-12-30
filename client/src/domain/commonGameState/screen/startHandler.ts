@@ -9,12 +9,6 @@ import messageHandler from '../../socket/messageHandler';
 import { Socket } from '../../socket/Socket';
 import { startedTypeGuard } from '../../typeGuards/game1/started';
 
-export interface HandleGameStartedProps {
-    roomId: string;
-    game: GameNames;
-    countdownTime: number;
-}
-
 interface Dependencies {
     setGameStarted: (val: boolean) => void;
     history: History;

@@ -18,9 +18,9 @@ const characterSpriteProperties: CharacterSpriteProperties = {
     frameHeight: 873,
 };
 
-export const characterFiles: string[] = [blueMonster, greenMonster, pinkMonster, orangeMonster];
+const characterFiles: string[] = [blueMonster, greenMonster, pinkMonster, orangeMonster];
 
-export const characterSpriteSheetPrefix = 'character_';
+const characterSpriteSheetPrefix = 'character_';
 
 export const characters: Character[] = characterFiles.map((file, idx) => {
     const monsterName = `${characterSpriteSheetPrefix}${defaultAvailableCharacters[idx].toString()}`;

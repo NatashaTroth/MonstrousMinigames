@@ -10,12 +10,12 @@ interface Dependencies {
     setGuessHint: (val: string) => void;
 }
 
-export const guessHintHandler = messageHandler(guessHintTypeGuard, (message, dependencies: Dependencies) => {
+const guessHintHandler = messageHandler(guessHintTypeGuard, (message, dependencies: Dependencies) => {
     const { setGuessHint } = dependencies;
-    setGuessHint(message.hint)
+    setGuessHint(message.hint);
 
     // eslint-disable-next-line no-console
-    console.log(message.hint)
+    console.log(message.hint);
 });
 
 export const useGuessHintHandler = (socket: Socket, handler = guessHintHandler) => {
@@ -24,7 +24,7 @@ export const useGuessHintHandler = (socket: Socket, handler = guessHintHandler) 
 
     React.useEffect(() => {
         if (!roomId) return;
-        
+
         const guessHintHandlerWithDependencies = handler({ setGuessHint });
         guessHintHandlerWithDependencies(socket, roomId);
     }, [handler, roomId, setGuessHint, socket]);

@@ -11,13 +11,6 @@ export enum TrashType {
     Plastic = 'PLASTIC',
 }
 
-export enum ObstacleRoutes {
-    treeStump = 'treestump',
-    spider = 'spider',
-    trash = 'trash',
-    stone = 'stone',
-}
-
 export enum GameState {
     created = 'CREATED',
     started = 'STARTED',

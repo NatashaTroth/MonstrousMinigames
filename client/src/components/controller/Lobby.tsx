@@ -90,6 +90,6 @@ export const Lobby: React.FunctionComponent<LobbyProps> = ({ history }) => {
     );
 };
 
-export function handleStartTutorial(history: History, roomId: string | undefined) {
+function handleStartTutorial(history: History, roomId: string | undefined) {
     history.push(controllerTutorialRoute(roomId));
 }

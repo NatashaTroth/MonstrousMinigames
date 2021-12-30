@@ -1,5 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { Dialog, Tooltip } from '@material-ui/core';
+import { Info } from '@material-ui/icons';
 import * as React from 'react';
+import styled from 'styled-components';
 
 import { Game, GameNames, games } from '../../config/games';
 import { ScreenStates } from '../../config/screenStates';
@@ -8,13 +11,15 @@ import { ScreenSocketContext } from '../../contexts/screen/ScreenSocketContextPr
 import { handleStartGameClick } from '../../domain/commonGameState/screen/handleStartGameClick';
 import history from '../../domain/history/history';
 import oliverLobby from '../../images/characters/oliverLobby.svg';
-import shakeInstructionsDemo from '../../images/ui/shakeInstructionDemo.png';
+import wood from '../../images/obstacles/wood/wood.svg';
+import attention from '../../images/ui/attention.png';
+import shakeIt from '../../images/ui/shakeIt.svg';
 import spiderDemo from '../../images/ui/spiderDemo.png';
 import trashDemo from '../../images/ui/trashDemo.png';
 import treeDemo from '../../images/ui/treeDemo.png';
 import { MessageTypes } from '../../utils/constants';
-import { Routes } from '../../utils/routes';
 import Button from '../common/Button';
+import { OrangeBase } from '../common/CommonStyles.sc';
 import {
     BackButtonContainer,
     Content,
@@ -23,12 +28,17 @@ import {
     GamePreviewContainer,
     GameSelectionContainer,
     ImageDescription,
+    ImagesContainer,
+    ImageWrapper,
+    InfoButton,
     InstructionImg,
     LeftContainer,
     OliverImage,
+    PreviewImage,
     PreviewImageContainer,
     RightContainer,
     SelectGameButtonContainer,
+    TextWrapper,
     Wrapper,
 } from './ChooseGame.sc';
 import { LobbyContainer } from './Lobby.sc';
@@ -36,11 +46,16 @@ import LobbyHeader from './LobbyHeader';
 
 const ChooseGame: React.FunctionComponent = () => {
     const lastSelectedGame = localStorage.getItem('game');
+    const [dialogOpen, setDialogOpen] = React.useState(false);
     const [selectedGame, setSelectedGame] = React.useState<Game>(
         lastSelectedGame ? games.find(game => game.id === lastSelectedGame) || games[0] : games[0]
     );
     const { roomId, screenAdmin, screenState, setChosenGame } = React.useContext(GameContext);
     const { screenSocket } = React.useContext(ScreenSocketContext);
+
+    const handleOpenDialog = () => {
+        setDialogOpen(true);
+    };
 
     React.useEffect(() => {
         if (screenAdmin) {
@@ -54,7 +69,7 @@ const ChooseGame: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         if (!screenAdmin && !screenState.startsWith(ScreenStates.chooseGame)) {
-            history.push(`${Routes.screen}/${roomId}/${screenState}`);
+            // history.push(`${Routes.screen}/${roomId}/${screenState}`);
         } else if (!screenAdmin && screenState.startsWith(ScreenStates.chooseGame)) {
             const gameId = screenState.replace(`${ScreenStates.chooseGame}/`, '');
             const preselectedGame = games.filter(game => {
@@ -70,6 +85,11 @@ const ChooseGame: React.FunctionComponent = () => {
         <LobbyContainer>
             <Content>
                 <LobbyHeader />
+                <InstructionDialog
+                    open={dialogOpen}
+                    handleClose={() => setDialogOpen(false)}
+                    selectedGame={selectedGame}
+                />
                 <GameSelectionContainer>
                     <LeftContainer>
                         <div>
@@ -91,15 +111,28 @@ const ChooseGame: React.FunctionComponent = () => {
                     </LeftContainer>
                     <RightContainer>
                         <GamePreviewContainer>
-                            <PreviewImageContainer src={selectedGame.image} />
-                            <ImageDescription>{selectedGame.imageDescription}</ImageDescription>
-                            {selectedGame.id === GameNames.game1 ? (
-                                <Game1Description />
-                            ) : selectedGame.id === GameNames.game2 ? (
-                                <Game2Description />
-                            ) : (
-                                <Game3Description />
-                            )}
+                            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                                <PreviewImageContainer>
+                                    <PreviewImage src={selectedGame.image} />
+                                </PreviewImageContainer>
+                                <ImageDescription>
+                                    {selectedGame.imageDescription}{' '}
+                                    <Tooltip title="Click for more information">
+                                        <span>
+                                            <InfoButton onClick={handleOpenDialog}>
+                                                <Info />
+                                            </InfoButton>
+                                        </span>
+                                    </Tooltip>
+                                </ImageDescription>
+                                {selectedGame.id === GameNames.game1 ? (
+                                    <Game1Description openDialog={handleOpenDialog} />
+                                ) : selectedGame.id === GameNames.game2 ? (
+                                    <Game2Description openDialog={handleOpenDialog} />
+                                ) : (
+                                    <Game3Description openDialog={handleOpenDialog} />
+                                )}
+                            </div>
                         </GamePreviewContainer>
                         <SelectGameButtonContainer>
                             {screenAdmin && (
@@ -127,12 +160,45 @@ const ChooseGame: React.FunctionComponent = () => {
 
 export default ChooseGame;
 
-export const Game1Description: React.FunctionComponent = () => (
+interface DescriptionProps {
+    openDialog: () => void;
+}
+
+const Game1Description: React.FunctionComponent<DescriptionProps> = ({ openDialog }) => (
     <ControlInstructionsContainer>
-        <Wrapper>
-            <InstructionImg src={shakeInstructionsDemo} />
+        <ImagesContainer>
+            <ImageWrapper>
+                <InstructionImg src={shakeIt} />
+            </ImageWrapper>
+            <ImageWrapper>
+                <InstructionImg src={attention} />
+            </ImageWrapper>
+            <ImageWrapper>
+                <InstructionImg src={wood} />
+            </ImageWrapper>
+        </ImagesContainer>
+        <TextWrapper>
             <ControlInstruction>Shake your phone to run!</ControlInstruction>
-        </Wrapper>
+            <ControlInstruction>Look at your phone if this icon appears on screen!</ControlInstruction>
+            <ControlInstruction>Remove the obstacles on your way!</ControlInstruction>
+        </TextWrapper>
+    </ControlInstructionsContainer>
+);
+
+const Game2Description: React.FunctionComponent<DescriptionProps> = ({ openDialog }) => (
+    <ControlInstructionsContainer>
+        <Button onClick={openDialog}>More information</Button>
+    </ControlInstructionsContainer>
+);
+
+const Game3Description: React.FunctionComponent<DescriptionProps> = ({ openDialog }) => (
+    <ControlInstructionsContainer>
+        <Button onClick={openDialog}>More information</Button>
+    </ControlInstructionsContainer>
+);
+
+const Game1DrawerDescription: React.FunctionComponent = () => (
+    <ControlInstructionsContainer>
         <Wrapper>
             <InstructionImg src={treeDemo} />
             <ControlInstruction>Remove the tree trunk by cutting it along the line!</ControlInstruction>
@@ -150,10 +216,53 @@ export const Game1Description: React.FunctionComponent = () => (
     </ControlInstructionsContainer>
 );
 
-export const Game2Description: React.FunctionComponent = () => (
-    <ControlInstructionsContainer>{/* // TODO */}</ControlInstructionsContainer>
+const Game2DrawerDescription: React.FunctionComponent = () => (
+    <ControlInstructionsContainer></ControlInstructionsContainer>
 );
 
-export const Game3Description: React.FunctionComponent = () => (
-    <ControlInstructionsContainer>{/* // TODO */}</ControlInstructionsContainer>
+const Game3DrawerDescription: React.FunctionComponent = () => (
+    <ControlInstructionsContainer></ControlInstructionsContainer>
 );
+
+interface InstructionDialog {
+    open: boolean;
+    handleClose: () => void;
+    selectedGame: Game;
+}
+
+const InstructionDialog: React.FunctionComponent<InstructionDialog> = ({ handleClose, selectedGame, ...props }) => {
+    return (
+        <Dialog
+            {...props}
+            maxWidth="md"
+            PaperProps={{
+                style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                    padding: 20,
+                    width: '80%',
+                    height: '80%',
+                },
+            }}
+            onClose={handleClose}
+        >
+            <DialogContent>
+                {selectedGame.id === GameNames.game1 ? (
+                    <Game1DrawerDescription />
+                ) : selectedGame.id === GameNames.game2 ? (
+                    <Game2DrawerDescription />
+                ) : (
+                    <Game3DrawerDescription />
+                )}
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+const DialogContent = styled(OrangeBase)`
+    border-radius: 10px;
+    color: black;
+    display: flex;
+    width: 100%;
+    height: 100%;
+`;

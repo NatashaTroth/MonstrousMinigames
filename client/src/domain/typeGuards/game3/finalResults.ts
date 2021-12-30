@@ -1,7 +1,7 @@
 import { MessageTypesGame3 } from '../../../utils/constants';
 import { MessageDataGame3 } from './MessageDataGame3';
 
-export interface Result {
+interface Result {
     photographerId: string;
     points: number;
     rank: number;

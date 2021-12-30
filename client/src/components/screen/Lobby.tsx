@@ -133,7 +133,7 @@ export const Lobby: React.FunctionComponent = () => {
                             <RightButtonContainer>
                                 <Button
                                     onClick={() => history.push(screenChooseGameRoute(roomId))}
-                                    disabled={!screenAdmin || !connectedUsers || connectedUsers?.length === 0}
+                                    //disabled={!screenAdmin || !connectedUsers || connectedUsers?.length === 0}
                                     variant="secondary"
                                     title={
                                         screenAdmin

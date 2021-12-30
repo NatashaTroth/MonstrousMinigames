@@ -6,12 +6,10 @@ import { handleCreateNewRoom } from '../../../components/screen/ConnectScreen';
 
 configure({ adapter: new Adapter() });
 
-export const buildSuccessfulFetch = (response: unknown) =>
+const buildSuccessfulFetch = (response: unknown) =>
     jest.fn().mockResolvedValue({
         json: jest.fn().mockResolvedValue(response),
     });
-
-export const buildFailingFetch = (error: unknown) => jest.fn().mockRejectedValue(error);
 
 afterEach(cleanup);
 
