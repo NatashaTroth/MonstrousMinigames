@@ -1,29 +1,29 @@
-import { localDevelopment, pushChasers } from '../../../constants';
-import User from '../../classes/user';
-import { GameNames } from '../../enums/gameNames';
-import { IMessage } from '../../interfaces/messages';
-import { GameState } from '../enums';
-import Game from '../Game';
-import { verifyGameState } from '../helperFunctions/verifyGameState';
-import { verifyUserId } from '../helperFunctions/verifyUserId';
-import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
-import { HashTable, IGameInterface } from '../interfaces';
-import { GameType } from '../leaderboard/enums/GameType';
-import Leaderboard from '../leaderboard/Leaderboard';
-import Player from '../Player';
-import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
-import UserHasNoStones from './customErrors/UserHasNoStones';
-import { GameOneMsgType, ObstacleType } from './enums';
-import GameOneEventEmitter from './GameOneEventEmitter';
-import * as InitialGameParameters from './GameOneInitialParameters';
-import GameOnePlayer from './GameOnePlayer';
+import { localDevelopment, pushChasers } from "../../../constants";
+import User from "../../classes/user";
+import { GameNames } from "../../enums/gameNames";
+import { IMessage } from "../../interfaces/messages";
+import { GameState } from "../enums";
+import Game from "../Game";
+import { verifyGameState } from "../helperFunctions/verifyGameState";
+import { verifyUserId } from "../helperFunctions/verifyUserId";
+import { verifyUserIsActive } from "../helperFunctions/verifyUserIsActive";
+import { HashTable, IGameInterface } from "../interfaces";
+import { GameType } from "../leaderboard/enums/GameType";
+import Leaderboard from "../leaderboard/Leaderboard";
+import Player from "../Player";
+import { NotAtObstacleError, WrongObstacleIdError } from "./customErrors";
+import UserHasNoStones from "./customErrors/UserHasNoStones";
+import { GameOneMsgType, ObstacleType } from "./enums";
+import GameOneEventEmitter from "./GameOneEventEmitter";
+import * as InitialGameParameters from "./GameOneInitialParameters";
+import GameOnePlayer from "./GameOnePlayer";
 import {
     createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
-} from './helperFunctions/initiatePlayerState';
-import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from './interfaces';
-import { ObstacleReachedInfoController } from './interfaces/GameEvents';
-import { IMessageObstacle } from './interfaces/messageObstacle';
-import { IMessageStunPlayer } from './interfaces/messageStunPlayer';
+} from "./helperFunctions/initiatePlayerState";
+import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from "./interfaces";
+import { ObstacleReachedInfoController } from "./interfaces/GameEvents";
+import { IMessageObstacle } from "./interfaces/messageObstacle";
+import { IMessageStunPlayer } from "./interfaces/messageStunPlayer";
 
 let pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
 
@@ -102,18 +102,16 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         if (this.cameraPositionX < this.trackLength)
             this.cameraPositionX += (timeElapsedSinceLastFrame / 33) * this.cameraSpeed;
 
-        this.updateChasersPosition(timeElapsed, timeElapsedSinceLastFrame);
+        this.updateChasersPosition(timeElapsedSinceLastFrame);
 
         if (localDevelopment) {
             for (const player of this.players.values()) {
                 if (player.positionX < this.trackLength) {
                     this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
                 }
-
-                // push chasers
+                // push chasers TODO delete
                 if (pushChasers) {
                     if (pushChasersPeriodicallyCounter >= 100) {
-                        console.log('---------- PUUSH--------');
                         pushChasersPeriodicallyCounter = 0;
                         this.pushChasers(player.id!);
                     }
@@ -135,7 +133,10 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
                 this.playerWantsToSolveObstacle(message.userId!, (message as IMessageObstacle).obstacleId);
                 break;
             case GameOneMsgType.STUN_PLAYER:
-                if ((message as IMessageStunPlayer).receivingUserId) {
+                if (
+                    !(message as IMessageStunPlayer).receivingUserId ||
+                    (message as IMessageStunPlayer).receivingUserId === message.userId
+                ) {
                     break;
                 }
                 this.stunPlayer((message as IMessageStunPlayer).receivingUserId, message.userId!);
@@ -177,7 +178,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     }
 
     private getStunnablePlayers(): string[] {
-        return Array.from(this.players.values()).reduce(function (res: string[], option: Player) {
+        return Array.from(this.players.values()).reduce((res: string[], option: Player) => {
             if (!option.finished && option.isActive) {
                 res.push(option.id);
             }
@@ -211,6 +212,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         GameOneEventEmitter.emitGameHasStoppedEvent(this.roomId);
     }
 
+    // TODO Test
     stopGameAllUsersDisconnected() {
         super.stopGameAllUsersDisconnected();
     }
@@ -239,13 +241,15 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         };
     }
 
-    //TODO test
-    private updateChasersPosition(timeElapsed: number, timeElapsedSinceLastFrame: number) {
+    private updateChasersPosition(timeElapsedSinceLastFrame: number) {
         //10000 to 90000  * timePassed //TODO - make faster over time??
         if (this.chasersPositionX > this.trackLength) return;
         this.chasersPositionX += (timeElapsedSinceLastFrame / 33) * this.chasersSpeed;
 
-        //TODO test
+        this.checkIfPlayersCaught();
+    }
+
+    private checkIfPlayersCaught() {
         for (const player of this.players.values()) {
             if (!player.finished && this.chaserCaughtPlayer(player)) {
                 this.handlePlayerCaught(player);
@@ -435,7 +439,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             GameOneEventEmitter.emitPlayerHasExceededMaxNumberChaserPushes(this.roomId, userPushing.id);
         }
 
-        this.updateChasersPosition(this.gameTime, 0);
+        this.checkIfPlayersCaught();
 
         GameOneEventEmitter.emitChasersWerePushed(this.roomId, this.chaserPushAmount);
     }

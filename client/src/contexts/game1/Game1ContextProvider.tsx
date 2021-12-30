@@ -33,6 +33,9 @@ export const defaultValue = {
     setStunnablePlayers: () => {
         // do nothing
     },
+    resetGame1: () => {
+        // do nothing
+    },
 };
 export interface Obstacle {
     type: ObstacleTypes;
@@ -57,30 +60,32 @@ interface Game1ContextProps {
     setExceededChaserPushes: (val: boolean) => void;
     stunnablePlayers: string[];
     setStunnablePlayers: (val: string[]) => void;
+    resetGame1: () => void;
 }
 
 export const Game1Context = React.createContext<Game1ContextProps>(defaultValue);
 
+let obstacleHelper: undefined | Obstacle = undefined;
+
 const Game1ContextProvider: React.FunctionComponent = ({ children }) => {
     const [obstacle, setObstacle] = React.useState<undefined | Obstacle>();
-    const [playerFinished, setPlayerFinished] = React.useState<boolean>(false);
-    const [dead, setPlayerDead] = React.useState(false);
-    const [hasStone, setHasStone] = React.useState(false);
+    const [playerFinished, setPlayerFinished] = React.useState<boolean>(defaultValue.playerFinished);
+    const [dead, setPlayerDead] = React.useState(defaultValue.dead);
+    const [hasStone, setHasStone] = React.useState(defaultValue.hasStone);
     const [earlySolvableObstacle, setEarlySolvableObstacle] = React.useState<Obstacle | undefined>();
-    const [exceededChaserPushes, setExceededChaserPushes] = React.useState(false);
+    const [exceededChaserPushes, setExceededChaserPushes] = React.useState(defaultValue.exceededChaserPushes);
     const [stunnablePlayers, setStunnablePlayers] = React.useState<string[]>([]);
-
-    let reroute = true;
 
     const content = {
         obstacle,
         setObstacle: (roomId: string | undefined, val: undefined | Obstacle) => {
-            setObstacle(val);
-            if (val) {
-                reroute = true;
+            if (val && obstacleHelper?.id !== val?.id) {
+                setObstacle(val);
+                obstacleHelper = val;
                 history.push(controllerObstacleRoute(roomId, val.type)!);
-            } else if (reroute) {
-                reroute = false;
+            } else if (!val && obstacleHelper) {
+                setObstacle(val);
+                obstacleHelper = val;
                 history.push(controllerGame1Route(roomId));
             }
         },
@@ -96,6 +101,15 @@ const Game1ContextProvider: React.FunctionComponent = ({ children }) => {
         setPlayerFinished,
         stunnablePlayers,
         setStunnablePlayers,
+        resetGame1: () => {
+            setObstacle(defaultValue.obstacle);
+            setPlayerFinished(defaultValue.playerFinished);
+            setPlayerDead(defaultValue.dead);
+            setHasStone(defaultValue.hasStone);
+            setEarlySolvableObstacle(defaultValue.earlySolvableObstacle);
+            setExceededChaserPushes(defaultValue.exceededChaserPushes);
+            setStunnablePlayers([]);
+        },
     };
     return <Game1Context.Provider value={content}>{children}</Game1Context.Provider>;
 };

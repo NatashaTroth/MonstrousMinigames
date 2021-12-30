@@ -1,26 +1,18 @@
 import { Settings, VolumeOff, VolumeUp } from '@material-ui/icons';
 import { History } from 'history';
 import * as React from 'react';
+import styled from 'styled-components';
 
-import { AudioContext } from '../../contexts/AudioContextProvider';
-import { handleAudio } from '../../domain/audio/handleAudio';
+import { MyAudioContext } from '../../contexts/AudioContextProvider';
 import { Routes } from '../../utils/routes';
 import IconButton from '../common/IconButton';
-import { InnerContainer, StyledContainer } from './MasterHeader.sc';
 
 interface MasterHeaderProps {
     history: History;
 }
 
 const MasterHeader: React.FC<MasterHeaderProps> = ({ history }) => {
-    const {
-        playLobbyMusic,
-        pauseLobbyMusic,
-        audioPermission,
-        setAudioPermissionGranted,
-        playing,
-        musicIsPlaying,
-    } = React.useContext(AudioContext);
+    const { isPlaying, togglePlaying } = React.useContext(MyAudioContext);
 
     if (history.location.pathname.includes(Routes.game1)) {
         return null;
@@ -32,21 +24,24 @@ const MasterHeader: React.FC<MasterHeaderProps> = ({ history }) => {
                 <IconButton onClick={() => history.push(Routes.settings)} right={80}>
                     <Settings />
                 </IconButton>
-                <IconButton
-                    onClick={() =>
-                        handleAudio({
-                            playing,
-                            audioPermission,
-                            pauseLobbyMusic,
-                            playLobbyMusic,
-                            setAudioPermissionGranted,
-                        })
-                    }
-                >
-                    {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
-                </IconButton>
+                <IconButton onClick={() => togglePlaying()}>{isPlaying ? <VolumeUp /> : <VolumeOff />}</IconButton>
             </InnerContainer>
         </StyledContainer>
     );
 };
 export default MasterHeader;
+
+const StyledContainer = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+`;
+
+const InnerContainer = styled.div`
+    padding: 10px;
+
+    button:not(:last-child) {
+        margin-right: 20px;
+    }
+`;

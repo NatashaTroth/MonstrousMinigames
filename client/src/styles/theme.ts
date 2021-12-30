@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core';
+import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core';
 
 declare module '@material-ui/core/styles/createMuiTheme' {
     interface Theme {
@@ -76,6 +76,37 @@ const theme = createMuiTheme({
         characterColors: ['#1e8fe2', '#69a04e', '#b53cd4', '#b97d35'],
     },
     boxShadowDepth: 7,
+    overrides: {
+        MuiChip: {
+            root: {
+                height: 38,
+                borderRadius: 20,
+                backgroundColor: '#6aac02',
+            },
+            label: {
+                fontSize: 30,
+            },
+        },
+
+        MuiTab: {
+            root: {
+                backgroundColor: '#a8833f',
+                border: 'none',
+            },
+            textColorPrimary: {
+                color: '#000000',
+                '&.Mui-selected': {
+                    color: 'white',
+                    fontWeight: 700,
+                },
+            },
+        },
+        MuiTabs: {
+            indicator: {
+                backgroundColor: 'white',
+            },
+        },
+    },
 });
 
 export default theme;

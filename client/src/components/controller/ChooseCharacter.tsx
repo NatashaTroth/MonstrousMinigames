@@ -1,28 +1,31 @@
 /* eslint-disable simple-import-sort/imports */
-import "react-multi-carousel/lib/styles.css";
-import { ArrowBackIos, ArrowForwardIos, Clear } from "@material-ui/icons";
-import * as React from "react";
-import Carousel from "react-multi-carousel";
-import { History } from "history";
+import 'react-multi-carousel/lib/styles.css';
+import { ArrowBackIos, ArrowForwardIos, Clear } from '@material-ui/icons';
+import * as React from 'react';
+import Carousel from 'react-multi-carousel';
+import { History } from 'history';
 
-import Button from "../../components/common/Button";
-import IconButton from "../../components/common/IconButton";
-import { Label } from "../../components/common/Label.sc";
-import { carouselOptions } from "../../config/carouselOptions";
+import Button from '../../components/common/Button';
+import IconButton from '../../components/common/IconButton';
+import { Label } from '../../components/common/Label.sc';
+import { carouselOptions } from '../../config/carouselOptions';
+import { Character as CharacterInterface, characterDictionary, characters } from '../../config/characters';
+import { ControllerSocketContext } from '../../contexts/controller/ControllerSocketContextProvider';
+import { GameContext } from '../../contexts/GameContextProvider';
+import { PlayerContext } from '../../contexts/PlayerContextProvider';
+import history from '../../domain/history/history';
+import { Socket } from '../../domain/socket/Socket';
+import { MessageTypes } from '../../utils/constants';
+import { controllerLobbyRoute } from '../../utils/routes';
 import {
-    Character as CharacterInterface, characterDictionary, characters
-} from "../../config/characters";
-import { ControllerSocketContext } from "../../contexts/ControllerSocketContextProvider";
-import { GameContext } from "../../contexts/GameContextProvider";
-import { PlayerContext } from "../../contexts/PlayerContextProvider";
-import history from "../../domain/history/history";
-import { Socket } from "../../domain/socket/Socket";
-import { MessageTypes } from "../../utils/constants";
-import { controllerLobbyRoute } from "../../utils/routes";
-import {
-    Character, CharacterContainer, ChooseButtonContainer, ChooseCharacterContainer, ClearContainer,
-    Left, Right
-} from "./ChooseCharacter.sc";
+    Character,
+    CharacterContainer,
+    ChooseButtonContainer,
+    ChooseCharacterContainer,
+    ClearContainer,
+    Left,
+    Right,
+} from './ChooseCharacter.sc';
 
 const ChooseCharacter: React.FunctionComponent = () => {
     const { character, setCharacter } = React.useContext(PlayerContext);
@@ -42,9 +45,10 @@ const ChooseCharacter: React.FunctionComponent = () => {
         if (!isMoving) {
             if (actualCharacter === characters.length - 1) {
                 setActualCharacter(0);
-            } else {
-                setActualCharacter(actualCharacter + 1);
+                return;
             }
+
+            setActualCharacter(actualCharacter + 1);
         }
     }
 
@@ -52,9 +56,10 @@ const ChooseCharacter: React.FunctionComponent = () => {
         if (!isMoving) {
             if (actualCharacter === 0) {
                 setActualCharacter(characters.length - 1);
-            } else {
-                setActualCharacter(actualCharacter - 1);
+                return;
             }
+
+            setActualCharacter(actualCharacter - 1);
         }
     }
 
@@ -81,7 +86,6 @@ const ChooseCharacter: React.FunctionComponent = () => {
             <Carousel
                 afterChange={(previousSlide, { currentSlide }) => {
                     setIsMoving(false);
-                    //todo handle swiping
                 }}
                 beforeChange={() => setIsMoving(true)}
                 {...carouselOptions}
@@ -135,9 +139,10 @@ export const chooseCharacterClick = (props: HandleChooseCharacterClickProps) => 
 
     if (searchParams.get('back')) {
         history.goBack();
-    } else {
-        history.push(controllerLobbyRoute(roomId));
+        return;
     }
+
+    history.push(controllerLobbyRoute(roomId));
 };
 
 interface CustomArrow {

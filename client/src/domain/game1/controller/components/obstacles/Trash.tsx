@@ -1,21 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import interact from "interactjs";
-import * as React from "react";
+import interact from 'interactjs';
+import * as React from 'react';
 
-import Button from "../../../../../components/common/Button";
-import { ComponentToTest } from "../../../../../components/controller/Tutorial";
-import { ControllerSocketContext } from "../../../../../contexts/ControllerSocketContextProvider";
-import { Game1Context, Obstacle } from "../../../../../contexts/game1/Game1ContextProvider";
-import { GameContext } from "../../../../../contexts/GameContextProvider";
-import food from "../../../../../images/obstacles/trash/food.svg";
-import paper from "../../../../../images/obstacles/trash/paper.svg";
-import plastic from "../../../../../images/obstacles/trash/plastic.svg";
-import { MessageTypesGame1, ObstacleTypes, TrashType } from "../../../../../utils/constants";
-import { Socket } from "../../../../socket/Socket";
-import { dragMoveListener, initializeInteractListeners, itemCounter } from "./Draggable";
-import LinearProgressBar from "./LinearProgressBar";
-import { ObstacleContainer, ObstacleInstructions } from "./ObstacleStyles.sc";
-import { Container, Draggable, DropZone, StyledImage, StyledSkipButton } from "./Trash.sc";
+import Button from '../../../../../components/common/Button';
+import { ComponentToTest } from '../../../../../components/controller/Tutorial';
+import { ControllerSocketContext } from '../../../../../contexts/controller/ControllerSocketContextProvider';
+import { Game1Context, Obstacle } from '../../../../../contexts/game1/Game1ContextProvider';
+import { GameContext } from '../../../../../contexts/GameContextProvider';
+import food from '../../../../../images/obstacles/trash/food.svg';
+import paper from '../../../../../images/obstacles/trash/paper.svg';
+import plastic from '../../../../../images/obstacles/trash/plastic.svg';
+import { MessageTypesGame1, ObstacleTypes, TrashType } from '../../../../../utils/constants';
+import { Socket } from '../../../../socket/Socket';
+import { dragMoveListener, initializeInteractListeners, itemCounter } from './Draggable';
+import LinearProgressBar from './LinearProgressBar';
+import { ObstacleContainer, ObstacleInstructions } from './ObstacleStyles.sc';
+import { Container, Draggable, DropZone, StyledImage, StyledSkipButton } from './Trash.sc';
 
 const tutorialObstacle = {
     id: 1,
@@ -61,16 +61,17 @@ const Trash: React.FunctionComponent<TrashProps> = ({ tutorial = false, handleTu
                     if (mounted) {
                         if (tutorial) {
                             handleTutorialFinished?.(ObstacleTypes.stone);
-                        } else {
-                            solveObstacle({
-                                controllerSocket,
-                                obstacle: obstacleToUse,
-                                setObstacle,
-                                roomId,
-                                clearTimeout,
-                                handleSkip,
-                            });
+                            return;
                         }
+
+                        solveObstacle({
+                            controllerSocket,
+                            obstacle: obstacleToUse,
+                            setObstacle,
+                            roomId,
+                            clearTimeout,
+                            handleSkip,
+                        });
                     }
                 },
                 p => {

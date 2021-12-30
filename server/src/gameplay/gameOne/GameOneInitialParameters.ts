@@ -1,8 +1,10 @@
-export const TRACK_LENGTH = 5000;
-export const NUMBER_OBSTACLES = 4;
+import { localDevelopment, shorterGame } from '../../../constants';
+
+export const TRACK_LENGTH = shorterGame && localDevelopment ? 1000 : 5000;
+export const NUMBER_OBSTACLES = shorterGame && localDevelopment ? 0 : 4;
 export const COUNTDOWN_TIME = 3000;
 export const STUNNED_TIME = 3000;
-export const NUMBER_STONES = 4; //when alive
+export const NUMBER_STONES = shorterGame && localDevelopment ? 0 : 4; //when alive
 export const MAX_NUMBER_CHASER_PUSHES = 3;
 export const CHASER_PUSH_AMOUNT = 20;
 export const APPROACH_SOLVABLE_OBSTACLE_DISTANCE = 200;

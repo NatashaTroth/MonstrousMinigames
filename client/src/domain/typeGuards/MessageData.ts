@@ -19,6 +19,7 @@ import { PlayerUnstunnedMessage } from './game1/playerUnstunned';
 import { GameHasStartedMessage } from './game1/started';
 import { StunnablePlayersMessage } from './game1/stunnablePlayers';
 import { GameSetMessage } from './gameSet';
+import { LeaderboardStateMessage } from './leaderboardState';
 import { GameHasPausedMessage } from './paused';
 import { GameHasResetMessage } from './reset';
 import { GameHasResumedMessage } from './resumed';
@@ -60,4 +61,5 @@ export type MessageData =
     | ChasersPushedMessage
     | StunnablePlayersMessage
     | GameSetMessage
+    | LeaderboardStateMessage
     | undefined;

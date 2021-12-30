@@ -1,5 +1,5 @@
-import { MessageTypesGame1 } from "../../../utils/constants";
-import { MessageData } from "../MessageData";
+import { MessageTypesGame1 } from '../../../utils/constants';
+import { MessageData } from '../MessageData';
 
 export interface PlayerFinishedMessage {
     type: MessageTypesGame1.playerFinished;

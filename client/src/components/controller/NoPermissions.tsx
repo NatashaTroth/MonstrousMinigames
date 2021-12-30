@@ -1,7 +1,8 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
 import Button from '../common/Button';
-import { Container, Text } from './NoPermissions.sc';
+import { StyledFullScreenContainer } from './FullScreenContainer.sc';
 
 interface NoPermissionProps {
     getMotionPermission: () => void;
@@ -24,3 +25,12 @@ export const NoPermissions: React.FunctionComponent<NoPermissionProps> = ({
         </Container>
     );
 };
+
+const Container = styled(StyledFullScreenContainer)`
+    color: white;
+    font-weight: 700;
+`;
+
+const Text = styled.div`
+    margin-bottom: 20px;
+`;

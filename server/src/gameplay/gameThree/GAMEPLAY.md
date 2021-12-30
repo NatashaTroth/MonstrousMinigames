@@ -31,7 +31,7 @@ Once the players join in the game, they will all be presented with a topic (e.g.
 
 -   For each vote a player gets on their picture, they will receive 1 point.
 
-... this flow repeats 3 times until the final round starts.
+... this flow repeats 2 times until the final round starts.
 
 ### Final Round
 
@@ -107,12 +107,12 @@ storage hinten - nach spiel alles löschen
 ```typescript
 {
     roomId: string;
-    photoUrls: photoPhotographerMapper[];
+    photoUrls: PhotoPhotographerMapper[];
     countdownTime: number;
 }
 
-//photoPhotographerMapper:
-export interface photoPhotographerMapper {
+//PhotoPhotographerMapper:
+export interface PhotoPhotographerMapper {
     photographerId: string;
     url: string;
 }
@@ -122,7 +122,7 @@ export interface photoPhotographerMapper {
 
 ```typescript
 {
-    oterId: string;
+    voterId: string;
     photographerId: string;
 }
 ```
@@ -132,12 +132,12 @@ export interface photoPhotographerMapper {
 ```typescript
  {
     roomId: string;
-    results: votingResultsPhotographerMapper[];
+    results: VotesPhotographerMapper[];
     countdownTime: number;
 }
 
-//votingResultsPhotographerMapper:
-export interface votingResultsPhotographerMapper {
+//VotesPhotographerMapper:
+export interface VotesPhotographerMapper {
     photographerId: string;
     points: number;
 }
@@ -150,21 +150,84 @@ roomId: string;
 countdownTime: number;
 ```
 
-8.) TODO
-
----------MAGDA FRAGEN----------
-Soll ich dir den GameThreeGameState schicken:
+--- Final round ---
+8.) Server sends 'game3/takeFinalPhotosCountdown':
 
 ```typescript
-export enum GameThreeGameState {
-    BeforeStart = 'BEFORE_START',
-    TakingPhoto = 'TAKING_PHOTO',
-    Voting = 'VOTING',
-    ViewingResults = 'VIEWING_RESULTS',
-    WaitingForClientAction = 'WAITING_FOR_CLIENT_ACTION',
+roomId: string;
+countdownTime: number;
+```
+
+9.) Controller takes a photos and sends them individually to server: 'game3/photo'
+
+```typescript
+{
+    url: string;
 }
 ```
 
-Soll ich dir den Countdown schicken - also wie lange man hat um die Voting Ergebnisse anzuschauen? Vermutlich schon oder?
+10.) When the take final photos timer runs out or all photos have been sent (whichever is first), server sends the photo urls of one player (photographerId - random order) to client (SCREEN + CONTROLLER): 'game3/presentFinalPhotos'
 
-Ich kann dir auch die Rundenzahl mitschicken - soll ich das in eine eigene Message - oder beim photoTopic message dazu?
+```typescript
+{
+    roomId: string;
+    countdownTime: number;
+    photographerId: string;
+    photoUrls: string[];
+}
+```
+
+11.) When countdown runs out, or presenting play clicks on the finished button, the photos of the next random photographer are sent ('game3/presentFinalPhotos'). (and so on until all players have presented)
+
+12.) Once all players have presented their photos, the final voting stage message is sent to the client (SCREEN + CONTROLLER) 'game3/voteForFinalPhotos'
+
+13.) Controllers send their votes 'game3/finishedPresenting' (same message content as voting before)
+
+```typescript
+{
+    voterId: string;
+    photographerId: string;
+}
+```
+
+14.) After time runs out or all votes are sent (whichever is first), the server sends the final results to the client (SCREEN + CONTROLLER) 'game3/finalResults'. The gameState is set to FINISHED.
+
+```typescript
+ {
+    roomId,
+    data: {
+        roomId,
+        gameState,
+        playerRanks,
+    },
+}
+
+//VotesPhotographerMapper:
+export interface GameThreePlayerRank  {
+    id: string;
+    name: string;
+    rank: number;
+    isActive: boolean;
+    points: number;
+}
+
+```
+
+Other:
+Every time a new round starts: get 'game3/newRound' message
+
+---------TODO----------
+
+//**\_\_\_**
+
+automatisch punkte wenn vorher nur 1 person in runde foto - skip vote message - kriegt alle punkte für die runde
+
+user deactivated
+
+add all the global messages stop game (not pause), ...
+
+also set received finalinfo true when only received 1
+
+add roundIdx in player
+
+points lost for not participating go to others

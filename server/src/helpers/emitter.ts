@@ -2,8 +2,11 @@ import { Namespace, Socket } from 'socket.io';
 
 import Room from '../classes/room';
 import User from '../classes/user';
+import { GameNames } from '../enums/gameNames';
 import { MessageTypes } from '../enums/messageTypes';
 import { GameOneMsgType } from '../gameplay/gameOne/enums';
+import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
+import { LeaderboardInfo } from '../gameplay/leaderboard/interfaces';
 
 function sendUserInit(socket: Socket, user: User, room: Room): void {
     socket.emit('message', {
@@ -48,25 +51,52 @@ function sendErrorMessage(socket: Socket, e: Error): void {
     });
 }
 
-function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room): void {
+function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room, game: string): void {
+    let type = '';
+    switch (game) {
+        case GameNames.GAME1:
+            type = GameOneMsgType.ALL_SCREENS_PHASER_GAME_LOADED;
+            break;
+        case GameNames.GAME2:
+            type = GameTwoMessageTypes.ALL_SCREENS_PHASER_GAME_LOADED;
+            break;
+    }
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(room.id).emit('message', {
-            type: GameOneMsgType.ALL_SCREENS_PHASER_GAME_LOADED,
+            type,
         });
     });
 }
 
-function sendScreenPhaserGameLoadedTimedOut(nsp: Namespace, socketId: string): void {
+function sendScreenPhaserGameLoadedTimedOut(nsp: Namespace, socketId: string, game: string): void {
+    let type = '';
+    switch (game) {
+        case GameNames.GAME1:
+            type = GameOneMsgType.PHASER_LOADING_TIMED_OUT;
+            break;
+        case GameNames.GAME2:
+            type = GameTwoMessageTypes.PHASER_LOADING_TIMED_OUT;
+            break;
+    }
     //TODO
     nsp.to(socketId).emit('message', {
-        type: GameOneMsgType.PHASER_LOADING_TIMED_OUT,
+        type,
     });
 }
 
-function sendStartPhaserGame(nsps: Array<Namespace>, room: Room): void {
+function sendStartPhaserGame(nsps: Array<Namespace>, room: Room, game: string): void {
+    let type = '';
+    switch (game) {
+        case GameNames.GAME1:
+            type = GameOneMsgType.START_PHASER_GAME;
+            break;
+        case GameNames.GAME2:
+            type = GameTwoMessageTypes.START_PHASER_GAME;
+            break;
+    }
     nsps.forEach(function (namespace: Namespace) {
         namespace.to(room.id).emit('message', {
-            type: GameOneMsgType.START_PHASER_GAME,
+            type,
         });
     });
 }
@@ -87,10 +117,11 @@ function sendScreenAdmin(nsp: Namespace, socketId: string, isScreenAdmin: boolea
     });
 }
 
-function sendScreenState(nsp: Namespace | Socket, state: string | undefined): void {
+function sendScreenState(nsp: Namespace | Socket, state: string | undefined, game?: string | undefined): void {
     nsp.emit('message', {
         type: MessageTypes.SCREEN_STATE,
         state: state,
+        game: game,
     });
 }
 
@@ -99,6 +130,14 @@ function sendMessage(type: MessageTypes | GameOneMsgType, nsps: Array<Namespace>
         namespace.to(recipient).emit('message', {
             type: type,
         });
+    });
+}
+
+//Todo natasha test
+function sendLeaderboardState(nsp: Namespace | Socket, leaderboardState: LeaderboardInfo): void {
+    nsp.emit('message', {
+        type: MessageTypes.LEADERBOARD_STATE,
+        leaderboardState,
     });
 }
 
@@ -126,4 +165,5 @@ export default {
     sendScreenAdmin,
     sendScreenState,
     sendGameSet,
+    sendLeaderboardState,
 };

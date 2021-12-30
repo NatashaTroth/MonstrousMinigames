@@ -5,5 +5,7 @@ export interface IMessage {
     characterNumber?: string;
     state?: string;
     direction?: string;
+    sneaking?: boolean;
     game?: string;
+    guess?: number;
 }

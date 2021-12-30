@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { Tooltip } from '@material-ui/core';
 import * as React from 'react';
 
 import Button from '../../components/common/Button';
 import { characters } from '../../config/characters';
 import { GameNames } from '../../config/games';
 import { ScreenStates } from '../../config/screenStates';
-import { AudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
-import { ScreenSocketContext, User } from '../../contexts/ScreenSocketContextProvider';
-import { handleAudioPermission } from '../../domain/audio/handlePermission';
+import { ScreenSocketContext } from '../../contexts/screen/ScreenSocketContextProvider';
 import handleStartGame1 from '../../domain/game1/screen/gameState/handleStartGame1';
 import handleStartGame2 from '../../domain/game2/screen/gameState/handleStartGame2';
 import handleStartClickedGame3 from '../../domain/game3/screen/gameState/handleStartClickedGame3';
@@ -29,21 +28,23 @@ import {
     GetReadyBackground,
 } from './PlayersGetReady.sc';
 
+interface User {
+    id: string;
+    name: string;
+    roomId: string;
+    number: number;
+    ready: boolean;
+}
+
 const PlayersGetReady: React.FC = () => {
     const { screenSocket } = React.useContext(ScreenSocketContext);
-    const { audioPermission, setAudioPermissionGranted, initialPlayLobbyMusic } = React.useContext(AudioContext);
     const { roomId, connectedUsers, screenAdmin, screenState, chosenGame } = React.useContext(GameContext);
 
     const emptyGame = !connectedUsers || connectedUsers.length === 0;
     const usersReady =
-        !connectedUsers ||
-        connectedUsers.filter((user: User) => {
-            return user.ready;
-        }).length === connectedUsers.length;
+        !connectedUsers || connectedUsers.filter((user: User) => user.ready).length === connectedUsers.length;
 
     React.useEffect(() => {
-        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
-        initialPlayLobbyMusic(true);
         if (screenAdmin) {
             screenSocket?.emit({
                 type: MessageTypes.screenState,
@@ -57,6 +58,8 @@ const PlayersGetReady: React.FC = () => {
             history.push(`${Routes.screen}/${roomId}/${screenState}`);
         }
     }, [screenState]);
+
+    const { canStart, message } = canStartGame(emptyGame, usersReady, connectedUsers, chosenGame);
 
     return (
         <FullScreenContainer>
@@ -82,16 +85,20 @@ const PlayersGetReady: React.FC = () => {
                         ))}
                     </ConnectedUsers>
                     {screenAdmin && (
-                        <Button
-                            disabled={emptyGame || !usersReady}
-                            onClick={() => {
-                                if (getUserArray(connectedUsers || []).length > 0 && chosenGame) {
-                                    startGame(chosenGame!, screenSocket!);
-                                }
-                            }}
-                        >
-                            Start
-                        </Button>
+                        <Tooltip title={message}>
+                            <span>
+                                <Button
+                                    disabled={!canStart}
+                                    onClick={() => {
+                                        if (getUserArray(connectedUsers || []).length > 0 && chosenGame) {
+                                            startGame(chosenGame!, screenSocket!);
+                                        }
+                                    }}
+                                >
+                                    Start
+                                </Button>
+                            </span>
+                        </Tooltip>
                     )}
                 </Content>
             </GetReadyBackground>
@@ -116,4 +123,22 @@ function startGame(game: GameNames, screenSocket: Socket) {
             handleStartClickedGame3(screenSocket);
             return;
     }
+}
+
+export function canStartGame(
+    emptyGame: boolean,
+    usersReady: boolean,
+    connectedUsers: User[] | undefined,
+    chosenGame: GameNames | undefined
+): { canStart: boolean; message: string } {
+    if (chosenGame === GameNames.game3 && connectedUsers && connectedUsers.length >= 3) {
+        if (!emptyGame && usersReady) return { canStart: true, message: '' };
+        return { canStart: false, message: 'Not all users are ready yet' };
+    } else if (chosenGame === GameNames.game3) {
+        return { canStart: false, message: 'Three players are needed to play this game' };
+    }
+
+    if (!emptyGame && usersReady) return { canStart: true, message: '' };
+
+    return { canStart: false, message: 'Not all users are ready yet' };
 }

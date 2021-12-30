@@ -2,7 +2,7 @@ import { History } from 'history';
 import * as React from 'react';
 import Frame from 'react-frame-component';
 
-import { ControllerSocketContext } from '../../contexts/ControllerSocketContextProvider';
+import { ControllerSocketContext } from '../../contexts/controller/ControllerSocketContextProvider';
 import Button from '../common/Button';
 import { ConnectScreenContainer, FormContainer, inputStyles, LabelStyles, wrapperStyles } from './ConnectScreen.sc';
 
@@ -35,6 +35,7 @@ export const ConnectScreen: React.FunctionComponent<ConnectScreen> = ({ history 
             <FormContainer
                 onSubmit={e => {
                     e.preventDefault();
+
                     const frame = document.getElementsByTagName('iframe')[0];
                     if (frame) {
                         frame.parentNode?.removeChild(frame);

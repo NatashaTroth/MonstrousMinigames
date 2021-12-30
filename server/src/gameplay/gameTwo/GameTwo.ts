@@ -1,19 +1,25 @@
-import random from 'random';
-
-import User from '../../classes/user';
-import { IMessage } from '../../interfaces/messages';
 import Game from '../Game';
+import Player from '../Player';
+import { GameState } from '../enums';
 import { IGameInterface } from '../interfaces';
 import Leaderboard from '../leaderboard/Leaderboard';
-import Player from '../Player';
-import Sheep from './classes/Sheep';
-import InitialParameters from './constants/InitialParameters';
-import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
-import { SheepStates } from './enums/SheepStates';
-import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
+import User from '../../classes/user';
+import { GameNames } from '../../enums/gameNames';
+import { IMessage } from '../../interfaces/messages';
+import { GameType } from '../leaderboard/enums/GameType';
+
 import GameTwoPlayer from './GameTwoPlayer';
 import { GameStateInfo } from './interfaces';
-import { GameNames } from '../../enums/gameNames';
+
+import Brightness from './classes/Brightness';
+import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
+import GuessingService from './classes/GuessingServices';
+import RoundEventEmitter from './classes/RoundEventEmitter';
+import RoundService from './classes/RoundService';
+import SheepService from './classes/SheepService';
+import Parameters from './constants/Parameters';
+import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
+import { Phases } from './enums/Phases';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -23,23 +29,26 @@ interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateIn
 export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implements GameTwoGameInterface {
     public lengthX: number;
     public lengthY: number;
-    public sheep: Sheep[];
-    private currentSheepId: number;
-    countdownTime = InitialParameters.COUNTDOWN_TIME;
+    public sheepService: SheepService;
+    private roundService: RoundService;
+    private roundEventEmitter: RoundEventEmitter;
+    private guessingService: GuessingService;
+    private brightness: Brightness;
 
-    initialPlayerPositions = InitialParameters.PLAYERS_POSITIONS;
-
+    countdownTime = Parameters.COUNTDOWN_TIME;
     gameName = GameNames.GAME2;
 
-    constructor(roomId: string, public leaderboard: Leaderboard) {
+    constructor(roomId: string, public leaderboard: Leaderboard, minSheepCount = Parameters.MIN_SHEEP_COUNT, maxSheepCount = Parameters.MAX_SHEEP_COUNT) {
         super(roomId);
         this.gameStateMessage = GameTwoMessageTypes.GAME_STATE;
-        this.lengthX = InitialParameters.LENGTH_X;
-        this.lengthY = InitialParameters.LENGTH_Y;
-        this.sheep = [];
-        this.currentSheepId = 0;
-        console.log('game2 created');
-        console.info(this);
+        this.lengthX = Parameters.LENGTH_X;
+        this.lengthY = Parameters.LENGTH_Y;
+        this.roundEventEmitter = new RoundEventEmitter();
+        this.sheepService = new SheepService(minSheepCount, maxSheepCount);
+        this.roundService = new RoundService(this.roundEventEmitter);
+        this.guessingService = new GuessingService(Parameters.ROUNDS);
+        this.brightness = new Brightness();
+
     }
 
     getGameStateInfo(): GameStateInfo {
@@ -53,82 +62,47 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 positionY: player.posY,
                 finished: player.finished,
                 isActive: player.isActive,
-                characterNumber: player.characterNumber
+                characterNumber: player.characterNumber,
             })),
-            sheep: this.sheep,
+            sheep: this.sheepService.getSheepData(),
             lengthX: this.lengthX,
             lengthY: this.lengthY,
+            round: this.roundService.round,
+            phase: this.roundService.phase,
+            timeLeft: this.roundService.getTimeLeft(),
+            aliveSheepCounts: this.guessingService.counts,
+            brightness: this.brightness.value
         };
-    }
-
-    protected beforeCreateNewGame() {
-        throw new Error('Method not implemented.');
     }
 
     protected mapUserToPlayer(user: User): GameTwoPlayer {
         const player = new GameTwoPlayer(
             user.id,
             user.name,
-            this.initialPlayerPositions[user.number].x,
-            this.initialPlayerPositions[user.number].y,
-            InitialParameters.KILLS_PER_ROUND,
+            user.number,
+            Parameters.KILLS_PER_ROUND,
             user.characterNumber
         );
-        console.info(player);
         return player;
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
-        return
-
+        if (this.roundService.isCountingPhase()) this.sheepService.update();
     }
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
-        return
+        return;
+    }
+    protected beforeCreateNewGame() {
+        return;
     }
 
-    protected initSheep(count: number): void {
-        const seedrandom = require('seedrandom');
-        random.use(seedrandom('sheep'));
+    // *************** game events *************
 
-        for (let i = 0; i <= count; i++) {
-            let posX: number;
-            let posY: number;
-            do {
-                posX = random.int(InitialParameters.MARGIN, InitialParameters.LENGTH_X - InitialParameters.MARGIN);
-                posY = random.int(InitialParameters.MARGIN, InitialParameters.LENGTH_Y - InitialParameters.MARGIN);
-            } while (!this.isValidStartingPosition(posX, posY));
-            this.sheep.push(new Sheep(posX, posY, this.currentSheepId));
-            this.currentSheepId++;
-        }
-    }
-
-    protected isValidStartingPosition(posX: number, posY: number): boolean {
-        let valid = true;
-
-        this.players.forEach(player => {
-            if (
-                Math.abs(player.posX - posX) < InitialParameters.MARGIN ||
-                Math.abs(player.posY - posY) < InitialParameters.MARGIN
-            ) {
-                valid = false;
-                return;
-            }
-        });
-        this.sheep.forEach(sheep => {
-            if (
-                Math.abs(sheep.posX - posX) < InitialParameters.MARGIN &&
-                Math.abs(sheep.posY - posY) < InitialParameters.MARGIN
-            ) {
-                valid = false;
-                return;
-            }
-        });
-
-        return valid;
-    }
     createNewGame(users: Array<User>) {
         super.createNewGame(users);
-        this.initSheep(InitialParameters.SHEEP_COUNT);
-        console.info(this.sheep);
+        this.resetPlayers();
+        this.sheepService.initSheep();
+        this.guessingService.init(users);
+        this.listenToEvents();
         GameTwoEventEmitter.emitInitialGameStateInfoUpdate(
             this.roomId,
             this.getGameStateInfo()
@@ -138,75 +112,43 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     startGame(): void {
         setTimeout(() => {
             super.startGame();
+            this.roundService.start();
         }, this.countdownTime);
         GameTwoEventEmitter.emitGameHasStartedEvent(this.roomId, this.countdownTime, this.gameName);
-
     }
+
     pauseGame(): void {
         super.pauseGame();
+        this.roundService.pause();
+        this.stopPlayersMoving();
+        this.sheepService.stopMoving();
+        this.brightness.stop();
+        GameTwoEventEmitter.emitGameHasPausedEvent(this.roomId);
     }
 
     resumeGame(): void {
         super.resumeGame();
+        this.roundService.resume();
+        this.setPlayersMoving();
+        this.sheepService.startMoving();
+        this.brightness.start(false);
+        GameTwoEventEmitter.emitGameHasResumedEvent(this.roomId);
     }
 
     stopGameUserClosed() {
         super.stopGameUserClosed();
+        GameTwoEventEmitter.emitGameHasStoppedEvent(this.roomId);
+        this.cleanup();
     }
 
     stopGameAllUsersDisconnected() {
         super.stopGameAllUsersDisconnected();
-    }
-
-    protected movePlayer(userId: string, direction: string) {
-        this.players.get(userId)!.setDirection(direction);
-    }
-    protected killSheep(userId: string) {
-        const player = this.players.get(userId)!;
-
-        if (player.killsLeft < 1) {
-            return;
-        }
-
-        const sheepInRadius = this.sheep.filter(sheep => {
-            return (
-                sheep.state === SheepStates.ALIVE &&
-                Math.abs(sheep.posX - player.posX) <= InitialParameters.KILL_RADIUS &&
-                Math.abs(sheep.posY - player.posY) <= InitialParameters.KILL_RADIUS
-            );
-        });
-
-        this.sheep.forEach(sheep => {
-            Math.abs(sheep.posX - player.posX) <= InitialParameters.KILL_RADIUS &&
-                Math.abs(sheep.posY - player.posY) <= InitialParameters.KILL_RADIUS;
-        });
-
-        if (sheepInRadius.length < 1) {
-            return;
-        }
-        if (sheepInRadius.length >= 1) {
-            const sheepId = sheepInRadius[0].id;
-            this.sheep[sheepId].state = SheepStates.DECOY;
-            //todo how to handle if multiple sheep
-        }
-    }
-
-    protected handleInput(message: IMessage) {
-        switch (message.type) {
-            case GameTwoMessageTypes.MOVE:
-                this.movePlayer(message.userId!, message.direction!);
-                break;
-            case GameTwoMessageTypes.KILL:
-                this.killSheep(message.userId!);
-                break;
-            default:
-                console.info(message);
-        }
+        this.cleanup();
     }
 
     disconnectPlayer(userId: string) {
         if (super.disconnectPlayer(userId)) {
-            //.emitPlayerHasDisconnected(this.roomId, userId);
+            GameTwoEventEmitter.emitPlayerHasDisconnected(this.roomId, userId);
             return true;
         }
 
@@ -215,12 +157,132 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     reconnectPlayer(userId: string) {
         if (super.reconnectPlayer(userId)) {
-            //.emitPlayerHasReconnected(this.roomId, userId);
-
+            GameTwoEventEmitter.emitPlayerHasReconnected(this.roomId, userId);
             return true;
         }
-
         return false;
     }
 
+    public cleanup() {
+        this.roundEventEmitter.removeAllListeners();
+    }
+
+    // *************** input messages *************
+    protected handleInput(message: IMessage) {
+        switch (message.type) {
+            case GameTwoMessageTypes.MOVE:
+                //console.info(message)
+                this.movePlayer(message.userId!, message.direction!, message.sneaking);
+                break;
+            case GameTwoMessageTypes.KILL:
+                // console.info(message)
+                this.killSheep(message.userId!);
+                break;
+            case GameTwoMessageTypes.GUESS:
+                // console.info(message)
+                this.handleGuess(message.userId!, message.guess!);
+                break;
+            default:
+                console.info(message);
+        }
+    }
+
+    protected movePlayer(userId: string, direction: string, sneaking = false) {
+        const player = this.players.get(userId)!;
+        if (this.roundService.isCountingPhase() && player) {
+            if (player.sneaking !== sneaking) player.setSneaking(sneaking);
+            player.direction = direction;
+        }
+    }
+    protected killSheep(userId: string) {
+        const player = this.players.get(userId)!;
+        if (this.roundService.isCountingPhase() && player && player.killsLeft > 0) {
+            if (this.sheepService.killSheep(player)) {
+                player.killsLeft--;
+                GameTwoEventEmitter.emitRemainingKills(this.roomId, userId, player.killsLeft);
+            }
+        }
+    }
+
+    protected handleGuess(userId: string, guess: number) {
+        const player = this.players.get(userId)!;
+        const round = this.roundService.round;
+
+        if (this.roundService.isGuessingPhase() && player) {
+            if (this.guessingService.addGuess(round, guess, userId)) {
+                const hint = this.guessingService.getHintForRound(round, userId);
+                GameTwoEventEmitter.emitGuessHint(this.roomId, player.id, hint);
+                if (this.guessingService.allGuessesSubmitted(round)) this.roundService.skipPhase();
+            }
+        }
+
+    }
+
+    // *************** phases *************
+
+    protected listenToEvents(): void {
+        this.roundEventEmitter.on(RoundEventEmitter.PHASE_CHANGE_EVENT, (round: number, phase: string) => {
+            if (phase === Phases.COUNTING) {
+                this.initCountingPhase();
+            } else if (phase === Phases.GUESSING) {
+                this.initGuessingPhase(round);
+            } else if (phase === Phases.RESULTS) {
+                this.initResultsPhase();
+            }
+            GameTwoEventEmitter.emitPhaseHasChanged(this.roomId, round, phase);
+        });
+
+        this.roundEventEmitter.on(RoundEventEmitter.GAME_FINISHED_EVENT, () => this.handleGameFinished());
+    }
+
+    protected initCountingPhase(): void {
+        this.setPlayersMoving();
+        this.emitPlayerRemainingKills();
+        this.sheepService.startMoving()
+        this.brightness.start();
+    }
+
+    protected initGuessingPhase(round: number): void {
+        this.stopPlayersMoving();
+        this.resetPlayers();
+        this.sheepService.stopMoving();
+        this.brightness.stop();
+        this.guessingService.saveSheepCount(round, this.sheepService.getAliveSheepCount());
+    }
+
+    protected initResultsPhase(): void {
+        this.guessingService.calculatePlayerRanks();
+        GameTwoEventEmitter.emitPlayerRanks(this.roomId, this.guessingService.getPlayerRanks())
+    }
+
+    protected handleGameFinished(): void {
+        const playerRanks = this.guessingService.getPlayerRanks();
+
+        this.leaderboard.addGameToHistory(GameType.GameTwo, [...playerRanks]);
+        this.gameState = GameState.Finished;
+
+        GameTwoEventEmitter.emitGameHasFinishedEvent(this.roomId, this.gameState, playerRanks);
+    }
+
+
+
+    // *************** players *************
+
+    protected stopPlayersMoving(): void {
+        [...this.players].forEach(player => player[1].moving = false);
+    }
+
+    protected setPlayersMoving(): void {
+        [...this.players].forEach(player => player[1].moving = true);
+    }
+
+    protected resetPlayers(): void {
+        [...this.players].forEach(player => {
+            player[1].resetPlayer();
+        });
+    }
+
+    protected emitPlayerRemainingKills(): void {
+        [...this.players].forEach(player => GameTwoEventEmitter.emitRemainingKills(this.roomId, player[0], player[1].killsLeft));
+    }
 }

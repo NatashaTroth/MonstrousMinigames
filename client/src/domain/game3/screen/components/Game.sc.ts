@@ -1,41 +1,52 @@
 import { Typography } from '@material-ui/core';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { StyledFullScreenContainer } from '../../../../components/controller/FullScreenContainer.sc';
-import frame from '../../../../images/ui/frame.jpeg';
 
 export const StyledImg = styled.img`
     display: flex;
     width: 100%;
     margin-top: 2px;
-`;
-
-export const TimeWrapper = styled.div`
-    position: relative;
-    width: 80px;
-    height: 60px;
-    font-size: 48px;
+    object-fit: cover;
+    height: 100%;
 `;
 
 export const InstructionContainer = styled.div`
     display: flex;
     flex-direction: column;
-    margin-bottom: 40px;
+    margin: 20px 0;
 `;
 
-export const PictureInstruction = styled(Typography)`
-    font-size: 40px;
+interface Props {
+    size?: 'small' | 'default';
+}
+
+export const PictureInstruction = styled(Typography)<Props>`
+    font-size: 30px;
     color: ${({ theme }) => theme.palette.primary.main};
     font-weight: 700;
     font-style: italic;
-    margin-bottom: 30px;
+    margin: 30px 0;
     padding: 0 60px;
+
+    ${({ size = 'default' }) =>
+        size === 'small' &&
+        css`
+            font-size: 20px;
+            margin: 20px 0;
+        `}
 `;
 
-export const RandomWord = styled(Typography)`
-    font-size: 55px;
+export const RandomWord = styled(Typography)<Props>`
+    font-size: 40px;
     color: ${({ theme }) => theme.palette.secondary.main};
     font-weight: 700;
+
+    ${({ size = 'default' }) =>
+        size === 'small' &&
+        css`
+            font-size: 25px;
+        `}
 `;
 
 export const ScreenContainer = styled(StyledFullScreenContainer)`
@@ -44,26 +55,29 @@ export const ScreenContainer = styled(StyledFullScreenContainer)`
     }
 `;
 
-export const LoadingMessage = styled(Typography)`
-    font-size: 20px;
-    color: ${({ theme }) => theme.palette.primary.main};
-    font-weight: 700;
-    font-style: italic;
+export const ImagesContainer = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    height: 50%;
 `;
 
 export const ImageContainer = styled.div`
     display: flex;
-    width: 100%;
-    justify-content: space-around;
+    flex-direction: column;
+    width: 20%;
+    align-items: center;
+    height: 80%;
 `;
 
 export const Frame = styled.div`
-    width: 18%;
-    background: url(${frame});
-    margin: auto;
+    width: 100%;
+    height: 80%;
     display: flex;
-    background-size: cover;
-    box-shadow: inset 0 50px rgba(255, 255, 255, 0.1), inset 2px -15px 30px rgba(0, 0, 0, 0.4),
+    align-items: center;
+    padding: 20px;
+    background-color: ${({ theme }) => theme.palette.secondary.main};
+    background-position: center;
+    box-shadow: inset 0 0px rgba(255, 255, 255, 0.1), inset 2px -15px 30px rgba(0, 0, 0, 0.4),
         2px 2px 5px rgba(0, 0, 0, 0.3);
-    padding: 2%;
 `;

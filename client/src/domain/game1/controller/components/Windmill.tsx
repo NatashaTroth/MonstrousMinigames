@@ -1,17 +1,17 @@
 // eslint-disable-next-line simple-import-sort/imports
-import * as React from "react";
+import * as React from 'react';
 
-import { ComponentToTest } from "../../../../components/controller/Tutorial";
-import { ControllerSocketContext } from "../../../../contexts/ControllerSocketContextProvider";
-import { GameContext } from "../../../../contexts/GameContextProvider";
-import windmill from "../../../../images/ui/pinwheel.svg";
-import windmillWood from "../../../../images/ui/pinwheel2.svg";
-import { MessageTypesGame1 } from "../../../../utils/constants";
-import { controllerPlayerDeadRoute } from "../../../../utils/routes";
-import history from "../../../history/history";
-import LinearProgressBar from "./obstacles/LinearProgressBar";
-import { ObstacleContainer, ObstacleInstructions } from "./obstacles/ObstacleStyles.sc";
-import { ProgressBarContainer, TouchContainer, WindmillImage, WindmillWood } from "./Windmill.sc";
+import { ComponentToTest } from '../../../../components/controller/Tutorial';
+import { ControllerSocketContext } from '../../../../contexts/controller/ControllerSocketContextProvider';
+import { GameContext } from '../../../../contexts/GameContextProvider';
+import windmill from '../../../../images/ui/pinwheel.svg';
+import windmillWood from '../../../../images/ui/pinwheel2.svg';
+import { MessageTypesGame1 } from '../../../../utils/constants';
+import { controllerPlayerDeadRoute } from '../../../../utils/routes';
+import history from '../../../history/history';
+import LinearProgressBar from './obstacles/LinearProgressBar';
+import { ObstacleContainer, ObstacleInstructions } from './obstacles/ObstacleStyles.sc';
+import { ProgressBarContainer, TouchContainer, WindmillImage, WindmillWood } from './Windmill.sc';
 
 interface WindmillProps {
     tutorial?: boolean;
@@ -40,6 +40,7 @@ const Windmill: React.FunctionComponent<WindmillProps> = ({ tutorial = false, ha
         const touchContainer = document.getElementById('touchContainer');
         touchContainer?.addEventListener('touchmove', handleTouchMove);
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         function handleTouchMove(e: any) {
             e.preventDefault();
 
@@ -76,15 +77,16 @@ const Windmill: React.FunctionComponent<WindmillProps> = ({ tutorial = false, ha
             if (rounds + 1 === MAX) {
                 if (tutorial) {
                     handleTutorialFinished?.('finished');
-                } else {
-                    controllerSocket.emit({ type: MessageTypesGame1.pushChasers });
-                    history.push(controllerPlayerDeadRoute(roomId));
+                    return;
                 }
+
+                controllerSocket.emit({ type: MessageTypesGame1.pushChasers });
+                history.push(controllerPlayerDeadRoute(roomId));
             }
             setRounds(rounds + 1);
             setDistance(0);
         }
-    });
+    }, [distance, rounds, tutorial, controllerSocket, roomId, handleTutorialFinished]);
 
     return (
         <ObstacleContainer>

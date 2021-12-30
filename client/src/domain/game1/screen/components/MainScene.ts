@@ -1,50 +1,24 @@
+/* eslint-disable no-console */
 import Phaser from 'phaser';
 
 import chasersSpritesheet from '../../../../images/characters/spritesheets/chasers/chasers_spritesheet.png';
 import windSpritesheet from '../../../../images/characters/spritesheets/chasers/wind_spritesheet.png';
-import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1 } from '../../../../utils/constants';
-import { screenFinishedRoute } from '../../../../utils/routes';
-import history from '../../../history/history';
-import { MessageSocket } from '../../../socket/MessageSocket';
+import {
+    designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1
+} from '../../../../utils/constants';
+import { Game1 } from '../../../phaser/game1/Game1';
+import { GameToScreenMapper } from '../../../phaser/game1/GameToScreenMapper';
+import { initialGameInput } from '../../../phaser/game1/initialGameInput';
+import { Player } from '../../../phaser/game1/Player';
+import { PhaserPlayerRenderer } from '../../../phaser/game1/renderer/PhaserPlayerRenderer';
+import { GameAudio } from '../../../phaser/GameAudio';
+import GameEventEmitter from '../../../phaser/GameEventEmitter';
+import { GameEventTypes } from '../../../phaser/GameEventTypes';
+import { GameData } from '../../../phaser/gameInterfaces';
+import { PhaserGameRenderer } from '../../../phaser/renderer/PhaserGameRenderer';
 import { Socket } from '../../../socket/Socket';
-import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
-import {
-    AllScreensPhaserGameLoadedMessage,
-    allScreensPhaserGameLoadedTypeGuard,
-} from '../../../typeGuards/game1/allScreensPhaserGameLoaded';
-import {
-    ApproachingSolvableObstacleOnceMessage,
-    approachingSolvableObstacleOnceTypeGuard,
-} from '../../../typeGuards/game1/approachingSolvableObstacleOnceTypeGuard';
-import { ChasersPushedMessage, ChasersPushedTypeGuard } from '../../../typeGuards/game1/chasersPushed';
-import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../../typeGuards/game1/gameStateInfo';
-import {
-    InitialGameStateInfoMessage,
-    initialGameStateInfoTypeGuard,
-} from '../../../typeGuards/game1/initialGameStateInfo';
-import { ObstacleSkippedMessage, obstacleSkippedTypeGuard } from '../../../typeGuards/game1/obstacleSkipped';
-import {
-    ObstacleWillBeSolvedMessage,
-    obstacleWillBeSolvedTypeGuard,
-} from '../../../typeGuards/game1/obstacleWillBeSolved';
-import {
-    PhaserLoadingTimedOutMessage,
-    phaserLoadingTimedOutTypeGuard,
-} from '../../../typeGuards/game1/phaserLoadingTimedOut';
-import { GameHasStartedMessage, startedTypeGuard } from '../../../typeGuards/game1/started';
-import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
-import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
-import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
+import { initSockets } from '../gameState/initSockets';
 import { moveLanesToCenter } from '../gameState/moveLanesToCenter';
-import { GameAudio } from '../phaser/GameAudio';
-import GameEventEmitter from '../phaser/GameEventEmitter';
-import { GameEventTypes } from '../phaser/GameEventTypes';
-import { GameData } from '../phaser/gameInterfaces';
-import { GameToScreenMapper } from '../phaser/GameToScreenMapper';
-import { initialGameInput } from '../phaser/initialGameInput';
-import { Player } from '../phaser/Player';
-import { PhaserGameRenderer } from '../phaser/renderer/PhaserGameRenderer';
-import { PhaserPlayerRenderer } from '../phaser/renderer/PhaserPlayerRenderer';
 import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
 
 class MainScene extends Phaser.Scene {
@@ -56,7 +30,7 @@ class MainScene extends Phaser.Scene {
     plusX: number;
     posY: number;
     plusY: number;
-    players: Array<Player>;
+    players: Player[];
     trackLength: number;
     gameStarted: boolean;
     paused: boolean;
@@ -69,9 +43,10 @@ class MainScene extends Phaser.Scene {
     gameToScreenMapper?: GameToScreenMapper;
     firstGameStateReceived: boolean;
     allScreensLoaded: boolean;
+    socketsInitiated = false;
 
     constructor() {
-        super('MainScene');
+        super(Game1.SCENE_NAME);
         this.windowWidth = 0;
         this.windowHeight = 0;
 
@@ -89,9 +64,21 @@ class MainScene extends Phaser.Scene {
         this.screenAdmin = false;
         this.firstGameStateReceived = false;
         this.allScreensLoaded = false;
+        // this.setAllVars() //TODO use to remove duplicate code
+
+        this.initiateEventEmitters();
+    }
+
+    resetSceneVariables() {
+        this.players = [];
+        this.gameStarted = false;
+        this.paused = false;
+        this.firstGameStateReceived = false;
+        this.allScreensLoaded = false;
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
+        this.resetSceneVariables();
         this.camera = this.cameras.main;
         this.windowWidth = this.cameras.main.width;
         this.windowHeight = this.cameras.main.height;
@@ -99,8 +86,8 @@ class MainScene extends Phaser.Scene {
         this.socket = data.socket;
         this.screenAdmin = data.screenAdmin;
         this.gameRenderer = new PhaserGameRenderer(this);
-        this.initSockets();
-        this.initiateEventEmitters();
+
+        if (!this.socketsInitiated) this.initSockets();
 
         if (this.roomId === '' && data.roomId !== undefined) {
             this.roomId = data.roomId;
@@ -121,15 +108,6 @@ class MainScene extends Phaser.Scene {
                 this.gameRenderer?.fileProgressUpdate(file);
             });
         }
-
-        //once all the files are done loading
-        this.load.on('complete', () => {
-            this.gameRenderer?.updateLoadingScreenFinishedPreloading();
-            this.socket?.emit({
-                type: MessageTypesGame1.phaserLoaded,
-                roomId: this.roomId,
-            });
-        });
 
         audioFiles.forEach(audio => this.load.audio(audio.name, audio.file));
 
@@ -160,7 +138,14 @@ class MainScene extends Phaser.Scene {
         });
     }
 
+    //called when preload has finished loading all the files
     create() {
+        this.gameRenderer?.updateLoadingScreenFinishedPreloading();
+        this.socket?.emit({
+            type: MessageTypesGame1.phaserLoaded,
+            roomId: this.roomId,
+        });
+
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
 
@@ -169,109 +154,19 @@ class MainScene extends Phaser.Scene {
         }
     }
 
-    sendCreateNewGame() {
-        this.socket?.emit({
-            type: MessageTypes.createGame,
-            roomId: this.roomId,
-        });
-    }
-
     sendStartGame() {
         handleStartGame(this.socket, this.roomId);
     }
 
     initSockets() {
-        if (!this.socket) return;
-        if (!designDevelopment) {
-            const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
-            initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
-                this.gameRenderer?.destroyLoadingScreen();
-                this.gameStarted = true;
-                this.initiateGame(data.data);
-                this.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');
-                if (this.screenAdmin && !designDevelopment) this.sendStartGame();
-            });
-        }
+        this.socketsInitiated = true;
 
-        const allScreensPhaserGameLoaded = new MessageSocket(allScreensPhaserGameLoadedTypeGuard, this.socket);
-        allScreensPhaserGameLoaded.listen((data: AllScreensPhaserGameLoadedMessage) => {
-            if (this.screenAdmin) this.sendCreateNewGame();
+        initSockets({
+            socket: this.socket,
+            screenAdmin: this.screenAdmin,
+            scene: this,
+            roomId: this.roomId,
         });
-
-        const approachingObstacle = new MessageSocket(approachingSolvableObstacleOnceTypeGuard, this.socket);
-        approachingObstacle.listen((data: ApproachingSolvableObstacleOnceMessage) => {
-            this.players.find(player => player.userId === data.userId)?.handleApproachingObstacle();
-        });
-
-        const obstacleSkipped = new MessageSocket(obstacleSkippedTypeGuard, this.socket);
-        obstacleSkipped.listen((data: ObstacleSkippedMessage) => {
-            this.players.find(player => player.userId === data.userId)?.handleObstacleSkipped();
-        });
-
-        const obstacleWillBeSolved = new MessageSocket(obstacleWillBeSolvedTypeGuard, this.socket);
-        obstacleWillBeSolved.listen((data: ObstacleWillBeSolvedMessage) => {
-            this.players.find(player => player.userId === data.userId)?.destroyWarningIcon();
-        });
-
-        const phaserLoadedTimedOut = new MessageSocket(phaserLoadingTimedOutTypeGuard, this.socket);
-        phaserLoadedTimedOut.listen((data: PhaserLoadingTimedOutMessage) => {
-            //TODO handle ?
-        });
-
-        const startedGame = new MessageSocket(startedTypeGuard, this.socket);
-        startedGame.listen((data: GameHasStartedMessage) => {
-            this.createGameCountdown(data.countdownTime);
-        });
-
-        const gameStateInfoSocket = new MessageSocket(gameStateInfoTypeGuard, this.socket);
-        gameStateInfoSocket.listen((data: GameStateInfoMessage) => {
-            this.updateGameState(data.data);
-        });
-
-        const pausedSocket = new MessageSocket(pausedTypeGuard, this.socket);
-        pausedSocket.listen((data: GameHasPausedMessage) => {
-            this.pauseGame();
-        });
-
-        const resumedSocket = new MessageSocket(resumedTypeGuard, this.socket);
-        resumedSocket.listen((data: GameHasResumedMessage) => {
-            this.resumeGame();
-        });
-
-        const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
-        gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
-            this.gameAudio?.stopMusic();
-            history.push(screenFinishedRoute(this.roomId));
-        });
-
-        const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);
-        stoppedSocket.listen((data: GameHasStoppedMessage) => {
-            this.gameAudio?.stopMusic();
-        });
-
-        const chasersPushedSocket = new MessageSocket(ChasersPushedTypeGuard, this.socket);
-        const xPositions: number[] = [];
-        const yPositions: number[] = [];
-        this.players.forEach(element => {
-            if (!element.dead) {
-                xPositions.push(element.coordinates.x);
-                yPositions.push(element.coordinates.x);
-            }
-        });
-
-        chasersPushedSocket.listen((data: ChasersPushedMessage) => {
-            this.players.forEach(player => {
-                player.renderer.renderWind();
-            });
-        });
-
-        //TODO
-        // gameHasReset
-
-        // if ((data.type == 'error' && data.msg !== undefined) || !data.data) {
-        //     this.handleError(data.msg);
-        //     return;
-        // }
     }
 
     initiateEventEmitters() {
@@ -293,6 +188,11 @@ class MainScene extends Phaser.Scene {
     }
 
     initiateGame(gameStateData: GameData) {
+        this.gameRenderer?.destroyLoadingScreen();
+        if (!localDevelopment && !designDevelopment) {
+            this.gameStarted = true;
+        }
+
         this.gameToScreenMapper = new GameToScreenMapper(gameStateData.playersState[0].positionX, this.windowWidth);
         this.trackLength = gameStateData.trackLength;
 
@@ -312,27 +212,27 @@ class MainScene extends Phaser.Scene {
     }
 
     updateGameState(gameStateData: GameData) {
-        for (let i = 0; i < this.players.length; i++) {
-            if (gameStateData.playersState[i].dead) {
-                if (!this.players[i].finished) {
-                    this.players[i].handlePlayerDead();
+        this.players.forEach((player, index) => {
+            if (gameStateData.playersState[index]?.dead) {
+                if (!player.player.isFinished) {
+                    player.handlePlayerDead();
                 }
-            } else if (gameStateData.playersState[i].finished) {
-                if (!this.players[i].finished) {
-                    this.players[i].handlePlayerFinished();
+            } else if (gameStateData.playersState[index]?.finished) {
+                if (!player.player.isFinished) {
+                    player.handlePlayerFinished();
                 }
-            } else if (gameStateData.playersState[i].stunned) {
-                this.players[i].handlePlayerStunned();
+            } else if (gameStateData.playersState[index]?.stunned) {
+                player.handlePlayerStunned();
             } else {
-                if (this.players[i].stunned) {
-                    this.players[i].handlePlayerUnStunned();
+                if (player.player.isStunned) {
+                    player.handlePlayerUnStunned();
                 }
 
-                this.players[i].moveForward(gameStateData.playersState[i].positionX);
-                this.players[i].checkAtObstacle(gameStateData.playersState[i].atObstacle);
+                player.moveForward(gameStateData.playersState[index]?.positionX);
+                player.checkAtObstacle(gameStateData.playersState[index]?.atObstacle);
             }
-            this.players[i].setChasers(gameStateData.chasersPositionX);
-        }
+            player.setChasers(gameStateData.chasersPositionX);
+        });
 
         this.moveCamera(gameStateData.cameraPositionX);
     }
@@ -370,7 +270,7 @@ class MainScene extends Phaser.Scene {
         this.players.push(player);
     }
 
-    private createGameCountdown(countdownTime: number) {
+    createGameCountdown(countdownTime: number) {
         const decrementCounter = (counter: number) => counter - 1000;
         let countdownValue = countdownTime;
 
@@ -390,24 +290,6 @@ class MainScene extends Phaser.Scene {
 
         updateCountdown();
         const countdownInterval = setInterval(updateCountdown, 1000);
-    }
-
-    private pauseGame() {
-        this.paused = true;
-        this.players.forEach(player => {
-            player.stopRunning();
-        });
-        this.scene.pause();
-        this.gameAudio?.pause();
-    }
-
-    private resumeGame() {
-        this.paused = false;
-        this.players.forEach(player => {
-            player.startRunning();
-        });
-        this.scene.resume();
-        this.gameAudio?.resume();
     }
 
     handlePauseResumeButton() {
