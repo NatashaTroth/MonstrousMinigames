@@ -11,36 +11,27 @@ import { ScreenSocketContext } from '../../contexts/screen/ScreenSocketContextPr
 import { handleStartGameClick } from '../../domain/commonGameState/screen/handleStartGameClick';
 import history from '../../domain/history/history';
 import oliverLobby from '../../images/characters/oliverLobby.svg';
-import wood from '../../images/obstacles/wood/wood.svg';
-import attention from '../../images/ui/attention.png';
-import shakeIt from '../../images/ui/shakeIt.svg';
-import spiderDemo from '../../images/ui/spiderDemo.png';
-import trashDemo from '../../images/ui/trashDemo.png';
-import treeDemo from '../../images/ui/treeDemo.png';
 import { MessageTypes } from '../../utils/constants';
+import { Routes } from '../../utils/routes';
 import Button from '../common/Button';
 import { OrangeBase } from '../common/CommonStyles.sc';
 import {
     BackButtonContainer,
     Content,
-    ControlInstruction,
-    ControlInstructionsContainer,
     GamePreviewContainer,
     GameSelectionContainer,
     ImageDescription,
-    ImagesContainer,
-    ImageWrapper,
     InfoButton,
-    InstructionImg,
     LeftContainer,
     OliverImage,
     PreviewImage,
     PreviewImageContainer,
     RightContainer,
     SelectGameButtonContainer,
-    TextWrapper,
-    Wrapper,
 } from './ChooseGame.sc';
+import { Game1Description, Game1Drawer } from './Game1Description';
+import { Game2Description, Game2Drawer } from './Game2Description';
+import { Game3Description, Game3Drawer } from './Game3Description';
 import { LobbyContainer } from './Lobby.sc';
 import LobbyHeader from './LobbyHeader';
 
@@ -69,7 +60,7 @@ const ChooseGame: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         if (!screenAdmin && !screenState.startsWith(ScreenStates.chooseGame)) {
-            // history.push(`${Routes.screen}/${roomId}/${screenState}`);
+            history.push(`${Routes.screen}/${roomId}/${screenState}`);
         } else if (!screenAdmin && screenState.startsWith(ScreenStates.chooseGame)) {
             const gameId = screenState.replace(`${ScreenStates.chooseGame}/`, '');
             const preselectedGame = games.filter(game => {
@@ -93,7 +84,7 @@ const ChooseGame: React.FunctionComponent = () => {
                 <GameSelectionContainer>
                     <LeftContainer>
                         <div>
-                            {games.map((game, index) => (
+                            {games.map(game => (
                                 <Button
                                     key={game.name}
                                     variant={game.id === selectedGame.id ? 'secondary' : 'primary'}
@@ -126,11 +117,11 @@ const ChooseGame: React.FunctionComponent = () => {
                                     </Tooltip>
                                 </ImageDescription>
                                 {selectedGame.id === GameNames.game1 ? (
-                                    <Game1Description openDialog={handleOpenDialog} />
+                                    <Game1Description />
                                 ) : selectedGame.id === GameNames.game2 ? (
-                                    <Game2Description openDialog={handleOpenDialog} />
+                                    <Game2Description />
                                 ) : (
-                                    <Game3Description openDialog={handleOpenDialog} />
+                                    <Game3Description />
                                 )}
                             </div>
                         </GamePreviewContainer>
@@ -160,70 +151,6 @@ const ChooseGame: React.FunctionComponent = () => {
 
 export default ChooseGame;
 
-interface DescriptionProps {
-    openDialog: () => void;
-}
-
-const Game1Description: React.FunctionComponent<DescriptionProps> = ({ openDialog }) => (
-    <ControlInstructionsContainer>
-        <ImagesContainer>
-            <ImageWrapper>
-                <InstructionImg src={shakeIt} />
-            </ImageWrapper>
-            <ImageWrapper>
-                <InstructionImg src={attention} />
-            </ImageWrapper>
-            <ImageWrapper>
-                <InstructionImg src={wood} />
-            </ImageWrapper>
-        </ImagesContainer>
-        <TextWrapper>
-            <ControlInstruction>Shake your phone to run!</ControlInstruction>
-            <ControlInstruction>Look at your phone if this icon appears on screen!</ControlInstruction>
-            <ControlInstruction>Remove the obstacles on your way!</ControlInstruction>
-        </TextWrapper>
-    </ControlInstructionsContainer>
-);
-
-const Game2Description: React.FunctionComponent<DescriptionProps> = ({ openDialog }) => (
-    <ControlInstructionsContainer>
-        <Button onClick={openDialog}>More information</Button>
-    </ControlInstructionsContainer>
-);
-
-const Game3Description: React.FunctionComponent<DescriptionProps> = ({ openDialog }) => (
-    <ControlInstructionsContainer>
-        <Button onClick={openDialog}>More information</Button>
-    </ControlInstructionsContainer>
-);
-
-const Game1DrawerDescription: React.FunctionComponent = () => (
-    <ControlInstructionsContainer>
-        <Wrapper>
-            <InstructionImg src={treeDemo} />
-            <ControlInstruction>Remove the tree trunk by cutting it along the line!</ControlInstruction>
-        </Wrapper>
-        <Wrapper>
-            <InstructionImg src={spiderDemo} />
-            <ControlInstruction>Blow into the microphone to get rid of the spider!</ControlInstruction>
-        </Wrapper>
-        <Wrapper>
-            <InstructionImg src={trashDemo} />
-            <ControlInstruction>
-                Put the right trash in the garbage can to get the forest clean again!
-            </ControlInstruction>
-        </Wrapper>
-    </ControlInstructionsContainer>
-);
-
-const Game2DrawerDescription: React.FunctionComponent = () => (
-    <ControlInstructionsContainer></ControlInstructionsContainer>
-);
-
-const Game3DrawerDescription: React.FunctionComponent = () => (
-    <ControlInstructionsContainer></ControlInstructionsContainer>
-);
-
 interface InstructionDialog {
     open: boolean;
     handleClose: () => void;
@@ -248,11 +175,11 @@ const InstructionDialog: React.FunctionComponent<InstructionDialog> = ({ handleC
         >
             <DialogContent>
                 {selectedGame.id === GameNames.game1 ? (
-                    <Game1DrawerDescription />
+                    <Game1Drawer />
                 ) : selectedGame.id === GameNames.game2 ? (
-                    <Game2DrawerDescription />
+                    <Game2Drawer />
                 ) : (
-                    <Game3DrawerDescription />
+                    <Game3Drawer />
                 )}
             </DialogContent>
         </Dialog>

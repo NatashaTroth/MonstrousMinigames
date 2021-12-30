@@ -85,7 +85,7 @@ export const PreviewImage = styled.div<PreviewImageContainer>`
 export const PreviewImageContainer = styled.div`
     display: flex;
     width: 100%;
-    height: 30%;
+    height: 40%;
     margin-top: 30px;
 `;
 
@@ -122,6 +122,7 @@ export const ControlInstruction = styled.div`
     width: 100%;
     letter-spacing: 1px;
     line-height: 1.5;
+    margin: 0 10px;
 `;
 
 export const InstructionImg = styled.img`
@@ -152,7 +153,7 @@ export const ImageWrapper = styled.div`
     width: 20%;
     justify-content: center;
     align-items: center;
-    height: 50%;
+    height: 75%;
 `;
 
 export const TextWrapper = styled.div`
