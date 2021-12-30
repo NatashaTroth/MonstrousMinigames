@@ -1,3 +1,4 @@
+import { PhaserGame } from '../../../phaser/PhaserGame';
 import messageHandler from '../../../socket/messageHandler';
 import { stoppedTypeGuard } from '../../../typeGuards/stopped';
 
@@ -17,9 +18,13 @@ interface MainScene {
 
 interface Dependencies {
     scene: MainScene;
+    currentScene?: string;
 }
 export const stoppedHandler = messageHandler(stoppedTypeGuard, (message, dependencies: Dependencies) => {
-    const { scene } = dependencies;
+    const { scene, currentScene = PhaserGame.getInstance().currentScene } = dependencies;
+
+    if (currentScene !== PhaserGame.SCENE_NAME_GAME_1) return;
+
     scene.gameAudio?.stopMusic();
     scene.scene.stop();
 });

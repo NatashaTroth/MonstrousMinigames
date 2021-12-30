@@ -3,12 +3,11 @@ import { Namespace, Socket } from 'socket.io';
 import { GameNames } from '../enums/gameNames';
 import { MessageTypes } from '../enums/messageTypes';
 import Game from '../gameplay/Game';
+import { GameOneMsgType } from '../gameplay/gameOne/enums';
+import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
+import Leaderboard from '../gameplay/leaderboard/Leaderboard';
 import { IMessage } from '../interfaces/messages';
 import RoomService from '../services/roomService';
-import { GameOneMsgType } from '../gameplay/gameOne/enums';
-import Leaderboard from '../gameplay/leaderboard/Leaderboard';
-import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
-
 import Room from './room';
 
 class Screen {
@@ -62,7 +61,6 @@ class Screen {
         }
 
         if (timedOut) {
-            console.log('sending timed out');
             const notReadyScreens = this.room!.getScreensPhaserNotReady();
             notReadyScreens.forEach(screen => {
                 this.emitter.sendScreenPhaserGameLoadedTimedOut(this.screenNamespace, screen.id, game); //TODO natasha
@@ -98,7 +96,6 @@ class Screen {
                     }
                     break;
                 case MessageTypes.PAUSE_RESUME:
-                    console.log('received pause resume message');
                     if (this.room?.isPlaying()) {
                         console.info(this.room.id + ' | Pause Game');
                         this.room.pauseGame();
@@ -188,7 +185,6 @@ class Screen {
                     this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!, GameNames.GAME1);
                     break;
                 case GameTwoMessageTypes.PHASER_GAME_LOADED:
-                    console.log(message);
                     this.room?.setScreenPhaserGameReady(this.socket.id, true);
                     if (this.room && !this.room?.firstPhaserScreenLoaded) {
                         this.room.firstPhaserScreenLoaded = true;
@@ -204,7 +200,6 @@ class Screen {
                     break;
 
                 case GameTwoMessageTypes.START_PHASER_GAME:
-                    console.log(message);
                     this.emitter.sendStartPhaserGame([this.screenNamespace], this.room!, GameNames.GAME2);
                     break;
                 default:

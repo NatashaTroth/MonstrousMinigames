@@ -25,13 +25,7 @@ export class Player {
         this.playerRunning = false;
 
         this.renderer = new PhaserPlayerRenderer(scene);
-        const yPadding = 30; //padding, so bottom of character/sheep don't hang over edge
-        this.renderer.renderSheepBackground(
-            0,
-            this.gameToScreenMapper.getScreenYOffset() - yPadding,
-            window.innerWidth,
-            this.gameToScreenMapper.getMappedGameHeight() + yPadding * 2
-        );
+
         this.setPlayer();
     }
 

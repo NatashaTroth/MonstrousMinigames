@@ -1,11 +1,11 @@
 import game2SoundLoop from '../../../../assets/audio/Game_2_Sound_Loop.wav';
 import { defaultAvailableCharacters } from '../../../../config/characters';
-import blueMonster from '../../../../images/characters/spritesheets/monsters/blue_spritesheet.png';
-import greenMonster from '../../../../images/characters/spritesheets/monsters/green_spritesheet.png';
-import orangeMonster from '../../../../images/characters/spritesheets/monsters/orange_spritesheet.png';
-import pinkMonster from '../../../../images/characters/spritesheets/monsters/pink_spritesheet.png';
+import blueMonsterGame2 from '../../../../images/characters/spritesheets/monsters/blue_spritesheet.png';
+import greenMonsterGame2 from '../../../../images/characters/spritesheets/monsters/green_spritesheet.png';
+import orangeMonsterGame2 from '../../../../images/characters/spritesheets/monsters/orange_spritesheet.png';
+import pinkMonsterGame2 from '../../../../images/characters/spritesheets/monsters/pink_spritesheet.png';
 import sheepDecoy from '../../../../images/characters/spritesheets/sheep/sheep_decoy.png';
-import grass from '../../../../images/ui/grass.png';
+import sheepGrass from '../../../../images/ui/grass.png';
 import { AnimationNameGame2 } from '../../../phaser/enums/AnimationName';
 import { Character, CharacterAnimation, CharacterSpriteProperties } from '../../../phaser/gameInterfaces';
 
@@ -18,12 +18,12 @@ const characterSpriteProperties: CharacterSpriteProperties = {
     frameHeight: 873,
 };
 
-const characterFiles: string[] = [blueMonster, greenMonster, pinkMonster, orangeMonster];
+const characterFiles: string[] = [blueMonsterGame2, greenMonsterGame2, pinkMonsterGame2, orangeMonsterGame2];
 
 const characterSpriteSheetPrefix = 'character_';
 
 export const characters: Character[] = characterFiles.map((file, idx) => {
-    const monsterName = `${characterSpriteSheetPrefix}${defaultAvailableCharacters[idx].toString()}`;
+    const monsterName = `${characterSpriteSheetPrefix}${defaultAvailableCharacters[idx].toString()}Game2`;
     const animationsMap = new Map<AnimationNameGame2, CharacterAnimation>();
     animationsMap.set(AnimationNameGame2.Running, {
         name: `${monsterName}_running`,
@@ -40,6 +40,6 @@ export const characters: Character[] = characterFiles.map((file, idx) => {
 
 // obstacle textures have to have the same name as obstacle type - lowercase
 export const images = [
-    { name: 'grass', file: grass },
+    { name: 'sheepGrass', file: sheepGrass },
     { name: 'sheepDecoy', file: sheepDecoy },
 ];

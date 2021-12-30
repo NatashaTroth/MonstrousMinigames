@@ -4,7 +4,6 @@ import Phaser from 'phaser';
 import chasersSpritesheet from '../../../../images/characters/spritesheets/chasers/chasers_spritesheet.png';
 import windSpritesheet from '../../../../images/characters/spritesheets/chasers/wind_spritesheet.png';
 import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame1 } from '../../../../utils/constants';
-import { Game1 } from '../../../phaser/game1/Game1';
 import { GameToScreenMapper } from '../../../phaser/game1/GameToScreenMapper';
 import { initialGameInput } from '../../../phaser/game1/initialGameInput';
 import { Player } from '../../../phaser/game1/Player';
@@ -13,6 +12,7 @@ import { GameAudio } from '../../../phaser/GameAudio';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import { GameEventTypes } from '../../../phaser/GameEventTypes';
 import { GameData } from '../../../phaser/gameInterfaces';
+import { PhaserGame } from '../../../phaser/PhaserGame';
 import { PhaserGameRenderer } from '../../../phaser/renderer/PhaserGameRenderer';
 import { Socket } from '../../../socket/Socket';
 import { initSockets } from '../gameState/initSockets';
@@ -44,7 +44,7 @@ class MainScene extends Phaser.Scene {
     socketsInitiated = false;
 
     constructor() {
-        super(Game1.SCENE_NAME);
+        super(PhaserGame.SCENE_NAME_GAME_1);
         this.windowWidth = 0;
         this.windowHeight = 0;
 

@@ -18,11 +18,6 @@ export class PhaserPlayerRenderer {
 
     constructor(private scene: SheepGameScene) {}
 
-    renderBackground() {
-        const bg = this.scene.add.image(0, 0, 'grass'); //TODO: replace bg image
-        bg.setScale(0.4);
-    }
-
     renderPlayer(coordinates: Coordinates, character: Character): void {
         this.character = character;
         if (!this.player) {
@@ -96,13 +91,6 @@ export class PhaserPlayerRenderer {
                 }
             }
         }
-    }
-
-    renderSheepBackground(x: number, y: number, width: number, height: number) {
-        const element = this.scene.add.image(x, y, 'grass');
-        element.setDisplaySize(width, height);
-        element.setOrigin(0, 0);
-        element.setDepth(depthDictionary.sky);
     }
 
     private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {

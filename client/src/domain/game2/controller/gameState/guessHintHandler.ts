@@ -13,9 +13,6 @@ interface Dependencies {
 const guessHintHandler = messageHandler(guessHintTypeGuard, (message, dependencies: Dependencies) => {
     const { setGuessHint } = dependencies;
     setGuessHint(message.hint);
-
-    // eslint-disable-next-line no-console
-    console.log(message.hint);
 });
 
 export const useGuessHintHandler = (socket: Socket, handler = guessHintHandler) => {
