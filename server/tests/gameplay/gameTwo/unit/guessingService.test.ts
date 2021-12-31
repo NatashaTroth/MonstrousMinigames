@@ -28,11 +28,15 @@ describe('GuessingService Tests', () => {
     });
 
     it('should return the right hint for the size of the miss', () => {
-        const threshold = Parameters.GOOD_GUESS_THRESHOLD;
-        expect(guessingService.getHint(threshold)).toEqual(GuessHints.LOW);
-        expect(guessingService.getHint(threshold + 1)).toEqual(GuessHints.VERY_LOW);
-        expect(guessingService.getHint(threshold * -1)).toEqual(GuessHints.HIGH);
-        expect(guessingService.getHint(threshold * -1 - 1)).toEqual(GuessHints.VERY_HIGH);
+        const goodThreshold = Parameters.GOOD_GUESS_THRESHOLD;
+        const badThreshold = Parameters.BAD_GUESS_THRESHOLD;
+
+        expect(guessingService.getHint(goodThreshold)).toEqual(GuessHints.BIT_LOW);
+        expect(guessingService.getHint(goodThreshold + 1)).toEqual(GuessHints.LOW);
+        expect(guessingService.getHint(badThreshold + 1)).toEqual(GuessHints.VERY_LOW);
+        expect(guessingService.getHint(goodThreshold * -1)).toEqual(GuessHints.BIT_HIGH);
+        expect(guessingService.getHint(goodThreshold * -1 - 1)).toEqual(GuessHints.HIGH);
+        expect(guessingService.getHint(badThreshold * -1)).toEqual(GuessHints.VERY_HIGH);
         expect(guessingService.getHint(0)).toEqual(GuessHints.EXACT);
     });
 
