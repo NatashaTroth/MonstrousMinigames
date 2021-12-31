@@ -49,7 +49,8 @@ const PHASE_TIMES: phaseTimes = {
     results: shorterGame ? 2000 : 5000,
 };
 
-const GOOD_GUESS_THRESHOLD = 3;
+const GOOD_GUESS_THRESHOLD = 5;
+const BAD_GUESS_THRESHOLD = 20;
 
 const SHEEP_FREEZE_MIN_MS = 500;
 const SHEEP_FREEZE_MAX_MS = 5000;
@@ -81,6 +82,7 @@ export default {
     ROUNDS,
     PHASE_TIMES,
     GOOD_GUESS_THRESHOLD,
+    BAD_GUESS_THRESHOLD,
     SHEEP_FREEZE_MIN_MS,
     SHEEP_FREEZE_MAX_MS,
     SHEEP_DIRECTIONS_COUNT,
