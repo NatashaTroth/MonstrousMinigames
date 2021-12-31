@@ -3,12 +3,16 @@ import history from '../../../history/history';
 import { GameData } from '../../../phaser/gameInterfaces/GameData';
 import { Socket } from '../../../socket/Socket';
 import { handleStartGame } from '../components/MainScene';
-import { allScreensPhaserGameLoadedHandler, sendCreateNewGame } from './allScreensPhaserGameLoadedHandler';
+import {
+    allScreensPhaserGameLoadedHandler, sendCreateNewGame
+} from './allScreensPhaserGameLoadedHandler';
 import { chasersPushedHandler } from './chasersPushedHandler';
 import { gameFinishedHandler } from './gameFinishedHandler';
 import { gameStateInfoHandler } from './gameStateInfoHandler';
 import { initialGameStateHandler } from './initialGameStateHandler';
-import { approachingObstacleHandler, obstacleSkippedHandler, obstacleWillBeSolvedHandler } from './obstacleHandler';
+import {
+    approachingObstacleHandler, obstacleSkippedHandler, obstacleWillBeSolvedHandler
+} from './obstacleHandler';
 import { pausedHandler } from './pausedHandler';
 import { phaserLoadedTimedOutHandler } from './phaserLoadedTimedOut';
 import { resumeHandler } from './resumeHandler';
@@ -38,7 +42,7 @@ interface MainScene {
     players: Player[];
     gameAudio?: { stopMusic: () => void; pause: () => void; resume: () => void };
     scene: {
-        restart: () => void;
+        stop: () => void;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         get: (name: string) => any;
         pause: () => void;
@@ -126,6 +130,6 @@ export function initSockets({ socket, screenAdmin, roomId, scene }: InitSocketsP
     pauseHandlerWithDependencies(socket);
     resumeHandlerWithDependencies(socket);
     gameStateInfoHandlerWithDependencies(socket);
-    gameFinishedHandlerWithDependencies(socket, roomId);
+    gameFinishedHandlerWithDependencies(socket);
     chasersPushedHandlerWithDependencies(socket);
 }

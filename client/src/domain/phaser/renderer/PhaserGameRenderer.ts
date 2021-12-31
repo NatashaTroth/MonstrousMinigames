@@ -25,13 +25,13 @@ export class PhaserGameRenderer {
     progressBoxWidth: number;
     progressBoxHeight: number;
     countdownText?: Phaser.GameObjects.Text;
+    loadingScreenBackground?: Phaser.GameObjects.Graphics;
     progressBox?: Phaser.GameObjects.Graphics;
     progressBar?: Phaser.GameObjects.Graphics;
     loadingText?: Phaser.GameObjects.Text;
     percentText?: Phaser.GameObjects.Text;
     assetText?: Phaser.GameObjects.Text; //only for local dev -> to see which assets take long to load
     playerRanksText?: Phaser.GameObjects.Text;
-    guessInstructionText?: Phaser.GameObjects.Text;
 
     constructor(private scene: MainScene | SheepGameScene) {
         this.scene = scene;
@@ -76,35 +76,11 @@ export class PhaserGameRenderer {
         this.playerRanksText.setDepth(depthDictionary.percentText);
     }
 
-    renderGuessText(show: boolean) {
-        // TODO: formatting
-        if (show) {
-            if (!this.guessInstructionText) {
-                const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
-                const screenCenterHeight = this.scene.cameras.main.worldView.y + this.scene.cameras.main.height / 2;
-                this.guessInstructionText = this.scene.make.text({
-                    x: screenCenterWidth,
-                    y: screenCenterHeight - this.progressBoxHeight,
-                    text: 'How many sheep are there?\nEnter your guess on your device.',
-                    style: {
-                        ...loadingTextStyleProperties,
-                        fontSize: `${40}px`,
-                        color: colors.orange,
-                        fontStyle: 'bold',
-                    },
-                });
-                this.guessInstructionText.setOrigin(0.5);
-                this.guessInstructionText.setDepth(depthDictionary.percentText);
-            } else {
-                this.guessInstructionText.setVisible(true);
-            }
-        } else {
-            this.guessInstructionText?.setVisible(false);
-        }
-    }
-
     renderLoadingScreen() {
         //progress bar: https://gamedevacademy.org/creating-a-preloading-screen-in-phaser-3/?a=13#Loading_Our_Assets
+
+        this.loadingScreenBackground = this.scene.add.graphics();
+        this.loadingScreenBackground.fillStyle(0x000b18);
 
         //loading bar
         this.progressBar = this.scene.add.graphics();
@@ -191,6 +167,7 @@ export class PhaserGameRenderer {
         this.percentText?.destroy();
         this.progressBox?.destroy();
         this.progressBar?.destroy();
+        this.loadingScreenBackground?.destroy();
         if (designDevelopment) this.assetText?.destroy();
     }
 

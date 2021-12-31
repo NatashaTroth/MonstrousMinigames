@@ -73,221 +73,238 @@ const App: React.FunctionComponent = () => {
     }
 
     return (
-        <Router history={history}>
-            <StylesProvider injectFirst>
-                <MuiThemeProvider theme={theme}>
-                    <ThemeProvider theme={theme}>
-                        <AppContainer className="App">
-                            <ScreenWrapper>
-                                <FirebaseContextProvider>
-                                    <GameContextProvider>
-                                        <PlayerContextProvider>
-                                            <Game1ContextProvider>
-                                                <Game2ContextProvider>
-                                                <Game3ContextProvider>
-                                                    <ScreenSocketContextProvider>
-                                                        <ControllerSocketContextProvider
-                                                            permission={!(!micPermission || !motionPermission)}
-                                                        >
-                                                            {!isMobileOnly && <MasterHeader history={history} />}
-                                                            <PausedDialog>
-                                                                <Switch>
-                                                                    <Route
-                                                                        path={Routes.credits}
-                                                                        component={Credits}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.settings}
-                                                                        component={Settings}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.controllerChooseCharacter}
-                                                                        component={ChooseCharacter}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.controllerLobby}
-                                                                        component={() => (
-                                                                            <ControllerLobbyScreen history={history} />
-                                                                        )}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.controllerTutorial}
-                                                                        component={() => <Tutorial history={history} />}
-                                                                        exact
-                                                                    />
-                                                                    {/*----------------- Game 1 -----------------*/}
-                                                                    <Route
-                                                                        path={Routes.controllerGame1}
-                                                                        component={() => (
-                                                                            <ShakeInstruction
-                                                                                sessionStorage={sessionStorage}
+        <>
+            <div id="phaserWrapper">
+                <div id="phaserGameContainer" />
+            </div>
+            <Router history={history}>
+                <StylesProvider injectFirst>
+                    <MuiThemeProvider theme={theme}>
+                        <ThemeProvider theme={theme}>
+                            <AppContainer className="App">
+                                <ScreenWrapper>
+                                    <FirebaseContextProvider>
+                                        <GameContextProvider>
+                                            <PlayerContextProvider>
+                                                <Game1ContextProvider>
+                                                    <Game2ContextProvider>
+                                                        <Game3ContextProvider>
+                                                            <ScreenSocketContextProvider>
+                                                                <ControllerSocketContextProvider
+                                                                    permission={!(!micPermission || !motionPermission)}
+                                                                >
+                                                                    {!isMobileOnly && (
+                                                                        <MasterHeader history={history} />
+                                                                    )}
+
+                                                                    <PausedDialog>
+                                                                        <Switch>
+                                                                            <Route
+                                                                                path={Routes.credits}
+                                                                                component={Credits}
+                                                                                exact
                                                                             />
-                                                                        )}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.controllerTreeStump}
-                                                                        component={TreeTrunk}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.controllerSpider}
-                                                                        component={() => (
-                                                                            <Spider navigator={navigator} />
-                                                                        )}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.controllerTrash}
-                                                                        component={Trash}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.controllerStone}
-                                                                        component={() => <Stone history={history} />}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.controllerPlayerDead}
-                                                                        component={PlayerDead}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.controllerPlayerStunned}
-                                                                        component={PlayerStunned}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.controllerWindmill}
-                                                                        component={Windmill}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.screenGame1}
-                                                                        component={Game}
-                                                                        exact
-                                                                    />
-                                                                    {/*----------------- Game 2 -----------------*/}
-                                                                    <Route
-                                                                        path={Routes.controllerGame2}
-                                                                        component={() => (
-                                                                            <Joystick sessionStorage={sessionStorage} />
-                                                                        )}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.screenGame2}
-                                                                        component={Game2}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.controllerGuess}
-                                                                        component={Guess}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.controllerResults}
-                                                                        component={Results}
-                                                                        exact
-                                                                    />
-
-                                                                    {/*----------------- Game 3 -----------------*/}
-                                                                    <Route
-                                                                        path={Routes.controllerGame3}
-                                                                        component={TakePicture}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.controllerVote}
-                                                                        component={Vote}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.controllerPresent}
-                                                                        component={PresentFinalPhotos}
-                                                                        exact
-                                                                    />
-
-                                                                    <Route
-                                                                        path={Routes.screenGame3}
-                                                                        component={Game3}
-                                                                        exact
-                                                                    />
-
-                                                                    {/*----------------- General -----------------*/}
-                                                                    <Route
-                                                                        path={Routes.controllerPlayerFinished}
-                                                                        component={ControllerFinishedScreen}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.screenLobby}
-                                                                        component={ScreenLobbyScreen}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.screenLeaderboard}
-                                                                        component={Leaderboard}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.screenChooseGame}
-                                                                        component={ChooseGame}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.screenGetReady}
-                                                                        component={PlayersGetReady}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.screenFinished}
-                                                                        component={ScreenFinishedScreen}
-                                                                        exact
-                                                                    />
-                                                                    <Route
-                                                                        path={Routes.home}
-                                                                        component={() =>
-                                                                            isMobileOnly ? (
-                                                                                !micPermission || !motionPermission ? (
-                                                                                    <NoPermissions
-                                                                                        getMotionPermission={
-                                                                                            getMotionPermission
-                                                                                        }
-                                                                                        getMicrophonePermission={
-                                                                                            getMicrophonePermission
-                                                                                        }
-                                                                                    />
-                                                                                ) : (
-                                                                                    <ControllerConnectScreen
+                                                                            <Route
+                                                                                path={Routes.settings}
+                                                                                component={Settings}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.controllerChooseCharacter}
+                                                                                component={ChooseCharacter}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.controllerLobby}
+                                                                                component={() => (
+                                                                                    <ControllerLobbyScreen
                                                                                         history={history}
                                                                                     />
-                                                                                )
-                                                                            ) : (
-                                                                                <ScreenConnectScreen />
-                                                                            )
-                                                                        }
-                                                                    />
-                                                                </Switch>
-                                                            </PausedDialog>
-                                                        </ControllerSocketContextProvider>
-                                                    </ScreenSocketContextProvider>
-                                                </Game3ContextProvider>
-                                                </Game2ContextProvider>
-                                            </Game1ContextProvider>
-                                        </PlayerContextProvider>
-                                    </GameContextProvider>
-                                </FirebaseContextProvider>
-                            </ScreenWrapper>
-                        </AppContainer>
-                    </ThemeProvider>
-                </MuiThemeProvider>
-            </StylesProvider>
-        </Router>
+                                                                                )}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.controllerTutorial}
+                                                                                component={() => (
+                                                                                    <Tutorial history={history} />
+                                                                                )}
+                                                                                exact
+                                                                            />
+                                                                            {/*----------------- Game 1 -----------------*/}
+                                                                            <Route
+                                                                                path={Routes.controllerGame1}
+                                                                                component={() => (
+                                                                                    <ShakeInstruction
+                                                                                        sessionStorage={sessionStorage}
+                                                                                    />
+                                                                                )}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.controllerTreeStump}
+                                                                                component={TreeTrunk}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.controllerSpider}
+                                                                                component={() => (
+                                                                                    <Spider navigator={navigator} />
+                                                                                )}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.controllerTrash}
+                                                                                component={Trash}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.controllerStone}
+                                                                                component={() => (
+                                                                                    <Stone history={history} />
+                                                                                )}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.controllerPlayerDead}
+                                                                                component={PlayerDead}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.controllerPlayerStunned}
+                                                                                component={PlayerStunned}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.controllerWindmill}
+                                                                                component={Windmill}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.screenGame1}
+                                                                                component={Game}
+                                                                                exact
+                                                                            />
+                                                                            {/*----------------- Game 2 -----------------*/}
+                                                                            <Route
+                                                                                path={Routes.controllerGame2}
+                                                                                component={() => (
+                                                                                    <Joystick
+                                                                                        sessionStorage={sessionStorage}
+                                                                                    />
+                                                                                )}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.screenGame2}
+                                                                                component={Game2}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.controllerGuess}
+                                                                                component={Guess}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.controllerResults}
+                                                                                component={Results}
+                                                                                exact
+                                                                            />
+
+                                                                            {/*----------------- Game 3 -----------------*/}
+                                                                            <Route
+                                                                                path={Routes.controllerGame3}
+                                                                                component={TakePicture}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.controllerVote}
+                                                                                component={Vote}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.controllerPresent}
+                                                                                component={PresentFinalPhotos}
+                                                                                exact
+                                                                            />
+
+                                                                            <Route
+                                                                                path={Routes.screenGame3}
+                                                                                component={Game3}
+                                                                                exact
+                                                                            />
+
+                                                                            {/*----------------- General -----------------*/}
+                                                                            <Route
+                                                                                path={Routes.controllerPlayerFinished}
+                                                                                component={ControllerFinishedScreen}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.screenLobby}
+                                                                                component={ScreenLobbyScreen}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.screenLeaderboard}
+                                                                                component={Leaderboard}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.screenChooseGame}
+                                                                                component={ChooseGame}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.screenGetReady}
+                                                                                component={PlayersGetReady}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.screenFinished}
+                                                                                component={ScreenFinishedScreen}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.home}
+                                                                                component={() =>
+                                                                                    isMobileOnly ? (
+                                                                                        !micPermission ||
+                                                                                        !motionPermission ? (
+                                                                                            <NoPermissions
+                                                                                                getMotionPermission={
+                                                                                                    getMotionPermission
+                                                                                                }
+                                                                                                getMicrophonePermission={
+                                                                                                    getMicrophonePermission
+                                                                                                }
+                                                                                            />
+                                                                                        ) : (
+                                                                                            <ControllerConnectScreen
+                                                                                                history={history}
+                                                                                            />
+                                                                                        )
+                                                                                    ) : (
+                                                                                        <ScreenConnectScreen />
+                                                                                    )
+                                                                                }
+                                                                            />
+                                                                        </Switch>
+                                                                    </PausedDialog>
+                                                                </ControllerSocketContextProvider>
+                                                            </ScreenSocketContextProvider>
+                                                        </Game3ContextProvider>
+                                                    </Game2ContextProvider>
+                                                </Game1ContextProvider>
+                                            </PlayerContextProvider>
+                                        </GameContextProvider>
+                                    </FirebaseContextProvider>
+                                </ScreenWrapper>
+                            </AppContainer>
+                        </ThemeProvider>
+                    </MuiThemeProvider>
+                </StylesProvider>
+            </Router>
+        </>
     );
 };
 

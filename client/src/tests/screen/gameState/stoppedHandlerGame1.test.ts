@@ -1,4 +1,5 @@
 import { stoppedHandler } from '../../../domain/game1/screen/gameState/stoppedHandler';
+import { PhaserGame } from '../../../domain/phaser/PhaserGame';
 import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasStoppedMessage } from '../../../domain/typeGuards/stopped';
 import { MessageTypes } from '../../../utils/constants';
@@ -22,18 +23,18 @@ describe('stoppedHandler Game1', () => {
                 stopMusic,
             },
             scene: {
-                restart: jest.fn(),
+                stop: jest.fn(),
                 get: jest.fn(),
             },
         };
 
         scene.scene.get.mockReturnValue({
             scene: {
-                restart: jest.fn(),
+                stop: jest.fn(),
             },
         });
 
-        const withDependencies = stoppedHandler({ scene });
+        const withDependencies = stoppedHandler({ scene, currentScene: PhaserGame.SCENE_NAME_GAME_1 });
 
         withDependencies(socket);
         await socket.emit(message);

@@ -6,16 +6,15 @@ import { RouteParams } from '../../../../App';
 import { MyAudioContext, Sound } from '../../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../../../contexts/screen/ScreenSocketContextProvider';
-import { Game1 } from '../../../phaser/game1/Game1';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
+import { PhaserGame } from '../../../phaser/PhaserGame';
 import { AudioButton, Container, PauseButton, StopButton } from './Game.sc';
 
 const Game: React.FunctionComponent = () => {
-    const { roomId, hasPaused, screenAdmin, playCount } = React.useContext(GameContext);
+    const { roomId, hasPaused, screenAdmin } = React.useContext(GameContext);
     const { isPlaying, changeSound, togglePlaying } = React.useContext(MyAudioContext);
     const { id }: RouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
-    const gameContainer = `${roomId}${playCount}`;
 
     if (id && !screenSocket) {
         handleSocketConnection(id, 'game1');
@@ -23,13 +22,21 @@ const Game: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         changeSound(Sound.game1);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
-    React.useEffect(() => {
-        const game = new Game1(gameContainer);
-        game.game.scene.start('MainScene', { roomId, socket: screenSocket, screenAdmin });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        const container = document.getElementById('phaserWrapper');
+        if (container) {
+            container.style.display = 'block';
+        }
+
+        const game = PhaserGame.getInstance(`phaserGameContainer`);
+        game.startGame1Scene(roomId, screenSocket, screenAdmin);
+
+        return () => {
+            const container = document.getElementById('phaserWrapper');
+            if (container) {
+                container.style.display = 'none';
+            }
+        };
     }, []);
 
     async function handleAudio() {
@@ -61,9 +68,6 @@ const Game: React.FunctionComponent = () => {
             <AudioButton onClick={handleAudio} variant="primary">
                 {isPlaying ? <VolumeUp /> : <VolumeOff />}
             </AudioButton>
-            <div>
-                <div id={gameContainer} />
-            </div>
         </Container>
     );
 };

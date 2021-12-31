@@ -9,4 +9,5 @@ export const AppContainer = styled.div`
     background-position: bottom;
     background-image: url(${camp});
     background-size: cover;
+    position: relative;
 `;

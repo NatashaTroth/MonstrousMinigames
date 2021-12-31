@@ -1,12 +1,10 @@
 export class GameToScreenMapper {
-    private screenPercentOfGame: number;
-    // public screenSpeed: number;
+    private screenPercentageOfGameWidth: number;
 
-    constructor(gameWidth: number, windowWidth: number) {
-        // Game Positions
-        // chaser pos = 0
-        // playerpos = 500 ... 100%
-        //
+    private widthPaddingPercentage = 0.05; // sum of total adding at sides
+    heightPadding = 20;
+
+    constructor(gameWidth: number, private windowWidth: number, private gameHeight: number, windowHeight: number) {
         // Screen Positions
         //window.innerWidth / 2 ... x %
 
@@ -15,18 +13,23 @@ export class GameToScreenMapper {
 
         //screenpercent: 0.5088888888888888, windowwidth: 916, gamewidth: 1800
 
-        this.screenPercentOfGame = (1 / gameWidth) * windowWidth;
-
-        // eslint-disable-next-line no-console
-        console.log(`screenpercent: ${this.screenPercentOfGame}, windowwidth: ${windowWidth}, gamewidth: ${gameWidth}`);
-        // this.screenSpeed = this.mapGameMeasurementToScreen(gameSpeed);
+        this.screenPercentageOfGameWidth = (1 / gameWidth) * (windowWidth * (1 - this.widthPaddingPercentage)); //for padding
     }
 
-    mapGameMeasurementToScreen(value: number) {
-        return value * this.screenPercentOfGame;
+    mapGameXMeasurementToScreen(value: number) {
+        return value * this.screenPercentageOfGameWidth + (this.windowWidth * this.widthPaddingPercentage) / 3; //add 1/3 more padding to right because of scrollbar
     }
 
-    // mapScreenMeasurementToGame(value: number) {
-    //     return value / this.screenPercentOfGame;
-    // }
+    mapGameYMeasurementToScreen(value: number) {
+        return value * this.screenPercentageOfGameWidth + this.getScreenYOffset();
+    }
+
+    getMappedGameHeight() {
+        return this.mapGameXMeasurementToScreen(this.gameHeight);
+    }
+
+    getScreenYOffset() {
+        //To render at the bottom of the screen
+        return window.innerHeight - this.getMappedGameHeight() - this.heightPadding;
+    }
 }

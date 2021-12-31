@@ -92,10 +92,6 @@ export const defaultValue = {
     setAvailableCharacters: () => {
         // do nothing
     },
-    playCount: 0,
-    setPlayCount: () => {
-        // do nothing
-    },
 };
 interface GameContextProps {
     finished: boolean;
@@ -129,8 +125,6 @@ interface GameContextProps {
     setScreenState: (val: string) => void;
     availableCharacters: number[];
     setAvailableCharacters: (val: number[]) => void;
-    playCount: number;
-    setPlayCount: (val: number) => void;
 }
 
 export const GameContext = React.createContext<GameContextProps>(defaultValue);
@@ -151,7 +145,6 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenAdmin, setScreenAdmin] = React.useState<boolean>(defaultValue.screenAdmin);
     const [screenState, setScreenState] = React.useState<string>(ScreenStates.lobby);
     const [availableCharacters, setAvailableCharacters] = React.useState<number[]>(defaultAvailableCharacters);
-    const [playCount, setPlayCount] = React.useState(0);
 
     const content = {
         finished,
@@ -199,8 +192,6 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setScreenState,
         availableCharacters,
         setAvailableCharacters,
-        playCount,
-        setPlayCount,
     };
     return <GameContext.Provider value={content}>{children}</GameContext.Provider>;
 };

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import Phaser from 'phaser';
 
 import chasersSpritesheet from '../../../../images/characters/spritesheets/chasers/chasers_spritesheet.png';
@@ -11,6 +12,7 @@ import { GameAudio } from '../../../phaser/GameAudio';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import { GameEventTypes } from '../../../phaser/GameEventTypes';
 import { GameData } from '../../../phaser/gameInterfaces';
+import { PhaserGame } from '../../../phaser/PhaserGame';
 import { PhaserGameRenderer } from '../../../phaser/renderer/PhaserGameRenderer';
 import { Socket } from '../../../socket/Socket';
 import { initSockets } from '../gameState/initSockets';
@@ -39,9 +41,10 @@ class MainScene extends Phaser.Scene {
     gameToScreenMapper?: GameToScreenMapper;
     firstGameStateReceived: boolean;
     allScreensLoaded: boolean;
+    socketsInitiated = false;
 
     constructor() {
-        super('MainScene');
+        super(PhaserGame.SCENE_NAME_GAME_1);
         this.windowWidth = 0;
         this.windowHeight = 0;
 
@@ -59,9 +62,21 @@ class MainScene extends Phaser.Scene {
         this.screenAdmin = false;
         this.firstGameStateReceived = false;
         this.allScreensLoaded = false;
+        // this.setAllVars() //TODO use to remove duplicate code
+
+        this.initiateEventEmitters();
+    }
+
+    resetSceneVariables() {
+        this.players = [];
+        this.gameStarted = false;
+        this.paused = false;
+        this.firstGameStateReceived = false;
+        this.allScreensLoaded = false;
     }
 
     init(data: { roomId: string; socket: Socket; screenAdmin: boolean }) {
+        this.resetSceneVariables();
         this.camera = this.cameras.main;
         this.windowWidth = this.cameras.main.width;
         this.windowHeight = this.cameras.main.height;
@@ -70,17 +85,7 @@ class MainScene extends Phaser.Scene {
         this.screenAdmin = data.screenAdmin;
         this.gameRenderer = new PhaserGameRenderer(this);
 
-        const xPositions: number[] = [];
-        const yPositions: number[] = [];
-        this.players.forEach(player => {
-            if (!player.player.isDead) {
-                xPositions.push(player.coordinates.x);
-                yPositions.push(player.coordinates.x);
-            }
-        });
-
-        this.initSockets();
-        this.initiateEventEmitters();
+        if (!this.socketsInitiated) this.initSockets();
 
         if (this.roomId === '' && data.roomId !== undefined) {
             this.roomId = data.roomId;
@@ -101,15 +106,6 @@ class MainScene extends Phaser.Scene {
                 this.gameRenderer?.fileProgressUpdate(file);
             });
         }
-
-        //once all the files are done loading
-        this.load.on('complete', () => {
-            this.gameRenderer?.updateLoadingScreenFinishedPreloading();
-            this.socket?.emit({
-                type: MessageTypesGame1.phaserLoaded,
-                roomId: this.roomId,
-            });
-        });
 
         audioFiles.forEach(audio => this.load.audio(audio.name, audio.file));
 
@@ -140,7 +136,14 @@ class MainScene extends Phaser.Scene {
         });
     }
 
+    //called when preload has finished loading all the files
     create() {
+        this.gameRenderer?.updateLoadingScreenFinishedPreloading();
+        this.socket?.emit({
+            type: MessageTypesGame1.phaserLoaded,
+            roomId: this.roomId,
+        });
+
         this.gameAudio = new GameAudio(this.sound);
         this.gameAudio.initAudio();
 
@@ -154,6 +157,8 @@ class MainScene extends Phaser.Scene {
     }
 
     initSockets() {
+        this.socketsInitiated = true;
+
         initSockets({
             socket: this.socket,
             screenAdmin: this.screenAdmin,
@@ -181,6 +186,7 @@ class MainScene extends Phaser.Scene {
     }
 
     initiateGame(gameStateData: GameData) {
+        this.gameRenderer?.destroyLoadingScreen();
         if (!localDevelopment && !designDevelopment) {
             this.gameStarted = true;
         }

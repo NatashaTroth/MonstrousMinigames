@@ -109,6 +109,7 @@ export const enum MessageTypesGame3 {
     voteForFinalPhots = 'game3/voteForFinalPhotos',
     finalResults = 'game3/finalResults',
     presentFinalPhotos = 'game3/presentFinalPhotos',
+    finishedPresenting = 'game3/finishedPresenting',
 }
 
 export const localDevelopment = false; //the one in constants.ts on the server

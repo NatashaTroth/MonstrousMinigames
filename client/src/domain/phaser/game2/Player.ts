@@ -26,7 +26,6 @@ export class Player {
 
         this.renderer = new PhaserPlayerRenderer(scene);
 
-        this.renderer.renderSheepBackground(window.innerWidth, window.innerHeight);
         this.setPlayer();
     }
 
@@ -39,18 +38,18 @@ export class Player {
             }
         }
 
-        this.coordinates.x = this.gameToScreenMapper.mapGameMeasurementToScreen(newXPosition);
-        this.coordinates.y = this.gameToScreenMapper.mapGameMeasurementToScreen(newYPosition);
+        this.coordinates.x = newXPosition;
+        this.coordinates.y = newYPosition;
         this.renderer.movePlayerTo(
-            this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
-            this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.y)
+            this.gameToScreenMapper.mapGameXMeasurementToScreen(this.coordinates.x),
+            this.gameToScreenMapper.mapGameYMeasurementToScreen(this.coordinates.y)
         );
     }
 
     private setPlayer() {
         const screenCoordinates = {
-            x: this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.x),
-            y: this.gameToScreenMapper.mapGameMeasurementToScreen(this.coordinates.y),
+            x: this.gameToScreenMapper.mapGameXMeasurementToScreen(this.coordinates.x),
+            y: this.gameToScreenMapper.mapGameYMeasurementToScreen(this.coordinates.y),
         };
 
         this.renderer.renderPlayer(screenCoordinates, this.character);

@@ -1,6 +1,6 @@
 import { History } from 'history';
 
-import { screenFinishedRoute } from '../../../../utils/routes';
+import { PhaserGame } from '../../../phaser/PhaserGame';
 import messageHandler from '../../../socket/messageHandler';
 import { finishedTypeGuard } from '../../../typeGuards/finished';
 
@@ -9,10 +9,17 @@ interface Dependencies {
         gameAudio?: {
             stopMusic: () => void;
         };
+        scene: {
+            stop: () => void;
+        };
     };
     history: History;
+    currentScene?: string;
 }
-export const gameFinishedHandler = messageHandler(finishedTypeGuard, (message, dependencies: Dependencies, roomId) => {
-    dependencies.scene.gameAudio?.stopMusic();
-    dependencies.history.push(screenFinishedRoute(roomId));
+
+export const gameFinishedHandler = messageHandler(finishedTypeGuard, (message, dependencies: Dependencies) => {
+    const { scene, currentScene = PhaserGame.getInstance().currentScene } = dependencies;
+    if (currentScene !== PhaserGame.SCENE_NAME_GAME_1) return;
+    scene.gameAudio?.stopMusic();
+    scene.scene.stop();
 });
