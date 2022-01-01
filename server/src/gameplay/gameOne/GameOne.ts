@@ -54,7 +54,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     chasersPositionX = InitialGameParameters.CHASERS_POSITION_X;
     cameraPositionX = InitialGameParameters.CAMERA_POSITION_X;
     obstacleTypes: ObstacleTypeObject[] = [];
-    maxRunsPerFrame = 1;
+    maxRunsPerFrame = 2;
 
     gameName = GameNames.GAME1;
 
