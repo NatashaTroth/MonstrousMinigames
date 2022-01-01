@@ -11,7 +11,6 @@ import { HashTable, IGameInterface } from '../interfaces';
 import { GameType } from '../leaderboard/enums/GameType';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
-import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
 import UserHasNoStones from './customErrors/UserHasNoStones';
 import { GameOneMsgType, ObstacleType } from './enums';
 import GameOneEventEmitter from './GameOneEventEmitter';
@@ -21,7 +20,6 @@ import {
     createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
 } from './helperFunctions/initiatePlayerState';
 import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from './interfaces';
-import { ObstacleReachedInfoController } from './interfaces/GameEvents';
 import { IMessageObstacle } from './interfaces/messageObstacle';
 import { IMessageStunPlayer } from './interfaces/messageStunPlayer';
 
@@ -47,14 +45,11 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     countdownTime = InitialGameParameters.COUNTDOWN_TIME; //should be 1 second more than client - TODO: make sure it is
     cameraSpeed = InitialGameParameters.CAMERA_SPEED;
     chasersSpeed = InitialGameParameters.CHASERS_SPEED;
-    stunnedTime = InitialGameParameters.STUNNED_TIME;
-    approachSolvableObstacleDistance = InitialGameParameters.APPROACH_SOLVABLE_OBSTACLE_DISTANCE;
 
     initialPlayerPositionX = InitialGameParameters.PLAYERS_POSITION_X;
     chasersPositionX = InitialGameParameters.CHASERS_POSITION_X;
     cameraPositionX = InitialGameParameters.CAMERA_POSITION_X;
     obstacleTypes: ObstacleTypeObject[] = [];
-    maxRunsPerFrame = 2;
 
     gameName = GameNames.GAME1;
 
@@ -73,7 +68,9 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             user.name,
             this.initialPlayerPositionX,
             createObstacles(this.obstacleTypes, this.numberOfObstacles, this.trackLength, this.initialPlayerPositionX),
-            user.characterNumber
+            user.characterNumber,
+            this.trackLength,
+            this.roomId
         );
 
         player.on(GameOnePlayer.EVT_UNSTUNNED, () => {
@@ -110,7 +107,9 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
                 if (player.positionX < this.trackLength) {
                     for (let i = 0; i < 5; i++) {
                         // to test speed limit
-                        this.runForward(player.id, parseInt(`${process.env.SPEED}`, 10) || 2);
+                        player.runForward(parseInt(`${process.env.SPEED}`, 10) || 2);
+                        // if (player.playerHasPassedGoal()) this.playerHasFinishedGame(); //TODO!!
+
                         // this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
                     }
                 }
@@ -129,7 +128,8 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     protected handleInput(message: IMessage) {
         switch (message.type) {
             case GameOneMsgType.MOVE:
-                this.runForward(message.userId!, parseInt(`${process.env.SPEED}`, 10) || 2);
+                this.movePlayer(message);
+
                 break;
             case GameOneMsgType.OBSTACLE_SOLVED:
                 this.playerHasCompletedObstacle(message.userId!, (message as IMessageObstacle).obstacleId);
@@ -151,6 +151,34 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
                 break;
             default:
                 console.info(message);
+        }
+    }
+
+    private movePlayer(message: IMessage) {
+        verifyGameState(this.gameState, [GameState.Started]);
+        if (!this.players.has(message.userId!)) return;
+        const player = this.players.get(message.userId!)!;
+        player.runForward(parseInt(`${process.env.SPEED}`, 10) || 2);
+        if (player.playerHasPassedGoal()) {
+            const finishedTime = Date.now();
+            player.handlePlayerFinishedGame(finishedTime, this.rankSuccessfulUser(finishedTime));
+            this.handlePlayerFinished();
+        }
+    }
+
+    private handlePlayerFinished() {
+        GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
+        const playersNotFinished = Array.from(this.players.values()).filter(player => !player.finished);
+
+        // when there is only one player left the stone obstacles are removed as they do not serve a purpose at that point
+        if (playersNotFinished.length <= 1) {
+            for (const player of playersNotFinished) {
+                player.obstacles = player.obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
+            }
+        }
+
+        if (this.gameHasFinished()) {
+            this.handleGameFinished();
         }
     }
 
@@ -264,7 +292,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
 
     private handlePlayerCaught(playerState: GameOnePlayer) {
         playerState.dead = true;
-        this.updatePlayerStateFinished(playerState.id);
+        this.players.get(playerState.id)?.updatePlayerStateFinished();
         playerState.rank = this.rankFailedUser(playerState.finishedTimeMs);
         GameOneEventEmitter.emitPlayerIsDead(this.roomId, playerState.id, playerState.rank);
         GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
@@ -292,118 +320,6 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         return obstaclePositions;
     }
 
-    private runForward(userId: string, speed = this.speed): void {
-        verifyGameState(this.gameState, [GameState.Started]);
-        verifyUserId(this.players, userId);
-        verifyUserIsActive(userId, this.players.get(userId)!.isActive);
-        const player = this.players.get(userId)!;
-        if (this.playerIsNotAllowedToRun(userId) || player.stunned) return;
-
-        // player.positionX += Math.abs(speed);
-        player.positionX += speed;
-        player.countRunsPerFrame++;
-
-        if (this.playerHasReachedObstacle(userId)) this.handlePlayerReachedObstacle(userId);
-        if (this.playerIsApproachingSolvableObstacle(player)) this.handlePlayerApproachingSolvableObstacle(player);
-        if (this.playerHasPassedGoal(userId)) this.playerHasFinishedGame(userId);
-    }
-
-    private playerIsNotAllowedToRun(userId: string) {
-        const player = this.players.get(userId)!;
-
-        return player.finished || player.dead || player.atObstacle || player.countRunsPerFrame >= this.maxRunsPerFrame;
-    }
-
-    private playerIsApproachingSolvableObstacle(player: GameOnePlayer): boolean {
-        return (
-            !player.atObstacle &&
-            (player.obstacles.length || 0) > 0 &&
-            (player.positionX || 0) >= (player.obstacles[0].positionX || 0) - this.approachSolvableObstacleDistance &&
-            player.obstacles[0].solvable
-        );
-    }
-
-    private playerHasReachedObstacle(userId: string): boolean {
-        const player = this.players.get(userId);
-
-        return (
-            (player?.obstacles?.length || 0) > 0 &&
-            !!player?.positionX &&
-            !!player?.obstacles?.[0]?.positionX &&
-            player.positionX >= player.obstacles[0].positionX
-        );
-    }
-
-    private playerHasPassedGoal(userId: string): boolean {
-        const player = this.players.get(userId)!;
-
-        return player.positionX >= this.trackLength && player.obstacles.length === 0;
-    }
-
-    private handlePlayerApproachingSolvableObstacle(player: GameOnePlayer): void {
-        // when already carrying a stone, no action is required
-        if (player.obstacles[0].type === ObstacleType.Stone && player.stonesCarrying > 0) {
-            return;
-        }
-
-        if (!player.obstacles[0].sentApproachingMessage) {
-            player.obstacles[0].sentApproachingMessage = true;
-            GameOneEventEmitter.emitApproachingSolvableObstacleEventOnce({
-                roomId: this.roomId,
-                userId: player.id,
-                obstacleType: player.obstacles[0].type,
-                obstacleId: player.obstacles[0].id,
-                distance: player.obstacles[0].positionX - player.positionX,
-            });
-        }
-
-        GameOneEventEmitter.emitApproachingSolvableObstacleEvent({
-            roomId: this.roomId,
-            userId: player.id,
-            obstacleType: player.obstacles[0].type,
-            obstacleId: player.obstacles[0].id,
-            distance: player.obstacles[0].positionX - player.positionX,
-        });
-    }
-
-    private handlePlayerReachedObstacle(userId: string): void {
-        const player = this.players.get(userId)!;
-        //reset sentApproachingMessage for next optional obstacle
-        player.obstacles[0].sentApproachingMessage = false;
-        // when already carrying a stone or not opt in automatically skip the stone obstacle
-        if (
-            (player.obstacles[0].type === ObstacleType.Stone && player.stonesCarrying > 0) ||
-            player.obstacles[0].solvable
-        ) {
-            player.obstacles.shift();
-            GameOneEventEmitter.emitObstacleSkippedEvent({
-                roomId: this.roomId,
-                userId,
-            });
-            return;
-        }
-
-        // block player from running when obstacle is reached
-        player.atObstacle = true;
-
-        //set position x to obstacle position (in case ran past)
-        player.positionX = player.obstacles[0].positionX;
-        const obstacleDetails: ObstacleReachedInfoController = {
-            obstacleType: player.obstacles[0].type,
-            obstacleId: player.obstacles[0].id,
-        };
-        if (player.obstacles[0].type === ObstacleType.Trash) {
-            obstacleDetails.trashType = player.obstacles[0].trashType;
-            obstacleDetails.numberTrashItems = player.obstacles[0].numberTrashItems;
-        }
-
-        GameOneEventEmitter.emitObstacleReachedEvent({
-            roomId: this.roomId,
-            userId,
-            ...obstacleDetails,
-        });
-    }
-
     private stunPlayer(userIdStunned: string, userIdThrown: string) {
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.players, userIdStunned);
@@ -415,13 +331,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         this.verifyUserCanThrowCollectedStone(playerThrown);
         playerThrown.stonesCarrying--;
 
-        const playerStunned = this.players.get(userIdStunned)!;
-        if (this.playerIsNotAllowedToRun(userIdStunned)) return;
-        if (playerStunned.stunned || playerStunned.atObstacle) return;
-        playerStunned.stunned = true;
-        playerStunned.stunnedSeconds = this.stunnedTime;
-
-        GameOneEventEmitter.emitPlayerIsStunned(this.roomId, userIdStunned);
+        this.players.get(userIdStunned)!.stun();
     }
 
     private pushChasers(userIdPushing: string) {
@@ -475,37 +385,10 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     private playerHasCompletedObstacle(userId: string, obstacleId: number): void {
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.players, userId);
-        verifyUserIsActive(userId, this.players.get(userId)!.isActive);
-
-        this.verifyUserIsAtObstacle(userId);
-
         const player = this.players.get(userId)!;
+        verifyUserIsActive(userId, player.isActive);
 
-        if (player.obstacles[0].id === obstacleId) {
-            player.atObstacle = false;
-
-            if (player.obstacles[0].type === ObstacleType.Stone) {
-                player.stonesCarrying++;
-            }
-
-            player.obstacles.shift();
-        } else {
-            throw new WrongObstacleIdError(`${obstacleId} is not the id for the next obstacle.`, userId, obstacleId);
-        }
-    }
-
-    private verifyUserIsAtObstacle(userId: string) {
-        const player = this.players.get(userId);
-        const solvableObstacleInReach = player && this.playerIsApproachingSolvableObstacle(player!);
-
-        if (
-            !player?.atObstacle &&
-            !solvableObstacleInReach
-            // ||
-            // player?.positionX !== player?.obstacles?.[0]?.positionX
-        ) {
-            throw new NotAtObstacleError(`User ${userId} is not at an obstacle`, userId);
-        }
+        player.obstacleCompleted(obstacleId);
     }
 
     private verifyUserCanThrowCollectedStone(userId: string | GameOnePlayer) {
@@ -513,38 +396,6 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
 
         if (player.stonesCarrying < 1) {
             throw new UserHasNoStones(undefined, player.id);
-        }
-    }
-
-    private playerHasFinishedGame(userId: string): void {
-        //only if player hasn't already been marked as finished
-        // if (this.playersState[userId].finished) return; //don't think I need
-
-        const player = this.players.get(userId)!;
-        this.updatePlayerStateFinished(userId);
-        player.rank = this.rankSuccessfulUser(player.finishedTimeMs);
-        player.positionX = this.trackLength;
-
-        GameOneEventEmitter.emitPlayerHasFinishedEvent(this.roomId, userId, player.rank);
-        GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
-
-        if (this.gameHasFinished()) {
-            this.handleGameFinished();
-        }
-    }
-
-    private updatePlayerStateFinished(userId: string) {
-        const player = this.players.get(userId)!;
-        player.finished = true;
-        player.finishedTimeMs = Date.now();
-
-        const playersNotFinished = Array.from(this.players.values()).filter(player => !player.finished);
-
-        // when there is only one player left the stone obstacles are removed as they do not serve a purpose at that point
-        if (playersNotFinished.length <= 1) {
-            for (const player of playersNotFinished) {
-                player.obstacles = player.obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
-            }
         }
     }
 
