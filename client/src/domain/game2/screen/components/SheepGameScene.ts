@@ -141,7 +141,7 @@ class SheepGameScene extends Phaser.Scene {
             frameWidth: 124,
             frameHeight: 124,
             startFrame: 0,
-            endFrame: 17,
+            endFrame: 37,
         });
     }
 
