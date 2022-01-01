@@ -1,24 +1,11 @@
-import * as React from 'react';
-import { useHistory } from 'react-router';
+import * as React from "react";
 
-import { Character } from '../config/characters';
-import { ObstacleTypes, TrashType } from '../utils/constants';
-import { controllerGame1Route, controllerObstacleRoute } from '../utils/routes';
+import { Character } from "../config/characters";
+import { ObstacleTypes, TrashType } from "../utils/constants";
 
 export const defaultValue = {
-    obstacle: undefined,
-    setObstacle: () => {
-        // do nothing
-    },
-    playerFinished: false,
-    setPlayerFinished: () => {
-        // do nothing
-    },
     playerRank: undefined,
     setPlayerRank: () => {
-        // do nothing
-    },
-    resetPlayer: () => {
         // do nothing
     },
     playerNumber: undefined,
@@ -41,20 +28,7 @@ export const defaultValue = {
     setUserId: () => {
         // do nothing
     },
-    dead: false,
-    setPlayerDead: () => {
-        // do nothing
-    },
-    hasStone: false,
-    setHasStone: () => {
-        // do nothing
-    },
-    earlySolvableObstacle: undefined,
-    setEarlySolvableObstacle: () => {
-        // do nothing
-    },
-    exceededChaserPushes: false,
-    setExceededChaserPushes: () => {
+    resetPlayer: () => {
         // do nothing
     },
 };
@@ -67,13 +41,8 @@ export interface Obstacle {
 }
 
 interface PlayerContextProps {
-    obstacle: undefined | Obstacle;
-    setObstacle: (roomId: string | undefined, val: Obstacle | undefined) => void;
-    playerFinished: boolean;
-    setPlayerFinished: (val: boolean) => void;
     playerRank: number | undefined;
     setPlayerRank: (val: number) => void;
-    resetPlayer: () => void;
     playerNumber: number | undefined;
     setPlayerNumber: (val: number) => void;
     character: undefined | Character;
@@ -84,53 +53,23 @@ interface PlayerContextProps {
     setReady: (val: boolean) => void;
     userId: string;
     setUserId: (val: string) => void;
-    dead: boolean;
-    setPlayerDead: (val: boolean) => void;
-    hasStone: boolean;
-    setHasStone: (val: boolean) => void;
-    earlySolvableObstacle: Obstacle | undefined;
-    setEarlySolvableObstacle: (val: Obstacle | undefined) => void;
-    exceededChaserPushes: boolean;
-    setExceededChaserPushes: (val: boolean) => void;
+    resetPlayer: () => void;
 }
 
 export const PlayerContext = React.createContext<PlayerContextProps>(defaultValue);
 
 const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
     const [userId, setUserId] = React.useState<string>('');
-    const [obstacle, setObstacle] = React.useState<undefined | Obstacle>();
-    const [playerFinished, setPlayerFinished] = React.useState<boolean>(false);
     const [playerRank, setPlayerRank] = React.useState<undefined | number>();
     const [playerNumber, setPlayerNumber] = React.useState<number | undefined>();
-    const history = useHistory();
     const [character, setCharacter] = React.useState<undefined | Character>(undefined);
     const [name, setName] = React.useState<string>('');
     const [ready, setReady] = React.useState<boolean>(false);
-    const [dead, setPlayerDead] = React.useState(false);
-    const [hasStone, setHasStone] = React.useState(false);
-    const [earlySolvableObstacle, setEarlySolvableObstacle] = React.useState<Obstacle | undefined>();
-    const [exceededChaserPushes, setExceededChaserPushes] = React.useState(false);
-
-    let reroute = true;
 
     const content = {
-        obstacle,
-        setObstacle: (roomId: string | undefined, val: undefined | Obstacle) => {
-            setObstacle(val);
-            if (val) {
-                reroute = true;
-                history.push(controllerObstacleRoute(roomId, val.type)!);
-            } else if (reroute) {
-                reroute = false;
-                history.push(controllerGame1Route(roomId));
-            }
-        },
-        playerFinished,
-        setPlayerFinished,
         playerRank,
         setPlayerRank,
         resetPlayer: () => {
-            setPlayerFinished(false);
             setPlayerRank(undefined);
         },
         playerNumber,
@@ -143,14 +82,6 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setReady,
         userId,
         setUserId,
-        dead,
-        setPlayerDead,
-        hasStone,
-        setHasStone,
-        earlySolvableObstacle,
-        setEarlySolvableObstacle,
-        exceededChaserPushes,
-        setExceededChaserPushes,
     };
     return <PlayerContext.Provider value={content}>{children}</PlayerContext.Provider>;
 };

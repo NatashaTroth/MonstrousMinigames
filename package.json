@@ -1,0 +1,21 @@
+{
+  "name": "masterprojekt_troth_fellinger_spiegelmayr_maislinger",
+  "version": "1.0.0",
+  "description": "npm i",
+  "main": "index.js",
+  "scripts": {
+    "setup": "npm install && cd client && npm install && cd ../server && npm install && cd ..",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.mediacube.at:fhs41228/masterprojekt_troth_fellinger_spiegelmayr_maislinger.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "husky": "^7.0.4",
+    "react-joystick-component": "^1.4.0"
+  }
+}

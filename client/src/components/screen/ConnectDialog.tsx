@@ -1,7 +1,7 @@
 import { Dialog } from '@material-ui/core';
 import * as React from 'react';
 
-import { ScreenSocketContext } from '../../contexts/ScreenSocketContextProvider';
+import { ScreenSocketContext } from '../../contexts/screen/ScreenSocketContextProvider';
 import Button from '../common/Button';
 import { DialogContent, InputContainer, InputLabel, StyledForm, StyledInput } from './ConnectDialog.sc';
 

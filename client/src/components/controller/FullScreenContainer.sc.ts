@@ -1,15 +1,8 @@
 import styled from 'styled-components';
 
-import forest from '../../images/ui/forest.svg';
+import { FullScreenContainer } from '../common/FullScreenStyles.sc';
 
-export const StyledFullScreenContainer = styled.div`
-    background-repeat: no-repeat;
-    background-size: cover;
+export const StyledFullScreenContainer = styled(FullScreenContainer)`
     background-position: bottom;
-    background-image: url(${forest});
-    width: 100%;
-    height: 100%;
-    display: flex;
     justify-content: center;
-    align-items: center;
 `;

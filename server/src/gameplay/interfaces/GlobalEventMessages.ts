@@ -1,6 +1,7 @@
-import { GameState } from "../enums";
+import { GameNames } from '../../enums/gameNames';
+import { GameState } from '../enums';
 
-export const GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED = 'game1/hasStarted';
+export const GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED = 'gameHasStarted';
 export const GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED = 'gameHasFinished';
 export const GLOBAL_EVENT_MESSAGE__GAME_HAS_STOPPED = 'gameHasStopped';
 export const GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED = 'gameHasPaused';
@@ -22,6 +23,7 @@ export interface GlobalGameHasStarted {
     type: typeof GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED;
     roomId: string;
     countdownTime: number;
+    game: GameNames;
 }
 export interface GlobalGameHasFinished {
     type: typeof GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED;
@@ -29,7 +31,7 @@ export interface GlobalGameHasFinished {
     data: {
         roomId: string;
         gameState: GameState;
-        playerRanks?: any[];
+        playerRanks: any[];
     };
 }
 export interface GlobalGameHasStopped {
@@ -56,7 +58,7 @@ export interface GlobalPlayerHasReconnected {
 }
 
 export type GlobalEventMessage =
-    GlobalGameHasStarted
+    | GlobalGameHasStarted
     | GlobalGameHasFinished
     | GlobalGameHasStopped
     | GlobalGameHasPaused

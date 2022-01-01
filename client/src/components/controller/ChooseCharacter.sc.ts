@@ -1,24 +1,14 @@
 import styled from 'styled-components';
 
-import forest from '../../images/ui/forest_mobile.svg';
-
-const boxShadowDepth = 7;
-
-export const ChooseCharacterContainer = styled.div`
-    height: 100%;
-    width: 100%;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: bottom;
-    background-image: url(${forest});
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-`;
+import { StyledFullScreenContainer } from './FullScreenContainer.sc';
 
 interface Props {
     available: boolean;
 }
+
+export const ChooseCharacterContainer = styled(StyledFullScreenContainer)`
+    align-items: initial;
+`;
 
 export const Character = styled.img<Props>`
     width: 100%;
@@ -47,7 +37,7 @@ export const CustomButton = styled.button`
 
     color: black;
     background: ${({ theme }) => theme.palette.primary.main};
-    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
+    box-shadow: calc(${({ theme }) => theme.boxShadowDepth} * 1px) calc(${({ theme }) => theme.boxShadowDepth} * 1px) 0
         ${({ theme }) => theme.palette.primary.dark};
 
     padding: 10px;
@@ -58,15 +48,15 @@ export const CustomButton = styled.button`
     outline: transparent;
 
     &:hover {
-        box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
-            ${({ theme }) => theme.palette.secondary.dark};
+        box-shadow: calc(${({ theme }) => theme.boxShadowDepth} * 1px)
+            calc(${({ theme }) => theme.boxShadowDepth} * 1px) 0 ${({ theme }) => theme.palette.secondary.dark};
         background: ${({ theme }) => theme.palette.secondary.main};
     }
 
     &:active {
         transform: translateY(4px);
-        box-shadow: calc(${boxShadowDepth} * 1px - 4px) calc(${boxShadowDepth} * 1px - 4px) 0
-            ${({ theme }) => theme.palette.secondary.dark};
+        box-shadow: calc(${({ theme }) => theme.boxShadowDepth} * 1px - 4px)
+            calc(${({ theme }) => theme.boxShadowDepth} * 1px - 4px) 0 ${({ theme }) => theme.palette.secondary.dark};
         background: ${({ theme }) => theme.palette.secondary.main};
     }
 `;

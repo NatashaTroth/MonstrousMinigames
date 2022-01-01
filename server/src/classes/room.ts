@@ -4,15 +4,16 @@ import {
     GameAlreadyStartedError,
     UsersNotReadyError,
 } from '../customErrors';
+import { GameOne, GameTwo } from '../gameplay';
 import { GameNames } from '../enums/gameNames';
 import { Globals } from '../enums/globals';
 import { ScreenStates } from '../enums/screenStates';
-import { CatchFoodGame, Game2 } from '../gameplay';
-import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
 import Game from '../gameplay/Game';
-// import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
-import Leaderboard from '../gameplay/leaderboard/Leaderboard';
+import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
 import { ScreenInfo } from '../interfaces/interfaces';
+import GameThree from '../gameplay/gameThree/GameThree';
+import Leaderboard from '../gameplay/leaderboard/Leaderboard';
+
 import User from './user';
 
 class Room {
@@ -21,7 +22,7 @@ class Room {
     public timestamp: number;
     public game: Game;
     private state: RoomStates;
-    private leaderboard: Leaderboard;
+    public leaderboard: Leaderboard;
     public screenState: string;
     public screens: Array<ScreenInfo>;
     public firstPhaserScreenLoaded: boolean;
@@ -33,7 +34,7 @@ class Room {
         this.users = [];
         this.timestamp = Date.now();
         this.leaderboard = new Leaderboard(this.id);
-        this.game = game || new CatchFoodGame(this.id, this.leaderboard);
+        this.game = game || new GameOne(this.id, this.leaderboard);
         this.game.leaderboard = this.leaderboard;
         this.state = RoomStates.OPEN;
         this.screens = [];
@@ -64,6 +65,7 @@ class Room {
 
         this.users.push(user);
         this.updateUserNumbers();
+        this.leaderboard.addUser(user.id, user.name);
     }
 
     private updateUserNumbers(): void {
@@ -128,30 +130,29 @@ class Room {
     public setGame(gameName: string): void {
         switch (gameName) {
             case GameNames.GAME1:
-                this.game = new CatchFoodGame(this.id, this.leaderboard);
+                this.game = new GameOne(this.id, this.leaderboard);
                 break;
             case GameNames.GAME2:
-                this.game = new Game2(this.id, this.leaderboard);
+                this.game = new GameTwo(this.id, this.leaderboard);
+                break;
+            case GameNames.GAME3:
+                this.game = new GameThree(this.id, this.leaderboard);
                 break;
         }
     }
 
-    public createNewGame(game?: Game) {
+    public createNewGame() {
         if (this.users.length === 0) {
             throw new CannotStartEmptyGameError();
         }
         if (this.hasNotReadyUsers()) {
             throw new UsersNotReadyError();
         }
-        if (game) {
-            this.game = game;
-            this.game.leaderboard = this.leaderboard;
-        }
+
         this.setState(RoomStates.CREATED);
 
         this.game.createNewGame(this.users);
         this.updateTimestamp();
-        // return this.game.getGameStateInfo();
     }
 
     public allPhaserGamesReady() {
@@ -191,8 +192,8 @@ class Room {
     }
 
     public async resetGame() {
-        this.users = this.getActiveUsers();
         this.clearInactiveUsers();
+        this.users = this.getActiveUsers();
         this.setOpen();
     }
 
@@ -205,7 +206,7 @@ class Room {
         });
     }
 
-    private setState(state: RoomStates): void {
+    public setState(state: RoomStates): void {
         this.state = state;
     }
 
@@ -256,13 +257,10 @@ class Room {
     }
     public removeScreen(screenId: string): void {
         const index = this.screens.findIndex(element => element.id === screenId);
-        // const index = this.screens.indexOf({ id: screenId });
         this.screens.splice(index, 1);
     }
     public isAdminScreen(screenId: string): boolean {
-        //TODO test
         return this.screens.findIndex(element => element.id === screenId) === 0;
-        // return this.screens.indexOf({ id: screenId }) === 0;
     }
     public getAdminScreenId(): string {
         return this.screens[0]?.id;

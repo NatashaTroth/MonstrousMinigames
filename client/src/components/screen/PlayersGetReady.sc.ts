@@ -1,40 +1,19 @@
 import styled from 'styled-components';
 
-import forest from '../../images/ui/forest.svg';
+import { ContentBase, ContentContainer } from '../common/FullScreenStyles.sc';
 
-const boxShadowDepth = 7;
-
-export const GetReadyContainer = styled.div`
-    background-image: url(${forest});
-    background-size: cover;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
-
-export const Content = styled.div`
-    width: 100%;
-    align-content: center;
-    display: flex;
+export const Content = styled(ContentBase)`
     padding: 60px 60px;
     justify-content: center;
-    flex-direction: column;
+    align-items: unset;
 `;
 
-export const GetReadyBackground = styled.div`
-    background-color: ${({ theme }) => theme.palette.secondary.main};
-    border-radius: 40px;
-    box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
-        ${({ theme }) => theme.palette.secondary.dark};
-    display: flex;
-    width: 80%;
-    flex-direction: column;
+export const GetReadyBackground = styled(ContentContainer)`
     align-items: center;
     justify-content: center;
     padding: 30px;
 `;
+
 export const ConnectedUsers = styled.div`
     display: flex;
     align-items: center;
@@ -60,7 +39,7 @@ export const ConnectedUserStatus = styled(User)`
     max-width: 200px;
     display: flex;
     flex-direction: column;
-    background-color: ${({ free }) => (free ? '#8c9d99' : '${primary}')};
+    background-color: ${({ free, theme }) => (free ? '#8c9d99' : theme.palette.primary.main)};
 
     @media (min-width: 1200px) {
         font-size: 25px;
@@ -74,7 +53,7 @@ export const ConnectedUserCharacter = styled(User)`
     flex-direction: column;
     margin-bottom: 20px;
     justify-content: ${({ free }) => (free ? 'flex-end' : 'center')};
-    background-color: ${({ free }) => (free ? '#8c9d99' : '${primary}')};
+    background-color: ${({ free, theme }) => (free ? '#8c9d99' : theme.palette.primary.main)};
 
     @media (min-width: 875px) {
         justify-content: ${({ free }) => (free ? 'flex-end' : 'space-between')};

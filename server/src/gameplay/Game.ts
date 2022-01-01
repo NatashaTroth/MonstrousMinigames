@@ -21,6 +21,9 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     // ********** Public *****************************
     public gameState = GameState.Initialised;
     public players = new Map<string, TPlayer>();
+    public gameStateMessage: string;
+    public gameName = '';
+    public sendGameStateUpdates: boolean;
 
     constructor(
         public roomId: string,
@@ -29,10 +32,13 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
         protected maxNumberOfPlayers: number = Globals.MAX_PLAYER_NUMBER
     ) {
         super();
+        this.gameStateMessage = 'gameState';
+        this.sendGameStateUpdates = true;
     }
 
     createNewGame(users: User[]) {
         verifyGameState(this.gameState, [GameState.Initialised, GameState.Finished, GameState.Stopped]);
+        this.beforeCreateNewGame();
         if (users.length > this.maxNumberOfPlayers) {
             throw new MaxNumberUsersExceededError(
                 `Too many players. Max ${this.maxNumberOfPlayers} Players`,
@@ -69,16 +75,6 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     stopGameAllUsersDisconnected() {
         this.stopGame();
     }
-    resumeGame() {
-        verifyGameState(this.gameState, [GameState.Paused]);
-        const gameTime = this.gameTime;
-        this.gameState = GameState.Started;
-        this._lastFrameAt = this._lastFrameAt - this._gameStartedAt;
-        this._gameStartedAt = Date.now() - gameTime;
-        this._lastFrameAt = this._lastFrameAt + this._gameStartedAt;
-
-        this._gameLoop();
-    }
     startGame() {
         this._gameStartedAt = Date.now();
         this._lastFrameAt = Date.now();
@@ -91,6 +87,16 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
         this.gameState = GameState.Paused;
 
         this._gamePausedAt = Date.now();
+    }
+    resumeGame() {
+        verifyGameState(this.gameState, [GameState.Paused]);
+        const gameTime = this.gameTime;
+        this.gameState = GameState.Started;
+        this._lastFrameAt = this._lastFrameAt - this._gameStartedAt;
+        this._gameStartedAt = Date.now() - gameTime;
+        this._lastFrameAt = this._lastFrameAt + this._gameStartedAt; //update the last frame time
+
+        this._gameLoop();
     }
     stopGame() {
         verifyGameState(this.gameState, [GameState.Started, GameState.Paused]);
@@ -147,6 +153,7 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     protected users: User[] = [];
     protected currentRank = 1;
 
+    protected abstract beforeCreateNewGame(): void;
     protected abstract mapUserToPlayer(user: User): TPlayer;
     protected abstract update(timeElapsed: number, timeElapsedSinceLastFrame: number): Promise<void> | void;
     protected abstract handleInput(message: IMessage): Promise<void> | void;
@@ -163,9 +170,8 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     }
     protected rankFailedUser(rankingMetric: number) {
         const currentRank = this._currentBackRank--;
-
         if (this._backRankDictionary.has(rankingMetric)) {
-            const previousRank = this._rankDictionary.get(rankingMetric)!;
+            const previousRank = this._backRankDictionary.get(rankingMetric)!;
             const newRank = previousRank - 1;
             this._backRankDictionary.set(rankingMetric, newRank);
             for (const player of this.players.values()) {
@@ -183,10 +189,10 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     protected get gameTime() {
         switch (this.gameState) {
             case GameState.Started:
-                return Date.now() - this._gameStartedAt;
-            case GameState.Paused:
             case GameState.Stopped:
             case GameState.Finished:
+                return Date.now() - this._gameStartedAt;
+            case GameState.Paused:
                 return this._gamePausedAt - this._gameStartedAt;
             default:
                 return 0;

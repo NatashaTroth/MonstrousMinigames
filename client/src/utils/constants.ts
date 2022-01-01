@@ -34,15 +34,22 @@ export enum MessageTypes {
     userReady = 'userReady',
     screenState = 'screenState',
 
+    gameHasStarted = 'gameHasStarted',
     gameHasFinished = 'gameHasFinished',
     gameHasReset = 'gameHasReset',
     gameHasStopped = 'gameHasStopped',
     gameHasPaused = 'gameHasPaused',
     gameHasResumed = 'gameHasResumed',
 
+    chooseGame = 'chooseGame',
+    gameSet = 'gameSet',
+    createGame = 'createGame',
+
     pauseResume = 'pauseResume',
     startGame = 'startGame',
     stopGame = 'stopGame',
+
+    leaderboardState = 'leaderboardState',
 
     error = 'error',
 }
@@ -54,7 +61,6 @@ export enum MessageTypesGame1 {
     obstacleWillBeSolved = 'game1/obstacleWillBeSolved',
     obstacleSolved = 'game1/obstacleSolved',
     playerFinished = 'game1/playerFinished',
-    started = 'game1/hasStarted',
     phaserLoaded = 'game1/phaserGameLoaded',
     phaserLoadingTimedOut = 'game1/phaserLoadingTimedOut',
     allScreensPhaserGameLoaded = 'game1/allScreensPhaserGameLoaded',
@@ -65,7 +71,6 @@ export enum MessageTypesGame1 {
     playerStunned = 'game1/playerStunned',
     playerUnstunned = 'game1/playerUnstunned',
     stunPlayer = 'game1/stunPlayer',
-    createGame = 'game1/create',
     chasersPushed = 'game1/chasersPushed',
 
     pushChasers = 'game1/chasersPushed',
@@ -73,9 +78,43 @@ export enum MessageTypesGame1 {
     approachingSolvableObstacle = 'game1/approachingSolvableObstacle',
     approachingSolvableObstacleOnce = 'game1/approachingSolvableObstacleOnce',
     solveObstacle = 'game1/solveObstacle',
+    stunnablePlayers = 'game1/stunnablePlayers',
+}
+
+export enum MessageTypesGame2 {
+    runForward = 'game2/runForward',
+    phaserLoaded = 'game2/phaserGameLoaded',
+    phaserLoadingTimedOut = 'game2/phaserLoadingTimedOut',
+    allScreensSheepGameLoaded = 'game2/allScreensPhaserGameLoaded',
+    startSheepGame = 'game2/startPhaserGame',
+    initialGameState = 'game2/initialGameState',
+    gameState = 'game2/gameState',
+    movePlayer = 'game2/move',
+    killSheep = 'game2/kill',
+    phaseChanged = 'game2/PhaseHasChanged',
+    playerRanks = 'game2/playerRanks',
+    guess = 'game2/guess',
+    guessHint = 'game2/guessHint',
+}
+
+export const enum MessageTypesGame3 {
+    newPhotoTopic = 'game3/newPhotoTopic',
+    initialGameState = 'game3/initialGameState',
+    photo = 'game3/photo',
+    voteForPhotos = 'game3/voteForPhotos',
+    photoVote = 'game3/photoVote',
+    newRound = 'game3/newRound',
+    finalRoundCountdown = 'game3/takeFinalPhotosCountdown',
+    votingResults = 'game3/photoVotingResults',
+    voteForFinalPhots = 'game3/voteForFinalPhotos',
+    finalResults = 'game3/finalResults',
+    presentFinalPhotos = 'game3/presentFinalPhotos',
+    finishedPresenting = 'game3/finishedPresenting',
 }
 
 export const localDevelopment = false; //the one in constants.ts on the server
 export const designDevelopment = false; //so that phaser game doesn't start, but loads
+export const stunnedAnimation = false; //renders stunned animation every so often
 
-export const localBackend = 'http://localhost:5000/';
+const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT || 5000;
+export const localBackend = `http://localhost:${BACKEND_PORT}/`;

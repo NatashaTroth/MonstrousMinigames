@@ -2,12 +2,14 @@ import * as React from 'react';
 
 import Button from '../../../../../components/common/Button';
 import { StyledParticles } from '../../../../../components/common/Particles.sc';
+import { ComponentToTest } from '../../../../../components/controller/Tutorial';
 import { treeParticlesConfig } from '../../../../../config/particlesConfig';
-import { ControllerSocketContext } from '../../../../../contexts/ControllerSocketContextProvider';
+import { ControllerSocketContext } from '../../../../../contexts/controller/ControllerSocketContextProvider';
+import { Game1Context, Obstacle } from '../../../../../contexts/game1/Game1ContextProvider';
 import { GameContext } from '../../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../../contexts/PlayerContextProvider';
 import wood from '../../../../../images/obstacles/wood/wood.svg';
 import { MessageTypesGame1 } from '../../../../../utils/constants';
+import { Socket } from '../../../../socket/Socket';
 import LinearProgressBar from './LinearProgressBar';
 import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from './ObstacleStyles.sc';
 import {
@@ -20,29 +22,40 @@ import {
     StyledTouchAppIcon,
     TouchContainer,
 } from './TreeTrunk.sc';
+import { handleTouchEnd, handleTouchStart, newTrunk, setTranslate } from './TreeTrunkFunctions';
 
 export type Orientation = 'vertical' | 'horizontal';
 
-interface Coordinates {
+export interface Coordinates {
     top: number;
     right: number;
     bottom: number;
     left: number;
 }
 
-interface TouchStart {
+export interface TouchStart {
     clientX: number;
     clientY: number;
 }
 
-const TreeTrunk: React.FunctionComponent = () => {
+interface TreeTrunkProps {
+    tutorial?: boolean;
+    handleTutorialFinished?: (val: ComponentToTest) => void;
+}
+
+const TreeTrunk: React.FunctionComponent<TreeTrunkProps> = ({
+    tutorial = false,
+    handleTutorialFinished = () => {
+        // do nothing
+    },
+}) => {
     const orientationOptions: Orientation[] = ['vertical', 'horizontal'];
     const tolerance = 10;
     const distance = 80;
     const trunksToFinish = 5;
 
     const { controllerSocket } = React.useContext(ControllerSocketContext);
-    const { obstacle, setObstacle } = React.useContext(PlayerContext);
+    const { obstacle, setObstacle } = React.useContext(Game1Context);
     const [skip, setSkip] = React.useState(false);
     const { showInstructions, setShowInstructions, roomId } = React.useContext(GameContext);
     const [progress, setProgress] = React.useState(0);
@@ -50,7 +63,7 @@ const TreeTrunk: React.FunctionComponent = () => {
     const [orientation, setOrientation] = React.useState(
         orientationOptions[Math.floor(Math.random() * orientationOptions.length)]
     );
-    const [coordinates, setCoordinates] = React.useState({ top: 0, right: 0, bottom: 0, left: 0 });
+    const [coordinates, setCoordinates] = React.useState<Coordinates>({ top: 0, right: 0, bottom: 0, left: 0 });
     const [touchStart, setTouchStart] = React.useState<undefined | TouchStart>();
     const [failed, setFailed] = React.useState(false);
 
@@ -63,9 +76,7 @@ const TreeTrunk: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         setTimeout(() => {
-            if (progress === 0) {
-                setSkip(true);
-            }
+            setSkip(true);
         }, 10000);
 
         newTrunk(orientationOptions, setOrientation);
@@ -75,19 +86,14 @@ const TreeTrunk: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         const touchContainer = document.getElementById(`touchContainer`);
-        touchContainer?.addEventListener('touchstart', handleTouchStart, { passive: false });
+
+        touchContainer?.addEventListener('touchstart', onTouchStart, { passive: false });
         touchContainer?.addEventListener('touchmove', drag, { passive: false });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [progress]);
 
-    const solveObstacle = () => {
-        controllerSocket?.emit({ type: MessageTypesGame1.obstacleSolved, obstacleId: obstacle!.id });
-        setShowInstructions(false);
-        setObstacle(roomId, undefined);
-    };
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    function drag(e: any) {
+    const drag = (e: any) => {
         e.preventDefault();
         const dragItem = document.getElementById('dragItem');
 
@@ -98,57 +104,52 @@ const TreeTrunk: React.FunctionComponent = () => {
         yOffset = currentY;
 
         setTranslate(currentX, currentY, dragItem!);
-    }
+    };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    function handleTouchStart(e: any) {
-        e.preventDefault();
-        setFailed(false);
-        const touchContainer = document.getElementById('touchContainer');
+    const onTouchStart = (e: any) => {
+        const { newInitialX, newInitialY } = handleTouchStart({
+            e,
+            tolerance,
+            setTouchStart,
+            setCoordinates,
+            setFailed,
+            setParticles,
+            xOffset,
+            yOffset,
+        });
 
-        initialX = e.touches[0].clientX - xOffset;
-        initialY = e.touches[0].clientY - yOffset;
-
-        if (touchContainer) {
-            const element = touchContainer.getBoundingClientRect();
-
-            setCoordinates({
-                top: element.top - tolerance,
-                right: element.right + tolerance,
-                bottom: element.bottom + tolerance,
-                left: element.left - tolerance,
-            });
-        }
-
-        setTouchStart(e.touches[0]);
-        setParticles(true);
-    }
+        initialX = newInitialX;
+        initialY = newInitialY;
+    };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleTouchEnd = (e: any) => {
-        e.preventDefault();
-        const endY = e.changedTouches[0].clientY;
-        const endX = e.changedTouches[0].clientX;
-
-        if (touchStart) {
-            if (
-                isInContainer(touchStart, coordinates) &&
-                ((orientation === 'vertical' && endY >= touchStart.clientY + distance) ||
-                    (orientation === 'horizontal' && endX >= touchStart.clientX + distance))
-            ) {
-                if (trunksToFinish - 1 === progress) {
-                    solveObstacle();
-                } else {
-                    setProgress(progress + 1);
-                    newTrunk(orientationOptions, setOrientation);
-                }
-            } else {
-                setFailed(true);
-            }
-        }
-
-        setTouchStart(undefined);
-        setParticles(false);
+    const onTouchEnd = (e: any) => {
+        handleTouchEnd({
+            e,
+            touchStart,
+            coordinates,
+            distance,
+            setFailed,
+            setOrientation,
+            setParticles,
+            setProgress,
+            setTouchStart,
+            progress,
+            orientation,
+            orientationOptions,
+            solveObstacle: () =>
+                solveObstacle({
+                    controllerSocket,
+                    obstacle,
+                    roomId,
+                    setObstacle,
+                    setShowInstructions,
+                }),
+            trunksToFinish,
+            tutorial,
+            handleTutorialFinished,
+        });
     };
 
     return (
@@ -163,7 +164,7 @@ const TreeTrunk: React.FunctionComponent = () => {
                 </ObstacleItem>
                 <TouchContainer
                     id={`touchContainer`}
-                    onTouchEnd={handleTouchEnd}
+                    onTouchEnd={onTouchEnd}
                     orientation={orientation}
                     key={`touchContainer${progress}`}
                 >
@@ -175,7 +176,13 @@ const TreeTrunk: React.FunctionComponent = () => {
             </ObstacleContent>
             {skip && (
                 <StyledSkipButton>
-                    <Button onClick={solveObstacle}>Skip</Button>
+                    <Button
+                        onClick={() =>
+                            solveObstacle({ controllerSocket, obstacle, roomId, setObstacle, setShowInstructions })
+                        }
+                    >
+                        Skip
+                    </Button>
                 </StyledSkipButton>
             )}
         </ObstacleContainer>
@@ -184,21 +191,17 @@ const TreeTrunk: React.FunctionComponent = () => {
 
 export default TreeTrunk;
 
-const isInContainer = (touches: TouchStart, coordinates: Coordinates) => {
-    return (
-        touches.clientX >= coordinates.left &&
-        touches.clientX <= coordinates.right &&
-        touches.clientY >= coordinates.top &&
-        touches.clientY <= coordinates.bottom
-    );
+export interface SolveObstacle {
+    controllerSocket: Socket;
+    obstacle: Obstacle | undefined;
+    roomId: string | undefined;
+    setShowInstructions: (val: boolean) => void;
+    setObstacle: (roomId: string | undefined, obstacle: Obstacle | undefined) => void;
+}
+export const solveObstacle = (props: SolveObstacle) => {
+    const { controllerSocket, obstacle, roomId, setObstacle, setShowInstructions } = props;
+
+    controllerSocket?.emit({ type: MessageTypesGame1.obstacleSolved, obstacleId: obstacle!.id });
+    setShowInstructions(false);
+    setObstacle(roomId, undefined);
 };
-
-function setTranslate(xPos: number, yPos: number, el: HTMLElement) {
-    el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
-    el.style.opacity = '1';
-}
-
-function newTrunk(orientationOptions: Orientation[], setOrientation: (orientation: Orientation) => void) {
-    const newOrientation = orientationOptions[Math.floor(Math.random() * orientationOptions.length)];
-    setOrientation(newOrientation);
-}

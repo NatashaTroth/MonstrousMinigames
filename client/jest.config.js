@@ -16,6 +16,7 @@ module.exports = {
     },
     collectCoverage: true,
     collectCoverageFrom: ['src/**/*.{ts,tsx}'],
-    watchPathIgnorePatterns: ['src/config'],
-    coveragePathIgnorePatterns: ['src/config'],
+    watchPathIgnorePatterns: ['src/config', 'src/serviceWorker', 'src/index.tsx'],
+    coveragePathIgnorePatterns: ['src/config', 'src/serviceWorker', 'src/index.tsx'],
+    setupFiles: ["jest-canvas-mock"]
 };

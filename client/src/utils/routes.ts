@@ -4,10 +4,12 @@ export enum Routes {
     // Routes for router
     credits = '/credits',
     settings = '/settings',
+    controllerTutorial = '/controller/:id/tutorial',
     controllerChooseCharacter = '/controller/:id/choose-character',
     controllerLobby = '/controller/:id/lobby',
     controllerGame1 = '/controller/:id/game1',
     controllerGame2 = '/controller/:id/game2',
+    controllerGame3 = '/controller/:id/game3',
     controllerTreeStump = `/controller/:id/treestump`,
     controllerSpider = `/controller/:id/spider`,
     controllerTrash = `/controller/:id/trash`,
@@ -16,30 +18,44 @@ export enum Routes {
     controllerPlayerStunned = '/controller/:id/stunned',
     controllerPlayerFinished = '/controller/:id/finished',
     controllerWindmill = '/controller/:id/windmill',
+    controllerVote = '/controller/:id/vote',
+    controllerPresent = '/controller/:id/present',
+    controllerGuess = '/controller/:id/guess',
+    controllerResults = '/controller/:id/results',
+
     screenLobby = '/screen/:id/lobby',
-    screenChooseGame = '/screen/:id/choose-game',
-    screenGameIntro = '/screen/:id/game-intro',
+    screenLeaderboard = '/screen/:id/leaderboard',
+    screenChooseGame = '/screen/:id/choose-game/:game?',
     screenGetReady = '/screen/:id/get-ready',
     screenGame1 = '/screen/:id/game1',
+    screenGame2 = '/screen/:id/game2',
+    screenGame3 = '/screen/:id/game3',
     screenFinished = '/screen/:id/finished',
     // Route pieces for history
     home = '/:id?',
     controller = '/controller',
     screen = '/screen',
+    leaderboard = '/leaderboard',
     lobby = '/lobby',
     treeStump = '/treestump',
     spider = '/spider',
     trash = '/trash',
     stone = '/stone',
+    tutorial = '/tutorial',
     game1 = '/game1',
+    game2 = '/game2',
+    game3 = '/game3',
     dead = '/dead',
     finished = '/finished',
-    gameIntro = '/game-intro',
     chooseGame = '/choose-game',
     getReady = '/get-ready',
     stunned = '/stunned',
     chooseCharacter = '/choose-character',
     windmill = '/windmill',
+    vote = '/vote',
+    present = '/present',
+    guess = '/guess',
+    results = '/results',
 }
 
 export const controllerChooseCharacterRoute = (roomId: undefined | string) =>
@@ -52,7 +68,22 @@ export const controllerPlayerDeadRoute = (roomId: undefined | string) => `${Rout
 export const controllerFinishedRoute = (roomId: undefined | string) =>
     `${Routes.controller}/${roomId}${Routes.finished}`;
 
+export const controllerTutorialRoute = (roomId: undefined | string) =>
+    `${Routes.controller}/${roomId}${Routes.tutorial}`;
+
 export const controllerGame1Route = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.game1}`;
+
+export const controllerGame2Route = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.game2}`;
+
+export const controllerGame3Route = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.game3}`;
+
+export const controllerGuessRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.guess}`;
+
+export const controllerResultsRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.results}`;
+
+export const controllerVoteRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.vote}`;
+
+export const controllerPresentRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.present}`;
 
 export const controllerPlayerStunnedRoute = (roomId: undefined | string) =>
     `${Routes.controller}/${roomId}${Routes.stunned}`;
@@ -73,8 +104,6 @@ export const controllerObstacleRoute = (roomId: undefined | string, obstacle: Ob
 export const controllerWindmillRoute = (roomId: undefined | string) =>
     `${Routes.controller}/${roomId}${Routes.windmill}`;
 
-export const screenGameIntroRoute = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.gameIntro}`;
-
 export const screenGetReadyRoute = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.getReady}`;
 
 export const screenChooseGameRoute = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.chooseGame}`;
@@ -83,4 +112,12 @@ export const screenFinishedRoute = (roomId: undefined | string) => `${Routes.scr
 
 export const screenLobbyRoute = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.lobby}`;
 
+export const screenLeaderboardRoute = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.leaderboard}`;
+
 export const screenGame1Route = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.game1}`;
+
+export const screenGame2Route = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.game2}`;
+
+export const screenGame3Route = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.game3}`;
+
+export const screenGame3Vote = (roomId: undefined | string) => `${Routes.screen}/${roomId}${Routes.game3}`;

@@ -1,15 +1,17 @@
 import { Namespace, Socket } from 'socket.io';
+
 import { injectAll, singleton } from 'tsyringe';
 
+import { DI_EVENT_MESSAGE_EMITTERS } from '../di';
 import Controller from '../classes/Controller';
 import GameEventEmitter from '../classes/GameEventEmitter';
 import Screen from '../classes/Screen';
 import SocketIOServer from '../classes/SocketIOServer';
-import { DI_EVENT_MESSAGE_EMITTERS } from '../di';
 import { Namespaces } from '../enums/nameSpaces';
 import emitter from '../helpers/emitter';
 import { EventMessage } from '../interfaces/EventMessage';
 import { EventMessageEmitter } from '../interfaces/EventMessageEmitter';
+
 import RoomService from './roomService';
 
 @singleton()
@@ -36,8 +38,10 @@ class ConnectionHandler {
     public shutdown(): void {
         this.controllerNamespace.removeAllListeners();
         this.screenNameSpace.removeAllListeners();
+        this.socketIOServer.socketIo.close();
         this.socketIOServer.socketIo.removeAllListeners();
         this.gameEventEmitter.removeAllListeners();
+        this.eventMessageEmitters.forEach(emitter => emitter.removeAllListeners());
     }
     private handleControllers() {
         this.controllerNamespace.on('connection', (socket: Socket) => {
@@ -69,6 +73,7 @@ class ConnectionHandler {
             const game = room?.game;
 
             if (!room || !game) return;
+            console.log(message);
 
             this.eventMessageEmitters
                 .filter(emitter => emitter.canHandle(message, game))

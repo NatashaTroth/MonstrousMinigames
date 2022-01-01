@@ -2,7 +2,7 @@ import { Typography } from '@material-ui/core';
 import * as React from 'react';
 import styled from 'styled-components';
 
-export const StyledTypography = styled(Typography)`
+const StyledTypography = styled(Typography)`
     && {
         color: white;
         font-weight: 700;
@@ -17,6 +17,7 @@ export const StyledTypography = styled(Typography)`
         }
     }
 `;
+
 const Logo: React.FunctionComponent = () => (
     <div>
         <StyledTypography>Monstrous</StyledTypography>

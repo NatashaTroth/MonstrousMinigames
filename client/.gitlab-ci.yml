@@ -14,8 +14,8 @@ npm:client:
         - cd client/
         - echo "Running npm ci ..."
         - npm ci
-    except:
-        - /^backend-.*$/
+    # except:
+    # - /^backend-.*$/
 
 lint:client:
     stage: lint
@@ -27,11 +27,11 @@ lint:client:
         - npm run lint-fix
         - npm run tsc --silent
     except:
-        - /^backend-.*$/
+        # - /^backend-.*$/
         - staging
 
-test:client:
-    stage: test
+test-integration:client:
+    stage: test-integration
     tags:
         - node
     script:
@@ -39,7 +39,7 @@ test:client:
         - echo "Testing.."
         - ./node_modules/.bin/jest ./
     except:
-        - /^backend-.*$/
+        # - /^backend-.*$/
         - staging
 
 #--- Deployment ---
@@ -69,12 +69,12 @@ staging:client:
 production:client:
     stage: production
     variables:
-        REACT_APP_FRONTEND_URL: 'https://monsters-6baec.web.app/'
+        REACT_APP_FRONTEND_URL: 'https://monstrous-minigames.web.app/'
         REACT_APP_BACKEND_URL: 'https://monstrous-minigames.herokuapp.com/'
         DEPLOYMENT_DESTINATION: production
     environment:
         name: production-client
-        url: https://monsters-6baec.web.app/
+        url: https://monstrous-minigames.web.app/
     script:
         - *deployment-script
 

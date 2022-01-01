@@ -1,7 +1,5 @@
 import styled, { css } from 'styled-components';
 
-const boxShadowDepth = 7;
-
 export const Container = styled.div``;
 
 interface ButtonProps {
@@ -15,7 +13,7 @@ export const StyledButtonBase = styled.button<ButtonProps>`
     background: ${({ variant = 'primary', theme }) =>
         variant === 'primary' ? theme.palette.primary.main : theme.palette.secondary.main};
     box-shadow: ${({ variant = 'primary', theme }) =>
-        `calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0 ${
+        `calc(${theme.boxShadowDepth} * 1px) calc(${theme.boxShadowDepth} * 1px) 0 ${
             variant === 'primary' ? theme.palette.primary.dark : theme.palette.secondary.dark
         }}`};
     cursor: pointer;
@@ -26,15 +24,18 @@ export const StyledButtonBase = styled.button<ButtonProps>`
     outline: transparent;
 
     &:not([disabled]) {
-        &:hover {
-            box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
-                ${({ theme }) => theme.palette.secondary.dark};
-            background: ${({ theme }) => theme.palette.secondary.main};
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                box-shadow: calc(${({ theme }) => theme.boxShadowDepth} * 1px)
+                    calc(${({ theme }) => theme.boxShadowDepth} * 1px) 0 ${({ theme }) => theme.palette.secondary.dark};
+                background: ${({ theme }) => theme.palette.secondary.main};
+            }
         }
 
         &:active {
             transform: translateY(4px);
-            box-shadow: calc(${boxShadowDepth} * 1px - 4px) calc(${boxShadowDepth} * 1px - 4px) 0
+            box-shadow: calc(${({ theme }) => theme.boxShadowDepth} * 1px - 4px)
+                calc(${({ theme }) => theme.boxShadowDepth} * 1px - 4px) 0
                 ${({ theme }) => theme.palette.secondary.dark};
             background: ${({ theme }) => theme.palette.secondary.main};
         }
@@ -42,8 +43,8 @@ export const StyledButtonBase = styled.button<ButtonProps>`
 
     &:disabled {
         color: lightgray;
-        box-shadow: calc(${boxShadowDepth} * 1px) calc(${boxShadowDepth} * 1px) 0
-            ${({ theme }) => theme.colors.disabledShadow};
+        box-shadow: calc(${({ theme }) => theme.boxShadowDepth} * 1px)
+            calc(${({ theme }) => theme.boxShadowDepth} * 1px) 0 ${({ theme }) => theme.colors.disabledShadow};
         background: ${({ theme }) => theme.colors.disabled};
     }
 `;

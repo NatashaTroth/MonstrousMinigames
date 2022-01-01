@@ -3,7 +3,9 @@ export interface IMessage {
     roomId?: string;
     userId?: string;
     characterNumber?: string;
-    receivingUserId?: string;
     state?: string;
-    usingCollectedStone?: boolean;
+    direction?: string;
+    sneaking?: boolean;
+    game?: string;
+    guess?: number;
 }

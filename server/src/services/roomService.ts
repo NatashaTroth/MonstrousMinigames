@@ -1,10 +1,10 @@
 import { inject, singleton } from 'tsyringe';
 
-import Room from '../classes/room';
 import { InvalidRoomCodeError } from '../customErrors';
 import { DI_ROOM_NUMBER } from '../di';
+import Room from '../classes/room';
+import NoRoomCodeAvailableError from '../customErrors/NoRoomCodeAvailableError';
 import { Globals } from '../enums/globals';
-import Game from '../gameplay/Game';
 import { IGameStateBase } from '../gameplay/interfaces/IGameStateBase';
 
 const CodeGenerator = require('node-code-generator');
@@ -17,11 +17,13 @@ class RoomService {
 
     constructor(@inject(DI_ROOM_NUMBER) roomCount: number) {
         this.rooms = [];
-        this.roomCodes = generator.generateCodes('****', roomCount, { alphanumericChars: 'BCDFGHJKLMNPQRSTVWXYZ' });
+        this.roomCodes = generator.generateCodes('****', roomCount, {
+            alphanumericChars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        });
     }
 
-    public createRoom(roomId: string = this.getSingleRoomCode(), game?: Game): Room {
-        const room = new Room(roomId, game);
+    public createRoom(): Room {
+        const room = new Room(this.getSingleRoomCode());
         this.rooms.push(room);
         return room;
     }
@@ -37,26 +39,24 @@ class RoomService {
         return room;
     }
     /** starts the game in the room and returns the initial game state */
-    public startGame(room: Room): IGameStateBase | undefined {
+    public startGame(room: Room): IGameStateBase {
         room.createNewGame();
         room.startGame();
-        return room.game?.getGameStateInfo();
+        return room.game.getGameStateInfo();
     }
 
-    public getSingleRoomCode(): string {
-        return this.roomCodes.pop() || 'XXXX';
+    private getSingleRoomCode(): string {
+        const roomCode = this.roomCodes.pop();
+        if (!roomCode) throw new NoRoomCodeAvailableError();
+        return roomCode;
     }
 
-    public removeRoom(roomId: string): boolean {
+    public removeRoom(roomId: string): void {
         const room = this.getRoomById(roomId);
-        if (room) {
-            const index = this.rooms.indexOf(room);
-            this.rooms.splice(index, 1);
-            room.clear();
-            this.roomCodes.unshift(room.id);
-            return true;
-        }
-        return false;
+        const index = this.rooms.indexOf(room);
+        this.rooms.splice(index, 1);
+        room.clear();
+        this.roomCodes.unshift(room.id);
     }
     public cleanupRooms(): void {
         const closedRooms = this.rooms.filter((room: Room) => {

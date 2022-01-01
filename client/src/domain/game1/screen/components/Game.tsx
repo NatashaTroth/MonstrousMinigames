@@ -1,29 +1,18 @@
-import { Pause, PlayArrow, VolumeOff, VolumeUp } from '@material-ui/icons';
-import Phaser from 'phaser';
+import { Pause, PlayArrow, Stop, VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 import { useParams } from 'react-router';
 
 import { RouteParams } from '../../../../App';
-import { AudioContext } from '../../../../contexts/AudioContextProvider';
+import { MyAudioContext, Sound } from '../../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
-import { ScreenSocketContext } from '../../../../contexts/ScreenSocketContextProvider';
-import { handleAudioPermission } from '../../../audio/handlePermission';
-import GameEventEmitter from '../phaser/GameEventEmitter';
-import { AudioButton, Container, PauseButton } from './Game.sc';
-import MainScene from './MainScene';
+import { ScreenSocketContext } from '../../../../contexts/screen/ScreenSocketContextProvider';
+import GameEventEmitter from '../../../phaser/GameEventEmitter';
+import { PhaserGame } from '../../../phaser/PhaserGame';
+import { AudioButton, Container, PauseButton, StopButton } from './Game.sc';
 
 const Game: React.FunctionComponent = () => {
     const { roomId, hasPaused, screenAdmin } = React.useContext(GameContext);
-    const {
-        pauseLobbyMusicNoMute,
-        audioPermission,
-        setAudioPermissionGranted,
-        musicIsPlaying,
-        gameAudioPlaying,
-        setGameAudioPlaying,
-        mute,
-        unMute,
-    } = React.useContext(AudioContext);
+    const { isPlaying, changeSound, togglePlaying } = React.useContext(MyAudioContext);
     const { id }: RouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
 
@@ -32,56 +21,40 @@ const Game: React.FunctionComponent = () => {
     }
 
     React.useEffect(() => {
-        handleAudioPermission(audioPermission, { setAudioPermissionGranted });
+        changeSound(Sound.game1);
 
-        if (Number(localStorage.getItem('audioVolume')) > 0) {
-            setGameAudioPlaying(true);
+        const container = document.getElementById('phaserWrapper');
+        if (container) {
+            container.style.display = 'block';
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
-    React.useEffect(() => {
-        pauseLobbyMusicNoMute(audioPermission);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [audioPermission]);
+        const game = PhaserGame.getInstance(`phaserGameContainer`);
+        game.startGame1Scene(roomId, screenSocket, screenAdmin);
 
-    React.useEffect(() => {
-        const game = new Phaser.Game({
-            parent: 'game-root',
-            type: Phaser.WEBGL,
-            width: '100%',
-            height: '100%',
-            // backgroundColor: '#081919',
-            backgroundColor: '#000b18',
-            physics: {
-                default: 'arcade',
-                arcade: {
-                    debug: false,
-                },
-            },
-        });
-        game.scene.add('MainScene', MainScene, false); //socket: ScreenSocket.getInstance(socket)
-        game.scene.start('MainScene', { roomId, socket: screenSocket, screenAdmin });
-
-        // game.world.setBounds(0,0,7500, window.innerHeight)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        return () => {
+            const container = document.getElementById('phaserWrapper');
+            if (container) {
+                container.style.display = 'none';
+            }
+        };
     }, []);
 
     async function handleAudio() {
-        if (gameAudioPlaying) {
+        if (isPlaying) {
             GameEventEmitter.emitPauseAudioEvent();
-            setGameAudioPlaying(false);
-            mute();
         } else {
             GameEventEmitter.emitPlayAudioEvent();
-            setGameAudioPlaying(true);
-            unMute();
         }
+
+        togglePlaying();
     }
 
-    //TODO click on pause immediately - doesn't work because wrong gamestate, countdown still running - fix
     async function handlePause() {
         GameEventEmitter.emitPauseResumeEvent();
+    }
+
+    async function handleStop() {
+        GameEventEmitter.emitStopEvent();
     }
 
     return (
@@ -89,18 +62,14 @@ const Game: React.FunctionComponent = () => {
             <PauseButton onClick={handlePause} variant="primary">
                 {hasPaused ? <PlayArrow /> : <Pause />}
             </PauseButton>
+            <StopButton onClick={handleStop} variant="primary">
+                {<Stop />}
+            </StopButton>
             <AudioButton onClick={handleAudio} variant="primary">
-                {musicIsPlaying ? <VolumeUp /> : <VolumeOff />}
+                {isPlaying ? <VolumeUp /> : <VolumeOff />}
             </AudioButton>
-            <GameContent />
         </Container>
     );
 };
 
 export default Game;
-
-const GameContent: React.FunctionComponent = () => (
-    <div>
-        <div id="game-root" data-testid="game-container"></div>
-    </div>
-);

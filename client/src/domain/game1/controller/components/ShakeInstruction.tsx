@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import FullScreenContainer from '../../../../components/common/FullScreenContainer';
-import { ControllerSocketContext } from '../../../../contexts/ControllerSocketContextProvider';
+import { ControllerSocketContext } from '../../../../contexts/controller/ControllerSocketContextProvider';
+import { Game1Context } from '../../../../contexts/game1/Game1ContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import pebble from '../../../../images/obstacles/stone/pebble.svg';
 import stone from '../../../../images/obstacles/stone/stone.svg';
 import arrow from '../../../../images/ui/arrow_blue.svg';
@@ -34,7 +34,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
         sessionStorage.getItem('countdownTime') ? Number(sessionStorage.getItem('countdownTime')) / 1000 : null
     );
     const [solveStoneClicked, setSolveStoneClicked] = React.useState(false);
-    const { hasStone, setHasStone, earlySolvableObstacle } = React.useContext(PlayerContext);
+    const { hasStone, setHasStone, earlySolvableObstacle } = React.useContext(Game1Context);
     const { roomId } = React.useContext(GameContext);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
 
@@ -42,18 +42,14 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
         if (counter !== null && counter !== undefined) {
             if (counter > 0) {
                 setTimeout(() => setCounter(counter - 1), 1000);
-            } else {
-                sessionStorage.removeItem('countdownTime');
-                setCounter(null);
+                return;
             }
+
+            sessionStorage.removeItem('countdownTime');
+            setCounter(null);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [counter]);
-
-    function handleThrowPebble() {
-        setHasStone(false);
-        history.push(`${controllerObstacleRoute(roomId, ObstacleTypes.stone)}?choosePlayer=true`);
-    }
 
     function handleSolveStone() {
         setSolveStoneClicked(true);
@@ -74,7 +70,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                             <PebbleContainer>
                                 <PebbleInstructions>Click to use collected stone</PebbleInstructions>
                                 <Arrow src={arrow} />
-                                <PebbleButton onClick={handleThrowPebble}>
+                                <PebbleButton onClick={() => handleThrowPebble(setHasStone, roomId)}>
                                     <StyledPebbleImage src={pebble} />
                                 </PebbleButton>
                             </PebbleContainer>
@@ -101,3 +97,8 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
 };
 
 export default ShakeInstruction;
+
+export function handleThrowPebble(setHasStone: (val: boolean) => void, roomId: string | undefined) {
+    setHasStone(false);
+    history.push(`${controllerObstacleRoute(roomId, ObstacleTypes.stone)}?choosePlayer=true`);
+}
