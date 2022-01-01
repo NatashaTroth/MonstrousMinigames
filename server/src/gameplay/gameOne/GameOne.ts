@@ -1,29 +1,29 @@
-import { localDevelopment, pushChasers } from "../../../constants";
-import User from "../../classes/user";
-import { GameNames } from "../../enums/gameNames";
-import { IMessage } from "../../interfaces/messages";
-import { GameState } from "../enums";
-import Game from "../Game";
-import { verifyGameState } from "../helperFunctions/verifyGameState";
-import { verifyUserId } from "../helperFunctions/verifyUserId";
-import { verifyUserIsActive } from "../helperFunctions/verifyUserIsActive";
-import { HashTable, IGameInterface } from "../interfaces";
-import { GameType } from "../leaderboard/enums/GameType";
-import Leaderboard from "../leaderboard/Leaderboard";
-import Player from "../Player";
-import { NotAtObstacleError, WrongObstacleIdError } from "./customErrors";
-import UserHasNoStones from "./customErrors/UserHasNoStones";
-import { GameOneMsgType, ObstacleType } from "./enums";
-import GameOneEventEmitter from "./GameOneEventEmitter";
-import * as InitialGameParameters from "./GameOneInitialParameters";
-import GameOnePlayer from "./GameOnePlayer";
+import { localDevelopment, pushChasers } from '../../../constants';
+import User from '../../classes/user';
+import { GameNames } from '../../enums/gameNames';
+import { IMessage } from '../../interfaces/messages';
+import { GameState } from '../enums';
+import Game from '../Game';
+import { verifyGameState } from '../helperFunctions/verifyGameState';
+import { verifyUserId } from '../helperFunctions/verifyUserId';
+import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
+import { HashTable, IGameInterface } from '../interfaces';
+import { GameType } from '../leaderboard/enums/GameType';
+import Leaderboard from '../leaderboard/Leaderboard';
+import Player from '../Player';
+import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
+import UserHasNoStones from './customErrors/UserHasNoStones';
+import { GameOneMsgType, ObstacleType } from './enums';
+import GameOneEventEmitter from './GameOneEventEmitter';
+import * as InitialGameParameters from './GameOneInitialParameters';
+import GameOnePlayer from './GameOnePlayer';
 import {
     createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
-} from "./helperFunctions/initiatePlayerState";
-import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from "./interfaces";
-import { ObstacleReachedInfoController } from "./interfaces/GameEvents";
-import { IMessageObstacle } from "./interfaces/messageObstacle";
-import { IMessageStunPlayer } from "./interfaces/messageStunPlayer";
+} from './helperFunctions/initiatePlayerState';
+import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from './interfaces';
+import { ObstacleReachedInfoController } from './interfaces/GameEvents';
+import { IMessageObstacle } from './interfaces/messageObstacle';
+import { IMessageStunPlayer } from './interfaces/messageStunPlayer';
 
 let pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
 
@@ -54,6 +54,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     chasersPositionX = InitialGameParameters.CHASERS_POSITION_X;
     cameraPositionX = InitialGameParameters.CAMERA_POSITION_X;
     obstacleTypes: ObstacleTypeObject[] = [];
+    maxRunsPerFrame = 2;
 
     gameName = GameNames.GAME1;
 
@@ -107,7 +108,11 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         if (localDevelopment) {
             for (const player of this.players.values()) {
                 if (player.positionX < this.trackLength) {
-                    this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
+                    for (let i = 0; i < 5; i++) {
+                        // to test speed limit
+                        this.runForward(player.id, parseInt(`${process.env.SPEED}`, 10) || 2);
+                        // this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
+                    }
                 }
                 // push chasers TODO delete
                 if (pushChasers) {
@@ -291,12 +296,12 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.players, userId);
         verifyUserIsActive(userId, this.players.get(userId)!.isActive);
-
         const player = this.players.get(userId)!;
         if (this.playerIsNotAllowedToRun(userId) || player.stunned) return;
 
         // player.positionX += Math.abs(speed);
         player.positionX += speed;
+        player.countRunsPerFrame++;
 
         if (this.playerHasReachedObstacle(userId)) this.handlePlayerReachedObstacle(userId);
         if (this.playerIsApproachingSolvableObstacle(player)) this.handlePlayerApproachingSolvableObstacle(player);
@@ -306,7 +311,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     private playerIsNotAllowedToRun(userId: string) {
         const player = this.players.get(userId)!;
 
-        return player.finished || player.dead || player.atObstacle;
+        return player.finished || player.dead || player.atObstacle || player.countRunsPerFrame >= this.maxRunsPerFrame;
     }
 
     private playerIsApproachingSolvableObstacle(player: GameOnePlayer): boolean {

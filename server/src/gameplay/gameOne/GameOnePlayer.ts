@@ -11,6 +11,7 @@ class GameOnePlayer extends Player implements PlayerState {
     stunned = false;
     stunnedSeconds = 0;
     chaserPushesUsed = 0;
+    countRunsPerFrame = 0;
 
     constructor(
         id: string,
@@ -30,6 +31,8 @@ class GameOnePlayer extends Player implements PlayerState {
                 this.emit(GameOnePlayer.EVT_UNSTUNNED, this);
             }
         }
+
+        this.countRunsPerFrame = 0;
     }
 }
 
