@@ -60,6 +60,7 @@ describe('Run forward', () => {
     it('moves players forward correctly when runForward is called multiple times', async () => {
         startGameAndAdvanceCountdown(gameOne);
         gameOne['runForward']('1', 10);
+        gameOne.players.get('1')!.countRunsPerFrame = 0; // to avoid going over limit for this test
         gameOne['runForward']('1', 5);
         expect(gameOne.players.get('1')?.positionX).toBe(gameOne.initialPlayerPositionX + 15);
     });
@@ -182,6 +183,7 @@ describe('Obstacles reached', () => {
         startGameAndAdvanceCountdown(gameOne, removeStonesFromObstacles(gameOne));
         completeNextObstacle(gameOne, '1');
         const tmpPlayerPositionX = gameOne.players.get('1')!.positionX;
+        gameOne.players.get('1')!.countRunsPerFrame = 0; // to avoid going over limit for this test
         gameOne['runForward']('1', 5);
         expect(gameOne.players.get('1')!.positionX).toBe(tmpPlayerPositionX + 5);
     });
