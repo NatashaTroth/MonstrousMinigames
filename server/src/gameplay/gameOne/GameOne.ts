@@ -11,6 +11,7 @@ import { HashTable, IGameInterface } from '../interfaces';
 import { GameType } from '../leaderboard/enums/GameType';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
+import Chasers from './classes/Chasers';
 import UserHasNoStones from './customErrors/UserHasNoStones';
 import { GameOneMsgType, ObstacleType } from './enums';
 import GameOneEventEmitter from './GameOneEventEmitter';
@@ -38,20 +39,15 @@ interface GameOneInterface extends IGameInterface<GameOnePlayer, GameStateInfo> 
 export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implements GameOneInterface {
     trackLength = InitialGameParameters.TRACK_LENGTH;
     numberOfObstacles = InitialGameParameters.NUMBER_OBSTACLES;
-    maxNumberOfChaserPushes = InitialGameParameters.MAX_NUMBER_CHASER_PUSHES;
-    chaserPushAmount = InitialGameParameters.CHASER_PUSH_AMOUNT;
     numberOfStones = InitialGameParameters.NUMBER_STONES;
     speed = InitialGameParameters.SPEED;
     countdownTime = InitialGameParameters.COUNTDOWN_TIME; //should be 1 second more than client - TODO: make sure it is
     cameraSpeed = InitialGameParameters.CAMERA_SPEED;
-    chasersSpeed = InitialGameParameters.CHASERS_SPEED;
-
     initialPlayerPositionX = InitialGameParameters.PLAYERS_POSITION_X;
-    chasersPositionX = InitialGameParameters.CHASERS_POSITION_X;
     cameraPositionX = InitialGameParameters.CAMERA_POSITION_X;
     obstacleTypes: ObstacleTypeObject[] = [];
-
     gameName = GameNames.GAME1;
+    chasers?: Chasers;
 
     constructor(roomId: string, public leaderboard: Leaderboard /*, public usingChasers = false*/) {
         super(roomId);
@@ -100,28 +96,11 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         if (this.cameraPositionX < this.trackLength)
             this.cameraPositionX += (timeElapsedSinceLastFrame / 33) * this.cameraSpeed;
 
-        this.updateChasersPosition(timeElapsedSinceLastFrame);
+        this.chasers!.update(timeElapsed, timeElapsedSinceLastFrame);
+        this.checkIfPlayersCaught();
 
         if (localDevelopment) {
-            for (const player of this.players.values()) {
-                if (player.positionX < this.trackLength) {
-                    for (let i = 0; i < 5; i++) {
-                        // to test speed limit
-                        player.runForward(parseInt(`${process.env.SPEED}`, 10) || 2);
-                        // if (player.playerHasPassedGoal()) this.playerHasFinishedGame(); //TODO!!
-
-                        // this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
-                    }
-                }
-                // push chasers TODO delete
-                if (pushChasers) {
-                    if (pushChasersPeriodicallyCounter >= 100) {
-                        pushChasersPeriodicallyCounter = 0;
-                        this.pushChasers(player.id!);
-                    }
-                    pushChasersPeriodicallyCounter++;
-                }
-            }
+            this.updateLocalDev();
         }
     }
 
@@ -192,8 +171,8 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         this.numberOfObstacles = numberOfObstacles;
         this.numberOfStones = numberOfStones;
         this.initialPlayerPositionX = InitialGameParameters.PLAYERS_POSITION_X;
-        this.chasersPositionX = InitialGameParameters.CHASERS_POSITION_X;
         this.cameraPositionX = InitialGameParameters.CAMERA_POSITION_X;
+        this.chasers = new Chasers(this.trackLength, this.roomId);
 
         super.createNewGame(users);
 
@@ -269,17 +248,9 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
                 characterNumber: player.characterNumber,
                 chaserPushesUsed: player.chaserPushesUsed,
             })),
-            chasersPositionX: this.chasersPositionX,
+            chasersPositionX: this.chasers!.getPosition(),
             cameraPositionX: this.cameraPositionX,
         };
-    }
-
-    private updateChasersPosition(timeElapsedSinceLastFrame: number) {
-        //10000 to 90000  * timePassed //TODO - make faster over time??
-        if (this.chasersPositionX > this.trackLength) return;
-        this.chasersPositionX += (timeElapsedSinceLastFrame / 33) * this.chasersSpeed;
-
-        this.checkIfPlayersCaught();
     }
 
     private checkIfPlayersCaught() {
@@ -308,7 +279,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     }
 
     private chaserCaughtPlayer(player: GameOnePlayer) {
-        return player.positionX <= this.chasersPositionX;
+        return player.positionX <= this.chasers!.getPosition();
     }
 
     getObstaclePositions(): HashTable<Array<Obstacle>> {
@@ -327,8 +298,8 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         verifyUserIsActive(userIdStunned, this.players.get(userIdStunned)!.isActive);
 
         const playerThrown = this.players.get(userIdThrown)!;
-
-        this.verifyUserCanThrowCollectedStone(playerThrown);
+        const player = typeof playerThrown === 'string' ? this.players.get(playerThrown)! : playerThrown;
+        player.verifyUserCanThrowCollectedStone();
         playerThrown.stonesCarrying--;
 
         this.players.get(userIdStunned)!.stun();
@@ -339,28 +310,11 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         verifyUserId(this.players, userIdPushing);
 
         const userPushing = this.players.get(userIdPushing)!;
-        if (!pushChasers) if (!userPushing.finished) return;
-        if (this.maxNumberPushChasersExceeded(userPushing)) return;
+        if (!userPushing.finished || userPushing.maxNumberPushChasersExceeded()) return;
 
-        //TODO Test
-        this.chasersPositionX += this.chaserPushAmount;
-        this.chasersSpeed = InitialGameParameters.CHASERS_PUSH_SPEED;
-        setTimeout(() => {
-            this.chasersSpeed = InitialGameParameters.CHASERS_SPEED;
-        }, 1300);
-        userPushing.chaserPushesUsed++;
-
-        if (this.maxNumberPushChasersExceeded(userPushing)) {
-            GameOneEventEmitter.emitPlayerHasExceededMaxNumberChaserPushes(this.roomId, userPushing.id);
-        }
-
+        userPushing.pushChasers();
+        this.chasers?.push();
         this.checkIfPlayersCaught();
-
-        GameOneEventEmitter.emitChasersWerePushed(this.roomId, this.chaserPushAmount);
-    }
-
-    private maxNumberPushChasersExceeded(player: GameOnePlayer) {
-        return player.chaserPushesUsed >= this.maxNumberOfChaserPushes;
     }
 
     //TODO test & move to player
@@ -387,16 +341,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         verifyUserId(this.players, userId);
         const player = this.players.get(userId)!;
         verifyUserIsActive(userId, player.isActive);
-
         player.obstacleCompleted(obstacleId);
-    }
-
-    private verifyUserCanThrowCollectedStone(userId: string | GameOnePlayer) {
-        const player = typeof userId === 'string' ? this.players.get(userId)! : userId;
-
-        if (player.stonesCarrying < 1) {
-            throw new UserHasNoStones(undefined, player.id);
-        }
     }
 
     private gameHasFinished(): boolean {
@@ -451,5 +396,29 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         }
 
         return false;
+    }
+
+    //*****************
+
+    private updateLocalDev() {
+        for (const player of this.players.values()) {
+            if (player.positionX < this.trackLength) {
+                for (let i = 0; i < 5; i++) {
+                    // to test speed limit
+                    player.runForward(parseInt(`${process.env.SPEED}`, 10) || 2);
+                    // if (player.playerHasPassedGoal()) this.playerHasFinishedGame(); //TODO!!
+
+                    // this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
+                }
+            }
+            // push chasers TODO delete
+            if (pushChasers) {
+                if (pushChasersPeriodicallyCounter >= 100) {
+                    pushChasersPeriodicallyCounter = 0;
+                    this.pushChasers(player.id!);
+                }
+                pushChasersPeriodicallyCounter++;
+            }
+        }
     }
 }

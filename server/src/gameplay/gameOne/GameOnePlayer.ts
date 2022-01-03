@@ -1,6 +1,7 @@
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
 import Player from '../Player';
 import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
+import UserHasNoStones from './customErrors/UserHasNoStones';
 import { ObstacleType } from './enums';
 import GameOneEventEmitter from './GameOneEventEmitter';
 import * as InitialGameParameters from './GameOneInitialParameters';
@@ -20,6 +21,7 @@ class GameOnePlayer extends Player implements PlayerState {
     countRunsPerFrame = 0;
     maxRunsPerFrame = 2;
     stunnedTime = InitialGameParameters.STUNNED_TIME;
+    maxNumberOfChaserPushes = InitialGameParameters.MAX_NUMBER_CHASER_PUSHES;
 
     constructor(
         id: string,
@@ -114,6 +116,23 @@ class GameOnePlayer extends Player implements PlayerState {
             this.obstacles.shift();
         } else {
             throw new WrongObstacleIdError(`${obstacleId} is not the id for the next obstacle.`, this.id, obstacleId);
+        }
+    }
+
+    maxNumberPushChasersExceeded() {
+        return this.chaserPushesUsed >= this.maxNumberOfChaserPushes;
+    }
+
+    pushChasers() {
+        this.chaserPushesUsed++;
+        if (this.maxNumberPushChasersExceeded()) {
+            GameOneEventEmitter.emitPlayerHasExceededMaxNumberChaserPushes(this.roomId, this.id);
+        }
+    }
+
+    verifyUserCanThrowCollectedStone() {
+        if (this.stonesCarrying < 1) {
+            throw new UserHasNoStones(undefined, this.id);
         }
     }
 
