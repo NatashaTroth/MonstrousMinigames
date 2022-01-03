@@ -15,17 +15,8 @@ export interface PlayerRank {
     previousRank: number;
 }
 
-export const defaultValue = {
-    playerRanks: [
-        {
-            id: 'abc',
-            name: 'name',
-            rank: 0,
-            isActive: true,
-            points: 0,
-            previousRank: 0,
-        },
-    ],
+const defaultValue = {
+    playerRanks: [],
     setPlayerRanks: () => {
         // do nothing
     },
@@ -43,8 +34,6 @@ export const defaultValue = {
         // do nothing
     },
 };
-
-export type SheepGamePhase = { phase: GamePhases } | undefined;
 
 interface Game2ContextProps {
     playerRanks: PlayerRank[];
@@ -66,13 +55,10 @@ const Game2ContextProvider: React.FunctionComponent = ({ children }) => {
     const content = {
         phase,
         setPhase,
-
         guessHint,
         setGuessHint,
-
         playerRanks,
         setPlayerRanks,
-
         resetGame2: () => {
             setGuessHint(defaultValue.guessHint);
             setPhase(defaultValue.phase);

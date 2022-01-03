@@ -45,10 +45,6 @@ export const Draggable = styled.div<Draggable>`
     ${({ index }) => getDraggableLeftPosition(index)};
 `;
 
-export const StyledCan = styled.img`
-    width: 80%;
-`;
-
 export const StyledImage = styled.img`
     width: 100%;
     height: 100%;
@@ -82,10 +78,6 @@ export const DropZone = styled.div<DropZoneProps>`
     display: flex;
     align-items: flex-end;
     justify-content: center;
-`;
-
-export const StyledTrashImage = styled.img`
-    width: 80%;
 `;
 
 function getDraggableLeftPosition(index: number) {

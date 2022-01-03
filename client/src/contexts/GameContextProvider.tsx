@@ -12,13 +12,13 @@ export enum GameType {
     GameThree = 'Snapshot Marathon',
 }
 
-export interface UserPoints {
+interface UserPoints {
     userId: string;
     name: string;
     points: number;
     rank: number;
 }
-export interface GamePlayed {
+interface GamePlayed {
     game: GameType;
     playerRanks: PlayerRank[];
 }

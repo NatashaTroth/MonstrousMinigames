@@ -37,6 +37,7 @@ const Game: React.FunctionComponent = () => {
                 container.style.display = 'none';
             }
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     async function handleAudio() {
