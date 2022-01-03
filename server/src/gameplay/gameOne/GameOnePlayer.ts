@@ -103,6 +103,13 @@ class GameOnePlayer extends Player implements PlayerState {
         GameOneEventEmitter.emitPlayerIsStunned(this.roomId, this.id);
     }
 
+    playerWantsToSolveObstacle(obstacleId: number): void {
+        const obstacle = this.obstacles.find(obstacle => obstacle.id === obstacleId);
+        if (!obstacle) return;
+        obstacle.solvable = false;
+        GameOneEventEmitter.emitPlayerWantsToSolveObstacle({ roomId: this.roomId, userId: this.id });
+    }
+
     obstacleCompleted(obstacleId: number) {
         this.verifyUserIsAtObstacle();
 
@@ -130,10 +137,11 @@ class GameOnePlayer extends Player implements PlayerState {
         }
     }
 
-    verifyUserCanThrowCollectedStone() {
+    throwStone() {
         if (this.stonesCarrying < 1) {
             throw new UserHasNoStones(undefined, this.id);
         }
+        this.stonesCarrying--;
     }
 
     handlePlayerCaught() {

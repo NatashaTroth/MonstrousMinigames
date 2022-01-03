@@ -12,8 +12,7 @@ import { GameType } from '../leaderboard/enums/GameType';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
 import Chasers from './classes/Chasers';
-import UserHasNoStones from './customErrors/UserHasNoStones';
-import { GameOneMsgType, ObstacleType } from './enums';
+import { GameOneMsgType } from './enums';
 import GameOneEventEmitter from './GameOneEventEmitter';
 import * as InitialGameParameters from './GameOneInitialParameters';
 import GameOnePlayer from './GameOnePlayer';
@@ -70,7 +69,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         );
 
         player.on(GameOnePlayer.EVT_UNSTUNNED, () => {
-            this.onPlayerUnstunned(player.id);
+            GameOneEventEmitter.emitPlayerIsUnstunned(this.roomId, player.id);
         });
 
         return player;
@@ -105,17 +104,20 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     }
 
     protected handleInput(message: IMessage) {
+        verifyGameState(this.gameState, [GameState.Started]);
         switch (message.type) {
             case GameOneMsgType.MOVE:
                 this.movePlayer(message);
-
                 break;
             case GameOneMsgType.OBSTACLE_SOLVED:
-                this.playerHasCompletedObstacle(message.userId!, (message as IMessageObstacle).obstacleId);
+                this.getValidPlayer(message.userId!).obstacleCompleted((message as IMessageObstacle).obstacleId);
                 break;
             case GameOneMsgType.SOLVE_OBSTACLE:
-                this.playerWantsToSolveObstacle(message.userId!, (message as IMessageObstacle).obstacleId);
+                this.getValidPlayer(message.userId!).playerWantsToSolveObstacle(
+                    (message as IMessageObstacle).obstacleId
+                );
                 break;
+
             case GameOneMsgType.STUN_PLAYER:
                 if (
                     !(message as IMessageStunPlayer).receivingUserId ||
@@ -131,32 +133,6 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             default:
                 console.info(message);
         }
-    }
-
-    private movePlayer(message: IMessage) {
-        verifyGameState(this.gameState, [GameState.Started]);
-        if (!this.players.has(message.userId!)) return;
-        const player = this.players.get(message.userId!)!;
-        player.runForward(parseInt(`${process.env.SPEED}`, 10) || 2);
-        if (player.playerHasPassedGoal()) {
-            this.handlePlayerFinished(player);
-        }
-    }
-
-    private handlePlayerFinished(player: GameOnePlayer) {
-        const finishedTime = Date.now();
-        player.handlePlayerFinishedGame(finishedTime, this.rankSuccessfulUser(finishedTime));
-        GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
-        const playersNotFinished = Array.from(this.players.values()).filter(player => !player.finished);
-
-        // when there is only one player left the stone obstacles are removed as they do not serve a purpose at that point
-        if (playersNotFinished.length <= 1) {
-            for (const player of playersNotFinished) {
-                player.obstacles = player.obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
-            }
-        }
-
-        if (this.gameHasFinished()) this.handleGameFinished();
     }
 
     createNewGame(
@@ -185,15 +161,6 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             cameraPositionX: firstGameStateInfo.cameraPositionX,
         });
         GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers()); // TODO test (test all times this emitter is called)
-    }
-
-    private getStunnablePlayers(): string[] {
-        return Array.from(this.players.values()).reduce((res: string[], option: Player) => {
-            if (!option.finished && option.isActive) {
-                res.push(option.id);
-            }
-            return res;
-        }, []);
     }
 
     startGame(): void {
@@ -232,6 +199,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             gameState: this.gameState,
             roomId: this.roomId,
             playersState: Array.from(this.players.values()).map(player => ({
+                //TODO renive
                 id: player.id,
                 name: player.name,
                 positionX: player.positionX,
@@ -251,35 +219,6 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         };
     }
 
-    private checkIfPlayersCaught() {
-        for (const player of this.players.values()) {
-            if (!player.finished && this.chaserCaughtPlayer(player)) {
-                this.handlePlayerCaught(player);
-            }
-        }
-    }
-
-    private handlePlayerCaught(playerState: GameOnePlayer) {
-        playerState.dead = true;
-        this.players.get(playerState.id)?.updatePlayerStateFinished();
-        playerState.rank = this.rankFailedUser(playerState.finishedTimeMs);
-        GameOneEventEmitter.emitPlayerIsDead(this.roomId, playerState.id, playerState.rank);
-        GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
-
-        //todo duplicate
-        if (!localDevelopment) {
-            const players = Array.from(this.players.values());
-            const activeUnfinishedPlayers = players.filter(player => player.isActive && !player.dead);
-            if (activeUnfinishedPlayers.length <= 1 || this.gameHasFinished()) {
-                this.handleGameFinished();
-            }
-        }
-    }
-
-    private chaserCaughtPlayer(player: GameOnePlayer) {
-        return player.positionX <= this.chasers!.getPosition();
-    }
-
     getObstaclePositions(): HashTable<Array<Obstacle>> {
         const obstaclePositions: HashTable<Array<Obstacle>> = {};
         for (const player of this.players.values()) {
@@ -289,25 +228,70 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         return obstaclePositions;
     }
 
+    // ***** player *****
+    private movePlayer(message: IMessage) {
+        const player = this.getValidPlayer(message.userId!);
+        player.runForward(parseInt(`${process.env.SPEED}`, 10) || 2);
+        if (player.playerHasPassedGoal()) {
+            this.handlePlayerFinished(player);
+        }
+    }
+
+    private handlePlayerFinished(player: GameOnePlayer) {
+        const finishedTime = Date.now();
+        player.handlePlayerFinishedGame(finishedTime, this.rankSuccessfulUser(finishedTime));
+        GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
+
+        if (this.gameHasFinished()) this.handleGameFinished();
+    }
+
+    private getStunnablePlayers(): string[] {
+        return Array.from(this.players.values()).reduce((res: string[], option: Player) => {
+            if (!option.finished && option.isActive) {
+                res.push(option.id);
+            }
+            return res;
+        }, []);
+    }
+
     private stunPlayer(userIdStunned: string, userIdThrown: string) {
-        verifyGameState(this.gameState, [GameState.Started]);
-        verifyUserId(this.players, userIdStunned);
-        verifyUserId(this.players, userIdThrown);
-        verifyUserIsActive(userIdStunned, this.players.get(userIdStunned)!.isActive);
+        const playerThrown = this.getValidPlayer(userIdThrown);
+        const playerStunned = this.getValidPlayer(userIdStunned);
+        playerThrown.throwStone();
+        playerStunned.stun();
+    }
 
-        const playerThrown = this.players.get(userIdThrown)!;
-        const player = typeof playerThrown === 'string' ? this.players.get(playerThrown)! : playerThrown;
-        player.verifyUserCanThrowCollectedStone();
-        playerThrown.stonesCarrying--;
+    // ***** chasers *****
+    private checkIfPlayersCaught() {
+        for (const player of this.players.values()) {
+            if (this.chaserHasCaughtPlayer(player)) {
+                this.handlePlayerCaught(player);
+            }
+        }
+    }
 
-        this.players.get(userIdStunned)!.stun();
+    private handlePlayerCaught(playerState: GameOnePlayer) {
+        playerState.handlePlayerCaught();
+        playerState.rank = this.rankFailedUser(playerState.finishedTimeMs);
+        GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
+
+        //todo duplicate
+        if (localDevelopment) return;
+        const players = Array.from(this.players.values());
+        const activeUnfinishedPlayers = players.filter(player => player.isActive && !player.dead);
+        if (activeUnfinishedPlayers.length <= 1 || this.gameHasFinished()) {
+            this.handleGameFinished();
+        }
+    }
+
+    private chaserHasCaughtPlayer(player: GameOnePlayer) {
+        return player.finished && player.positionX <= this.chasers!.getPosition();
     }
 
     private pushChasers(userIdPushing: string) {
-        verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.players, userIdPushing);
-
         const userPushing = this.players.get(userIdPushing)!;
+
         if (!userPushing.finished || userPushing.maxNumberPushChasersExceeded()) return;
 
         userPushing.pushChasers();
@@ -315,38 +299,12 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         this.checkIfPlayersCaught();
     }
 
-    //TODO test & move to player
-    private onPlayerUnstunned(userId: string) {
-        GameOneEventEmitter.emitPlayerIsUnstunned(this.roomId, userId);
-    }
-
-    private playerWantsToSolveObstacle(userId: string, obstacleId: number): void {
-        verifyGameState(this.gameState, [GameState.Started]);
-        verifyUserId(this.players, userId);
-        verifyUserIsActive(userId, this.players.get(userId)!.isActive);
-
-        const player = this.players.get(userId)!;
-        const obstacle = player.obstacles.find(obstacle => obstacle.id === obstacleId);
-
-        if (!obstacle) return;
-
-        obstacle.solvable = false;
-        GameOneEventEmitter.emitPlayerWantsToSolveObstacle({ roomId: this.roomId, userId });
-    }
-
-    private playerHasCompletedObstacle(userId: string, obstacleId: number): void {
-        verifyGameState(this.gameState, [GameState.Started]);
-        verifyUserId(this.players, userId);
-        const player = this.players.get(userId)!;
-        verifyUserIsActive(userId, player.isActive);
-        player.obstacleCompleted(obstacleId);
-    }
-
+    // ***** game state *****
     private gameHasFinished(): boolean {
         const players = Array.from(this.players.values());
         const activeUnfinishedPlayers = players.filter(player => player.isActive && !player.finished);
 
-        return activeUnfinishedPlayers.length === 0;
+        return activeUnfinishedPlayers.length === 0; //TODO - test, does game finish when only 1 player??
     }
 
     private handleGameFinished(): void {
@@ -362,7 +320,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         //Broadcast, stop game, return ranks
     }
 
-    createPlayerRanks(): Array<PlayerRank> {
+    private createPlayerRanks(): Array<PlayerRank> {
         return Array.from(this.players.values()).map(player => ({
             id: player.id,
             name: player.name,
@@ -396,7 +354,14 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         return false;
     }
 
-    //*****************
+    //******** other *********
+
+    private getValidPlayer(userId: string): GameOnePlayer {
+        verifyUserId(this.players, userId);
+        const player = this.players.get(userId)!;
+        verifyUserIsActive(userId, player.isActive);
+        return player;
+    }
 
     private updateLocalDev() {
         for (const player of this.players.values()) {
