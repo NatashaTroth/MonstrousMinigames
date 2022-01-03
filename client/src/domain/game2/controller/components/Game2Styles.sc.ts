@@ -19,8 +19,11 @@ export const Round = styled(Typography)`
     padding: 0 60px;
 `;
 
-export const FormConainter = styled.div`
-    display: flex;
+export const FormContainer = styled.div`
     width: 100%;
+    display: flex;
+    flex-direction: column;
     height: 100%;
+    justify-content: center;
+    align-items: center;
 `;

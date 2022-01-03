@@ -2,12 +2,12 @@ import * as React from 'react';
 
 import Button from '../../../../components/common/Button';
 import { FullScreenContainer } from '../../../../components/common/FullScreenStyles.sc';
-import { FormContainer, inputStyles } from '../../../../components/controller/ConnectScreen.sc';
+import { inputStyles } from '../../../../components/controller/ConnectScreen.sc';
 import { ControllerSocketContext } from '../../../../contexts/controller/ControllerSocketContextProvider';
 import { Game2Context } from '../../../../contexts/game2/Game2ContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import { MessageTypesGame2 } from '../../../../utils/constants';
-import { Instructions } from './Game2Styles.sc';
+import { FormContainer, Instructions } from './Game2Styles.sc';
 
 const Guess: React.FunctionComponent = () => {
     const [submitted, setSubmitted] = React.useState(false);
