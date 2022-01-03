@@ -30,8 +30,8 @@ import {
     SelectGameButtonContainer,
 } from './ChooseGame.sc';
 import { Game1Description, Game1Drawer } from './Game1Description';
-import { Game2Description, Game2Drawer } from './Game2Description';
-import { Game3Description, Game3Drawer } from './Game3Description';
+import { Game2Description } from './Game2Description';
+import { Game3Description } from './Game3Description';
 import { LobbyContainer } from './Lobby.sc';
 import LobbyHeader from './LobbyHeader';
 
@@ -104,17 +104,19 @@ const ChooseGame: React.FunctionComponent = () => {
                         <GamePreviewContainer>
                             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                                 <PreviewImageContainer>
-                                    <PreviewImage src={selectedGame.image} />
+                                    <PreviewImage src={selectedGame.image} game={selectedGame.id} />
                                 </PreviewImageContainer>
                                 <ImageDescription>
                                     {selectedGame.imageDescription}{' '}
-                                    <Tooltip title="Click for more information">
-                                        <span>
-                                            <InfoButton onClick={handleOpenDialog}>
-                                                <Info />
-                                            </InfoButton>
-                                        </span>
-                                    </Tooltip>
+                                    {selectedGame.id === GameNames.game1 && (
+                                        <Tooltip title="Click for more information">
+                                            <span>
+                                                <InfoButton onClick={handleOpenDialog}>
+                                                    <Info />
+                                                </InfoButton>
+                                            </span>
+                                        </Tooltip>
+                                    )}
                                 </ImageDescription>
                                 {selectedGame.id === GameNames.game1 ? (
                                     <Game1Description />
@@ -173,15 +175,7 @@ const InstructionDialog: React.FunctionComponent<InstructionDialog> = ({ handleC
             }}
             onClose={handleClose}
         >
-            <DialogContent>
-                {selectedGame.id === GameNames.game1 ? (
-                    <Game1Drawer />
-                ) : selectedGame.id === GameNames.game2 ? (
-                    <Game2Drawer />
-                ) : (
-                    <Game3Drawer />
-                )}
-            </DialogContent>
+            <DialogContent>{selectedGame.id === GameNames.game1 && <Game1Drawer />}</DialogContent>
         </Dialog>
     );
 };

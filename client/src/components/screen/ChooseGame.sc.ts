@@ -1,6 +1,7 @@
 import { IconButton } from '@material-ui/core';
 import styled from 'styled-components';
 
+import { GameNames } from '../../config/games';
 import { OrangeBase } from '../common/CommonStyles.sc';
 
 export const GameSelectionContainer = styled.div`
@@ -72,6 +73,7 @@ export const OliverImage = styled.img`
 
 interface PreviewImageContainer {
     src: string;
+    game: GameNames;
 }
 
 export const PreviewImage = styled.div<PreviewImageContainer>`
@@ -79,13 +81,13 @@ export const PreviewImage = styled.div<PreviewImageContainer>`
     width: 100%;
     height: 100%;
     background-size: cover;
-    background-position: bottom;
+    background-position: ${({ game }) => (game === GameNames.game2 ? 'left' : 'bottom')};
 `;
 
 export const PreviewImageContainer = styled.div`
     display: flex;
     width: 100%;
-    height: 40%;
+    height: 25%;
     margin-top: 30px;
 `;
 

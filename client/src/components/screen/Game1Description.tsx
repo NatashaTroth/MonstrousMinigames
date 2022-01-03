@@ -9,7 +9,14 @@ import wood from '../../images/obstacles/wood/wood.svg';
 import attention from '../../images/ui/attention.png';
 import pinwheel from '../../images/ui/pinwheel.svg';
 import shakeIt from '../../images/ui/shakeIt.svg';
-import { ControlInstruction, ImagesContainer, ImageWrapper, InstructionImg, TextWrapper } from './ChooseGame.sc';
+import {
+    ControlInstruction,
+    ControlInstructionsContainer,
+    ImagesContainer,
+    ImageWrapper,
+    InstructionImg,
+    TextWrapper,
+} from './ChooseGame.sc';
 
 export const Game1Description: React.FunctionComponent = () => (
     <ControlInstructionsContainer>
@@ -85,13 +92,6 @@ const Row = styled.div`
     display: flex;
     flex-direction: column;
     height: 50%;
-`;
-
-const ControlInstructionsContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
 `;
 
 const Instruction = styled(ControlInstruction)`
