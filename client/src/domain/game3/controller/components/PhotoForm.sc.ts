@@ -13,7 +13,9 @@ export const StyledButton = styled(MuiButton)`
     padding: 20px;
     border-radius: 10px;
     background-color: ${({ theme }) => theme.palette.secondary.main};
-    animation: ${glowing} 1500ms infinite;
+    &:not([disabled]) {
+        animation: ${glowing} 1500ms infinite;
+    }
 `;
 
 export const StyledImg = styled.img`
