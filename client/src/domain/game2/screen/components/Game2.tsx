@@ -65,15 +65,8 @@ const Game2: React.FunctionComponent = () => {
             <AudioButton onClick={handleAudio} variant="primary">
                 {isPlaying ? <VolumeUp /> : <VolumeOff />}
             </AudioButton>
-            <GameContent />
         </Container>
     );
 };
 
 export default Game2;
-
-const GameContent: React.FunctionComponent = () => (
-    <div>
-        <div id="sheep-game" data-testid="sheep-game"></div>
-    </div>
-);

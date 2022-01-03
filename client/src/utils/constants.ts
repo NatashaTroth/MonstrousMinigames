@@ -88,6 +88,7 @@ export enum MessageTypesGame2 {
     playerRanks = 'game2/playerRanks',
     guess = 'game2/guess',
     guessHint = 'game2/guessHint',
+    remainingKills = 'game2/remainingKills',
 }
 
 export const enum MessageTypesGame3 {

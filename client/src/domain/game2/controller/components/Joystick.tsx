@@ -5,12 +5,13 @@ import { IJoystickUpdateEvent } from 'react-joystick-component/build/lib/Joystic
 
 import Button from '../../../../components/common/Button';
 import FullScreenContainer from '../../../../components/common/FullScreenContainer';
-import { Instruction } from '../../../../components/common/Instruction.sc';
 import { ControllerSocketContext } from '../../../../contexts/controller/ControllerSocketContextProvider';
+import { Game2Context } from '../../../../contexts/game2/Game2ContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import { MessageTypesGame2 } from '../../../../utils/constants';
 import { Countdown } from '../../../game1/controller/components/ShakeInstruction.sc';
 import { Storage } from '../../../storage/Storage';
+import { Instructions, Round } from './Game2Styles.sc';
 import { JoystickContainer, KillSheepButtonContainer } from './Joystick.sc';
 
 interface ShakeInstructionProps {
@@ -22,6 +23,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
         sessionStorage.getItem('countdownTime') ? Number(sessionStorage.getItem('countdownTime')) / 1000 : null
     );
 
+    const { remainingKills, roundIdx } = React.useContext(Game2Context);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { userId } = React.useContext(PlayerContext);
     let direction: string | undefined = 'C';
@@ -101,7 +103,8 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                     <Countdown>{counter}</Countdown>
                 ) : (
                     <>
-                        <Instruction>Use the Joystick to Move</Instruction>
+                        <Round>Round {roundIdx}</Round>
+                        <Instructions>Use the Joystick to Move</Instructions>
                         <JoystickContainer>
                             <Joystick
                                 size={100}
@@ -111,8 +114,11 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                                 stop={handleStop.bind(this)}
                             ></Joystick>
                         </JoystickContainer>
+                        <Instructions>Remaining kills: {remainingKills}</Instructions>
                         <KillSheepButtonContainer>
-                            <Button onClick={emitKillMessage}>Kill Sheep</Button>
+                            <Button onClick={emitKillMessage} disabled={remainingKills === 0}>
+                                Kill Sheep
+                            </Button>
                         </KillSheepButtonContainer>
                     </>
                 )}

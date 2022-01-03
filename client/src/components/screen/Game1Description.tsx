@@ -40,7 +40,7 @@ export const Game1Description: React.FunctionComponent = () => (
 );
 
 export const Game1Drawer: React.FunctionComponent = () => (
-    <ControlInstructionsContainer>
+    <DrawerContainer>
         <Content>
             <Row>
                 <ImagesContainer>
@@ -77,8 +77,15 @@ export const Game1Drawer: React.FunctionComponent = () => (
                 </TextWrapper>
             </Row>
         </Content>
-    </ControlInstructionsContainer>
+    </DrawerContainer>
 );
+
+const DrawerContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+`;
 
 const Content = styled.div`
     padding: 30px;
