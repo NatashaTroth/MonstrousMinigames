@@ -139,13 +139,13 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         const player = this.players.get(message.userId!)!;
         player.runForward(parseInt(`${process.env.SPEED}`, 10) || 2);
         if (player.playerHasPassedGoal()) {
-            const finishedTime = Date.now();
-            player.handlePlayerFinishedGame(finishedTime, this.rankSuccessfulUser(finishedTime));
-            this.handlePlayerFinished();
+            this.handlePlayerFinished(player);
         }
     }
 
-    private handlePlayerFinished() {
+    private handlePlayerFinished(player: GameOnePlayer) {
+        const finishedTime = Date.now();
+        player.handlePlayerFinishedGame(finishedTime, this.rankSuccessfulUser(finishedTime));
         GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
         const playersNotFinished = Array.from(this.players.values()).filter(player => !player.finished);
 
@@ -156,9 +156,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             }
         }
 
-        if (this.gameHasFinished()) {
-            this.handleGameFinished();
-        }
+        if (this.gameHasFinished()) this.handleGameFinished();
     }
 
     createNewGame(

@@ -136,6 +136,12 @@ class GameOnePlayer extends Player implements PlayerState {
         }
     }
 
+    handlePlayerCaught() {
+        this.dead = true;
+        this.updatePlayerStateFinished();
+        GameOneEventEmitter.emitPlayerIsDead(this.roomId, this.id, this.rank);
+    }
+
     //********************
 
     private playerIsNotAllowedToRun() {
