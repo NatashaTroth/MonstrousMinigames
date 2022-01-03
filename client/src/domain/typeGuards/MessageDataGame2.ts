@@ -7,6 +7,7 @@ import { InitialGameStateInfoMessage } from './game2/initialGameStateInfo';
 import { PhaseChangedMessage } from './game2/phaseChanged';
 import { PhaserLoadingTimedOutMessage } from './game2/phaserLoadingTimedOut';
 import { PlayerRanksMessage } from './game2/playerRanks';
+import { RemainingKillsMessage } from './game2/remainingKills';
 import { SheepGameHasStartedMessage } from './game2/started';
 import { GameHasPausedMessage } from './paused';
 import { GameHasResetMessage } from './reset';
@@ -35,4 +36,5 @@ export type MessageDataGame2 =
     | PhaseChangedMessage
     | PlayerRanksMessage
     | GuessHintMessage
+    | RemainingKillsMessage
     | undefined;

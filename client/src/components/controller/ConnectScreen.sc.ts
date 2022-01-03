@@ -53,7 +53,7 @@ export const wrapperStyles = {
     justifyContent: 'center',
 } as React.CSSProperties;
 
-export const FormContainer = styled.form`
+export const FormContainer = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;

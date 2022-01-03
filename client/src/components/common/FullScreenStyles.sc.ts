@@ -13,6 +13,7 @@ export const FullScreenContainer = styled.div`
     align-items: center;
     flex-direction: column;
     background-repeat: no-repeat;
+    background-position-x: -1px;
 `;
 
 const OrangeContainerBase = styled(OrangeBase)`
