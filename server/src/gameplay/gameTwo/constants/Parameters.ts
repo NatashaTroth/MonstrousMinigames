@@ -37,7 +37,7 @@ const MAX_SHEEP_COUNT = 75;
 const KILL_RADIUS = 50;
 const KILLS_PER_ROUND = 5;
 
-const ROUNDS = shorterGame ? 1 : 5;
+const ROUNDS = shorterGame ? 1 : 3;
 
 type phaseTimes = {
     [key: string]: number;
