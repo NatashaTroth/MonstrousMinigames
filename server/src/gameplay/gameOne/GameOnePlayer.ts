@@ -172,7 +172,6 @@ class GameOnePlayer extends Player implements PlayerState {
     }
 
     private handlePlayerApproachingSolvableObstacle(): void {
-        console.log('handlePlayerApproachingSolvableObstacle');
         // when already carrying a stone, no action is required
         if (this.obstacles[0].type === ObstacleType.Stone && this.stonesCarrying > 0) {
             return;
