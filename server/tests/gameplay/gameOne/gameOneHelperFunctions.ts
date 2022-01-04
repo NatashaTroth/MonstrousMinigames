@@ -4,14 +4,14 @@ import DI from '../../../src/di';
 import { GameOne } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/enums';
 import Game from '../../../src/gameplay/Game';
-import * as InitialGameParameters from '../../../src/gameplay/gameOne/GameOneInitialParameters';
+import InitialParameters from '../../../src/gameplay/gameOne/constants/InitialParameters';
 import { PlayerRank } from '../../../src/gameplay/gameOne/interfaces';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
 } from '../../../src/gameplay/interfaces/GlobalEventMessages';
 import { users } from '../mockData';
 
-const TRACK_LENGTH = InitialGameParameters.TRACK_LENGTH;
+const TRACK_LENGTH = InitialParameters.TRACK_LENGTH;
 const gameEventEmitter = DI.resolve(GameEventEmitter);
 const dateNow = 1618665766156;
 

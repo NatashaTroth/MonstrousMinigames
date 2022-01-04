@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
-import * as InitialGameParameters from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
+import InitialParameters from '../../../../src/gameplay/gameOne/constants/InitialParameters';
 import { GameStateInfo } from '../../../../src/gameplay/gameOne/interfaces';
 import { leaderboard, roomId, users } from '../../mockData';
 import { clearTimersAndIntervals } from '../gameOneHelperFunctions';
@@ -16,9 +16,9 @@ describe('Get Obstacle Positions test', () => {
         gameOne = new GameOne(roomId, leaderboard);
         gameOne.createNewGame(
             users,
-            InitialGameParameters.TRACK_LENGTH,
-            InitialGameParameters.NUMBER_OBSTACLES,
-            InitialGameParameters.NUMBER_STONES
+            InitialParameters.TRACK_LENGTH,
+            InitialParameters.NUMBER_OBSTACLES,
+            InitialParameters.NUMBER_STONES
         );
         gameStateInfo = gameOne.getGameStateInfo();
     });
@@ -74,7 +74,7 @@ describe('Get Obstacle Positions test', () => {
 
     it('returns player with correct number of obstacles (all)', async () => {
         expect(gameStateInfo.playersState[0].obstacles.length).toBe(
-            InitialGameParameters.NUMBER_OBSTACLES + InitialGameParameters.NUMBER_STONES
+            InitialParameters.NUMBER_OBSTACLES + InitialParameters.NUMBER_STONES
         );
     });
 

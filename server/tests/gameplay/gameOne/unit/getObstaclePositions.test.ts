@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
 import { GameOne } from '../../../../src/gameplay';
-import * as InitialGameParameters from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
+import InitialParameters from '../../../../src/gameplay/gameOne/constants/InitialParameters';
 import { Obstacle } from '../../../../src/gameplay/gameOne/interfaces';
 import { HashTable } from '../../../../src/gameplay/interfaces';
 import { leaderboard, roomId, users } from '../../mockData';
@@ -16,9 +16,9 @@ describe('Get Obstacle Positions test', () => {
         gameOne = new GameOne(roomId, leaderboard);
         gameOne.createNewGame(
             users,
-            InitialGameParameters.TRACK_LENGTH,
-            InitialGameParameters.NUMBER_OBSTACLES,
-            InitialGameParameters.NUMBER_STONES
+            InitialParameters.TRACK_LENGTH,
+            InitialParameters.NUMBER_OBSTACLES,
+            InitialParameters.NUMBER_STONES
         );
         obstacles = gameOne.getObstaclePositions();
     });
@@ -32,9 +32,7 @@ describe('Get Obstacle Positions test', () => {
     });
 
     it('should return the correct number of obstacles', async () => {
-        expect(obstacles['1'].length).toBe(
-            InitialGameParameters.NUMBER_OBSTACLES + InitialGameParameters.NUMBER_STONES
-        );
+        expect(obstacles['1'].length).toBe(InitialParameters.NUMBER_OBSTACLES + InitialParameters.NUMBER_STONES);
     });
 
     it('should contain the key obstacle positionX', async () => {

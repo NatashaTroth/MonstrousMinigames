@@ -1,10 +1,10 @@
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
 import Player from '../Player';
+import InitialParameters from './constants/InitialParameters';
 import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
 import UserHasNoStones from './customErrors/UserHasNoStones';
 import { ObstacleType } from './enums';
 import GameOneEventEmitter from './GameOneEventEmitter';
-import * as InitialGameParameters from './GameOneInitialParameters';
 import { Obstacle, PlayerState } from './interfaces';
 import { ObstacleReachedInfoController } from './interfaces/GameEvents';
 
@@ -20,8 +20,8 @@ class GameOnePlayer extends Player implements PlayerState {
     chaserPushesUsed = 0;
     countRunsPerFrame = 0;
     maxRunsPerFrame = 2;
-    stunnedTime = InitialGameParameters.STUNNED_TIME;
-    maxNumberOfChaserPushes = InitialGameParameters.MAX_NUMBER_CHASER_PUSHES;
+    stunnedTime = InitialParameters.STUNNED_TIME;
+    maxNumberOfChaserPushes = InitialParameters.MAX_NUMBER_CHASER_PUSHES;
 
     constructor(
         id: string,
@@ -172,6 +172,7 @@ class GameOnePlayer extends Player implements PlayerState {
     }
 
     private handlePlayerApproachingSolvableObstacle(): void {
+        console.log('handlePlayerApproachingSolvableObstacle');
         // when already carrying a stone, no action is required
         if (this.obstacles[0].type === ObstacleType.Stone && this.stonesCarrying > 0) {
             return;
@@ -236,7 +237,7 @@ class GameOnePlayer extends Player implements PlayerState {
             !this.atObstacle &&
             (this.obstacles.length || 0) > 0 &&
             (this.positionX || 0) >=
-                (this.obstacles[0].positionX || 0) - InitialGameParameters.APPROACH_SOLVABLE_OBSTACLE_DISTANCE &&
+                (this.obstacles[0].positionX || 0) - InitialParameters.APPROACH_SOLVABLE_OBSTACLE_DISTANCE &&
             this.obstacles[0].solvable
         );
     }

@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
-import * as InitialGameParameters from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
+import InitialParameters from '../../../../src/gameplay/gameOne/constants/InitialParameters';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
 import {
     advanceCountdown, clearTimersAndIntervals, releaseThreadN
@@ -34,7 +34,7 @@ describe('Chasers', () => {
             gameOne.players.get(users[i].id)!.positionX = 0;
         }
 
-        gameOne.chasersPositionX = InitialGameParameters.CHASERS_POSITION_X;
+        gameOne.chasersPositionX = InitialParameters.CHASERS_POSITION_X;
         gameOne['updateChasersPosition'](100);
 
         expect(gameOne.gameState).toBe(GameState.Finished);

@@ -12,9 +12,9 @@ import { GameType } from '../leaderboard/enums/GameType';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Player from '../Player';
 import Chasers from './classes/Chasers';
+import InitialParameters from './constants/InitialParameters';
 import { GameOneMsgType } from './enums';
 import GameOneEventEmitter from './GameOneEventEmitter';
-import * as InitialGameParameters from './GameOneInitialParameters';
 import GameOnePlayer from './GameOnePlayer';
 import {
     createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
@@ -36,14 +36,14 @@ interface GameOneInterface extends IGameInterface<GameOnePlayer, GameStateInfo> 
 }
 
 export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implements GameOneInterface {
-    trackLength = InitialGameParameters.TRACK_LENGTH;
-    numberOfObstacles = InitialGameParameters.NUMBER_OBSTACLES;
-    numberOfStones = InitialGameParameters.NUMBER_STONES;
-    speed = InitialGameParameters.SPEED;
-    countdownTime = InitialGameParameters.COUNTDOWN_TIME; //should be 1 second more than client - TODO: make sure it is
-    cameraSpeed = InitialGameParameters.CAMERA_SPEED;
-    initialPlayerPositionX = InitialGameParameters.PLAYERS_POSITION_X;
-    cameraPositionX = InitialGameParameters.CAMERA_POSITION_X;
+    trackLength = InitialParameters.TRACK_LENGTH;
+    numberOfObstacles = InitialParameters.NUMBER_OBSTACLES;
+    numberOfStones = InitialParameters.NUMBER_STONES;
+    speed = InitialParameters.SPEED;
+    countdownTime = InitialParameters.COUNTDOWN_TIME; //should be 1 second more than client - TODO: make sure it is
+    cameraSpeed = InitialParameters.CAMERA_SPEED;
+    initialPlayerPositionX = InitialParameters.PLAYERS_POSITION_X;
+    cameraPositionX = InitialParameters.CAMERA_POSITION_X;
     obstacleTypes: ObstacleTypeObject[] = [];
     gameName = GameNames.GAME1;
     chasers?: Chasers;
@@ -144,8 +144,8 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         this.trackLength = trackLength;
         this.numberOfObstacles = numberOfObstacles;
         this.numberOfStones = numberOfStones;
-        this.initialPlayerPositionX = InitialGameParameters.PLAYERS_POSITION_X;
-        this.cameraPositionX = InitialGameParameters.CAMERA_POSITION_X;
+        this.initialPlayerPositionX = InitialParameters.PLAYERS_POSITION_X;
+        this.cameraPositionX = InitialParameters.CAMERA_POSITION_X;
         this.chasers = new Chasers(this.trackLength, this.roomId);
 
         super.createNewGame(users);

@@ -4,8 +4,8 @@ import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
+import InitialParameters from '../../../../src/gameplay/gameOne/constants/InitialParameters';
 import { ObstacleType } from '../../../../src/gameplay/gameOne/enums';
-import * as InitialGameParameters from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import { GameEvents } from '../../../../src/gameplay/gameOne/interfaces';
 import {
     GAME_ONE_EVENT_MESSAGE__CHASERS_WERE_PUSHED, GAME_ONE_EVENT_MESSAGE__OBSTACLE_REACHED,
@@ -570,7 +570,7 @@ describe('Chaser event', () => {
         });
         // gameOne['runForward']('1', chasersStartPosX);
         gameOne.players.get(users[0].id)!.finished = true;
-        gameOne.players.get(users[0].id)!.chaserPushesUsed = InitialGameParameters.MAX_NUMBER_CHASER_PUSHES - 1;
+        gameOne.players.get(users[0].id)!.chaserPushesUsed = InitialParameters.MAX_NUMBER_CHASER_PUSHES - 1;
         gameOne['pushChasers'](users[0].id);
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(maxNrChasersEvent).toBeTruthy();
