@@ -35,8 +35,8 @@ import {
 import { PlayerRanksMessage, playerRanksTypeGuard } from '../../../typeGuards/game2/playerRanks';
 import { SheepGameHasStartedMessage, sheepGameStartedTypeGuard } from '../../../typeGuards/game2/started';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
-import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
+import { resumeHandler } from '../gameState/resumeHandler';
 import { audioFiles, characters, images } from './GameAssets';
 
 class SheepGameScene extends Phaser.Scene {
@@ -103,7 +103,6 @@ class SheepGameScene extends Phaser.Scene {
         this.gameRenderer = new PhaserGameRenderer(this);
         this.gameTwoRenderer = new GameTwoRenderer(this);
 
-        //this.initSockets();
         if (!this.socketsInitiated) this.initSockets();
 
         if (this.roomId === '' && data.roomId !== undefined) {
@@ -178,8 +177,10 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     initSockets() {
-        if (!this.socket) return; //TODO - handle error - although think ok
+        if (!this.socket) return;
+
         this.socketsInitiated = true;
+
         if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
@@ -187,12 +188,10 @@ class SheepGameScene extends Phaser.Scene {
                 this.gameStarted = true;
                 this.initiateGame(data.data);
                 this.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');
-                // third message -> start Game
                 if (this.screenAdmin && !designDevelopment) this.sendStartGame();
             });
         }
 
-        // second message -> createGame
         const allScreensSheepGameLoaded = new MessageSocket(allScreensSheepGameLoadedTypeGuard, this.socket);
         allScreensSheepGameLoaded.listen((data: AllScreensSheepGameLoadedMessage) => {
             if (this.screenAdmin) this.sendCreateNewGame();
@@ -230,11 +229,8 @@ class SheepGameScene extends Phaser.Scene {
             this.pauseGame();
         });
 
-        const resumedSocket = new MessageSocket(resumedTypeGuard, this.socket);
-        resumedSocket.listen((data: GameHasResumedMessage) => {
-            if (this.notCurrentGameScene()) return;
-            this.resumeGame();
-        });
+        const resumeHandlerWithDependencies = resumeHandler({ scene: this });
+        resumeHandlerWithDependencies(this.socket);
 
         const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
         gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
@@ -267,6 +263,10 @@ class SheepGameScene extends Phaser.Scene {
 
         this.gameEventEmitter.on(GameEventTypes.PauseResume, () => {
             this.handlePauseResumeButton();
+        });
+
+        this.gameEventEmitter.on(GameEventTypes.Stop, () => {
+            this.handleStopGame();
         });
     }
 
@@ -413,17 +413,13 @@ class SheepGameScene extends Phaser.Scene {
         this.gameAudio?.pause();
     }
 
-    private resumeGame() {
-        this.paused = false;
-        this.players.forEach(player => {
-            player.startRunning();
-        });
-        this.scene.resume();
-        this.gameAudio?.resume();
+    handlePauseResumeButton() {
+        if (PhaserGame.getInstance().currentScene !== PhaserGame.SCENE_NAME_GAME_2) return;
+        this.socket?.emit({ type: MessageTypes.pauseResume });
     }
 
-    handlePauseResumeButton() {
-        this.socket?.emit({ type: MessageTypes.pauseResume });
+    handleStopGame() {
+        handleStop(this.socket);
     }
 
     handleError(msg = 'Something went wrong.') {
@@ -441,11 +437,10 @@ class SheepGameScene extends Phaser.Scene {
         //     obstacle.destroy();
         // });
     }
-
-    //TODO stop game button
-    // function handleStopGame() {
-    //     screenSocket?.emit({ type: MessageTypes.stopGame });
-    // }
 }
 
 export default SheepGameScene;
+
+function handleStop(socket: Socket | undefined) {
+    socket?.emit({ type: MessageTypes.stopGame });
+}
