@@ -18,6 +18,7 @@ export const startPhaserGameHandler = messageHandler(
     (message, dependencies: Dependencies, roomId) => {
         const { setGameStarted, history } = dependencies;
         setGameStarted(true);
+        document.body.style.overflow = 'hidden';
         history.push(screenGame1Route(roomId));
     }
 );

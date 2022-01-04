@@ -14,7 +14,7 @@ interface MasterHeaderProps {
 const MasterHeader: React.FC<MasterHeaderProps> = ({ history }) => {
     const { isPlaying, togglePlaying } = React.useContext(MyAudioContext);
 
-    if (history.location.pathname.includes(Routes.game1)) {
+    if (history.location.pathname.includes(Routes.game1 || Routes.game2)) {
         return null;
     }
 

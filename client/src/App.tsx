@@ -74,7 +74,7 @@ const App: React.FunctionComponent = () => {
 
     return (
         <>
-            <div id="phaserWrapper">
+            <div id="phaserWrapper" style={{ position: 'absolute' }}>
                 <div id="phaserGameContainer" />
             </div>
             <Router history={history}>
