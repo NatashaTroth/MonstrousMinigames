@@ -301,7 +301,8 @@ class MainScene extends Phaser.Scene {
 
 export default MainScene;
 
-export function handleResume(socket: Socket | undefined) {
+export function handleResume(socket: Socket | undefined, currentScene = PhaserGame.getInstance().currentScene) {
+    if (currentScene !== PhaserGame.SCENE_NAME_GAME_1) return;
     socket?.emit({ type: MessageTypes.pauseResume });
 }
 

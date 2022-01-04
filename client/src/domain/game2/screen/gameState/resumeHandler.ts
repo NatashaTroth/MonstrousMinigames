@@ -22,7 +22,7 @@ interface Dependencies {
 
 export const resumeHandler = messageHandler(resumedTypeGuard, (message, dependencies: Dependencies) => {
     const { scene, currentScene = PhaserGame.getInstance().currentScene } = dependencies;
-    if (currentScene !== PhaserGame.SCENE_NAME_GAME_1) return;
+    if (currentScene !== PhaserGame.SCENE_NAME_GAME_2) return;
 
     scene.paused = false;
     scene.players.forEach(player => {

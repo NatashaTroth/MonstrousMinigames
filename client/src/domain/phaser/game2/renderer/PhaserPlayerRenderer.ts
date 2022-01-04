@@ -2,9 +2,11 @@ import Phaser from 'phaser';
 
 import { depthDictionary } from '../../../../config/depthDictionary';
 import SheepGameScene from '../../../game2/screen/components/SheepGameScene';
+import * as colors from '../../colors';
 import { Character } from '../../gameInterfaces';
 import { CharacterAnimationFrames } from '../../gameInterfaces/Character';
 import { Coordinates } from '../../gameTypes';
+import { loadingTextStyleProperties } from '../../textStyleProperties';
 
 /**
  * this is an incomplete PlayerRenderer adapter which contains all the phaser logic. This class might only be tested via
@@ -12,16 +14,21 @@ import { Coordinates } from '../../gameTypes';
  */
 
 export class PhaserPlayerRenderer {
-    private player?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    private player: {
+        name?: Phaser.GameObjects.Text;
+        body?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    };
     private character?: Character;
     private direction?: string;
 
-    constructor(private scene: SheepGameScene) {}
+    constructor(private scene: SheepGameScene) {
+        this.player = {};
+    }
 
-    renderPlayer(coordinates: Coordinates, character: Character): void {
+    renderPlayer(coordinates: Coordinates, character: Character, playerName: string): void {
         this.character = character;
-        if (!this.player) {
-            this.renderPlayerInitially(coordinates, character.name);
+        if (!this.player.body || !this.player.name) {
+            this.renderPlayerInitially(coordinates, character, playerName);
             // frames:
             // 0-3: forward
             // 4-7: left
@@ -32,13 +39,17 @@ export class PhaserPlayerRenderer {
             this.initiateAnimation(character.name, character.name.concat('_walkLeft'), { start: 4, end: 7 });
             this.initiateAnimation(character.name, character.name.concat('_walkRight'), { start: 8, end: 11 });
         } else {
-            this.player.x = coordinates.x;
-            this.player.y = coordinates.y;
+            this.player.body.x = coordinates.x;
+            this.player.body.y = coordinates.y;
+
+            this.player.name.x = coordinates.x - this.player.body.displayWidth / 2;
+            this.player.name.y = coordinates.y - this.player.body.displayHeight / 2 - 20;
         }
     }
 
     destroyPlayer() {
-        this.player?.destroy();
+        this.player.body?.destroy();
+        this.player.name?.destroy();
     }
 
     getMoveDirection(oldX: number, oldY: number, newX: number, newY: number) {
@@ -64,10 +75,20 @@ export class PhaserPlayerRenderer {
     }
 
     movePlayerTo(newXPosition: number, newYPosition: number) {
-        if (this.player) {
-            const newDirection = this.getMoveDirection(this.player?.x, this.player?.y, newXPosition, newYPosition);
-            this.player.x = newXPosition;
-            this.player.y = newYPosition;
+        if (this.player.body) {
+            const newDirection = this.getMoveDirection(
+                this.player.body.x,
+                this.player.body.y,
+                newXPosition,
+                newYPosition
+            );
+            this.player.body.x = newXPosition;
+            this.player.body.y = newYPosition;
+
+            if (this.player.name) {
+                this.player.name.x = newXPosition - this.player.body.displayWidth / 2;
+                this.player.name.y = newYPosition - this.player.body.displayHeight / 2 - 20;
+            }
 
             if (this.character) {
                 if (this.direction != newDirection) {
@@ -93,11 +114,24 @@ export class PhaserPlayerRenderer {
         }
     }
 
-    private renderPlayerInitially(coordinates: Coordinates, monsterSpriteSheetName: string) {
-        this.player = this.scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName);
-        this.player.setScale(0.1);
-        this.player.setDepth(depthDictionary.player);
-        this.player.setCollideWorldBounds(true);
+    private renderPlayerInitially(coordinates: Coordinates, character: Character, playerName: string) {
+        this.player.body = this.scene.physics.add.sprite(coordinates.x, coordinates.y, character.name);
+        this.player.body.setScale(0.1);
+        this.player.body.setDepth(depthDictionary.player);
+        this.player.body.setCollideWorldBounds(true);
+
+        this.player.name = this.scene.make.text({
+            x: this.player.body.x - this.player.body.displayWidth / 2,
+            y: this.player.body.y - this.player.body.displayHeight / 2 - 20,
+            text: playerName,
+            style: {
+                ...loadingTextStyleProperties,
+                fontSize: `20px`,
+                color: colors.black,
+                fontStyle: 'bold',
+            },
+        });
+        this.player.name.setDepth(depthDictionary.percentText);
     }
 
     private initiateAnimation(spritesheetName: string, animationName: string, frames: CharacterAnimationFrames) {
@@ -110,9 +144,9 @@ export class PhaserPlayerRenderer {
     }
 
     startAnimation(animationName: string) {
-        this.player?.play(animationName);
+        this.player.body?.play(animationName);
     }
     stopAnimation() {
-        this.player?.anims.stop();
+        this.player.body?.anims.stop();
     }
 }
