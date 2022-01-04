@@ -10,6 +10,7 @@ export class GameTwoRenderer {
     brightnessOverlay?: Phaser.GameObjects.Rectangle;
     guessInstructionText?: Phaser.GameObjects.Text;
     roundText?: Phaser.GameObjects.Text;
+    sheepCountText?: Phaser.GameObjects.Text;
 
     constructor(private scene: SheepGameScene) {}
 
@@ -75,5 +76,27 @@ export class GameTwoRenderer {
         element.setDisplaySize(width, height);
         element.setOrigin(0, 0);
         element.setDepth(depthDictionary.sky);
+    }
+
+    renderInitialSheepCount(count: number) {
+        const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
+        const screenCenterHeight = this.scene.cameras.main.worldView.y + this.scene.cameras.main.height / 2;
+        this.sheepCountText = this.scene.make.text({
+            x: screenCenterWidth,
+            y: screenCenterHeight - 50,
+            text: `${count} sheeps are on the meadow`,
+            style: {
+                ...loadingTextStyleProperties,
+                fontSize: `${40}px`,
+                color: colors.black,
+                fontStyle: 'bold',
+            },
+        });
+        this.sheepCountText.setOrigin(0.5);
+        this.sheepCountText.setDepth(depthDictionary.percentText);
+    }
+
+    destroyInitialSheepCount() {
+        this.sheepCountText?.destroy();
     }
 }

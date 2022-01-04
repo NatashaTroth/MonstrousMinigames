@@ -398,11 +398,19 @@ class SheepGameScene extends Phaser.Scene {
             } else {
                 this.gameRenderer?.destroyCountdown();
                 clearInterval(countdownInterval);
+                this.createInitialSheepCount();
             }
         };
 
         updateCountdown();
         const countdownInterval = setInterval(updateCountdown, 1000);
+    }
+
+    private createInitialSheepCount() {
+        if (this.gameTwoRenderer) {
+            this.gameTwoRenderer.renderInitialSheepCount(this.sheep.length);
+            setTimeout(() => this.gameTwoRenderer!.destroyInitialSheepCount(), 3000);
+        }
     }
 
     private pauseGame() {
