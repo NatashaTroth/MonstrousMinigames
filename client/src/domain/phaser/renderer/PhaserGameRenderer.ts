@@ -43,7 +43,7 @@ export class PhaserGameRenderer {
 
     renderCountdown(text: string) {
         this.countdownText = handleRenderCountdown(this.scene, this.countdownText, text);
-        this.countdownText.setDepth(depthDictionary.player);
+        this.countdownText.setDepth(depthDictionary.countdown);
     }
 
     renderLeaderboard(data: PlayerRank[]) {

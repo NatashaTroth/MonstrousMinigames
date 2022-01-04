@@ -52,7 +52,7 @@ export class Player {
             y: this.gameToScreenMapper.mapGameYMeasurementToScreen(this.coordinates.y),
         };
 
-        this.renderer.renderPlayer(screenCoordinates, this.character);
+        this.renderer.renderPlayer(screenCoordinates, this.character, this.username);
     }
 
     startRunning() {
