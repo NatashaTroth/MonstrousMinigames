@@ -8,8 +8,8 @@ import { loadingTextStyleProperties } from '../../textStyleProperties';
 
 export class GameTwoRenderer {
     brightnessOverlay?: Phaser.GameObjects.Rectangle;
-    guessText?: Phaser.GameObjects.Text;
     guessInstructionText?: Phaser.GameObjects.Text;
+    roundText?: Phaser.GameObjects.Text;
 
     constructor(private scene: SheepGameScene) {}
 
@@ -20,8 +20,27 @@ export class GameTwoRenderer {
         this.brightnessOverlay.setOrigin(0, 0);
         this.brightnessOverlay.setAlpha(0);
     }
+
     updateBrightnessOverlay(brightness: number) {
         this.brightnessOverlay?.setAlpha(1 - brightness / 100);
+    }
+
+    renderRoundCount(round: number) {
+        const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
+        const screenCenterHeight = this.scene.cameras.main.worldView.y + 50;
+        this.roundText = this.scene.make.text({
+            x: screenCenterWidth,
+            y: screenCenterHeight,
+            text: `Round ${round}`,
+            style: {
+                ...loadingTextStyleProperties,
+                fontSize: `30px`,
+                color: colors.orange,
+                fontStyle: 'bold',
+            },
+        });
+        this.roundText.setOrigin(0.5);
+        this.roundText.setDepth(depthDictionary.percentText);
     }
 
     renderGuessText(show: boolean) {
@@ -33,7 +52,7 @@ export class GameTwoRenderer {
                 this.guessInstructionText = this.scene.make.text({
                     x: screenCenterWidth,
                     y: screenCenterHeight - 50,
-                    text: 'How many sheep are there?\nEnter your guess on your device.',
+                    text: 'How many sheep are on the meadow?\nEnter your guess on your device.',
                     style: {
                         ...loadingTextStyleProperties,
                         fontSize: `${40}px`,

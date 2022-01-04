@@ -343,6 +343,7 @@ class SheepGameScene extends Phaser.Scene {
             this.sheep.forEach(sheep => {
                 sheep.renderer.setSheepVisible(true);
             });
+            this.gameTwoRenderer?.renderRoundCount(data.round);
         }
     }
 
