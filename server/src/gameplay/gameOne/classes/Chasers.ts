@@ -11,6 +11,7 @@ class Chasers {
 
     async update(timeElapsed: number, timeElapsedSinceLastFrame: number): Promise<void> {
         this.updateChasersPosition(timeElapsedSinceLastFrame);
+        // console.log('chaser update' + this.chasersPositionX);
     }
 
     private updateChasersPosition(timeElapsedSinceLastFrame: number) {

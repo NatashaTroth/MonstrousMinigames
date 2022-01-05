@@ -15,6 +15,16 @@ const TRACK_LENGTH = InitialParameters.TRACK_LENGTH;
 const gameEventEmitter = DI.resolve(GameEventEmitter);
 const dateNow = 1618665766156;
 
+export function advanceCountdown(gameOne: GameOne, time: number) {
+    gameOne['update'](10, time);
+    const previousNow = Date.now;
+    Date.now = () => previousNow() + time;
+    jest.advanceTimersByTime(time);
+    //Todo change to update time - not call update function - not working - update is being called after expect (look at stun test)
+    // await advanceCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+    // await releaseThread();
+}
+
 export const releaseThread = () => new Promise<void>(resolve => resolve());
 export const releaseThreadN = async (n: number) => {
     for (let i = 0; i < n; i++) {
@@ -25,13 +35,11 @@ export const releaseThreadN = async (n: number) => {
 export function clearTimersAndIntervals(game: Game) {
     //to clear intervals
     jest.advanceTimersByTime((game as GameOne).countdownTime || 0);
-    // jest.advanceTimersByTime(gameOne.timeOutLimit);
     try {
         game.stopGameUserClosed();
     } catch (e) {
         //no need to handle, game is already finished
     }
-    // jest.runAllTimers();
     jest.clearAllMocks();
 }
 
@@ -40,9 +48,9 @@ export function startGameAndAdvanceCountdown(gameOne: GameOne, afterCreate: () =
     gameOne.createNewGame(users, TRACK_LENGTH, 4);
     afterCreate();
     gameOne.startGame();
-    advanceCountdown(gameOne.countdownTime);
+    advanceStartCountdown(gameOne.countdownTime);
 }
-export function advanceCountdown(time: number) {
+export function advanceStartCountdown(time: number) {
     //run countdown
     const previousNow = Date.now;
     Date.now = () => previousNow() + time;
@@ -50,7 +58,7 @@ export function advanceCountdown(time: number) {
 }
 
 export function finishCreatedGame(gameOne: GameOne) {
-    advanceCountdown(gameOne.countdownTime);
+    advanceCountdown(gameOne, gameOne.countdownTime);
     return finishGame(gameOne);
 }
 
@@ -71,7 +79,8 @@ export function finishGame(gameOne: GameOne): GameOne {
 
 export function finishPlayer(gameOne: GameOne, userId: string) {
     completePlayersObstacles(gameOne, userId);
-    gameOne['runForward'](userId, gameOne.trackLength - gameOne.players.get(userId)!.positionX);
+
+    gameOne.players.get(userId)!.runForward(gameOne.trackLength - gameOne.players.get(userId)!.positionX);
 }
 
 export function completePlayersObstacles(gameOne: GameOne, userId: string) {
@@ -92,15 +101,18 @@ export function goToNextUnsolvableObstacle(gameOne: GameOne, userId: string) {
     const player = gameOne.players.get(userId)!;
     // gameOne.maxRunsPerFrame = Infinity; //To prevent going over speedlimit
     while (player.obstacles.length && !player.atObstacle) {
-        gameOne['runForward'](userId, distanceToNextObstacle(gameOne, userId));
+        gameOne.players.get(userId)!.runForward(distanceToNextObstacle(gameOne, userId));
+
         player.countRunsPerFrame = 0; //To prevent going over speed limit
     }
 }
 
 export function completeNextObstacle(gameOne: GameOne, userId: string) {
-    gameOne['runForward'](userId, distanceToNextObstacle(gameOne, userId));
-    if (gameOne['playerHasReachedObstacle'](userId))
-        gameOne['playerHasCompletedObstacle'](userId, gameOne.players.get(userId)!.obstacles[0].id);
+    gameOne.players.get(userId)!.runForward(distanceToNextObstacle(gameOne, userId));
+    advanceCountdown(gameOne, 10);
+
+    // if (gameOne['playerHasReachedObstacle'](userId))
+    //     gameOne['playerHasCompletedObstacle'](userId, gameOne.players.get(userId)!.obstacles[0].id);
 }
 
 export function distanceToNextObstacle(gameOne: GameOne, userId: string) {
@@ -108,7 +120,7 @@ export function distanceToNextObstacle(gameOne: GameOne, userId: string) {
 }
 
 export function runToNextObstacle(gameOne: GameOne, userId: string) {
-    gameOne['runForward']('1', distanceToNextObstacle(gameOne, userId));
+    gameOne.players.get(userId)!.runForward(distanceToNextObstacle(gameOne, userId));
 }
 
 export async function startAndFinishGameDifferentTimes(gameOne: GameOne) {
@@ -120,21 +132,25 @@ export async function startAndFinishGameDifferentTimes(gameOne: GameOne) {
         completePlayersObstacles(gameOne, i.toString());
     }
 
-    advanceCountdown(1000);
+    advanceCountdown(gameOne, 1000);
     await releaseThreadN(3);
-    gameOne['runForward']('1', TRACK_LENGTH);
+    gameOne.players.get('1')!.runForward(TRACK_LENGTH);
+
     await releaseThreadN(3);
-    advanceCountdown(4000);
+    advanceCountdown(gameOne, 4000);
     await releaseThreadN(3);
-    gameOne['runForward']('2', TRACK_LENGTH);
+    gameOne.players.get('2')!.runForward(TRACK_LENGTH);
+
     await releaseThreadN(3);
-    advanceCountdown(5000);
+    advanceCountdown(gameOne, 5000);
     await releaseThreadN(3);
-    gameOne['runForward']('3', TRACK_LENGTH);
+    gameOne.players.get('3')!.runForward(TRACK_LENGTH);
+
     await releaseThreadN(3);
-    advanceCountdown(5000);
+    advanceCountdown(gameOne, 5000);
     await releaseThreadN(3);
-    gameOne['runForward']('4', TRACK_LENGTH);
+    gameOne.players.get('4')!.runForward(TRACK_LENGTH);
+
     await releaseThreadN(3);
     return gameOne;
 }
@@ -173,11 +189,11 @@ export function getGameFinishedDataSameRanks(gameOne: GameOne) {
         completePlayersObstacles(gameOne, i.toString());
     }
 
-    gameOne['runForward']('1', TRACK_LENGTH);
-    gameOne['runForward']('2', TRACK_LENGTH);
-    gameOne['runForward']('3', TRACK_LENGTH);
+    gameOne.players.get('1')!.runForward(TRACK_LENGTH);
+    gameOne.players.get('2')!.runForward(TRACK_LENGTH);
+    gameOne.players.get('3')!.runForward(TRACK_LENGTH);
     Date.now = jest.fn(() => dateNow + 15000);
-    gameOne['runForward']('4', TRACK_LENGTH);
+    gameOne.players.get('4')!.runForward(TRACK_LENGTH);
 
     return eventData;
 }

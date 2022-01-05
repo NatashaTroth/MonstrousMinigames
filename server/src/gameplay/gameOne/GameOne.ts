@@ -149,7 +149,6 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         this.chasers = new Chasers(this.trackLength, this.roomId);
 
         super.createNewGame(users);
-
         const firstGameStateInfo = this.getGameStateInfo();
         GameOneEventEmitter.emitInitialGameStateInfoUpdate(this.roomId, {
             roomId: firstGameStateInfo.roomId,
@@ -160,6 +159,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             chasersPositionX: firstGameStateInfo.chasersPositionX,
             cameraPositionX: firstGameStateInfo.cameraPositionX,
         });
+
         GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers()); // TODO test (test all times this emitter is called)
     }
 
@@ -285,7 +285,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     }
 
     private chaserHasCaughtPlayer(player: GameOnePlayer) {
-        return player.finished && player.positionX <= this.chasers!.getPosition();
+        return !player.finished && player.positionX <= this.chasers!.getPosition();
     }
 
     private pushChasers(userIdPushing: string) {
