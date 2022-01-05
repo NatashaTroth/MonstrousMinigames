@@ -23,7 +23,7 @@ const Settings: React.FunctionComponent = () => {
     const { isPlaying, setVolume, volume, togglePlaying } = React.useContext(MyAudioContext);
 
     const handleChange = (event: React.ChangeEvent<unknown>, newValue: number | number[]): void => {
-        setVolume(typeof newValue == 'number' ? newValue : newValue[0]);
+        setVolume(typeof newValue === 'number' ? newValue : newValue[0]);
     };
 
     return (

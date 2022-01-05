@@ -53,16 +53,17 @@ export class PhaserPlayerRenderer {
     }
 
     getMoveDirection(oldX: number, oldY: number, newX: number, newY: number) {
-        if (newX == oldX) {
+        if (newX === oldX) {
             //move up/down
             if (oldY < newY) {
                 return 'down';
             } else if (oldY > newY) {
                 return 'up';
             }
+
             return 'stand';
         }
-        if (newY == oldY) {
+        if (newY === oldY) {
             //move left/right
             if (oldX < newX) {
                 return 'right';

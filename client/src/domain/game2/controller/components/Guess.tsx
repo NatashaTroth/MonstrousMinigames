@@ -4,7 +4,6 @@ import Button from '../../../../components/common/Button';
 import { FullScreenContainer } from '../../../../components/common/FullScreenStyles.sc';
 import { inputStyles } from '../../../../components/controller/ConnectScreen.sc';
 import { ControllerSocketContext } from '../../../../contexts/controller/ControllerSocketContextProvider';
-import { Game2Context } from '../../../../contexts/game2/Game2ContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import { MessageTypesGame2 } from '../../../../utils/constants';
 import { FormContainer, Instructions } from './Game2Styles.sc';
@@ -14,14 +13,14 @@ const Guess: React.FunctionComponent = () => {
     const [guess, setGuess] = React.useState<undefined | string>('');
     const { userId } = React.useContext(PlayerContext);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
-    const { guessHint } = React.useContext(Game2Context);
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setSubmitted(true);
+
         controllerSocket?.emit({
             type: MessageTypesGame2.guess,
-            userId: userId,
+            userId,
             guess,
         });
     }

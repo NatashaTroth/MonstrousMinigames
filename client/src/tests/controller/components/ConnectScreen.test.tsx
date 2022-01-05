@@ -99,7 +99,7 @@ describe('IFrameContent', () => {
         );
 
         const nameInput = container.find('input').at(0);
-        const roomInput = container.find('input').at(0);
+        const roomInput = container.find('input').at(1);
 
         nameInput.simulate('focus');
         nameInput.simulate('change', { target: { value: 'Name' } });
