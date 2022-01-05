@@ -26,7 +26,7 @@ export class PhaserSheepRenderer {
     }
 
     getMoveDirection(oldX: number, oldY: number, newX?: number, newY?: number) {
-        if (newX == oldX) {
+        if (newX === oldX) {
             //move up/down
             if (newY) {
                 if (oldY < newY) {
@@ -38,7 +38,7 @@ export class PhaserSheepRenderer {
             }
         }
 
-        if (newY == oldY) {
+        if (newY === oldY) {
             if (newX) {
                 //move left/right
                 if (oldX < newX) {
@@ -72,9 +72,9 @@ export class PhaserSheepRenderer {
     }
 
     renderSheep(coordinates: Coordinates, state: SheepState) {
-        if (state == SheepState.ALIVE) {
+        if (state === SheepState.ALIVE) {
             this.renderSheepInitially(coordinates);
-        } else if (state == SheepState.DECOY) {
+        } else if (state === SheepState.DECOY) {
             this.placeDecoy();
         }
     }

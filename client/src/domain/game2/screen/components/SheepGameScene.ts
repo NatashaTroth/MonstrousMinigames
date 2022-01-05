@@ -318,9 +318,9 @@ class SheepGameScene extends Phaser.Scene {
                     this.gameToScreenMapper?.mapGameXMeasurementToScreen(gameStateData.sheep[i].posX),
                     this.gameToScreenMapper?.mapGameYMeasurementToScreen(gameStateData.sheep[i].posY)
                 );
-                if (gameStateData.sheep[i].state && gameStateData.sheep[i].state == SheepState.DECOY) {
+                if (gameStateData.sheep[i].state && gameStateData.sheep[i].state === SheepState.DECOY) {
                     this.sheep[i].renderer.placeDecoy();
-                } else if (gameStateData.sheep[i].state == SheepState.DEAD) {
+                } else if (gameStateData.sheep[i].state === SheepState.DEAD) {
                     this.sheep[i].renderer.destroySheep();
                 }
             }
@@ -330,20 +330,25 @@ class SheepGameScene extends Phaser.Scene {
 
     updateGamePhase(data: PhaseChangedMessage) {
         this.phase = data.phase;
-        if (this.phase == GamePhases.guessing) {
-            this.sheep.forEach(sheep => {
-                sheep.renderer.setSheepVisible(false);
-            });
-            this.gameTwoRenderer?.renderGuessText(true);
-        } else if (this.phase == GamePhases.results) {
-            this.gameTwoRenderer?.renderGuessText(false);
-            // TODO
-        } else {
-            this.gameRenderer?.destroyLeaderboard();
-            this.sheep.forEach(sheep => {
-                sheep.renderer.setSheepVisible(true);
-            });
-            this.gameTwoRenderer?.renderRoundCount(data.round);
+
+        switch (this.phase) {
+            case GamePhases.guessing:
+                this.sheep.forEach(sheep => {
+                    sheep.renderer.setSheepVisible(false);
+                });
+                this.gameTwoRenderer?.renderGuessText(true);
+                return;
+            case GamePhases.results:
+                this.gameTwoRenderer?.renderGuessText(false);
+                // TODO
+                return;
+            default:
+                this.gameRenderer?.destroyLeaderboard();
+                this.sheep.forEach(sheep => {
+                    sheep.renderer.setSheepVisible(true);
+                });
+                this.gameTwoRenderer?.renderRoundCount(data.round);
+                return;
         }
     }
 

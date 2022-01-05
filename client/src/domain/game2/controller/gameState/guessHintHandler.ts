@@ -10,7 +10,7 @@ interface Dependencies {
     setGuessHint: (val: string) => void;
 }
 
-const guessHintHandler = messageHandler(guessHintTypeGuard, (message, dependencies: Dependencies) => {
+export const guessHintHandler = messageHandler(guessHintTypeGuard, (message, dependencies: Dependencies) => {
     const { setGuessHint } = dependencies;
     setGuessHint(message.hint);
 });

@@ -30,12 +30,10 @@ export class Player {
     }
 
     moveTo(newXPosition: number, newYPosition: number) {
-        if (newXPosition == this.coordinates.x && newYPosition == this.coordinates.y && this.playerRunning) {
+        if (newXPosition === this.coordinates.x && newYPosition === this.coordinates.y && this.playerRunning) {
             this.stopRunning();
-        } else {
-            if (!this.playerRunning) {
-                this.startRunning();
-            }
+        } else if (!this.playerRunning) {
+            this.startRunning();
         }
 
         this.coordinates.x = newXPosition;
