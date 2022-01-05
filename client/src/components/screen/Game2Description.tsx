@@ -22,8 +22,8 @@ export const Game2Description: React.FunctionComponent = () => (
             </ImageWrapper>
         </ImagesContainer>
         <TextWrapper>
-            <ControlInstruction>Use the joystick on your phone to run!</ControlInstruction>
-            <ControlInstruction>Catch the closest sheep by clicking on the button</ControlInstruction>
+            <ControlInstruction>Use the joystick on your phone to run</ControlInstruction>
+            <ControlInstruction>Catch the closest sheep by replacing it with the decoy</ControlInstruction>
         </TextWrapper>
     </ControlInstructionsContainer>
 );

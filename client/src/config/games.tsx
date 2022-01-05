@@ -25,10 +25,10 @@ export const games: Game[] = [
     },
     {
         id: GameNames.game2,
-        name: 'Sheep World',
+        name: 'Sheep Thief',
         image: game2Demo,
         imageDescription:
-            'Run across the meadow and catch sheep. Who guesses the right number of remaining sheep at the end wins!',
+            'Run across the meadow and catch sheeps. Who guesses the right number of remaining sheep at the end wins!',
     },
     {
         id: GameNames.game3,

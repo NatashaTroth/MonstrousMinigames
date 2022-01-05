@@ -42,6 +42,7 @@ import Game from './domain/game1/screen/components/Game';
 import Guess from './domain/game2/controller/components/Guess';
 import Joystick from './domain/game2/controller/components/Joystick';
 import Results from './domain/game2/controller/components/Results';
+import StealSheep from './domain/game2/controller/components/StealSheep';
 import Game2 from './domain/game2/screen/components/Game2';
 import PresentFinalPhotos from './domain/game3/controller/components/PresentFinalPhotos';
 import TakePicture from './domain/game3/controller/components/TakePicture';
@@ -197,6 +198,11 @@ const App: React.FunctionComponent = () => {
                                                                             <Route
                                                                                 path={Routes.screenGame2}
                                                                                 component={Game2}
+                                                                                exact
+                                                                            />
+                                                                            <Route
+                                                                                path={Routes.controllerStealSheep}
+                                                                                component={StealSheep}
                                                                                 exact
                                                                             />
                                                                             <Route
