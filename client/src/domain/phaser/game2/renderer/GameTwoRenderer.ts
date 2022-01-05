@@ -27,21 +27,25 @@ export class GameTwoRenderer {
     }
 
     renderRoundCount(round: number) {
-        const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
-        const screenCenterHeight = this.scene.cameras.main.worldView.y + 50;
-        this.roundText = this.scene.make.text({
-            x: screenCenterWidth,
-            y: screenCenterHeight,
-            text: `Round ${round}`,
-            style: {
-                ...loadingTextStyleProperties,
-                fontSize: `30px`,
-                color: colors.orange,
-                fontStyle: 'bold',
-            },
-        });
-        this.roundText.setOrigin(0.5);
-        this.roundText.setDepth(depthDictionary.percentText);
+        if (this.roundText) {
+            this.roundText.setText(`Round ${round}`);
+        } else {
+            const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
+            const screenCenterHeight = this.scene.cameras.main.worldView.y + 50;
+            this.roundText = this.scene.make.text({
+                x: screenCenterWidth,
+                y: screenCenterHeight,
+                text: `Round ${round}`,
+                style: {
+                    ...loadingTextStyleProperties,
+                    fontSize: `30px`,
+                    color: colors.orange,
+                    fontStyle: 'bold',
+                },
+            });
+            this.roundText.setOrigin(0.5);
+            this.roundText.setDepth(depthDictionary.percentText);
+        }
     }
 
     renderGuessText(show: boolean) {
@@ -53,7 +57,7 @@ export class GameTwoRenderer {
                 this.guessInstructionText = this.scene.make.text({
                     x: screenCenterWidth,
                     y: screenCenterHeight - 50,
-                    text: 'How many sheep are on the meadow?\nEnter your guess on your device.',
+                    text: 'How many sheeps are on the meadow?\nEnter your guess on your device.',
                     style: {
                         ...loadingTextStyleProperties,
                         fontSize: `${40}px`,
