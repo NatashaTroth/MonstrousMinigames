@@ -5,21 +5,18 @@ import { IMessage } from '../../interfaces/messages';
 import { GameState } from '../enums';
 import Game from '../Game';
 import { verifyGameState } from '../helperFunctions/verifyGameState';
-import { verifyUserId } from '../helperFunctions/verifyUserId';
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
-import { HashTable, IGameInterface } from '../interfaces';
+import { IGameInterface } from '../interfaces';
 import { GameType } from '../leaderboard/enums/GameType';
 import Leaderboard from '../leaderboard/Leaderboard';
-import Player from '../Player';
 import Chasers from './classes/Chasers';
+import GameOnePlayersController from './classes/GameOnePlayersController';
 import InitialParameters from './constants/InitialParameters';
 import { GameOneMsgType } from './enums';
 import GameOneEventEmitter from './GameOneEventEmitter';
 import GameOnePlayer from './GameOnePlayer';
-import {
-    createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
-} from './helperFunctions/initiatePlayerState';
-import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from './interfaces';
+import { createObstacles, getObstacleTypes } from './helperFunctions/initiatePlayerState';
+import { GameStateInfo, ObstacleTypeObject } from './interfaces';
 import { IMessageObstacle } from './interfaces/messageObstacle';
 import { IMessageStunPlayer } from './interfaces/messageStunPlayer';
 
@@ -32,7 +29,7 @@ interface GameOneInterface extends IGameInterface<GameOnePlayer, GameStateInfo> 
 
     createNewGame(players: Array<User>, trackLength?: number, numberOfObstacles?: number): void;
     getGameStateInfo(): GameStateInfo;
-    getObstaclePositions(): HashTable<Array<Obstacle>>;
+    // getObstaclePositions(): HashTable<Array<Obstacle>>;
 }
 
 export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implements GameOneInterface {
@@ -47,6 +44,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     obstacleTypes: ObstacleTypeObject[] = [];
     gameName = GameNames.GAME1;
     chasers?: Chasers;
+    gameOnePlayersController?: GameOnePlayersController;
 
     constructor(roomId: string, public leaderboard: Leaderboard /*, public usingChasers = false*/) {
         super(roomId);
@@ -75,21 +73,17 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         return player;
     }
 
-    protected postProcessPlayers(playersIterable: IterableIterator<GameOnePlayer>) {
-        const players = Array.from(playersIterable);
-        const obstacles: Obstacle[] = [];
-        players.forEach(player => obstacles.push(...player.obstacles));
-        const stones = getStonesForObstacles(
-            obstacles,
+    protected postProcessPlayers(
+        playersIterable: IterableIterator<GameOnePlayer>,
+        playersMap: Map<string, GameOnePlayer>
+    ) {
+        this.gameOnePlayersController = new GameOnePlayersController(
+            playersMap,
+            // playersIterable,
             this.trackLength,
             this.initialPlayerPositionX,
-            100,
             this.numberOfStones
         );
-
-        for (const player of players) {
-            player.obstacles = sortBy([...player.obstacles, ...stones.map(stone => ({ ...stone }))], 'positionX');
-        }
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
         if (this.cameraPositionX < this.trackLength)
@@ -160,7 +154,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             cameraPositionX: firstGameStateInfo.cameraPositionX,
         });
 
-        GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers()); // TODO test (test all times this emitter is called)
+        GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.gameOnePlayersController!.getStunnablePlayers()); // TODO test (test all times this emitter is called)
     }
 
     startGame(): void {
@@ -198,34 +192,10 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         return {
             gameState: this.gameState,
             roomId: this.roomId,
-            playersState: Array.from(this.players.values()).map(player => ({
-                //TODO renive
-                id: player.id,
-                name: player.name,
-                positionX: player.positionX,
-                obstacles: player.obstacles,
-                atObstacle: player.atObstacle,
-                finished: player.finished,
-                finishedTimeMs: player.finishedTimeMs,
-                dead: player.dead,
-                rank: player.rank,
-                isActive: player.isActive,
-                stunned: player.stunned,
-                characterNumber: player.characterNumber,
-                chaserPushesUsed: player.chaserPushesUsed,
-            })),
+            playersState: this.gameOnePlayersController!.getPlayerState(),
             chasersPositionX: this.chasers!.getPosition(),
             cameraPositionX: this.cameraPositionX,
         };
-    }
-
-    getObstaclePositions(): HashTable<Array<Obstacle>> {
-        const obstaclePositions: HashTable<Array<Obstacle>> = {};
-        for (const player of this.players.values()) {
-            obstaclePositions[player.id] = [...player.obstacles];
-        }
-
-        return obstaclePositions;
     }
 
     // ***** player *****
@@ -240,18 +210,9 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     private handlePlayerFinished(player: GameOnePlayer) {
         const finishedTime = Date.now();
         player.handlePlayerFinishedGame(finishedTime, this.rankSuccessfulUser(finishedTime));
-        GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
+        GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.gameOnePlayersController!.getStunnablePlayers());
 
         if (this.gameHasFinished()) this.handleGameFinished();
-    }
-
-    private getStunnablePlayers(): string[] {
-        return Array.from(this.players.values()).reduce((res: string[], option: Player) => {
-            if (!option.finished && option.isActive) {
-                res.push(option.id);
-            }
-            return res;
-        }, []);
     }
 
     private stunPlayer(userIdStunned: string, userIdThrown: string) {
@@ -263,34 +224,32 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
 
     // ***** chasers *****
     private checkIfPlayersCaught() {
-        for (const player of this.players.values()) {
-            if (this.chaserHasCaughtPlayer(player)) {
-                this.handlePlayerCaught(player);
-            }
-        }
+        this.gameOnePlayersController!.getCaughtPlayers(this.chasers!.getPosition()).forEach(player => {
+            this.handlePlayerCaught(player);
+        });
     }
 
     private handlePlayerCaught(playerState: GameOnePlayer) {
         playerState.handlePlayerCaught();
         playerState.rank = this.rankFailedUser(playerState.finishedTimeMs);
-        GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
+        GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.gameOnePlayersController!.getStunnablePlayers());
 
         //todo duplicate
         if (localDevelopment) return;
-        const players = Array.from(this.players.values());
-        const activeUnfinishedPlayers = players.filter(player => player.isActive && !player.dead);
+
+        const activeUnfinishedPlayers = this.gameOnePlayersController!.getActiveUnfinishedPlayers();
         if (activeUnfinishedPlayers.length <= 1 || this.gameHasFinished()) {
             this.handleGameFinished();
         }
     }
 
-    private chaserHasCaughtPlayer(player: GameOnePlayer) {
-        return !player.finished && player.positionX <= this.chasers!.getPosition();
-    }
+    // private chaserHasCaughtPlayer(player: GameOnePlayer) {
+    //     return !player.finished && player.positionX <= this.chasers!.getPosition();
+    // }
 
     private pushChasers(userIdPushing: string) {
-        verifyUserId(this.players, userIdPushing);
-        const userPushing = this.players.get(userIdPushing)!;
+        this.gameOnePlayersController!.verifyUserId(userIdPushing);
+        const userPushing = this.gameOnePlayersController!.getPlayerById(userIdPushing);
 
         if (!userPushing.finished || userPushing.maxNumberPushChasersExceeded()) return;
 
@@ -301,16 +260,13 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
 
     // ***** game state *****
     private gameHasFinished(): boolean {
-        const players = Array.from(this.players.values());
-        const activeUnfinishedPlayers = players.filter(player => player.isActive && !player.finished);
-
-        return activeUnfinishedPlayers.length === 0; //TODO - test, does game finish when only 1 player??
+        return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 0; //TODO - test, does game finish when only 1 player??
     }
 
     private handleGameFinished(): void {
         this.gameState = GameState.Finished;
 
-        const playerRanks = this.createPlayerRanks();
+        const playerRanks = this.gameOnePlayersController!.createPlayerRanks(this.currentRank, this.gameStartedAt);
         this.leaderboard.addGameToHistory(GameType.GameOne, [...playerRanks]);
 
         const currentGameStateInfo = this.getGameStateInfo();
@@ -320,23 +276,10 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         //Broadcast, stop game, return ranks
     }
 
-    private createPlayerRanks(): Array<PlayerRank> {
-        return Array.from(this.players.values()).map(player => ({
-            id: player.id,
-            name: player.name,
-            rank: player.finished ? player.rank : this.currentRank,
-            finished: player.finished,
-            dead: player.dead,
-            totalTimeInMs: (player.finishedTimeMs > 0 ? player.finishedTimeMs : Date.now()) - this.gameStartedAt,
-            positionX: player.positionX,
-            isActive: player.isActive,
-        }));
-    }
-
     disconnectPlayer(userId: string) {
         if (super.disconnectPlayer(userId)) {
             GameOneEventEmitter.emitPlayerHasDisconnected(this.roomId, userId);
-            GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
+            GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.gameOnePlayersController!.getStunnablePlayers());
 
             return true;
         }
@@ -347,7 +290,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     reconnectPlayer(userId: string) {
         if (super.reconnectPlayer(userId)) {
             GameOneEventEmitter.emitPlayerHasReconnected(this.roomId, userId);
-            GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.getStunnablePlayers());
+            GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.gameOnePlayersController!.getStunnablePlayers());
             return true;
         }
 
@@ -357,14 +300,14 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     //******** other *********
 
     private getValidPlayer(userId: string): GameOnePlayer {
-        verifyUserId(this.players, userId);
-        const player = this.players.get(userId)!;
+        this.gameOnePlayersController!.verifyUserId(userId);
+        const player = this.gameOnePlayersController!.getPlayerById(userId);
         verifyUserIsActive(userId, player.isActive);
         return player;
     }
 
     private updateLocalDev() {
-        for (const player of this.players.values()) {
+        for (const player of this.gameOnePlayersController!.getPlayerValues()) {
             if (player.positionX < this.trackLength) {
                 for (let i = 0; i < 5; i++) {
                     // to test speed limit
