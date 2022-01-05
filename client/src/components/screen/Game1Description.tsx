@@ -32,9 +32,9 @@ export const Game1Description: React.FunctionComponent = () => (
             </ImageWrapper>
         </ImagesContainer>
         <TextWrapper>
-            <ControlInstruction>Shake your phone to run!</ControlInstruction>
-            <ControlInstruction>Don't get caught by the mosquito!</ControlInstruction>
-            <ControlInstruction>Look at your phone if this icon appears on screen!</ControlInstruction>
+            <ControlInstruction>Shake your phone to run</ControlInstruction>
+            <ControlInstruction>Don't get caught by the mosquito</ControlInstruction>
+            <ControlInstruction>Look at your phone if this icon appears on screen</ControlInstruction>
         </TextWrapper>
     </ControlInstructionsContainer>
 );

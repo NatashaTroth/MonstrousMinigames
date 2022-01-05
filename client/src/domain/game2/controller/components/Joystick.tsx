@@ -7,18 +7,21 @@ import Button from '../../../../components/common/Button';
 import FullScreenContainer from '../../../../components/common/FullScreenContainer';
 import { ControllerSocketContext } from '../../../../contexts/controller/ControllerSocketContextProvider';
 import { Game2Context } from '../../../../contexts/game2/Game2ContextProvider';
+import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import { MessageTypesGame2 } from '../../../../utils/constants';
+import { controllerStealSheepRoute } from '../../../../utils/routes';
 import { Countdown } from '../../../game1/controller/components/ShakeInstruction.sc';
+import history from '../../../history/history';
 import { Storage } from '../../../storage/Storage';
 import { Instructions, Round } from './Game2Styles.sc';
 import { JoystickContainer, KillSheepButtonContainer } from './Joystick.sc';
 
-interface ShakeInstructionProps {
+interface JoyStickProps {
     sessionStorage: Storage;
 }
 
-const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sessionStorage }) => {
+const JoyStick: React.FunctionComponent<JoyStickProps> = ({ sessionStorage }) => {
     const [counter, setCounter] = React.useState(
         sessionStorage.getItem('countdownTime') ? Number(sessionStorage.getItem('countdownTime')) / 1000 : null
     );
@@ -26,10 +29,14 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
     const { remainingKills, roundIdx } = React.useContext(Game2Context);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { userId } = React.useContext(PlayerContext);
+    const { roomId } = React.useContext(GameContext);
+
     let direction: string | undefined = 'C';
 
     React.useEffect(() => {
-        if (counter !== null && counter !== undefined) {
+        let mounted = true;
+
+        if (counter !== null && counter !== undefined && mounted) {
             if (counter > 0) {
                 setTimeout(() => setCounter(counter - 1), 1000);
             } else {
@@ -37,41 +44,20 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                 setCounter(null);
             }
         }
+
+        return () => {
+            mounted = false;
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [counter]);
-
-    function getDirectionforPos(x: number, y: number) {
-        if (Math.abs(x) < 20 && Math.abs(y) < 20) {
-            return 'C';
-        } else if (y >= 20) {
-            if (-35 <= x) {
-                if (x <= 35) {
-                    return 'N';
-                }
-                return 'NE';
-            }
-            return 'NW';
-        } else if (y <= -20) {
-            if (-35 <= x) {
-                if (x <= 35) {
-                    return 'S';
-                }
-                return 'SE';
-            }
-            return 'SW';
-        } else if (x >= 20) {
-            return 'E';
-        } else if (x <= -20) {
-            return 'W';
-        }
-        return 'C';
-    }
 
     function emitKillMessage() {
         controllerSocket.emit({
             type: MessageTypesGame2.killSheep,
-            userId: userId,
+            userId,
         });
+
+        history.push(controllerStealSheepRoute(roomId));
     }
 
     function handleMove(event: IJoystickUpdateEvent) {
@@ -110,14 +96,14 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
                                 size={100}
                                 baseColor="grey"
                                 stickColor="white"
-                                move={handleMove.bind(this)}
-                                stop={handleStop.bind(this)}
+                                move={e => handleMove(e)}
+                                stop={() => handleStop()}
                             ></Joystick>
                         </JoystickContainer>
                         <Instructions>Remaining kills: {remainingKills}</Instructions>
                         <KillSheepButtonContainer>
                             <Button onClick={emitKillMessage} disabled={remainingKills === 0}>
-                                Kill Sheep
+                                Steal Sheep
                             </Button>
                         </KillSheepButtonContainer>
                     </>
@@ -127,4 +113,31 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
     );
 };
 
-export default ShakeInstruction;
+export default JoyStick;
+
+function getDirectionforPos(x: number, y: number) {
+    if (Math.abs(x) < 20 && Math.abs(y) < 20) {
+        return 'C';
+    } else if (y >= 20) {
+        if (-35 <= x) {
+            if (x <= 35) {
+                return 'N';
+            }
+            return 'NE';
+        }
+        return 'NW';
+    } else if (y <= -20) {
+        if (-35 <= x) {
+            if (x <= 35) {
+                return 'S';
+            }
+            return 'SE';
+        }
+        return 'SW';
+    } else if (x >= 20) {
+        return 'E';
+    } else if (x <= -20) {
+        return 'W';
+    }
+    return 'C';
+}

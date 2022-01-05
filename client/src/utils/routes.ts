@@ -21,6 +21,7 @@ export enum Routes {
     controllerVote = '/controller/:id/vote',
     controllerPresent = '/controller/:id/present',
     controllerGuess = '/controller/:id/guess',
+    controllerStealSheep = '/controller/:id/steal-sheep',
     controllerResults = '/controller/:id/results',
 
     screenLobby = '/screen/:id/lobby',
@@ -55,6 +56,7 @@ export enum Routes {
     vote = '/vote',
     present = '/present',
     guess = '/guess',
+    stealSheep = '/steal-sheep',
     results = '/results',
 }
 
@@ -76,6 +78,9 @@ export const controllerGame1Route = (roomId: undefined | string) => `${Routes.co
 export const controllerGame2Route = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.game2}`;
 
 export const controllerGame3Route = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.game3}`;
+
+export const controllerStealSheepRoute = (roomId: undefined | string) =>
+    `${Routes.controller}/${roomId}${Routes.stealSheep}`;
 
 export const controllerGuessRoute = (roomId: undefined | string) => `${Routes.controller}/${roomId}${Routes.guess}`;
 
