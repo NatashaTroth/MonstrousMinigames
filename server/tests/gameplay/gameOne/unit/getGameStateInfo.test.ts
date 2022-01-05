@@ -79,6 +79,6 @@ describe('Get Obstacle Positions test', () => {
     });
 
     it('returns chaser position', async () => {
-        expect(gameStateInfo.chasersPositionX).toBe(gameOne.chasersPositionX);
+        expect(gameStateInfo.chasersPositionX).toBe(InitialParameters.CHASERS_POSITION_X);
     });
 });
