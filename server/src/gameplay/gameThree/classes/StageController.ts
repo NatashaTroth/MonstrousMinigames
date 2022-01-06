@@ -54,6 +54,7 @@ export class StageController {
     }
 
     handleInput(message: IMessage) {
+        console.log(message);
         this.stage!.handleInput(message);
     }
 
