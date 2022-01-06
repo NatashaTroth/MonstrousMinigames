@@ -95,6 +95,7 @@ export const enum MessageTypesGame3 {
     newPhotoTopic = 'game3/newPhotoTopic',
     initialGameState = 'game3/initialGameState',
     photo = 'game3/photo',
+    errorUploadingPhoto = 'game3/errorUploadingPhoto',
     voteForPhotos = 'game3/voteForPhotos',
     photoVote = 'game3/photoVote',
     newRound = 'game3/newRound',
