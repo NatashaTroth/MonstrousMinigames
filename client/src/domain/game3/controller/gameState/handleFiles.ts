@@ -15,16 +15,28 @@ export default async function uploadFile(
     if (!values.picture) return false;
 
     if (remoteStorage && roomId) {
-        const imageUrl = await remoteStorage.uploadImage(
-            `${roomId}/${roundIdx}/${userId}${uploadedImagesCount}.jpg`,
-            values.picture
-        );
+        try {
+            const imageUrl = await remoteStorage.uploadImage(
+                `${roomId}/${roundIdx}/${userId}${uploadedImagesCount}.jpg`,
+                values.picture
+            );
 
-        if (imageUrl) {
+            if (imageUrl) {
+                controllerSocket.emit({
+                    type: MessageTypesGame3.photo,
+                    photographerId: userId,
+                    url: imageUrl,
+                });
+            } else {
+                controllerSocket.emit({
+                    type: MessageTypesGame3.errorUploadingPhoto,
+                    errorMsg: JSON.stringify(imageUrl),
+                });
+            }
+        } catch (error) {
             controllerSocket.emit({
-                type: MessageTypesGame3.photo,
-                photographerId: userId,
-                url: imageUrl,
+                type: MessageTypesGame3.errorUploadingPhoto,
+                errorMsg: JSON.stringify(error),
             });
         }
     }
