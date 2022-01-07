@@ -1,15 +1,10 @@
 import React from 'react';
 
+import { GameNames } from '../../../../config/games';
 import { Game1Context } from '../../../../contexts/game1/Game1ContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { Socket } from '../../../socket/Socket';
 import { sendMovement } from './sendMovement';
-
-function addMovementListener(controllerSocket: Socket, hasPaused: boolean, playerFinished: boolean) {
-    window.addEventListener('devicemotion', e =>
-        sendMovementToController(e, playerFinished, controllerSocket, hasPaused, sendMovement)
-    );
-}
 
 export function sendMovementToController(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,21 +12,32 @@ export function sendMovementToController(
     playerFinished: boolean,
     controllerSocket: Socket,
     hasPaused: boolean,
-    sendMovement: (socket: Socket, hasPaused: boolean) => void
+    sendMovement: (socket: Socket, hasPaused: boolean) => void,
+    chosenGame: GameNames | undefined
 ) {
     event.preventDefault();
-    if (event?.acceleration?.x && (event?.acceleration?.x < -2 || event?.acceleration?.x > 2) && !playerFinished) {
+    if (playerFinished || chosenGame === GameNames.game2) return;
+
+    if (event?.acceleration?.x && (event?.acceleration?.x < -2 || event?.acceleration?.x > 2)) {
         sendMovement(controllerSocket, hasPaused);
     }
 }
 
 export const useMovementListener = (socket: Socket, permission: boolean) => {
     const { playerFinished } = React.useContext(Game1Context);
-    const { hasPaused } = React.useContext(GameContext);
+    const { hasPaused, chosenGame } = React.useContext(GameContext);
 
     React.useEffect(() => {
         if (permission) {
-            addMovementListener(socket, hasPaused, playerFinished);
+            window.addEventListener('devicemotion', e =>
+                sendMovementToController(e, playerFinished, socket, hasPaused, sendMovement, chosenGame)
+            );
         }
-    }, [permission, hasPaused, playerFinished, socket]);
+
+        return () => {
+            window.removeEventListener('devicemotion', e =>
+                sendMovementToController(e, playerFinished, socket, hasPaused, sendMovement, chosenGame)
+            );
+        };
+    }, [permission, hasPaused, playerFinished, socket, chosenGame]);
 };

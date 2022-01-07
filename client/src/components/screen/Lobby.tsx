@@ -13,6 +13,7 @@ import { Game3Context } from '../../contexts/game3/Game3ContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/screen/ScreenSocketContextProvider';
 import history from '../../domain/history/history';
+import { FakeInMemorySocket } from '../../domain/socket/InMemorySocketFake';
 import { MessageTypes } from '../../utils/constants';
 import { generateQRCode } from '../../utils/generateQRCode';
 import { Routes, screenChooseGameRoute, screenLeaderboardRoute } from '../../utils/routes';
@@ -49,6 +50,8 @@ export const Lobby: React.FunctionComponent = () => {
     const [qRCodeDialogOpen, setQRCodeDialogOpen] = React.useState(false);
 
     React.useEffect(() => {
+        changeSound(Sound.lobby);
+
         if (screenAdmin) {
             screenSocket?.emit({
                 type: MessageTypes.screenState,
@@ -56,16 +59,13 @@ export const Lobby: React.FunctionComponent = () => {
             });
         }
 
-        changeSound(Sound.lobby);
+        resetGame();
+        resetGame3();
 
-        if (screenSocket) {
-            resetGame();
-            resetGame3();
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (id && !screenSocket) {
+    if (id && screenSocket instanceof FakeInMemorySocket) {
         handleSocketConnection(id, 'lobby');
     }
 

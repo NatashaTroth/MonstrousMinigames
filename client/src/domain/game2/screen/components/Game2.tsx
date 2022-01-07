@@ -9,6 +9,7 @@ import { ScreenSocketContext } from '../../../../contexts/screen/ScreenSocketCon
 import { AudioButton, Container, PauseButton, StopButton } from '../../../game1/screen/components/Game.sc';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import { PhaserGame } from '../../../phaser/PhaserGame';
+import { FakeInMemorySocket } from '../../../socket/InMemorySocketFake';
 
 const Game2: React.FunctionComponent = () => {
     const { roomId, hasPaused, screenAdmin } = React.useContext(GameContext);
@@ -16,7 +17,7 @@ const Game2: React.FunctionComponent = () => {
     const { id }: RouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
 
-    if (id && !screenSocket) {
+    if (id && screenSocket instanceof FakeInMemorySocket) {
         handleSocketConnection(id, 'game2');
     }
 
