@@ -10,6 +10,16 @@ export const pushChasersMessage: IMessage = {
     userId: users[0].id,
 };
 
+export const runForwardMessage: IMessage = {
+    type: GameOneMsgType.MOVE,
+    userId: users[0].id,
+};
+
+export const playerHasCompletedObstacleMessage: IMessage = {
+    type: GameOneMsgType.OBSTACLE_SOLVED,
+    userId: users[0].id,
+};
+
 export const obstacles: Obstacle[] = [
     { id: 17, positionX: 1675, type: ObstacleType.Stone, solvable: true },
     { id: 0, positionX: 1940, type: ObstacleType.TreeStump, solvable: false },

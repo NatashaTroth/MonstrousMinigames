@@ -201,7 +201,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     // ***** player *****
     private movePlayer(message: IMessage) {
         const player = this.getValidPlayer(message.userId!);
-        player.runForward(parseInt(`${process.env.SPEED}`, 10) || 2);
+        player.runForward(parseInt(`${process.env.SPEED}`, 10) || InitialParameters.SPEED);
         if (player.playerHasPassedGoal()) {
             this.handlePlayerFinished(player);
         }
@@ -311,7 +311,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             if (player.positionX < this.trackLength) {
                 for (let i = 0; i < 5; i++) {
                     // to test speed limit
-                    player.runForward(parseInt(`${process.env.SPEED}`, 10) || 2);
+                    player.runForward(parseInt(`${process.env.SPEED}`, 10) || InitialParameters.SPEED);
                     // if (player.playerHasPassedGoal()) this.playerHasFinishedGame(); //TODO!!
 
                     // this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
