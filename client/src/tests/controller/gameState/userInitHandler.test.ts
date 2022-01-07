@@ -16,6 +16,7 @@ it('when UserInitMessage was written, handed persistUser is executed', async () 
         isAdmin: true,
         number: 1,
         ready: true,
+        screenState: 'lobby',
     };
 
     const persistUser = jest.fn();
@@ -26,6 +27,7 @@ it('when UserInitMessage was written, handed persistUser is executed', async () 
         setUserId: jest.fn(),
         setReady: jest.fn(),
         persistUser,
+        setScreenState: jest.fn(),
     };
 
     const userInitHandlerWithDependencies = userInitHandler(dependencies);

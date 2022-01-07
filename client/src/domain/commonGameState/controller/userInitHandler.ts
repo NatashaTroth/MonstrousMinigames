@@ -15,23 +15,25 @@ interface Dependencies {
     setName: (val: string) => void;
     setUserId: (val: string) => void;
     setReady: (val: boolean) => void;
+    setScreenState: (val: string) => void;
 }
 
 export const userInitHandler = messageHandler(userInitTypeGuard, (message, dependencies: Dependencies) => {
-    const { setPlayerNumber, setName, setUserId, setReady, persistUser } = dependencies;
+    const { setPlayerNumber, setName, setUserId, setReady, persistUser, setScreenState } = dependencies;
 
     setName(message.name);
     setPlayerNumber(message.number);
     setUserId(message.userId);
     setReady(message.ready);
+    setScreenState(message.screenState);
 
     persistUser(message);
 });
 
 export const useUserInitHandler = (socket: Socket, handler = userInitHandler) => {
     const { setPlayerNumber, setName, setUserId, setReady } = React.useContext(PlayerContext);
+    const { roomId, setScreenState } = React.useContext(GameContext);
 
-    const { roomId } = React.useContext(GameContext);
     React.useEffect(() => {
         if (!roomId) return;
 
@@ -46,8 +48,9 @@ export const useUserInitHandler = (socket: Socket, handler = userInitHandler) =>
             setUserId,
             setReady,
             persistUser: persistUserWithDependencies,
+            setScreenState,
         });
 
         userInitHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setName, setPlayerNumber, setReady, setUserId, socket]);
+    }, [handler, roomId, setName, setPlayerNumber, setReady, setScreenState, setUserId, socket]);
 };

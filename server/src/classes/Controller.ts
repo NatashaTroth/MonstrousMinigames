@@ -1,11 +1,11 @@
-import { Namespace, Socket } from 'socket.io';
+import { Namespace, Socket } from "socket.io";
 
-import { MessageTypes } from '../enums/messageTypes';
-import Game from '../gameplay/Game';
-import { IMessage } from '../interfaces/messages';
-import RoomService from '../services/roomService';
-import Room from './room';
-import User from './user';
+import { MessageTypes } from "../enums/messageTypes";
+import Game from "../gameplay/Game";
+import { IMessage } from "../interfaces/messages";
+import RoomService from "../services/roomService";
+import Room from "./room";
+import User from "./user";
 
 class Controller {
     protected name: string | null = null;
@@ -33,7 +33,7 @@ class Controller {
                 (this.socket.handshake.query as Record<string, string | undefined>).userId
             );
             this.emitter.sendConnectedUsers([this.controllerNamespace, this.screenNamespace], this.room!);
-            this.emitter.sendUserInit(this.socket, this.user, this.room);
+            this.emitter.sendUserInit(this.socket, this.user, this.room, this.room?.getScreenState());
             console.info(this.room.id + ' | Controller connected: ' + this.user.id);
 
             this.socket.on('disconnect', this.onDisconnect.bind(this));
