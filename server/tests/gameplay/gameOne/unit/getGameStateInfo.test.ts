@@ -1,10 +1,15 @@
 import 'reflect-metadata';
 
+import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
+import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
 import InitialParameters from '../../../../src/gameplay/gameOne/constants/InitialParameters';
-import { GameStateInfo } from '../../../../src/gameplay/gameOne/interfaces';
-import { leaderboard, roomId, users } from '../../mockData';
+import { GameStateInfo, InitialGameStateInfo } from '../../../../src/gameplay/gameOne/interfaces';
+import {
+    GAME_ONE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, GameOneEventMessage
+} from '../../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
+import { leaderboard, roomId, trackLength, users } from '../../mockData';
 import { clearTimersAndIntervals } from '../gameOneHelperFunctions';
 
 let gameOne: GameOne;
@@ -13,6 +18,7 @@ let gameStateInfo: GameStateInfo;
 describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
+
         gameOne = new GameOne(roomId, leaderboard);
         gameOne.createNewGame(
             users,
@@ -35,13 +41,12 @@ describe('Get Obstacle Positions test', () => {
         expect(gameStateInfo.roomId).toBe(users[0].roomId);
     });
 
-    //TODO test initial game state info
     // it('should return the track length', async () => {
-    //     expect(gameStateInfo.trackLength).toBe(TRACKLENGTH);
+    //     expect(initialGameStateInfo.trackLength).toBe(InitialParameters.TRACK_LENGTH);
     // });
 
     // it('should return the number of obstacles', async () => {
-    //     expect(gameStateInfo.numberOfObstacles).toBe(NUMBER_OF_OBSTACLES);
+    //     expect(initialGameStateInfo.numberOfObstacles).toBe(InitialParameters.NUMBER_OBSTACLES);
     // });
 
     it('should return the playersState as an Array', async () => {

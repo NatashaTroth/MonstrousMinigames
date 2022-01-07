@@ -6,12 +6,14 @@ import { getStonesForObstacles, sortBy } from '../helperFunctions/initiatePlayer
 import { Obstacle, PlayerRank, PlayerStateForClient } from '../interfaces';
 
 class GameOnePlayersController {
+    private players: Map<string, GameOnePlayer>;
     constructor(
-        private players: Map<string, GameOnePlayer>,
+        players: Map<string, GameOnePlayer>,
         trackLength: number,
         initialPlayerPositionX: number,
         numberOfStones: number
     ) {
+        this.players = new Map(players);
         const playersArray = Array.from(players.values());
         const obstacles: Obstacle[] = [];
         playersArray.forEach(player => obstacles.push(...player.obstacles));
