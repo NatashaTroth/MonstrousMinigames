@@ -1,12 +1,12 @@
-import { Namespace, Socket } from "socket.io";
+import { Namespace, Socket } from 'socket.io';
 
-import Room from "../classes/room";
-import User from "../classes/user";
-import { GameNames } from "../enums/gameNames";
-import { MessageTypes } from "../enums/messageTypes";
-import { GameOneMsgType } from "../gameplay/gameOne/enums";
-import { GameTwoMessageTypes } from "../gameplay/gameTwo/enums/GameTwoMessageTypes";
-import { LeaderboardInfo } from "../gameplay/leaderboard/interfaces";
+import Room from '../classes/room';
+import User from '../classes/user';
+import { GameNames } from '../enums/gameNames';
+import { MessageTypes } from '../enums/messageTypes';
+import { GameOneMsgType } from '../gameplay/gameOne/enums';
+import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
+import { LeaderboardInfo } from '../gameplay/leaderboard/interfaces';
 
 function sendUserInit(socket: Socket, user: User, room: Room, state: string | undefined): void {
     socket.emit('message', {
