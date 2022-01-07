@@ -1,29 +1,29 @@
-import { localDevelopment, pushChasers } from '../../../constants';
-import User from '../../classes/user';
-import { GameNames } from '../../enums/gameNames';
-import { IMessage } from '../../interfaces/messages';
-import { GameState } from '../enums';
-import Game from '../Game';
-import { verifyGameState } from '../helperFunctions/verifyGameState';
-import { verifyUserId } from '../helperFunctions/verifyUserId';
-import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
-import { HashTable, IGameInterface } from '../interfaces';
-import { GameType } from '../leaderboard/enums/GameType';
-import Leaderboard from '../leaderboard/Leaderboard';
-import Player from '../Player';
-import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
-import UserHasNoStones from './customErrors/UserHasNoStones';
-import { GameOneMsgType, ObstacleType } from './enums';
-import GameOneEventEmitter from './GameOneEventEmitter';
-import * as InitialGameParameters from './GameOneInitialParameters';
-import GameOnePlayer from './GameOnePlayer';
+import { localDevelopment, pushChasers } from "../../../constants";
+import User from "../../classes/user";
+import { GameNames } from "../../enums/gameNames";
+import { IMessage } from "../../interfaces/messages";
+import { GameState } from "../enums";
+import Game from "../Game";
+import { verifyGameState } from "../helperFunctions/verifyGameState";
+import { verifyUserId } from "../helperFunctions/verifyUserId";
+import { verifyUserIsActive } from "../helperFunctions/verifyUserIsActive";
+import { HashTable, IGameInterface } from "../interfaces";
+import { GameType } from "../leaderboard/enums/GameType";
+import Leaderboard from "../leaderboard/Leaderboard";
+import Player from "../Player";
+import { NotAtObstacleError, WrongObstacleIdError } from "./customErrors";
+import UserHasNoStones from "./customErrors/UserHasNoStones";
+import { GameOneMsgType, ObstacleType } from "./enums";
+import GameOneEventEmitter from "./GameOneEventEmitter";
+import * as InitialGameParameters from "./GameOneInitialParameters";
+import GameOnePlayer from "./GameOnePlayer";
 import {
     createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
-} from './helperFunctions/initiatePlayerState';
-import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from './interfaces';
-import { ObstacleReachedInfoController } from './interfaces/GameEvents';
-import { IMessageObstacle } from './interfaces/messageObstacle';
-import { IMessageStunPlayer } from './interfaces/messageStunPlayer';
+} from "./helperFunctions/initiatePlayerState";
+import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from "./interfaces";
+import { ObstacleReachedInfoController } from "./interfaces/GameEvents";
+import { IMessageObstacle } from "./interfaces/messageObstacle";
+import { IMessageStunPlayer } from "./interfaces/messageStunPlayer";
 
 let pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
 
@@ -87,13 +87,16 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         const players = Array.from(playersIterable);
         const obstacles: Obstacle[] = [];
         players.forEach(player => obstacles.push(...player.obstacles));
-        const stones = getStonesForObstacles(
-            obstacles,
-            this.trackLength,
-            this.initialPlayerPositionX,
-            100,
-            this.numberOfStones
-        );
+        const stones =
+            players.length > 1
+                ? getStonesForObstacles(
+                      obstacles,
+                      this.trackLength,
+                      this.initialPlayerPositionX,
+                      100,
+                      this.numberOfStones
+                  )
+                : [];
 
         for (const player of players) {
             player.obstacles = sortBy([...player.obstacles, ...stones.map(stone => ({ ...stone }))], 'positionX');

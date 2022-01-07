@@ -1,11 +1,11 @@
-import { Namespace, Socket } from "socket.io";
+import { Namespace, Socket } from 'socket.io';
 
-import { MessageTypes } from "../enums/messageTypes";
-import Game from "../gameplay/Game";
-import { IMessage } from "../interfaces/messages";
-import RoomService from "../services/roomService";
-import Room from "./room";
-import User from "./user";
+import { MessageTypes } from '../enums/messageTypes';
+import Game from '../gameplay/Game';
+import { IMessage } from '../interfaces/messages';
+import RoomService from '../services/roomService';
+import Room from './room';
+import User from './user';
 
 class Controller {
     protected name: string | null = null;
