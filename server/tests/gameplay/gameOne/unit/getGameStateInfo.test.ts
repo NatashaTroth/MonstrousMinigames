@@ -1,15 +1,10 @@
 import 'reflect-metadata';
 
-import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
-import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
 import InitialParameters from '../../../../src/gameplay/gameOne/constants/InitialParameters';
-import { GameStateInfo, InitialGameStateInfo } from '../../../../src/gameplay/gameOne/interfaces';
-import {
-    GAME_ONE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, GameOneEventMessage
-} from '../../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
-import { leaderboard, roomId, trackLength, users } from '../../mockData';
+import { GameStateInfo } from '../../../../src/gameplay/gameOne/interfaces';
+import { leaderboard, roomId, users } from '../../mockData';
 import { clearTimersAndIntervals } from '../gameOneHelperFunctions';
 
 let gameOne: GameOne;

@@ -1,38 +1,32 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../../src/gameplay';
+import GameOnePlayersController from '../../../../src/gameplay/gameOne/classes/GameOnePlayersController';
 import InitialParameters from '../../../../src/gameplay/gameOne/constants/InitialParameters';
 import { Obstacle } from '../../../../src/gameplay/gameOne/interfaces';
 import { HashTable } from '../../../../src/gameplay/interfaces';
-import { leaderboard, roomId, users } from '../../mockData';
-import { clearTimersAndIntervals } from '../gameOneHelperFunctions';
+import { trackLength } from '../../mockData';
+import { players } from '../gameOneMockData';
 
-let gameOne: GameOne;
 let obstacles: HashTable<Array<Obstacle>>;
+let gameOnePlayersController: GameOnePlayersController;
 
 describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
-        jest.useFakeTimers();
-        gameOne = new GameOne(roomId, leaderboard);
-        gameOne.createNewGame(
-            users,
-            InitialParameters.TRACK_LENGTH,
-            InitialParameters.NUMBER_OBSTACLES,
+        gameOnePlayersController = new GameOnePlayersController(
+            players,
+            trackLength,
+            InitialParameters.PLAYERS_POSITION_X,
             InitialParameters.NUMBER_STONES
         );
-        obstacles = gameOne.getObstaclePositions();
-    });
-    afterEach(async () => {
-        clearTimersAndIntervals(gameOne);
+        obstacles = gameOnePlayersController.getObstaclePositions();
     });
 
     it('should return the correct number of users', async () => {
         expect(true).toBeTruthy();
-        // expect(Object.keys(obstacles).length).toBe(users.length);
     });
 
     it('should return the correct number of obstacles', async () => {
-        expect(obstacles['1'].length).toBe(InitialParameters.NUMBER_OBSTACLES + InitialParameters.NUMBER_STONES);
+        expect(obstacles['1'].length).toBe(players.get('1')!.obstacles.length);
     });
 
     it('should contain the key obstacle positionX', async () => {
@@ -42,8 +36,4 @@ describe('Get Obstacle Positions test', () => {
     it('should contain the obstacle type', async () => {
         expect(Object.keys(obstacles['1'][0])).toContain('type');
     });
-
-    // it("should contain the obstacle type", async () => {
-    //   expect(Object.keys(obstacles["1"][0].type)).toBeInstanceOf(ObstacleType);
-    // });
 });

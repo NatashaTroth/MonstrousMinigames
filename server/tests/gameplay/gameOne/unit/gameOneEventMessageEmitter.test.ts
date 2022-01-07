@@ -4,11 +4,14 @@ import Room from '../../../../src/classes/room';
 import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
+import InitialParameters from '../../../../src/gameplay/gameOne/constants/InitialParameters';
 import { ObstacleType } from '../../../../src/gameplay/gameOne/enums';
 import {
     GameOneEventMessageEmitter
 } from '../../../../src/gameplay/gameOne/GameOneEventMessageEmitter';
-import { NamespaceAdapter } from '../../../../src/gameplay/gameOne/interfaces';
+import {
+    InitialGameStateInfo, NamespaceAdapter
+} from '../../../../src/gameplay/gameOne/interfaces';
 import {
     GAME_ONE_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE,
     GAME_ONE_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE_ONCE,
@@ -26,7 +29,7 @@ import {
     GameOnePlayerStunnedState, GameOnePlayerUnstunnedState, GameOneSolveObstacleInfo,
     GameOneStunnablePlayers
 } from '../../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
-import { leaderboard, roomId, users } from '../../mockData';
+import { leaderboard, roomId, trackLength, users } from '../../mockData';
 
 let gameOne: GameOne;
 let gameOneEventMessageEmitter: GameOneEventMessageEmitter;
@@ -66,8 +69,17 @@ const userId = users[0].id;
 const obstacleId = 4;
 const obstacleType = ObstacleType.TreeStump;
 const distance = 200;
-const gameStateInfoData = {
+// const gameStateInfoData = {
+//     roomId,
+//     playersState: [],
+//     gameState: GameState.Created,
+//     chasersPositionX: 100,
+//     cameraPositionX: 150,
+// };
+const initialGameStateInfoData: InitialGameStateInfo = {
     roomId,
+    trackLength,
+    numberOfObstacles: InitialParameters.NUMBER_OBSTACLES,
     playersState: [],
     gameState: GameState.Created,
     chasersPositionX: 100,
@@ -82,6 +94,13 @@ describe('Can handle function', () => {
     beforeEach(async () => {
         gameOne = new GameOne(roomId, leaderboard);
         gameOne.createNewGame(users);
+    });
+
+    afterAll(() => {
+        gameOneEventMessageEmitter.removeAllListeners();
+    });
+    afterEach(() => {
+        DI.clearInstances();
     });
 
     it('should return false for a wrong message type', async () => {
@@ -110,6 +129,11 @@ describe('Handle function does not send when not user', () => {
 
     afterEach(() => {
         jest.clearAllMocks();
+        DI.clearInstances();
+    });
+
+    afterAll(() => {
+        gameOneEventMessageEmitter.removeAllListeners();
     });
 
     it('should not call emit GAME_ONE_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE function', () => {
@@ -153,6 +177,11 @@ describe("Handle function send to single user's controller", () => {
 
     afterEach(() => {
         jest.clearAllMocks();
+        DI.clearInstances();
+    });
+
+    afterAll(() => {
+        gameOneEventMessageEmitter.removeAllListeners();
     });
 
     it('should emit GAME_ONE_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE ', () => {
@@ -350,6 +379,11 @@ describe("Handle function send to room's controllers", () => {
 
     afterEach(() => {
         jest.clearAllMocks();
+        DI.clearInstances();
+    });
+
+    afterAll(() => {
+        gameOneEventMessageEmitter.removeAllListeners();
     });
 
     it('should emit GAME_ONE_EVENT_MESSAGE__STUNNABLE_PLAYERS ', () => {
@@ -389,13 +423,18 @@ describe("Handle function send to room's screens", () => {
 
     afterEach(() => {
         jest.clearAllMocks();
+        DI.clearInstances();
+    });
+
+    afterAll(() => {
+        gameOneEventMessageEmitter.removeAllListeners();
     });
 
     it('should emit GAME_ONE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE ', () => {
         const message: GameOneInitialGameState = {
             type: GAME_ONE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
             roomId,
-            data: gameStateInfoData,
+            data: initialGameStateInfoData,
         };
 
         gameOneEventMessageEmitter.handle(screenNamespace, screenNamespace, room, message);
@@ -407,7 +446,7 @@ describe("Handle function send to room's screens", () => {
         const message: GameOneInitialGameState = {
             type: GAME_ONE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
             roomId,
-            data: gameStateInfoData,
+            data: initialGameStateInfoData,
         };
 
         gameOneEventMessageEmitter.handle(screenNamespace, screenNamespace, room, message);

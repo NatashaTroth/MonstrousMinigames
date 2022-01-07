@@ -16,11 +16,21 @@ let firstObstacle: Obstacle;
 let gameOnePlayer: GameOnePlayer;
 
 describe('Player wants to Solve Obstacle', () => {
-    beforeEach(async () => {
+    beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
+    beforeEach(async () => {
         gameOnePlayer = players.get(users[0].id)!;
         firstObstacle = gameOnePlayer.obstacles[0];
         firstObstacleId = gameOnePlayer.obstacles[0].id;
+    });
+
+    afterAll(() => {
+        gameEventEmitter.removeAllListeners();
+    });
+
+    afterEach(() => {
+        DI.clearInstances();
     });
 
     it("should set the obstacle's solvable property to false", async () => {

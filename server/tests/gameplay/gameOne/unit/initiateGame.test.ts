@@ -28,9 +28,11 @@ let gameEventEmitter: GameEventEmitter;
 let chasers: Chasers;
 
 describe('Change and verify game state', () => {
+    beforeAll(() => {
+        gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
     beforeEach(async () => {
         gameOne = new GameOne(roomId, leaderboard);
-        gameEventEmitter = DI.resolve(GameEventEmitter);
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
             if (message.type === GAME_ONE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE) {
                 initialGameStateInfo = message.data;
@@ -39,6 +41,14 @@ describe('Change and verify game state', () => {
         gameOne.createNewGame(users);
         gameStateInfo = gameOne.getGameStateInfo();
         chasers = new Chasers(trackLength, roomId);
+    });
+
+    afterAll(() => {
+        gameEventEmitter.removeAllListeners();
+    });
+
+    afterEach(() => {
+        DI.clearInstances();
     });
 
     it('initiates chasersPositionX with correct value', async () => {
