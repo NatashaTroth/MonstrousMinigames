@@ -1,11 +1,11 @@
 import game2SoundLoop from '../../../../assets/audio/Game_2_Sound_Loop.wav';
 import { defaultAvailableCharacters } from '../../../../config/characters';
+import sheepBackgroundGrass from '../../../../images/background/sheepBackgroundGrass.png';
 import blueMonsterGame2 from '../../../../images/characters/spritesheets/monsters/blue_spritesheet.png';
 import greenMonsterGame2 from '../../../../images/characters/spritesheets/monsters/green_spritesheet.png';
 import orangeMonsterGame2 from '../../../../images/characters/spritesheets/monsters/orange_spritesheet.png';
 import pinkMonsterGame2 from '../../../../images/characters/spritesheets/monsters/pink_spritesheet.png';
 import sheepDecoy from '../../../../images/characters/spritesheets/sheep/sheep_decoy.png';
-import sheepGrass from '../../../../images/ui/grass.png';
 import { AnimationNameGame2 } from '../../../phaser/enums/AnimationName';
 import { Character, CharacterAnimation, CharacterSpriteProperties } from '../../../phaser/gameInterfaces';
 
@@ -40,6 +40,6 @@ export const characters: Character[] = characterFiles.map((file, idx) => {
 
 // obstacle textures have to have the same name as obstacle type - lowercase
 export const images = [
-    { name: 'sheepGrass', file: sheepGrass },
+    { name: 'sheepGrass', file: sheepBackgroundGrass },
     { name: 'sheepDecoy', file: sheepDecoy },
 ];

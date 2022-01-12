@@ -83,7 +83,7 @@ export class PhaserPlayerRenderer {
                             this.startAnimation(this.character.name.concat('_walkRight'));
                             break;
                         case 'up':
-                            //this.startAnimation(this.character.name.concat('_walkBackward'));
+                            this.startAnimation(this.character.name.concat('_walkBackward'));
                             break; // TODO: create backwards & diagonal animations
                         default:
                             this.stopAnimation();
