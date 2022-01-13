@@ -5,6 +5,7 @@ export enum GameTwoMessageTypes {
     START_PHASER_GAME = 'game2/startPhaserGame',
     GAME_STATE = 'game2/gameState',
     MOVE = 'game2/move',
+    CHOOSE = 'game2/choose',
     KILL = 'game2/kill',
     GUESS = 'game2/guess',
 }
