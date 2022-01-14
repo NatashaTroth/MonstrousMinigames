@@ -53,7 +53,7 @@ const JoyStick: React.FunctionComponent<JoyStickProps> = ({ sessionStorage }) =>
 
     function emitKillMessage() {
         controllerSocket.emit({
-            type: MessageTypesGame2.killSheep,
+            type: MessageTypesGame2.chooseSheep,
             userId,
         });
 
