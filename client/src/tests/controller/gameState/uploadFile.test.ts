@@ -5,7 +5,6 @@ import { cleanup } from '@testing-library/react';
 import uploadFile from '../../../domain/game3/controller/gameState/handleFiles';
 import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { FakeRemoteStorage } from '../../../domain/storage/RemoteStorage';
-import { MessageTypesGame3 } from '../../../utils/constants';
 
 afterEach(cleanup);
 
@@ -19,25 +18,28 @@ describe('Upload File', () => {
         expect(result).toBe(false);
     });
 
-    it('should call uploadImage function of storage', async () => {
-        const values = { picture: new File([''], 'filename') };
-        const storage = new FakeRemoteStorage();
-        const socket = new FakeInMemorySocket();
+    // TODO move to Takepicture
+    // it('should call uploadImage function of storage', async () => {
 
-        const uploadImageSpy = jest.spyOn(storage, 'uploadImage');
+    //     const blob = new Blob();
+    //     const values = { picture: blob };
+    //     const storage = new FakeRemoteStorage();
+    //     const socket = new FakeInMemorySocket();
 
-        await uploadFile(values, storage, 'ABDE', '1', 1, socket, 0);
+    //     const uploadImageSpy = jest.spyOn(storage, 'uploadImage');
 
-        expect(uploadImageSpy).toHaveBeenCalledTimes(1);
-    });
+    //     await uploadFile(values, storage, 'ABDE', '1', 1, socket, 0);
 
-    it('should emit imageUrl to socket after successful upload', async () => {
-        const values = { picture: new File([''], 'filename') };
-        const storage = new FakeRemoteStorage();
-        const socket = new FakeInMemorySocket();
+    //     expect(uploadImageSpy).toHaveBeenCalledTimes(1);
+    // });
 
-        await uploadFile(values, storage, 'ABDE', '1', 1, socket, 0);
+    // it('should emit imageUrl to socket after successful upload', async () => {
+    //     const values = { picture: new File([''], 'filename') };
+    //     const storage = new FakeRemoteStorage();
+    //     const socket = new FakeInMemorySocket();
 
-        expect(socket.emitedVals).toEqual([{ type: MessageTypesGame3.photo, photographerId: '1', url: 'path' }]);
-    });
+    //     await uploadFile(values, storage, 'ABDE', '1', 1, socket, 0);
+
+    //     expect(socket.emitedVals).toEqual([{ type: MessageTypesGame3.photo, photographerId: '1', url: 'path' }]);
+    // });
 });

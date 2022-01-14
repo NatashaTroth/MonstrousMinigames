@@ -38,6 +38,12 @@ export default async function uploadFile(
                         });
                     }
                 },
+                error: error => {
+                    controllerSocket.emit({
+                        type: MessageTypesGame3.errorUploadingPhoto,
+                        errorMsg: JSON.stringify(error),
+                    });
+                },
             });
         } catch (error) {
             controllerSocket.emit({
