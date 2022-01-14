@@ -89,6 +89,7 @@ export enum MessageTypesGame2 {
     playerRanks = 'game2/playerRanks',
     guess = 'game2/guess',
     guessHint = 'game2/guessHint',
+    chooseResponse = 'game2/chooseResponse',
     remainingKills = 'game2/remainingKills',
 }
 
