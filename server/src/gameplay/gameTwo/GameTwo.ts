@@ -201,9 +201,11 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     protected chooseSheep(userId: string) {
         const player = this.players.get(userId)!;
+        let successful = false;
         if (this.roundService.isCountingPhase() && player && player.killsLeft > 0) {
-            this.sheepService.chooseSheep(player)
+            successful = this.sheepService.chooseSheep(player);
         }
+        GameTwoEventEmitter.emitChooseResponse(this.roomId, userId, successful);
     }
     protected killSheep(userId: string) {
         const player = this.players.get(userId)!;
