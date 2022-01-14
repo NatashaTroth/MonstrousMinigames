@@ -17,6 +17,7 @@
         "@types/react-swipeable-views": "^0.13.1",
         "@types/wav": "^1.0.0",
         "ansi-styles": "^5.1.0",
+        "compressorjs": "^1.1.1",
         "es6-promise": "^4.2.8",
         "final-form": "^4.20.4",
         "firebase": "^9.1.0",

@@ -2,7 +2,7 @@ import { FirebaseStorage, getDownloadURL, ref, uploadBytes } from '@firebase/sto
 import { deleteObject, listAll } from 'firebase/storage';
 
 export interface RemoteStorage {
-    uploadImage: (path: string, picture: File) => Promise<string>;
+    uploadImage: (path: string, picture: File | Blob) => Promise<string>;
     deleteImages: (path: string) => Promise<void>;
 }
 
@@ -13,7 +13,7 @@ export class RemoteStorageAdapter implements RemoteStorage {
         this.storage = storage;
     }
 
-    async uploadImage(path: string, picture: File) {
+    async uploadImage(path: string, picture: File | Blob) {
         const storageRef = ref(this.storage, path);
         const uploadedImage = await uploadBytes(storageRef, picture);
         return await getDownloadURL(uploadedImage.ref);
@@ -55,7 +55,7 @@ async function deleteFile(pathToFile: string, fileName: string, storage: Firebas
 }
 
 export class FakeRemoteStorage implements RemoteStorage {
-    async uploadImage(path: string, picture: File): Promise<string> {
+    async uploadImage(path: string, picture: File | Blob): Promise<string> {
         return new Promise(resolve => {
             resolve('path');
         });
