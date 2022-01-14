@@ -13,7 +13,7 @@ interface Dependencies {
 }
 
 export const chooseResponseHandler = messageHandler(chooseResponseTypeGuard, (message, dependencies: Dependencies) => {
-    if (message.successfull) {
+    if (message.successful) {
         dependencies.history.push(controllerStealSheepRoute(message.roomId));
     }
 });

@@ -4,7 +4,7 @@ import { MessageDataGame2 } from '../MessageDataGame2';
 export interface ChooseResponseMessage {
     type: MessageTypesGame2.chooseResponse;
     roomId: string;
-    successfull: boolean;
+    successful: boolean;
 }
 
 export const chooseResponseTypeGuard = (data: MessageDataGame2): data is ChooseResponseMessage =>
