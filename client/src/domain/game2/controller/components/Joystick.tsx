@@ -10,9 +10,7 @@ import { Game2Context } from '../../../../contexts/game2/Game2ContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import { MessageTypesGame2 } from '../../../../utils/constants';
-import { controllerStealSheepRoute } from '../../../../utils/routes';
 import { Countdown } from '../../../game1/controller/components/ShakeInstruction.sc';
-import history from '../../../history/history';
 import { Storage } from '../../../storage/Storage';
 import { Instructions, Round } from './Game2Styles.sc';
 import { JoystickContainer, KillSheepButtonContainer } from './Joystick.sc';
@@ -53,11 +51,11 @@ const JoyStick: React.FunctionComponent<JoyStickProps> = ({ sessionStorage }) =>
 
     function emitKillMessage() {
         controllerSocket.emit({
-            type: MessageTypesGame2.killSheep,
+            type: MessageTypesGame2.chooseSheep,
             userId,
         });
 
-        history.push(controllerStealSheepRoute(roomId));
+        //history.push(controllerStealSheepRoute(roomId));
     }
 
     function handleMove(event: IJoystickUpdateEvent) {

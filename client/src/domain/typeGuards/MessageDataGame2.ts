@@ -1,6 +1,7 @@
 import { ErrorMessage } from './error';
 import { GameHasFinishedMessage } from './finished';
 import { AllScreensSheepGameLoadedMessage } from './game2/allScreensSheepGameLoaded';
+import { ChooseResponseMessage } from './game2/chooseResponse';
 import { GameStateInfoMessage } from './game2/gameStateInfo';
 import { GuessHintMessage } from './game2/guessHint';
 import { InitialGameStateInfoMessage } from './game2/initialGameStateInfo';
@@ -36,5 +37,6 @@ export type MessageDataGame2 =
     | PhaseChangedMessage
     | PlayerRanksMessage
     | GuessHintMessage
+    | ChooseResponseMessage
     | RemainingKillsMessage
     | undefined;

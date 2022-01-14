@@ -83,11 +83,13 @@ export enum MessageTypesGame2 {
     initialGameState = 'game2/initialGameState',
     gameState = 'game2/gameState',
     movePlayer = 'game2/move',
+    chooseSheep = 'game2/choose',
     killSheep = 'game2/kill',
     phaseChanged = 'game2/PhaseHasChanged',
     playerRanks = 'game2/playerRanks',
     guess = 'game2/guess',
     guessHint = 'game2/guessHint',
+    chooseResponse = 'game2/chooseResponse',
     remainingKills = 'game2/remainingKills',
 }
 
