@@ -1,3 +1,5 @@
+import Compressor from 'compressorjs';
+
 import { MessageTypesGame3 } from '../../../../utils/constants';
 import { Socket } from '../../../socket/Socket';
 import { RemoteStorage } from '../../../storage/RemoteStorage';
@@ -15,24 +17,28 @@ export default async function uploadFile(
     if (!values.picture) return false;
 
     if (remoteStorage && roomId) {
-        try {
-            const imageUrl = await remoteStorage.uploadImage(
-                `${roomId}/${roundIdx}/${userId}${uploadedImagesCount}.jpg`,
-                values.picture
-            );
+        const path = `${roomId}/${roundIdx}/${userId}${uploadedImagesCount}.jpg`;
 
-            if (imageUrl) {
-                controllerSocket.emit({
-                    type: MessageTypesGame3.photo,
-                    photographerId: userId,
-                    url: imageUrl,
-                });
-            } else {
-                controllerSocket.emit({
-                    type: MessageTypesGame3.errorUploadingPhoto,
-                    errorMsg: JSON.stringify(imageUrl),
-                });
-            }
+        try {
+            new Compressor(values.picture, {
+                quality: 0.5,
+                success: async compressedResult => {
+                    const imageUrl = await remoteStorage.uploadImage(path, compressedResult);
+
+                    if (imageUrl) {
+                        controllerSocket.emit({
+                            type: MessageTypesGame3.photo,
+                            photographerId: userId,
+                            url: imageUrl,
+                        });
+                    } else {
+                        controllerSocket.emit({
+                            type: MessageTypesGame3.errorUploadingPhoto,
+                            errorMsg: JSON.stringify(imageUrl),
+                        });
+                    }
+                },
+            });
         } catch (error) {
             controllerSocket.emit({
                 type: MessageTypesGame3.errorUploadingPhoto,
