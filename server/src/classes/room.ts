@@ -194,7 +194,12 @@ class Room {
     public async resetGame() {
         this.clearInactiveUsers();
         this.users = this.getActiveUsers();
+        this.resetUserReady();
         this.setOpen();
+    }
+
+    public resetUserReady(): void {
+        this.users.forEach(user => user.setReady(false));
     }
 
     private clearInactiveUsers() {
