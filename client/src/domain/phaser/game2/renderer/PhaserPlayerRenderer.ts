@@ -38,6 +38,11 @@ export class PhaserPlayerRenderer {
             this.initiateAnimation(character.name, character.name.concat('_walkForward'), { start: 0, end: 3 });
             this.initiateAnimation(character.name, character.name.concat('_walkLeft'), { start: 4, end: 7 });
             this.initiateAnimation(character.name, character.name.concat('_walkRight'), { start: 8, end: 11 });
+            this.initiateAnimation(character.name, character.name.concat('_walkBack'), { start: 16, end: 19 });
+            this.initiateAnimation(character.name, character.name.concat('_walkNortheast'), { start: 20, end: 23 });
+            this.initiateAnimation(character.name, character.name.concat('_walkNorthwest'), { start: 24, end: 27 });
+            this.initiateAnimation(character.name, character.name.concat('_walkSoutheast'), { start: 28, end: 31 });
+            this.initiateAnimation(character.name, character.name.concat('_walkSouthwest'), { start: 32, end: 35 });
         } else {
             this.player.body.x = coordinates.x;
             this.player.body.y = coordinates.y;
@@ -72,6 +77,16 @@ export class PhaserPlayerRenderer {
             }
             return 'stand';
         }
+
+        if (newY < oldY && newX < oldX) {
+            return 'northwest';
+        } else if (newY > oldY && newX < oldX) {
+            return 'southwest';
+        } else if (newY < oldY && newX > oldX) {
+            return 'northeast';
+        } else if (newY > oldY && newX > oldX) {
+            return 'southeast';
+        }
         return 'stand';
     }
 
@@ -105,8 +120,20 @@ export class PhaserPlayerRenderer {
                             this.startAnimation(this.character.name.concat('_walkRight'));
                             break;
                         case 'up':
-                            //this.startAnimation(this.character.name.concat('_walkBackward'));
-                            break; // TODO: create backwards & diagonal animations
+                            this.startAnimation(this.character.name.concat('_walkBack'));
+                            break;
+                        case 'southeast':
+                            this.startAnimation(this.character.name.concat('_walkSoutheast'));
+                            break;
+                        case 'southwest':
+                            this.startAnimation(this.character.name.concat('_walkSouthwest'));
+                            break;
+                        case 'northeast':
+                            this.startAnimation(this.character.name.concat('_walkNortheast'));
+                            break;
+                        case 'northwest':
+                            this.startAnimation(this.character.name.concat('_walkNorthwest'));
+                            break;
                         default:
                             this.stopAnimation();
                     }
