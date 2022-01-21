@@ -287,9 +287,9 @@ class SheepGameScene extends Phaser.Scene {
 
         const yPadding = 30; //padding, so bottom of character/sheep don't hang over edge
         this.gameTwoRenderer?.renderSheepBackground(
-            0,
+            this.gameToScreenMapper.getCenterOffsetX(),
             this.gameToScreenMapper.getScreenYOffset() - yPadding,
-            window.innerWidth,
+            this.gameToScreenMapper.getMappedGameWidth(),
             this.gameToScreenMapper.getMappedGameHeight() + yPadding * 2
         );
 
