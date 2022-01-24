@@ -21,7 +21,7 @@ const StyledTypography = styled(Typography)`
 const Logo: React.FunctionComponent = () => (
     <div>
         <StyledTypography>Monstrous</StyledTypography>
-        <StyledTypography>Minigames</StyledTypography>
+        <StyledTypography>Mini Games</StyledTypography>
     </div>
 );
 
