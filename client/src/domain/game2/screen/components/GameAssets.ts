@@ -5,7 +5,7 @@ import greenMonsterGame2 from '../../../../images/characters/spritesheets/monste
 import orangeMonsterGame2 from '../../../../images/characters/spritesheets/monsters/orange_spritesheet.png';
 import pinkMonsterGame2 from '../../../../images/characters/spritesheets/monsters/pink_spritesheet.png';
 import sheepDecoy from '../../../../images/characters/spritesheets/sheep/sheep_decoy.png';
-import sheepBackground from '../../../../images/sheepBackground/background.png';
+import sheepBackground from '../../../../images/sheepBackground/background2.png';
 import sheepGrass from '../../../../images/ui/grass.png';
 import { AnimationNameGame2 } from '../../../phaser/enums/AnimationName';
 import { Character, CharacterAnimation, CharacterSpriteProperties } from '../../../phaser/gameInterfaces';
