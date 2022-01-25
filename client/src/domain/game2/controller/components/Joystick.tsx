@@ -98,7 +98,7 @@ const JoyStick: React.FunctionComponent<JoyStickProps> = ({ sessionStorage }) =>
                                 stop={() => handleStop()}
                             ></Joystick>
                         </JoystickContainer>
-                        <Instructions>Remaining kills: {remainingKills}</Instructions>
+                        <Instructions>Remaining decoys: {remainingKills}</Instructions>
                         <KillSheepButtonContainer>
                             <Button onClick={emitKillMessage} disabled={remainingKills === 0}>
                                 Steal Sheep
