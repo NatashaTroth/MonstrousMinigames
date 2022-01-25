@@ -60,7 +60,7 @@ class SheepGameScene extends Phaser.Scene {
     allScreensLoaded: boolean;
     playerRanks: PlayerRank[];
     gameTwoRenderer?: GameTwoRenderer;
-    socketsInitiated: boolean;
+    socketsInitiated = false;
 
     constructor() {
         super(PhaserGame.SCENE_NAME_GAME_2);
@@ -77,12 +77,10 @@ class SheepGameScene extends Phaser.Scene {
         this.firstGameStateReceived = false;
         this.allScreensLoaded = false;
         this.playerRanks = [];
-        this.socketsInitiated = false;
         this.initiateEventEmitters();
     }
 
     resetSceneVariables() {
-        this.socketsInitiated = false;
         this.players = [];
         this.sheep = [];
         this.phase = GamePhases.counting;
