@@ -137,11 +137,12 @@ export default class GameThreeEventEmitter {
         });
     }
 
-    public static emitTakeFinalPhotosCountdown(roomId: string, countdownTime: number) {
+    public static emitTakeFinalPhotosCountdown(roomId: string, countdownTime: number, photoTopics: string[]) {
         this.GameThreeEventMessageEmitter.emit({
             type: GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
             roomId,
             countdownTime,
+            photoTopics,
         });
     }
 

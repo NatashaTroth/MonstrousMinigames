@@ -3,6 +3,7 @@ import InitialParameters from '../constants/InitialParameters';
 import GameThreeEventEmitter from '../GameThreeEventEmitter';
 import { PlayerNameId } from '../interfaces';
 import { FinalPhotosStage } from './FinalPhotosStage';
+import { PhotoTopics } from './PhotoTopics';
 import { PlayerPoints } from './PlayerPoints';
 import { SinglePhotoStage } from './SinglePhotoStage';
 import { Stage } from './Stage';
@@ -20,6 +21,7 @@ export class StageController {
         this.initStageEventEmitter();
         this.handleNewRound();
         this.playerPoints = new PlayerPoints(players);
+        PhotoTopics.createNewPhotoTopicsInstance(); // reset singleton for this round
     }
 
     private initStageEventEmitter() {

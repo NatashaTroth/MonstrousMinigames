@@ -50,6 +50,19 @@ describe('Initiate stage', () => {
 
         expect(eventCalled).toBeTruthy();
     });
+
+    it('should emit the taking final photos with 5 photo suggestions', async () => {
+        let suggestions = [];
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
+            if (message.type === GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN) {
+                console.log(message);
+                suggestions = message.photoTopics;
+            }
+        });
+        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
+
+        expect(suggestions.length).toBe(5);
+    });
 });
 
 describe('Taking Photo', () => {

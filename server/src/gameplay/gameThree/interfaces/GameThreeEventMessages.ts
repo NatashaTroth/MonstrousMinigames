@@ -68,6 +68,7 @@ export interface TakeFinalPhotosCountdown {
     type: typeof GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN;
     roomId: string;
     countdownTime: number;
+    photoTopics: string[];
 }
 
 export interface PresentFinalPhotos {
