@@ -76,7 +76,8 @@ export class GameTwoRenderer {
     }
 
     renderSheepBackground(x: number, y: number, width: number, height: number) {
-        const element = this.scene.add.image(x, y, 'sheepGrass');
+        const element = this.scene.add.image(x, y, 'sheepBackground');
+        // const element = this.scene.add.image(x, y, 'sheepGrass');
         element.setDisplaySize(width, height);
         element.setOrigin(0, 0);
         element.setDepth(depthDictionary.sky);

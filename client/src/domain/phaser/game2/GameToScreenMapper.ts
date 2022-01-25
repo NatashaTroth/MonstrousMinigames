@@ -49,7 +49,14 @@ export class GameToScreenMapper {
         // return this.mapGameXMeasurementToScreen(this.gameHeight);
         return (
             this.gameHeight * this.screenPercentageOfGameWidth + (this.windowWidth * this.widthPaddingPercentage) / 3
-        ); //add 1/3 more padding to right because of scrollbar
+        );
+    }
+
+    getMappedBackgroundHeight() {
+        // return this.mapGameXMeasurementToScreen(this.gameHeight);
+        return (
+            ((this.gameHeight * this.screenPercentageOfGameWidth) / 2) * 3 //+ (this.windowWidth * this.widthPaddingPercentage) / 3
+        );
     }
 
     getMappedGameWidth() {
