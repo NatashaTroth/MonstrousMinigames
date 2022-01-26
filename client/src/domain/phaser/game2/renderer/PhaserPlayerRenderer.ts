@@ -6,6 +6,7 @@ import * as colors from '../../colors';
 import { Character } from '../../gameInterfaces';
 import { CharacterAnimationFrames } from '../../gameInterfaces/Character';
 import { Coordinates } from '../../gameTypes';
+import { Scene } from '../../Scene';
 import { loadingTextStyleProperties } from '../../textStyleProperties';
 
 /**
@@ -28,7 +29,7 @@ export class PhaserPlayerRenderer {
     renderPlayer(coordinates: Coordinates, character: Character, playerName: string): void {
         this.character = character;
         if (!this.player.body || !this.player.name) {
-            this.renderPlayerInitially(coordinates, character, playerName);
+            this.renderPlayerInitially(coordinates, character, character.name);
             // frames:
             // 0-3: forward
             // 4-7: left
@@ -38,6 +39,11 @@ export class PhaserPlayerRenderer {
             this.initiateAnimation(character.name, character.name.concat('_walkForward'), { start: 0, end: 3 });
             this.initiateAnimation(character.name, character.name.concat('_walkLeft'), { start: 4, end: 7 });
             this.initiateAnimation(character.name, character.name.concat('_walkRight'), { start: 8, end: 11 });
+            this.initiateAnimation(character.name, character.name.concat('_walkBack'), { start: 16, end: 19 });
+            this.initiateAnimation(character.name, character.name.concat('_walkNortheast'), { start: 20, end: 23 });
+            this.initiateAnimation(character.name, character.name.concat('_walkNorthwest'), { start: 24, end: 27 });
+            this.initiateAnimation(character.name, character.name.concat('_walkSoutheast'), { start: 28, end: 31 });
+            this.initiateAnimation(character.name, character.name.concat('_walkSouthwest'), { start: 32, end: 35 });
         } else {
             this.player.body.x = coordinates.x;
             this.player.body.y = coordinates.y;
@@ -72,6 +78,16 @@ export class PhaserPlayerRenderer {
             }
             return 'stand';
         }
+
+        if (newY < oldY && newX < oldX) {
+            return 'northwest';
+        } else if (newY > oldY && newX < oldX) {
+            return 'southwest';
+        } else if (newY < oldY && newX > oldX) {
+            return 'northeast';
+        } else if (newY > oldY && newX > oldX) {
+            return 'southeast';
+        }
         return 'stand';
     }
 
@@ -105,8 +121,20 @@ export class PhaserPlayerRenderer {
                             this.startAnimation(this.character.name.concat('_walkRight'));
                             break;
                         case 'up':
-                            //this.startAnimation(this.character.name.concat('_walkBackward'));
-                            break; // TODO: create backwards & diagonal animations
+                            this.startAnimation(this.character.name.concat('_walkBack'));
+                            break;
+                        case 'southeast':
+                            this.startAnimation(this.character.name.concat('_walkSoutheast'));
+                            break;
+                        case 'southwest':
+                            this.startAnimation(this.character.name.concat('_walkSouthwest'));
+                            break;
+                        case 'northeast':
+                            this.startAnimation(this.character.name.concat('_walkNortheast'));
+                            break;
+                        case 'northwest':
+                            this.startAnimation(this.character.name.concat('_walkNorthwest'));
+                            break;
                         default:
                             this.stopAnimation();
                     }
@@ -116,10 +144,11 @@ export class PhaserPlayerRenderer {
     }
 
     private renderPlayerInitially(coordinates: Coordinates, character: Character, playerName: string) {
-        this.player.body = this.scene.physics.add.sprite(coordinates.x, coordinates.y, character.name);
-        this.player.body.setScale(0.1);
-        this.player.body.setDepth(depthDictionary.player);
-        this.player.body.setCollideWorldBounds(true);
+        this.player.body = handleRenderPlayer(this.scene, coordinates, character.name);
+        // this.player.body = this.scene.physics.add.sprite(coordinates.x, coordinates.y, character.name);
+        // this.player.body.setScale(0.1);
+        // this.player.body.setDepth(depthDictionary.player);
+        // this.player.body.setCollideWorldBounds(true);
 
         this.player.name = this.scene.make.text({
             x: this.player.body.x - this.player.body.displayWidth / 2,
@@ -150,4 +179,13 @@ export class PhaserPlayerRenderer {
     stopAnimation() {
         this.player.body?.anims.stop();
     }
+}
+
+export function handleRenderPlayer(scene: Scene, coordinates: Coordinates, monsterSpriteSheetName: string) {
+    const player = scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName);
+    player.setScale(0.1);
+    player.setDepth(depthDictionary.player);
+    player.setCollideWorldBounds(true);
+
+    return player as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 }

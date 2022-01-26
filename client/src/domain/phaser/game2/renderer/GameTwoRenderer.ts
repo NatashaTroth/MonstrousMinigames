@@ -23,7 +23,11 @@ export class GameTwoRenderer {
     }
 
     updateBrightnessOverlay(brightness: number) {
-        this.brightnessOverlay?.setAlpha(1 - brightness / 100);
+        this.brightnessOverlay?.setAlpha(this.getNewBrightness(brightness));
+    }
+
+    getNewBrightness(brightness: number) {
+        return 1 - brightness / 100;
     }
 
     renderRoundCount(round: number) {
@@ -76,10 +80,11 @@ export class GameTwoRenderer {
     }
 
     renderSheepBackground(x: number, y: number, width: number, height: number) {
+        console.log('bg');
         const element = this.scene.add.image(x, y, 'sheepGrass');
         element.setDisplaySize(width, height);
         element.setOrigin(0, 0);
-        element.setDepth(depthDictionary.sky);
+        element.setDepth(depthDictionary.game2Bg);
     }
 
     renderInitialSheepCount(count: number) {

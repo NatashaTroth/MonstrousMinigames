@@ -18,7 +18,7 @@ const Credits: React.FunctionComponent = () => (
                 <Headline>Credits</Headline>
                 <TextContainer>
                     This project was developed as part of the MultiMediaTechnology Master's degree programme at the
-                    University of Applied Sciences Salzburg. The students Natasha Troth, Robin Fellinger, Leon
+                    University of Applied Sciences Salzburg. The students Natasha Troth, Robin Fellinger, Ash
                     Spiegelmayr and Magdalena Maislinger are responsible for the technical implementation. All game
                     elements and the design for the user interface were created by MultiMediaArt student Kerstin
                     Schaumberger. The music and sound elements were created by the MultiMediaArt artist Tobias Türk.
