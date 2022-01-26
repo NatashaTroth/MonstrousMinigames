@@ -1,15 +1,17 @@
-import * as React from 'react';
+import * as React from "react";
 
-import Countdown from '../../../../components/common/Countdown';
-import { ControllerSocketContext } from '../../../../contexts/controller/ControllerSocketContextProvider';
-import { FirebaseContext } from '../../../../contexts/FirebaseContextProvider';
-import { Game3Context } from '../../../../contexts/game3/Game3ContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
-import uploadFile from '../gameState/handleFiles';
-import { CountdownContainer, Instructions, ScreenContainer } from './Game3Styles.sc';
-import PhotoForm from './PhotoForm';
-import { RandomWord } from './TakePicture.sc';
+import Countdown from "../../../../components/common/Countdown";
+import {
+    ControllerSocketContext
+} from "../../../../contexts/controller/ControllerSocketContextProvider";
+import { FirebaseContext } from "../../../../contexts/FirebaseContextProvider";
+import { Game3Context } from "../../../../contexts/game3/Game3ContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
+import uploadFile from "../gameState/handleFiles";
+import { CountdownContainer, Instructions, ScreenContainer } from "./Game3Styles.sc";
+import PhotoForm from "./PhotoForm";
+import { RandomWord } from "./TakePicture.sc";
 
 export interface UploadProps {
     picture: File | Blob | undefined;
@@ -19,7 +21,7 @@ const TakePicture: React.FunctionComponent = () => {
     const { storage } = React.useContext(FirebaseContext);
     const { roomId, countdownTime } = React.useContext(GameContext);
     const { userId } = React.useContext(PlayerContext);
-    const { roundIdx, topicMessage, finalRoundCountdownTime } = React.useContext(Game3Context);
+    const { roundIdx, topicMessage, finalRoundCountdownTime, finalRoundPhotoTopics } = React.useContext(Game3Context);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const [uploadedImagesCount, setUploadedImagesCount] = React.useState(0);
     const [displayCountdown, setDisplayCountdown] = React.useState(true);
@@ -46,6 +48,7 @@ const TakePicture: React.FunctionComponent = () => {
                 </CountdownContainer>
             )}
             {!displayCountdown && <RandomWord>{topicMessage?.topic}</RandomWord>}
+            {!displayCountdown && finalRound && <RandomWord>{finalRoundPhotoTopics.join(', ')}</RandomWord>}
             <Instructions>{finalRound ? 'Final Round' : `Round ${roundIdx}`}</Instructions>
             {displayCountdown ? (
                 <>

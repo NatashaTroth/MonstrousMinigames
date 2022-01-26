@@ -1,11 +1,15 @@
-import React from 'react';
+import React from "react";
 
-import Countdown from '../../../../components/common/Countdown';
-import { MyAudioContext, Sound } from '../../../../contexts/AudioContextProvider';
-import { FinalPhoto, Game3Context, Topic, Vote, VoteResult } from '../../../../contexts/game3/Game3ContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
-import { ImagesContainer, InstructionContainer, PictureInstruction, RandomWord, ScreenContainer } from './Game.sc';
-import Photo from './Photo';
+import Countdown from "../../../../components/common/Countdown";
+import { MyAudioContext, Sound } from "../../../../contexts/AudioContextProvider";
+import {
+    FinalPhoto, Game3Context, Topic, Vote, VoteResult
+} from "../../../../contexts/game3/Game3ContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import {
+    ImagesContainer, InstructionContainer, PictureInstruction, RandomWord, ScreenContainer
+} from "./Game.sc";
+import Photo from "./Photo";
 
 const Game3: React.FunctionComponent = () => {
     const { countdownTime } = React.useContext(GameContext);
@@ -16,6 +20,7 @@ const Game3: React.FunctionComponent = () => {
         finalRoundCountdownTime,
         presentFinalPhotos,
         topicMessage,
+        finalRoundPhotoTopics,
     } = React.useContext(Game3Context);
     const [displayCountdown, setDisplayCountdown] = React.useState(true);
     const [timeToDisplay, setTimeToDisplay] = React.useState<undefined | number>(undefined);
@@ -79,6 +84,11 @@ const Game3: React.FunctionComponent = () => {
                             votingResults,
                             topicMessage?.topic
                         )}
+                        {finalRound && (
+                            <RandomWord size={voteForPhotoMessage || presentFinalPhotos ? 'small' : 'default'}>
+                                {finalRoundPhotoTopics.join(', ')}
+                            </RandomWord>
+                        )}
                     </InstructionContainer>
                     {voteForPhotoMessage && (
                         <ImagesContainer>
@@ -121,7 +131,7 @@ export function getInstruction(
 
     if (finalRound) {
         instruction =
-            'Take three photos. Later you will receive random photos from all uploaded photos. Use your imagination and present a short story about it.';
+            'Get inspired by the topics and take three photos. Later you will receive random photos from all uploaded photos. Use your imagination and present a short story about it containing one of the topics.';
     }
 
     if (voteForPhotoMessage) {

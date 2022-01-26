@@ -1,10 +1,11 @@
-import { MessageTypesGame3 } from '../../../utils/constants';
-import { MessageDataGame3 } from './MessageDataGame3';
+import { MessageTypesGame3 } from "../../../utils/constants";
+import { MessageDataGame3 } from "./MessageDataGame3";
 
 export interface FinalRoundCountdownMessage {
     type: MessageTypesGame3.finalRoundCountdown;
     roomId: string;
     countdownTime: number;
+    photoTopics: string[];
 }
 
 export const finalRoundCountdownTypeGuard = (data: MessageDataGame3): data is FinalRoundCountdownMessage => {

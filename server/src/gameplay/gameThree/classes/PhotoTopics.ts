@@ -1,5 +1,5 @@
-import InitialParameters from '../constants/InitialParameters';
-import { RandomWordGenerator } from './RandomWordGenerator';
+import InitialParameters from "../constants/InitialParameters";
+import { RandomWordGenerator } from "./RandomWordGenerator";
 
 export class PhotoTopics {
     private _topics: string[];
@@ -13,7 +13,7 @@ export class PhotoTopics {
 
     public static getInstance(
         numberRounds = InitialParameters.NUMBER_ROUNDS,
-        numberSuggestionsFinalPhotos = 5,
+        numberSuggestionsFinalPhotos = InitialParameters.NUMBER_SUGGESTIONS,
         newInstance = false
     ): PhotoTopics {
         if (!PhotoTopics.instance || newInstance) {
@@ -25,7 +25,7 @@ export class PhotoTopics {
 
     public static createNewPhotoTopicsInstance(
         numberRounds = InitialParameters.NUMBER_ROUNDS,
-        numberSuggestionsFinalPhotos = 5
+        numberSuggestionsFinalPhotos = InitialParameters.NUMBER_SUGGESTIONS
     ) {
         PhotoTopics.instance = new PhotoTopics(numberRounds, numberSuggestionsFinalPhotos);
     }
