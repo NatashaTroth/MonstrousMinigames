@@ -282,7 +282,7 @@ class SheepGameScene extends Phaser.Scene {
 
         this.physics.world.setBounds(
             0,
-            this.gameToScreenMapper.getScreenYOffset() - 150, //- 200, -> so that monster can go to the top of the field, but does not work, probably because backend stops at position 0
+            this.gameToScreenMapper.getObjectYOffset(), //- 200, -> so that monster can go to the top of the field, but does not work, probably because backend stops at position 0
             this.windowWidth,
             this.gameToScreenMapper.getMappedGameHeight() + 150 // + 200
         );
@@ -299,7 +299,7 @@ class SheepGameScene extends Phaser.Scene {
             // this.gameToScreenMapper.getMappedGameHeight() + yPadding * 2
         );
 
-        return;
+        // return;
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);

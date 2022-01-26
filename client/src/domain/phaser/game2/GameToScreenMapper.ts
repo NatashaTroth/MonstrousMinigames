@@ -10,6 +10,9 @@ export class GameToScreenMapper {
     backgroundImageWidth = 0;
     backgroundImageHeight = 0;
     backgroundWidthEqualsWindowWidth = true;
+    mappedGameWidth?: number;
+    mappedGameHeight?: number;
+    yObjectOffsetFromTopBackground = 0;
 
     constructor(
         private gameWidth: number,
@@ -39,7 +42,25 @@ export class GameToScreenMapper {
         // this.centerOffsetX = (this.windowWidth - this.gameWidth * this.screenPercentageOfGameWidth) / 2;
 
         this.calcBackgroundImageSizes();
+
+        if (this.backgroundWidthEqualsWindowWidth) {
+            // gameWidth... 100%
+            // windowWidth... x
+
+            this.mappedGameWidth = this.windowWidth;
+            this.screenPercentageOfGameWidth = (1 / gameWidth) * this.windowWidth;
+            this.mappedGameHeight = gameHeight * this.screenPercentageOfGameWidth;
+            // this.mappedGameHeight = 1;
+        } else {
+            this.mappedGameHeight = this.windowHeight;
+            this.screenPercentageOfGameWidth = (1 / gameHeight) * this.windowHeight;
+            this.mappedGameWidth = gameWidth * this.screenPercentageOfGameWidth;
+        }
+
+        this.yObjectOffsetFromTopBackground = this.backgroundImageHeight - this.mappedGameHeight; // top position sheep at bottom of the background image
     }
+
+    // ********** Background Image *************
 
     private calcBackgroundImageSizes() {
         // backgroundImageDimensions.width ... 1   // (100%)
@@ -79,34 +100,18 @@ export class GameToScreenMapper {
         // return window.innerHeight - this.getMappedGameHeight() - this.heightPadding;
     }
 
-    // private calcBackgroundImageSizes() {
-    //     // backgroundImageDimensions.width ... 1   // (100%)
-    //     // window width ... x    // = backgroundMultiplier
-
-    //     // backgroundImageDimensions.height * x
-
-    //     if (this.windowWidth > this.windowHeight) {
-    //         // console.log('here1');
-    //         this.backgroundImageWidth = this.windowWidth;
-    //         // this.screenPercentageOfGameWidth = (1 / backgroundImageDimensions.width) * this.windowWidth;
-    //         const backgroundMultiplier = (1 / backgroundImageDimensions.width) * this.windowWidth;
-    //         // console.log(this.backgroundImageHeight);
-    //         this.backgroundImageHeight = backgroundMultiplier * backgroundImageDimensions.height;
-    //     } else {
-    //         // console.log('here2');
-    //         this.backgroundImageHeight = this.windowHeight;
-    //         // this.screenPercentageOfGameWidth = (1 / backgroundImageDimensions.height) * this.windowHeight;
-    //         const backgroundMultiplier = (1 / backgroundImageDimensions.height) * this.windowHeight;
-    //         this.backgroundImageWidth = backgroundMultiplier * backgroundImageDimensions.width;
-    //     }
-    // }
-
     getSheepBackgroundImageWidth() {
         return this.backgroundImageWidth;
     }
 
     getSheepBackgroundImageHeight() {
         return this.backgroundImageHeight;
+    }
+
+    // ********** Other *************
+
+    getObjectYOffset() {
+        return this.getScreenYOffset() + this.yObjectOffsetFromTopBackground;
     }
 
     mapGameXMeasurementToScreen(value: number) {
@@ -118,7 +123,7 @@ export class GameToScreenMapper {
     }
 
     mapGameYMeasurementToScreen(value: number) {
-        return value * this.screenPercentageOfGameWidth + this.getScreenYOffset();
+        return value * this.screenPercentageOfGameWidth + this.getObjectYOffset();
     }
 
     getMappedGameHeight() {
@@ -127,13 +132,6 @@ export class GameToScreenMapper {
             this.gameHeight * this.screenPercentageOfGameWidth + (this.windowWidth * this.widthPaddingPercentage) / 3
         );
     }
-
-    // getMappedBackgroundHeight() {
-    //     // return this.mapGameXMeasurementToScreen(this.gameHeight);
-    //     return (
-    //         ((this.gameHeight * this.screenPercentageOfGameWidth) / 2) * 3 //+ (this.windowWidth * this.widthPaddingPercentage) / 3
-    //     );
-    // }
 
     getMappedGameWidth() {
         return this.gameWidth * this.screenPercentageOfGameWidth;
