@@ -84,7 +84,7 @@ export class GameTwoRenderer {
         const element = this.scene.add.image(x, y, 'sheepGrass');
         element.setDisplaySize(width, height);
         element.setOrigin(0, 0);
-        element.setDepth(depthDictionary.grass);
+        element.setDepth(depthDictionary.game2Bg);
     }
 
     renderInitialSheepCount(count: number) {
