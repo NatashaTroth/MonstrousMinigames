@@ -76,10 +76,11 @@ export class GameTwoRenderer {
     }
 
     renderSheepBackground(x: number, y: number, width: number, height: number) {
+        console.log('bg');
         const element = this.scene.add.image(x, y, 'sheepGrass');
         element.setDisplaySize(width, height);
         element.setOrigin(0, 0);
-        element.setDepth(depthDictionary.sky);
+        element.setDepth(depthDictionary.grass);
     }
 
     renderInitialSheepCount(count: number) {

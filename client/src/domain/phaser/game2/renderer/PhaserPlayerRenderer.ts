@@ -6,6 +6,7 @@ import * as colors from '../../colors';
 import { Character } from '../../gameInterfaces';
 import { CharacterAnimationFrames } from '../../gameInterfaces/Character';
 import { Coordinates } from '../../gameTypes';
+import { Scene } from '../../Scene';
 import { loadingTextStyleProperties } from '../../textStyleProperties';
 
 /**
@@ -28,7 +29,7 @@ export class PhaserPlayerRenderer {
     renderPlayer(coordinates: Coordinates, character: Character, playerName: string): void {
         this.character = character;
         if (!this.player.body || !this.player.name) {
-            this.renderPlayerInitially(coordinates, character, playerName);
+            this.renderPlayerInitially(coordinates, character, character.name);
             // frames:
             // 0-3: forward
             // 4-7: left
@@ -143,10 +144,11 @@ export class PhaserPlayerRenderer {
     }
 
     private renderPlayerInitially(coordinates: Coordinates, character: Character, playerName: string) {
-        this.player.body = this.scene.physics.add.sprite(coordinates.x, coordinates.y, character.name);
-        this.player.body.setScale(0.1);
-        this.player.body.setDepth(depthDictionary.player);
-        this.player.body.setCollideWorldBounds(true);
+        this.player.body = handleRenderPlayer(this.scene, coordinates, character.name);
+        // this.player.body = this.scene.physics.add.sprite(coordinates.x, coordinates.y, character.name);
+        // this.player.body.setScale(0.1);
+        // this.player.body.setDepth(depthDictionary.player);
+        // this.player.body.setCollideWorldBounds(true);
 
         this.player.name = this.scene.make.text({
             x: this.player.body.x - this.player.body.displayWidth / 2,
@@ -177,4 +179,13 @@ export class PhaserPlayerRenderer {
     stopAnimation() {
         this.player.body?.anims.stop();
     }
+}
+
+export function handleRenderPlayer(scene: Scene, coordinates: Coordinates, monsterSpriteSheetName: string) {
+    const player = scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName);
+    player.setScale(0.1);
+    player.setDepth(depthDictionary.player);
+    player.setCollideWorldBounds(true);
+
+    return player as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 }

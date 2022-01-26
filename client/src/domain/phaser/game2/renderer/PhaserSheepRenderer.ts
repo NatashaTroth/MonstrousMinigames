@@ -52,19 +52,19 @@ export class PhaserSheepRenderer {
 
         if (newX && newY) {
             if (newX < oldX && newY < oldY) {
-                return 'southwest';
-            }
-
-            if (newX > oldX && newY < oldY) {
-                return 'southeast';
-            }
-
-            if (newX < oldX && newY > oldY) {
                 return 'northwest';
             }
 
-            if (newX > oldX && newY > oldY) {
+            if (newX > oldX && newY < oldY) {
                 return 'northeast';
+            }
+
+            if (newX < oldX && newY > oldY) {
+                return 'southwest';
+            }
+
+            if (newX > oldX && newY > oldY) {
+                return 'southeast';
             }
         }
 
