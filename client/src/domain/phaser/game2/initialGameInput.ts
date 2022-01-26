@@ -81,8 +81,8 @@ export const initialGameInput = {
         { id: '63', posX: 917, posY: 562, state: SheepState.ALIVE },
         { id: '64', posX: 1020, posY: 651, state: SheepState.ALIVE },
     ],
-    lengthX: 1800,
-    lengthY: 700,
+    lengthX: 1920,
+    lengthY: 720,
     gameState: 'CREATED',
     brightness: 100,
 };
