@@ -3,7 +3,9 @@ import Phaser from 'phaser';
 
 import { GamePhases, PlayerRank } from '../../../../contexts/game2/Game2ContextProvider';
 import sheepSpritesheet from '../../../../images/characters/spritesheets/sheep/sheep_spritesheet.png';
-import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2 } from '../../../../utils/constants';
+import {
+    designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2
+} from '../../../../utils/constants';
 import { GameData } from '../../../phaser/game2/gameInterfaces/GameData';
 import { GameToScreenMapper } from '../../../phaser/game2/GameToScreenMapper';
 import { initialGameInput } from '../../../phaser/game2/initialGameInput';
@@ -19,21 +21,22 @@ import { MessageSocket } from '../../../socket/MessageSocket';
 import { Socket } from '../../../socket/Socket';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
 import {
-    AllScreensSheepGameLoadedMessage,
-    allScreensSheepGameLoadedTypeGuard,
+    AllScreensSheepGameLoadedMessage, allScreensSheepGameLoadedTypeGuard
 } from '../../../typeGuards/game2/allScreensSheepGameLoaded';
-import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../../typeGuards/game2/gameStateInfo';
 import {
-    InitialGameStateInfoMessage,
-    initialGameStateInfoTypeGuard,
+    GameStateInfoMessage, gameStateInfoTypeGuard
+} from '../../../typeGuards/game2/gameStateInfo';
+import {
+    InitialGameStateInfoMessage, initialGameStateInfoTypeGuard
 } from '../../../typeGuards/game2/initialGameStateInfo';
 import { PhaseChangedMessage, phaseChangedTypeGuard } from '../../../typeGuards/game2/phaseChanged';
 import {
-    PhaserLoadingTimedOutMessage,
-    phaserLoadingTimedOutTypeGuard,
+    PhaserLoadingTimedOutMessage, phaserLoadingTimedOutTypeGuard
 } from '../../../typeGuards/game2/phaserLoadingTimedOut';
 import { PlayerRanksMessage, playerRanksTypeGuard } from '../../../typeGuards/game2/playerRanks';
-import { SheepGameHasStartedMessage, sheepGameStartedTypeGuard } from '../../../typeGuards/game2/started';
+import {
+    SheepGameHasStartedMessage, sheepGameStartedTypeGuard
+} from '../../../typeGuards/game2/started';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
 import { resumeHandler } from '../gameState/resumeHandler';
@@ -182,6 +185,7 @@ class SheepGameScene extends Phaser.Scene {
         if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
+                console.log(JSON.stringify(data));
                 this.gameRenderer?.destroyLoadingScreen();
                 this.gameStarted = true;
                 this.initiateGame(data.data);
@@ -285,11 +289,17 @@ class SheepGameScene extends Phaser.Scene {
 
         const yPadding = 30; //padding, so bottom of character/sheep don't hang over edge
         this.gameTwoRenderer?.renderSheepBackground(
-            this.gameToScreenMapper.getCenterOffsetX(),
-            this.gameToScreenMapper.getScreenYOffset() - yPadding,
-            this.gameToScreenMapper.getMappedGameWidth(),
-            this.gameToScreenMapper.getMappedGameHeight() + yPadding * 2
+            this.gameToScreenMapper.getScreenXOffset(),
+            this.gameToScreenMapper.getScreenYOffset(),
+            // 0,
+            // 0,
+            this.gameToScreenMapper.getSheepBackgroundImageWidth(),
+            this.gameToScreenMapper.getSheepBackgroundImageHeight()
+            // this.gameToScreenMapper.getMappedGameWidth(),
+            // this.gameToScreenMapper.getMappedGameHeight() + yPadding * 2
         );
+
+        return;
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);

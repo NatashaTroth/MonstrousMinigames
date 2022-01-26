@@ -5,10 +5,12 @@ import greenMonsterGame2 from '../../../../images/characters/spritesheets/monste
 import orangeMonsterGame2 from '../../../../images/characters/spritesheets/monsters/orange_spritesheet.png';
 import pinkMonsterGame2 from '../../../../images/characters/spritesheets/monsters/pink_spritesheet.png';
 import sheepDecoy from '../../../../images/characters/spritesheets/sheep/sheep_decoy.png';
-import sheepBackground from '../../../../images/sheepBackground/background2.png';
+import sheepBackground from '../../../../images/sheepBackground/background.png';
 import sheepGrass from '../../../../images/ui/grass.png';
 import { AnimationNameGame2 } from '../../../phaser/enums/AnimationName';
-import { Character, CharacterAnimation, CharacterSpriteProperties } from '../../../phaser/gameInterfaces';
+import {
+    Character, CharacterAnimation, CharacterSpriteProperties
+} from '../../../phaser/gameInterfaces';
 
 //TODO types
 
@@ -38,6 +40,11 @@ export const characters: Character[] = characterFiles.map((file, idx) => {
         animations: animationsMap,
     };
 });
+
+export const backgroundImageDimensions = {
+    width: 2500,
+    height: 1802,
+};
 
 // obstacle textures have to have the same name as obstacle type - lowercase
 export const images = [
