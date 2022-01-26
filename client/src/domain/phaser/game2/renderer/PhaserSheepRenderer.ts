@@ -71,9 +71,9 @@ export class PhaserSheepRenderer {
         return 'stand';
     }
 
-    renderSheep(coordinates: Coordinates, state: SheepState) {
+    renderSheep(coordinates: Coordinates, state: SheepState, gameWidth: number) {
         if (state === SheepState.ALIVE) {
-            this.renderSheepInitially(coordinates);
+            this.renderSheepInitially(coordinates, gameWidth);
         } else if (state === SheepState.DECOY) {
             this.placeDecoy();
         }
@@ -131,7 +131,7 @@ export class PhaserSheepRenderer {
         this.sheep?.setTexture('sheepDecoy');
     }
 
-    private renderSheepInitially(coordinates: Coordinates) {
+    private renderSheepInitially(coordinates: Coordinates, gameWidth: number) {
         this.sheep = this.scene.physics.add.sprite(coordinates.x, coordinates.y, 'sheepSpritesheet');
         this.initiateAnimation('sheepSpritesheet', 'sheep_walkRight', { start: 0, end: 4 });
         this.initiateAnimation('sheepSpritesheet', 'sheep_walkLeft', { start: 5, end: 9 });
@@ -141,7 +141,7 @@ export class PhaserSheepRenderer {
         this.initiateAnimation('sheepSpritesheet', 'sheep_walkNorthWest', { start: 23, end: 27 });
         this.initiateAnimation('sheepSpritesheet', 'sheep_walkSouthEast', { start: 28, end: 32 });
         this.initiateAnimation('sheepSpritesheet', 'sheep_walkSouthWest', { start: 33, end: 37 });
-        this.sheep.setScale(0.5);
+        this.sheep.setScale(0.0006 * gameWidth);
 
         this.sheep.setDepth(depthDictionary.sheep);
         this.sheep.setCollideWorldBounds(true);

@@ -35,7 +35,8 @@ export class Sheep {
                 x: this.gameToScreenMapper.mapGameXMeasurementToScreen(this.coordinates.x),
                 y: this.gameToScreenMapper.mapGameYMeasurementToScreen(this.coordinates.y),
             },
-            this.state
+            this.state,
+            this.gameToScreenMapper.mappedGameWidth
         );
     }
 

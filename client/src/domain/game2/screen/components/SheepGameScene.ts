@@ -281,10 +281,12 @@ class SheepGameScene extends Phaser.Scene {
         );
 
         this.physics.world.setBounds(
+            // this.gameToScreenMapper.getObjectXOffset(),
             0,
             this.gameToScreenMapper.getObjectYOffset(), //- 200, -> so that monster can go to the top of the field, but does not work, probably because backend stops at position 0
-            this.windowWidth,
-            this.gameToScreenMapper.getMappedGameHeight() + 150 // + 200
+            // this.gameToScreenMapper.getMappedGameWidth(),
+            10000000,
+            this.gameToScreenMapper.getMappedGameHeight() // + 200
         );
 
         const yPadding = 30; //padding, so bottom of character/sheep don't hang over edge

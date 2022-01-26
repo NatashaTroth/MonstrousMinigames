@@ -10,9 +10,10 @@ export class GameToScreenMapper {
     backgroundImageWidth = 0;
     backgroundImageHeight = 0;
     backgroundWidthEqualsWindowWidth = true;
-    mappedGameWidth?: number;
-    mappedGameHeight?: number;
+    mappedGameWidth = 0;
+    mappedGameHeight = 0;
     yObjectOffsetFromTopBackground = 0;
+    paddingX = 10;
 
     constructor(
         private gameWidth: number,
@@ -43,21 +44,27 @@ export class GameToScreenMapper {
 
         this.calcBackgroundImageSizes();
 
-        if (this.backgroundWidthEqualsWindowWidth) {
-            // gameWidth... 100%
-            // windowWidth... x
+        // if (this.backgroundWidthEqualsWindowWidth) {
+        // gameWidth... 100%
+        // windowWidth... x
 
-            this.mappedGameWidth = this.windowWidth;
-            this.screenPercentageOfGameWidth = (1 / gameWidth) * this.windowWidth;
-            this.mappedGameHeight = gameHeight * this.screenPercentageOfGameWidth;
-            // this.mappedGameHeight = 1;
-        } else {
-            this.mappedGameHeight = this.windowHeight;
-            this.screenPercentageOfGameWidth = (1 / gameHeight) * this.windowHeight;
-            this.mappedGameWidth = gameWidth * this.screenPercentageOfGameWidth;
-        }
+        this.mappedGameWidth = this.backgroundImageWidth;
+
+        // console.log(this.backgroundImageWidth);
+        // console.log(this.mappedGameWidth);
+        // console.log(this.windowWidth);
+
+        this.screenPercentageOfGameWidth = (1 / gameWidth) * this.backgroundImageWidth;
+        // console.log(gameWidth * this.screenPercentageOfGameWidth);
+        this.mappedGameHeight = gameHeight * this.screenPercentageOfGameWidth;
+        // } else {
+        //     this.mappedGameHeight = this.windowHeight;
+        //     this.screenPercentageOfGameWidth = (1 / gameHeight) * this.windowHeight;
+        //     this.mappedGameWidth = gameWidth * this.screenPercentageOfGameWidth;
+        // }
 
         this.yObjectOffsetFromTopBackground = this.backgroundImageHeight - this.mappedGameHeight; // top position sheep at bottom of the background image
+        this.paddingX = this.paddingX * this.screenPercentageOfGameWidth;
     }
 
     // ********** Background Image *************
@@ -110,15 +117,20 @@ export class GameToScreenMapper {
 
     // ********** Other *************
 
+    getObjectXOffset() {
+        return this.getScreenXOffset();
+    }
+
     getObjectYOffset() {
         return this.getScreenYOffset() + this.yObjectOffsetFromTopBackground;
     }
 
     mapGameXMeasurementToScreen(value: number) {
         return (
-            value * this.screenPercentageOfGameWidth +
-            (this.windowWidth * this.widthPaddingPercentage) / 3 +
-            this.centerOffsetX
+            value * this.screenPercentageOfGameWidth + this.getObjectXOffset()
+            // +
+            // (this.windowWidth * this.widthPaddingPercentage) / 3 +
+            // this.centerOffsetX
         ); //add 1/3 more padding to right because of scrollbar
     }
 
@@ -127,13 +139,15 @@ export class GameToScreenMapper {
     }
 
     getMappedGameHeight() {
+        return this.mappedGameHeight;
         // return this.mapGameXMeasurementToScreen(this.gameHeight);
-        return (
-            this.gameHeight * this.screenPercentageOfGameWidth + (this.windowWidth * this.widthPaddingPercentage) / 3
-        );
+        // return (
+        //     this.gameHeight * this.screenPercentageOfGameWidth + (this.windowWidth * this.widthPaddingPercentage) / 3
+        // );
     }
 
     getMappedGameWidth() {
-        return this.gameWidth * this.screenPercentageOfGameWidth;
+        return this.mappedGameWidth;
+        // return this.gameWidth * this.screenPercentageOfGameWidth;
     }
 }
