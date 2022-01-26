@@ -46,7 +46,7 @@ describe('Joystick', () => {
                 <JoyStick sessionStorage={sessionStorage} />
             </ThemeProvider>
         );
-        const givenText = 'Remaining kills: '.concat(defaultSteals.toString());
+        const givenText = 'Remaining decoys: '.concat(defaultSteals.toString());
         expect(queryByText(container, givenText)).toBeTruthy();
     });
 
@@ -58,7 +58,7 @@ describe('Joystick', () => {
                 <JoyStick sessionStorage={sessionStorage} />
             </ThemeProvider>
         );
-        const givenText = 'Remaining kills: '.concat(newStealNumber.toString());
+        const givenText = 'Remaining decoys: '.concat(newStealNumber.toString());
         expect(queryByText(container, givenText)).toBeTruthy();
     });
 
