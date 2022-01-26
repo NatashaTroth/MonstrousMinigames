@@ -13,7 +13,8 @@ export class GameToScreenMapper {
     mappedGameWidth = 0;
     mappedGameHeight = 0;
     yObjectOffsetFromTopBackground = 0;
-    paddingX = 10;
+    paddingX = 30; // to stop the sheep from going off the side
+    mappedPaddingX = 0;
 
     constructor(
         private gameWidth: number,
@@ -54,7 +55,7 @@ export class GameToScreenMapper {
         // console.log(this.mappedGameWidth);
         // console.log(this.windowWidth);
 
-        this.screenPercentageOfGameWidth = (1 / gameWidth) * this.backgroundImageWidth;
+        this.screenPercentageOfGameWidth = (1 / gameWidth) * (this.backgroundImageWidth - this.paddingX * 2);
         // console.log(gameWidth * this.screenPercentageOfGameWidth);
         this.mappedGameHeight = gameHeight * this.screenPercentageOfGameWidth;
         // } else {
@@ -64,7 +65,7 @@ export class GameToScreenMapper {
         // }
 
         this.yObjectOffsetFromTopBackground = this.backgroundImageHeight - this.mappedGameHeight; // top position sheep at bottom of the background image
-        this.paddingX = this.paddingX * this.screenPercentageOfGameWidth;
+        this.mappedPaddingX = this.paddingX * this.screenPercentageOfGameWidth;
     }
 
     // ********** Background Image *************
@@ -118,11 +119,11 @@ export class GameToScreenMapper {
     // ********** Other *************
 
     getObjectXOffset() {
-        return this.getScreenXOffset();
+        return this.getScreenXOffset() + this.paddingX;
     }
 
     getObjectYOffset() {
-        return this.getScreenYOffset() + this.yObjectOffsetFromTopBackground;
+        return this.getScreenYOffset() + this.yObjectOffsetFromTopBackground - this.mappedPaddingX;
     }
 
     mapGameXMeasurementToScreen(value: number) {

@@ -3,7 +3,9 @@ import * as React from 'react';
 import Button from '../../../../components/common/Button';
 import { FullScreenContainer } from '../../../../components/common/FullScreenStyles.sc';
 import { inputStyles } from '../../../../components/controller/ConnectScreen.sc';
-import { ControllerSocketContext } from '../../../../contexts/controller/ControllerSocketContextProvider';
+import {
+    ControllerSocketContext
+} from '../../../../contexts/controller/ControllerSocketContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import { MessageTypesGame2 } from '../../../../utils/constants';
 import { FormContainer, Instructions } from './Game2Styles.sc';
@@ -28,7 +30,7 @@ const Guess: React.FunctionComponent = () => {
     return (
         <FullScreenContainer>
             <FormContainer>
-                <Instructions>How many sheeps are on the meadow?</Instructions>
+                <Instructions>How many sheep are on the meadow?</Instructions>
                 <form onSubmit={(e: React.FormEvent) => handleSubmit(e)}>
                     <input
                         type="number"

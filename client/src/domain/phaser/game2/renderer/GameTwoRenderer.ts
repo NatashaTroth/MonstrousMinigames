@@ -57,7 +57,7 @@ export class GameTwoRenderer {
                 this.guessInstructionText = this.scene.make.text({
                     x: screenCenterWidth,
                     y: screenCenterHeight - 50,
-                    text: 'How many sheeps are on the meadow?\nEnter your guess on your device.',
+                    text: 'How many sheep are on the meadow?\nEnter your guess on your device.',
                     style: {
                         ...loadingTextStyleProperties,
                         fontSize: `${40}px`,
@@ -89,7 +89,7 @@ export class GameTwoRenderer {
         this.sheepCountText = this.scene.make.text({
             x: screenCenterWidth,
             y: screenCenterHeight - 50,
-            text: `${count} sheeps are on the meadow`,
+            text: `${count} sheep are on the meadow`,
             style: {
                 ...loadingTextStyleProperties,
                 fontSize: `${40}px`,
