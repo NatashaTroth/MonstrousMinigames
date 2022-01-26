@@ -23,7 +23,11 @@ export class GameTwoRenderer {
     }
 
     updateBrightnessOverlay(brightness: number) {
-        this.brightnessOverlay?.setAlpha(1 - brightness / 100);
+        this.brightnessOverlay?.setAlpha(this.getNewBrightness(brightness));
+    }
+
+    getNewBrightness(brightness: number) {
+        return 1 - brightness / 100;
     }
 
     renderRoundCount(round: number) {
