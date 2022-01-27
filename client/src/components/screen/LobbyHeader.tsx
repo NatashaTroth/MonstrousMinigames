@@ -18,7 +18,7 @@ const LobbyHeader: React.FC = () => {
             <HeadContainerLeft>
                 <RoomCodeContainer>
                     <Headline>Room Code:</Headline>
-                    <Code>{roomId}</Code>
+                    <Code className="roomCode">{roomId}</Code>
                 </RoomCodeContainer>
             </HeadContainerLeft>
             <HeadContainerRight>
