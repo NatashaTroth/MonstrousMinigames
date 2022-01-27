@@ -43,9 +43,9 @@ test-integration:client:
         # - /^backend-.*$/
         - staging
 
-end-to-end:
+end-to-end:client:
+    stage: end-to-end
     image: qawolf/playwright-ci:v1.0.0
-
     script:
         - cd client/
         - echo "End to End testing.."
