@@ -35,20 +35,18 @@ export class PhaserGame {
     }
 
     startGame1Scene(roomId: string | undefined, socket: Socket | undefined, screenAdmin: boolean) {
-        if (!this.game.scene.getScene(PhaserGame.SCENE_NAME_GAME_1))
+        if (!this.game.scene.getScene(PhaserGame.SCENE_NAME_GAME_1)) {
             this.game.scene.add(PhaserGame.SCENE_NAME_GAME_1, MainSceneGame1, false);
-
-        // this.game.scene.stop(PhaserGame.SCENE_NAME_GAME_2);
+        }
 
         this.currentScene = PhaserGame.SCENE_NAME_GAME_1;
         this.game.scene.start(PhaserGame.SCENE_NAME_GAME_1, { roomId, socket, screenAdmin });
     }
 
     startGame2Scene(roomId: string | undefined, socket: Socket | undefined, screenAdmin: boolean) {
-        if (!this.game.scene.getScene(PhaserGame.SCENE_NAME_GAME_2))
+        if (!this.game.scene.getScene(PhaserGame.SCENE_NAME_GAME_2)) {
             this.game.scene.add(PhaserGame.SCENE_NAME_GAME_2, SheepGameScene, false);
-
-        // this.game.scene.stop(PhaserGame.SCENE_NAME_GAME_1);
+        }
 
         this.currentScene = PhaserGame.SCENE_NAME_GAME_2;
         this.game.scene.start(PhaserGame.SCENE_NAME_GAME_2, { roomId, socket, screenAdmin });

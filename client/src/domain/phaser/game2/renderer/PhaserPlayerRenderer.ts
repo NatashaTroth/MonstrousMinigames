@@ -34,7 +34,6 @@ export class PhaserPlayerRenderer {
             // 0-3: forward
             // 4-7: left
             // 8-11: right
-            // TODO: fix animations, missing walking back animation
 
             this.initiateAnimation(character.name, character.name.concat('_walkForward'), { start: 0, end: 3 });
             this.initiateAnimation(character.name, character.name.concat('_walkLeft'), { start: 4, end: 7 });
@@ -145,10 +144,6 @@ export class PhaserPlayerRenderer {
 
     private renderPlayerInitially(coordinates: Coordinates, character: Character, playerName: string) {
         this.player.body = handleRenderPlayer(this.scene, coordinates, character.name);
-        // this.player.body = this.scene.physics.add.sprite(coordinates.x, coordinates.y, character.name);
-        // this.player.body.setScale(0.1);
-        // this.player.body.setDepth(depthDictionary.player);
-        // this.player.body.setCollideWorldBounds(true);
 
         this.player.name = this.scene.make.text({
             x: this.player.body.x - this.player.body.displayWidth / 2,

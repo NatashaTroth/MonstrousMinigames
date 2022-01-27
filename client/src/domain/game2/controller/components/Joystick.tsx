@@ -10,6 +10,7 @@ import { Game2Context } from '../../../../contexts/game2/Game2ContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import { MessageTypesGame2 } from '../../../../utils/constants';
 import { Countdown } from '../../../game1/controller/components/ShakeInstruction.sc';
+import { Socket } from '../../../socket/Socket';
 import { Storage } from '../../../storage/Storage';
 import { Instructions, Round } from './Game2Styles.sc';
 import { JoystickContainer, KillSheepButtonContainer } from './Joystick.sc';
@@ -47,13 +48,6 @@ const JoyStick: React.FunctionComponent<JoyStickProps> = ({ sessionStorage }) =>
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [counter]);
 
-    function emitKillMessage() {
-        controllerSocket.emit({
-            type: MessageTypesGame2.chooseSheep,
-            userId,
-        });
-    }
-
     function handleMove(event: IJoystickUpdateEvent) {
         if (event.x && event.y) {
             const newDirection = getDirectionforPos(event.x, event.y);
@@ -66,14 +60,6 @@ const JoyStick: React.FunctionComponent<JoyStickProps> = ({ sessionStorage }) =>
                 });
             }
         }
-    }
-
-    function handleStop() {
-        controllerSocket.emit({
-            type: MessageTypesGame2.movePlayer,
-            userId: userId,
-            direction: 'C',
-        });
     }
 
     return (
@@ -91,12 +77,15 @@ const JoyStick: React.FunctionComponent<JoyStickProps> = ({ sessionStorage }) =>
                                 baseColor="grey"
                                 stickColor="white"
                                 move={e => handleMove(e)}
-                                stop={() => handleStop()}
+                                stop={() => handleStop(userId, controllerSocket)}
                             ></Joystick>
                         </JoystickContainer>
                         <Instructions>Remaining decoys: {remainingKills}</Instructions>
                         <KillSheepButtonContainer>
-                            <Button onClick={emitKillMessage} disabled={remainingKills === 0}>
+                            <Button
+                                onClick={() => emitKillMessage(userId, controllerSocket)}
+                                disabled={remainingKills === 0}
+                            >
                                 Steal Sheep
                             </Button>
                         </KillSheepButtonContainer>
@@ -109,29 +98,56 @@ const JoyStick: React.FunctionComponent<JoyStickProps> = ({ sessionStorage }) =>
 
 export default JoyStick;
 
-function getDirectionforPos(x: number, y: number) {
+enum Direction {
+    C = 'C',
+    N = 'N',
+    S = 'S',
+    W = 'W',
+    E = 'E',
+    NE = 'NE',
+    NW = 'NW',
+    SE = 'SE',
+    SW = 'SW',
+}
+
+export function getDirectionforPos(x: number, y: number) {
     if (Math.abs(x) < 20 && Math.abs(y) < 20) {
-        return 'C';
-    } else if (y >= 20) {
-        if (-35 <= x) {
-            if (x <= 35) {
-                return 'N';
-            }
-            return 'NE';
-        }
-        return 'NW';
-    } else if (y <= -20) {
-        if (-35 <= x) {
-            if (x <= 35) {
-                return 'S';
-            }
-            return 'SE';
-        }
-        return 'SW';
-    } else if (x >= 20) {
-        return 'E';
-    } else if (x <= -20) {
-        return 'W';
+        return Direction.C;
     }
-    return 'C';
+
+    if (y >= 20) {
+        if (-35 <= x) {
+            return x <= 35 ? Direction.N : Direction.NE;
+        }
+        return Direction.NW;
+    }
+
+    if (y <= -20) {
+        if (-35 <= x) {
+            return x <= 35 ? Direction.S : Direction.SE;
+        }
+        return Direction.SW;
+    }
+    if (x >= 20) {
+        return Direction.E;
+    }
+
+    if (x <= -20) {
+        return Direction.W;
+    }
+}
+
+export function emitKillMessage(userId: string, controllerSocket: Socket) {
+    controllerSocket.emit({
+        type: MessageTypesGame2.chooseSheep,
+        userId,
+    });
+}
+
+export function handleStop(userId: string, controllerSocket: Socket) {
+    controllerSocket.emit({
+        type: MessageTypesGame2.movePlayer,
+        userId: userId,
+        direction: Direction.C,
+    });
 }

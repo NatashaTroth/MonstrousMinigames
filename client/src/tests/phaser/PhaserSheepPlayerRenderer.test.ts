@@ -38,35 +38,3 @@ describe('handleRenderPlayer SheepGame', () => {
         expect(scene.physics.add.sprite).toHaveBeenCalledWith(0, 0, character.name);
     });
 });
-
-// describe('handleWindAnimation', () => {
-//     const numberPlayers = 2;
-//     const laneHeightsPerNumberPlayers = [10, 20];
-//     const wind = {
-//         x: 10,
-//         y: 20,
-//         displayHeight: 10,
-//         setScale: jest.fn(),
-//         setDepth: jest.fn(),
-//         play: jest.fn(),
-//         on: jest.fn(),
-//         destroy: jest.fn(),
-//         setBounce: jest.fn(),
-//         setCollideWorldBounds: jest.fn(),
-//     };
-
-//     handleWindAnimation(wind, numberPlayers, laneHeightsPerNumberPlayers);
-//     expect(wind.play).toHaveBeenCalledWith('windAnimation');
-// });
-
-//     it('should create player', () => {
-//         handleRenderPlayer(scene, numberPlayers, laneHeightsPerNumberPlayers, coordinates, monsterSpriteSheetName);
-
-//         expect(scene.physics.add.sprite).toHaveBeenCalledWith(
-//             coordinates.x,
-//             coordinates.y,
-//             monsterSpriteSheetName,
-//             expect.anything()
-//         );
-//     });
-//});

@@ -9,8 +9,6 @@ import sheepGrass from '../../../../images/ui/grass.png';
 import { AnimationNameGame2 } from '../../../phaser/enums/AnimationName';
 import { Character, CharacterAnimation, CharacterSpriteProperties } from '../../../phaser/gameInterfaces';
 
-//TODO types
-
 export const audioFiles = [{ name: 'backgroundMusicLoop', file: [game2SoundLoop] }];
 
 const characterSpriteProperties: CharacterSpriteProperties = {
