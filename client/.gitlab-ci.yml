@@ -14,7 +14,7 @@ npm:client:
         - cd client/
         - echo "Running npm ci ..."
         - npm ci
-        - npx playwright install
+      
     # except:
     # - /^backend-.*$/
 
@@ -45,9 +45,10 @@ test-integration:client:
 
 end-to-end:client:
     stage: end-to-end
-    image: qawolf/playwright-ci:v1.0.0
+    image: mcr.microsoft.com/playwright:focal
     script:
         - cd client/
+        - npx playwright install
         - echo "End to End testing.."
         # Start local server
         - npm start & npx wait-on http://localhost:3000
