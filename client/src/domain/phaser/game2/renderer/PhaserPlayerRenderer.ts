@@ -42,7 +42,7 @@ export class PhaserPlayerRenderer {
             this.player.body.x = coordinates.x;
             this.player.body.y = coordinates.y;
 
-            this.player.name.x = coordinates.x - this.player.body.displayWidth / 2;
+            this.player.name.x = coordinates.x - this.player.name.displayWidth / 2;
             this.player.name.y = coordinates.y - this.player.body.displayHeight / 2 - 20;
         }
     }
@@ -87,7 +87,7 @@ export class PhaserPlayerRenderer {
             this.player.body.y = newYPosition;
 
             if (this.player.name) {
-                this.player.name.x = newXPosition - this.player.body.displayWidth / 2;
+                this.player.name.x = newXPosition - this.player.name.displayWidth / 2;
                 this.player.name.y = newYPosition - this.player.body.displayHeight / 2 - 20;
             }
 
@@ -133,6 +133,7 @@ export class PhaserPlayerRenderer {
             },
         });
         this.player.name.setDepth(depthDictionary.percentText);
+        this.player.name.x = coordinates.x - this.player.name.displayWidth / 2;
     }
 
     private initiateAnimation(spritesheetName: string, animationName: string, frames: CharacterAnimationFrames) {

@@ -280,14 +280,14 @@ class SheepGameScene extends Phaser.Scene {
             this.windowHeight
         );
 
-        this.physics.world.setBounds(
-            // this.gameToScreenMapper.getObjectXOffset(),
-            0,
-            this.gameToScreenMapper.getObjectYOffset(), //- 200, -> so that monster can go to the top of the field, but does not work, probably because backend stops at position 0
-            // this.gameToScreenMapper.getMappedGameWidth(),
-            10000000,
-            this.gameToScreenMapper.getMappedGameHeight() // + 200
-        );
+        // this.physics.world.setBounds(
+        //     // this.gameToScreenMapper.getObjectXOffset(),
+        //     0,
+        //     this.gameToScreenMapper.getObjectYOffset() - 200, //- 200, -> so that monster can go to the top of the field, but does not work, probably because backend stops at position 0
+        //     // this.gameToScreenMapper.getMappedGameWidth(),
+        //     10000000,
+        //     this.gameToScreenMapper.getMappedGameHeight() + 400
+        // );
 
         const yPadding = 30; //padding, so bottom of character/sheep don't hang over edge
         this.gameTwoRenderer?.renderSheepBackground(

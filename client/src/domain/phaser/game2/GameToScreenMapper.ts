@@ -14,6 +14,7 @@ export class GameToScreenMapper {
     mappedGameHeight = 0;
     yObjectOffsetFromTopBackground = 0;
     paddingX = 30; // to stop the sheep from going off the side
+    // paddingX = 30; // to stop the sheep from going off the side
     mappedPaddingX = 0;
 
     constructor(
@@ -55,16 +56,26 @@ export class GameToScreenMapper {
         // console.log(this.mappedGameWidth);
         // console.log(this.windowWidth);
 
-        this.screenPercentageOfGameWidth = (1 / gameWidth) * (this.backgroundImageWidth - this.paddingX * 2);
+        this.screenPercentageOfGameWidth = (1 / gameWidth) * (this.backgroundImageWidth - this.paddingX * 2); //TODO:
+        // console.log(this.backgroundImageWidth);
+        // console.log(gameWidth * this.screenPercentageOfGameWidth);
+
+        // console.log(gameHeight * this.screenPercentageOfGameWidth);
+
         // console.log(gameWidth * this.screenPercentageOfGameWidth);
         this.mappedGameHeight = gameHeight * this.screenPercentageOfGameWidth;
+        // console.log(this.screenPercentageOfGameWidth);
         // } else {
         //     this.mappedGameHeight = this.windowHeight;
         //     this.screenPercentageOfGameWidth = (1 / gameHeight) * this.windowHeight;
         //     this.mappedGameWidth = gameWidth * this.screenPercentageOfGameWidth;
         // }
 
-        this.yObjectOffsetFromTopBackground = this.backgroundImageHeight - this.mappedGameHeight; // top position sheep at bottom of the background image
+        this.yObjectOffsetFromTopBackground = this.backgroundImageHeight - this.mappedGameHeight - this.paddingX * 1.5; // top position sheep at bottom of the background image
+        console.log(this.backgroundImageHeight);
+        console.log(this.mappedGameHeight);
+        console.log(this.yObjectOffsetFromTopBackground);
+
         this.mappedPaddingX = this.paddingX * this.screenPercentageOfGameWidth;
     }
 
@@ -123,7 +134,7 @@ export class GameToScreenMapper {
     }
 
     getObjectYOffset() {
-        return this.getScreenYOffset() + this.yObjectOffsetFromTopBackground - this.mappedPaddingX;
+        return this.getScreenYOffset() + this.yObjectOffsetFromTopBackground; //- this.paddingX;
     }
 
     mapGameXMeasurementToScreen(value: number) {
