@@ -61,7 +61,7 @@ describe('Initiate stage', () => {
         });
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
 
-        expect(suggestions.length).toBe(5);
+        expect(suggestions.length).toBe(InitialParameters.NUMBER_SUGGESTIONS);
     });
 });
 
