@@ -43,12 +43,12 @@ test-integration:client:
         # - /^backend-.*$/
         - staging
 
-end-two-end:
+end-to-end:
     image: qawolf/playwright-ci:v1.0.0
 
     script:
         - cd client/
-        - echo "End two End testing.."
+        - echo "End to End testing.."
         # Start local server
         - npm start & npx wait-on http://localhost:3000
         - npm run e2e
