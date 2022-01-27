@@ -1,7 +1,7 @@
 import React from 'react';
 
 import sheep from '../../images/characters/singleSheep.png';
-import shakeIt from '../../images/ui/shakeIt.svg';
+import joystick from '../../images/ui/joystick.png';
 import {
     ControlInstruction,
     ControlInstructionsContainer,
@@ -15,7 +15,7 @@ export const Game2Description: React.FunctionComponent = () => (
     <ControlInstructionsContainer>
         <ImagesContainer>
             <ImageWrapper>
-                <InstructionImg src={shakeIt} />
+                <InstructionImg src={joystick} />
             </ImageWrapper>
             <ImageWrapper>
                 <InstructionImg src={sheep} />
