@@ -1,15 +1,15 @@
-import React from "react";
+import { Stop, VolumeOff, VolumeUp } from '@material-ui/icons';
+import React from 'react';
 
-import Countdown from "../../../../components/common/Countdown";
-import { MyAudioContext, Sound } from "../../../../contexts/AudioContextProvider";
-import {
-    FinalPhoto, Game3Context, Topic, Vote, VoteResult
-} from "../../../../contexts/game3/Game3ContextProvider";
-import { GameContext } from "../../../../contexts/GameContextProvider";
-import {
-    ImagesContainer, InstructionContainer, PictureInstruction, RandomWord, ScreenContainer
-} from "./Game.sc";
-import Photo from "./Photo";
+import Countdown from '../../../../components/common/Countdown';
+import { MyAudioContext, Sound } from '../../../../contexts/AudioContextProvider';
+import { FinalPhoto, Game3Context, Topic, Vote, VoteResult } from '../../../../contexts/game3/Game3ContextProvider';
+import { GameContext } from '../../../../contexts/GameContextProvider';
+import { ScreenSocketContext } from '../../../../contexts/screen/ScreenSocketContextProvider';
+import { MessageTypes } from '../../../../utils/constants';
+import { AudioButton, Container, StopButton } from '../../../game1/screen/components/Game.sc';
+import { ImagesContainer, InstructionContainer, PictureInstruction, RandomWord, ScreenContainer } from './Game.sc';
+import Photo from './Photo';
 
 const Game3: React.FunctionComponent = () => {
     const { countdownTime } = React.useContext(GameContext);
@@ -22,9 +22,10 @@ const Game3: React.FunctionComponent = () => {
         topicMessage,
         finalRoundPhotoTopics,
     } = React.useContext(Game3Context);
+    const { screenSocket } = React.useContext(ScreenSocketContext);
     const [displayCountdown, setDisplayCountdown] = React.useState(true);
     const [timeToDisplay, setTimeToDisplay] = React.useState<undefined | number>(undefined);
-    const { changeSound, setVolume, isPlaying, volume } = React.useContext(MyAudioContext);
+    const { changeSound, setVolume, isPlaying, volume, togglePlaying } = React.useContext(MyAudioContext);
     const finalRound = roundIdx === 3;
 
     React.useEffect(() => {
@@ -55,8 +56,24 @@ const Game3: React.FunctionComponent = () => {
         setTimeToDisplay(time);
     }, [presentFinalPhotos, finalRoundCountdownTime, voteForPhotoMessage, topicMessage]);
 
+    async function handleAudio() {
+        togglePlaying();
+    }
+
+    async function handleStop() {
+        screenSocket?.emit({ type: MessageTypes.stopGame });
+    }
+
     return (
         <ScreenContainer>
+            <Container>
+                <StopButton onClick={handleStop} variant="primary">
+                    {<Stop />}
+                </StopButton>
+                <AudioButton onClick={handleAudio} variant="primary">
+                    {isPlaying ? <VolumeUp /> : <VolumeOff />}
+                </AudioButton>
+            </Container>
             <PictureInstruction size={voteForPhotoMessage ? 'small' : 'default'}>
                 {finalRound ? 'Final Round' : `Round ${roundIdx}`}
             </PictureInstruction>
