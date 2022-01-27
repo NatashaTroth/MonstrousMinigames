@@ -103,7 +103,7 @@ export const enum MessageTypesGame3 {
     newRound = 'game3/newRound',
     finalRoundCountdown = 'game3/takeFinalPhotosCountdown',
     votingResults = 'game3/photoVotingResults',
-    voteForFinalPhots = 'game3/voteForFinalPhotos',
+    voteForFinalPhotos = 'game3/voteForFinalPhotos',
     finalResults = 'game3/finalResults',
     presentFinalPhotos = 'game3/presentFinalPhotos',
     finishedPresenting = 'game3/finishedPresenting',
