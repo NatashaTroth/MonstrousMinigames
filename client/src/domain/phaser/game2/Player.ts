@@ -50,7 +50,12 @@ export class Player {
             y: this.gameToScreenMapper.mapGameYMeasurementToScreen(this.coordinates.y),
         };
 
-        this.renderer.renderPlayer(screenCoordinates, this.character, this.username);
+        this.renderer.renderPlayer(
+            screenCoordinates,
+            this.character,
+            this.username,
+            this.gameToScreenMapper.mappedGameWidth
+        );
     }
 
     startRunning() {

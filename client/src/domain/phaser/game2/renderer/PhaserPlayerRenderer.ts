@@ -25,10 +25,10 @@ export class PhaserPlayerRenderer {
         this.player = {};
     }
 
-    renderPlayer(coordinates: Coordinates, character: Character, playerName: string): void {
+    renderPlayer(coordinates: Coordinates, character: Character, playerName: string, gameWidth: number): void {
         this.character = character;
         if (!this.player.body || !this.player.name) {
-            this.renderPlayerInitially(coordinates, character, playerName);
+            this.renderPlayerInitially(coordinates, character, playerName, gameWidth);
             // frames:
             // 0-3: forward
             // 4-7: left
@@ -115,9 +115,14 @@ export class PhaserPlayerRenderer {
         }
     }
 
-    private renderPlayerInitially(coordinates: Coordinates, character: Character, playerName: string) {
+    private renderPlayerInitially(
+        coordinates: Coordinates,
+        character: Character,
+        playerName: string,
+        gameWidth: number
+    ) {
         this.player.body = this.scene.physics.add.sprite(coordinates.x, coordinates.y, character.name);
-        this.player.body.setScale(0.1);
+        this.player.body.setScale(0.00013 * gameWidth);
         this.player.body.setDepth(depthDictionary.player);
         this.player.body.setCollideWorldBounds(true);
 
