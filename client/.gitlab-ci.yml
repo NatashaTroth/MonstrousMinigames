@@ -48,10 +48,11 @@ end-to-end:client:
     image: mcr.microsoft.com/playwright:focal
     script:
         - cd client/
-        - npx playwright-cli install
+        - npx playwright install
         - echo "End to End testing.."
         # Start local server
         - npm start & npx wait-on http://localhost:3000
+        - echo fs.inotify.max_user_watches=582222 | sudo tee -a /etc/sysctl.conf && sudo sysctl  -p
         - npm run end2end
     except:
         # - /^backend-.*$/
