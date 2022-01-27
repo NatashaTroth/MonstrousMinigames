@@ -21,7 +21,13 @@ const TakePicture: React.FunctionComponent = () => {
     const { storage } = React.useContext(FirebaseContext);
     const { roomId, countdownTime } = React.useContext(GameContext);
     const { userId } = React.useContext(PlayerContext);
-    const { roundIdx, topicMessage, finalRoundCountdownTime, finalRoundPhotoTopics } = React.useContext(Game3Context);
+    const {
+        roundIdx,
+        topicMessage,
+        finalRoundCountdownTime,
+        finalRoundPhotoTopics,
+        setTopicMessage,
+    } = React.useContext(Game3Context);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const [uploadedImagesCount, setUploadedImagesCount] = React.useState(0);
     const [displayCountdown, setDisplayCountdown] = React.useState(true);
@@ -32,6 +38,11 @@ const TakePicture: React.FunctionComponent = () => {
         setUploadedImagesCount(uploadedImagesCount + 1);
         setPreview(undefined);
     };
+
+    React.useEffect(() => {
+        setUploadedImagesCount(0);
+        setDisplayCountdown(true);
+    }, [roundIdx]);
 
     const finalRound = roundIdx === 3;
     const timeToDisplay = finalRoundCountdownTime
@@ -47,7 +58,7 @@ const TakePicture: React.FunctionComponent = () => {
                     <Countdown time={timeToDisplay} size="small" />
                 </CountdownContainer>
             )}
-            {!displayCountdown && <RandomWord>{topicMessage?.topic}</RandomWord>}
+            {!displayCountdown && !finalRound && <RandomWord>{topicMessage?.topic}</RandomWord>}
             {!displayCountdown && finalRound && <RandomWord>{finalRoundPhotoTopics.join(', ')}</RandomWord>}
             <Instructions>{finalRound ? 'Final Round' : `Round ${roundIdx}`}</Instructions>
             {displayCountdown ? (

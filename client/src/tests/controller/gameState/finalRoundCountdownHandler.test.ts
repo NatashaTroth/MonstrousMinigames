@@ -15,13 +15,15 @@ describe('finalRoundCountdownHandler', () => {
         type: MessageTypesGame3.finalRoundCountdown,
         roomId,
         countdownTime: 3000,
+        photoTopics: [],
     };
 
     it('when FinalRoundCountdownMessage is written, setFinalRoundCountdownTime should be called', async () => {
         const setFinalRoundCountdownTime = jest.fn();
+        const setFinalRoundPhotoTopics = jest.fn();
         const socket = new FakeInMemorySocket();
 
-        const withDependencies = finalRoundCountdownHandler({ setFinalRoundCountdownTime });
+        const withDependencies = finalRoundCountdownHandler({ setFinalRoundCountdownTime, setFinalRoundPhotoTopics });
         withDependencies(socket, roomId);
 
         await socket.emit(message);
