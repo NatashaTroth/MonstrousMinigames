@@ -21,7 +21,7 @@ const config: PlaywrightTestConfig = {
     forbidOnly: !!process.env.CI,
 
     /* Retry on CI only */
-    retries: process.env.CI ? 2 : 0,
+    retries: 0,
 
     /* Opt out of parallel tests on CI. */
     workers: process.env.CI ? 1 : undefined,
@@ -52,18 +52,18 @@ const config: PlaywrightTestConfig = {
                 ...devices['Desktop Chrome'],
             },
         },
-        {
-            name: 'firefox',
-            use: {
-                ...devices['Desktop Firefox'],
-            },
-        },
-        {
-            name: 'webkit',
-            use: {
-                ...devices['Desktop Safari'],
-            },
-        },
+        // {
+        //     name: 'firefox',
+        //     use: {
+        //         ...devices['Desktop Firefox'],
+        //     },
+        // },
+        // {
+        //     name: 'webkit',
+        //     use: {
+        //         ...devices['Desktop Safari'],
+        //     },
+        // },
 
         /* Test against mobile viewports. */
         // {

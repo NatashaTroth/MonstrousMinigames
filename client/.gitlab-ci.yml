@@ -48,7 +48,7 @@ end-to-end:client:
     image: mcr.microsoft.com/playwright:focal
     script:
         - cd client/
-        - npx playwright install
+        - npx playwright-cli install
         - echo "End to End testing.."
         # Start local server
         - npm start & npx wait-on http://localhost:3000

@@ -20,7 +20,7 @@ test('Render room code at lobby header', async ({ page }) => {
     await expect(roomCode).toHaveText(roomId);
 });
 
-// test('Render room code at lobby header', async ({ page }) => {
+// test('Connect Controller to room and display connected user', async ({ page }) => {
 //     await page.goto('/');
 
 //     const [response] = await Promise.all([
@@ -34,8 +34,22 @@ test('Render room code at lobby header', async ({ page }) => {
 //         page.locator('button:has-text("Create New Room")').click(),
 //     ]);
 
-//     const { roomId } = await response.json();
+//     // Create a Chromium browser instance
+//     const browser = await chromium.launch();
 
-//     const roomCode = page.locator('.roomCode');
-//     await expect(roomCode).toHaveText(roomId);
+//     // Create two isolated browser contexts
+//     const userContext = await browser.newContext();
+//     const adminContext = await browser.newContext();
+
+//     const { devices } = require('playwright');
+//     const iPhone = devices['iPhone 11 Pro'];
+
+//     const context = await browser.newContext({
+//         ...iPhone,
+//         permissions: ['geolocation'],
+//         geolocation: { latitude: 52.52, longitude: 13.39 },
+//         colorScheme: 'dark',
+//         locale: 'de-DE',
+//     });
+//     const page = await context.newPage();
 // });
