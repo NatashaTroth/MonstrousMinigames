@@ -4,7 +4,9 @@ import { cleanup } from '@testing-library/react';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure } from 'enzyme';
 
-import { dragMoveListener } from '../../../domain/game1/controller/components/obstacles/Draggable';
+import {
+    dragMoveListener,
+} from '../../../domain/game1/controller/components/obstacles/Draggable';
 
 configure({ adapter: new Adapter() });
 

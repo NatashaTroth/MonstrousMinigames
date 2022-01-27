@@ -313,6 +313,6 @@ export function handleStartGame(socket: Socket | undefined, roomId: string | und
     });
 }
 
-function handleStop(socket: Socket | undefined) {
+export function handleStop(socket: Socket | undefined) {
     socket?.emit({ type: MessageTypes.stopGame });
 }
