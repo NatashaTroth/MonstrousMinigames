@@ -1,12 +1,11 @@
 image: node:15
 stages:
   - npm
-  - lint
   - end-to-end
+  - lint
   - test-unit
   - test-integration
   - test-other
-
   - staging
   - production
 
