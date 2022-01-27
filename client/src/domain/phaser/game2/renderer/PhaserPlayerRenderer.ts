@@ -29,7 +29,7 @@ export class PhaserPlayerRenderer {
     renderPlayer(coordinates: Coordinates, character: Character, playerName: string): void {
         this.character = character;
         if (!this.player.body || !this.player.name) {
-            this.renderPlayerInitially(coordinates, character, character.name);
+            this.renderPlayerInitially(coordinates, character, playerName);
             // frames:
             // 0-3: forward
             // 4-7: left
