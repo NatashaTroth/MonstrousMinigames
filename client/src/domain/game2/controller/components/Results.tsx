@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
 import { FullScreenContainer } from '../../../../components/common/FullScreenStyles.sc';
 import { Game2Context } from '../../../../contexts/game2/Game2ContextProvider';
@@ -9,11 +10,20 @@ const Results: React.FunctionComponent = () => {
 
     return (
         <FullScreenContainer>
-            <Instructions>
-                {guessHint === '' ? "Don't forget to enter a guess" : `Your last guess was ${guessHint}`}
-            </Instructions>
+            <Container>
+                <Instructions>
+                    {guessHint === '' ? "Don't forget to enter a guess" : `Your last guess was ${guessHint}`}
+                </Instructions>
+            </Container>
         </FullScreenContainer>
     );
 };
 
 export default Results;
+
+const Container = styled.div`
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+`;

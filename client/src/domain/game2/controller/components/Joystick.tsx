@@ -7,7 +7,6 @@ import Button from '../../../../components/common/Button';
 import FullScreenContainer from '../../../../components/common/FullScreenContainer';
 import { ControllerSocketContext } from '../../../../contexts/controller/ControllerSocketContextProvider';
 import { Game2Context } from '../../../../contexts/game2/Game2ContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
 import { MessageTypesGame2 } from '../../../../utils/constants';
 import { Countdown } from '../../../game1/controller/components/ShakeInstruction.sc';
@@ -27,7 +26,6 @@ const JoyStick: React.FunctionComponent<JoyStickProps> = ({ sessionStorage }) =>
     const { remainingKills, roundIdx } = React.useContext(Game2Context);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { userId } = React.useContext(PlayerContext);
-    const { roomId } = React.useContext(GameContext);
 
     let direction: string | undefined = 'C';
 
@@ -54,8 +52,6 @@ const JoyStick: React.FunctionComponent<JoyStickProps> = ({ sessionStorage }) =>
             type: MessageTypesGame2.chooseSheep,
             userId,
         });
-
-        //history.push(controllerStealSheepRoute(roomId));
     }
 
     function handleMove(event: IJoystickUpdateEvent) {
