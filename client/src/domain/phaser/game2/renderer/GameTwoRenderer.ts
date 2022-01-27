@@ -61,7 +61,7 @@ export class GameTwoRenderer {
                 this.guessInstructionText = this.scene.make.text({
                     x: screenCenterWidth,
                     y: screenCenterHeight - 50,
-                    text: 'How many sheeps are on the meadow?\nEnter your guess on your device.',
+                    text: 'How many sheep are on the meadow?\nEnter your guess on your device.',
                     style: {
                         ...loadingTextStyleProperties,
                         fontSize: `${40}px`,
@@ -80,8 +80,8 @@ export class GameTwoRenderer {
     }
 
     renderSheepBackground(x: number, y: number, width: number, height: number) {
-        console.log('bg');
-        const element = this.scene.add.image(x, y, 'sheepGrass');
+        const element = this.scene.add.image(x, y, 'sheepBackground');
+        // const element = this.scene.add.image(x, y, 'sheepGrass');
         element.setDisplaySize(width, height);
         element.setOrigin(0, 0);
         element.setDepth(depthDictionary.game2Bg);
@@ -93,7 +93,7 @@ export class GameTwoRenderer {
         this.sheepCountText = this.scene.make.text({
             x: screenCenterWidth,
             y: screenCenterHeight - 50,
-            text: `${count} sheeps are on the meadow`,
+            text: `${count} sheep are on the meadow`,
             style: {
                 ...loadingTextStyleProperties,
                 fontSize: `${40}px`,

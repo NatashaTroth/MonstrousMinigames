@@ -2,8 +2,8 @@ import { shorterGame } from '../../../../constants';
 
 const COUNTDOWN_TIME = 3000;
 
-const LENGTH_X = 1920;
-const LENGTH_Y = 720;
+const LENGTH_X = 2500;
+const LENGTH_Y = 1218;
 
 const SPEED = 2;
 const SNEAKING_SPEED = 1;
