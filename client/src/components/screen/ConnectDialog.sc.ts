@@ -30,18 +30,6 @@ export const StyledForm = styled.form`
     align-items: center;
 `;
 
-export const FormContainer = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    margin-top: 100px;
-    align-items: center;
-
-    button:first-of-type {
-        margin-bottom: 50px;
-    }
-`;
-
 export const InputLabel = styled.label`
     color: white;
     font-size: 24px;

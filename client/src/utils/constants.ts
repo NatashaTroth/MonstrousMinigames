@@ -11,13 +11,6 @@ export enum TrashType {
     Plastic = 'PLASTIC',
 }
 
-export enum ObstacleRoutes {
-    treeStump = 'treestump',
-    spider = 'spider',
-    trash = 'trash',
-    stone = 'stone',
-}
-
 export enum GameState {
     created = 'CREATED',
     started = 'STARTED',
@@ -90,17 +83,21 @@ export enum MessageTypesGame2 {
     initialGameState = 'game2/initialGameState',
     gameState = 'game2/gameState',
     movePlayer = 'game2/move',
+    chooseSheep = 'game2/choose',
     killSheep = 'game2/kill',
     phaseChanged = 'game2/PhaseHasChanged',
     playerRanks = 'game2/playerRanks',
     guess = 'game2/guess',
     guessHint = 'game2/guessHint',
+    chooseResponse = 'game2/chooseResponse',
+    remainingKills = 'game2/remainingKills',
 }
 
 export const enum MessageTypesGame3 {
     newPhotoTopic = 'game3/newPhotoTopic',
     initialGameState = 'game3/initialGameState',
     photo = 'game3/photo',
+    errorUploadingPhoto = 'game3/errorUploadingPhoto',
     voteForPhotos = 'game3/voteForPhotos',
     photoVote = 'game3/photoVote',
     newRound = 'game3/newRound',

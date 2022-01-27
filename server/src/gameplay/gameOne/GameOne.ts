@@ -54,6 +54,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     chasersPositionX = InitialGameParameters.CHASERS_POSITION_X;
     cameraPositionX = InitialGameParameters.CAMERA_POSITION_X;
     obstacleTypes: ObstacleTypeObject[] = [];
+    maxRunsPerFrame = 2;
 
     gameName = GameNames.GAME1;
 
@@ -86,13 +87,16 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         const players = Array.from(playersIterable);
         const obstacles: Obstacle[] = [];
         players.forEach(player => obstacles.push(...player.obstacles));
-        const stones = getStonesForObstacles(
-            obstacles,
-            this.trackLength,
-            this.initialPlayerPositionX,
-            100,
-            this.numberOfStones
-        );
+        const stones =
+            players.length > 1
+                ? getStonesForObstacles(
+                      obstacles,
+                      this.trackLength,
+                      this.initialPlayerPositionX,
+                      100,
+                      this.numberOfStones
+                  )
+                : [];
 
         for (const player of players) {
             player.obstacles = sortBy([...player.obstacles, ...stones.map(stone => ({ ...stone }))], 'positionX');
@@ -107,7 +111,11 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         if (localDevelopment) {
             for (const player of this.players.values()) {
                 if (player.positionX < this.trackLength) {
-                    this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
+                    for (let i = 0; i < 5; i++) {
+                        // to test speed limit
+                        this.runForward(player.id, parseInt(`${process.env.SPEED}`, 10) || 2);
+                        // this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
+                    }
                 }
                 // push chasers TODO delete
                 if (pushChasers) {
@@ -291,12 +299,12 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         verifyGameState(this.gameState, [GameState.Started]);
         verifyUserId(this.players, userId);
         verifyUserIsActive(userId, this.players.get(userId)!.isActive);
-
         const player = this.players.get(userId)!;
         if (this.playerIsNotAllowedToRun(userId) || player.stunned) return;
 
         // player.positionX += Math.abs(speed);
         player.positionX += speed;
+        player.countRunsPerFrame++;
 
         if (this.playerHasReachedObstacle(userId)) this.handlePlayerReachedObstacle(userId);
         if (this.playerIsApproachingSolvableObstacle(player)) this.handlePlayerApproachingSolvableObstacle(player);
@@ -306,7 +314,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     private playerIsNotAllowedToRun(userId: string) {
         const player = this.players.get(userId)!;
 
-        return player.finished || player.dead || player.atObstacle;
+        return player.finished || player.dead || player.atObstacle || player.countRunsPerFrame >= this.maxRunsPerFrame;
     }
 
     private playerIsApproachingSolvableObstacle(player: GameOnePlayer): boolean {

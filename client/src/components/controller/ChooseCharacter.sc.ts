@@ -25,7 +25,7 @@ export const ChooseButtonContainer = styled.div`
     margin-top: 30px;
 `;
 
-export const CustomButton = styled.button`
+const CustomButton = styled.button`
     position: absolute;
     outline: 0;
     transition: all 0.5s;

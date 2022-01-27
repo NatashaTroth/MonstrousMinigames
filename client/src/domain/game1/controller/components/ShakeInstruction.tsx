@@ -98,7 +98,7 @@ const ShakeInstruction: React.FunctionComponent<ShakeInstructionProps> = ({ sess
 
 export default ShakeInstruction;
 
-export function handleThrowPebble(setHasStone: (val: boolean) => void, roomId: string | undefined) {
+function handleThrowPebble(setHasStone: (val: boolean) => void, roomId: string | undefined) {
     setHasStone(false);
     history.push(`${controllerObstacleRoute(roomId, ObstacleTypes.stone)}?choosePlayer=true`);
 }

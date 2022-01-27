@@ -1,7 +1,7 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { Character } from "../config/characters";
-import { ObstacleTypes, TrashType } from "../utils/constants";
+import { Character } from '../config/characters';
+import { ObstacleTypes, TrashType } from '../utils/constants';
 
 export const defaultValue = {
     playerRank: undefined,
@@ -71,6 +71,7 @@ const PlayerContextProvider: React.FunctionComponent = ({ children }) => {
         setPlayerRank,
         resetPlayer: () => {
             setPlayerRank(undefined);
+            setReady(false);
         },
         playerNumber,
         setPlayerNumber,

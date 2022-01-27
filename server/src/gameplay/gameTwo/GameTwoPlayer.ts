@@ -10,6 +10,7 @@ class GameTwoPlayer extends Player {
     public speed: number;
     public posX: number;
     public posY: number;
+    public chosenSheep: number | null;
     constructor(
         public id: string,
         name: string,
@@ -24,6 +25,7 @@ class GameTwoPlayer extends Player {
         this.speed = this.getSpeed();
         this.posX = this.getPlayerPositionX();
         this.posY = this.getPlayerPositionY();
+        this.chosenSheep = null;
     }
 
     update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
@@ -31,30 +33,6 @@ class GameTwoPlayer extends Player {
     }
 
     public move() {
-        // if (this.direction === Direction.STOP) {
-        //     return;
-        // }
-        // if (this.direction.startsWith(Direction.UP)) {
-        //     if (this.posY - this.speed >= 0) {
-        //         this.posY -= this.speed;
-        //     }
-        // }
-        // if (this.direction.startsWith(Direction.DOWN)) {
-        //     if (this.posY + this.speed <= Parameters.LENGTH_Y) {
-        //         this.posY += this.speed;
-        //     }
-        // }
-        // if (this.direction.includes(Direction.RIGHT)) {
-        //     if (this.posX + this.speed <= Parameters.LENGTH_X) {
-        //         this.posX += this.speed;
-        //     }
-        // }
-        // if (this.direction.includes(Direction.LEFT)) {
-        //     if (this.posX - this.speed >= 0) {
-        //         this.posX -= this.speed;
-        //     }
-        // }
-
         if (this.direction !== Direction.STOP) {
             switch (this.direction) {
                 case Direction.UP_LEFT:
@@ -139,6 +117,7 @@ class GameTwoPlayer extends Player {
         this.setPlayerPosition()
         this.setDirection(Direction.STOP);
         this.setKillsLeft(Parameters.KILLS_PER_ROUND);
+        this.chosenSheep = null;
     }
 }
 export default GameTwoPlayer;

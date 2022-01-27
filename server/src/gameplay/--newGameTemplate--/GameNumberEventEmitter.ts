@@ -1,4 +1,5 @@
 import DI from '../../di';
+import { GameNames } from '../../enums/gameNames';
 import { GameState } from '../enums';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED,
@@ -25,7 +26,7 @@ export default class GameNumberEventEmitter {
         });
     }
 
-    public static emitGameHasStartedEvent(roomId: string, countdownTime: number, game: string) {
+    public static emitGameHasStartedEvent(roomId: string, countdownTime: number, game: GameNames) {
         this.GameNumberEventMessageEmitter.emit({
             type: GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED,
             roomId,

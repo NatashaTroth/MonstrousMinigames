@@ -8,17 +8,17 @@ import { PlayerRank } from './screen/ScreenSocketContextProvider';
 
 export enum GameType {
     GameOne = 'The Great Monster Escape',
-    GameTwo = 'Kill sheep',
+    GameTwo = 'Sheep Thief',
     GameThree = 'Snapshot Marathon',
 }
 
-export interface UserPoints {
+interface UserPoints {
     userId: string;
     name: string;
     points: number;
     rank: number;
 }
-export interface GamePlayed {
+interface GamePlayed {
     game: GameType;
     playerRanks: PlayerRank[];
 }

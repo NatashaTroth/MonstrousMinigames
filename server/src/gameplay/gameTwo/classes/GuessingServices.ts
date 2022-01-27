@@ -42,14 +42,23 @@ export default class GuessingService {
     }
 
     public getHint(miss: number): string {
-        if (miss > 0 && miss <= Parameters.GOOD_GUESS_THRESHOLD) {
-            return GuessHints.LOW;
-        } else if (miss > 0) {
-            return GuessHints.VERY_LOW;
-        } else if (miss < 0 && miss >= -1 * Parameters.GOOD_GUESS_THRESHOLD) {
-            return GuessHints.HIGH;
+        if (miss > 0) {
+            if (miss <= Parameters.GOOD_GUESS_THRESHOLD) {
+                return GuessHints.BIT_LOW;
+            } else if (miss >= Parameters.BAD_GUESS_THRESHOLD) {
+                return GuessHints.VERY_LOW;
+            } else {
+                return GuessHints.LOW;
+            }
         } else if (miss < 0) {
-            return GuessHints.VERY_HIGH;
+            miss = miss * -1;
+            if (miss <= Parameters.GOOD_GUESS_THRESHOLD) {
+                return GuessHints.BIT_HIGH;
+            } else if (miss >= Parameters.BAD_GUESS_THRESHOLD) {
+                return GuessHints.VERY_HIGH;
+            } else {
+                return GuessHints.HIGH;
+            }
         } else {
             return GuessHints.EXACT;
         }
@@ -97,9 +106,9 @@ export default class GuessingService {
 
     public allGuessesSubmitted(round: number): boolean {
         const count = [...this.guesses.entries()].reduce(function (result, item) {
-            if(item[1][round - 1]) return result + 1;
-            return result ;
-          }, 0);
+            if (item[1][round - 1]) return result + 1;
+            return result;
+        }, 0);
 
         return count === this.guesses.size;
     }

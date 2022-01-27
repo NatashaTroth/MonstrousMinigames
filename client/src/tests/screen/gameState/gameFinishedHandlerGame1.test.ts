@@ -1,6 +1,7 @@
 import { createMemoryHistory } from 'history';
 
 import { gameFinishedHandler } from '../../../domain/game1/screen/gameState/gameFinishedHandler';
+import { PhaserGame } from '../../../domain/phaser/PhaserGame';
 import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { GameHasFinishedMessage } from '../../../domain/typeGuards/finished';
 import { GameState, MessageTypes } from '../../../utils/constants';
@@ -32,7 +33,7 @@ describe('gameFinishedHandler Game1', () => {
             },
         };
 
-        const withDependencies = gameFinishedHandler({ history, scene });
+        const withDependencies = gameFinishedHandler({ history, scene, currentScene: PhaserGame.SCENE_NAME_GAME_1 });
 
         withDependencies(socket);
         await socket.emit(message);

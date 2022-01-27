@@ -12,7 +12,7 @@ import PhotoForm from './PhotoForm';
 import { RandomWord } from './TakePicture.sc';
 
 export interface UploadProps {
-    picture: File | undefined;
+    picture: File | Blob | undefined;
 }
 
 const TakePicture: React.FunctionComponent = () => {

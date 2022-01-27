@@ -1,4 +1,5 @@
-import { handleResume, handleStartGame } from '../../../domain/game1/screen/components/MainScene';
+import { handleResume, handleStartGame, handleStop } from '../../../domain/game1/screen/components/MainScene';
+import { PhaserGame } from '../../../domain/phaser/PhaserGame';
 import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { MessageTypes } from '../../../utils/constants';
 
@@ -6,7 +7,7 @@ describe('handleResume', () => {
     it('handleResume should emit pauseResume to socket', () => {
         const socket = new FakeInMemorySocket();
 
-        handleResume(socket);
+        handleResume(socket, PhaserGame.SCENE_NAME_GAME_1);
 
         expect(socket.emitedVals).toEqual([{ type: MessageTypes.pauseResume }]);
     });
@@ -23,6 +24,20 @@ describe('handleStartGame', () => {
             {
                 type: MessageTypes.startGame,
                 roomId,
+            },
+        ]);
+    });
+});
+
+describe('handleStopGame', () => {
+    it('handleStopGame should emit stopGame to socket', () => {
+        const socket = new FakeInMemorySocket();
+
+        handleStop(socket);
+
+        expect(socket.emitedVals).toEqual([
+            {
+                type: MessageTypes.stopGame,
             },
         ]);
     });

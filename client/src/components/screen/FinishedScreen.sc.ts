@@ -22,24 +22,6 @@ export const LeaderBoardRow = styled.div`
     margin-bottom: 30px;
 `;
 
-export const PlayerTime = styled.div`
-    border: 5px solid black;
-    color: black;
-    background: white;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
-    font-weight: 700;
-    display: flex;
-    width: 28%;
-    font-size: 25px;
-    flex-direction: column;
-    text-align: center;
-    box-shadow: 8px 8px 0 #888;
-    border-radius: 4px;
-    padding: 5px;
-    text-align: right;
-`;
-
 export const UnfinishedUserRow = styled.div`
     display: flex;
     justify-content: center;

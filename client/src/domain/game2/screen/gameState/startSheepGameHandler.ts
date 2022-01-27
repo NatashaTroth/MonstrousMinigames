@@ -19,6 +19,7 @@ export const startSheepGameHandler = messageHandler(
         const { setSheepGameStarted, history } = dependencies;
 
         setSheepGameStarted(true);
+        document.body.style.overflow = 'hidden';
         history.push(screenGame2Route(roomId));
     }
 );

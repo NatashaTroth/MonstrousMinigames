@@ -76,18 +76,24 @@ export function finishPlayer(gameOne: GameOne, userId: string) {
 
 export function completePlayersObstacles(gameOne: GameOne, userId: string) {
     const player = gameOne.players.get(userId)!;
-
-    while (player.obstacles.length) {
-        gameOne['runForward'](userId, distanceToNextObstacle(gameOne, userId));
-        if (player.atObstacle) gameOne['playerHasCompletedObstacle'](userId, player.obstacles[0].id);
+    if (player.obstacles.length > 0) {
+        player.positionX = player.obstacles.pop()!.positionX;
+        player.obstacles = [];
     }
+
+    // gameOne.maxRunsPerFrame = Infinity; //To prevent going over speed limit
+    // while (player.obstacles.length) {
+    //     gameOne['runForward'](userId, distanceToNextObstacle(gameOne, userId));
+    //     if (player.atObstacle) gameOne['playerHasCompletedObstacle'](userId, player.obstacles[0].id);
+    // }
 }
 
 export function goToNextUnsolvableObstacle(gameOne: GameOne, userId: string) {
     const player = gameOne.players.get(userId)!;
-
+    // gameOne.maxRunsPerFrame = Infinity; //To prevent going over speedlimit
     while (player.obstacles.length && !player.atObstacle) {
         gameOne['runForward'](userId, distanceToNextObstacle(gameOne, userId));
+        player.countRunsPerFrame = 0; //To prevent going over speed limit
     }
 }
 

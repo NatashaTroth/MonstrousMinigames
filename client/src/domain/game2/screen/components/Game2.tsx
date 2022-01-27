@@ -1,5 +1,4 @@
-import { Pause, PlayArrow, VolumeOff, VolumeUp } from '@material-ui/icons';
-import Phaser from 'phaser';
+import { Pause, PlayArrow, Stop, VolumeOff, VolumeUp } from '@material-ui/icons';
 import * as React from 'react';
 import { useParams } from 'react-router';
 
@@ -7,9 +6,10 @@ import { RouteParams } from '../../../../App';
 import { MyAudioContext, Sound } from '../../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../../../contexts/screen/ScreenSocketContextProvider';
-import { AudioButton, Container, PauseButton } from '../../../game1/screen/components/Game.sc';
+import { AudioButton, Container, PauseButton, StopButton } from '../../../game1/screen/components/Game.sc';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
-import SheepGameScene from './SheepGameScene';
+import { PhaserGame } from '../../../phaser/PhaserGame';
+import { FakeInMemorySocket } from '../../../socket/InMemorySocketFake';
 
 const Game2: React.FunctionComponent = () => {
     const { roomId, hasPaused, screenAdmin } = React.useContext(GameContext);
@@ -17,7 +17,7 @@ const Game2: React.FunctionComponent = () => {
     const { id }: RouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
 
-    if (id && !screenSocket) {
+    if (id && screenSocket instanceof FakeInMemorySocket) {
         handleSocketConnection(id, 'game2');
     }
 
@@ -27,26 +27,20 @@ const Game2: React.FunctionComponent = () => {
     }, []);
 
     React.useEffect(() => {
-        const game = new Phaser.Game({
-            parent: 'sheep-game',
-            type: Phaser.WEBGL,
-            width: '100%',
-            height: '100%',
-            // backgroundColor: '#081919',
-            // backgroundColor: '#000b18',
-            backgroundColor: '#b9ebff',
-            physics: {
-                default: 'arcade',
-                arcade: {
-                    debug: false,
-                },
-            },
-        });
-        game.scene.add('SheepGameScene', SheepGameScene, false); //socket: ScreenSocket.getInstance(socket)
-        game.scene.start('SheepGameScene', { roomId, socket: screenSocket, screenAdmin });
+        const container = document.getElementById('phaserWrapper');
+        if (container) {
+            container.style.display = 'block';
+        }
 
-        // game.world.setBounds(0,0,7500, window.innerHeight)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        const game = PhaserGame.getInstance(`phaserGameContainer`);
+        game.startGame2Scene(roomId, screenSocket, screenAdmin);
+
+        return () => {
+            const container = document.getElementById('phaserWrapper');
+            if (container) {
+                container.style.display = 'none';
+            }
+        };
     }, []);
 
     async function handleAudio() {
@@ -59,9 +53,12 @@ const Game2: React.FunctionComponent = () => {
         togglePlaying();
     }
 
-    //TODO click on pause immediately - doesn't work because wrong gamestate, countdown still running - fix
     async function handlePause() {
         GameEventEmitter.emitPauseResumeEvent();
+    }
+
+    async function handleStop() {
+        GameEventEmitter.emitStopEvent();
     }
 
     return (
@@ -69,18 +66,14 @@ const Game2: React.FunctionComponent = () => {
             <PauseButton onClick={handlePause} variant="primary">
                 {hasPaused ? <PlayArrow /> : <Pause />}
             </PauseButton>
+            <StopButton onClick={handleStop} variant="primary">
+                {<Stop />}
+            </StopButton>
             <AudioButton onClick={handleAudio} variant="primary">
                 {isPlaying ? <VolumeUp /> : <VolumeOff />}
             </AudioButton>
-            <GameContent />
         </Container>
     );
 };
 
 export default Game2;
-
-const GameContent: React.FunctionComponent = () => (
-    <div>
-        <div id="sheep-game" data-testid="sheep-game"></div>
-    </div>
-);

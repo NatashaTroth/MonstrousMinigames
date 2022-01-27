@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import QRCode from 'qrcode';
 
 export async function generateQRCode(url: string, elementId: string) {

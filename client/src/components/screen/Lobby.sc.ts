@@ -93,12 +93,6 @@ export const ConnectedUserContainer = styled.div`
     width: 20%;
 `;
 
-export const Subline = styled.div`
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 20px;
-`;
-
 export const CharacterContainer = styled.div`
     display: flex;
     justify-content: center;
