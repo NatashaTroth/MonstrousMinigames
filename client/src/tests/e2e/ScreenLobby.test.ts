@@ -1,7 +1,20 @@
-import { expect, test } from "@playwright/test";
+import { chromium, expect, test } from "@playwright/test";
 
-test('Render room code at lobby header', async ({ page }) => {
-    await page.goto('/');
+// test.beforeAll(async ({ request, baseURL }) => {
+//     const response = await request.get(`${baseURL}/`);
+//     expect(response.ok()).toBeTruthy();
+// });
+
+test('Render room code at lobby header', async ({ baseURL }) => {
+    const browser = await chromium.launch({
+        args: ['--disable-dev-shm-usage'],
+    });
+
+    const context = await browser.newContext({ baseURL });
+    const page = await context.newPage();
+
+    await page.goto(`/`);
+    await page.screenshot({ path: 'test.png' });
 
     const [response] = await Promise.all([
         // Waits for the next response matching some conditions
