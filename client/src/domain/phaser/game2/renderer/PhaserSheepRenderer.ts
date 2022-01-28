@@ -18,7 +18,6 @@ export class PhaserSheepRenderer {
     constructor(private scene: SheepGameScene) {}
 
     preload() {
-        // TODO: fix animations
         // 0 - 4: right
         // 5 - 9: left
         // 10 - 13: forward
@@ -47,7 +46,6 @@ export class PhaserSheepRenderer {
                     return 'left';
                 }
             }
-            //return 'stand';
         }
 
         if (newX && newY) {

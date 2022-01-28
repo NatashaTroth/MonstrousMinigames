@@ -1,21 +1,26 @@
-import Phaser from "phaser";
+import Phaser from 'phaser';
 
-import { depthDictionary } from "../../../../config/depthDictionary";
-import { fireworkFlares } from "../../../game1/screen/components/GameAssets";
-import MainScene from "../../../game1/screen/components/MainScene";
-import { moveLanesToCenter } from "../../../game1/screen/gameState/moveLanesToCenter";
-import * as colors from "../../colors";
-import { Character, CharacterAnimation } from "../../gameInterfaces";
-import { CharacterAnimationFrames } from "../../gameInterfaces/Character";
-import { Coordinates } from "../../gameTypes";
-import { Scene } from "../../Scene";
-import { SpriteWithDynamicBody } from "../../SpriteWithDynamicBody";
-import { sharedTextStyleProperties } from "../../textStyleProperties";
+import { depthDictionary } from '../../../../config/depthDictionary';
+import { fireworkFlares } from '../../../game1/screen/components/GameAssets';
+import MainScene from '../../../game1/screen/components/MainScene';
+import { moveLanesToCenter } from '../../../game1/screen/gameState/moveLanesToCenter';
+import * as colors from '../../colors';
+import { Character, CharacterAnimation } from '../../gameInterfaces';
+import { CharacterAnimationFrames } from '../../gameInterfaces/Character';
+import { Coordinates } from '../../gameTypes';
+import { Scene } from '../../Scene';
+import { SpriteWithDynamicBody } from '../../SpriteWithDynamicBody';
+import { sharedTextStyleProperties } from '../../textStyleProperties';
 
 /**
  * this is an incomplete PlayerRenderer adapter which contains all the phaser logic. This class might only be tested via
  * integration tests. That's why we want to keep this class as small as possible.
  */
+
+enum Cave {
+    BEHIND = 'caveBehind',
+    FRONT = 'caveInFront',
+}
 
 interface RendererObstacle {
     phaserInstance: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -208,12 +213,12 @@ export class PhaserPlayerRenderer {
         posX -= 30; // move the cave slightly to the left, so the monster runs fully into the cave
         const scale = (0.9 / this.numberPlayers) * this.laneHeightsPerNumberPlayers![this.numberPlayers - 1];
         const yOffset = 2.2;
-        this.caveBehind = this.scene.physics.add.sprite(posX, posY, 'caveBehind'); //TODO change caveBehind to enum
+        this.caveBehind = this.scene.physics.add.sprite(posX, posY, Cave.BEHIND);
         this.caveBehind.setScale(scale);
         this.caveBehind.setDepth(depthDictionary.caveBehind);
         this.caveBehind.y -= this.caveBehind.displayHeight / yOffset; /// (0.01 * numberPlayers);
 
-        this.caveInFront = this.scene.physics.add.sprite(posX, posY, 'caveInFront'); //TODO change caveInFront to enum
+        this.caveInFront = this.scene.physics.add.sprite(posX, posY, Cave.FRONT);
         this.caveInFront.setScale(scale);
         this.caveInFront.setDepth(depthDictionary.caveInFront);
         this.caveInFront.y -= this.caveInFront.displayHeight / yOffset; //(0.01 * numberPlayers);

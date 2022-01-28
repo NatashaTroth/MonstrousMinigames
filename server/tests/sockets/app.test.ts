@@ -39,7 +39,6 @@ describe('App Tests:', () => {
 
     it('should get a room code on request', async done => {
         await axios.get(`http://${url}/create-room`).then(resp => {
-            console.log('hi');
             expect(resp.data.roomId).not.toBeNull();
             done();
         });

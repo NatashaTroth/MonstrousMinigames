@@ -2,13 +2,14 @@ import 'reflect-metadata';
 
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
-import * as InitialGameParameters from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
+import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
 import {
     advanceCountdown, clearTimersAndIntervals, releaseThreadN
 } from '../gameOneHelperFunctions';
 
 let gameOne: GameOne;
+const InitialGameParameters = getInitialParams();
 
 describe('Chasers', () => {
     beforeEach(() => {

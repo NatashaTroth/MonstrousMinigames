@@ -3,9 +3,9 @@ import Phaser from 'phaser';
 
 import { GamePhases, PlayerRank } from '../../../../contexts/game2/Game2ContextProvider';
 import sheepSpritesheet from '../../../../images/characters/spritesheets/sheep/sheep_spritesheet.png';
-import {
-    designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2
-} from '../../../../utils/constants';
+import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2 } from '../../../../utils/constants';
+import { screenLobbyRoute } from '../../../../utils/routes';
+import history from '../../../history/history';
 import { GameData } from '../../../phaser/game2/gameInterfaces/GameData';
 import { GameToScreenMapper } from '../../../phaser/game2/GameToScreenMapper';
 import { initialGameInput } from '../../../phaser/game2/initialGameInput';
@@ -21,22 +21,21 @@ import { MessageSocket } from '../../../socket/MessageSocket';
 import { Socket } from '../../../socket/Socket';
 import { finishedTypeGuard, GameHasFinishedMessage } from '../../../typeGuards/finished';
 import {
-    AllScreensSheepGameLoadedMessage, allScreensSheepGameLoadedTypeGuard
+    AllScreensSheepGameLoadedMessage,
+    allScreensSheepGameLoadedTypeGuard,
 } from '../../../typeGuards/game2/allScreensSheepGameLoaded';
+import { GameStateInfoMessage, gameStateInfoTypeGuard } from '../../../typeGuards/game2/gameStateInfo';
 import {
-    GameStateInfoMessage, gameStateInfoTypeGuard
-} from '../../../typeGuards/game2/gameStateInfo';
-import {
-    InitialGameStateInfoMessage, initialGameStateInfoTypeGuard
+    InitialGameStateInfoMessage,
+    initialGameStateInfoTypeGuard,
 } from '../../../typeGuards/game2/initialGameStateInfo';
 import { PhaseChangedMessage, phaseChangedTypeGuard } from '../../../typeGuards/game2/phaseChanged';
 import {
-    PhaserLoadingTimedOutMessage, phaserLoadingTimedOutTypeGuard
+    PhaserLoadingTimedOutMessage,
+    phaserLoadingTimedOutTypeGuard,
 } from '../../../typeGuards/game2/phaserLoadingTimedOut';
 import { PlayerRanksMessage, playerRanksTypeGuard } from '../../../typeGuards/game2/playerRanks';
-import {
-    SheepGameHasStartedMessage, sheepGameStartedTypeGuard
-} from '../../../typeGuards/game2/started';
+import { SheepGameHasStartedMessage, sheepGameStartedTypeGuard } from '../../../typeGuards/game2/started';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
 import { resumeHandler } from '../gameState/resumeHandler';
@@ -169,11 +168,9 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     sendStartGame() {
-        //TODO!!!! - do not send when game is already started? - or is it just ignored - appears to work - maybe check if no game state updates?
         this.socket?.emit({
             type: MessageTypes.startGame,
             roomId: this.roomId,
-            // userId: sessionStorage.getItem('userId'), //TODO
         });
     }
 
@@ -201,7 +198,7 @@ class SheepGameScene extends Phaser.Scene {
 
         const phaserLoadedTimedOut = new MessageSocket(phaserLoadingTimedOutTypeGuard, this.socket);
         phaserLoadedTimedOut.listen((data: PhaserLoadingTimedOutMessage) => {
-            //TODO handle
+            history.push(screenLobbyRoute(this.roomId));
         });
 
         const startedGame = new MessageSocket(sheepGameStartedTypeGuard, this.socket);
@@ -239,7 +236,6 @@ class SheepGameScene extends Phaser.Scene {
             if (this.notCurrentGameScene()) return;
             this.gameAudio?.stopMusic();
             this.scene.stop();
-            // history.push(screenFinishedRoute(this.roomId));
         });
 
         const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);
@@ -289,7 +285,7 @@ class SheepGameScene extends Phaser.Scene {
         //     this.gameToScreenMapper.getMappedGameHeight() + 400
         // );
 
-        const yPadding = 30; //padding, so bottom of character/sheep don't hang over edge
+        // const yPadding = 30; //padding, so bottom of character/sheep don't hang over edge
         this.gameTwoRenderer?.renderSheepBackground(
             this.gameToScreenMapper.getScreenXOffset(),
             this.gameToScreenMapper.getScreenYOffset(),
@@ -350,7 +346,6 @@ class SheepGameScene extends Phaser.Scene {
                 return;
             case GamePhases.results:
                 this.gameTwoRenderer?.renderGuessText(false);
-                // TODO
                 return;
             default:
                 this.gameRenderer?.destroyLeaderboard();
@@ -444,22 +439,6 @@ class SheepGameScene extends Phaser.Scene {
 
     handleStopGame() {
         handleStop(this.socket);
-    }
-
-    handleError(msg = 'Something went wrong.') {
-        // this.add.text(32, 32, `Error: ${msg}`, { font: '30px Arial' });
-        // this.players.forEach(player => {
-        //     player.phaserObject.destroy();
-        // });
-        // this.players.forEach(player => {
-        //     player.playerObstacles.forEach(obstacle => {
-        //         obstacle.destroy();
-        //     });
-        // });
-        // this.backgroundMusicLoop?.stop();
-        // obstacles.forEach(obstacle => {
-        //     obstacle.destroy();
-        // });
     }
 }
 
