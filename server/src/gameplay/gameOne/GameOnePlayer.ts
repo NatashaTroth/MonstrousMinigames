@@ -110,8 +110,9 @@ class GameOnePlayer extends Player implements PlayerState {
 
     obstacleCompleted(obstacleId: number) {
         this.verifyUserIsAtObstacle();
-
+        console.log('obstacle completed ' + this.obstacles.length);
         if (this.obstacles[0].id === obstacleId) {
+            console.log('YQASss');
             this.atObstacle = false;
 
             if (this.obstacles[0].type === ObstacleType.Stone) {

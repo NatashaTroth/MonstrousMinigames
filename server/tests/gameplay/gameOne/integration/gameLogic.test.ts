@@ -4,6 +4,7 @@ import { GameOne } from '../../../../src/gameplay';
 import { Difficulty, GameState } from '../../../../src/gameplay/enums';
 import { ObstacleType } from '../../../../src/gameplay/gameOne/enums';
 import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
+import { IMessageObstacle } from '../../../../src/gameplay/gameOne/interfaces';
 import { leaderboard, roomId } from '../../mockData';
 import {
     clearTimersAndIntervals, completeObstacles, finishPlayer, getGameFinishedDataDifferentTimes,
@@ -12,6 +13,8 @@ import {
 import { playerHasCompletedObstacleMessage, runForwardMessage } from '../gameOneMockData';
 
 const TRACK_LENGTH = 5000; // has to be bigger than initial player position
+const OBSTACLE_ID_THAT_IS_NOT_NEXT = 1;
+const OBSTACLE_ID_THAT_DOES_NOT_EXIST = 5000;
 
 let gameOne: GameOne;
 const dateNow = 1618665766156;
@@ -149,6 +152,44 @@ describe('Obstacles reached', () => {
             gameOne.receiveInput({ ...runForwardMessage, userId: '1' });
         }
         expect(player.positionX).toBe(obstaclePosition);
+    });
+
+    it('does not complete an obstacle if the user is not at an obstacle', async () => {
+        startGameAndAdvanceCountdown(gameOne);
+        const player = gameOne.players.get('1')!;
+        const initialObstacleLengths = player.obstacles.length;
+        gameOne.receiveInput({ ...playerHasCompletedObstacleMessage, userId: '1' });
+        expect(player.obstacles.length).toBe(initialObstacleLengths);
+    });
+
+    it.todo('Flakey:');
+
+    it.skip('does not complete an obstacle if obstacle id is not next', async () => {
+        startGameAndAdvanceCountdown(gameOne);
+        const player = gameOne.players.get('1')!;
+        const initialObstacleLengths = player.obstacles.length;
+        goToNextUnsolvableObstacle(gameOne, player);
+        gameOne.receiveInput({
+            ...playerHasCompletedObstacleMessage,
+            userId: '1',
+            obstacleId: OBSTACLE_ID_THAT_IS_NOT_NEXT,
+        } as IMessageObstacle);
+        expect(player.obstacles.length).toBe(initialObstacleLengths);
+    });
+
+    it.todo('Flakey:');
+    it.skip('does not complete an obstacle if obstacle id does not exist', async () => {
+        startGameAndAdvanceCountdown(gameOne);
+        const player = gameOne.players.get('1')!;
+        const initialObstacleLengths = player.obstacles.length;
+        console.log(player.obstacles.length);
+        goToNextUnsolvableObstacle(gameOne, player);
+        gameOne.receiveInput({
+            ...playerHasCompletedObstacleMessage,
+            userId: '1',
+            obstacleId: OBSTACLE_ID_THAT_DOES_NOT_EXIST,
+        } as IMessageObstacle);
+        expect(player.obstacles.length).toBe(initialObstacleLengths);
     });
 
     it.todo('Flakey:');
