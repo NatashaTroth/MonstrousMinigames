@@ -6,7 +6,6 @@ import { Direction } from "./enums/Direction";
 class GameTwoPlayer extends Player {
     public direction: string;
     public moving: boolean;
-    public sneaking: boolean;
     public speed: number;
     public posX: number;
     public posY: number;
@@ -21,8 +20,7 @@ class GameTwoPlayer extends Player {
         super(id, name, characterNumber);
         this.direction = 'C';
         this.moving = false;
-        this.sneaking = false;
-        this.speed = this.getSpeed();
+        this.speed = Parameters.SPEED;
         this.posX = this.getPlayerPositionX();
         this.posY = this.getPlayerPositionY();
         this.chosenSheep = null;
@@ -36,52 +34,68 @@ class GameTwoPlayer extends Player {
         if (this.direction !== Direction.STOP) {
             switch (this.direction) {
                 case Direction.UP_LEFT:
-                    if (this.posY - this.speed / 2 >= 0 && this.posX - this.speed / 2 >= 0) {
-                        this.posY -= this.speed;
-                        this.posX -= this.speed;
-                    }
+                    this.moveUp();
+                    this.moveLeft();
                     break;
                 case Direction.UP:
-                    if (this.posY - this.speed >= 0) {
-                        this.posY -= this.speed;
-                    }
+                    this.moveUp();
                     break;
                 case Direction.UP_RIGHT:
-                    if (this.posY - this.speed / 2 >= 0 && this.posX + this.speed / 2 <+ Parameters.LENGTH_X) {
-                        this.posY -= this.speed;
-                        this.posX += this.speed;
-                    }
+                    this.moveUp();
+                    this.moveRight();
                     break;
                 case Direction.RIGHT:
-                    if (this.posX + this.speed <= Parameters.LENGTH_X) {
-                        this.posX += this.speed;
-                    }
+                    this.moveRight();
                     break;
                 case Direction.DOWN_RIGHT:
-                    if (this.posY + this.speed / 2 <= Parameters.LENGTH_Y && this.posX + this.speed / 2 <= Parameters.LENGTH_X) {
-                        this.posY += this.speed;
-                        this.posX += this.speed;
-                    }
+                    this.moveDown();
+                    this.moveRight();
                     break;
                 case Direction.DOWN:
-                    if (this.posY + this.speed <= Parameters.LENGTH_Y) {
-                        this.posY += this.speed;
-                    }
+                    this.moveDown();
                     break;
                 case Direction.DOWN_LEFT:
-                    if (this.posY + this.speed / 2 <= Parameters.LENGTH_Y && this.posX - this.speed / 2 >= 0) {
-                        this.posY += this.speed;
-                        this.posX -= this.speed;
-                    }
+                    this.moveDown();
+                    this.moveLeft();
                     break;
                 case Direction.LEFT:
-                    if (this.posX - this.speed >= 0) {
-                        this.posX -= this.speed;
-                    }
+                    this.moveLeft();
                     break;
             }
         }
     }
+    private moveLeft(){
+        if (this.posX - this.speed >= 0) {
+            this.posX -= this.speed;
+        }else{
+            this.posX = 0;
+        }
+    }
+
+    private moveRight(){
+        if (this.posX + this.speed <= Parameters.LENGTH_X) {
+            this.posX += this.speed;
+        }else{
+            this.posX = Parameters.LENGTH_X;
+        }
+    }
+
+    private moveUp(){
+        if (this.posY - this.speed >= 0) {
+            this.posY -= this.speed;
+        }else{
+            this.posY = 0;
+        }
+    }
+
+    private moveDown(){
+        if (this.posY + this.speed <= Parameters.LENGTH_Y) {
+            this.posY += this.speed;
+        }else{
+            this.posY = Parameters.LENGTH_Y
+        }
+    }
+
     public setPlayerPosition(): void {
         this.posX = this.getPlayerPositionX();
         this.posY = this.getPlayerPositionY();
@@ -93,19 +107,6 @@ class GameTwoPlayer extends Player {
     private getPlayerPositionY(): number {
         return Parameters.PLAYERS_POSITIONS[this.number - 1].y;
     }
-    private getSpeed(): number {
-        if (this.sneaking) {
-            return Parameters.SNEAKING_SPEED;
-        } else {
-            return Parameters.SPEED;
-        }
-    }
-
-    public setSneaking(sneaking: boolean): void {
-        this.sneaking = sneaking;
-        this.speed = this.getSpeed();
-    }
-
     public setDirection(direction: string): void {
         this.direction = direction;
     }

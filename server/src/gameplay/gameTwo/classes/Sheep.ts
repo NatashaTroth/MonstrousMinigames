@@ -22,7 +22,7 @@ export default class Sheep {
         this.posY = posY;
         this.id = id;
         this.state = SheepStates.ALIVE;
-        this.speed = Parameters.SPEED;
+        this.speed = Parameters.SHEEP_SPEED;
         this.directions = this.initDirections();
         this.direction = '';
         this.isMoving = false;
@@ -81,61 +81,68 @@ export default class Sheep {
     private move() {
         switch (this.direction) {
             case Direction.UP_LEFT:
-                if (this.posY - this.speed / 2 >= 0 && this.posX - this.speed / 2 >= 0) {
-                    this.posY -= this.speed;
-                    this.posX -= this.speed;
-                } else {
-                    this.setNewDirection();
-                }
+                this.moveUp();
+                this.moveLeft();
                 break;
             case Direction.UP:
-                if (this.posY - this.speed >= 0) {
-                    this.posY -= this.speed;
-                } else {
-                    this.setNewDirection();
-                } break;
+                this.moveUp();
+                break;
             case Direction.UP_RIGHT:
-                if (this.posY - this.speed / 2 >= 0 && this.posX + this.speed / 2 < + Parameters.LENGTH_X) {
-                    this.posY -= this.speed;
-                    this.posX += this.speed;
-                } else {
-                    this.setNewDirection();
-                }
+                this.moveUp();
+                this.moveRight();
                 break;
             case Direction.RIGHT:
-                if (this.posX + this.speed <= Parameters.LENGTH_X) {
-                    this.posX += this.speed;
-                } else {
-                    this.setNewDirection();
-                } break;
+                this.moveRight();
+                break;
             case Direction.DOWN_RIGHT:
-                if (this.posY + this.speed / 2 <= Parameters.LENGTH_Y && this.posX + this.speed / 2 <= Parameters.LENGTH_X) {
-                    this.posY += this.speed;
-                    this.posX += this.speed;
-                } else {
-                    this.setNewDirection();
-                }
+                this.moveDown();
+                this.moveRight();
                 break;
             case Direction.DOWN:
-                if (this.posY + this.speed <= Parameters.LENGTH_Y) {
-                    this.posY += this.speed;
-                } else {
-                    this.setNewDirection();
-                }
+                this.moveDown();
                 break;
             case Direction.DOWN_LEFT:
-                if (this.posY + this.speed / 2 <= Parameters.LENGTH_Y && this.posX - this.speed / 2 >= 0) {
-                    this.posY += this.speed;
-                    this.posX -= this.speed;
-                }
+                this.moveDown();
+                this.moveLeft();
                 break;
             case Direction.LEFT:
-                if (this.posX - this.speed >= 0) {
-                    this.posX -= this.speed;
-                } else {
-                    this.setNewDirection();
-                }
+                this.moveLeft();
                 break;
+        }
+        if (this.posX === 0 || this.posX === Parameters.LENGTH_X || this.posY === 0 || this.posY === Parameters.LENGTH_Y) {
+            this.setNewDirection();
+        }
+    }
+
+    private moveLeft() {
+        if (this.posX - this.speed >= 0) {
+            this.posX -= this.speed;
+        } else {
+            this.posX = 0;
+        }
+    }
+
+    private moveRight() {
+        if (this.posX + this.speed <= Parameters.LENGTH_X) {
+            this.posX += this.speed;
+        } else {
+            this.posX = Parameters.LENGTH_X;
+        }
+    }
+
+    private moveUp() {
+        if (this.posY - this.speed >= 0) {
+            this.posY -= this.speed;
+        } else {
+            this.posY = 0;
+        }
+    }
+
+    private moveDown() {
+        if (this.posY + this.speed <= Parameters.LENGTH_Y) {
+            this.posY += this.speed;
+        } else {
+            this.posY = Parameters.LENGTH_Y
         }
     }
 

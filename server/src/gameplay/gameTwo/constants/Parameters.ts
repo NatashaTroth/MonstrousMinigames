@@ -5,8 +5,8 @@ const COUNTDOWN_TIME = 3000;
 const LENGTH_X = 2500;
 const LENGTH_Y = 1218;
 
-const SPEED = 2;
-const SNEAKING_SPEED = 1;
+const SPEED = 5;
+const SHEEP_SPEED = 4;
 
 const PLAYER_MARGIN = 100;
 
@@ -34,7 +34,7 @@ const MARGIN = 20;
 const MIN_SHEEP_COUNT = 50;
 const MAX_SHEEP_COUNT = 75;
 
-const KILL_RADIUS = 50;
+const KILL_RADIUS = 100;
 const KILLS_PER_ROUND = 5;
 
 const ROUNDS = shorterGame ? 1 : 3;
@@ -72,7 +72,7 @@ export default {
     LENGTH_X,
     LENGTH_Y,
     SPEED,
-    SNEAKING_SPEED,
+    SHEEP_SPEED,
     PLAYERS_POSITIONS,
     MARGIN,
     MIN_SHEEP_COUNT,
