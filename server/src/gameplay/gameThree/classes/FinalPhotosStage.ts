@@ -14,7 +14,8 @@ export class FinalPhotosStage extends PhotoStage {
         });
         GameThreeEventEmitter.emitTakeFinalPhotosCountdown(
             roomId,
-            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS
+            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS,
+            this.photoTopics.nextNTopics(5)
         );
     }
 

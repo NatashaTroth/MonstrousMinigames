@@ -143,6 +143,7 @@ describe('Handle function send to controller', () => {
             type: GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
             roomId,
             countdownTime,
+            photoTopics: [],
         };
 
         gameThreeEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
@@ -254,6 +255,7 @@ describe('Handle function send to screen', () => {
             type: GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN,
             roomId,
             countdownTime,
+            photoTopics: [],
         };
 
         gameThreeEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
