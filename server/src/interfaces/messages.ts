@@ -8,4 +8,5 @@ export interface IMessage {
     sneaking?: boolean;
     game?: string;
     guess?: number;
+    difficulty?: number;
 }
