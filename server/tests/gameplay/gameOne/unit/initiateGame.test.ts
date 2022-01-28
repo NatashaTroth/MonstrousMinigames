@@ -4,13 +4,14 @@ import { GameOne } from '../../../../src/gameplay';
 import {
     ObstacleType, regularObstacleTypes
 } from '../../../../src/gameplay/gameOne/enums/ObstacleType';
-import * as InitialGameParameters from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
+import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import {
     createObstacles
 } from '../../../../src/gameplay/gameOne/helperFunctions/initiatePlayerState';
 import { Obstacle } from '../../../../src/gameplay/gameOne/interfaces';
 import { leaderboard, roomId, users } from '../../mockData';
 
+const InitialGameParameters = getInitialParams();
 // import {
 //     numberOfObstacles, numberOfStones, TRACK_LENGTH, trackLength as InitialGameParameters
 // } from '../mockDataGameOne';
@@ -37,6 +38,7 @@ describe('Change and verify game state', () => {
     });
 
     it('initiates trackLength with correct length', async () => {
+        console.log(gameOne.trackLength);
         expect(gameOne.trackLength).toBe(InitialGameParameters.TRACK_LENGTH);
     });
 

@@ -1,29 +1,31 @@
-import { localDevelopment, pushChasers } from "../../../constants";
-import User from "../../classes/user";
-import { GameNames } from "../../enums/gameNames";
-import { IMessage } from "../../interfaces/messages";
-import { GameState } from "../enums";
-import Game from "../Game";
-import { verifyGameState } from "../helperFunctions/verifyGameState";
-import { verifyUserId } from "../helperFunctions/verifyUserId";
-import { verifyUserIsActive } from "../helperFunctions/verifyUserIsActive";
-import { HashTable, IGameInterface } from "../interfaces";
-import { GameType } from "../leaderboard/enums/GameType";
-import Leaderboard from "../leaderboard/Leaderboard";
-import Player from "../Player";
-import { NotAtObstacleError, WrongObstacleIdError } from "./customErrors";
-import UserHasNoStones from "./customErrors/UserHasNoStones";
-import { GameOneMsgType, ObstacleType } from "./enums";
-import GameOneEventEmitter from "./GameOneEventEmitter";
-import * as InitialGameParameters from "./GameOneInitialParameters";
-import GameOnePlayer from "./GameOnePlayer";
+import { localDevelopment, pushChasers } from '../../../constants';
+import User from '../../classes/user';
+import { GameNames } from '../../enums/gameNames';
+import { IMessage } from '../../interfaces/messages';
+import { GameState } from '../enums';
+import Game from '../Game';
+import { verifyGameState } from '../helperFunctions/verifyGameState';
+import { verifyUserId } from '../helperFunctions/verifyUserId';
+import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
+import { HashTable, IGameInterface } from '../interfaces';
+import { GameType } from '../leaderboard/enums/GameType';
+import Leaderboard from '../leaderboard/Leaderboard';
+import Player from '../Player';
+import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
+import UserHasNoStones from './customErrors/UserHasNoStones';
+import { GameOneMsgType, ObstacleType } from './enums';
+import { Difficulty } from './enums/Difficulty';
+import GameOneEventEmitter from './GameOneEventEmitter';
+import { getInitialParams, InitialParams } from './GameOneInitialParameters';
+// import * as InitialGameParameters from './GameOneInitialParameters';
+import GameOnePlayer from './GameOnePlayer';
 import {
     createObstacles, getObstacleTypes, getStonesForObstacles, sortBy
-} from "./helperFunctions/initiatePlayerState";
-import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from "./interfaces";
-import { ObstacleReachedInfoController } from "./interfaces/GameEvents";
-import { IMessageObstacle } from "./interfaces/messageObstacle";
-import { IMessageStunPlayer } from "./interfaces/messageStunPlayer";
+} from './helperFunctions/initiatePlayerState';
+import { GameStateInfo, Obstacle, ObstacleTypeObject, PlayerRank } from './interfaces';
+import { ObstacleReachedInfoController } from './interfaces/GameEvents';
+import { IMessageObstacle } from './interfaces/messageObstacle';
+import { IMessageStunPlayer } from './interfaces/messageStunPlayer';
 
 let pushChasersPeriodicallyCounter = 0; // only for testing TODO delete
 
@@ -38,29 +40,46 @@ interface GameOneInterface extends IGameInterface<GameOnePlayer, GameStateInfo> 
 }
 
 export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implements GameOneInterface {
-    trackLength = InitialGameParameters.TRACK_LENGTH;
-    numberOfObstacles = InitialGameParameters.NUMBER_OBSTACLES;
-    maxNumberOfChaserPushes = InitialGameParameters.MAX_NUMBER_CHASER_PUSHES;
-    chaserPushAmount = InitialGameParameters.CHASER_PUSH_AMOUNT;
-    numberOfStones = InitialGameParameters.NUMBER_STONES;
-    speed = InitialGameParameters.SPEED;
-    countdownTime = InitialGameParameters.COUNTDOWN_TIME; //should be 1 second more than client - TODO: make sure it is
-    cameraSpeed = InitialGameParameters.CAMERA_SPEED;
-    chasersSpeed = InitialGameParameters.CHASERS_SPEED;
-    stunnedTime = InitialGameParameters.STUNNED_TIME;
-    approachSolvableObstacleDistance = InitialGameParameters.APPROACH_SOLVABLE_OBSTACLE_DISTANCE;
+    InitialGameParameters: InitialParams;
+    trackLength: number;
+    numberOfObstacles: number;
+    maxNumberOfChaserPushes: number;
+    chaserPushAmount: number;
+    numberOfStones: number;
+    speed: number;
+    countdownTime: number;
+    cameraSpeed: number;
+    chasersSpeed: number;
+    stunnedTime: number;
+    approachSolvableObstacleDistance: number;
+    initialPlayerPositionX: number;
+    chasersPositionX: number;
+    cameraPositionX: number;
 
-    initialPlayerPositionX = InitialGameParameters.PLAYERS_POSITION_X;
-    chasersPositionX = InitialGameParameters.CHASERS_POSITION_X;
-    cameraPositionX = InitialGameParameters.CAMERA_POSITION_X;
     obstacleTypes: ObstacleTypeObject[] = [];
     maxRunsPerFrame = 2;
 
     gameName = GameNames.GAME1;
 
-    constructor(roomId: string, public leaderboard: Leaderboard /*, public usingChasers = false*/) {
+    constructor(roomId: string, public leaderboard: Leaderboard, difficulty = Difficulty.MEDIUM) {
         super(roomId);
         this.gameStateMessage = GameOneMsgType.GAME_STATE;
+        this.InitialGameParameters = getInitialParams(difficulty);
+        this.trackLength = this.InitialGameParameters.TRACK_LENGTH;
+        this.numberOfObstacles = this.InitialGameParameters.NUMBER_OBSTACLES;
+        this.maxNumberOfChaserPushes = this.InitialGameParameters.MAX_NUMBER_CHASER_PUSHES;
+        this.chaserPushAmount = this.InitialGameParameters.CHASER_PUSH_AMOUNT;
+        this.numberOfStones = this.InitialGameParameters.NUMBER_STONES;
+        this.speed = this.InitialGameParameters.SPEED;
+        this.countdownTime = this.InitialGameParameters.COUNTDOWN_TIME; //should be 1 second more than client - TODO: make sure it is
+        this.cameraSpeed = this.InitialGameParameters.CAMERA_SPEED;
+        this.chasersSpeed = this.InitialGameParameters.CHASERS_SPEED;
+        this.stunnedTime = this.InitialGameParameters.STUNNED_TIME;
+        this.approachSolvableObstacleDistance = this.InitialGameParameters.APPROACH_SOLVABLE_OBSTACLE_DISTANCE;
+
+        this.initialPlayerPositionX = this.InitialGameParameters.PLAYERS_POSITION_X;
+        this.chasersPositionX = this.InitialGameParameters.CHASERS_POSITION_X;
+        this.cameraPositionX = this.InitialGameParameters.CAMERA_POSITION_X;
     }
 
     protected beforeCreateNewGame() {
@@ -166,9 +185,9 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         this.trackLength = trackLength;
         this.numberOfObstacles = numberOfObstacles;
         this.numberOfStones = numberOfStones;
-        this.initialPlayerPositionX = InitialGameParameters.PLAYERS_POSITION_X;
-        this.chasersPositionX = InitialGameParameters.CHASERS_POSITION_X;
-        this.cameraPositionX = InitialGameParameters.CAMERA_POSITION_X;
+        this.initialPlayerPositionX = this.InitialGameParameters.PLAYERS_POSITION_X;
+        this.chasersPositionX = this.InitialGameParameters.CHASERS_POSITION_X;
+        this.cameraPositionX = this.InitialGameParameters.CAMERA_POSITION_X;
 
         super.createNewGame(users);
 
@@ -437,9 +456,9 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
 
         //TODO Test
         this.chasersPositionX += this.chaserPushAmount;
-        this.chasersSpeed = InitialGameParameters.CHASERS_PUSH_SPEED;
+        this.chasersSpeed = this.InitialGameParameters.CHASERS_PUSH_SPEED;
         setTimeout(() => {
-            this.chasersSpeed = InitialGameParameters.CHASERS_SPEED;
+            this.chasersSpeed = this.InitialGameParameters.CHASERS_SPEED;
         }, 1300);
         userPushing.chaserPushesUsed++;
 
