@@ -45,21 +45,6 @@ export const getInitialParams = (difficulty = Difficulty.MEDIUM): InitialParams 
 
 const easyParams = () => {
     return {
-        TRACK_LENGTH: shorterGame && localDevelopment ? 1000 : 4000,
-        NUMBER_OBSTACLES: shorterGame && localDevelopment ? 0 : 4,
-        STUNNED_TIME: 3000,
-        NUMBER_STONES: shorterGame && localDevelopment ? 0 : 4, //when alive
-        MAX_NUMBER_CHASER_PUSHES: 3,
-        CHASER_PUSH_AMOUNT: 20,
-        SPEED: 1,
-        CAMERA_SPEED: 1.7,
-        CHASERS_SPEED: 1.75,
-        CHASERS_PUSH_SPEED: 3,
-    };
-};
-
-const mediumParams = () => {
-    return {
         TRACK_LENGTH: shorterGame && localDevelopment ? 1000 : 5000,
         NUMBER_OBSTACLES: shorterGame && localDevelopment ? 0 : 4,
         STUNNED_TIME: 3000,
@@ -73,17 +58,34 @@ const mediumParams = () => {
     };
 };
 
-const hardParams = () => {
+const mediumParams = () => {
+    const mediumParamsModifier = 1.5;
     return {
-        TRACK_LENGTH: shorterGame && localDevelopment ? 1000 : 6000,
+        TRACK_LENGTH: shorterGame && localDevelopment ? 1000 : 5000 * mediumParamsModifier,
         NUMBER_OBSTACLES: shorterGame && localDevelopment ? 0 : 5,
-        STUNNED_TIME: 4000,
-        NUMBER_STONES: shorterGame && localDevelopment ? 0 : 4, //when alive
-        MAX_NUMBER_CHASER_PUSHES: 4,
-        CHASER_PUSH_AMOUNT: 30,
+        STUNNED_TIME: 3000 * mediumParamsModifier,
+        NUMBER_STONES: shorterGame && localDevelopment ? 0 : 5, //when alive
+        MAX_NUMBER_CHASER_PUSHES: 3,
+        CHASER_PUSH_AMOUNT: 20 * mediumParamsModifier,
         SPEED: 1,
-        CAMERA_SPEED: 1.9,
-        CHASERS_SPEED: 1.8,
-        CHASERS_PUSH_SPEED: 4,
+        CAMERA_SPEED: 1.7 * mediumParamsModifier,
+        CHASERS_SPEED: 1.75 * mediumParamsModifier,
+        CHASERS_PUSH_SPEED: 3 * mediumParamsModifier,
+    };
+};
+
+const hardParams = () => {
+    const hardParamsModifier = 1.75;
+    return {
+        TRACK_LENGTH: shorterGame && localDevelopment ? 1000 : 5000 * hardParamsModifier,
+        NUMBER_OBSTACLES: shorterGame && localDevelopment ? 0 : 6,
+        STUNNED_TIME: 3000 * hardParamsModifier,
+        NUMBER_STONES: shorterGame && localDevelopment ? 0 : 6, //when alive
+        MAX_NUMBER_CHASER_PUSHES: 4,
+        CHASER_PUSH_AMOUNT: 20 * hardParamsModifier,
+        SPEED: 1,
+        CAMERA_SPEED: 1.7 * hardParamsModifier,
+        CHASERS_SPEED: 1.75 * hardParamsModifier,
+        CHASERS_PUSH_SPEED: 3 * hardParamsModifier,
     };
 };

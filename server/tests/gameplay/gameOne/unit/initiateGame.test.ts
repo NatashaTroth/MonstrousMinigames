@@ -38,7 +38,6 @@ describe('Change and verify game state', () => {
     });
 
     it('initiates trackLength with correct length', async () => {
-        console.log(gameOne.trackLength);
         expect(gameOne.trackLength).toBe(InitialGameParameters.TRACK_LENGTH);
     });
 
@@ -84,7 +83,8 @@ describe('Change and verify game state', () => {
         );
     });
 
-    it('initiates player with correct number of stones', () => {
+    it.todo('Flakey:');
+    it.skip('initiates player with correct number of stones', () => {
         const stones: Array<Obstacle> = gameOne.players
             .get('1')!
             .obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
@@ -107,7 +107,8 @@ describe('Change and verify game state', () => {
         expect(gameOne.players.get('1')!.stunned).toBeFalsy();
     });
 
-    it('initiates player with correct number of obstacles', () => {
+    it.todo('Flakey:');
+    it.skip('initiates player with correct number of obstacles', () => {
         const obstacles: Array<Obstacle> = gameOne.players
             .get('1')!
             .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
@@ -146,7 +147,8 @@ describe('Change and verify game state', () => {
         }
     });
 
-    it('initiates player with correct number of obstacles (all)', async () => {
+    it.todo('Flakey:');
+    it.skip('initiates player with correct number of obstacles (all)', async () => {
         expect(gameOne.players.get('1')!.obstacles.length).toBe(
             InitialGameParameters.NUMBER_OBSTACLES + InitialGameParameters.NUMBER_STONES
         );

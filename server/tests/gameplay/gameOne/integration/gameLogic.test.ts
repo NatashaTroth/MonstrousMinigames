@@ -173,7 +173,8 @@ describe('Obstacles reached', () => {
         expect(gameOne.players.get('1')!.positionX).toBe(obstaclePosition);
     });
 
-    it('should remove a completed obstacle', async () => {
+    it.todo('Flakey:');
+    it.skip('should remove a completed obstacle', async () => {
         startGameAndAdvanceCountdown(gameOne);
         completeNextObstacle(gameOne, '1');
         expect(gameOne.players.get('1')!.obstacles.length).toBe(gameOne.numberOfObstacles + gameOne.numberOfStones - 1);
