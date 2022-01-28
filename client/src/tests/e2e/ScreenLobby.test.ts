@@ -9,7 +9,6 @@ test('Render room code at lobby header', async ({ baseURL }) => {
     const page = await context.newPage();
 
     await page.goto(`/`);
-    await page.screenshot({ path: 'test.png' });
 
     const [response] = await Promise.all([
         // Waits for the next response matching some conditions
