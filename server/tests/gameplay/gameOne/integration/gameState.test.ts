@@ -2,14 +2,18 @@ import 'reflect-metadata';
 
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
+import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import { verifyGameState } from '../../../../src/gameplay/helperFunctions/verifyGameState';
 import { leaderboard, roomId, users } from '../../mockData';
 import {
-    clearTimersAndIntervals, completeNextObstacle, finishGame, finishPlayer,
+    clearTimersAndIntervals, finishGame, finishPlayer, goToNextUnsolvableObstacle,
     startGameAndAdvanceCountdown
 } from '../gameOneHelperFunctions';
+import { playerHasCompletedObstacleMessage, runForwardMessage } from '../gameOneMockData';
 
 let gameOne: GameOne;
+const userId = '1';
+const InitialParameters = getInitialParams();
 
 describe('Change and verify game state', () => {
     beforeEach(async () => {
@@ -28,31 +32,22 @@ describe('Change and verify game state', () => {
     it("shouldn't be able to move player until game has started and the countdown has run", async () => {
         gameOne.createNewGame(users, 1550, 4);
         const initialPositionX = gameOne.players.get('1')!.positionX;
-        try {
-            gameOne['runForward']('50');
-        } catch (e) {
-            //ignore for this test
-        }
+        gameOne.receiveInput({ ...runForwardMessage, userId });
         expect(gameOne.players.get('1')!.positionX).toBe(initialPositionX);
     });
 
     it('should be able to move player once game has started and the countdown has run', async () => {
         startGameAndAdvanceCountdown(gameOne);
         const initialPositionX = gameOne.players.get('1')!.positionX;
-        gameOne['runForward']('1', 10);
-        expect(gameOne.players.get('1')!.positionX).toBe(initialPositionX + 10);
+        gameOne.receiveInput({ ...runForwardMessage, userId });
+        expect(gameOne.players.get('1')!.positionX).toBe(initialPositionX + InitialParameters.SPEED);
     });
 
     it("shouldn't be able to move player when game is paused", async () => {
         startGameAndAdvanceCountdown(gameOne);
         const initialPositionX = gameOne.players.get('1')!.positionX;
         gameOne.pauseGame();
-        try {
-            gameOne['runForward']('50');
-        } catch (e) {
-            //ignore in this test
-        }
-
+        gameOne.receiveInput({ ...runForwardMessage, userId });
         expect(gameOne.players.get('1')!.positionX).toBe(initialPositionX);
     });
 
@@ -60,30 +55,27 @@ describe('Change and verify game state', () => {
         gameOne.createNewGame(users, 1550, 4);
         // Countdown still has to run
         const obstaclesCompletedLength = gameOne.players.get('1')!.obstacles.length;
-        try {
-            gameOne['playerHasCompletedObstacle']('1', 0);
-        } catch (e) {
-            //ignore for this test
-        }
+        gameOne.receiveInput({ ...playerHasCompletedObstacleMessage, userId });
+
         expect(gameOne.players.get('1')!.obstacles.length).toBe(obstaclesCompletedLength);
     });
 
     it('should be able to complete obstacle when game has started', async () => {
         startGameAndAdvanceCountdown(gameOne);
-        const obstaclesCompletedLength = gameOne.players.get('1')!.obstacles.length;
-        completeNextObstacle(gameOne, '1');
-        expect(gameOne.players.get('1')!.obstacles.length).toBe(obstaclesCompletedLength - 1);
+        const player = gameOne.players.get('1')!;
+        const obstaclesCompletedLength = player.obstacles.length;
+        goToNextUnsolvableObstacle(gameOne, player);
+        gameOne.receiveInput({ ...playerHasCompletedObstacleMessage, userId });
+
+        expect(player.obstacles.length).toBe(obstaclesCompletedLength - 1);
     });
 
     it("shouldn't be able to complete obstacle when game is paused", async () => {
         startGameAndAdvanceCountdown(gameOne);
         const obstaclesCompletedLength = gameOne.players.get('1')!.obstacles.length;
         gameOne.pauseGame();
-        try {
-            gameOne['playerHasCompletedObstacle']('1', 0);
-        } catch (e) {
-            //ignore for this test
-        }
+        gameOne.receiveInput({ ...playerHasCompletedObstacleMessage, userId });
+
         expect(gameOne.players.get('1')!.obstacles.length).toBe(obstaclesCompletedLength);
     });
 
