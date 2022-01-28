@@ -418,7 +418,7 @@ class SheepGameScene extends Phaser.Scene {
     private createInitialSheepCount() {
         if (this.gameTwoRenderer) {
             this.gameTwoRenderer.renderInitialSheepCount(this.sheep.length);
-            setTimeout(() => this.gameTwoRenderer!.destroyInitialSheepCount(), 3000);
+            setTimeout(() => this.gameTwoRenderer!.destroyInitialSheepCount(), 10000);
         }
     }
 

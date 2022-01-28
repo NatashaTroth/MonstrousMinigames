@@ -157,8 +157,10 @@ export class PhaserPlayerRenderer {
             style: {
                 ...loadingTextStyleProperties,
                 fontSize: `20px`,
-                color: colors.black,
+                color: colors.orange,
                 fontStyle: 'bold',
+                stroke: colors.black,
+                strokeThickness: 2,
             },
         });
         this.player.name.setDepth(depthDictionary.percentText);
