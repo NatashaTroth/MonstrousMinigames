@@ -49,6 +49,7 @@ end-to-end:client:
     script:
         - cd client/
         - npx playwright install --with-deps
+        - npm run build 
         - echo "End to End testing.."
         - npm run end2end
     except:
