@@ -1,10 +1,5 @@
 import { chromium, expect, test } from "@playwright/test";
 
-// test.beforeAll(async ({ request, baseURL }) => {
-//     const response = await request.get(`${baseURL}/`);
-//     expect(response.ok()).toBeTruthy();
-// });
-
 test('Render room code at lobby header', async ({ baseURL }) => {
     const browser = await chromium.launch({
         args: ['--disable-dev-shm-usage'],
