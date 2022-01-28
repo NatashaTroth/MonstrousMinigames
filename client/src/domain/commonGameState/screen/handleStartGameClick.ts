@@ -17,7 +17,7 @@ export function handleStartGameClick(
         screenSocket?.emit({
             type: MessageTypes.chooseGame,
             game: selectedGame.id,
-            difficulty: 1, //TODO magda
+            // difficulty: 1, //TODO magda
         });
     }
     history.push(screenGetReadyRoute(roomId));
