@@ -409,7 +409,7 @@ export function handleRenderPlayer(
     coordinates: Coordinates,
     monsterSpriteSheetName: string
 ) {
-    const player = scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
+    const player = scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 0);
     player.setDepth(depthDictionary.player);
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
