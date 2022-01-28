@@ -173,80 +173,71 @@ export function finishGame(gameOne: GameOne): GameOne {
 //     gameOne.players.get(userId)!.runForward(distanceToNextObstacle(gameOne, userId));
 // }
 
-// export async function startAndFinishGameDifferentTimes(gameOne: GameOne) {
-//     const dateNow = 1618665766156;
-//     Date.now = jest.fn(() => dateNow);
-//     startGameAndAdvanceCountdown(gameOne);
-//     // finish game
-//     for (let i = 1; i <= gameOne.numberOfObstacles; i++) {
-//         completePlayersObstacles(gameOne, i.toString());
-//     }
+export async function startAndFinishGameDifferentTimes(gameOne: GameOne, timesFinished = [1000, 5000, 10000, 15000]) {
+    const dateNow = 1618665766156;
+    Date.now = jest.fn(() => dateNow);
+    startGameAndAdvanceCountdown(gameOne);
 
-//     advanceCountdown(gameOne, 1000);
-//     await releaseThreadN(3);
-//     gameOne.players.get('1')!.runForward(TRACK_LENGTH);
+    advanceCountdown(gameOne, timesFinished[0]);
+    await releaseThreadN(3);
+    finishPlayer(gameOne, '1');
 
-//     await releaseThreadN(3);
-//     advanceCountdown(gameOne, 4000);
-//     await releaseThreadN(3);
-//     gameOne.players.get('2')!.runForward(TRACK_LENGTH);
+    await releaseThreadN(3);
+    advanceCountdown(gameOne, timesFinished[1] - timesFinished[0]);
+    await releaseThreadN(3);
+    finishPlayer(gameOne, '2');
 
-//     await releaseThreadN(3);
-//     advanceCountdown(gameOne, 5000);
-//     await releaseThreadN(3);
-//     gameOne.players.get('3')!.runForward(TRACK_LENGTH);
+    await releaseThreadN(3);
+    advanceCountdown(gameOne, timesFinished[2] - timesFinished[1]);
+    await releaseThreadN(3);
+    finishPlayer(gameOne, '3');
 
-//     await releaseThreadN(3);
-//     advanceCountdown(gameOne, 5000);
-//     await releaseThreadN(3);
-//     gameOne.players.get('4')!.runForward(TRACK_LENGTH);
+    await releaseThreadN(3);
+    advanceCountdown(gameOne, timesFinished[3] - timesFinished[2]);
+    await releaseThreadN(3);
+    finishPlayer(gameOne, '4');
 
-//     await releaseThreadN(3);
-//     return gameOne;
-// }
+    await releaseThreadN(3);
+    return gameOne;
+}
 
-// export async function getGameFinishedDataDifferentTimes(gameOne: GameOne) {
-//     let eventData = {
-//         roomId: '',
-//         gameState: GameState.Started,
-//         playerRanks: [] as PlayerRank[],
-//     };
-//     gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
-//         if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
-//             eventData = message.data as any;
-//         }
-//     });
-//     gameOne = await startAndFinishGameDifferentTimes(gameOne);
-//     return eventData;
-// }
+export async function getGameFinishedDataDifferentTimes(gameOne: GameOne, timesFinished?: number[]) {
+    let eventData = {
+        roomId: '',
+        gameState: GameState.Started,
+        playerRanks: [] as PlayerRank[],
+    };
+    gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+        if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+            eventData = message.data as any;
+        }
+    });
+    gameOne = await startAndFinishGameDifferentTimes(gameOne, timesFinished);
+    return eventData;
+}
 
-// export function getGameFinishedDataSameRanks(gameOne: GameOne) {
-//     let eventData = {
-//         roomId: '',
-//         gameState: GameState.Started,
-//         playerRanks: [] as PlayerRank[],
-//     };
+export function getGameFinishedDataSameRanks(gameOne: GameOne) {
+    let eventData = {
+        roomId: '',
+        gameState: GameState.Started,
+        playerRanks: [] as PlayerRank[],
+    };
 
-//     gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
-//         if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
-//             eventData = message.data as any;
-//         }
-//     });
+    gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+        if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+            eventData = message.data as any;
+        }
+    });
 
-//     startGameAndAdvanceCountdown(gameOne);
-//     // finish game
-//     for (let i = 1; i <= gameOne.numberOfObstacles; i++) {
-//         completePlayersObstacles(gameOne, i.toString());
-//     }
+    startGameAndAdvanceCountdown(gameOne);
 
-//     gameOne.players.get('1')!.runForward(TRACK_LENGTH);
-//     gameOne.players.get('2')!.runForward(TRACK_LENGTH);
-//     gameOne.players.get('3')!.runForward(TRACK_LENGTH);
-//     Date.now = jest.fn(() => dateNow + 15000);
-//     gameOne.players.get('4')!.runForward(TRACK_LENGTH);
+    // finish game
+    finishPlayer(gameOne, '1');
+    finishPlayer(gameOne, '2');
+    finishPlayer(gameOne, '3');
 
-//     return eventData;
-// }
+    return eventData;
+}
 
 // export async function getGameFinishedDataWithSomeDead(gameOne: GameOne) {
 //     let eventData = {

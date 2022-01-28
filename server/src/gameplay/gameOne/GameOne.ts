@@ -46,7 +46,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     chasers?: Chasers;
     gameOnePlayersController?: GameOnePlayersController;
 
-    constructor(roomId: string, public leaderboard: Leaderboard /*, public usingChasers = false*/) {
+    constructor(roomId: string, public leaderboard: Leaderboard, private useChasers = true) {
         super(roomId);
         this.gameStateMessage = GameOneMsgType.GAME_STATE;
     }
@@ -89,8 +89,10 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         if (this.cameraPositionX < this.trackLength)
             this.cameraPositionX += (timeElapsedSinceLastFrame / 33) * this.cameraSpeed;
 
-        this.chasers!.update(timeElapsed, timeElapsedSinceLastFrame);
-        this.checkIfPlayersCaught(Date.now());
+        if (this.useChasers) {
+            this.chasers!.update(timeElapsed, timeElapsedSinceLastFrame);
+            this.checkIfPlayersCaught(Date.now());
+        }
 
         if (localDevelopment) {
             this.updateLocalDev();
