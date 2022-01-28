@@ -51,7 +51,7 @@ end-to-end:client:
         - npx playwright install --with-deps
         - echo "End to End testing.."
         # Start local server
-        - npm start & npx wait-on http://localhost:3000
+        # - npm start & npx wait-on http://localhost:3000
         - npm run end2end
     except:
         # - /^backend-.*$/
