@@ -16,7 +16,7 @@ export const FullScreenContainer = styled.div`
     background-position-x: -1px;
 `;
 
-const OrangeContainerBase = styled(OrangeBase)`
+export const OrangeContainerBase = styled(OrangeBase)`
     display: flex;
     flex-direction: column;
     border-radius: 40px;
