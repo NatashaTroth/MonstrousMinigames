@@ -39,6 +39,9 @@ export class PhaserPlayerRenderer {
     private caveInFront?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private backgroundElements?: Phaser.GameObjects.Image[];
 
+    private characterName?: string;
+    private phaserObjectId: number;
+
     constructor(
         private scene: MainScene,
         private numberPlayers: number,
@@ -48,6 +51,7 @@ export class PhaserPlayerRenderer {
         this.skippedObstacles = [];
         this.particles = [];
         this.backgroundElements = [];
+        this.phaserObjectId = Math.random();
 
         //when <= 2 lanes, make them less high to fit more width
 
@@ -296,13 +300,34 @@ export class PhaserPlayerRenderer {
     }
 
     destroyObstacle() {
+        // eslint-disable-next-line no-console
+        console.log(this.characterName, ' ', this.phaserObjectId);
+        // eslint-disable-next-line no-console
+        console.log(this.obstacles.length);
         const currentObstacle = this.obstacles.shift();
         currentObstacle?.phaserInstance.destroy();
+
+        // eslint-disable-next-line no-console
+        console.log('Desctroyed obstacle from list');
+        // eslint-disable-next-line no-console
+        console.log(this.obstacles.length);
+        // eslint-disable-next-line no-console
+        console.log('------');
     }
 
     handleSkippedObstacle() {
+        // eslint-disable-next-line no-console
+        console.log(this.characterName, ' ', this.phaserObjectId);
+        // eslint-disable-next-line no-console
+        console.log(this.obstacles.length);
         const currentObstacle = this.obstacles.shift();
         if (currentObstacle) this.skippedObstacles.push(currentObstacle);
+        // eslint-disable-next-line no-console
+        console.log('Removed obstacle from list');
+        // eslint-disable-next-line no-console
+        console.log(this.obstacles.length);
+        // eslint-disable-next-line no-console
+        console.log('------');
     }
 
     destroyObstacles() {
@@ -368,6 +393,7 @@ export class PhaserPlayerRenderer {
             coordinates,
             monsterSpriteSheetName
         );
+        this.characterName = monsterSpriteSheetName;
     }
 
     private initiateAnimation(spritesheetName: string, animationName: string, frames: CharacterAnimationFrames) {
@@ -396,7 +422,7 @@ export class PhaserPlayerRenderer {
         this.destroyChaser();
         this.destroyAttentionIcon();
         this.destroyCave();
-        this.destroyObstacle();
+        this.destroyObstacles();
         this.destroyWarningIcon();
         this.destroyPlayer();
     }

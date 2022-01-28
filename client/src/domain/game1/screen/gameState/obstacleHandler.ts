@@ -1,5 +1,7 @@
 import messageHandler from '../../../socket/messageHandler';
-import { approachingSolvableObstacleOnceTypeGuard } from '../../../typeGuards/game1/approachingSolvableObstacleOnceTypeGuard';
+import {
+    approachingSolvableObstacleOnceTypeGuard
+} from '../../../typeGuards/game1/approachingSolvableObstacleOnceTypeGuard';
 import { obstacleSkippedTypeGuard } from '../../../typeGuards/game1/obstacleSkipped';
 import { obstacleWillBeSolvedTypeGuard } from '../../../typeGuards/game1/obstacleWillBeSolved';
 
@@ -24,6 +26,8 @@ export const approachingObstacleHandler = messageHandler(
 export const obstacleSkippedHandler = messageHandler(
     obstacleSkippedTypeGuard,
     (message, dependencies: Dependencies) => {
+        // eslint-disable-next-line no-console
+        console.log('Received obstacle ski9pped msg');
         dependencies.players.find(player => player.player.id === message.userId)?.handleObstacleSkipped();
     }
 );
