@@ -8,6 +8,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { MyAudioContext } from '../../contexts/AudioContextProvider';
+import { GameContext } from '../../contexts/GameContextProvider';
 import history from '../../domain/history/history';
 import Button from './Button';
 import {
@@ -21,9 +22,14 @@ import IconButton from './IconButton';
 
 const Settings: React.FunctionComponent = () => {
     const { isPlaying, setVolume, volume, togglePlaying } = React.useContext(MyAudioContext);
+    const { difficulty, setDifficulty } = React.useContext(GameContext);
 
     const handleChange = (event: React.ChangeEvent<unknown>, newValue: number | number[]): void => {
         setVolume(typeof newValue === 'number' ? newValue : newValue[0]);
+    };
+
+    const handleDifficultyChange = (event: React.ChangeEvent<unknown>, newValue: number | number[]) => {
+        setDifficulty(typeof newValue === 'number' ? newValue : newValue[0]);
     };
 
     return (
@@ -31,8 +37,9 @@ const Settings: React.FunctionComponent = () => {
             <ContentContainer>
                 <ContentBase>
                     <Headline>Settings</Headline>
+                    <SubHeading>Sound</SubHeading>
                     <VolumeContainer>
-                        <Typography gutterBottom>Sound Volume</Typography>
+                        <Typography gutterBottom>Volume</Typography>
                         <StyledGridContainer container spacing={2}>
                             <Grid item>
                                 <VolumeDown />
@@ -46,6 +53,21 @@ const Settings: React.FunctionComponent = () => {
                             <IconButton onClick={() => togglePlaying()}>
                                 {isPlaying ? <VolumeUp /> : <VolumeOff />}
                             </IconButton>
+                        </StyledGridContainer>
+                    </VolumeContainer>
+                    <SubHeading>Game 1</SubHeading>
+                    <VolumeContainer>
+                        <Typography gutterBottom>Difficulty</Typography>
+                        <StyledGridContainer container spacing={2}>
+                            <Grid item>
+                                <Typography>Easy</Typography>
+                            </Grid>
+                            <Grid item xs>
+                                <Slider value={difficulty} onChange={handleDifficultyChange} step={1} min={0} max={2} />
+                            </Grid>
+                            <Grid item>
+                                <Typography>Hard</Typography>
+                            </Grid>
                         </StyledGridContainer>
                     </VolumeContainer>
                 </ContentBase>
@@ -68,4 +90,11 @@ const VolumeContainer = styled.div`
 
 const StyledGridContainer = styled(Grid)`
     align-items: center;
+`;
+
+export const SubHeading = styled.div`
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
 `;
