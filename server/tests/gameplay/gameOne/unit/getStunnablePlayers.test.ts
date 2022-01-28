@@ -2,12 +2,13 @@ import 'reflect-metadata';
 
 import { GameOne } from '../../../../src/gameplay';
 import GameOnePlayersController from '../../../../src/gameplay/gameOne/classes/GameOnePlayersController';
-import InitialParameters from '../../../../src/gameplay/gameOne/constants/InitialParameters';
+import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import { players } from '../../gameOne/gameOneMockData';
 import { leaderboard, roomId, trackLength, users } from '../../mockData';
 
 // let gameOne: GameOne;
 let gameOnePlayersController: GameOnePlayersController;
+const InitialParameters = getInitialParams();
 
 describe('Stun player tests', () => {
     beforeEach(() => {

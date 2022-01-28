@@ -1,5 +1,5 @@
-import InitialParameters from '../../../src/gameplay/gameOne/constants/InitialParameters';
 import { GameOneMsgType, ObstacleType } from '../../../src/gameplay/gameOne/enums';
+import { getInitialParams } from '../../../src/gameplay/gameOne/GameOneInitialParameters';
 import GameOnePlayer from '../../../src/gameplay/gameOne/GameOnePlayer';
 import { Obstacle } from '../../../src/gameplay/gameOne/interfaces';
 import { IMessage } from '../../../src/interfaces/messages';
@@ -38,11 +38,12 @@ for (const user of users) {
         new GameOnePlayer(
             user.id,
             user.name,
-            InitialParameters.PLAYERS_POSITION_X,
+            getInitialParams().PLAYERS_POSITION_X,
             obstacles,
             user.characterNumber,
             trackLength,
-            roomId
+            roomId,
+            getInitialParams()
         )
     );
 }

@@ -4,7 +4,6 @@ import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
-import InitialParameters from '../../../../src/gameplay/gameOne/constants/InitialParameters';
 import { ObstacleType } from '../../../../src/gameplay/gameOne/enums';
 import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import { GameEvents } from '../../../../src/gameplay/gameOne/interfaces';
@@ -27,7 +26,7 @@ import {
 
 let gameOne: GameOne;
 let gameEventEmitter: GameEventEmitter;
-const InitialGameParameters = getInitialParams();
+const InitialParameters = getInitialParams();
 
 const beforeEachFunction = () => {
     gameOne = new GameOne(roomId, leaderboard);

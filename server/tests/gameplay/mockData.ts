@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 import User from '../../src/classes/user';
-import InitialParameters from '../../src/gameplay/gameOne/constants/InitialParameters';
-import GameOnePlayer from '../../src/gameplay/gameOne/GameOnePlayer';
+import { getInitialParams } from '../../src/gameplay/gameOne/GameOneInitialParameters';
 import Leaderboard from '../../src/gameplay/leaderboard/Leaderboard';
 import { IMessage } from '../../src/interfaces/messages';
 
@@ -29,7 +28,7 @@ export const mockMessage: IMessage = {
 
 export const dateNow = 1618665766156;
 
-export const trackLength = InitialParameters.TRACK_LENGTH;
+export const trackLength = getInitialParams().TRACK_LENGTH;
 
 export const mockPhotoUrl = 'https://mockPhoto.com';
 

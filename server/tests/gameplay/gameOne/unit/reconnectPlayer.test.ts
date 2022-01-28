@@ -2,17 +2,13 @@ import 'reflect-metadata';
 
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
-<<<<<<< HEAD
-import InitialParameters from '../../../../src/gameplay/gameOne/constants/InitialParameters';
-import GameOnePlayer from '../../../../src/gameplay/gameOne/GameOnePlayer';
-=======
 import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
->>>>>>> dev
+import GameOnePlayer from '../../../../src/gameplay/gameOne/GameOnePlayer';
 import { leaderboard, roomId, users } from '../../mockData';
 import { playerHasCompletedObstacleMessage, players, runForwardMessage } from '../gameOneMockData';
 
 let gameOne: GameOne;
-const InitialGameParameters = getInitialParams();
+const InitialParameters = getInitialParams();
 
 describe('Reconnect Player tests', () => {
     beforeEach(() => {

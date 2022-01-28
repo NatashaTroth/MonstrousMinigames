@@ -3,21 +3,23 @@ import 'reflect-metadata';
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
-// ..
 import { GameState } from '../../../../src/gameplay/enums';
+import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import { PlayerRank } from '../../../../src/gameplay/gameOne/interfaces';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
 } from '../../../../src/gameplay/interfaces/GlobalEventMessages';
 import { leaderboard, roomId } from '../../mockData';
 import {
-    clearTimersAndIntervals, completeNextObstacle, finishPlayer, startGameAndAdvanceCountdown
+    clearTimersAndIntervals, finishPlayer, startGameAndAdvanceCountdown
 } from '../gameOneHelperFunctions';
+import { playerHasCompletedObstacleMessage, runForwardMessage } from '../gameOneMockData';
 
 // const TRACK_LENGTH = 500;
 
 let gameOne: GameOne;
 let gameEventEmitter: GameEventEmitter;
+const InitialGameParameters = getInitialParams();
 
 describe('Disconnect Player tests', () => {
     beforeAll(() => {
@@ -31,33 +33,26 @@ describe('Disconnect Player tests', () => {
 
     afterEach(async () => {
         clearTimersAndIntervals(gameOne);
+        DI.clearInstances();
     });
 
     it('cannot run forward when disconnected', async () => {
-        const SPEED = 50;
+        const userId = '1';
         startGameAndAdvanceCountdown(gameOne);
-        gameOne['runForward']('1', SPEED);
+        gameOne.receiveInput({ ...runForwardMessage, userId });
         gameOne.disconnectPlayer('1');
-        try {
-            gameOne['runForward']('1');
-        } catch (e) {
-            //ignore for this test
-        }
-        expect(gameOne.players.get('1')?.positionX).toBe(gameOne.initialPlayerPositionX + SPEED);
+        gameOne.receiveInput({ ...runForwardMessage, userId });
+
+        expect(gameOne.players.get('1')?.positionX).toBe(gameOne.initialPlayerPositionX + InitialGameParameters.SPEED);
     });
 
-    it('cannot complete an obstacle when disconnected', async () => {
+    it('cannot complete an obstacle when disconnected', () => {
         startGameAndAdvanceCountdown(gameOne);
         const obstaclesLength = gameOne.players.get('1')!.obstacles.length;
-        completeNextObstacle(gameOne, '1');
         gameOne.disconnectPlayer('1');
 
-        try {
-            gameOne['playerHasCompletedObstacle']('1', gameOne.players.get('1')!.obstacles[0].id);
-        } catch (e) {
-            //ignore for this test
-        }
-        expect(gameOne.players.get('1')!.obstacles.length).toBe(obstaclesLength - 1);
+        gameOne.receiveInput(playerHasCompletedObstacleMessage);
+        expect(gameOne.players.get('1')!.obstacles.length).toBe(obstaclesLength);
     });
 
     it('should emit isActive is false when a player was disconnected and the game has finished', async () => {
@@ -110,6 +105,8 @@ describe('Disconnect Player tests', () => {
         finishPlayer(gameOne, '1');
         Date.now = jest.fn(() => dateNow + 20000);
         finishPlayer(gameOne, '2');
+
+        // console.log(Array.from(gameOne.players.values()).map(pl => pl.rank));
 
         expect(eventData.playerRanks[0].rank).toBe(1);
         expect(eventData.playerRanks[1].rank).toBe(2);

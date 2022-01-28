@@ -85,18 +85,12 @@ class GameOnePlayersController {
         currentRank: number,
         gameStartedAt: number,
         rankSuccessfulUser: (rankingMetric: number) => number,
+        rankFailedUser: (rankingMetric: number) => number,
         gameOneArg: GameOne,
         currentTime: number
     ): Array<PlayerRank> {
+        this.rankUnrankedPlayers(rankSuccessfulUser, rankFailedUser, gameOneArg, currentTime);
         return Array.from(this.players.values()).map(player => {
-            if (!player.finished) {
-                player.handlePlayerFinishedGame(
-                    currentTime,
-                    rankSuccessfulUser.call(gameOneArg, player.finishedTimeMs)
-                );
-                player.finished = true;
-            }
-
             return {
                 id: player.id,
                 name: player.name,
@@ -112,6 +106,26 @@ class GameOnePlayersController {
 
     verifyUserId(id: string) {
         HelperFunctions.verifyUserId(this.players, id);
+    }
+
+    private rankUnrankedPlayers(
+        rankSuccessfulUser: (rankingMetric: number) => number,
+        rankFailedUser: (rankingMetric: number) => number,
+        gameOneArg: GameOne,
+        currentTime: number
+    ) {
+        this.players.forEach(player => {
+            if (!player.isActive && !player.finished) {
+                player.handlePlayerCaught(currentTime);
+                player.rank = rankFailedUser.call(gameOneArg, player.finishedTimeMs);
+            } else if (!player.finished) {
+                player.handlePlayerFinishedGame(
+                    currentTime,
+                    rankSuccessfulUser.call(gameOneArg, player.finishedTimeMs)
+                );
+                player.finished = true;
+            }
+        });
     }
 }
 

@@ -1,10 +1,9 @@
-import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
 import Player from '../Player';
-import InitialParameters from './constants/InitialParameters';
-import { NotAtObstacleError, WrongObstacleIdError } from './customErrors';
+import { NotAtObstacleError } from './customErrors';
 import UserHasNoStones from './customErrors/UserHasNoStones';
 import { ObstacleType } from './enums';
 import GameOneEventEmitter from './GameOneEventEmitter';
+import { InitialParams } from './GameOneInitialParameters';
 import { Obstacle, PlayerState } from './interfaces';
 import { ObstacleReachedInfoController } from './interfaces/GameEvents';
 
@@ -20,8 +19,8 @@ class GameOnePlayer extends Player implements PlayerState {
     chaserPushesUsed = 0;
     countRunsPerFrame = 0;
     maxRunsPerFrame = 2;
-    stunnedTime = InitialParameters.STUNNED_TIME;
-    maxNumberOfChaserPushes = InitialParameters.MAX_NUMBER_CHASER_PUSHES;
+    stunnedTime: number;
+    maxNumberOfChaserPushes: number;
 
     constructor(
         id: string,
@@ -30,9 +29,12 @@ class GameOnePlayer extends Player implements PlayerState {
         public obstacles: Obstacle[],
         public characterNumber: number,
         private trackLength: number,
-        private roomId: string
+        private roomId: string,
+        private InitialParameters: InitialParams
     ) {
         super(id, name, characterNumber);
+        this.stunnedTime = this.InitialParameters.STUNNED_TIME;
+        this.maxNumberOfChaserPushes = this.InitialParameters.MAX_NUMBER_CHASER_PUSHES;
     }
 
     async update(timeElapsed: number, timeElapsedSinceLastFrame: number): Promise<void> {
@@ -48,8 +50,6 @@ class GameOnePlayer extends Player implements PlayerState {
     }
 
     runForward(speed: number): void {
-        verifyUserIsActive(this.id, this.isActive);
-
         if (this.playerIsNotAllowedToRun()) return;
         this.positionX += speed;
         this.countRunsPerFrame++;
@@ -153,6 +153,7 @@ class GameOnePlayer extends Player implements PlayerState {
 
     playerIsNotAllowedToRun() {
         return (
+            !this.isActive ||
             this.finished ||
             this.dead ||
             this.atObstacle ||
@@ -235,7 +236,7 @@ class GameOnePlayer extends Player implements PlayerState {
             !this.atObstacle &&
             (this.obstacles.length || 0) > 0 &&
             (this.positionX || 0) >=
-                (this.obstacles[0].positionX || 0) - InitialParameters.APPROACH_SOLVABLE_OBSTACLE_DISTANCE &&
+                (this.obstacles[0].positionX || 0) - this.InitialParameters.APPROACH_SOLVABLE_OBSTACLE_DISTANCE &&
             this.obstacles[0].solvable
         );
     }

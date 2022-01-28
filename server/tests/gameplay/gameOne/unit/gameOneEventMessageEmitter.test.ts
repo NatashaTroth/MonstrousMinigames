@@ -4,11 +4,11 @@ import Room from '../../../../src/classes/room';
 import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
-import InitialParameters from '../../../../src/gameplay/gameOne/constants/InitialParameters';
 import { ObstacleType } from '../../../../src/gameplay/gameOne/enums';
 import {
     GameOneEventMessageEmitter
 } from '../../../../src/gameplay/gameOne/GameOneEventMessageEmitter';
+import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import {
     InitialGameStateInfo, NamespaceAdapter
 } from '../../../../src/gameplay/gameOne/interfaces';
@@ -33,7 +33,7 @@ import { leaderboard, roomId, trackLength, users } from '../../mockData';
 
 let gameOne: GameOne;
 let gameOneEventMessageEmitter: GameOneEventMessageEmitter;
-
+const InitialParameters = getInitialParams();
 const controllerSpaceEmit = jest.fn((messageName, message) => {
     /*do nothing*/
 });

@@ -1,13 +1,18 @@
-import InitialParameters from '../constants/InitialParameters';
 import GameOneEventEmitter from '../GameOneEventEmitter';
+import { InitialParams } from '../GameOneInitialParameters';
 
 class Chasers {
-    maxNumberOfChaserPushes = InitialParameters.MAX_NUMBER_CHASER_PUSHES;
-    chaserPushAmount = InitialParameters.CHASER_PUSH_AMOUNT;
-    chasersSpeed = InitialParameters.CHASERS_SPEED;
-    chasersPositionX = InitialParameters.CHASERS_POSITION_X;
+    maxNumberOfChaserPushes: number;
+    chaserPushAmount: number;
+    chasersSpeed: number;
+    chasersPositionX: number;
 
-    constructor(private trackLength: number, private roomId: string) {}
+    constructor(private trackLength: number, private roomId: string, private InitialParameters: InitialParams) {
+        this.maxNumberOfChaserPushes = this.InitialParameters.MAX_NUMBER_CHASER_PUSHES;
+        this.chaserPushAmount = this.InitialParameters.CHASER_PUSH_AMOUNT;
+        this.chasersSpeed = this.InitialParameters.CHASERS_SPEED;
+        this.chasersPositionX = this.InitialParameters.CHASERS_POSITION_X;
+    }
 
     async update(timeElapsed: number, timeElapsedSinceLastFrame: number): Promise<void> {
         this.updateChasersPosition(timeElapsedSinceLastFrame);
@@ -26,9 +31,9 @@ class Chasers {
     push() {
         //TODO Test
         this.chasersPositionX += this.chaserPushAmount;
-        this.chasersSpeed = InitialParameters.CHASERS_PUSH_SPEED;
+        this.chasersSpeed = this.InitialParameters.CHASERS_PUSH_SPEED;
         setTimeout(() => {
-            this.chasersSpeed = InitialParameters.CHASERS_SPEED;
+            this.chasersSpeed = this.InitialParameters.CHASERS_SPEED;
         }, 1300);
 
         GameOneEventEmitter.emitChasersWerePushed(this.roomId, this.chaserPushAmount);

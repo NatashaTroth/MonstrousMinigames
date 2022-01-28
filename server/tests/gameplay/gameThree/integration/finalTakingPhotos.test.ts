@@ -58,7 +58,6 @@ describe('Initiate stage', () => {
         let suggestions = [];
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
             if (message.type === GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN) {
-                console.log(message);
                 suggestions = message.photoTopics;
             }
         });

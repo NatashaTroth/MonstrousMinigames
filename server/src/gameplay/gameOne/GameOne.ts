@@ -6,13 +6,11 @@ import { GameState } from '../enums';
 import { Difficulty } from '../enums/Difficulty';
 import Game from '../Game';
 import { verifyGameState } from '../helperFunctions/verifyGameState';
-import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
 import { IGameInterface } from '../interfaces';
 import { GameType } from '../leaderboard/enums/GameType';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Chasers from './classes/Chasers';
 import GameOnePlayersController from './classes/GameOnePlayersController';
-import InitialParameters from './constants/InitialParameters';
 import { GameOneMsgType } from './enums';
 import GameOneEventEmitter from './GameOneEventEmitter';
 import { getInitialParams, InitialParams } from './GameOneInitialParameters';
@@ -95,7 +93,8 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             createObstacles(this.obstacleTypes, this.numberOfObstacles, this.trackLength, this.initialPlayerPositionX),
             user.characterNumber,
             this.trackLength,
-            this.roomId
+            this.roomId,
+            this.InitialGameParameters
         );
 
         player.on(GameOnePlayer.EVT_UNSTUNNED, () => {
@@ -156,10 +155,10 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
                 this.movePlayer(message);
                 break;
             case GameOneMsgType.OBSTACLE_SOLVED:
-                this.getValidPlayer(message.userId!).obstacleCompleted((message as IMessageObstacle).obstacleId);
+                this.getValidPlayer(message.userId!)?.obstacleCompleted((message as IMessageObstacle).obstacleId);
                 break;
             case GameOneMsgType.SOLVE_OBSTACLE:
-                this.getValidPlayer(message.userId!).playerWantsToSolveObstacle(
+                this.getValidPlayer(message.userId!)?.playerWantsToSolveObstacle(
                     (message as IMessageObstacle).obstacleId
                 );
                 break;
@@ -190,7 +189,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         this.trackLength = trackLength;
         this.numberOfObstacles = numberOfObstacles;
         this.numberOfStones = numberOfStones;
-        this.chasers = new Chasers(this.trackLength, this.roomId);
+        this.chasers = new Chasers(this.trackLength, this.roomId, this.InitialGameParameters);
         this.initialPlayerPositionX = this.InitialGameParameters.PLAYERS_POSITION_X;
         this.chasersPositionX = this.InitialGameParameters.CHASERS_POSITION_X;
         this.cameraPositionX = this.InitialGameParameters.CAMERA_POSITION_X;
@@ -254,8 +253,8 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     // ***** player *****
     private movePlayer(message: IMessage) {
         const player = this.getValidPlayer(message.userId!);
-        player.runForward(parseInt(`${process.env.SPEED}`, 10) || InitialParameters.SPEED);
-        if (player.playerHasPassedGoal()) {
+        player?.runForward(parseInt(`${process.env.SPEED}`, 10) || this.InitialGameParameters.SPEED);
+        if (player?.playerHasPassedGoal()) {
             this.handlePlayerFinished(player);
         }
     }
@@ -271,8 +270,8 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     private stunPlayer(userIdStunned: string, userIdThrown: string) {
         const playerThrown = this.getValidPlayer(userIdThrown);
         const playerStunned = this.getValidPlayer(userIdStunned);
-        playerThrown.throwStone();
-        playerStunned.stun();
+        playerThrown?.throwStone();
+        playerStunned?.stun();
         //     verifyGameState(this.gameState, [GameState.Started]);
         //     verifyUserId(this.players, userIdStunned);
         //     verifyUserId(this.players, userIdThrown);
@@ -424,6 +423,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             this.currentRank,
             this.gameStartedAt,
             this.rankSuccessfulUser,
+            this.rankFailedUser,
             this,
             Date.now()
         );
@@ -459,10 +459,13 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
 
     //******** other *********
 
-    private getValidPlayer(userId: string): GameOnePlayer {
+    private getValidPlayer(userId: string): GameOnePlayer | undefined {
         this.gameOnePlayersController!.verifyUserId(userId);
         const player = this.gameOnePlayersController!.getPlayerById(userId);
-        verifyUserIsActive(userId, player.isActive);
+        // verifyUserIsActive(userId, player.isActive);
+        if (!player.isActive) {
+            return undefined;
+        }
         return player;
     }
 
@@ -471,7 +474,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             if (player.positionX < this.trackLength) {
                 for (let i = 0; i < 5; i++) {
                     // to test speed limit
-                    player.runForward(parseInt(`${process.env.SPEED}`, 10) || InitialParameters.SPEED);
+                    player.runForward(parseInt(`${process.env.SPEED}`, 10) || this.InitialGameParameters.SPEED);
                     // if (player.playerHasPassedGoal()) this.playerHasFinishedGame(); //TODO!!
 
                     // this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);

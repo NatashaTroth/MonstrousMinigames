@@ -3,8 +3,8 @@ import 'reflect-metadata';
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
-import InitialParameters from '../../../../src/gameplay/gameOne/constants/InitialParameters';
 import { ObstacleType } from '../../../../src/gameplay/gameOne/enums';
+import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import {
     GAME_ONE_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE, GameOneEventMessage
 } from '../../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
@@ -12,6 +12,7 @@ import { leaderboard, roomId, users } from '../../mockData';
 
 let gameOne: GameOne;
 let gameEventEmitter: GameEventEmitter;
+const InitialParameters = getInitialParams();
 
 describe('Approaching solvable obstacle', () => {
     beforeAll(() => {
