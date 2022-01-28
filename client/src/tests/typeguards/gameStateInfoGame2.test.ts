@@ -14,8 +14,6 @@ describe('sheep game state info TypeGuard', () => {
                 lengthY: 0,
                 brightness: 100,
             },
-
-            // },
         };
 
         expect(gameStateInfoTypeGuard(data)).toEqual(true);

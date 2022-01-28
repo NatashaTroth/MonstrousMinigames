@@ -26,12 +26,7 @@ export const newRoundHandler = messageHandler(newRoundTypeGuard, (message, depen
 
 export const useNewRoundHandler = (socket: Socket, handler = newRoundHandler) => {
     const { roomId } = React.useContext(GameContext);
-    const {
-        setVoteForPhotoMessage,
-        setRoundIdx,
-
-        setVotingResults,
-    } = React.useContext(Game3Context);
+    const { setVoteForPhotoMessage, setRoundIdx, setVotingResults } = React.useContext(Game3Context);
 
     React.useEffect(() => {
         if (!roomId) return;

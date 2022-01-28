@@ -33,7 +33,7 @@ class Controller {
                 (this.socket.handshake.query as Record<string, string | undefined>).userId
             );
             this.emitter.sendConnectedUsers([this.controllerNamespace, this.screenNamespace], this.room!);
-            this.emitter.sendUserInit(this.socket, this.user, this.room);
+            this.emitter.sendUserInit(this.socket, this.user, this.room, this.room?.getScreenState());
             console.info(this.room.id + ' | Controller connected: ' + this.user.id);
 
             this.socket.on('disconnect', this.onDisconnect.bind(this));

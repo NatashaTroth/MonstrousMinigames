@@ -5,14 +5,10 @@ import { GameContext } from '../../../../contexts/GameContextProvider';
 import { Obstacle } from '../../../../contexts/PlayerContextProvider';
 import messageHandler from '../../../socket/messageHandler';
 import { Socket } from '../../../socket/Socket';
-import { ObstacleMessage, obstacleTypeGuard } from '../../../typeGuards/game1/obstacle';
+import { obstacleTypeGuard } from '../../../typeGuards/game1/obstacle';
 
 interface Dependencies {
     setObstacle: (roomId: string | undefined, obstacle: undefined | Obstacle) => void;
-}
-export interface HandleObstacleMessageProps {
-    data: ObstacleMessage;
-    roomId: string;
 }
 
 export const obstacleHandler = messageHandler(obstacleTypeGuard, (message, dependencies: Dependencies, roomId) => {

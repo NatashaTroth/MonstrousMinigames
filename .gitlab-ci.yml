@@ -6,6 +6,7 @@ stages:
   - test-integration
   - test-other
   - staging
+  - end-to-end
   - production
 
 include:

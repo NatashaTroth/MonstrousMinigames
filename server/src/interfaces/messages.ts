@@ -1,3 +1,5 @@
+import { Difficulty } from '../gameplay/enums';
+
 export interface IMessage {
     type: string;
     roomId?: string;
@@ -8,4 +10,5 @@ export interface IMessage {
     sneaking?: boolean;
     game?: string;
     guess?: number;
+    difficulty?: Difficulty;
 }

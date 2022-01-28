@@ -1,5 +1,3 @@
-//TODO can be used by all phaser games!!
-
 import Phaser, { GameObjects } from 'phaser';
 
 import { depthDictionary } from '../../../config/depthDictionary';
@@ -43,7 +41,7 @@ export class PhaserGameRenderer {
 
     renderCountdown(text: string) {
         this.countdownText = handleRenderCountdown(this.scene, this.countdownText, text);
-        this.countdownText.setDepth(depthDictionary.player);
+        this.countdownText.setDepth(depthDictionary.countdown);
     }
 
     renderLeaderboard(data: PlayerRank[]) {
@@ -58,7 +56,6 @@ export class PhaserGameRenderer {
             ranksText = ranksText.concat(`${i + 1}. ${ranks[i]}\n`);
         }
 
-        // TODO: formatting
         const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
         const screenCenterHeight = this.scene.cameras.main.worldView.y + this.scene.cameras.main.height / 2;
         this.playerRanksText = this.scene.make.text({

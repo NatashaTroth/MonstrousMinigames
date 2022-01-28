@@ -17,6 +17,7 @@ describe('persistUser function', () => {
         isAdmin: true,
         number: 1,
         ready: false,
+        screenState: 'lobby',
     };
 
     it('handed userName should be persisted to local storage', () => {

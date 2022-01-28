@@ -1,14 +1,12 @@
-import { depthDictionary } from "../../../config/depthDictionary";
-import {
-    designDevelopment, localDevelopment, ObstacleTypes, stunnedAnimation
-} from "../../../utils/constants";
-import MainScene from "../../game1/screen/components/MainScene";
-import { AnimationNameGame1 } from "../enums/AnimationName";
-import { Character, GameData } from "../gameInterfaces";
-import { Coordinates } from "../gameTypes";
-import { DomainPlayer } from "./DomainPlayer";
-import { GameToScreenMapper } from "./GameToScreenMapper";
-import { PlayerRenderer } from "./PlayerRenderer";
+import { depthDictionary } from '../../../config/depthDictionary';
+import { designDevelopment, localDevelopment, ObstacleTypes, stunnedAnimation } from '../../../utils/constants';
+import MainScene from '../../game1/screen/components/MainScene';
+import { AnimationNameGame1 } from '../enums/AnimationName';
+import { Character, GameData } from '../gameInterfaces';
+import { Coordinates } from '../gameTypes';
+import { DomainPlayer } from './DomainPlayer';
+import { GameToScreenMapper } from './GameToScreenMapper';
+import { PlayerRenderer } from './PlayerRenderer';
 
 /**
  * This is the main player class where all the business functionality should be implemented (eg. what happens when a
@@ -87,12 +85,10 @@ export class Player {
     moveForward(newXPosition: number) {
         if (this.player.isFinished) return;
 
-        if (newXPosition == this.coordinates.x && this.player.isMoving) {
+        if (newXPosition === this.coordinates.x && this.player.isMoving) {
             this.stopRunning();
-        } else {
-            if (!this.player.isMoving) {
-                this.startRunning();
-            }
+        } else if (!this.player.isMoving) {
+            this.startRunning();
         }
 
         this.coordinates.x = newXPosition;
@@ -154,7 +150,6 @@ export class Player {
 
     handleReset() {
         this.renderer.destroyEverything();
-        // this.character.animations.delete(AnimationNameGame1.Running);
     }
 
     private destroyPlayer() {
@@ -197,7 +192,7 @@ export class Player {
 
         obstaclesArray.forEach((obstacle, index) => {
             const posX = this.gameToScreenMapper.mapGameMeasurementToScreen(obstacle.positionX) + 75;
-            let obstaclePosY = this.coordinates.y; //+ 30;
+            let obstaclePosY = this.coordinates.y;
             let obstacleScale = 0.5 / this.numberPlayers;
             let obstacleDepth = depthDictionary.obstacle - index;
 

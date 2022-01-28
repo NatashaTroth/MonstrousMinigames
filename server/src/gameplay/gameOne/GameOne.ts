@@ -3,6 +3,7 @@ import User from '../../classes/user';
 import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
 import { GameState } from '../enums';
+import { Difficulty } from '../enums/Difficulty';
 import Game from '../Game';
 import { verifyGameState } from '../helperFunctions/verifyGameState';
 import { verifyUserIsActive } from '../helperFunctions/verifyUserIsActive';
@@ -14,6 +15,8 @@ import GameOnePlayersController from './classes/GameOnePlayersController';
 import InitialParameters from './constants/InitialParameters';
 import { GameOneMsgType } from './enums';
 import GameOneEventEmitter from './GameOneEventEmitter';
+import { getInitialParams, InitialParams } from './GameOneInitialParameters';
+// import * as InitialGameParameters from './GameOneInitialParameters';
 import GameOnePlayer from './GameOnePlayer';
 import { createObstacles, getObstacleTypes } from './helperFunctions/initiatePlayerState';
 import { GameStateInfo, ObstacleTypeObject } from './interfaces';
@@ -33,22 +36,51 @@ interface GameOneInterface extends IGameInterface<GameOnePlayer, GameStateInfo> 
 }
 
 export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implements GameOneInterface {
-    trackLength = InitialParameters.TRACK_LENGTH;
-    numberOfObstacles = InitialParameters.NUMBER_OBSTACLES;
-    numberOfStones = InitialParameters.NUMBER_STONES;
-    speed = InitialParameters.SPEED;
-    countdownTime = InitialParameters.COUNTDOWN_TIME; //should be 1 second more than client - TODO: make sure it is
-    cameraSpeed = InitialParameters.CAMERA_SPEED;
-    initialPlayerPositionX = InitialParameters.PLAYERS_POSITION_X;
-    cameraPositionX = InitialParameters.CAMERA_POSITION_X;
+    InitialGameParameters: InitialParams;
+    trackLength: number;
+    numberOfObstacles: number;
+    maxNumberOfChaserPushes: number;
+    chaserPushAmount: number;
+    numberOfStones: number;
+    speed: number;
+    countdownTime: number;
+    cameraSpeed: number;
+    chasersSpeed: number;
+    stunnedTime: number;
+    approachSolvableObstacleDistance: number;
+    initialPlayerPositionX: number;
+    chasersPositionX: number;
+    cameraPositionX: number;
+
     obstacleTypes: ObstacleTypeObject[] = [];
     gameName = GameNames.GAME1;
     chasers?: Chasers;
     gameOnePlayersController?: GameOnePlayersController;
 
-    constructor(roomId: string, public leaderboard: Leaderboard, private useChasers = true) {
+    constructor(
+        roomId: string,
+        public leaderboard: Leaderboard,
+        difficulty = Difficulty.MEDIUM,
+        private useChasers = true
+    ) {
         super(roomId);
         this.gameStateMessage = GameOneMsgType.GAME_STATE;
+        this.InitialGameParameters = getInitialParams(difficulty);
+        this.trackLength = this.InitialGameParameters.TRACK_LENGTH;
+        this.numberOfObstacles = this.InitialGameParameters.NUMBER_OBSTACLES;
+        this.maxNumberOfChaserPushes = this.InitialGameParameters.MAX_NUMBER_CHASER_PUSHES;
+        this.chaserPushAmount = this.InitialGameParameters.CHASER_PUSH_AMOUNT;
+        this.numberOfStones = this.InitialGameParameters.NUMBER_STONES;
+        this.speed = this.InitialGameParameters.SPEED;
+        this.countdownTime = this.InitialGameParameters.COUNTDOWN_TIME; //should be 1 second more than client - TODO: make sure it is
+        this.cameraSpeed = this.InitialGameParameters.CAMERA_SPEED;
+        this.chasersSpeed = this.InitialGameParameters.CHASERS_SPEED;
+        this.stunnedTime = this.InitialGameParameters.STUNNED_TIME;
+        this.approachSolvableObstacleDistance = this.InitialGameParameters.APPROACH_SOLVABLE_OBSTACLE_DISTANCE;
+
+        this.initialPlayerPositionX = this.InitialGameParameters.PLAYERS_POSITION_X;
+        this.chasersPositionX = this.InitialGameParameters.CHASERS_POSITION_X;
+        this.cameraPositionX = this.InitialGameParameters.CAMERA_POSITION_X;
     }
 
     protected beforeCreateNewGame() {
@@ -84,6 +116,24 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             this.initialPlayerPositionX,
             this.numberOfStones
         );
+        // protected postProcessPlayers(playersIterable: IterableIterator<GameOnePlayer>) {
+        //     const players = Array.from(playersIterable);
+        //     const obstacles: Obstacle[] = [];
+        //     players.forEach(player => obstacles.push(...player.obstacles));
+        //     const stones =
+        //         players.length > 1
+        //             ? getStonesForObstacles(
+        //                   obstacles,
+        //                   this.trackLength,
+        //                   this.initialPlayerPositionX,
+        //                   100,
+        //                   this.numberOfStones
+        //               )
+        //             : [];
+
+        //     for (const player of players) {
+        //         player.obstacles = sortBy([...player.obstacles, ...stones.map(stone => ({ ...stone }))], 'positionX');
+        //     }
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
         if (this.cameraPositionX < this.trackLength)
@@ -140,9 +190,10 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         this.trackLength = trackLength;
         this.numberOfObstacles = numberOfObstacles;
         this.numberOfStones = numberOfStones;
-        this.initialPlayerPositionX = InitialParameters.PLAYERS_POSITION_X;
-        this.cameraPositionX = InitialParameters.CAMERA_POSITION_X;
         this.chasers = new Chasers(this.trackLength, this.roomId);
+        this.initialPlayerPositionX = this.InitialGameParameters.PLAYERS_POSITION_X;
+        this.chasersPositionX = this.InitialGameParameters.CHASERS_POSITION_X;
+        this.cameraPositionX = this.InitialGameParameters.CAMERA_POSITION_X;
 
         super.createNewGame(users);
         const firstGameStateInfo = this.getGameStateInfo();
@@ -222,6 +273,107 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         const playerStunned = this.getValidPlayer(userIdStunned);
         playerThrown.throwStone();
         playerStunned.stun();
+        //     verifyGameState(this.gameState, [GameState.Started]);
+        //     verifyUserId(this.players, userIdStunned);
+        //     verifyUserId(this.players, userIdThrown);
+        //     verifyUserIsActive(userIdStunned, this.players.get(userIdStunned)!.isActive);
+
+        //     const playerThrown = this.players.get(userIdThrown)!;
+
+        //     this.verifyUserCanThrowCollectedStone(playerThrown);
+        //     playerThrown.stonesCarrying--;
+
+        //     const playerStunned = this.players.get(userIdStunned)!;
+        //     if (this.playerIsNotAllowedToRun(userIdStunned)) return;
+        //     if (playerStunned.stunned || playerStunned.atObstacle) return;
+        //     playerStunned.stunned = true;
+        //     playerStunned.stunnedSeconds = this.stunnedTime;
+
+        //     GameOneEventEmitter.emitPlayerIsStunned(this.roomId, userIdStunned);
+        // }
+
+        // private pushChasers(userIdPushing: string) {
+        //     verifyGameState(this.gameState, [GameState.Started]);
+        //     verifyUserId(this.players, userIdPushing);
+
+        //     const userPushing = this.players.get(userIdPushing)!;
+        //     if (!pushChasers) if (!userPushing.finished) return;
+        //     if (this.maxNumberPushChasersExceeded(userPushing)) return;
+
+        //     //TODO Test
+        //     this.chasersPositionX += this.chaserPushAmount;
+        //     this.chasersSpeed = this.InitialGameParameters.CHASERS_PUSH_SPEED;
+        //     setTimeout(() => {
+        //         this.chasersSpeed = this.InitialGameParameters.CHASERS_SPEED;
+        //     }, 1300);
+        //     userPushing.chaserPushesUsed++;
+
+        //     if (this.maxNumberPushChasersExceeded(userPushing)) {
+        //         GameOneEventEmitter.emitPlayerHasExceededMaxNumberChaserPushes(this.roomId, userPushing.id);
+        //     }
+
+        //     this.checkIfPlayersCaught();
+
+        //     GameOneEventEmitter.emitChasersWerePushed(this.roomId, this.chaserPushAmount);
+        // }
+
+        // private maxNumberPushChasersExceeded(player: GameOnePlayer) {
+        //     return player.chaserPushesUsed >= this.maxNumberOfChaserPushes;
+        // }
+
+        // //TODO test & move to player
+        // private onPlayerUnstunned(userId: string) {
+        //     GameOneEventEmitter.emitPlayerIsUnstunned(this.roomId, userId);
+        // }
+
+        // private playerWantsToSolveObstacle(userId: string, obstacleId: number): void {
+        //     verifyGameState(this.gameState, [GameState.Started]);
+        //     verifyUserId(this.players, userId);
+        //     verifyUserIsActive(userId, this.players.get(userId)!.isActive);
+
+        //     const player = this.players.get(userId)!;
+        //     const obstacle = player.obstacles.find(obstacle => obstacle.id === obstacleId);
+
+        //     if (!obstacle) return;
+
+        //     obstacle.solvable = false;
+        //     GameOneEventEmitter.emitPlayerWantsToSolveObstacle({ roomId: this.roomId, userId });
+        // }
+
+        // private playerHasCompletedObstacle(userId: string, obstacleId: number): void {
+        //     verifyGameState(this.gameState, [GameState.Started]);
+        //     verifyUserId(this.players, userId);
+        //     verifyUserIsActive(userId, this.players.get(userId)!.isActive);
+
+        //     this.verifyUserIsAtObstacle(userId);
+
+        //     const player = this.players.get(userId)!;
+
+        //     if (player.obstacles[0].id === obstacleId) {
+        //         player.atObstacle = false;
+
+        //         if (player.obstacles[0].type === ObstacleType.Stone) {
+        //             player.stonesCarrying++;
+        //         }
+
+        //         player.obstacles.shift();
+        //     } else {
+        //         throw new WrongObstacleIdError(`${obstacleId} is not the id for the next obstacle.`, userId, obstacleId);
+        //     }
+        // }
+
+        // private verifyUserIsAtObstacle(userId: string) {
+        //     const player = this.players.get(userId);
+        //     const solvableObstacleInReach = player && this.playerIsApproachingSolvableObstacle(player!);
+
+        //     if (
+        //         !player?.atObstacle &&
+        //         !solvableObstacleInReach
+        //         // ||
+        //         // player?.positionX !== player?.obstacles?.[0]?.positionX
+        //     ) {
+        //         throw new NotAtObstacleError(`User ${userId} is not at an obstacle`, userId);
+        //     }
     }
 
     // ***** chasers *****

@@ -8,17 +8,17 @@ import { PlayerRank } from './screen/ScreenSocketContextProvider';
 
 export enum GameType {
     GameOne = 'The Great Monster Escape',
-    GameTwo = 'Kill sheep',
+    GameTwo = 'Sheep Thief',
     GameThree = 'Snapshot Marathon',
 }
 
-export interface UserPoints {
+interface UserPoints {
     userId: string;
     name: string;
     points: number;
     rank: number;
 }
-export interface GamePlayed {
+interface GamePlayed {
     game: GameType;
     playerRanks: PlayerRank[];
 }
@@ -92,6 +92,10 @@ export const defaultValue = {
     setAvailableCharacters: () => {
         // do nothing
     },
+    difficulty: 1,
+    setDifficulty: () => {
+        // do nothing
+    },
 };
 interface GameContextProps {
     finished: boolean;
@@ -125,6 +129,8 @@ interface GameContextProps {
     setScreenState: (val: string) => void;
     availableCharacters: number[];
     setAvailableCharacters: (val: number[]) => void;
+    difficulty: number;
+    setDifficulty: (val: number) => void;
 }
 
 export const GameContext = React.createContext<GameContextProps>(defaultValue);
@@ -145,6 +151,7 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [screenAdmin, setScreenAdmin] = React.useState<boolean>(defaultValue.screenAdmin);
     const [screenState, setScreenState] = React.useState<string>(ScreenStates.lobby);
     const [availableCharacters, setAvailableCharacters] = React.useState<number[]>(defaultAvailableCharacters);
+    const [difficulty, setDifficulty] = React.useState<number>(defaultValue.difficulty);
 
     const content = {
         finished,
@@ -192,6 +199,8 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setScreenState,
         availableCharacters,
         setAvailableCharacters,
+        difficulty,
+        setDifficulty,
     };
     return <GameContext.Provider value={content}>{children}</GameContext.Provider>;
 };

@@ -5,6 +5,7 @@ export interface FinalRoundCountdownMessage {
     type: MessageTypesGame3.finalRoundCountdown;
     roomId: string;
     countdownTime: number;
+    photoTopics: string[];
 }
 
 export const finalRoundCountdownTypeGuard = (data: MessageDataGame3): data is FinalRoundCountdownMessage => {

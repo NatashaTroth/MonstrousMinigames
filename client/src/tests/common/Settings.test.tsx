@@ -14,8 +14,8 @@ configure({ adapter: new Adapter() });
 afterEach(cleanup);
 
 describe('Settings', () => {
-    it('renders "Sound Volume" settings', () => {
-        const givenText = 'Sound Volume';
+    it('renders "Sound" settings', () => {
+        const givenText = 'Sound';
         const { container } = render(
             <ThemeProvider theme={theme}>
                 <Settings />

@@ -75,7 +75,7 @@ class Screen {
                     if (this.room?.isAdminScreen(this.socket.id) && message.game) {
                         console.info(this.room.id + ' | Choose Game' + ' | ' + message.game);
                         //todo error handling
-                        this.room?.setGame(message.game);
+                        this.room?.setGame(message.game, message.difficulty);
 
                         this.emitter.sendGameSet(
                             [this.controllerNamespace, this.screenNamespace],

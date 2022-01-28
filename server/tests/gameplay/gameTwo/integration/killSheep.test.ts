@@ -35,12 +35,19 @@ describe('GameTwo Sheep Tests', () => {
         const sheep = new Sheep(Parameters.PLAYERS_POSITIONS[0].x, Parameters.PLAYERS_POSITIONS[0].y, gameTwo.sheepService.sheep.length);
         gameTwo.sheepService.sheep.push(sheep);
 
-        const message = {
+        const chooseMessage = {
+            type: GameTwoMessageTypes.CHOOSE,
+            roomId: roomId,
+            userId: users[0].id
+        }
+        gameTwo.receiveInput(chooseMessage);
+
+        const killMessage = {
             type: GameTwoMessageTypes.KILL,
             roomId: roomId,
             userId: users[0].id
         }
-        gameTwo.receiveInput(message);
+        gameTwo.receiveInput(killMessage);
         expect(gameTwo.sheepService.sheep[sheep.id].state).toEqual(SheepStates.DECOY);
     });
 
@@ -56,12 +63,19 @@ describe('GameTwo Sheep Tests', () => {
         gameTwo.sheepService.sheep.push(sheep3);
         gameTwo.sheepService.stopMoving();
 
-        const message = {
+        const chooseMessage = {
+            type: GameTwoMessageTypes.CHOOSE,
+            roomId: roomId,
+            userId: users[0].id
+        }
+        gameTwo.receiveInput(chooseMessage);
+
+        const killMessage = {
             type: GameTwoMessageTypes.KILL,
             roomId: roomId,
             userId: users[0].id
         }
-        gameTwo.receiveInput(message);
+        gameTwo.receiveInput(killMessage);
         expect(gameTwo.sheepService.sheep[sheep3.id].state).toEqual(SheepStates.DECOY);
     });
 
@@ -73,22 +87,38 @@ describe('GameTwo Sheep Tests', () => {
         const sheep = new Sheep(Parameters.PLAYERS_POSITIONS[0].x, Parameters.PLAYERS_POSITIONS[0].y, gameTwo.sheepService.sheep.length);
         gameTwo.sheepService.sheep.push(sheep);
 
-        const message = {
+
+        const chooseMessage = {
+            type: GameTwoMessageTypes.CHOOSE,
+            roomId: roomId,
+            userId: users[0].id
+        }
+        gameTwo.receiveInput(chooseMessage);
+
+        const killMessage = {
             type: GameTwoMessageTypes.KILL,
             roomId: roomId,
             userId: users[0].id
         }
-        gameTwo.receiveInput(message);
+        gameTwo.receiveInput(killMessage);
+        
         expect(gameTwo.sheepService.sheep[sheep.id].state).toEqual(SheepStates.ALIVE);
     });
 
     it('should not kill sheep if user is not in radius', async () => {
-        const message = {
+        const chooseMessage = {
+            type: GameTwoMessageTypes.CHOOSE,
+            roomId: roomId,
+            userId: users[0].id
+        }
+        gameTwo.receiveInput(chooseMessage);
+
+        const killMessage = {
             type: GameTwoMessageTypes.KILL,
             roomId: roomId,
             userId: users[0].id
         }
-        gameTwo.receiveInput(message);
+        gameTwo.receiveInput(killMessage);
 
         const decoySheep = gameTwo.sheepService.sheep.filter(sheep => {
             return sheep.state === SheepStates.DECOY;
@@ -101,7 +131,15 @@ describe('GameTwo Sheep Tests', () => {
         const sheep = new Sheep(Parameters.PLAYERS_POSITIONS[0].x, Parameters.PLAYERS_POSITIONS[0].y, gameTwo.sheepService.sheep.length);
         gameTwo.sheepService.sheep.push(sheep);
 
-        const message = {
+
+        const chooseMessage = {
+            type: GameTwoMessageTypes.CHOOSE,
+            roomId: roomId,
+            userId: users[0].id
+        }
+        gameTwo.receiveInput(chooseMessage);
+
+        const killMessage = {
             type: GameTwoMessageTypes.KILL,
             roomId: roomId,
             userId: users[0].id
@@ -109,7 +147,7 @@ describe('GameTwo Sheep Tests', () => {
 
         const emitRemainingKills = jest.spyOn(GameTwoEventEmitter, "emitRemainingKills");
 
-        gameTwo.receiveInput(message);
+        gameTwo.receiveInput(killMessage);
 
         expect(emitRemainingKills).toHaveBeenCalledWith(roomId, users[0].id, Parameters.KILLS_PER_ROUND - 1);
     });

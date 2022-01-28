@@ -1,20 +1,29 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
+import { FullScreenContainer } from '../../../../components/common/FullScreenStyles.sc';
 import { Game2Context } from '../../../../contexts/game2/Game2ContextProvider';
-import { Instructions, ScreenContainer } from '../../../game3/controller/components/Game3Styles.sc';
+import { Instructions } from '../../../game3/controller/components/Game3Styles.sc';
 
-const Guess: React.FunctionComponent = () => {
-    //const { ... } = React.useContext(Game2Context);
-    //const { controllerSocket } = React.useContext(ControllerSocketContext);
+const Results: React.FunctionComponent = () => {
     const { guessHint } = React.useContext(Game2Context);
 
     return (
-        <ScreenContainer>
-            <Instructions>
-                {guessHint == '' ? "Don't forget to enter a guess" : `Your last guess was ${guessHint}`}
-            </Instructions>
-        </ScreenContainer>
+        <FullScreenContainer>
+            <Container>
+                <Instructions>
+                    {guessHint === '' ? "Don't forget to enter a guess" : `Your last guess was ${guessHint}`}
+                </Instructions>
+            </Container>
+        </FullScreenContainer>
     );
 };
 
-export default Guess;
+export default Results;
+
+const Container = styled.div`
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+`;

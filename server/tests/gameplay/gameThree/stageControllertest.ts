@@ -31,7 +31,7 @@
 //     // fit('should start round with take photo countdown', async () => {
 //     //     const spy = jest.spyOn(Countdown.prototype as any, 'initiateCountdown');
 //     //     // stageController.handleNewRound();
-//     //     expect(spy).toHaveBeenCalledWith(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+//     //     expect(spy).toHaveBeenCalledWith(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME);
 //     // });
 
 //     // it('should end the stage when all photos received', async () => {

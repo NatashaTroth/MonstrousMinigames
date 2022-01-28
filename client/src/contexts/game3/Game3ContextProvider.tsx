@@ -39,6 +39,10 @@ export const defaultValue = {
     resetGame3: () => {
         // do nothing
     },
+    finalRoundPhotoTopics: [],
+    setFinalRoundPhotoTopics: () => {
+        // do nothing
+    },
 };
 
 export type VoteResult = { results: VotingResult[]; countdownTime: number } | undefined;
@@ -64,6 +68,8 @@ interface Game3ContextProps {
     presentFinalPhotos: FinalPhoto;
     setPresentFinalPhotos: (val: FinalPhoto) => void;
     resetGame3: () => void;
+    finalRoundPhotoTopics: string[];
+    setFinalRoundPhotoTopics: (val: string[]) => void;
 }
 
 export const Game3Context = React.createContext<Game3ContextProps>(defaultValue);
@@ -78,6 +84,9 @@ const Game3ContextProvider: React.FunctionComponent = ({ children }) => {
         defaultValue.finalRoundCountdownTime
     );
     const [presentFinalPhotos, setPresentFinalPhotos] = React.useState<FinalPhoto>(defaultValue.presentFinalPhotos);
+    const [finalRoundPhotoTopics, setFinalRoundPhotoTopics] = React.useState<string[]>(
+        defaultValue.finalRoundPhotoTopics
+    );
     const { storage } = React.useContext(FirebaseContext);
     const { roomId, screenAdmin } = React.useContext(GameContext);
 
@@ -96,6 +105,8 @@ const Game3ContextProvider: React.FunctionComponent = ({ children }) => {
         setFinalRoundCountdownTime,
         presentFinalPhotos,
         setPresentFinalPhotos,
+        finalRoundPhotoTopics,
+        setFinalRoundPhotoTopics,
         resetGame3: () => {
             setRoundIdx(defaultValue.roundIdx);
             setTopicMessage(defaultValue.topicMessage);

@@ -1,4 +1,6 @@
-import game1Demo from '../images/ui/gameDemo.png';
+import game1Demo from '../images/ui/game1Demo.png';
+import game2Demo from '../images/ui/game2Demo.png';
+import game3Demo from '../images/ui/game3Demo.png';
 
 export enum GameNames {
     game1 = 'game1',
@@ -23,14 +25,15 @@ export const games: Game[] = [
     },
     {
         id: GameNames.game2,
-        name: 'Sheep World',
-        image: game1Demo,
-        imageDescription: 'Kill sheep',
+        name: 'Sheep Thief',
+        image: game2Demo,
+        imageDescription:
+            'Run across the meadow and catch sheep. Who guesses the right number of remaining sheep at the end wins!',
     },
     {
         id: GameNames.game3,
         name: 'Snapshot Marathon',
-        image: game1Demo,
-        imageDescription: 'Take photos',
+        image: game3Demo,
+        imageDescription: 'Join a safari and shoot photos matching the given word!',
     },
 ];

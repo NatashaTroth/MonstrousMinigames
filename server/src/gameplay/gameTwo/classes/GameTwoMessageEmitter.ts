@@ -10,7 +10,8 @@ import {
     GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED,
     GAME_TWO_EVENT_MESSAGE__GUESS_HINT,
     GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS,
-    GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS
+    GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS,
+    GAME_TWO_EVENT_MESSAGE__CHOOSE_RESPONSE
 } from '../interfaces/GameTwoEventMessages';
 import { GlobalEventMessage } from '../../interfaces/GlobalEventMessages';
 import { IGameStateBase } from '../../interfaces/IGameStateBase';
@@ -51,6 +52,7 @@ export class GameTwoMessageEmitter implements EventMessageEmitter {
                 break;
             // send to single user's controller
             case GAME_TWO_EVENT_MESSAGE__GUESS_HINT:
+            case GAME_TWO_EVENT_MESSAGE__CHOOSE_RESPONSE:
             case GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS:
                 try {
                     user = room.getUserById(message.userId);

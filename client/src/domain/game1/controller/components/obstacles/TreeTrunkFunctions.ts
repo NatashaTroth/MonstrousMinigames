@@ -2,7 +2,7 @@ import { ComponentToTest } from '../../../../../components/controller/Tutorial';
 import { ObstacleTypes } from '../../../../../utils/constants';
 import { Coordinates, Orientation, TouchStart } from './TreeTrunk';
 
-export const isInContainer = (touches: TouchStart, coordinates: Coordinates) =>
+const isInContainer = (touches: TouchStart, coordinates: Coordinates) =>
     touches.clientX >= coordinates.left &&
     touches.clientX <= coordinates.right &&
     touches.clientY >= coordinates.top &&

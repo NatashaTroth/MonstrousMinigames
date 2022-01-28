@@ -1,19 +1,21 @@
-import DI from '../../../di';
-import { GameNames } from '../../../enums/gameNames';
+import { GameStateInfo, PlayerRank } from '../interfaces';
 import { GameState } from '../../enums';
+import {
+    GAME_TWO_EVENT_MESSAGE__CHOOSE_RESPONSE,
+    GAME_TWO_EVENT_MESSAGE__GUESS_HINT, GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
+    GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED, GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS,
+    GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS
+} from '../interfaces/GameTwoEventMessages';
+import { GameTwoPlayerRank } from '../interfaces/GameTwoPlayerRank';
+import DI from '../../../di';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED,
     GLOBAL_EVENT_MESSAGE__GAME_HAS_RESUMED, GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED,
     GLOBAL_EVENT_MESSAGE__GAME_HAS_STOPPED, GLOBAL_EVENT_MESSAGE__PLAYER_HAS_DISCONNECTED,
     GLOBAL_EVENT_MESSAGE__PLAYER_HAS_RECONNECTED
 } from '../../interfaces/GlobalEventMessages';
-import { GameStateInfo, PlayerRank } from '../interfaces';
-import {
-    GAME_TWO_EVENT_MESSAGE__GUESS_HINT, GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
-    GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED, GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS,
-    GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS
-} from '../interfaces/GameTwoEventMessages';
-import { GameTwoPlayerRank } from '../interfaces/GameTwoPlayerRank';
+import { GameNames } from '../../../enums/gameNames';
+
 import { GameTwoMessageEmitter } from './GameTwoMessageEmitter';
 
 export default class GameTwoEventEmitter {
@@ -50,6 +52,15 @@ export default class GameTwoEventEmitter {
             roomId,
             userId,
             hint,
+        });
+    }
+
+    public static emitChooseResponse(roomId: string, userId: string, successful: boolean) {
+        this.GameTwoMessageEmitter.emit({
+            type: GAME_TWO_EVENT_MESSAGE__CHOOSE_RESPONSE,
+            roomId,
+            userId,
+            successful,
         });
     }
 

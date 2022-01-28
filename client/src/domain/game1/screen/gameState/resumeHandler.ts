@@ -29,5 +29,8 @@ export const resumeHandler = messageHandler(resumedTypeGuard, (message, dependen
         player.startRunning();
     });
     scene.scene.resume();
-    scene.gameAudio?.resume();
+
+    if (localStorage.getItem('playingMusic') !== 'false') {
+        scene.gameAudio?.resume();
+    }
 });

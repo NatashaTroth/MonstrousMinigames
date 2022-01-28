@@ -13,6 +13,7 @@ export const FullScreenContainer = styled.div`
     align-items: center;
     flex-direction: column;
     background-repeat: no-repeat;
+    background-position-x: -1px;
 `;
 
 export const OrangeContainerBase = styled(OrangeBase)`
@@ -31,7 +32,8 @@ export const ContentContainer = styled(OrangeContainerBase)`
 export const Headline = styled.div`
     font-weight: 700;
     font-size: 25px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+    margin-top: 30px;
 `;
 
 export const ContentBase = styled.div`

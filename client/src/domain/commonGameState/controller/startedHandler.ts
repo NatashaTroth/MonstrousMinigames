@@ -14,11 +14,6 @@ interface Dependencies {
     history: History;
     setCountdownTime: (time: number) => void;
 }
-export interface HandleGameStartedData {
-    roomId: string;
-    game: GameNames;
-    countdownTime: number;
-}
 
 export const startedHandler = messageHandler(startedTypeGuard, (message, dependencies: Dependencies, roomId) => {
     const { countdownTime, game } = message;

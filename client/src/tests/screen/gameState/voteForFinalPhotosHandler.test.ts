@@ -12,7 +12,7 @@ import { MessageTypesGame3 } from '../../../utils/constants';
 describe('voteForFinalPhotosHandler', () => {
     const roomId = 'ANES';
     const message: VoteForFinalPhotosMessage = {
-        type: MessageTypesGame3.voteForFinalPhots,
+        type: MessageTypesGame3.voteForFinalPhotos,
         roomId,
         countdownTime: 3000,
         photographers: [],

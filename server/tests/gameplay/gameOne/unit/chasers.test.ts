@@ -4,6 +4,7 @@ import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
 import Chasers from '../../../../src/gameplay/gameOne/classes/Chasers';
 import InitialParameters from '../../../../src/gameplay/gameOne/constants/InitialParameters';
+import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import { leaderboard, roomId, trackLength, users } from '../../mockData';
 import {
     advanceCountdown, clearTimersAndIntervals, startGameAndAdvanceCountdown
@@ -11,6 +12,8 @@ import {
 import { pushChasersMessage } from '../gameOneMockData';
 
 let chasers: Chasers;
+let gameOne: GameOne;
+const InitialGameParameters = getInitialParams();
 
 describe('Chasers', () => {
     beforeEach(() => {
