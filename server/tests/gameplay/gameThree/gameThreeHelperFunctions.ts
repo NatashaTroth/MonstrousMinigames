@@ -10,6 +10,6 @@ export function startGameAdvanceCountdown(gameThree: GameThree) {
 export function advanceCountdown(gameThree: GameThree, time: number) {
     gameThree['update'](10, time);
     //Todo change to update time - not call update function - not working - update is being called after expect (look at stun test)
-    // await advanceCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+    // await advanceCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME);
     // await releaseThread();
 }

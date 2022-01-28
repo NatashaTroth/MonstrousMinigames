@@ -29,7 +29,10 @@ describe('Taking Photo', () => {
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
         gameThree['stageController']!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
         users.forEach(user => {

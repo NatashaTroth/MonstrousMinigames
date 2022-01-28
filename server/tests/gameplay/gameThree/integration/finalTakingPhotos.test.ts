@@ -29,7 +29,10 @@ describe('Initiate stage', () => {
         startGameAdvanceCountdown(gameThree);
         gameThree['stageController']!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
         receiveMultiplePhotos(gameThree);
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
     });
 
@@ -74,7 +77,10 @@ describe('Taking Photo', () => {
         startGameAdvanceCountdown(gameThree);
         gameThree['stageController']!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
         receiveMultiplePhotos(gameThree);
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
     });
@@ -120,7 +126,10 @@ describe('Taking Photo', () => {
                 eventCalled = true;
             }
         });
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS - 1);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME - 1
+        );
 
         expect(eventCalled).toBeFalsy();
     });
@@ -133,7 +142,10 @@ describe('Taking Photo', () => {
             }
         });
         receiveMultiplePhotos(gameThree);
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
 
         expect(eventCalled).toBeTruthy();
     });
@@ -146,7 +158,10 @@ describe('Taking Photo', () => {
             }
         });
 
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         expect(eventCalled).toBeFalsy();
     });
 
@@ -158,7 +173,10 @@ describe('Taking Photo', () => {
             }
         });
 
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         expect(eventCalled).toBeTruthy();
     });
 });
