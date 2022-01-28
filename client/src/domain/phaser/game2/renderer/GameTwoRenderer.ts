@@ -92,14 +92,16 @@ export class GameTwoRenderer {
         this.sheepCountText = this.scene.make.text({
             x: screenCenterWidth,
             y: screenCenterHeight - 50,
-            text: `${count} sheep are on the meadow`,
+            text: `${count} sheeps are on the meadow`,
             style: {
                 ...loadingTextStyleProperties,
-                fontSize: `${40}px`,
+                fontSize: `${60}px`,
                 color: colors.black,
                 fontStyle: 'bold',
+                backgroundColor: colors.orange,
             },
         });
+        this.sheepCountText.setPadding(10);
         this.sheepCountText.setOrigin(0.5);
         this.sheepCountText.setDepth(depthDictionary.percentText);
     }
