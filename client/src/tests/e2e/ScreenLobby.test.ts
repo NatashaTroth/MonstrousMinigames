@@ -1,8 +1,8 @@
-import { chromium, expect, test } from "@playwright/test";
+import { chromium, expect, test } from '@playwright/test';
 
 test('Render room code at lobby header', async ({ baseURL }) => {
     const browser = await chromium.launch({
-        args: ['--disable-dev-shm-usage', '--ipc=host'],
+        args: ['--disable-dev-shm-usage'],
     });
 
     const context = await browser.newContext({ baseURL });

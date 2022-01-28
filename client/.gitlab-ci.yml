@@ -49,12 +49,10 @@ end-to-end:client:
     script:
         - cd client/
         - npx playwright install --with-deps
-        - npm run build 
         - echo "End to End testing.."
         - npm run end2end
-    except:
-        # - /^backend-.*$/
-        - staging
+    only:
+        - dev
 
 #--- Deployment ---
 .some-script: &deployment-script
@@ -77,8 +75,7 @@ staging:client:
         - *deployment-script
 
     only:
-        - master
-        - staging
+        - dev
 
 production:client:
     stage: production

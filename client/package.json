@@ -55,7 +55,7 @@
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --fix",
     "tsc": "tsc --project ./tsconfig.json && :",
-    "end2end": " DEBUG=pw:webserver npx playwright test"
+    "end2end": "npx playwright test"
   },
   "eslintConfig": {
     "extends": [
