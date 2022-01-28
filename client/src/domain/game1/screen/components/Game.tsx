@@ -8,6 +8,7 @@ import { GameContext } from '../../../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../../../contexts/screen/ScreenSocketContextProvider';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import { PhaserGame } from '../../../phaser/PhaserGame';
+import { FakeInMemorySocket } from '../../../socket/InMemorySocketFake';
 import { AudioButton, Container, PauseButton, StopButton } from './Game.sc';
 
 const Game: React.FunctionComponent = () => {
@@ -16,7 +17,7 @@ const Game: React.FunctionComponent = () => {
     const { id }: RouteParams = useParams();
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
 
-    if (id && !screenSocket) {
+    if (id && screenSocket instanceof FakeInMemorySocket) {
         handleSocketConnection(id, 'game1');
     }
 
@@ -37,6 +38,7 @@ const Game: React.FunctionComponent = () => {
                 container.style.display = 'none';
             }
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     async function handleAudio() {

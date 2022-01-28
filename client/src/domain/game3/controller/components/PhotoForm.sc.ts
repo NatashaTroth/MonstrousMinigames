@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components';
 
 import theme from '../../../../styles/theme';
 
-export const glowing = keyframes`{
+const glowing = keyframes`{
   0% { background-color: ${theme.palette.primary.main}; box-shadow: 0 0 3px  ${theme.palette.primary.dark}; transform: scale(1);  }
   50% { background-color: ${theme.palette.secondary.light}; box-shadow: 0 0 40px  ${theme.palette.secondary.dark}; transform: scale(1.2); }
   100% { background-color:  ${theme.palette.primary.main}; box-shadow: 0 0 3px  ${theme.palette.primary.dark}; transform: scale(1); }
@@ -13,7 +13,9 @@ export const StyledButton = styled(MuiButton)`
     padding: 20px;
     border-radius: 10px;
     background-color: ${({ theme }) => theme.palette.secondary.main};
-    animation: ${glowing} 1500ms infinite;
+    &:not([disabled]) {
+        animation: ${glowing} 1500ms infinite;
+    }
 `;
 
 export const StyledImg = styled.img`

@@ -10,6 +10,7 @@ describe('finalRoundCountdown TypeGuard', () => {
             type: MessageTypesGame3.finalRoundCountdown,
             roomId: 'ADGS',
             countdownTime: 3000,
+            photoTopics: [],
         };
 
         expect(finalRoundCountdownTypeGuard(data)).toEqual(true);

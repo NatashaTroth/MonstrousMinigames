@@ -26,11 +26,17 @@ describe('Initiate stage', () => {
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
         const stageController = gameThree['stageController']!;
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         stageController!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1; //skip to final round
         stageController!.handleNewRound();
         receiveMultiplePhotos(gameThree); // to pass no photos error in FinalPhotosStage
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         users.forEach(() => advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS));
     });
 
@@ -70,11 +76,17 @@ describe('Final results', () => {
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
         const stageController = gameThree['stageController']!;
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         stageController!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1; //skip to final round
         stageController!.handleNewRound();
         receiveMultiplePhotos(gameThree); // to pass no photos error in FinalPhotosStage
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         users.forEach(() => advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS));
         // add points
 

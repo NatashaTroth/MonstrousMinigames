@@ -5,11 +5,10 @@ import greenMonsterGame2 from '../../../../images/characters/spritesheets/monste
 import orangeMonsterGame2 from '../../../../images/characters/spritesheets/monsters/orange_spritesheet.png';
 import pinkMonsterGame2 from '../../../../images/characters/spritesheets/monsters/pink_spritesheet.png';
 import sheepDecoy from '../../../../images/characters/spritesheets/sheep/sheep_decoy.png';
+import sheepBackground from '../../../../images/sheepBackground/background.png';
 import sheepGrass from '../../../../images/ui/grass.png';
 import { AnimationNameGame2 } from '../../../phaser/enums/AnimationName';
 import { Character, CharacterAnimation, CharacterSpriteProperties } from '../../../phaser/gameInterfaces';
-
-//TODO types
 
 export const audioFiles = [{ name: 'backgroundMusicLoop', file: [game2SoundLoop] }];
 
@@ -18,9 +17,9 @@ const characterSpriteProperties: CharacterSpriteProperties = {
     frameHeight: 873,
 };
 
-export const characterFiles: string[] = [blueMonsterGame2, greenMonsterGame2, pinkMonsterGame2, orangeMonsterGame2];
+const characterFiles: string[] = [blueMonsterGame2, greenMonsterGame2, pinkMonsterGame2, orangeMonsterGame2];
 
-export const characterSpriteSheetPrefix = 'character_';
+const characterSpriteSheetPrefix = 'character_';
 
 export const characters: Character[] = characterFiles.map((file, idx) => {
     const monsterName = `${characterSpriteSheetPrefix}${defaultAvailableCharacters[idx].toString()}Game2`;
@@ -38,8 +37,14 @@ export const characters: Character[] = characterFiles.map((file, idx) => {
     };
 });
 
+export const backgroundImageDimensions = {
+    width: 2500,
+    height: 1802,
+};
+
 // obstacle textures have to have the same name as obstacle type - lowercase
 export const images = [
     { name: 'sheepGrass', file: sheepGrass },
     { name: 'sheepDecoy', file: sheepDecoy },
+    { name: 'sheepBackground', file: sheepBackground },
 ];

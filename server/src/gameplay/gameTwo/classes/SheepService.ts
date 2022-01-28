@@ -102,7 +102,8 @@ export default class SheepService {
         });
         return sheepId;
     }
-    public killSheep(player: GameTwoPlayer): boolean {
+
+    public chooseSheep(player: GameTwoPlayer): boolean {
         const sheepInRadius = this.getSheepInRadius(player);
 
         if (sheepInRadius.length < 1) return false;
@@ -113,14 +114,23 @@ export default class SheepService {
         } else {
             sheepId = this.getClosestSheepId(player, sheepInRadius);
         }
+        this.sheep[sheepId].state = SheepStates.CHOSEN;
+        this.sheep[sheepId].stopMoving();
+        player.chosenSheep = sheepId;
+        return true;
+    }
+
+    public resetChosenSheep(): void {
+        this.sheep.filter(s => s.state === SheepStates.CHOSEN).forEach(s => s.state = SheepStates.ALIVE);
+    }
+
+    public killSheep(sheepId: number): void {
         this.sheep[sheepId].state = SheepStates.DECOY;
         this.sheep[sheepId].stopMoving();
-        return true;
-
     }
 
     public getAliveSheepCount(): number {
-        return this.sheep.filter(s => s.state === SheepStates.ALIVE).length;
+        return this.sheep.filter(s => s.state !== SheepStates.DECOY).length;
     }
 
     public getSheepData(): SheepData[] {

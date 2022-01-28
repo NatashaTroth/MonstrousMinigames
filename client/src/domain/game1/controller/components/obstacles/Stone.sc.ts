@@ -1,4 +1,4 @@
-import { darken, Typography } from '@material-ui/core';
+import { darken } from '@material-ui/core';
 import styled, { keyframes } from 'styled-components';
 
 import { ObstacleContainer } from './ObstacleStyles.sc';
@@ -10,12 +10,6 @@ const ray_anim = keyframes`
 
     100% {
          transform: rotate(360deg);
-    }
-`;
-
-export const StyledTypography = styled(Typography)`
-    && {
-        color: white;
     }
 `;
 
@@ -55,7 +49,7 @@ export const RayBox = styled.div`
     animation: ${ray_anim} 30s linear infinite;
 `;
 
-export const Ray = styled.div`
+const Ray = styled.div`
     background: -webkit-linear-gradient(
         top,
         rgba(255, 255, 255, 0) 0%,

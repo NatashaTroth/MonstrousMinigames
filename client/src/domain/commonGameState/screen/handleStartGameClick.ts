@@ -9,7 +9,8 @@ export function handleStartGameClick(
     selectedGame: Game,
     roomId: string | undefined,
     screenAdmin: boolean,
-    screenSocket: Socket | undefined
+    screenSocket: Socket | undefined,
+    difficulty: number
 ) {
     setChosenGame(selectedGame.id);
     if (screenAdmin) {
@@ -17,6 +18,7 @@ export function handleStartGameClick(
         screenSocket?.emit({
             type: MessageTypes.chooseGame,
             game: selectedGame.id,
+            difficulty,
         });
     }
     history.push(screenGetReadyRoute(roomId));

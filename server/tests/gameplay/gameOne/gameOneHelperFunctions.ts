@@ -4,7 +4,7 @@ import DI from '../../../src/di';
 import { GameOne } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/enums';
 import Game from '../../../src/gameplay/Game';
-import InitialParameters from '../../../src/gameplay/gameOne/constants/InitialParameters';
+import { getInitialParams } from '../../../src/gameplay/gameOne/GameOneInitialParameters';
 import GameOnePlayer from '../../../src/gameplay/gameOne/GameOnePlayer';
 import { IMessageObstacle, PlayerRank } from '../../../src/gameplay/gameOne/interfaces';
 import {
@@ -13,7 +13,9 @@ import {
 import { users } from '../mockData';
 import { playerHasCompletedObstacleMessage, runForwardMessage } from './gameOneMockData';
 
-const TRACK_LENGTH = InitialParameters.TRACK_LENGTH;
+const InitialGameParameters = getInitialParams();
+
+const TRACK_LENGTH = InitialGameParameters.TRACK_LENGTH;
 const gameEventEmitter = DI.resolve(GameEventEmitter);
 const dateNow = 1618665766156;
 

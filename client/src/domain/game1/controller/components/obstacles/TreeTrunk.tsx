@@ -191,13 +191,14 @@ const TreeTrunk: React.FunctionComponent<TreeTrunkProps> = ({
 
 export default TreeTrunk;
 
-export interface SolveObstacle {
+interface SolveObstacle {
     controllerSocket: Socket;
     obstacle: Obstacle | undefined;
     roomId: string | undefined;
     setShowInstructions: (val: boolean) => void;
     setObstacle: (roomId: string | undefined, obstacle: Obstacle | undefined) => void;
 }
+
 export const solveObstacle = (props: SolveObstacle) => {
     const { controllerSocket, obstacle, roomId, setObstacle, setShowInstructions } = props;
 

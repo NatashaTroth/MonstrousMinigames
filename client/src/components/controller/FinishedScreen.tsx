@@ -1,10 +1,10 @@
-import * as React from "react";
-import styled from "styled-components";
+import * as React from 'react';
+import styled from 'styled-components';
 
-import { Game1Context } from "../../contexts/game1/Game1ContextProvider";
-import { PlayerContext } from "../../contexts/PlayerContextProvider";
-import { Instruction, InstructionContainer, InstructionText } from "../common/Instruction.sc";
-import { StyledFullScreenContainer } from "./FullScreenContainer.sc";
+import { Game1Context } from '../../contexts/game1/Game1ContextProvider';
+import { PlayerContext } from '../../contexts/PlayerContextProvider';
+import { Instruction, InstructionContainer, InstructionText } from '../common/Instruction.sc';
+import { StyledFullScreenContainer } from './FullScreenContainer.sc';
 
 export const FinishedScreen: React.FunctionComponent = () => {
     const { playerRank } = React.useContext(PlayerContext);
@@ -28,7 +28,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
     );
 };
 
-export const FinishedScreenContainer = styled.div`
+const FinishedScreenContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;

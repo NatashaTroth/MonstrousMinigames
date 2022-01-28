@@ -3,7 +3,6 @@ import React from 'react';
 
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { PlayerContext } from '../../../contexts/PlayerContextProvider';
-import { PlayerRank } from '../../../contexts/screen/ScreenSocketContextProvider';
 import { controllerFinishedRoute } from '../../../utils/routes';
 import history from '../../history/history';
 import messageHandler from '../../socket/messageHandler';
@@ -14,10 +13,6 @@ interface Dependencies {
     setPlayerRank: (val: number) => void;
     playerRank: undefined | number;
     history: History;
-}
-export interface HandleGameHasFinishedMessageData {
-    roomId: string;
-    playerRanks: PlayerRank[];
 }
 
 export const gameFinishedHandler = messageHandler(finishedTypeGuard, (message, dependencies: Dependencies, roomId) => {

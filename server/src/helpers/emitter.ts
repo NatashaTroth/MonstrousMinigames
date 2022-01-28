@@ -8,7 +8,7 @@ import { GameOneMsgType } from '../gameplay/gameOne/enums';
 import { GameTwoMessageTypes } from '../gameplay/gameTwo/enums/GameTwoMessageTypes';
 import { LeaderboardInfo } from '../gameplay/leaderboard/interfaces';
 
-function sendUserInit(socket: Socket, user: User, room: Room): void {
+function sendUserInit(socket: Socket, user: User, room: Room, state: string | undefined): void {
     socket.emit('message', {
         type: MessageTypes.USER_INIT,
         userId: user.id,
@@ -17,6 +17,7 @@ function sendUserInit(socket: Socket, user: User, room: Room): void {
         number: user.number,
         characterNumber: user.characterNumber,
         ready: user.ready,
+        screenState: state,
     });
 }
 

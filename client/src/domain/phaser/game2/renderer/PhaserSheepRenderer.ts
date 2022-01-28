@@ -18,7 +18,6 @@ export class PhaserSheepRenderer {
     constructor(private scene: SheepGameScene) {}
 
     preload() {
-        // TODO: fix animations
         // 0 - 4: right
         // 5 - 9: left
         // 10 - 13: forward
@@ -26,7 +25,7 @@ export class PhaserSheepRenderer {
     }
 
     getMoveDirection(oldX: number, oldY: number, newX?: number, newY?: number) {
-        if (newX == oldX) {
+        if (newX === oldX) {
             //move up/down
             if (newY) {
                 if (oldY < newY) {
@@ -38,7 +37,7 @@ export class PhaserSheepRenderer {
             }
         }
 
-        if (newY == oldY) {
+        if (newY === oldY) {
             if (newX) {
                 //move left/right
                 if (oldX < newX) {
@@ -46,16 +45,34 @@ export class PhaserSheepRenderer {
                 } else if (oldX > newX) {
                     return 'left';
                 }
-                return 'stand';
             }
         }
+
+        if (newX && newY) {
+            if (newX < oldX && newY < oldY) {
+                return 'northwest';
+            }
+
+            if (newX > oldX && newY < oldY) {
+                return 'northeast';
+            }
+
+            if (newX < oldX && newY > oldY) {
+                return 'southwest';
+            }
+
+            if (newX > oldX && newY > oldY) {
+                return 'southeast';
+            }
+        }
+
         return 'stand';
     }
 
-    renderSheep(coordinates: Coordinates, state: SheepState) {
-        if (state == SheepState.ALIVE) {
-            this.renderSheepInitially(coordinates);
-        } else if (state == SheepState.DECOY) {
+    renderSheep(coordinates: Coordinates, state: SheepState, gameWidth: number) {
+        if (state === SheepState.ALIVE) {
+            this.renderSheepInitially(coordinates, gameWidth);
+        } else if (state === SheepState.DECOY) {
             this.placeDecoy();
         }
     }
@@ -77,7 +94,19 @@ export class PhaserSheepRenderer {
                         break;
                     case 'up':
                         this.startAnimation('sheep_walkBackward');
-                        break; // TODO: create diagonal animations
+                        break;
+                    case 'northeast':
+                        this.startAnimation('sheep_walkNorthEast');
+                        break;
+                    case 'northwest':
+                        this.startAnimation('sheep_walkNorthWest');
+                        break;
+                    case 'southeast':
+                        this.startAnimation('sheep_walkSouthEast');
+                        break;
+                    case 'southwest':
+                        this.startAnimation('sheep_walkSouthWest');
+                        break;
                     default:
                         this.stopAnimation();
                 }
@@ -100,13 +129,17 @@ export class PhaserSheepRenderer {
         this.sheep?.setTexture('sheepDecoy');
     }
 
-    private renderSheepInitially(coordinates: Coordinates) {
+    private renderSheepInitially(coordinates: Coordinates, gameWidth: number) {
         this.sheep = this.scene.physics.add.sprite(coordinates.x, coordinates.y, 'sheepSpritesheet');
         this.initiateAnimation('sheepSpritesheet', 'sheep_walkRight', { start: 0, end: 4 });
         this.initiateAnimation('sheepSpritesheet', 'sheep_walkLeft', { start: 5, end: 9 });
-        this.initiateAnimation('sheepSpritesheet', 'sheep_walkForward', { start: 10, end: 14 });
-        this.initiateAnimation('sheepSpritesheet', 'sheep_walkBackward', { start: 15, end: 18 });
-        this.sheep.setScale(0.5);
+        this.initiateAnimation('sheepSpritesheet', 'sheep_walkForward', { start: 10, end: 13 });
+        this.initiateAnimation('sheepSpritesheet', 'sheep_walkBackward', { start: 14, end: 17 });
+        this.initiateAnimation('sheepSpritesheet', 'sheep_walkNorthEast', { start: 18, end: 22 });
+        this.initiateAnimation('sheepSpritesheet', 'sheep_walkNorthWest', { start: 23, end: 27 });
+        this.initiateAnimation('sheepSpritesheet', 'sheep_walkSouthEast', { start: 28, end: 32 });
+        this.initiateAnimation('sheepSpritesheet', 'sheep_walkSouthWest', { start: 33, end: 37 });
+        this.sheep.setScale(0.0006 * gameWidth);
 
         this.sheep.setDepth(depthDictionary.sheep);
         this.sheep.setCollideWorldBounds(true);

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 
 import { GameNames } from '../../config/games';
@@ -9,13 +8,25 @@ import { ScreenSocketContext } from '../../contexts/screen/ScreenSocketContextPr
 import { handleResetGame } from '../../domain/commonGameState/screen/handleResetGame';
 import { formatMs } from '../../utils/formatMs';
 import Button from '../common/Button';
-import { FullScreenContainer } from '../common/FullScreenStyles.sc';
-import { Instruction, InstructionContainer, InstructionText } from '../common/Instruction.sc';
-import { Label } from '../common/Label.sc';
-import { Headline, LeaderBoardRow, RankTable, UnfinishedUserRow } from './FinishedScreen.sc';
+import { FullScreenContainer, OrangeContainerBase } from '../common/FullScreenStyles.sc';
+import { InstructionText } from '../common/Instruction.sc';
+import {
+    ButtonContainer,
+    ContentContainer,
+    Header,
+    HeaderRow,
+    HeaderText,
+    Headline,
+    LeaderBoardRow,
+    RankTable,
+    StyledInstruction,
+    StyledLabel,
+    StyledTypography,
+    UnfinishedUserRow,
+} from './FinishedScreen.sc';
 
 export const FinishedScreen: React.FunctionComponent = () => {
-    const { playerRanks, screenAdmin, chosenGame, roomId } = React.useContext(GameContext);
+    const { screenAdmin, roomId, playerRanks, chosenGame } = React.useContext(GameContext);
     const { changeSound } = React.useContext(MyAudioContext);
     const { screenSocket } = React.useContext(ScreenSocketContext);
     const { deleteImages } = React.useContext(FirebaseContext);
@@ -33,64 +44,92 @@ export const FinishedScreen: React.FunctionComponent = () => {
         if (chosenGame === GameNames.game3 && screenAdmin) {
             deleteImages(roomId);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <FullScreenContainer>
             <RankTable>
                 <Headline>Finished!</Headline>
-                {sortedPlayerRanks?.map((player, index) => (
-                    <LeaderBoardRow key={`LeaderBoardRow${index}`}>
-                        <Instruction variant="dark">
-                            <InstructionText>
-                                #{player.rank} {player.name}
-                            </InstructionText>
-                        </Instruction>
+                <OrangeContainerBase>
+                    <ContentContainer>
+                        <HeaderRow>
+                            <Header chosenGame={chosenGame}>
+                                <HeaderText>Rank & Name</HeaderText>
+                            </Header>
+                            {chosenGame === GameNames.game1 && (
+                                <>
+                                    <Header chosenGame={chosenGame}>
+                                        <HeaderText>Total Time in MS</HeaderText>
+                                    </Header>
 
-                        {player.totalTimeInMs && (
-                            <>
-                                <Instruction variant="light">
-                                    <InstructionText>{formatMs(player.totalTimeInMs)}</InstructionText>
-                                </Instruction>
+                                    <Header chosenGame={chosenGame}>
+                                        <HeaderText>Difference</HeaderText>
+                                    </Header>
+                                </>
+                            )}
+                            {chosenGame !== GameNames.game1 && (
+                                <Header chosenGame={chosenGame}>
+                                    <HeaderText>Points</HeaderText>
+                                </Header>
+                            )}
+                        </HeaderRow>
+                        {sortedPlayerRanks?.map((player, index) => (
+                            <LeaderBoardRow key={`LeaderBoardRow${index}`}>
+                                <StyledInstruction variant="dark" chosenGame={chosenGame}>
+                                    <InstructionText>
+                                        #{player.rank} {player.name}
+                                    </InstructionText>
+                                </StyledInstruction>
 
-                                {index === 0 ? (
-                                    <Instruction variant="secondary">
-                                        <InstructionText>{`${formatMs(player.totalTimeInMs)}`} </InstructionText>
-                                    </Instruction>
-                                ) : (
-                                    <Instruction variant="primary">
-                                        <InstructionText>
-                                            {`+${formatMs(
-                                                player.totalTimeInMs! - sortedPlayerRanks[0].totalTimeInMs!
-                                            )}`}{' '}
-                                        </InstructionText>
-                                    </Instruction>
+                                {player.totalTimeInMs && (
+                                    <>
+                                        <StyledInstruction variant="light" chosenGame={chosenGame}>
+                                            <InstructionText>{formatMs(player.totalTimeInMs)}</InstructionText>
+                                        </StyledInstruction>
+
+                                        {index === 0 ? (
+                                            <StyledInstruction variant="primary" chosenGame={chosenGame}>
+                                                <InstructionText>
+                                                    {`${formatMs(player.totalTimeInMs)}`}{' '}
+                                                </InstructionText>
+                                            </StyledInstruction>
+                                        ) : (
+                                            <StyledInstruction variant="secondary" chosenGame={chosenGame}>
+                                                <InstructionText>
+                                                    {`+${formatMs(
+                                                        player.totalTimeInMs! - sortedPlayerRanks[0].totalTimeInMs!
+                                                    )}`}{' '}
+                                                </InstructionText>
+                                            </StyledInstruction>
+                                        )}
+                                    </>
                                 )}
+                                {chosenGame !== GameNames.game1 && (
+                                    <StyledInstruction variant="light" chosenGame={chosenGame}>
+                                        <InstructionText>{player.votes ?? player.points}</InstructionText>
+                                    </StyledInstruction>
+                                )}
+                            </LeaderBoardRow>
+                        ))}
+                        {deadPlayers?.length > 0 && (
+                            <>
+                                <StyledLabel>Dead Players:</StyledLabel>
+                                {deadPlayers.map((player, index) => (
+                                    <UnfinishedUserRow key={`UnfinishedLeaderBoardRow${index}`}>
+                                        <StyledTypography>{player.name}</StyledTypography>
+                                    </UnfinishedUserRow>
+                                ))}
                             </>
                         )}
-                        {player.votes !== undefined && player.votes !== null && (
-                            <Instruction variant="light">
-                                <InstructionText>{player.votes}</InstructionText>
-                            </Instruction>
-                        )}
-                    </LeaderBoardRow>
-                ))}
-                {deadPlayers?.length > 0 && (
-                    <>
-                        <Label>Dead Players:</Label>
-                        {deadPlayers.map((player, index) => (
-                            <UnfinishedUserRow key={`UnfinishedLeaderBoardRow${index}`}>
-                                <InstructionContainer>
-                                    <Instruction variant="dark">
-                                        <InstructionText>{player.name}</InstructionText>
-                                    </Instruction>
-                                </InstructionContainer>
-                            </UnfinishedUserRow>
-                        ))}
-                    </>
-                )}
+                    </ContentContainer>
+                </OrangeContainerBase>
             </RankTable>
-            {screenSocket && screenAdmin && <Button onClick={handleBackToLobby}>Back to Lobby</Button>}
+            {screenSocket && screenAdmin && (
+                <ButtonContainer>
+                    <Button onClick={handleBackToLobby}>Back to Lobby</Button>
+                </ButtonContainer>
+            )}
         </FullScreenContainer>
     );
 };

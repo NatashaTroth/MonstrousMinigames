@@ -174,8 +174,12 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 //console.info(message)
                 this.movePlayer(message.userId!, message.direction!, message.sneaking);
                 break;
+            case GameTwoMessageTypes.CHOOSE:
+                console.info(message)
+                this.chooseSheep(message.userId!);
+                break;
             case GameTwoMessageTypes.KILL:
-                // console.info(message)
+                console.info(message)
                 this.killSheep(message.userId!);
                 break;
             case GameTwoMessageTypes.GUESS:
@@ -194,13 +198,21 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             player.direction = direction;
         }
     }
+
+    protected chooseSheep(userId: string) {
+        const player = this.players.get(userId)!;
+        let successful = false;
+        if (this.roundService.isCountingPhase() && player && player.killsLeft > 0) {
+            successful = this.sheepService.chooseSheep(player);
+        }
+        GameTwoEventEmitter.emitChooseResponse(this.roomId, userId, successful);
+    }
     protected killSheep(userId: string) {
         const player = this.players.get(userId)!;
-        if (this.roundService.isCountingPhase() && player && player.killsLeft > 0) {
-            if (this.sheepService.killSheep(player)) {
-                player.killsLeft--;
-                GameTwoEventEmitter.emitRemainingKills(this.roomId, userId, player.killsLeft);
-            }
+        if (this.roundService.isCountingPhase() && player && player.killsLeft > 0 && player.chosenSheep) {
+            this.sheepService.killSheep(player.chosenSheep);
+            player.killsLeft--;
+            GameTwoEventEmitter.emitRemainingKills(this.roomId, userId, player.killsLeft);
         }
     }
 
@@ -246,6 +258,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.stopPlayersMoving();
         this.resetPlayers();
         this.sheepService.stopMoving();
+        this.sheepService.resetChosenSheep();
         this.brightness.stop();
         this.guessingService.saveSheepCount(round, this.sheepService.getAliveSheepCount());
     }
@@ -263,7 +276,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
         GameTwoEventEmitter.emitGameHasFinishedEvent(this.roomId, this.gameState, playerRanks);
     }
-
 
 
     // *************** players *************

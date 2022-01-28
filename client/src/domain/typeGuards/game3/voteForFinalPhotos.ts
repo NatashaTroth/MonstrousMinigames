@@ -7,12 +7,12 @@ export interface Photographer {
 }
 
 export interface VoteForFinalPhotosMessage {
-    type: MessageTypesGame3.voteForFinalPhots;
+    type: MessageTypesGame3.voteForFinalPhotos;
     roomId: string;
     photographers: Photographer[];
     countdownTime: number;
 }
 
 export const voteForFinalPhotosMessageTypeGuard = (data: MessageDataGame3): data is VoteForFinalPhotosMessage => {
-    return (data as VoteForFinalPhotosMessage).type === MessageTypesGame3.voteForFinalPhots;
+    return (data as VoteForFinalPhotosMessage).type === MessageTypesGame3.voteForFinalPhotos;
 };

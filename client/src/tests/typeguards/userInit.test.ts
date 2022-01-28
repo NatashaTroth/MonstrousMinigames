@@ -11,6 +11,7 @@ describe('userInit TypeGuard', () => {
             isAdmin: true,
             number: 1,
             ready: false,
+            screenState: 'lobby',
         };
 
         expect(userInitTypeGuard(data)).toEqual(true);

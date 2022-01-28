@@ -4,6 +4,8 @@ import Phaser from 'phaser';
 import { GamePhases, PlayerRank } from '../../../../contexts/game2/Game2ContextProvider';
 import sheepSpritesheet from '../../../../images/characters/spritesheets/sheep/sheep_spritesheet.png';
 import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2 } from '../../../../utils/constants';
+import { screenLobbyRoute } from '../../../../utils/routes';
+import history from '../../../history/history';
 import { GameData } from '../../../phaser/game2/gameInterfaces/GameData';
 import { GameToScreenMapper } from '../../../phaser/game2/GameToScreenMapper';
 import { initialGameInput } from '../../../phaser/game2/initialGameInput';
@@ -35,8 +37,8 @@ import {
 import { PlayerRanksMessage, playerRanksTypeGuard } from '../../../typeGuards/game2/playerRanks';
 import { SheepGameHasStartedMessage, sheepGameStartedTypeGuard } from '../../../typeGuards/game2/started';
 import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
-import { GameHasResumedMessage, resumedTypeGuard } from '../../../typeGuards/resumed';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
+import { resumeHandler } from '../gameState/resumeHandler';
 import { audioFiles, characters, images } from './GameAssets';
 
 class SheepGameScene extends Phaser.Scene {
@@ -60,7 +62,7 @@ class SheepGameScene extends Phaser.Scene {
     allScreensLoaded: boolean;
     playerRanks: PlayerRank[];
     gameTwoRenderer?: GameTwoRenderer;
-    socketsInitiated: boolean;
+    socketsInitiated = false;
 
     constructor() {
         super(PhaserGame.SCENE_NAME_GAME_2);
@@ -77,12 +79,10 @@ class SheepGameScene extends Phaser.Scene {
         this.firstGameStateReceived = false;
         this.allScreensLoaded = false;
         this.playerRanks = [];
-        this.socketsInitiated = false;
         this.initiateEventEmitters();
     }
 
     resetSceneVariables() {
-        this.socketsInitiated = false;
         this.players = [];
         this.sheep = [];
         this.phase = GamePhases.counting;
@@ -103,7 +103,6 @@ class SheepGameScene extends Phaser.Scene {
         this.gameRenderer = new PhaserGameRenderer(this);
         this.gameTwoRenderer = new GameTwoRenderer(this);
 
-        //this.initSockets();
         if (!this.socketsInitiated) this.initSockets();
 
         if (this.roomId === '' && data.roomId !== undefined) {
@@ -141,7 +140,7 @@ class SheepGameScene extends Phaser.Scene {
             frameWidth: 124,
             frameHeight: 124,
             startFrame: 0,
-            endFrame: 17,
+            endFrame: 37,
         });
     }
 
@@ -169,17 +168,17 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     sendStartGame() {
-        //TODO!!!! - do not send when game is already started? - or is it just ignored - appears to work - maybe check if no game state updates?
         this.socket?.emit({
             type: MessageTypes.startGame,
             roomId: this.roomId,
-            // userId: sessionStorage.getItem('userId'), //TODO
         });
     }
 
     initSockets() {
-        if (!this.socket) return; //TODO - handle error - although think ok
+        if (!this.socket) return;
+
         this.socketsInitiated = true;
+
         if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
@@ -187,12 +186,10 @@ class SheepGameScene extends Phaser.Scene {
                 this.gameStarted = true;
                 this.initiateGame(data.data);
                 this.camera?.setBackgroundColor('rgba(0, 0, 0, 0)');
-                // third message -> start Game
                 if (this.screenAdmin && !designDevelopment) this.sendStartGame();
             });
         }
 
-        // second message -> createGame
         const allScreensSheepGameLoaded = new MessageSocket(allScreensSheepGameLoadedTypeGuard, this.socket);
         allScreensSheepGameLoaded.listen((data: AllScreensSheepGameLoadedMessage) => {
             if (this.screenAdmin) this.sendCreateNewGame();
@@ -200,7 +197,7 @@ class SheepGameScene extends Phaser.Scene {
 
         const phaserLoadedTimedOut = new MessageSocket(phaserLoadingTimedOutTypeGuard, this.socket);
         phaserLoadedTimedOut.listen((data: PhaserLoadingTimedOutMessage) => {
-            //TODO handle
+            history.push(screenLobbyRoute(this.roomId));
         });
 
         const startedGame = new MessageSocket(sheepGameStartedTypeGuard, this.socket);
@@ -230,18 +227,14 @@ class SheepGameScene extends Phaser.Scene {
             this.pauseGame();
         });
 
-        const resumedSocket = new MessageSocket(resumedTypeGuard, this.socket);
-        resumedSocket.listen((data: GameHasResumedMessage) => {
-            if (this.notCurrentGameScene()) return;
-            this.resumeGame();
-        });
+        const resumeHandlerWithDependencies = resumeHandler({ scene: this });
+        resumeHandlerWithDependencies(this.socket);
 
         const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
         gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
             if (this.notCurrentGameScene()) return;
             this.gameAudio?.stopMusic();
             this.scene.stop();
-            // history.push(screenFinishedRoute(this.roomId));
         });
 
         const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);
@@ -268,6 +261,10 @@ class SheepGameScene extends Phaser.Scene {
         this.gameEventEmitter.on(GameEventTypes.PauseResume, () => {
             this.handlePauseResumeButton();
         });
+
+        this.gameEventEmitter.on(GameEventTypes.Stop, () => {
+            this.handleStopGame();
+        });
     }
 
     initiateGame(gameStateData: GameData) {
@@ -278,20 +275,28 @@ class SheepGameScene extends Phaser.Scene {
             this.windowHeight
         );
 
-        this.physics.world.setBounds(
-            0,
-            this.gameToScreenMapper.getScreenYOffset() - 150, //- 200, -> so that monster can go to the top of the field, but does not work, probably because backend stops at position 0
-            this.windowWidth,
-            this.gameToScreenMapper.getMappedGameHeight() + 150 // + 200
+        // this.physics.world.setBounds(
+        //     // this.gameToScreenMapper.getObjectXOffset(),
+        //     0,
+        //     this.gameToScreenMapper.getObjectYOffset() - 200, //- 200, -> so that monster can go to the top of the field, but does not work, probably because backend stops at position 0
+        //     // this.gameToScreenMapper.getMappedGameWidth(),
+        //     10000000,
+        //     this.gameToScreenMapper.getMappedGameHeight() + 400
+        // );
+
+        // const yPadding = 30; //padding, so bottom of character/sheep don't hang over edge
+        this.gameTwoRenderer?.renderSheepBackground(
+            this.gameToScreenMapper.getScreenXOffset(),
+            this.gameToScreenMapper.getScreenYOffset(),
+            // 0,
+            // 0,
+            this.gameToScreenMapper.getSheepBackgroundImageWidth(),
+            this.gameToScreenMapper.getSheepBackgroundImageHeight()
+            // this.gameToScreenMapper.getMappedGameWidth(),
+            // this.gameToScreenMapper.getMappedGameHeight() + yPadding * 2
         );
 
-        const yPadding = 30; //padding, so bottom of character/sheep don't hang over edge
-        this.gameTwoRenderer?.renderSheepBackground(
-            0,
-            this.gameToScreenMapper.getScreenYOffset() - yPadding,
-            window.innerWidth,
-            this.gameToScreenMapper.getMappedGameHeight() + yPadding * 2
-        );
+        // return;
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);
@@ -318,9 +323,9 @@ class SheepGameScene extends Phaser.Scene {
                     this.gameToScreenMapper?.mapGameXMeasurementToScreen(gameStateData.sheep[i].posX),
                     this.gameToScreenMapper?.mapGameYMeasurementToScreen(gameStateData.sheep[i].posY)
                 );
-                if (gameStateData.sheep[i].state && gameStateData.sheep[i].state == SheepState.DECOY) {
+                if (gameStateData.sheep[i].state && gameStateData.sheep[i].state === SheepState.DECOY) {
                     this.sheep[i].renderer.placeDecoy();
-                } else if (gameStateData.sheep[i].state == SheepState.DEAD) {
+                } else if (gameStateData.sheep[i].state === SheepState.DEAD) {
                     this.sheep[i].renderer.destroySheep();
                 }
             }
@@ -330,19 +335,24 @@ class SheepGameScene extends Phaser.Scene {
 
     updateGamePhase(data: PhaseChangedMessage) {
         this.phase = data.phase;
-        if (this.phase == GamePhases.guessing) {
-            this.sheep.forEach(sheep => {
-                sheep.renderer.setSheepVisible(false);
-            });
-            this.gameTwoRenderer?.renderGuessText(true);
-        } else if (this.phase == GamePhases.results) {
-            this.gameTwoRenderer?.renderGuessText(false);
-            // TODO
-        } else {
-            this.gameRenderer?.destroyLeaderboard();
-            this.sheep.forEach(sheep => {
-                sheep.renderer.setSheepVisible(true);
-            });
+
+        switch (this.phase) {
+            case GamePhases.guessing:
+                this.sheep.forEach(sheep => {
+                    sheep.renderer.setSheepVisible(false);
+                });
+                this.gameTwoRenderer?.renderGuessText(true);
+                return;
+            case GamePhases.results:
+                this.gameTwoRenderer?.renderGuessText(false);
+                return;
+            default:
+                this.gameRenderer?.destroyLeaderboard();
+                this.sheep.forEach(sheep => {
+                    sheep.renderer.setSheepVisible(true);
+                });
+                this.gameTwoRenderer?.renderRoundCount(data.round);
+                return;
         }
     }
 
@@ -397,11 +407,19 @@ class SheepGameScene extends Phaser.Scene {
             } else {
                 this.gameRenderer?.destroyCountdown();
                 clearInterval(countdownInterval);
+                this.createInitialSheepCount();
             }
         };
 
         updateCountdown();
         const countdownInterval = setInterval(updateCountdown, 1000);
+    }
+
+    private createInitialSheepCount() {
+        if (this.gameTwoRenderer) {
+            this.gameTwoRenderer.renderInitialSheepCount(this.sheep.length);
+            setTimeout(() => this.gameTwoRenderer!.destroyInitialSheepCount(), 10000);
+        }
     }
 
     private pauseGame() {
@@ -413,39 +431,18 @@ class SheepGameScene extends Phaser.Scene {
         this.gameAudio?.pause();
     }
 
-    private resumeGame() {
-        this.paused = false;
-        this.players.forEach(player => {
-            player.startRunning();
-        });
-        this.scene.resume();
-        this.gameAudio?.resume();
-    }
-
     handlePauseResumeButton() {
+        if (PhaserGame.getInstance().currentScene !== PhaserGame.SCENE_NAME_GAME_2) return;
         this.socket?.emit({ type: MessageTypes.pauseResume });
     }
 
-    handleError(msg = 'Something went wrong.') {
-        // this.add.text(32, 32, `Error: ${msg}`, { font: '30px Arial' });
-        // this.players.forEach(player => {
-        //     player.phaserObject.destroy();
-        // });
-        // this.players.forEach(player => {
-        //     player.playerObstacles.forEach(obstacle => {
-        //         obstacle.destroy();
-        //     });
-        // });
-        // this.backgroundMusicLoop?.stop();
-        // obstacles.forEach(obstacle => {
-        //     obstacle.destroy();
-        // });
+    handleStopGame() {
+        handleStop(this.socket);
     }
-
-    //TODO stop game button
-    // function handleStopGame() {
-    //     screenSocket?.emit({ type: MessageTypes.stopGame });
-    // }
 }
 
 export default SheepGameScene;
+
+function handleStop(socket: Socket | undefined) {
+    socket?.emit({ type: MessageTypes.stopGame });
+}

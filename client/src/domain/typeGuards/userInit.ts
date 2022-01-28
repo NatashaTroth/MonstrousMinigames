@@ -9,6 +9,7 @@ export interface UserInitMessage {
     isAdmin: boolean;
     number: number;
     ready: boolean;
+    screenState: string;
 }
 
 export const userInitTypeGuard = (data: MessageData): data is UserInitMessage =>

@@ -31,13 +31,13 @@ interface LobbyProps {
 export const Lobby: React.FunctionComponent<LobbyProps> = ({ history }) => {
     const { name, character, ready, setReady } = React.useContext(PlayerContext);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
-    const { roomId, chosenGame } = React.useContext(GameContext);
+    const { roomId, chosenGame, screenState } = React.useContext(GameContext);
 
     return (
         <FullScreenContainer>
             <LobbyContainer>
                 <Content>
-                    {!chosenGame ? (
+                    {!chosenGame && screenState !== 'get-ready' ? (
                         <InstructionContainer variant="light">
                             <Instruction>
                                 <InstructionText>The admin monitor is now choosing a game!</InstructionText>
@@ -90,6 +90,6 @@ export const Lobby: React.FunctionComponent<LobbyProps> = ({ history }) => {
     );
 };
 
-export function handleStartTutorial(history: History, roomId: string | undefined) {
+function handleStartTutorial(history: History, roomId: string | undefined) {
     history.push(controllerTutorialRoute(roomId));
 }

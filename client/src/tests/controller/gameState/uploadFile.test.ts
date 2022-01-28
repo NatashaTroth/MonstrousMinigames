@@ -2,10 +2,9 @@
 import 'jest-styled-components';
 import { cleanup } from '@testing-library/react';
 
-import uploadFile from '../../../domain/game3/controller/gameState/handleFiles';
+import { uploadFile } from '../../../domain/game3/controller/gameState/handleFiles';
 import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { FakeRemoteStorage } from '../../../domain/storage/RemoteStorage';
-import { MessageTypesGame3 } from '../../../utils/constants';
 
 afterEach(cleanup);
 
@@ -15,29 +14,17 @@ describe('Upload File', () => {
         const storage = new FakeRemoteStorage();
         const socket = new FakeInMemorySocket();
 
-        const result = await uploadFile(values, storage, 'ABDE', '1', 1, socket, 0);
+        const uploadFileWithDependencies = uploadFile({
+            remoteStorage: storage,
+            roomId: 'ABDE',
+            userId: '1',
+            controllerSocket: socket,
+            setLoading: jest.fn(),
+            setUploadedImagesCount: jest.fn(),
+            roundIdx: 1,
+        });
+
+        const result = await uploadFileWithDependencies(values, 0);
         expect(result).toBe(false);
-    });
-
-    it('should call uploadImage function of storage', async () => {
-        const values = { picture: new File([''], 'filename') };
-        const storage = new FakeRemoteStorage();
-        const socket = new FakeInMemorySocket();
-
-        const uploadImageSpy = jest.spyOn(storage, 'uploadImage');
-
-        await uploadFile(values, storage, 'ABDE', '1', 1, socket, 0);
-
-        expect(uploadImageSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it('should emit imageUrl to socket after successful upload', async () => {
-        const values = { picture: new File([''], 'filename') };
-        const storage = new FakeRemoteStorage();
-        const socket = new FakeInMemorySocket();
-
-        await uploadFile(values, storage, 'ABDE', '1', 1, socket, 0);
-
-        expect(socket.emitedVals).toEqual([{ type: MessageTypesGame3.photo, photographerId: '1', url: 'path' }]);
     });
 });

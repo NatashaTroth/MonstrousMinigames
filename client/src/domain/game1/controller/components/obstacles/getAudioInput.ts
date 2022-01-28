@@ -1,7 +1,7 @@
 import { Obstacle } from '../../../../../contexts/PlayerContextProvider';
 import { Navigator } from '../../../../navigator/Navigator';
 
-export let currentCount = 0;
+let currentCount = 0;
 interface WindowProps extends Window {
     webkitAudioContext?: typeof AudioContext;
 }

@@ -9,5 +9,3 @@ export class WindowAdapter implements Window {
         this.DeviceMotionEvent = global.window.DeviceMotionEvent;
     }
 }
-
-export const window = new WindowAdapter();
