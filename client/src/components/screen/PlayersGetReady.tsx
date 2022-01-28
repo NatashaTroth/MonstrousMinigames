@@ -102,9 +102,7 @@ const PlayersGetReady: React.FC = () => {
                     )}
                 </Content>
             </GetReadyBackground>
-            <BackButtonContainer>
-                <Button onClick={history.goBack}>Back</Button>
-            </BackButtonContainer>
+            <BackButtonContainer>{screenAdmin && <Button onClick={history.goBack}>Back</Button>}</BackButtonContainer>
         </FullScreenContainer>
     );
 };
