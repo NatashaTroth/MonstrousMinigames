@@ -8,11 +8,7 @@ import sheepDecoy from '../../../../images/characters/spritesheets/sheep/sheep_d
 import sheepBackground from '../../../../images/sheepBackground/background.png';
 import sheepGrass from '../../../../images/ui/grass.png';
 import { AnimationNameGame2 } from '../../../phaser/enums/AnimationName';
-import {
-    Character, CharacterAnimation, CharacterSpriteProperties
-} from '../../../phaser/gameInterfaces';
-
-//TODO types
+import { Character, CharacterAnimation, CharacterSpriteProperties } from '../../../phaser/gameInterfaces';
 
 export const audioFiles = [{ name: 'backgroundMusicLoop', file: [game2SoundLoop] }];
 

@@ -43,7 +43,6 @@ export const usePlayerFinishedHandler = (socket: Socket, handler = playerFinishe
     React.useEffect(() => {
         if (!roomId) return;
 
-        // Check if Game1 or not
         const playerFinishedHandlerWithDependencies = handler({
             setPlayerFinished,
             setPlayerRank,

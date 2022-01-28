@@ -150,7 +150,6 @@ export class Player {
 
     handleReset() {
         this.renderer.destroyEverything();
-        // this.character.animations.delete(AnimationNameGame1.Running);
     }
 
     private destroyPlayer() {
@@ -193,7 +192,7 @@ export class Player {
 
         obstaclesArray.forEach((obstacle, index) => {
             const posX = this.gameToScreenMapper.mapGameMeasurementToScreen(obstacle.positionX) + 75;
-            let obstaclePosY = this.coordinates.y; //+ 30;
+            let obstaclePosY = this.coordinates.y;
             let obstacleScale = 0.5 / this.numberPlayers;
             let obstacleDepth = depthDictionary.obstacle - index;
 

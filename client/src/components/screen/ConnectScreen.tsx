@@ -129,6 +129,7 @@ interface HandleCreateNewRoomProps {
 
 export async function handleCreateNewRoom({ setLoading, handleSocketConnection, fetch }: HandleCreateNewRoomProps) {
     setLoading(true);
+
     const response = await fetch(`${localDevelopment ? localBackend : process.env.REACT_APP_BACKEND_URL}create-room`, {
         method: 'GET',
         headers: {

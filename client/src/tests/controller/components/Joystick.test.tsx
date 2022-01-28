@@ -6,8 +6,15 @@ import { configure, mount } from 'enzyme';
 import { ThemeProvider } from 'styled-components';
 import React from 'react';
 
+import { ControllerSocketContext, defaultValue } from '../../../contexts/controller/ControllerSocketContextProvider';
+import JoyStick, {
+    emitKillMessage,
+    getDirectionforPos,
+    handleStop,
+} from '../../../domain/game2/controller/components/Joystick';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import theme from '../../../styles/theme';
-import JoyStick from '../../../domain/game2/controller/components/Joystick';
+import { MessageTypesGame2 } from '../../../utils/constants';
 import { LocalStorageFake } from '../../storage/LocalFakeStorage';
 
 configure({ adapter: new Adapter() });
@@ -17,7 +24,7 @@ afterEach(cleanup);
 describe('Joystick', () => {
     const sessionStorage = new LocalStorageFake();
 
-    it('renders instructions', async () => {
+    it('renders steal sheep button', async () => {
         const container = mount(
             <ThemeProvider theme={theme}>
                 <JoyStick sessionStorage={sessionStorage} />
@@ -28,7 +35,7 @@ describe('Joystick', () => {
         expect(button.text.toString().match('Steal Sheep'));
     });
 
-    it('renders steal sheep button', async () => {
+    it('renders instructions', async () => {
         const { container } = render(
             <ThemeProvider theme={theme}>
                 <JoyStick sessionStorage={sessionStorage} />
@@ -62,29 +69,100 @@ describe('Joystick', () => {
         expect(queryByText(container, givenText)).toBeTruthy();
     });
 
-    // it('disables steal button if no steals left', () => {
-    //     const newStealNumber = 0
-    //     sessionStorage.setItem('remainingKills', newStealNumber);
-    //     const container = mount(
-    //         <ThemeProvider theme={theme}>
-    //                 <JoyStick sessionStorage={sessionStorage}/>
-    //         </ThemeProvider>
-    //     );
-    //     const button = container.find('button');
-    //     button.simulate('click');
-    //     expect(button.prop('disabled')).toBeTruthy();
-    //     //expect(queryByText(container, "Remaining kills: 0")).toBeTruthy();
-    //     // const button = container.find('button');
-    //     // expect(button.prop('disabled')).toBeTruthy();
-    // });
-
     it('renders round number', () => {
         const { container } = render(
             <ThemeProvider theme={theme}>
                 <JoyStick sessionStorage={sessionStorage} />
             </ThemeProvider>
         );
-        //const givenText = "Round ".concat(newRoundNumber.toString())
         expect(queryByText(container, 'Round 1')).toBeTruthy();
+    });
+
+    it('should emit chooseSheep to socket when sheep button gets clicked', async () => {
+        const socket = new FakeInMemorySocket();
+
+        const container = mount(
+            <ThemeProvider theme={theme}>
+                <ControllerSocketContext.Provider value={{ ...defaultValue, controllerSocket: socket }}>
+                    <JoyStick sessionStorage={sessionStorage} />
+                </ControllerSocketContext.Provider>
+            </ThemeProvider>
+        );
+
+        const button = container.find('button');
+        button.simulate('click');
+
+        expect(socket.emitedVals).toEqual([
+            expect.objectContaining({
+                type: MessageTypesGame2.chooseSheep,
+            }),
+        ]);
+    });
+});
+
+describe('Joystick emitKillMessage', () => {
+    it('should emit chooseSheep to socket', async () => {
+        const socket = new FakeInMemorySocket();
+        const userId = '1';
+
+        await emitKillMessage(userId, socket);
+
+        expect(socket.emitedVals).toEqual([
+            {
+                type: MessageTypesGame2.chooseSheep,
+                userId,
+            },
+        ]);
+    });
+});
+
+describe('Joystick handleStop', () => {
+    it('should emit movePlayer to socket', async () => {
+        const socket = new FakeInMemorySocket();
+        const userId = '1';
+
+        await handleStop(userId, socket);
+
+        expect(socket.emitedVals).toEqual([
+            {
+                type: MessageTypesGame2.movePlayer,
+                userId: userId,
+                direction: 'C',
+            },
+        ]);
+    });
+});
+
+describe('Joystick getDirectionforPos', () => {
+    it('should return C when x and y smaller than 20', async () => {
+        expect(getDirectionforPos(10, 10)).toEqual('C');
+    });
+
+    it('should return C when x and y smaller than 20', async () => {
+        expect(getDirectionforPos(10, 10)).toEqual('C');
+    });
+
+    it('should return E when x is bigger than 20 and y smaller than 20', async () => {
+        expect(getDirectionforPos(40, 10)).toEqual('E');
+    });
+
+    it('should return W when x is smaller than -20 and y smaller than 20', async () => {
+        expect(getDirectionforPos(-40, 10)).toEqual('W');
+    });
+
+    it('should return NE when x is bigger than -35 and 35 and y is bigger than 20', async () => {
+        expect(getDirectionforPos(40, 40)).toEqual('NE');
+    });
+
+    it('should return NW when x is smaller than -35 and y is bigger than 20', async () => {
+        expect(getDirectionforPos(-40, 40)).toEqual('NW');
+    });
+
+    it('should return SE when x is bigger than -35 and 35 and y is smaller than -20', async () => {
+        expect(getDirectionforPos(40, -40)).toEqual('SE');
+    });
+
+    it('should return NS when x is smaller than -35 and y is smaller than -20', async () => {
+        expect(getDirectionforPos(-40, -40)).toEqual('SW');
     });
 });

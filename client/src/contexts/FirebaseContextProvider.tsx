@@ -6,7 +6,7 @@ import { firebaseConfigProduction, firebaseConfigStaging } from '../config/fireb
 import { deleteFiles } from '../domain/game3/controller/gameState/handleFiles';
 import { RemoteStorage, RemoteStorageAdapter } from '../domain/storage/RemoteStorage';
 
-const defaultValue = {
+export const defaultValue = {
     storage: undefined,
     deleteImages: () => {
         // do nothing
