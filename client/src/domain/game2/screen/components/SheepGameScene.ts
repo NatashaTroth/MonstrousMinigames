@@ -182,7 +182,6 @@ class SheepGameScene extends Phaser.Scene {
         if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
-                console.log(JSON.stringify(data));
                 this.gameRenderer?.destroyLoadingScreen();
                 this.gameStarted = true;
                 this.initiateGame(data.data);
