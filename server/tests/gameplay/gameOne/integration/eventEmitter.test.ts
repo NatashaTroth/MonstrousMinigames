@@ -127,7 +127,7 @@ describe('Obstacle reached events', () => {
             }
         });
 
-        goToNextUnsolvableObstacle(gameOne, '1');
+        goToNextUnsolvableObstacle(gameOne, gameOne.players.get('1')!);
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(obstacleEventReceived).toBeTruthy();
     });
@@ -146,7 +146,7 @@ describe('Obstacle reached events', () => {
         });
 
         startGameAndAdvanceCountdown(gameOne);
-        goToNextUnsolvableObstacle(gameOne, '1');
+        goToNextUnsolvableObstacle(gameOne, gameOne.players.get('1')!);
 
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(eventData).toMatchObject({

@@ -39,17 +39,18 @@ export function finishPlayer(gameOne: GameOne, userId: string) {
 export function completeObstacles(gameOne: GameOne, player: GameOnePlayer) {
     const obstacles = [...player.obstacles];
     for (let i = 0; i < obstacles.length; i++) {
-        let counter = 0;
-        while (
-            !player.atObstacle &&
-            player.positionX < gameOne.trackLength &&
-            !player.finished &&
-            gameOne.gameState === GameState.Started
-        ) {
-            runForwardNoLimit(gameOne, player);
-            counter++;
-            if (counter > gameOne.trackLength) break;
-        }
+        goToNextUnsolvableObstacle(gameOne, player);
+        // let counter = 0;
+        // while (
+        //     !player.atObstacle &&
+        //     player.positionX < gameOne.trackLength &&
+        //     !player.finished &&
+        //     gameOne.gameState === GameState.Started
+        // ) {
+        //     runForwardNoLimit(gameOne, player);
+        //     counter++;
+        //     if (counter > gameOne.trackLength) break;
+        // }
         gameOne.receiveInput({
             ...playerHasCompletedObstacleMessage,
             userId: player.id,
@@ -149,15 +150,21 @@ export function finishGame(gameOne: GameOne): GameOne {
 //     // }
 // }
 
-// export function goToNextUnsolvableObstacle(gameOne: GameOne, userId: string) {
-//     const player = gameOne.players.get(userId)!;
-//     // gameOne.maxRunsPerFrame = Infinity; //To prevent going over speedlimit
-//     while (player.obstacles.length && !player.atObstacle) {
-//         gameOne.players.get(userId)!.runForward(distanceToNextObstacle(gameOne, userId));
-
-//         player.countRunsPerFrame = 0; //To prevent going over speed limit
-//     }
-// }
+export function goToNextUnsolvableObstacle(gameOne: GameOne, player: GameOnePlayer) {
+    // gameOne.maxRunsPerFrame = Infinity; //To prevent going over speedlimit
+    let counter = 0;
+    while (
+        !player.atObstacle &&
+        player.positionX < gameOne.trackLength &&
+        !player.finished &&
+        gameOne.gameState === GameState.Started
+    ) {
+        runForwardNoLimit(gameOne, player);
+        counter++;
+        if (counter > gameOne.trackLength) break;
+        player.countRunsPerFrame = 0; //To prevent going over speed limit
+    }
+}
 
 // export function completeNextObstacle(gameOne: GameOne, userId: string) {
 //     gameOne.players.get(userId)!.runForward(distanceToNextObstacle(gameOne, userId));
