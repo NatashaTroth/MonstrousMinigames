@@ -1,4 +1,5 @@
 import { IMessage } from '../../../interfaces/messages';
+import InitialParameters from '../constants/InitialParameters';
 import { GameThreeMessageTypes } from '../enums/GameThreeMessageTypes';
 import { IMessagePhoto, PhotosPhotographerMapper, PlayerNameId } from '../interfaces';
 import { Photos } from './Photos';
@@ -18,7 +19,7 @@ export abstract class PhotoStage extends Stage {
         countdownTime: number;
         maxNumberPhotos?: number;
     }) {
-        super(roomId, userIds, countdownTime);
+        super(roomId, userIds, countdownTime + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME);
         this.photos = new Photos(maxNumberPhotos);
     }
 
