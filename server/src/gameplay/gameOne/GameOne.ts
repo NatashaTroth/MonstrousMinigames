@@ -90,7 +90,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             this.cameraPositionX += (timeElapsedSinceLastFrame / 33) * this.cameraSpeed;
 
         this.chasers!.update(timeElapsed, timeElapsedSinceLastFrame);
-        this.checkIfPlayersCaught();
+        this.checkIfPlayersCaught(Date.now());
 
         if (localDevelopment) {
             this.updateLocalDev();
@@ -223,15 +223,16 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     }
 
     // ***** chasers *****
-    private checkIfPlayersCaught() {
+    private checkIfPlayersCaught(currentTime: number) {
         this.gameOnePlayersController!.getCaughtPlayers(this.chasers!.getPosition()).forEach(player => {
-            this.handlePlayerCaught(player);
+            this.handlePlayerCaught(player, currentTime);
         });
     }
 
-    private handlePlayerCaught(playerState: GameOnePlayer) {
-        playerState.handlePlayerCaught();
-        playerState.rank = this.rankFailedUser(playerState.finishedTimeMs);
+    private handlePlayerCaught(player: GameOnePlayer, currentTime: number) {
+        player.handlePlayerCaught(currentTime);
+        player.rank = this.rankFailedUser(player.finishedTimeMs);
+
         GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.gameOnePlayersController!.getStunnablePlayers());
 
         //todo duplicate
@@ -255,18 +256,23 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
 
         userPushing.pushChasers();
         this.chasers?.push();
-        this.checkIfPlayersCaught();
+        this.checkIfPlayersCaught(Date.now());
     }
 
     // ***** game state *****
     private gameHasFinished(): boolean {
-        return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 0; //TODO - test, does game finish when only 1 player??
+        return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 1; //TODO - test, does game finish when only 1 player??
     }
 
     private handleGameFinished(): void {
         this.gameState = GameState.Finished;
-
-        const playerRanks = this.gameOnePlayersController!.createPlayerRanks(this.currentRank, this.gameStartedAt);
+        const playerRanks = this.gameOnePlayersController!.createPlayerRanks(
+            this.currentRank,
+            this.gameStartedAt,
+            this.rankSuccessfulUser,
+            this,
+            Date.now()
+        );
         this.leaderboard.addGameToHistory(GameType.GameOne, [...playerRanks]);
 
         const currentGameStateInfo = this.getGameStateInfo();

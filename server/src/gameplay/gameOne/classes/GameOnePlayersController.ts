@@ -1,6 +1,7 @@
 import * as HelperFunctions from '../../helperFunctions/verifyUserId';
 import { HashTable } from '../../interfaces';
 import Player from '../../Player';
+import GameOne from '../GameOne';
 import GameOnePlayer from '../GameOnePlayer';
 import { getStonesForObstacles, sortBy } from '../helperFunctions/initiatePlayerState';
 import { Obstacle, PlayerRank, PlayerStateForClient } from '../interfaces';
@@ -80,17 +81,33 @@ class GameOnePlayersController {
         }, []);
     }
 
-    createPlayerRanks(currentRank: number, gameStartedAt: number): Array<PlayerRank> {
-        return Array.from(this.players.values()).map(player => ({
-            id: player.id,
-            name: player.name,
-            rank: player.finished ? player.rank : currentRank,
-            finished: player.finished,
-            dead: player.dead,
-            totalTimeInMs: (player.finishedTimeMs > 0 ? player.finishedTimeMs : Date.now()) - gameStartedAt,
-            positionX: player.positionX,
-            isActive: player.isActive,
-        }));
+    createPlayerRanks(
+        currentRank: number,
+        gameStartedAt: number,
+        rankSuccessfulUser: (rankingMetric: number) => number,
+        gameOneArg: GameOne,
+        currentTime: number
+    ): Array<PlayerRank> {
+        return Array.from(this.players.values()).map(player => {
+            if (!player.finished) {
+                player.handlePlayerFinishedGame(
+                    currentTime,
+                    rankSuccessfulUser.call(gameOneArg, player.finishedTimeMs)
+                );
+                player.finished = true;
+            }
+
+            return {
+                id: player.id,
+                name: player.name,
+                rank: player.rank,
+                finished: player.finished,
+                dead: player.dead,
+                totalTimeInMs: (player.finishedTimeMs > 0 ? player.finishedTimeMs : Date.now()) - gameStartedAt,
+                positionX: player.positionX,
+                isActive: player.isActive,
+            };
+        });
     }
 
     verifyUserId(id: string) {

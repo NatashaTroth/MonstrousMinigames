@@ -51,7 +51,6 @@ class GameOnePlayer extends Player implements PlayerState {
         verifyUserIsActive(this.id, this.isActive);
 
         if (this.playerIsNotAllowedToRun()) return;
-
         this.positionX += speed;
         this.countRunsPerFrame++;
 
@@ -62,9 +61,8 @@ class GameOnePlayer extends Player implements PlayerState {
 
     verifyUserIsAtObstacle() {
         const solvableObstacleInReach = this.playerIsApproachingSolvableObstacle();
-
         if (
-            this.atObstacle &&
+            !this.atObstacle &&
             !solvableObstacleInReach
             // ||
             // player?.positionX !== player?.obstacles?.[0]?.positionX
@@ -89,7 +87,7 @@ class GameOnePlayer extends Player implements PlayerState {
         this.rank = rank;
     }
 
-    updatePlayerStateFinished(finishedTimeMs = Date.now()) {
+    updatePlayerStateFinished(finishedTimeMs: number) {
         this.finished = true;
         this.finishedTimeMs = finishedTimeMs;
     }
@@ -121,9 +119,10 @@ class GameOnePlayer extends Player implements PlayerState {
             }
 
             this.obstacles.shift();
-        } else {
-            throw new WrongObstacleIdError(`${obstacleId} is not the id for the next obstacle.`, this.id, obstacleId);
         }
+        //  else {
+        //     throw new WrongObstacleIdError(`${obstacleId} is not the id for the next obstacle.`, this.id, obstacleId);
+        // }
     }
 
     maxNumberPushChasersExceeded() {
@@ -144,15 +143,15 @@ class GameOnePlayer extends Player implements PlayerState {
         this.stonesCarrying--;
     }
 
-    handlePlayerCaught() {
+    handlePlayerCaught(currentTime: number) {
         this.dead = true;
-        this.updatePlayerStateFinished();
+        this.updatePlayerStateFinished(currentTime);
         GameOneEventEmitter.emitPlayerIsDead(this.roomId, this.id, this.rank);
     }
 
     //********************
 
-    private playerIsNotAllowedToRun() {
+    playerIsNotAllowedToRun() {
         return (
             this.finished ||
             this.dead ||
