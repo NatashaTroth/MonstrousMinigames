@@ -1,40 +1,40 @@
-import messageHandler from '../../../socket/messageHandler';
+import messageHandler from "../../../socket/messageHandler";
 import {
     approachingSolvableObstacleOnceTypeGuard
-} from '../../../typeGuards/game1/approachingSolvableObstacleOnceTypeGuard';
-import { obstacleSkippedTypeGuard } from '../../../typeGuards/game1/obstacleSkipped';
-import { obstacleWillBeSolvedTypeGuard } from '../../../typeGuards/game1/obstacleWillBeSolved';
+} from "../../../typeGuards/game1/approachingSolvableObstacleOnceTypeGuard";
+import { obstacleSkippedTypeGuard } from "../../../typeGuards/game1/obstacleSkipped";
+import { obstacleWillBeSolvedTypeGuard } from "../../../typeGuards/game1/obstacleWillBeSolved";
 
 interface Dependencies {
-    players: Array<{
-        player: {
-            id: string;
-        };
-        handleApproachingObstacle: () => void;
-        handleObstacleSkipped: () => void;
-        destroyWarningIcon: () => void;
-    }>;
+    scene: {
+        players: Array<{
+            player: {
+                id: string;
+            };
+            handleApproachingObstacle: () => void;
+            handleObstacleSkipped: () => void;
+            destroyWarningIcon: () => void;
+        }>;
+    };
 }
 
 export const approachingObstacleHandler = messageHandler(
     approachingSolvableObstacleOnceTypeGuard,
     (message, dependencies: Dependencies) => {
-        dependencies.players.find(player => player.player.id === message.userId)?.handleApproachingObstacle();
+        dependencies.scene.players.find(player => player.player.id === message.userId)?.handleApproachingObstacle();
     }
 );
 
 export const obstacleSkippedHandler = messageHandler(
     obstacleSkippedTypeGuard,
     (message, dependencies: Dependencies) => {
-        // eslint-disable-next-line no-console
-        console.log('Received obstacle ski9pped msg');
-        dependencies.players.find(player => player.player.id === message.userId)?.handleObstacleSkipped();
+        dependencies.scene.players.find(player => player.player.id === message.userId)?.handleObstacleSkipped();
     }
 );
 
 export const obstacleWillBeSolvedHandler = messageHandler(
     obstacleWillBeSolvedTypeGuard,
     (message, dependencies: Dependencies) => {
-        dependencies.players.find(player => player.player.id === message.userId)?.destroyWarningIcon();
+        dependencies.scene.players.find(player => player.player.id === message.userId)?.destroyWarningIcon();
     }
 );
