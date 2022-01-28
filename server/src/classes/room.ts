@@ -1,12 +1,15 @@
 import {
-    CannotStartEmptyGameError, CharacterNotAvailableError, GameAlreadyStartedError,
-    UsersNotReadyError
+    CannotStartEmptyGameError,
+    CharacterNotAvailableError,
+    GameAlreadyStartedError,
+    UsersNotReadyError,
 } from '../customErrors';
 import { GameNames } from '../enums/gameNames';
 import { Globals } from '../enums/globals';
 import { ScreenStates } from '../enums/screenStates';
 import { GameOne, GameTwo } from '../gameplay';
 import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
+import { Difficulty } from '../gameplay/enums';
 import Game from '../gameplay/Game';
 import GameThree from '../gameplay/gameThree/GameThree';
 import Leaderboard from '../gameplay/leaderboard/Leaderboard';
@@ -124,7 +127,7 @@ class Room {
         this.timestamp = Date.now();
     }
 
-    public setGame(gameName: string, difficulty = 1): void {
+    public setGame(gameName: string, difficulty = Difficulty.MEDIUM): void {
         switch (gameName) {
             case GameNames.GAME1:
                 this.game = new GameOne(this.id, this.leaderboard, difficulty);
