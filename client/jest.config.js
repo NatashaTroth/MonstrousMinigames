@@ -5,7 +5,7 @@ module.exports = {
     },
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
-    testPathIgnorePatterns: ['lib/', 'node_modules/', 'src/config'],
+    testPathIgnorePatterns: ['lib/', 'node_modules/', 'src/config', 'src/e2e'],
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
     moduleDirectories: ['node_modules', '<rootDir>/src'],
     transform: {
