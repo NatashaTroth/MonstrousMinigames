@@ -82,17 +82,4 @@ describe('Guess', () => {
         const button = container.find('button');
         expect(button.text.toString().match('Waiting for others...'));
     });
-
-    // it('button disabled after submit', async () => {
-    //     const container = mount(
-    //         <ThemeProvider theme={theme}>
-    //             <Guess />
-    //         </ThemeProvider>
-    //     );
-
-    //     const input = container.find('input');
-    //     input.simulate('submit', { preventDefault: jest.fn, target: { value: 'foo' } });
-    //     const button = container.find('button');
-    //     expect(button.is('[disabled]'));
-    // });
 });

@@ -5,7 +5,7 @@ import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
 import { ObstacleType } from '../../../../src/gameplay/gameOne/enums';
-import * as InitialGameParameters from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
+import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import { GameEvents } from '../../../../src/gameplay/gameOne/interfaces';
 import {
     GAME_ONE_EVENT_MESSAGE__CHASERS_WERE_PUSHED, GAME_ONE_EVENT_MESSAGE__OBSTACLE_REACHED,
@@ -26,6 +26,7 @@ import {
 
 let gameOne: GameOne;
 let gameEventEmitter: GameEventEmitter;
+const InitialGameParameters = getInitialParams();
 
 const beforeEachFunction = () => {
     gameOne = new GameOne(roomId, leaderboard);

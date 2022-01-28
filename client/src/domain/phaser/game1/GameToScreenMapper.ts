@@ -1,6 +1,5 @@
 export class GameToScreenMapper {
     private screenPercentOfGame: number;
-    // public screenSpeed: number;
 
     constructor(gamePlayersInitialPositionX: number, windowWidth: number) {
         /**************

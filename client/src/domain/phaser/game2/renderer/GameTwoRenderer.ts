@@ -53,7 +53,6 @@ export class GameTwoRenderer {
     }
 
     renderGuessText(show: boolean) {
-        // TODO: formatting
         if (show) {
             if (!this.guessInstructionText) {
                 const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;

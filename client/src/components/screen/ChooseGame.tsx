@@ -41,7 +41,7 @@ const ChooseGame: React.FunctionComponent = () => {
     const [selectedGame, setSelectedGame] = React.useState<Game>(
         lastSelectedGame ? games.find(game => game.id === lastSelectedGame) || games[0] : games[0]
     );
-    const { roomId, screenAdmin, screenState, setChosenGame } = React.useContext(GameContext);
+    const { roomId, screenAdmin, screenState, setChosenGame, difficulty } = React.useContext(GameContext);
     const { screenSocket } = React.useContext(ScreenSocketContext);
 
     const handleOpenDialog = () => {
@@ -137,7 +137,8 @@ const ChooseGame: React.FunctionComponent = () => {
                                             selectedGame,
                                             roomId,
                                             screenAdmin,
-                                            screenSocket
+                                            screenSocket,
+                                            difficulty
                                         )
                                     }
                                     fullwidth

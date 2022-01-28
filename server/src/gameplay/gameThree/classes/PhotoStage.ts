@@ -3,10 +3,12 @@ import InitialParameters from '../constants/InitialParameters';
 import { GameThreeMessageTypes } from '../enums/GameThreeMessageTypes';
 import { IMessagePhoto, PhotosPhotographerMapper, PlayerNameId } from '../interfaces';
 import { Photos } from './Photos';
+import { PhotoTopics } from './PhotoTopics';
 import { Stage } from './Stage';
 
 export abstract class PhotoStage extends Stage {
     protected photos: Photos;
+    protected photoTopics: PhotoTopics;
 
     constructor({
         roomId,
@@ -20,6 +22,7 @@ export abstract class PhotoStage extends Stage {
         maxNumberPhotos?: number;
     }) {
         super(roomId, userIds, countdownTime + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME);
+        this.photoTopics = PhotoTopics.getInstance();
         this.photos = new Photos(maxNumberPhotos);
     }
 
@@ -27,15 +30,15 @@ export abstract class PhotoStage extends Stage {
 
     handleInput(message: IMessage) {
         if (message.type === GameThreeMessageTypes.PHOTO_UPLOAD_ERROR) {
-            console.log('ERROR UPLOADING PHOTO');
-            console.log((message as { type: GameThreeMessageTypes; errorMsg: string }).errorMsg);
+            // console.log('ERROR UPLOADING PHOTO');
+            // console.log((message as { type: GameThreeMessageTypes; errorMsg: string }).errorMsg);
         }
         if (message.type !== GameThreeMessageTypes.PHOTO) return;
         this.addPhoto(message as IMessagePhoto);
     }
 
     private addPhoto(data: IMessagePhoto) {
-        console.log('***Recieved photo url*** ' + data.url);
+        // console.log('***Recieved photo url*** ' + data.url);
 
         if (
             this.players.find(player => {

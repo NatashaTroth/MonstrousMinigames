@@ -1,14 +1,13 @@
 import 'reflect-metadata';
 
 import { GameOne } from '../../../../src/gameplay';
-// import { GameState } from '../../../../src/gameplay/enums';
-import * as InitialGameParameters from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
-// import { GameStateInfo } from '../../../../src/gameplay/gameOne/interfaces';
+import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import { leaderboard, roomId, users } from '../../mockData';
 import { clearTimersAndIntervals } from '../gameOneHelperFunctions';
 
 let gameOne: GameOne;
 // let gameStateInfo: GameStateInfo;
+const InitialGameParameters = getInitialParams();
 
 describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {

@@ -4,16 +4,16 @@ import {
     GameAlreadyStartedError,
     UsersNotReadyError,
 } from '../customErrors';
-import { GameOne, GameTwo } from '../gameplay';
 import { GameNames } from '../enums/gameNames';
 import { Globals } from '../enums/globals';
 import { ScreenStates } from '../enums/screenStates';
-import Game from '../gameplay/Game';
+import { GameOne, GameTwo } from '../gameplay';
 import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
-import { ScreenInfo } from '../interfaces/interfaces';
+import { Difficulty } from '../gameplay/enums';
+import Game from '../gameplay/Game';
 import GameThree from '../gameplay/gameThree/GameThree';
 import Leaderboard from '../gameplay/leaderboard/Leaderboard';
-
+import { ScreenInfo } from '../interfaces/interfaces';
 import User from './user';
 
 class Room {
@@ -127,10 +127,10 @@ class Room {
         this.timestamp = Date.now();
     }
 
-    public setGame(gameName: string): void {
+    public setGame(gameName: string, difficulty = Difficulty.MEDIUM): void {
         switch (gameName) {
             case GameNames.GAME1:
-                this.game = new GameOne(this.id, this.leaderboard);
+                this.game = new GameOne(this.id, this.leaderboard, difficulty);
                 break;
             case GameNames.GAME2:
                 this.game = new GameTwo(this.id, this.leaderboard);
