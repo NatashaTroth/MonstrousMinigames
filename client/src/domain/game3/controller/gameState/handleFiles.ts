@@ -5,16 +5,29 @@ import { Socket } from '../../../socket/Socket';
 import { RemoteStorage } from '../../../storage/RemoteStorage';
 import { UploadProps } from '../components/TakePicture';
 
-export default async function uploadFile(
-    values: UploadProps,
-    remoteStorage: RemoteStorage | undefined,
-    roomId: string | undefined,
-    userId: string,
-    roundIdx: number,
-    controllerSocket: Socket,
-    uploadedImagesCount: number
-) {
+interface Dependencies {
+    remoteStorage: RemoteStorage | undefined;
+    roomId: string | undefined;
+    userId: string;
+    roundIdx: number;
+    controllerSocket: Socket;
+    setUploadedImagesCount: (val: number) => void;
+    setLoading: (val: boolean) => void;
+}
+
+export const uploadFile = (dependencies: Dependencies) => async (values: UploadProps, uploadedImagesCount: number) => {
     if (!values.picture) return false;
+
+    const {
+        remoteStorage,
+        roomId,
+        roundIdx,
+        userId,
+        controllerSocket,
+        setUploadedImagesCount,
+        setLoading,
+    } = dependencies;
+    setLoading(true);
 
     if (remoteStorage && roomId) {
         const path = `${roomId}/${roundIdx}/${userId}${uploadedImagesCount}.jpg`;
@@ -31,18 +44,24 @@ export default async function uploadFile(
                             photographerId: userId,
                             url: imageUrl,
                         });
+
+                        setUploadedImagesCount(uploadedImagesCount + 1);
                     } else {
                         controllerSocket.emit({
                             type: MessageTypesGame3.errorUploadingPhoto,
                             errorMsg: JSON.stringify(imageUrl),
                         });
                     }
+
+                    setLoading(false);
                 },
                 error: error => {
                     controllerSocket.emit({
                         type: MessageTypesGame3.errorUploadingPhoto,
                         errorMsg: JSON.stringify(error),
                     });
+
+                    setLoading(false);
                 },
             });
         } catch (error) {
@@ -50,9 +69,13 @@ export default async function uploadFile(
                 type: MessageTypesGame3.errorUploadingPhoto,
                 errorMsg: JSON.stringify(error),
             });
+
+            setLoading(false);
         }
+    } else {
+        setLoading(false);
     }
-}
+};
 
 export async function deleteFiles(remoteStorage: RemoteStorage | undefined, roomId: string | undefined) {
     if (remoteStorage && roomId) {
