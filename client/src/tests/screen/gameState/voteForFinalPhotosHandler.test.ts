@@ -2,8 +2,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import React from 'react';
 
 import {
-    useVoteForFinalPhotosHandler,
-    voteForFinalPhotosHandler,
+    useVoteForFinalPhotosHandler, voteForFinalPhotosHandler
 } from '../../../domain/game3/screen/gameState/voteForFinalPhotosHandler';
 import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { VoteForFinalPhotosMessage } from '../../../domain/typeGuards/game3/voteForFinalPhotos';
@@ -12,7 +11,7 @@ import { MessageTypesGame3 } from '../../../utils/constants';
 describe('voteForFinalPhotosHandler', () => {
     const roomId = 'ANES';
     const message: VoteForFinalPhotosMessage = {
-        type: MessageTypesGame3.voteForFinalPhots,
+        type: MessageTypesGame3.voteForFinalPhotos,
         roomId,
         countdownTime: 3000,
         photographers: [],

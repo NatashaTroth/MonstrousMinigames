@@ -1,12 +1,14 @@
-import { act, queryByText, render, waitFor } from '@testing-library/react';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure } from 'enzyme';
-import React from 'react';
-import { ThemeProvider } from 'styled-components';
+import { act, queryByText, render, waitFor } from "@testing-library/react";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
+import { configure } from "enzyme";
+import React from "react";
+import { ThemeProvider } from "styled-components";
 
-import { defaultValue, FinalPhoto, Game3Context, Topic, Vote } from '../../../contexts/game3/Game3ContextProvider';
-import Game3, { getInstruction, getTime } from '../../../domain/game3/screen/components/Game3';
-import theme from '../../../styles/theme';
+import {
+    defaultValue, FinalPhoto, Game3Context, Topic, Vote
+} from "../../../contexts/game3/Game3ContextProvider";
+import Game3, { getInstruction, getTime } from "../../../domain/game3/screen/components/Game3";
+import theme from "../../../styles/theme";
 
 configure({ adapter: new Adapter() });
 
@@ -97,7 +99,7 @@ describe('getInstruction', () => {
 
     it('should render final round instruction when final round is true', () => {
         const givenText =
-            'Take three photos. Later you will receive random photos from all uploaded photos. Use your imagination and present a short story about it.';
+            'Get inspired by the topics and take three photos. Later you will receive random photos from all uploaded photos. Use your imagination and present a short story about it containing one of the topics.';
         const { container } = render(
             <ThemeProvider theme={theme}>
                 {getInstruction(undefined, undefined, true, undefined, undefined)}
