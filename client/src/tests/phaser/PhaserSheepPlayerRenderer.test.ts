@@ -33,7 +33,7 @@ describe('handleRenderPlayer SheepGame', () => {
     });
 
     it('renders player', () => {
-        handleRenderPlayer(scene, { x: 0, y: 0 }, character.name);
+        handleRenderPlayer(scene, { x: 0, y: 0 }, character.name, 1000);
 
         expect(scene.physics.add.sprite).toHaveBeenCalledWith(0, 0, character.name);
     });

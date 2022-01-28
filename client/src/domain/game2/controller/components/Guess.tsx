@@ -28,7 +28,7 @@ const Guess: React.FunctionComponent = () => {
     return (
         <FullScreenContainer>
             <FormContainer>
-                <Instructions>How many sheeps are on the meadow?</Instructions>
+                <Instructions>How many sheep are on the meadow?</Instructions>
                 <form onSubmit={(e: React.FormEvent) => handleSubmit(e)}>
                     <input
                         type="number"

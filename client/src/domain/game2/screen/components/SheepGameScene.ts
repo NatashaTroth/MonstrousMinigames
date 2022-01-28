@@ -182,6 +182,7 @@ class SheepGameScene extends Phaser.Scene {
         if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
+                console.log(JSON.stringify(data));
                 this.gameRenderer?.destroyLoadingScreen();
                 this.gameStarted = true;
                 this.initiateGame(data.data);
@@ -275,20 +276,28 @@ class SheepGameScene extends Phaser.Scene {
             this.windowHeight
         );
 
-        this.physics.world.setBounds(
-            0,
-            this.gameToScreenMapper.getScreenYOffset() - 150, //- 200, -> so that monster can go to the top of the field, but does not work, probably because backend stops at position 0
-            this.windowWidth,
-            this.gameToScreenMapper.getMappedGameHeight() + 150 // + 200
+        // this.physics.world.setBounds(
+        //     // this.gameToScreenMapper.getObjectXOffset(),
+        //     0,
+        //     this.gameToScreenMapper.getObjectYOffset() - 200, //- 200, -> so that monster can go to the top of the field, but does not work, probably because backend stops at position 0
+        //     // this.gameToScreenMapper.getMappedGameWidth(),
+        //     10000000,
+        //     this.gameToScreenMapper.getMappedGameHeight() + 400
+        // );
+
+        // const yPadding = 30; //padding, so bottom of character/sheep don't hang over edge
+        this.gameTwoRenderer?.renderSheepBackground(
+            this.gameToScreenMapper.getScreenXOffset(),
+            this.gameToScreenMapper.getScreenYOffset(),
+            // 0,
+            // 0,
+            this.gameToScreenMapper.getSheepBackgroundImageWidth(),
+            this.gameToScreenMapper.getSheepBackgroundImageHeight()
+            // this.gameToScreenMapper.getMappedGameWidth(),
+            // this.gameToScreenMapper.getMappedGameHeight() + yPadding * 2
         );
 
-        const yPadding = 30; //padding, so bottom of character/sheep don't hang over edge
-        this.gameTwoRenderer?.renderSheepBackground(
-            this.gameToScreenMapper.getCenterOffsetX(),
-            this.gameToScreenMapper.getScreenYOffset() - yPadding,
-            this.gameToScreenMapper.getMappedGameWidth(),
-            this.gameToScreenMapper.getMappedGameHeight() + yPadding * 2
-        );
+        // return;
 
         for (let i = 0; i < gameStateData.playersState.length; i++) {
             this.createPlayer(i, gameStateData);
