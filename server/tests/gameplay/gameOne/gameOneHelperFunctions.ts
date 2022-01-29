@@ -263,30 +263,30 @@ export function getGameFinishedDataSameRanks(gameOne: GameOne) {
 //     return eventData;
 // }
 
-// export function getToCreatedGameState(gameOne: GameOne) {
-//     gameOne.createNewGame(users);
-//     expect(gameOne.gameState).toBe(GameState.Created);
-// }
+export function getToCreatedGameState(gameOne: GameOne) {
+    gameOne.createNewGame(users);
+    expect(gameOne.gameState).toBe(GameState.Created);
+}
 
-// export function getToStartedGameState(gameOne: GameOne) {
-//     startGameAndAdvanceCountdown(gameOne);
-//     expect(gameOne.gameState).toBe(GameState.Started);
-// }
+export function getToStartedGameState(gameOne: GameOne) {
+    startGameAndAdvanceCountdown(gameOne);
+    expect(gameOne.gameState).toBe(GameState.Started);
+}
 
-// export function getToPausedGameState(gameOne: GameOne) {
-//     startGameAndAdvanceCountdown(gameOne);
-//     gameOne.pauseGame();
-//     expect(gameOne.gameState).toBe(GameState.Paused);
-// }
+export function getToPausedGameState(gameOne: GameOne) {
+    startGameAndAdvanceCountdown(gameOne);
+    gameOne.pauseGame();
+    expect(gameOne.gameState).toBe(GameState.Paused);
+}
 
-// export function getToStoppedGameState(gameOne: GameOne) {
-//     startGameAndAdvanceCountdown(gameOne);
-//     gameOne.stopGameUserClosed();
-//     expect(gameOne.gameState).toBe(GameState.Stopped);
-// }
+export function getToStoppedGameState(gameOne: GameOne) {
+    startGameAndAdvanceCountdown(gameOne);
+    gameOne.stopGameUserClosed();
+    expect(gameOne.gameState).toBe(GameState.Stopped);
+}
 
-// export function getToFinishedGameState(gameOne: GameOne) {
-//     startGameAndAdvanceCountdown(gameOne);
-//     finishGame(gameOne);
-//     expect(gameOne.gameState).toBe(GameState.Finished);
-// }
+export function getToFinishedGameState(gameOne: GameOne) {
+    startGameAndAdvanceCountdown(gameOne);
+    finishGame(gameOne);
+    expect(gameOne.gameState).toBe(GameState.Finished);
+}
