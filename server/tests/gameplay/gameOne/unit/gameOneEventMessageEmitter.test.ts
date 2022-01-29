@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import { container } from 'tsyringe';
+
 import Room from '../../../../src/classes/room';
 import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
@@ -91,6 +93,10 @@ describe('Can handle function', () => {
         gameOneEventMessageEmitter = DI.resolve(GameOneEventMessageEmitter);
     });
 
+    afterAll(() => {
+        container.resolve(GameOneEventMessageEmitter).cleanUpListeners();
+    });
+
     beforeEach(async () => {
         gameOne = new GameOne(roomId, leaderboard);
         gameOne.createNewGame(users);
@@ -120,6 +126,10 @@ describe('Can handle function', () => {
 describe('Handle function does not send when not user', () => {
     beforeAll(() => {
         gameOneEventMessageEmitter = DI.resolve(GameOneEventMessageEmitter);
+    });
+
+    afterAll(() => {
+        container.resolve(GameOneEventMessageEmitter).cleanUpListeners();
     });
 
     beforeEach(async () => {
@@ -168,6 +178,10 @@ describe('Handle function does not send when not user', () => {
 describe("Handle function send to single user's controller", () => {
     beforeAll(() => {
         gameOneEventMessageEmitter = DI.resolve(GameOneEventMessageEmitter);
+    });
+
+    afterAll(() => {
+        container.resolve(GameOneEventMessageEmitter).cleanUpListeners();
     });
 
     beforeEach(async () => {
@@ -372,6 +386,10 @@ describe("Handle function send to room's controllers", () => {
         gameOneEventMessageEmitter = DI.resolve(GameOneEventMessageEmitter);
     });
 
+    afterAll(() => {
+        container.resolve(GameOneEventMessageEmitter).cleanUpListeners();
+    });
+
     beforeEach(async () => {
         gameOne = new GameOne(roomId, leaderboard);
         gameOne.createNewGame(users);
@@ -414,6 +432,10 @@ describe("Handle function send to room's controllers", () => {
 describe("Handle function send to room's screens", () => {
     beforeAll(() => {
         gameOneEventMessageEmitter = DI.resolve(GameOneEventMessageEmitter);
+    });
+
+    afterAll(() => {
+        container.resolve(GameOneEventMessageEmitter).cleanUpListeners();
     });
 
     beforeEach(async () => {

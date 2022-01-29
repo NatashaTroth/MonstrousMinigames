@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import { container } from 'tsyringe';
+
 import Room from '../../../../src/classes/room';
 import DI from '../../../../src/di';
 import { GameThree } from '../../../../src/gameplay';
@@ -52,6 +54,10 @@ describe('Can handle function', () => {
         gameThreeEventMessageEmitter = DI.resolve(GameThreeEventMessageEmitter);
     });
 
+    afterAll(() => {
+        container.resolve(GameThreeEventMessageEmitter).cleanUpListeners();
+    });
+
     beforeEach(async () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
@@ -74,6 +80,10 @@ describe('Can handle function', () => {
 describe('Handle function send to controller', () => {
     beforeAll(() => {
         gameThreeEventMessageEmitter = DI.resolve(GameThreeEventMessageEmitter);
+    });
+
+    afterAll(() => {
+        container.resolve(GameThreeEventMessageEmitter).cleanUpListeners();
     });
 
     beforeEach(async () => {
@@ -179,8 +189,11 @@ describe('Handle function send to controller', () => {
 
 describe('Handle function send to screen', () => {
     beforeAll(() => {
-        // gameEventEmitter = DI.resolve(GameEventEmitter);
         gameThreeEventMessageEmitter = DI.resolve(GameThreeEventMessageEmitter);
+    });
+
+    afterAll(() => {
+        container.resolve(GameThreeEventMessageEmitter).cleanUpListeners();
     });
 
     beforeEach(async () => {

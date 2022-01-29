@@ -1,27 +1,33 @@
 import 'reflect-metadata';
 
-import { leaderboard, roomId, usersWithNumbers } from '../mockData';
+import { container } from 'tsyringe';
+
+import GameEventEmitter from '../../../src/classes/GameEventEmitter';
 import DI from '../../../src/di';
 import { GameTwo } from '../../../src/gameplay';
-import GameEventEmitter from '../../../src/classes/GameEventEmitter';
-import { GlobalEventMessage, GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED, GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED } from '../../../src/gameplay/interfaces/GlobalEventMessages';
-
+import {
+    GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED, GLOBAL_EVENT_MESSAGE__GAME_HAS_STARTED,
+    GlobalEventMessage
+} from '../../../src/gameplay/interfaces/GlobalEventMessages';
+import { leaderboard, roomId, usersWithNumbers } from '../mockData';
 
 let gameTwo: GameTwo;
 let gameEventEmitter: GameEventEmitter;
 const users = usersWithNumbers;
 
-
 const beforeEachFunction = () => {
-    jest.spyOn(console, "log").mockImplementation();
+    jest.spyOn(console, 'log').mockImplementation();
     gameTwo = new GameTwo(roomId, leaderboard);
     jest.useFakeTimers();
 };
 
-
 describe('Event Emitter', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
+
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
     });
 
     beforeEach(() => {
@@ -31,7 +37,6 @@ describe('Event Emitter', () => {
     afterEach(() => {
         gameTwo.cleanup();
     });
-
 
     it('should create a new GameTwoEventEmitter instance (same object)', async () => {
         const gameEventEmitterNew = DI.resolve(GameEventEmitter);
@@ -44,11 +49,13 @@ describe('Start Game events ', () => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
 
-    beforeEach(() => {
-        beforeEachFunction();
-
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
     });
 
+    beforeEach(() => {
+        beforeEachFunction();
+    });
 
     it('should emit a GameHasStarted event when the game is started', async () => {
         let gameStartedEvent = false;
@@ -98,7 +105,6 @@ describe('Start Game events ', () => {
             beforeEachFunction();
         });
 
-
         it('should emit a GameHasPaused event when the game has been paused', async () => {
             let gameHasPaused = false;
             gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
@@ -138,4 +144,3 @@ describe('Start Game events ', () => {
         });
     });
 });
-

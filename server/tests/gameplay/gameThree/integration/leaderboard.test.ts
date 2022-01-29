@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import { container } from 'tsyringe';
+
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameThree } from '../../../../src/gameplay';
@@ -17,9 +19,17 @@ import {
 import { receiveMultiplePhotos } from '../gameThreeMockData';
 
 let gameThree: GameThree;
-const gameEventEmitter = DI.resolve(GameEventEmitter);
+let gameEventEmitter: GameEventEmitter;
 
 describe('Leaderboard tests for Game Three', () => {
+    beforeAll(() => {
+        gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
+
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
+    });
+
     beforeEach(() => {
         Date.now = () => dateNow;
         jest.useFakeTimers();

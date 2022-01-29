@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import { container } from 'tsyringe';
+
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
@@ -43,6 +45,10 @@ describe('Event Emitter', () => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
 
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
+    });
+
     beforeEach(() => {
         beforeEachFunction();
     });
@@ -60,6 +66,9 @@ describe('Event Emitter', () => {
 describe('Start Game events ', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
     });
 
     beforeEach(() => {
@@ -108,6 +117,9 @@ describe('Start Game events ', () => {
 describe('Obstacle reached events', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
     });
 
     beforeEach(() => {
@@ -163,6 +175,9 @@ describe('Game has paused events', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
+    });
 
     beforeEach(() => {
         beforeEachFunction();
@@ -206,6 +221,9 @@ describe('Game has paused events', () => {
 describe('Game has resumed events', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
     });
 
     beforeEach(() => {
@@ -253,6 +271,9 @@ describe('Game has stopped events', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
+    });
 
     beforeEach(() => {
         beforeEachFunction();
@@ -296,6 +317,9 @@ describe('Game has stopped events', () => {
 describe('Player has disconnected events', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
     });
 
     beforeEach(() => {
@@ -356,6 +380,9 @@ describe('Player has disconnected events', () => {
 describe('Player has reconnected events', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
     });
 
     beforeEach(() => {
@@ -418,6 +445,9 @@ describe('Player has finished events', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
+    });
 
     beforeEach(() => {
         beforeEachFunction();
@@ -467,6 +497,9 @@ describe('Player has finished events', () => {
 describe('Game has finished events', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
     });
 
     beforeEach(() => {
@@ -534,6 +567,9 @@ describe('Chaser event', () => {
 
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
     });
 
     beforeEach(() => {

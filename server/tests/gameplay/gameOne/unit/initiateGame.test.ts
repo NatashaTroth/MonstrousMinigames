@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import { container } from 'tsyringe';
+
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
@@ -36,6 +38,11 @@ describe('Change and verify game state', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
+
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
+    });
+
     beforeEach(async () => {
         gameOne = new GameOne(roomId, leaderboard);
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {

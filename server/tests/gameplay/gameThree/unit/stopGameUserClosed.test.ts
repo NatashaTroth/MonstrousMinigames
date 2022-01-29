@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import { container } from 'tsyringe';
+
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameState } from '../../../../src/gameplay/enums';
@@ -16,6 +18,11 @@ describe('Stop game user closed', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
+
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
+    });
+
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.gameState = GameState.Started;

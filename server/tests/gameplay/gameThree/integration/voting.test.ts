@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import { container } from 'tsyringe';
+
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
@@ -22,6 +24,11 @@ describe('Voting stage', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
+
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
+    });
+
     beforeEach(() => {
         Date.now = () => dateNow;
         jest.useFakeTimers();
@@ -91,6 +98,11 @@ describe('Results', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
+
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
+    });
+
     beforeEach(() => {
         Date.now = () => dateNow;
         jest.useFakeTimers();
