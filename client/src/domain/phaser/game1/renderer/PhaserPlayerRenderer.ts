@@ -300,34 +300,13 @@ export class PhaserPlayerRenderer {
     }
 
     destroyObstacle() {
-        // eslint-disable-next-line no-console
-        console.log(this.characterName, ' ', this.phaserObjectId);
-        // eslint-disable-next-line no-console
-        console.log(this.obstacles.length);
         const currentObstacle = this.obstacles.shift();
         currentObstacle?.phaserInstance.destroy();
-
-        // eslint-disable-next-line no-console
-        console.log('Desctroyed obstacle from list');
-        // eslint-disable-next-line no-console
-        console.log(this.obstacles.length);
-        // eslint-disable-next-line no-console
-        console.log('------');
     }
 
     handleSkippedObstacle() {
-        // eslint-disable-next-line no-console
-        console.log(this.characterName, ' ', this.phaserObjectId);
-        // eslint-disable-next-line no-console
-        console.log(this.obstacles.length);
         const currentObstacle = this.obstacles.shift();
         if (currentObstacle) this.skippedObstacles.push(currentObstacle);
-        // eslint-disable-next-line no-console
-        console.log('Removed obstacle from list');
-        // eslint-disable-next-line no-console
-        console.log(this.obstacles.length);
-        // eslint-disable-next-line no-console
-        console.log('------');
     }
 
     destroyObstacles() {
