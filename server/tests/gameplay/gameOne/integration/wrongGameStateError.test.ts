@@ -8,9 +8,6 @@ import {
     clearTimersAndIntervals, getToCreatedGameState, getToFinishedGameState, getToPausedGameState,
     getToStartedGameState, getToStoppedGameState, startGameAndAdvanceCountdown
 } from '../gameOneHelperFunctions';
-import {
-    playerHasCompletedObstacleMessageWitObstacleId, runForwardMessage
-} from '../gameOneMockData';
 
 let gameOne: GameOne;
 
