@@ -24,5 +24,6 @@ export const useGuessHintHandler = (socket: Socket, handler = guessHintHandler) 
 
         const guessHintHandlerWithDependencies = handler({ setGuessHint });
         guessHintHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setGuessHint, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

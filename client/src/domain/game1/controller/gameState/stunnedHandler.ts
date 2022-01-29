@@ -24,5 +24,6 @@ export const useStunnedHandler = (socket: Socket, handler = stunnedHandler) => {
         const stunnedHandlerWithDependencies = handler({ history });
 
         stunnedHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

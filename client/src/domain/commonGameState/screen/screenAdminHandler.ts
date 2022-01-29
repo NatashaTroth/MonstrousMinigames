@@ -21,5 +21,6 @@ export const useScreenAdminHandler = (socket: Socket, handler = screenAdminHandl
 
         const adminHandlerWithDependencies = handler({ setScreenAdmin });
         adminHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setScreenAdmin, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

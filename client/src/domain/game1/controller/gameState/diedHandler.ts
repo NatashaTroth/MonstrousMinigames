@@ -32,5 +32,6 @@ export const useDiedHandler = (socket: Socket, handler = diedHandler) => {
 
         const diedHandlerWithDependencies = handler({ setPlayerDead, setPlayerRank });
         diedHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setPlayerDead, setPlayerRank, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };
