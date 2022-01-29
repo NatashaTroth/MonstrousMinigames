@@ -4,16 +4,17 @@ import {
     GameAlreadyStartedError,
     UsersNotReadyError,
 } from '../customErrors';
+import { GameOne, GameTwo } from '../gameplay';
 import { GameNames } from '../enums/gameNames';
 import { Globals } from '../enums/globals';
 import { ScreenStates } from '../enums/screenStates';
-import { GameOne, GameTwo } from '../gameplay';
+import Game from '../gameplay/Game';
 import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
 import { Difficulty } from '../gameplay/enums';
-import Game from '../gameplay/Game';
+import { ScreenInfo } from '../interfaces/interfaces';
 import GameThree from '../gameplay/gameThree/GameThree';
 import Leaderboard from '../gameplay/leaderboard/Leaderboard';
-import { ScreenInfo } from '../interfaces/interfaces';
+
 import User from './user';
 
 class Room {
@@ -94,7 +95,7 @@ class Room {
                 if (this.hasActiveUsers()) {
                     this.game.disconnectPlayer(userId);
                 } else {
-                    this.setClosed();
+                    this.checkIfClosing();
                     this.game.stopGameAllUsersDisconnected();
                 }
             }
@@ -263,6 +264,7 @@ class Room {
     public removeScreen(screenId: string): void {
         const index = this.screens.findIndex(element => element.id === screenId);
         this.screens.splice(index, 1);
+        this.checkIfClosing();
     }
     public isAdminScreen(screenId: string): boolean {
         return this.screens.findIndex(element => element.id === screenId) === 0;
@@ -296,6 +298,12 @@ class Room {
     }
     public getScreenState(): string {
         return this.screenState;
+    }
+    public checkIfClosing(): void {
+        console.log(this.users)
+        if (this.screens.length === 0 && !this.hasActiveUsers()) {
+            this.setClosed();
+        }
     }
 }
 
