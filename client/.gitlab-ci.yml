@@ -14,9 +14,9 @@ npm:client:
         - cd client/
         - echo "Running npm ci ..."
         - npm ci
-      
-    # except:
-    # - /^backend-.*$/
+    only:
+        changes:
+            - client/**/*
 
 lint:client:
     stage: lint
@@ -28,8 +28,10 @@ lint:client:
         - npm run lint-fix
         - npm run tsc --silent
     except:
-        # - /^backend-.*$/
         - staging
+    only:
+        changes:
+            - client/**/*
 
 test-integration:client:
     stage: test-integration
@@ -40,8 +42,10 @@ test-integration:client:
         - echo "Testing.."
         - ./node_modules/.bin/jest ./
     except:
-        # - /^backend-.*$/
         - staging
+    only:
+        changes:
+            - client/**/*
 
 end-to-end:client:
     stage: end-to-end
@@ -52,7 +56,10 @@ end-to-end:client:
         - echo "End to End testing.."
         - npm run end2end
     only:
-        - dev
+        refs:
+            - dev
+        changes:
+            - client/**/*
 
 #--- Deployment ---
 .some-script: &deployment-script
@@ -75,7 +82,10 @@ staging:client:
         - *deployment-script
 
     only:
-        - dev
+        refs:
+            - dev
+        changes:
+            - client/**/*
 
 production:client:
     stage: production
@@ -90,7 +100,8 @@ production:client:
         - *deployment-script
 
     only:
-        - dev
+        refs:
+            - dev
+        changes:
+            - client/**/*
     when: manual
-
-
