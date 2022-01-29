@@ -59,6 +59,4 @@ describe('Viewing Results stage', () => {
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
         expect(eventCalled).toBeTruthy();
     });
-
-    it.todo('Test correct results sent to the client');
 });

@@ -4,16 +4,12 @@ import { GameOne } from '../../../../src/gameplay';
 import { Difficulty, GameState } from '../../../../src/gameplay/enums';
 import { ObstacleType } from '../../../../src/gameplay/gameOne/enums';
 import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
-import { IMessageObstacle } from '../../../../src/gameplay/gameOne/interfaces';
 import { leaderboard, roomId } from '../../mockData';
 import {
     clearTimersAndIntervals, completeObstacles, finishPlayer, getGameFinishedDataDifferentTimes,
     goToNextUnsolvableObstacle, startAndFinishGameDifferentTimes, startGameAndAdvanceCountdown
 } from '../gameOneHelperFunctions';
 import { playerHasCompletedObstacleMessage, runForwardMessage } from '../gameOneMockData';
-
-const OBSTACLE_ID_THAT_IS_NOT_NEXT = 1;
-const OBSTACLE_ID_THAT_DOES_NOT_EXIST = 5000;
 
 let gameOne: GameOne;
 const InitialParameters = getInitialParams();
@@ -85,21 +81,6 @@ describe('Obstacles reached', () => {
         expect(player.atObstacle).toBeTruthy();
     });
 
-    it.todo('flakey:');
-    it.skip('removes a stone obstacle when a player arrives at it carrying one', async () => {
-        startGameAndAdvanceCountdown(gameOne, () => {
-            gameOne.players.get('1')!.obstacles = gameOne.players
-                .get('1')!
-                .obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
-            gameOne.players.get('1')!.stonesCarrying = 1;
-        });
-
-        //todo run forward till get to obstacle
-
-        gameOne.receiveInput({ ...runForwardMessage, userId: '1' });
-        expect(gameOne.players.get('1')!.obstacles.length).toBe(gameOne.numberOfStones - 1);
-    });
-
     it("doesn't allow players to move when they reach an obstacle", async () => {
         startGameAndAdvanceCountdown(gameOne, removeStonesFromObstacles(gameOne));
         const player = gameOne.players.get('1')!;
@@ -151,43 +132,6 @@ describe('Obstacles reached', () => {
         expect(player.obstacles.length).toBe(initialObstacleLengths);
     });
 
-    it.todo('Flakey:');
-
-    it.skip('does not complete an obstacle if obstacle id is not next', async () => {
-        startGameAndAdvanceCountdown(gameOne);
-        const player = gameOne.players.get('1')!;
-        const initialObstacleLengths = player.obstacles.length;
-        goToNextUnsolvableObstacle(gameOne, player);
-        gameOne.receiveInput({
-            ...playerHasCompletedObstacleMessage,
-            userId: '1',
-            obstacleId: OBSTACLE_ID_THAT_IS_NOT_NEXT,
-        } as IMessageObstacle);
-        expect(player.obstacles.length).toBe(initialObstacleLengths);
-    });
-
-    it.todo('Flakey:');
-    it.skip('does not complete an obstacle if obstacle id does not exist', async () => {
-        startGameAndAdvanceCountdown(gameOne);
-        const player = gameOne.players.get('1')!;
-        const initialObstacleLengths = player.obstacles.length;
-        console.log(player.obstacles.length);
-        goToNextUnsolvableObstacle(gameOne, player);
-        gameOne.receiveInput({
-            ...playerHasCompletedObstacleMessage,
-            userId: '1',
-            obstacleId: OBSTACLE_ID_THAT_DOES_NOT_EXIST,
-        } as IMessageObstacle);
-        expect(player.obstacles.length).toBe(initialObstacleLengths);
-    });
-
-    it.todo('Flakey:');
-    it.skip('should remove a completed obstacle', async () => {
-        startGameAndAdvanceCountdown(gameOne);
-        gameOne.receiveInput({ ...playerHasCompletedObstacleMessage, userId: '1' });
-        expect(gameOne.players.get('1')!.obstacles.length).toBe(gameOne.numberOfObstacles + gameOne.numberOfStones - 1);
-    });
-
     it('can move a player again when obstacle is completed', async () => {
         startGameAndAdvanceCountdown(gameOne, removeStonesFromObstacles(gameOne));
         const player = gameOne.players.get('1')!;
@@ -229,14 +173,6 @@ describe('Player has finished race', () => {
             gameOne.receiveInput({ ...runForwardMessage, userId: '1' });
         }
         expect(gameOne.players.get('1')!.finished).toBeFalsy();
-    });
-
-    it.todo('Flakey:');
-    xit('should not set a player as finished if they have not reached the goal but completed their obstacles', async () => {
-        startGameAndAdvanceCountdown(gameOne);
-        const player = gameOne.players.get('1')!;
-        completeObstacles(gameOne, player);
-        expect(player.finished).toBeFalsy();
     });
 
     it('should not be able to run forward when player has finished the race', async () => {
@@ -283,7 +219,6 @@ describe('Game finished', () => {
 
     it('should give the second player that finishes a rank of 2', async () => {
         gameOne = await startAndFinishGameDifferentTimes(gameOne);
-        console.log(Array.from(gameOne.players.values()).map(p => p.rank));
         expect(gameOne.players.get('2')!.rank).toBe(2);
     });
 

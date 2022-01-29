@@ -230,7 +230,7 @@ class GameOnePlayer extends Player implements PlayerState {
         });
     }
 
-    private playerIsApproachingSolvableObstacle(): boolean {
+    playerIsApproachingSolvableObstacle(): boolean {
         return (
             !this.atObstacle &&
             (this.obstacles.length || 0) > 0 &&

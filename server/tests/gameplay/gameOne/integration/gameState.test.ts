@@ -60,17 +60,6 @@ describe('Change and verify game state', () => {
         expect(gameOne.players.get('1')!.obstacles.length).toBe(obstaclesCompletedLength);
     });
 
-    it.todo('Flakey:');
-    xit('should be able to complete obstacle when game has started', async () => {
-        startGameAndAdvanceCountdown(gameOne);
-        const player = gameOne.players.get('1')!;
-        const obstaclesCompletedLength = player.obstacles.length;
-        goToNextUnsolvableObstacle(gameOne, player);
-        gameOne.receiveInput({ ...playerHasCompletedObstacleMessage, userId });
-
-        expect(player.obstacles.length).toBe(obstaclesCompletedLength - 1);
-    });
-
     it("shouldn't be able to complete obstacle when game is paused", async () => {
         startGameAndAdvanceCountdown(gameOne);
         const obstaclesCompletedLength = gameOne.players.get('1')!.obstacles.length;

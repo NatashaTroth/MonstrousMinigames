@@ -108,14 +108,6 @@ describe('Change and verify game state', () => {
     //     expect(gameOnePlayer.approachSolvableObstacleDistance).toBe(InitialGameParameters.APPROACH_SOLVABLE_OBSTACLE_DISTANCE);
     // });
 
-    it.todo('Flakey:');
-    it.skip('initiates player with correct number of stones', () => {
-        const stones: Array<Obstacle> = gameOne.players
-            .get('1')!
-            .obstacles.filter(obstacle => obstacle.type === ObstacleType.Stone);
-        expect(stones.length).toBe(InitialGameParameters.NUMBER_STONES);
-    });
-
     it('initiates player positionX with initial position', async () => {
         expect(gameOne.players.get('1')!.positionX).toBe(gameOne.initialPlayerPositionX);
     });
@@ -130,14 +122,6 @@ describe('Change and verify game state', () => {
 
     it('initiates player as not stunned', async () => {
         expect(gameOne.players.get('1')!.stunned).toBeFalsy();
-    });
-
-    it.todo('Flakey:');
-    it.skip('initiates player with correct number of obstacles', () => {
-        const obstacles: Array<Obstacle> = gameOne.players
-            .get('1')!
-            .obstacles.filter(obstacle => obstacle.type !== ObstacleType.Stone);
-        expect(obstacles.length).toBe(InitialGameParameters.NUMBER_OBSTACLES);
     });
 
     it('initiates player with stones not overlapping with other obstacles', () => {
@@ -170,13 +154,6 @@ describe('Change and verify game state', () => {
                 );
             }
         }
-    });
-
-    it.todo('Flakey:');
-    it.skip('initiates player with correct number of obstacles (all)', async () => {
-        expect(gameOne.players.get('1')!.obstacles.length).toBe(
-            InitialGameParameters.NUMBER_OBSTACLES + InitialGameParameters.NUMBER_STONES
-        );
     });
 
     function getObstacleRange(gameOne: GameOne): number {
