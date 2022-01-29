@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 
+import { showErrors } from '../../../../constants';
 import { GameTwo } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
 import Parameters from '../../../../src/gameplay/gameTwo/constants/Parameters';
@@ -105,6 +106,6 @@ describe('GameTwo Unit Tests', () => {
             type: 'test',
         };
         gameTwo.receiveInput(message);
-        expect(console.info).toHaveBeenCalledWith(message);
+        if (showErrors) expect(console.info).toHaveBeenCalledWith(message);
     });
 });

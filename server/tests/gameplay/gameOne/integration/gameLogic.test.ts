@@ -219,7 +219,6 @@ describe('Game finished', () => {
 
     it('should give the second player that finishes a rank of 2', async () => {
         gameOne = await startAndFinishGameDifferentTimes(gameOne);
-        console.log(Array.from(gameOne.players.values()).map(p => p.rank));
         expect(gameOne.players.get('2')!.rank).toBe(2);
     });
 

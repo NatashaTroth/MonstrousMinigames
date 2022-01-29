@@ -60,6 +60,7 @@ describe('Room: Users', () => {
         clearTimersAndIntervals(room.game);
         jest.runAllTimers();
     });
+
     it('should label a player inactive after leaving a running game', () => {
         jest.useFakeTimers();
         user1.setReady(true);

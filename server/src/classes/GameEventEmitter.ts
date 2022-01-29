@@ -7,5 +7,6 @@ export default class GameEventEmitter extends EventEmitter {
 
     constructor() {
         super();
+        this.setMaxListeners(20);
     }
 }

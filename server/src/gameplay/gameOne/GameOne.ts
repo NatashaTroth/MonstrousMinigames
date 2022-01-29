@@ -1,4 +1,4 @@
-import { localDevelopment, pushChasers } from '../../../constants';
+import { localDevelopment, pushChasers, showErrors } from '../../../constants';
 import User from '../../classes/user';
 import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
@@ -163,7 +163,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
                     console.info(message);
             }
         } catch (e: any) {
-            console.info(e.Message);
+            if (showErrors) console.info(e.Message);
         }
     }
 
