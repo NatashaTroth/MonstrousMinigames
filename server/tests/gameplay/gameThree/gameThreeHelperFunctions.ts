@@ -3,6 +3,10 @@ import { GameThree } from '../../../src/gameplay';
 import { StageController } from '../../../src/gameplay/gameThree/classes/StageController';
 import InitialParameters from '../../../src/gameplay/gameThree/constants/InitialParameters';
 
+/***********************************************************************************/
+/* Only call private functions/properties in this file and only when necessary */
+/***********************************************************************************/
+
 export function startGameAdvanceCountdown(gameThree: GameThree) {
     gameThree.startGame();
     jest.advanceTimersByTime(InitialParameters.COUNTDOWN_TIME_GAME_START);

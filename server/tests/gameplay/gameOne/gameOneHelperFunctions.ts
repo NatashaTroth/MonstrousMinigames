@@ -14,19 +14,19 @@ import { users } from '../mockData';
 import { playerHasCompletedObstacleMessage, runForwardMessage } from './gameOneMockData';
 
 const InitialGameParameters = getInitialParams();
-
 const TRACK_LENGTH = InitialGameParameters.TRACK_LENGTH;
 const gameEventEmitter = DI.resolve(GameEventEmitter);
 const dateNow = 1618665766156;
+
+/***********************************************************************************/
+/* Only call private functions/properties in this file and only when necessary */
+/***********************************************************************************/
 
 export function advanceCountdown(gameOne: GameOne, time: number) {
     gameOne['update'](10, time);
     const previousNow = Date.now;
     Date.now = () => previousNow() + time;
     jest.advanceTimersByTime(time);
-    //Todo change to update time - not call update function - not working - update is being called after expect (look at stun test)
-    // await advanceCountdown(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-    // await releaseThread();
 }
 
 export function finishPlayer(gameOne: GameOne, userId: string) {
