@@ -2,6 +2,7 @@ import { GameOneMsgType, ObstacleType } from '../../../src/gameplay/gameOne/enum
 import { getInitialParams } from '../../../src/gameplay/gameOne/GameOneInitialParameters';
 import GameOnePlayer from '../../../src/gameplay/gameOne/GameOnePlayer';
 import { Obstacle } from '../../../src/gameplay/gameOne/interfaces';
+import { IMessageStunPlayer } from '../../../src/gameplay/gameOne/interfaces/messageStunPlayer';
 import { IMessage } from '../../../src/interfaces/messages';
 import { roomId, trackLength, users } from '../mockData';
 
@@ -15,9 +16,15 @@ export const runForwardMessage: IMessage = {
     userId: users[0].id,
 };
 
+//TODO Imessage obstacle
 export const playerHasCompletedObstacleMessage: IMessage = {
     type: GameOneMsgType.OBSTACLE_SOLVED,
     userId: users[0].id,
+};
+export const stunPlayerMessage: IMessageStunPlayer = {
+    type: GameOneMsgType.STUN_PLAYER,
+    userId: users[0].id,
+    receivingUserId: users[1].id,
 };
 
 export const obstacles: Obstacle[] = [
