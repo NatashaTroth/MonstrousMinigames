@@ -56,7 +56,7 @@ howFarCanRun = 0.12\*timeLeftForRunning
 
 12\*2500 (to get to 25 sec)
 
-## Refactor Game Class according to:
+## Refactored Game Class according to:
 
 https://gameprogrammingpatterns.com/command.html
 https://gameprogrammingpatterns.com/component.html
