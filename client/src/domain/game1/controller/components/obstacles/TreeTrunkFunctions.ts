@@ -1,6 +1,6 @@
-import { ComponentToTest } from '../../../../../components/controller/Tutorial';
-import { ObstacleTypes } from '../../../../../utils/constants';
-import { Coordinates, Orientation, TouchStart } from './TreeTrunk';
+import { ComponentToTest } from "../../../../../components/controller/Tutorial";
+import { ObstacleTypes } from "../../../../../utils/constants";
+import { Coordinates, Orientation, TouchStart } from "./TreeTrunk";
 
 const isInContainer = (touches: TouchStart, coordinates: Coordinates) =>
     touches.clientX >= coordinates.left &&
@@ -9,8 +9,10 @@ const isInContainer = (touches: TouchStart, coordinates: Coordinates) =>
     touches.clientY <= coordinates.bottom;
 
 export function setTranslate(xPos: number, yPos: number, el: HTMLElement) {
-    el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
-    el.style.opacity = '1';
+    if (el) {
+        el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+        el.style.opacity = '1';
+    }
 }
 
 export function newTrunk(orientationOptions: Orientation[], setOrientation: (orientation: Orientation) => void) {

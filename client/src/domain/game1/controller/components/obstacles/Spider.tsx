@@ -1,17 +1,19 @@
-import * as React from 'react';
+import * as React from "react";
 
-import Button from '../../../../../components/common/Button';
-import { ComponentToTest } from '../../../../../components/controller/Tutorial';
-import { ControllerSocketContext } from '../../../../../contexts/controller/ControllerSocketContextProvider';
-import { Game1Context, Obstacle } from '../../../../../contexts/game1/Game1ContextProvider';
-import { GameContext } from '../../../../../contexts/GameContextProvider';
-import { MessageTypesGame1, ObstacleTypes } from '../../../../../utils/constants';
-import { Navigator } from '../../../../navigator/Navigator';
-import { Socket } from '../../../../socket/Socket';
-import { getAudioInput, resetCurrentCount } from './getAudioInput';
-import LinearProgressBar from './LinearProgressBar';
-import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from './ObstacleStyles.sc';
-import { StyledNet, StyledSkipButton, StyledSpider } from './Spider.sc';
+import Button from "../../../../../components/common/Button";
+import { ComponentToTest } from "../../../../../components/controller/Tutorial";
+import {
+    ControllerSocketContext
+} from "../../../../../contexts/controller/ControllerSocketContextProvider";
+import { Game1Context, Obstacle } from "../../../../../contexts/game1/Game1ContextProvider";
+import { GameContext } from "../../../../../contexts/GameContextProvider";
+import { MessageTypesGame1, ObstacleTypes } from "../../../../../utils/constants";
+import { Navigator } from "../../../../navigator/Navigator";
+import { Socket } from "../../../../socket/Socket";
+import { getAudioInput, resetCurrentCount } from "./getAudioInput";
+import LinearProgressBar from "./LinearProgressBar";
+import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from "./ObstacleStyles.sc";
+import { StyledNet, StyledSkipButton, StyledSpider } from "./Spider.sc";
 
 interface SpiderProps {
     navigator: Navigator;
@@ -37,8 +39,12 @@ const Spider: React.FunctionComponent<SpiderProps> = ({ navigator, tutorial = fa
 
     React.useEffect(() => {
         let mounted = true;
-        resetCurrentCount();
-        initializeSkip();
+
+        if (mounted) {
+            resetCurrentCount();
+            initializeSkip();
+        }
+
         getAudioInput(
             MAX,
             {
