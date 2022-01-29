@@ -132,34 +132,38 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     }
 
     protected handleInput(message: IMessage) {
-        verifyGameState(this.gameState, [GameState.Started]);
-        switch (message.type) {
-            case GameOneMsgType.MOVE:
-                this.movePlayer(message);
-                break;
-            case GameOneMsgType.OBSTACLE_SOLVED:
-                this.getValidPlayer(message.userId!)?.obstacleCompleted((message as IMessageObstacle).obstacleId);
-                break;
-            case GameOneMsgType.SOLVE_OBSTACLE:
-                this.getValidPlayer(message.userId!)?.playerWantsToSolveObstacle(
-                    (message as IMessageObstacle).obstacleId
-                );
-                break;
-
-            case GameOneMsgType.STUN_PLAYER:
-                if (
-                    !(message as IMessageStunPlayer).receivingUserId ||
-                    (message as IMessageStunPlayer).receivingUserId === message.userId
-                ) {
+        try {
+            verifyGameState(this.gameState, [GameState.Started]);
+            switch (message.type) {
+                case GameOneMsgType.MOVE:
+                    this.movePlayer(message);
                     break;
-                }
-                this.stunPlayer((message as IMessageStunPlayer).receivingUserId, message.userId!);
-                break;
-            case GameOneMsgType.CHASERS_WERE_PUSHED:
-                this.pushChasers(message.userId!);
-                break;
-            default:
-                console.info(message);
+                case GameOneMsgType.OBSTACLE_SOLVED:
+                    this.getValidPlayer(message.userId!)?.obstacleCompleted((message as IMessageObstacle).obstacleId);
+                    break;
+                case GameOneMsgType.SOLVE_OBSTACLE:
+                    this.getValidPlayer(message.userId!)?.playerWantsToSolveObstacle(
+                        (message as IMessageObstacle).obstacleId
+                    );
+                    break;
+
+                case GameOneMsgType.STUN_PLAYER:
+                    if (
+                        !(message as IMessageStunPlayer).receivingUserId ||
+                        (message as IMessageStunPlayer).receivingUserId === message.userId
+                    ) {
+                        break;
+                    }
+                    this.stunPlayer((message as IMessageStunPlayer).receivingUserId, message.userId!);
+                    break;
+                case GameOneMsgType.CHASERS_WERE_PUSHED:
+                    this.pushChasers(message.userId!);
+                    break;
+                default:
+                    console.info(message);
+            }
+        } catch (e: any) {
+            console.info(e.Message);
         }
     }
 
