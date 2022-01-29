@@ -9,7 +9,10 @@ import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage, GlobalGameHasFinished
 } from '../../../../src/gameplay/interfaces/GlobalEventMessages';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
-import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
+import {
+    addPointsToPlayer, advanceCountdown, startGameAdvanceCountdown, startNewRound,
+    switchToSecondToLastRound
+} from '../gameThreeHelperFunctions';
 import { receiveMultiplePhotos } from '../gameThreeMockData';
 
 let gameThree: GameThree;
@@ -25,13 +28,12 @@ describe('Initiate stage', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
-        const stageController = gameThree['stageController']!;
         advanceCountdown(
             gameThree,
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
-        stageController!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1; //skip to final round
-        stageController!.handleNewRound();
+        switchToSecondToLastRound(gameThree);
+        startNewRound(gameThree);
         receiveMultiplePhotos(gameThree); // to pass no photos error in FinalPhotosStage
         advanceCountdown(
             gameThree,
@@ -67,7 +69,7 @@ describe('Final results', () => {
             playerRanks: [],
         },
     };
-    const pointsArray: number[] = [];
+    let pointsArray: number[] = [];
 
     beforeEach(() => {
         Date.now = () => dateNow;
@@ -75,13 +77,12 @@ describe('Final results', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
-        const stageController = gameThree['stageController']!;
         advanceCountdown(
             gameThree,
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
-        stageController!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1; //skip to final round
-        stageController!.handleNewRound();
+        switchToSecondToLastRound(gameThree);
+        startNewRound(gameThree);
         receiveMultiplePhotos(gameThree); // to pass no photos error in FinalPhotosStage
         advanceCountdown(
             gameThree,
@@ -90,13 +91,7 @@ describe('Final results', () => {
         users.forEach(() => advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS));
         // add points
 
-        users.forEach((user, idx) => {
-            pointsArray.push(stageController['playerPoints'].getPointsFromPlayer(user.id)); // get points from before (from sending final photo)
-            for (let i = 0; i < InitialParameters.NUMBER_ROUNDS; i++) {
-                stageController['playerPoints'].addPointsToPlayer(user.id, idx);
-                pointsArray[idx] += idx;
-            }
-        });
+        pointsArray = addPointsToPlayer(gameThree, users);
 
         // get final results
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {

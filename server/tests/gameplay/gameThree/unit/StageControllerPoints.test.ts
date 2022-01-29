@@ -7,6 +7,7 @@ import {
 } from '../../../../src/gameplay/gameThree/enums/GameThreeMessageTypes';
 import { IMessagePhotoVote } from '../../../../src/gameplay/gameThree/interfaces';
 import { roomId, users } from '../../mockData';
+import { switchToSecondToLastRound } from '../gameThreeHelperFunctions';
 import { photoMessage, players, votingMessage } from '../gameThreeMockData';
 
 let stageController: StageController;
@@ -138,7 +139,7 @@ describe('Point per Final Photo', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         stageController = new StageController(roomId, players);
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -189,7 +190,7 @@ describe('Final Voting Points', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         stageController = new StageController(roomId, players);
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -312,7 +313,7 @@ describe('Full run through all stages', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         stageController = new StageController(roomId, players);
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         receiveAllPhotos(stageController);
         firstTwoPlayersGetVote(stageController); // expect points to be: [1,1,0,0]
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);

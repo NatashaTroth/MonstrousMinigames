@@ -19,17 +19,13 @@ describe('DisconnectedUserError handling tests', () => {
     });
 
     it('DisconnectedUserError has userId property of disconnected user', async () => {
-        // const SPEED = 50;
         const userId = '1';
         startGameAndAdvanceCountdown(gameOne);
         gameOne.receiveInput({ ...runForwardMessage, userId });
-        // gameOne['runForward'](userId, SPEED);
         gameOne.disconnectPlayer(userId);
 
         try {
             gameOne.receiveInput({ ...runForwardMessage, userId });
-
-            // gameOne['runForward'](userId);
         } catch (e: any) {
             expect(e.userId).toBe(userId);
         }

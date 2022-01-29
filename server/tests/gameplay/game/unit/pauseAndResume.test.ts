@@ -7,27 +7,6 @@ import { MockGameClass } from '../../mockGameClass';
 let game: MockGameClass;
 const dateNow = 2;
 
-describe('Pause tests', () => {
-    beforeEach(() => {
-        jest.useFakeTimers();
-        Date.now = jest.fn(() => dateNow);
-        game = new MockGameClass(roomId, leaderboard);
-        game.createNewGame(users);
-        game.gameState = GameState.Started;
-        jest.useFakeTimers();
-    });
-
-    afterAll(async () => {
-        jest.clearAllTimers();
-    });
-
-    it('sets pause time to now', async () => {
-        Date.now = jest.fn(() => dateNow + 5000);
-        game.pauseGame();
-        expect(game['_gamePausedAt']).toBe(dateNow + 5000);
-    });
-});
-
 describe('Resume tests', () => {
     beforeEach(() => {
         jest.useFakeTimers();
@@ -41,22 +20,5 @@ describe('Resume tests', () => {
         game.pauseGame();
         game.resumeGame();
         expect(game.gameState).toBe(GameState.Started);
-    });
-
-    it('updates gameStartedTime correctly to accommodate pause', async () => {
-        const gameStartTime = Date.now();
-        const gamePauseTime = gameStartTime + 5000;
-        const gameResumeTime = gameStartTime + 15000;
-        const gameTimePassed = gamePauseTime - gameStartTime;
-        const newGameStartedTime = gameResumeTime - gameTimePassed;
-
-        game.startGame();
-        Date.now = jest.fn(() => gamePauseTime);
-        game.pauseGame();
-        expect(game['_gamePausedAt']).toBe(gamePauseTime);
-        Date.now = jest.fn(() => gameResumeTime);
-        game.resumeGame();
-
-        expect(game['_gameStartedAt']).toBe(newGameStartedTime);
     });
 });

@@ -29,7 +29,7 @@ describe('Stop game user closed', () => {
             Promise.resolve();
         });
 
-        gameThree['stopGameUserClosed']();
+        gameThree.stopGameUserClosed();
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
@@ -40,7 +40,7 @@ describe('Stop game user closed', () => {
                 eventCalled = true;
             }
         });
-        gameThree['stopGameUserClosed']();
+        gameThree.stopGameUserClosed();
         expect(eventCalled).toBeTruthy();
     });
 });

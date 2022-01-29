@@ -281,28 +281,4 @@ describe('Taking Photo', () => {
 
         expect(eventData?.photoUrls).toBe(undefined);
     });
-
-    it.todo('should return the incrementing photoId');
-
-    // it('should return the incrementing photoId', async () => {
-    //     let eventData: undefined | VoteForPhotos;
-    //     gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
-    //         if (message.type === GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS) {
-    //             eventData = message;
-    //         }
-    //     });
-
-    //     const photographerIds: string[] = [];
-    //     Array.from(gameThree.players.values()).forEach((player, idx) => {
-    //         player.roundInfo[gameThree['roundIdx']].received = true;
-    //         player.roundInfo[gameThree['roundIdx']].url = idx.toString();
-    //         photographerIds[idx] = player.id;
-    //     });
-
-    //     gameThree['sendPhotosToScreen']();
-    //     console.log(eventData);
-    //     expect(eventData?.photoUrls.map(photoUrl => photoUrl.photoId)).toEqual(
-    //         expect.arrayContaining(Array.from({ length: eventData!.photoUrls.length }, (_, i) => i + 1))
-    //     );
-    // });
 });

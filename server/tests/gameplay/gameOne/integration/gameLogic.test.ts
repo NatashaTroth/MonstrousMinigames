@@ -35,14 +35,6 @@ describe('Start game', () => {
         expect(gameOne.players.get('1')?.positionX).toBe(gameOne.initialPlayerPositionX);
     });
 
-    it('gameStartedTime is now', async () => {
-        Date.now = jest.fn(() => dateNow);
-        startGameAndAdvanceCountdown(gameOne);
-        // const afterCountdownTime = Date.now();
-        // advanceCountdown(50);
-        //Remove last 2 digits (could be slight difference)
-        expect(gameOne['_gameStartedAt']).toBe(Date.now());
-    });
 });
 
 describe('Run forward', () => {

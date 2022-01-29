@@ -47,8 +47,6 @@ describe('Approaching solvable obstacle', () => {
         player.runForward(
             player.obstacles[0].positionX - InitialParameters.APPROACH_SOLVABLE_OBSTACLE_DISTANCE - player.positionX
         );
-
-        // gameOne['handlePlayerApproachingSolvableObstacle'](player);
         expect(eventCalled).toBeTruthy();
     });
 
@@ -66,8 +64,6 @@ describe('Approaching solvable obstacle', () => {
         player.runForward(
             player.obstacles[0].positionX - InitialParameters.APPROACH_SOLVABLE_OBSTACLE_DISTANCE / 2 - player.positionX
         );
-
-        // gameOne['handlePlayerApproachingSolvableObstacle'](player);
         expect(eventCalled).toBeFalsy();
     });
 

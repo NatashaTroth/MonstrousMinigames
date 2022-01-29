@@ -40,17 +40,6 @@ export function completeObstacles(gameOne: GameOne, player: GameOnePlayer) {
     const obstacles = [...player.obstacles];
     for (let i = 0; i < obstacles.length; i++) {
         goToNextUnsolvableObstacle(gameOne, player);
-        // let counter = 0;
-        // while (
-        //     !player.atObstacle &&
-        //     player.positionX < gameOne.trackLength &&
-        //     !player.finished &&
-        //     gameOne.gameState === GameState.Started
-        // ) {
-        //     runForwardNoLimit(gameOne, player);
-        //     counter++;
-        //     if (counter > gameOne.trackLength) break;
-        // }
         gameOne.receiveInput({
             ...playerHasCompletedObstacleMessage,
             userId: player.id,
@@ -130,26 +119,6 @@ export function finishGame(gameOne: GameOne): GameOne {
     return gameOne;
 }
 
-// export function finishPlayer(gameOne: GameOne, userId: string) {
-//     completePlayersObstacles(gameOne, userId);
-
-//     gameOne.players.get(userId)!.runForward(gameOne.trackLength - gameOne.players.get(userId)!.positionX);
-// }
-
-// export function completePlayersObstacles(gameOne: GameOne, userId: string) {
-//     const player = gameOne.players.get(userId)!;
-//     if (player.obstacles.length > 0) {
-//         player.positionX = player.obstacles.pop()!.positionX;
-//         player.obstacles = [];
-//     }
-
-//     // gameOne.maxRunsPerFrame = Infinity; //To prevent going over speed limit
-//     // while (player.obstacles.length) {
-//     //     gameOne['runForward'](userId, distanceToNextObstacle(gameOne, userId));
-//     //     if (player.atObstacle) gameOne['playerHasCompletedObstacle'](userId, player.obstacles[0].id);
-//     // }
-// }
-
 export function goToNextUnsolvableObstacle(gameOne: GameOne, player: GameOnePlayer) {
     // gameOne.maxRunsPerFrame = Infinity; //To prevent going over speedlimit
     let counter = 0;
@@ -165,22 +134,6 @@ export function goToNextUnsolvableObstacle(gameOne: GameOne, player: GameOnePlay
         player.countRunsPerFrame = 0; //To prevent going over speed limit
     }
 }
-
-// export function completeNextObstacle(gameOne: GameOne, userId: string) {
-//     gameOne.players.get(userId)!.runForward(distanceToNextObstacle(gameOne, userId));
-//     advanceCountdown(gameOne, 10);
-
-//     // if (gameOne['playerHasReachedObstacle'](userId))
-//     //     gameOne['playerHasCompletedObstacle'](userId, gameOne.players.get(userId)!.obstacles[0].id);
-// }
-
-// export function distanceToNextObstacle(gameOne: GameOne, userId: string) {
-//     return gameOne.players.get(userId)!.obstacles[0].positionX - gameOne.players.get(userId)!.positionX;
-// }
-
-// export function runToNextObstacle(gameOne: GameOne, userId: string) {
-//     gameOne.players.get(userId)!.runForward(distanceToNextObstacle(gameOne, userId));
-// }
 
 export async function startAndFinishGameDifferentTimes(gameOne: GameOne, timesFinished = [1000, 5000, 10000, 15000]) {
     const dateNow = 1618665766156;
@@ -247,21 +200,6 @@ export function getGameFinishedDataSameRanks(gameOne: GameOne) {
 
     return eventData;
 }
-
-// export async function getGameFinishedDataWithSomeDead(gameOne: GameOne) {
-//     let eventData = {
-//         roomId: '',
-//         gameState: GameState.Started,
-//         playerRanks: [] as PlayerRank[],
-//     };
-//     gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
-//         if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
-//             eventData = message.data as any;
-//         }
-//     });
-//     gameOne = await startAndFinishGameDifferentTimes(gameOne);
-//     return eventData;
-// }
 
 export function getToCreatedGameState(gameOne: GameOne) {
     gameOne.createNewGame(users);

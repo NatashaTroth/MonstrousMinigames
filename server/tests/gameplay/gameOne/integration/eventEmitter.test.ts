@@ -23,6 +23,7 @@ import {
     clearTimersAndIntervals, finishGame, finishPlayer, goToNextUnsolvableObstacle,
     startGameAndAdvanceCountdown
 } from '../gameOneHelperFunctions';
+import { pushChasersMessage } from '../gameOneMockData';
 
 let gameOne: GameOne;
 let gameEventEmitter: GameEventEmitter;
@@ -491,8 +492,8 @@ describe('Game has finished events', () => {
     });
 
     it('should emit a GameHasFinished data when a all the players have finished race', async () => {
-        const dateNow = 1618665766156;
-        Date.now = jest.fn(() => dateNow);
+        const gameStartedTime = 1618665766156;
+        Date.now = jest.fn(() => gameStartedTime);
         startGameAndAdvanceCountdown(gameOne);
         let eventData = {
             roomId: '',
@@ -505,7 +506,7 @@ describe('Game has finished events', () => {
             }
         });
         // finish game
-        Date.now = jest.fn(() => dateNow + 10000);
+        Date.now = jest.fn(() => gameStartedTime + 10000);
         finishGame(gameOne);
 
         expect(eventData).toMatchObject({
@@ -513,7 +514,7 @@ describe('Game has finished events', () => {
             gameState: gameOne.gameState,
         });
 
-        const playerOneTotalTime = dateNow + 10000 - gameOne['gameStartedAt'];
+        const playerOneTotalTime = gameStartedTime + 10000 - (gameStartedTime + InitialParameters.COUNTDOWN_TIME);
 
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(eventData.playerRanks[0]).toMatchObject({
@@ -554,9 +555,8 @@ describe('Chaser event', () => {
                 chasersEvent = true;
             }
         });
-        // gameOne['runForward']('1', chasersStartPosX);
         gameOne.players.get(users[0].id)!.finished = true;
-        gameOne['pushChasers'](users[0].id);
+        gameOne.receiveInput(pushChasersMessage);
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(chasersEvent).toBeTruthy();
     });
@@ -569,42 +569,10 @@ describe('Chaser event', () => {
                 maxNrChasersEvent = true;
             }
         });
-        // gameOne['runForward']('1', chasersStartPosX);
         gameOne.players.get(users[0].id)!.finished = true;
         gameOne.players.get(users[0].id)!.chaserPushesUsed = InitialParameters.MAX_NUMBER_CHASER_PUSHES - 1;
-        gameOne['pushChasers'](users[0].id);
+        gameOne.receiveInput(pushChasersMessage);
         gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
         expect(maxNrChasersEvent).toBeTruthy();
     });
-
-    // it.skip('should emit a PlayerIsDead event when a chaser catches a player', async () => {
-    //     let playerIsDeadEvent = false;
-    //     gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
-    //         if (message.type === GAME_ONE_EVENT_MESSAGE__PLAYER_IS_DEAD) {
-    //             playerIsDeadEvent = true;
-    //         }
-    //     });
-    //     // gameOne['runForward']('1', chasersStartPosX);
-    //     jest.advanceTimersByTime(1000);
-    //     gameEventEmitter.removeAllListeners(GameEventEmitter.EVENT_MESSAGE_EVENT);
-    //     expect(playerIsDeadEvent).toBeTruthy();
-    // });
-
-    // TODO:
-    // it('emit game finished event when all but one player caught', async () => {
-    //     let eventData = false;
-    //     gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
-    //         if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
-    //             eventData = true;
-    //         }
-    //     });
-
-    //     users.forEach(user => {
-    //         gameOne.players.get(user.id)!.positionX = 0;
-    //     });
-
-    //     gameOne['updateChasersPosition'](100);
-
-    //     expect(eventData).toBeTruthy();
-    // });
 });

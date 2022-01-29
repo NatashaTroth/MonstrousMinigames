@@ -20,7 +20,7 @@ describe('Stop game all users disconnected', () => {
             Promise.resolve();
         });
 
-        gameThree['stopGameAllUsersDisconnected']();
+        gameThree.stopGameAllUsersDisconnected();
         expect(spy).toHaveBeenCalledTimes(1);
     });
 });
