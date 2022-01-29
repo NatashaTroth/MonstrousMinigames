@@ -6,9 +6,7 @@ import { RouteParams } from '../../../../App';
 import { MyAudioContext, Sound } from '../../../../contexts/AudioContextProvider';
 import { GameContext } from '../../../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../../../contexts/screen/ScreenSocketContextProvider';
-import {
-    AudioButton, Container, PauseButton, StopButton
-} from '../../../game1/screen/components/Game.sc';
+import { AudioButton, Container, PauseButton, StopButton } from '../../../game1/screen/components/Game.sc';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import { PhaserGame } from '../../../phaser/PhaserGame';
 import { FakeInMemorySocket } from '../../../socket/InMemorySocketFake';

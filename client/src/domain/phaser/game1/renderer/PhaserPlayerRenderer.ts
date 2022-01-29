@@ -39,6 +39,9 @@ export class PhaserPlayerRenderer {
     private caveInFront?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     private backgroundElements?: Phaser.GameObjects.Image[];
 
+    private characterName?: string;
+    private phaserObjectId: number;
+
     constructor(
         private scene: MainScene,
         private numberPlayers: number,
@@ -48,6 +51,7 @@ export class PhaserPlayerRenderer {
         this.skippedObstacles = [];
         this.particles = [];
         this.backgroundElements = [];
+        this.phaserObjectId = Math.random();
 
         //when <= 2 lanes, make them less high to fit more width
 
@@ -368,6 +372,7 @@ export class PhaserPlayerRenderer {
             coordinates,
             monsterSpriteSheetName
         );
+        this.characterName = monsterSpriteSheetName;
     }
 
     private initiateAnimation(spritesheetName: string, animationName: string, frames: CharacterAnimationFrames) {
@@ -396,7 +401,7 @@ export class PhaserPlayerRenderer {
         this.destroyChaser();
         this.destroyAttentionIcon();
         this.destroyCave();
-        this.destroyObstacle();
+        this.destroyObstacles();
         this.destroyWarningIcon();
         this.destroyPlayer();
     }
@@ -409,7 +414,7 @@ export function handleRenderPlayer(
     coordinates: Coordinates,
     monsterSpriteSheetName: string
 ) {
-    const player = scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 20);
+    const player = scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName, 0);
     player.setDepth(depthDictionary.player);
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
