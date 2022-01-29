@@ -1,6 +1,5 @@
 import {
-    VoteForFinalPhotosMessage,
-    voteForFinalPhotosMessageTypeGuard,
+    VoteForFinalPhotosMessage, voteForFinalPhotosMessageTypeGuard
 } from '../../domain/typeGuards/game3/voteForFinalPhotos';
 import { MessageTypesGame3 } from '../../utils/constants';
 

@@ -1,13 +1,13 @@
-import { History } from 'history';
-import React from 'react';
+import { History } from "history";
+import React from "react";
 
-import { Game3Context, Vote, VoteResult } from '../../../../contexts/game3/Game3ContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
-import { controllerGame3Route } from '../../../../utils/routes';
-import history from '../../../history/history';
-import messageHandler from '../../../socket/messageHandler';
-import { Socket } from '../../../socket/Socket';
-import { newRoundTypeGuard } from '../../../typeGuards/game3/newRound';
+import { Game3Context, Vote, VoteResult } from "../../../../contexts/game3/Game3ContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import { controllerGame3Route } from "../../../../utils/routes";
+import history from "../../../history/history";
+import messageHandler from "../../../socket/messageHandler";
+import { Socket } from "../../../socket/Socket";
+import { newRoundTypeGuard } from "../../../typeGuards/game3/newRound";
 
 interface Dependencies {
     setVoteForPhotoMessage: (val: Vote) => void;

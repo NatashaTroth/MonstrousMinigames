@@ -1,12 +1,14 @@
-import { act, queryByText, render, waitFor } from '@testing-library/react';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure } from 'enzyme';
-import React from 'react';
-import { ThemeProvider } from 'styled-components';
+import { act, queryByText, render, waitFor } from "@testing-library/react";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
+import { configure } from "enzyme";
+import React from "react";
+import { ThemeProvider } from "styled-components";
 
-import { defaultValue, FinalPhoto, Game3Context, Topic, Vote } from '../../../contexts/game3/Game3ContextProvider';
-import Game3, { getInstruction, getTime } from '../../../domain/game3/screen/components/Game3';
-import theme from '../../../styles/theme';
+import {
+    defaultValue, FinalPhoto, Game3Context, Topic, Vote
+} from "../../../contexts/game3/Game3ContextProvider";
+import Game3, { getInstruction, getTime } from "../../../domain/game3/screen/components/Game3";
+import theme from "../../../styles/theme";
 
 configure({ adapter: new Adapter() });
 

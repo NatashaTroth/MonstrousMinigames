@@ -12,12 +12,10 @@ import {
 } from '../gameOneHelperFunctions';
 import { playerHasCompletedObstacleMessage, runForwardMessage } from '../gameOneMockData';
 
-const TRACK_LENGTH = 5000; // has to be bigger than initial player position
 const OBSTACLE_ID_THAT_IS_NOT_NEXT = 1;
 const OBSTACLE_ID_THAT_DOES_NOT_EXIST = 5000;
 
 let gameOne: GameOne;
-const dateNow = 1618665766156;
 const InitialParameters = getInitialParams();
 
 describe('Start game', () => {
@@ -34,7 +32,6 @@ describe('Start game', () => {
         startGameAndAdvanceCountdown(gameOne);
         expect(gameOne.players.get('1')?.positionX).toBe(gameOne.initialPlayerPositionX);
     });
-
 });
 
 describe('Run forward', () => {

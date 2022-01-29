@@ -3,8 +3,7 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 
 import {
-    useVoteForFinalPhotosHandler,
-    voteForFinalPhotosHandler,
+    useVoteForFinalPhotosHandler, voteForFinalPhotosHandler
 } from '../../../domain/game3/controller/gameState/voteForFinalPhotosHandler';
 import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
 import { VoteForFinalPhotosMessage } from '../../../domain/typeGuards/game3/voteForFinalPhotos';

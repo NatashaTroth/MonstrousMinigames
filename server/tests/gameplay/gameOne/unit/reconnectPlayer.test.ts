@@ -3,9 +3,8 @@ import 'reflect-metadata';
 import { GameOne } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
 import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
-import GameOnePlayer from '../../../../src/gameplay/gameOne/GameOnePlayer';
 import { leaderboard, roomId, users } from '../../mockData';
-import { playerHasCompletedObstacleMessage, players, runForwardMessage } from '../gameOneMockData';
+import { playerHasCompletedObstacleMessage, runForwardMessage } from '../gameOneMockData';
 
 let gameOne: GameOne;
 const InitialParameters = getInitialParams();

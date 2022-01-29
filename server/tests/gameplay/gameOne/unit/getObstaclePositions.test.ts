@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 
-import { GameOne } from '../../../../src/gameplay';
 import GameOnePlayersController from '../../../../src/gameplay/gameOne/classes/GameOnePlayersController';
 import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitialParameters';
 import { Obstacle } from '../../../../src/gameplay/gameOne/interfaces';

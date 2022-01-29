@@ -1,11 +1,11 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { deleteFiles } from '../../domain/game3/controller/gameState/handleFiles';
-import { Photographer } from '../../domain/typeGuards/game3/voteForFinalPhotos';
-import { PhotoUserMapper } from '../../domain/typeGuards/game3/voteForPhotos';
-import { VotingResult } from '../../domain/typeGuards/game3/votingResults';
-import { FirebaseContext } from '../FirebaseContextProvider';
-import { GameContext } from '../GameContextProvider';
+import { deleteFiles } from "../../domain/game3/controller/gameState/handleFiles";
+import { Photographer } from "../../domain/typeGuards/game3/voteForFinalPhotos";
+import { PhotoUserMapper } from "../../domain/typeGuards/game3/voteForPhotos";
+import { VotingResult } from "../../domain/typeGuards/game3/votingResults";
+import { FirebaseContext } from "../FirebaseContextProvider";
+import { GameContext } from "../GameContextProvider";
 
 export const defaultValue = {
     roundIdx: 1,
