@@ -437,7 +437,7 @@ describe("Handle function send to room's screens", () => {
             data: initialGameStateInfoData,
         };
 
-        gameOneEventMessageEmitter.handle(screenNamespace, screenNamespace, room, message);
+        gameOneEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
         expect(screenSpaceEmit).toHaveBeenCalledWith('message', message);
         expect(controllerSpaceEmit).not.toHaveBeenCalled();
     });
@@ -449,7 +449,7 @@ describe("Handle function send to room's screens", () => {
             data: initialGameStateInfoData,
         };
 
-        gameOneEventMessageEmitter.handle(screenNamespace, screenNamespace, room, message);
+        gameOneEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
         expect(screenSpaceTo).toHaveBeenCalledWith(room.id);
         expect(controllerSpaceTo).not.toHaveBeenCalled();
     });
@@ -464,7 +464,7 @@ describe("Handle function send to room's screens", () => {
             distance,
         };
 
-        gameOneEventMessageEmitter.handle(screenNamespace, screenNamespace, room, message);
+        gameOneEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
         expect(screenSpaceEmit).toHaveBeenCalledWith('message', message);
         expect(controllerSpaceEmit).not.toHaveBeenCalled();
     });
@@ -479,7 +479,7 @@ describe("Handle function send to room's screens", () => {
             distance,
         };
 
-        gameOneEventMessageEmitter.handle(screenNamespace, screenNamespace, room, message);
+        gameOneEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
         expect(screenSpaceTo).toHaveBeenCalledWith(room.id);
         expect(controllerSpaceTo).not.toHaveBeenCalled();
     });
@@ -491,7 +491,7 @@ describe("Handle function send to room's screens", () => {
             userId,
         };
 
-        gameOneEventMessageEmitter.handle(screenNamespace, screenNamespace, room, message);
+        gameOneEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
         expect(screenSpaceEmit).toHaveBeenCalledWith('message', message);
         expect(controllerSpaceEmit).not.toHaveBeenCalled();
     });
@@ -503,7 +503,7 @@ describe("Handle function send to room's screens", () => {
             userId,
         };
 
-        gameOneEventMessageEmitter.handle(screenNamespace, screenNamespace, room, message);
+        gameOneEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
         expect(screenSpaceTo).toHaveBeenCalledWith(room.id);
         expect(controllerSpaceTo).not.toHaveBeenCalled();
     });
@@ -515,7 +515,7 @@ describe("Handle function send to room's screens", () => {
             userId,
         };
 
-        gameOneEventMessageEmitter.handle(screenNamespace, screenNamespace, room, message);
+        gameOneEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
         expect(screenSpaceEmit).toHaveBeenCalledWith('message', message);
         expect(controllerSpaceEmit).not.toHaveBeenCalled();
     });
@@ -527,7 +527,7 @@ describe("Handle function send to room's screens", () => {
             userId,
         };
 
-        gameOneEventMessageEmitter.handle(screenNamespace, screenNamespace, room, message);
+        gameOneEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
         expect(screenSpaceTo).toHaveBeenCalledWith(room.id);
         expect(controllerSpaceTo).not.toHaveBeenCalled();
     });
@@ -539,7 +539,7 @@ describe("Handle function send to room's screens", () => {
             amount: 100,
         };
 
-        gameOneEventMessageEmitter.handle(screenNamespace, screenNamespace, room, message);
+        gameOneEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
         expect(screenSpaceEmit).toHaveBeenCalledWith('message', message);
         expect(controllerSpaceEmit).not.toHaveBeenCalled();
     });
@@ -551,7 +551,7 @@ describe("Handle function send to room's screens", () => {
             amount: 100,
         };
 
-        gameOneEventMessageEmitter.handle(screenNamespace, screenNamespace, room, message);
+        gameOneEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
         expect(screenSpaceTo).toHaveBeenCalledWith(room.id);
         expect(controllerSpaceTo).not.toHaveBeenCalled();
     });
