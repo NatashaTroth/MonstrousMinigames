@@ -1,5 +1,5 @@
-import { MessageSocket } from './MessageSocket';
-import { Socket } from './Socket';
+import { MessageSocket } from "./MessageSocket";
+import { Socket } from "./Socket";
 
 type MessageHandler = <Message, Dependencies>(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,16 +1,16 @@
 import 'reflect-metadata';
 
-import { leaderboard, roomId, usersWithNumbers } from '../../mockData';
 import { GameTwo } from '../../../../src/gameplay';
 import { GameState } from '../../../../src/gameplay/enums';
 import Parameters from '../../../../src/gameplay/gameTwo/constants/Parameters';
+import { leaderboard, roomId, usersWithNumbers } from '../../mockData';
 
 let gameTwo: GameTwo;
 const users = usersWithNumbers;
 
 describe('GameTwo Unit Tests', () => {
     beforeEach(async () => {
-        jest.spyOn(console, "log").mockImplementation();
+        jest.spyOn(console, 'log').mockImplementation();
         gameTwo = new GameTwo(roomId, leaderboard);
         jest.useFakeTimers();
 
@@ -26,10 +26,6 @@ describe('GameTwo Unit Tests', () => {
 
     it('should have the correct new number of players', async () => {
         expect(gameTwo.players.size).toBe(users.length);
-    });
-
-    it('should have the correct current rank', async () => {
-        expect(gameTwo['currentRank']).toBe(1);
     });
 
     it('should have the correct name for player 1', async () => {
@@ -107,9 +103,8 @@ describe('GameTwo Unit Tests', () => {
         console.info = jest.fn();
         const message = {
             type: 'test',
-        }
+        };
         gameTwo.receiveInput(message);
         expect(console.info).toHaveBeenCalledWith(message);
     });
-
 });

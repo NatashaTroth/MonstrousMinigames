@@ -14,8 +14,9 @@ npm:server:
         - cd server/
         - echo "Running npm ci ..."
         - npm ci
-    # except:
-    #     - /^frontend-.*$/
+    only:
+        changes:
+            - server/**/*
 
 lint:server:
     stage: lint
@@ -26,8 +27,10 @@ lint:server:
         - echo "Linting.."
         - npm run lint
     except:
-        # - /^frontend-.*$/
         - staging
+    only:
+        changes:
+            - server/**/*
 
 test-unit:server:
     stage: test-unit
@@ -38,8 +41,10 @@ test-unit:server:
         - echo "Testing.."
         - npm run test:unit
     except:
-        # - /^frontend-.*$/
         - staging
+    only:
+        changes:
+            - server/**/*
 
 test-integration:server:
     stage: test-integration
@@ -49,23 +54,11 @@ test-integration:server:
         - cd server/
         - echo "Testing.."
         - npm run test:integration
-        # - ./node_modules/.bin/jest ./
     except:
-        # - /^frontend-.*$/
         - staging
-
-tests-other:server:
-    stage: test-other
-    tags:
-        - node
-    script:
-        - cd server/
-        - echo "Testing.."
-        - npm run test:other
-        # - ./node_modules/.bin/jest ./
-    except:
-        # - /^frontend-.*$/
-        - staging
+    only:
+        changes:
+            - server/**/*
 
 # --- Deployment ---
 .job_template: &deployment_configuration
@@ -88,8 +81,11 @@ staging:server:
     variables:
         HEROKU_APP: $HEROKU_APP_STAGING
     only:
-        - master
-        - staging
+        refs:
+            - master
+            - staging
+        changes:
+            - server/**/*
 
 production:server:
     <<: *deployment_configuration
@@ -100,5 +96,8 @@ production:server:
     variables:
         HEROKU_APP: $HEROKU_APP_PRODUCTION
     only:
-        - dev
+        refs:
+            - dev
+        changes:
+            - server/**/*
     when: manual

@@ -120,7 +120,10 @@ describe('Taking Photo', () => {
                 eventCalled = true;
             }
         });
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO - 1);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME - 1
+        );
 
         expect(eventCalled).toBeFalsy();
     });
@@ -133,7 +136,10 @@ describe('Taking Photo', () => {
             }
         });
         receiveMultiplePhotos(gameThree);
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
 
         expect(eventCalled).toBeTruthy();
     });
@@ -146,7 +152,10 @@ describe('Taking Photo', () => {
             }
         });
         receiveSinglePhoto(gameThree);
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
 
         expect(eventCalled).toBeFalsy();
     });
@@ -158,7 +167,10 @@ describe('Taking Photo', () => {
                 eventCalled = true;
             }
         });
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         expect(eventCalled).toBeFalsy();
     });
 
@@ -170,7 +182,10 @@ describe('Taking Photo', () => {
             }
         });
         receiveSinglePhoto(gameThree);
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
 
         expect(eventCalled).toBeTruthy();
     });
@@ -182,7 +197,10 @@ describe('Taking Photo', () => {
                 eventCalled = true;
             }
         });
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         expect(eventCalled).toBeTruthy();
     });
 
@@ -239,7 +257,10 @@ describe('Taking Photo', () => {
             photographerIds[idx] = user.id;
         });
 
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
 
         expect(eventData?.photoUrls.length).toBe(otherPlayers.length);
         expect(eventData?.photoUrls.map(photoUrl => photoUrl.photographerId)).toEqual(
@@ -260,28 +281,4 @@ describe('Taking Photo', () => {
 
         expect(eventData?.photoUrls).toBe(undefined);
     });
-
-    it.todo('should return the incrementing photoId');
-
-    // it('should return the incrementing photoId', async () => {
-    //     let eventData: undefined | VoteForPhotos;
-    //     gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
-    //         if (message.type === GAME_THREE_EVENT_MESSAGE__VOTE_FOR_PHOTOS) {
-    //             eventData = message;
-    //         }
-    //     });
-
-    //     const photographerIds: string[] = [];
-    //     Array.from(gameThree.players.values()).forEach((player, idx) => {
-    //         player.roundInfo[gameThree['roundIdx']].received = true;
-    //         player.roundInfo[gameThree['roundIdx']].url = idx.toString();
-    //         photographerIds[idx] = player.id;
-    //     });
-
-    //     gameThree['sendPhotosToScreen']();
-    //     console.log(eventData);
-    //     expect(eventData?.photoUrls.map(photoUrl => photoUrl.photoId)).toEqual(
-    //         expect.arrayContaining(Array.from({ length: eventData!.photoUrls.length }, (_, i) => i + 1))
-    //     );
-    // });
 });

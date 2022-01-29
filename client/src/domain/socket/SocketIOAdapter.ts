@@ -1,8 +1,8 @@
-import { stringify } from 'query-string';
-import io from 'socket.io-client';
+import { stringify } from "query-string";
+import io from "socket.io-client";
 
-import { localBackend, localDevelopment } from '../../utils/constants';
-import { Socket } from './Socket';
+import { localBackend, localDevelopment } from "../../utils/constants";
+import { Socket } from "./Socket";
 
 interface Params {
     roomId: string;

@@ -14,21 +14,21 @@ describe('Receive Input', () => {
     });
 
     it('should return if the game state is not started', async () => {
-        const handleInputSpy = jest.spyOn(MockGameClass.prototype as any, 'handleInput');
+        const handleInputSpy = jest.spyOn(game, 'handleInput');
         game.receiveInput(mockMessage);
         expect(handleInputSpy).not.toHaveBeenCalled();
     });
 
     it('should call handleInput', async () => {
         game.gameState = GameState.Started;
-        const handleInputSpy = jest.spyOn(MockGameClass.prototype as any, 'handleInput');
+        const handleInputSpy = jest.spyOn(game, 'handleInput');
         game.receiveInput(mockMessage);
         expect(handleInputSpy).toHaveBeenCalled();
     });
 
     it('should call handleInput with message', async () => {
         game.gameState = GameState.Started;
-        const handleInputSpy = jest.spyOn(MockGameClass.prototype as any, 'handleInput');
+        const handleInputSpy = jest.spyOn(game, 'handleInput');
         game.receiveInput(mockMessage);
         expect(handleInputSpy).toHaveBeenCalledWith(mockMessage);
     });

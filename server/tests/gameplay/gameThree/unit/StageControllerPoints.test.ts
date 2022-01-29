@@ -7,6 +7,7 @@ import {
 } from '../../../../src/gameplay/gameThree/enums/GameThreeMessageTypes';
 import { IMessagePhotoVote } from '../../../../src/gameplay/gameThree/interfaces';
 import { roomId, users } from '../../mockData';
+import { switchToSecondToLastRound } from '../gameThreeHelperFunctions';
 import { photoMessage, players, votingMessage } from '../gameThreeMockData';
 
 let stageController: StageController;
@@ -126,7 +127,9 @@ describe('Single Photo & Voting', () => {
 
     it('should return all vote points to only player who took a photo (if only one photo)', () => {
         stageController.handleInput(photoMessage);
-        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        stageController.update(
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         const userPoints = getPlayerPointsArray(stageController.getPlayerPoints());
         expect(userPoints).toEqual([users.length, 0, 0, 0]); //order of elements is checked as well
     });
@@ -136,8 +139,10 @@ describe('Point per Final Photo', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         stageController = new StageController(roomId, players);
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        switchToSecondToLastRound(stageController);
+        stageController.update(
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
     });
@@ -149,7 +154,9 @@ describe('Point per Final Photo', () => {
 
     it('should receive a point for a received photo', async () => {
         stageController.handleInput(photoMessage);
-        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        stageController.update(
+            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         const userPoints = getPlayerPointsArray(stageController.getPlayerPoints());
         expect(userPoints).toEqual([1, 0, 0, 0]); //order of elements is checked as well
     });
@@ -157,7 +164,9 @@ describe('Point per Final Photo', () => {
     it('should receive a point per received photo', async () => {
         stageController.handleInput(photoMessage);
         stageController.handleInput(photoMessage);
-        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        stageController.update(
+            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         const userPoints = getPlayerPointsArray(stageController.getPlayerPoints());
         expect(userPoints).toEqual([2, 0, 0, 0]); //order of elements is checked as well
     });
@@ -167,7 +176,9 @@ describe('Point per Final Photo', () => {
             stageController.handleInput(photoMessage);
         }
 
-        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        stageController.update(
+            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         const userPoints = getPlayerPointsArray(stageController.getPlayerPoints());
         expect(userPoints).toEqual([InitialParameters.NUMBER_FINAL_PHOTOS, 0, 0, 0]); //order of elements is checked as well
     });
@@ -179,12 +190,16 @@ describe('Final Voting Points', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         stageController = new StageController(roomId, players);
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        switchToSecondToLastRound(stageController);
+        stageController.update(
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
         receiveAllPhotos(stageController); // one point per player for a received photo (to pass no photos check in FinalPhotoStage switchStage())
-        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        stageController.update(
+            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         users.forEach(() => {
             stageController.update(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
         });
@@ -298,14 +313,16 @@ describe('Full run through all stages', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
         stageController = new StageController(roomId, players);
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         receiveAllPhotos(stageController);
         firstTwoPlayersGetVote(stageController); // expect points to be: [1,1,0,0]
         stageController.update(InitialParameters.COUNTDOWN_TIME_VOTE);
         stageController.update(InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
         // user 0 sends 0 photos, user 1: max nr photos, user 2: max nr photos + 2 photos, user 3: 0 photos
         sendMultiplePhotos(stageController); // expect points to be: [1, maxNumberPhotos + 1, maxNumberPhotos,0]
-        stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        stageController.update(
+            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         users.forEach(() => {
             stageController.update(InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
         });
@@ -395,5 +412,8 @@ function receiveAllPhotos(stageController: StageController, exceptIds: string[] 
         });
 
     //make sure skip to next stage
-    if (exceptIds.length > 0) stageController.update(InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+    if (exceptIds.length > 0)
+        stageController.update(
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
 }

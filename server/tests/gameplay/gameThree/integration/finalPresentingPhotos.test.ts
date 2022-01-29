@@ -13,7 +13,9 @@ import {
     GameThreeEventMessage, PresentFinalPhotos
 } from '../../../../src/gameplay/gameThree/interfaces/GameThreeEventMessages';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
-import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
+import {
+    advanceCountdown, startGameAdvanceCountdown, switchToSecondToLastRound
+} from '../gameThreeHelperFunctions';
 
 let gameThree: GameThree;
 const gameEventEmitter = DI.resolve(GameEventEmitter);
@@ -28,8 +30,11 @@ describe('Taking Photo', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
-        gameThree['stageController']!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        switchToSecondToLastRound(gameThree);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
         users.forEach(user => {

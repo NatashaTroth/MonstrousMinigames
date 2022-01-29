@@ -25,7 +25,10 @@ describe('Viewing Results stage', () => {
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
         receiveMultiplePhotos(gameThree);
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
     });
 

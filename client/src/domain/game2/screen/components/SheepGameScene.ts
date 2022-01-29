@@ -182,7 +182,6 @@ class SheepGameScene extends Phaser.Scene {
         if (!designDevelopment) {
             const initialGameStateInfoSocket = new MessageSocket(initialGameStateInfoTypeGuard, this.socket);
             initialGameStateInfoSocket.listen((data: InitialGameStateInfoMessage) => {
-                console.log(JSON.stringify(data));
                 this.gameRenderer?.destroyLoadingScreen();
                 this.gameStarted = true;
                 this.initiateGame(data.data);
@@ -419,7 +418,7 @@ class SheepGameScene extends Phaser.Scene {
     private createInitialSheepCount() {
         if (this.gameTwoRenderer) {
             this.gameTwoRenderer.renderInitialSheepCount(this.sheep.length);
-            setTimeout(() => this.gameTwoRenderer!.destroyInitialSheepCount(), 3000);
+            setTimeout(() => this.gameTwoRenderer!.destroyInitialSheepCount(), 10000);
         }
     }
 

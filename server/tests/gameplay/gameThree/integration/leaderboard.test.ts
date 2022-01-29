@@ -10,38 +10,37 @@ import {
 } from '../../../../src/gameplay/interfaces/GlobalEventMessages';
 import { GameType } from '../../../../src/gameplay/leaderboard/enums/GameType';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
-import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
+import {
+    addPointsToPlayer, advanceCountdown, startGameAdvanceCountdown, startNewRound,
+    switchToSecondToLastRound
+} from '../gameThreeHelperFunctions';
 import { receiveMultiplePhotos } from '../gameThreeMockData';
 
 let gameThree: GameThree;
 const gameEventEmitter = DI.resolve(GameEventEmitter);
 
 describe('Leaderboard tests for Game Three', () => {
-    let pointsArray: number[];
-
     beforeEach(() => {
-        pointsArray = [];
         Date.now = () => dateNow;
         jest.useFakeTimers();
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
-        const stageController = gameThree['stageController']!;
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
-        stageController!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1; //skip to final round
-        stageController!.handleNewRound();
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
+        switchToSecondToLastRound(gameThree); //skip to final round
+        startNewRound(gameThree);
         receiveMultiplePhotos(gameThree); // to pass no photos error in FinalPhotosStage
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         users.forEach(() => advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS));
         // add points
 
-        users.forEach((user, idx) => {
-            pointsArray.push(stageController['playerPoints'].getPointsFromPlayer(user.id)); // get points from before (from sending final photo)
-            for (let i = 0; i < InitialParameters.NUMBER_ROUNDS; i++) {
-                stageController['playerPoints'].addPointsToPlayer(user.id, idx);
-                pointsArray[idx] += idx;
-            }
-        });
+        addPointsToPlayer(gameThree, users);
     });
 
     afterEach(() => {

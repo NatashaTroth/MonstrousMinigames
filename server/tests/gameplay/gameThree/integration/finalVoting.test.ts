@@ -11,7 +11,9 @@ import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
 } from '../../../../src/gameplay/interfaces/GlobalEventMessages';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
-import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
+import {
+    advanceCountdown, startGameAdvanceCountdown, switchToSecondToLastRound
+} from '../gameThreeHelperFunctions';
 import { photoMessage } from '../gameThreeMockData';
 
 let gameThree: GameThree;
@@ -24,8 +26,11 @@ describe('Initiate stage', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
-        gameThree['stageController']!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        switchToSecondToLastRound(gameThree);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
         users.forEach(user => {
@@ -66,8 +71,11 @@ describe('Taking Photo', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
-        gameThree['stageController']!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
-        advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO);
+        switchToSecondToLastRound(gameThree);
+        advanceCountdown(
+            gameThree,
+            InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
+        );
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VOTE);
         advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_VIEW_RESULTS);
         users.forEach(user => {

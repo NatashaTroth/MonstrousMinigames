@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 
 import { GameState } from '../../../../src/gameplay/enums';
-import Game from '../../../../src/gameplay/Game';
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
 import { leaderboard, roomId } from '../../mockData';
 
@@ -17,11 +16,11 @@ describe('Stop game all users disconnected', () => {
     });
 
     it('should call stopGameAllUsersDisconnected super function', async () => {
-        const spy = jest.spyOn(Game.prototype as any, 'stopGameAllUsersDisconnected').mockImplementation(() => {
+        const spy = jest.spyOn(gameThree, 'stopGameAllUsersDisconnected').mockImplementation(() => {
             Promise.resolve();
         });
 
-        gameThree['stopGameAllUsersDisconnected']();
+        gameThree.stopGameAllUsersDisconnected();
         expect(spy).toHaveBeenCalledTimes(1);
     });
 });

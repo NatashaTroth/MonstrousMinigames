@@ -1,25 +1,25 @@
-import { designDevelopment } from '../../../../utils/constants';
-import history from '../../../history/history';
-import { GameData } from '../../../phaser/gameInterfaces/GameData';
-import { Socket } from '../../../socket/Socket';
-import { handleStartGame } from '../components/MainScene';
+import { designDevelopment } from "../../../../utils/constants";
+import history from "../../../history/history";
+import { GameData } from "../../../phaser/gameInterfaces/GameData";
+import { Socket } from "../../../socket/Socket";
+import { handleStartGame } from "../components/MainScene";
 import {
     allScreensPhaserGameLoadedHandler, sendCreateNewGame
-} from './allScreensPhaserGameLoadedHandler';
-import { chasersPushedHandler } from './chasersPushedHandler';
-import { gameFinishedHandler } from './gameFinishedHandler';
-import { gameStateInfoHandler } from './gameStateInfoHandler';
-import { initialGameStateHandler } from './initialGameStateHandler';
+} from "./allScreensPhaserGameLoadedHandler";
+import { chasersPushedHandler } from "./chasersPushedHandler";
+import { gameFinishedHandler } from "./gameFinishedHandler";
+import { gameStateInfoHandler } from "./gameStateInfoHandler";
+import { initialGameStateHandler } from "./initialGameStateHandler";
 import {
     approachingObstacleHandler, obstacleSkippedHandler, obstacleWillBeSolvedHandler
-} from './obstacleHandler';
-import { pausedHandler } from './pausedHandler';
-import { phaserLoadedTimedOutHandler } from './phaserLoadedTimedOut';
-import { resumeHandler } from './resumeHandler';
-import { startedHandler } from './startedHandler';
-import { stoppedHandler } from './stoppedHandler';
+} from "./obstacleHandler";
+import { pausedHandler } from "./pausedHandler";
+import { phaserLoadedTimedOutHandler } from "./phaserLoadedTimedOut";
+import { resumeHandler } from "./resumeHandler";
+import { startedHandler } from "./startedHandler";
+import { stoppedHandler } from "./stoppedHandler";
 
-interface Player {
+export interface Player {
     player: {
         id: string;
     };
@@ -78,15 +78,15 @@ export function initSockets({ socket, screenAdmin, roomId, scene }: InitSocketsP
     });
 
     const approachingObstacleHandlerWithDependencies = approachingObstacleHandler({
-        players: scene.players,
+        scene,
     });
 
     const obstacleSkippedHandlerWithDependencies = obstacleSkippedHandler({
-        players: scene.players,
+        scene,
     });
 
     const obstacleWillBeSolvedWithDependencies = obstacleWillBeSolvedHandler({
-        players: scene.players,
+        scene,
     });
 
     const phaserLoadedTimedOutHandlerWithDependencies = phaserLoadedTimedOutHandler({
@@ -117,7 +117,7 @@ export function initSockets({ socket, screenAdmin, roomId, scene }: InitSocketsP
     });
 
     const chasersPushedHandlerWithDependencies = chasersPushedHandler({
-        players: scene.players,
+        scene,
     });
 
     allScreensPhaserGameLoadedHandlerWithDependencies(socket);
