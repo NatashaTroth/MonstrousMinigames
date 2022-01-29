@@ -34,7 +34,7 @@ describe('Leaderboard tests for Game One', () => {
     });
 
     it('should call addGameToHistory on leaderboard', async () => {
-        const addGameToHistorySpy = jest.spyOn(Leaderboard.prototype as any, 'addGameToHistory');
+        const addGameToHistorySpy = jest.spyOn(leaderboard, 'addGameToHistory');
         startAndFinishGame(gameOne);
         expect(addGameToHistorySpy).toHaveBeenCalledTimes(1);
     });

@@ -13,28 +13,6 @@ const players: PlayerNameId[] = users.map(user => {
     return { id: user.id, name: user.name };
 });
 
-describe('Stage order after countdown', () => {
-    beforeEach(async () => {
-        jest.useFakeTimers();
-    });
-
-    afterEach(() => {
-        jest.runAllTimers();
-        jest.clearAllMocks();
-    });
-    it.todo('');
-
-    // it('should create a new SinglePhotoStage object', () => {
-    //     const spy = jest.spyOn(Stage.prototype as any, 'constructor').mockImplementation(() => {
-    //         Promise.resolve();
-    //     });
-    //     const singlePhotoStage = new SinglePhotoStage(roomId, players);
-    //     // expect().toBeInstanceOf(SinglePhotoStage);
-    //     // gameThree.createNewGame(users);
-    //     // expect(spy).toHaveBeenCalledTimes(1);
-    // });
-});
-
 describe('Stages without next stage', () => {
     beforeEach(async () => {
         jest.useFakeTimers();

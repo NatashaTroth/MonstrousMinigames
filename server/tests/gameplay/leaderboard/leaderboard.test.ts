@@ -1,6 +1,5 @@
 import User from '../../../src/classes/user';
 import { IPlayerRank } from '../../../src/gameplay/interfaces/IPlayerRank';
-import RankPoints from '../../../src/gameplay/leaderboard/classes/RankPoints';
 import { GameType } from '../../../src/gameplay/leaderboard/enums/GameType';
 import { LeaderboardInfo } from '../../../src/gameplay/leaderboard/interfaces';
 import Leaderboard from '../../../src/gameplay/leaderboard/Leaderboard';
@@ -170,18 +169,8 @@ describe('Add User Points', () => {
         jest.clearAllMocks();
     });
 
-    it('Updates user points object when new points are added', async () => {
-        const addUserPointsSpy = jest.spyOn(Leaderboard.prototype as any, 'addUserPoints');
-        users.forEach(user => {
-            leaderboard.addUser(user.id, user.name);
-        });
-        leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
-        expect(addUserPointsSpy).toHaveBeenCalledTimes(playerRanks.length);
-        expect(leaderboard.userPoints.get(users[0].id)!.points).toBe(RankPoints.getPointsFromRank(playerRanks[0].rank));
-    });
-
     it('Adds and updates user points object when new points are added and user was not yet added', async () => {
-        const addUserSpy = jest.spyOn(Leaderboard.prototype as any, 'addUser');
+        const addUserSpy = jest.spyOn(leaderboard, 'addUser');
         //check userPoints is empty
         expect(leaderboard.userPoints.size).toBe(0);
         leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
@@ -191,13 +180,11 @@ describe('Add User Points', () => {
 });
 
 describe('Create and add User Points after Game', () => {
-    let updateUserPointsAfterGameSpy: any;
     beforeEach(() => {
         leaderboard = new Leaderboard(roomId);
         users.forEach(user => {
             leaderboard.addUser(user.id, user.name);
         });
-        updateUserPointsAfterGameSpy = jest.spyOn(Leaderboard.prototype as any, 'updateUserPointsAfterGame');
     });
     afterEach(() => {
         jest.clearAllMocks();
@@ -206,7 +193,6 @@ describe('Create and add User Points after Game', () => {
     it('Updates user points object when the first points are added', async () => {
         const playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
         leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
-        expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(1);
 
         // leaderboard.updateUserPointsAfterGame(playerRanks);
         // expect(leaderboard.userPoints[user.id].points).toBe(points);
@@ -233,7 +219,6 @@ describe('Create and add User Points after Game', () => {
         playerRanks[0].finished = false; // player 1
         playerRanks[2].finished = false; // player 3
         leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
-        expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(1);
 
         // leaderboard.updateUserPointsAfterGame(playerRanks);
         // expect(leaderboard.userPoints[user.id].points).toBe(points);
@@ -256,11 +241,9 @@ describe('Create and add User Points after Game', () => {
     it('Updates user points object when new points are added with duplicate ranks', async () => {
         const playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
         leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
-        expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(1);
 
         const playerRanks2 = createPlayerRanksArray(users, [2, 4, 1, 2]);
         leaderboard.addGameToHistory(GameType.GameOne, playerRanks2);
-        expect(updateUserPointsAfterGameSpy).toHaveBeenCalledTimes(2);
 
         expect(leaderboard.userPoints.get('1')).toMatchObject({
             points: 5 + 3,

@@ -3,7 +3,6 @@ import 'reflect-metadata';
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameState } from '../../../../src/gameplay/enums';
-import Game from '../../../../src/gameplay/Game';
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_STOPPED, GlobalEventMessage
@@ -26,11 +25,11 @@ describe('Stop game user closed', () => {
     });
 
     it('should call stopGameUserClosed super function', async () => {
-        const spy = jest.spyOn(Game.prototype as any, 'stopGameUserClosed').mockImplementation(() => {
+        const spy = jest.spyOn(gameThree, 'stopGameUserClosed').mockImplementation(() => {
             Promise.resolve();
         });
 
-        gameThree['stopGameUserClosed']();
+        gameThree.stopGameUserClosed();
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
@@ -41,7 +40,7 @@ describe('Stop game user closed', () => {
                 eventCalled = true;
             }
         });
-        gameThree['stopGameUserClosed']();
+        gameThree.stopGameUserClosed();
         expect(eventCalled).toBeTruthy();
     });
 });

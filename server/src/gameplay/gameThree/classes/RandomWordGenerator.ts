@@ -3,10 +3,11 @@ import { words } from '../constants/randomWords';
 
 export class RandomWordGenerator {
     private randomWords: string[];
-    private wordList = words;
+    private wordList: string[];
 
-    constructor() {
+    constructor(inputWords: string[] = []) {
         this.randomWords = [];
+        this.wordList = inputWords.length > 0 ? inputWords : words;
     }
 
     generateRandomWords(numberWords: number) {
