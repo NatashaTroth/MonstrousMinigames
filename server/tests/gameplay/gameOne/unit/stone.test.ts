@@ -16,6 +16,7 @@ describe('Completed stone obstacle', () => {
 
     it("should increase the player's stonesCarrying property by one", async () => {
         firstObstacle = gameOnePlayer.obstacles[0];
+        gameOnePlayer.atObstacle = true;
         const initialStonesCarrying = gameOnePlayer.stonesCarrying;
         gameOnePlayer.obstacleCompleted(firstObstacle.id);
         expect(gameOnePlayer.stonesCarrying).toBe(initialStonesCarrying + 1);

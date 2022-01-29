@@ -17,7 +17,7 @@ const InitialParameters = getInitialParams();
 describe('Chasers', () => {
     beforeEach(() => {
         jest.useFakeTimers();
-        chasers = new Chasers(trackLength, roomId);
+        chasers = new Chasers(trackLength, roomId, getInitialParams());
     });
 
     afterEach(() => {
@@ -96,8 +96,6 @@ describe('Push Chasers', () => {
         expect(gameOne.chasers?.chasersPositionX).toBe(initialChasersPositionX);
     });
 });
-
-let gameOne: GameOne;
 
 describe('Chaser catch player logic in GameOne.ts (combined with player logic)', () => {
     beforeEach(() => {

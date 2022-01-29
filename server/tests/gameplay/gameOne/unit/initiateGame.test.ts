@@ -45,7 +45,7 @@ describe('Change and verify game state', () => {
         });
         gameOne.createNewGame(users);
         gameStateInfo = gameOne.getGameStateInfo();
-        chasers = new Chasers(trackLength, roomId);
+        chasers = new Chasers(trackLength, roomId, getInitialParams());
     });
 
     afterAll(() => {

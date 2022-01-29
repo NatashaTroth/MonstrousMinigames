@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 
 import { GameOne } from '../../../../src/gameplay';
+import { Difficulty } from '../../../../src/gameplay/enums';
 import { leaderboard, roomId } from '../../mockData';
 import {
     clearTimersAndIntervals, getGameFinishedDataDifferentTimes, getGameFinishedDataSameRanks
@@ -13,7 +14,7 @@ const dateNow = 1618665766156;
 
 describe('createPlayerRanks test', () => {
     beforeEach(() => {
-        gameOne = new GameOne(roomId, leaderboard, false);
+        gameOne = new GameOne(roomId, leaderboard, Difficulty.MEDIUM, false);
         jest.useFakeTimers();
     });
 
