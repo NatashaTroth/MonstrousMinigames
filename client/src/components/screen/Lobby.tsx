@@ -9,7 +9,6 @@ import Button from '../../components/common/Button';
 import { characters } from '../../config/characters';
 import { ScreenStates } from '../../config/screenStates';
 import { MyAudioContext, Sound } from '../../contexts/AudioContextProvider';
-import { Game3Context } from '../../contexts/game3/Game3ContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import { ScreenSocketContext } from '../../contexts/screen/ScreenSocketContextProvider';
 import history from '../../domain/history/history';
@@ -41,9 +40,8 @@ import {
 import LobbyHeader from './LobbyHeader';
 
 export const Lobby: React.FunctionComponent = () => {
-    const { roomId, connectedUsers, screenAdmin, screenState, resetGame } = React.useContext(GameContext);
+    const { roomId, connectedUsers, screenAdmin, screenState } = React.useContext(GameContext);
     const { screenSocket, handleSocketConnection } = React.useContext(ScreenSocketContext);
-    const { resetGame3 } = React.useContext(Game3Context);
     const { changeSound } = React.useContext(MyAudioContext);
     const { id }: RouteParams = useParams();
     const navigator = window.navigator;
@@ -58,9 +56,6 @@ export const Lobby: React.FunctionComponent = () => {
                 state: ScreenStates.lobby,
             });
         }
-
-        resetGame();
-        resetGame3();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

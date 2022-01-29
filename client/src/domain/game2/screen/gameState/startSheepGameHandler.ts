@@ -33,5 +33,6 @@ export const useStartSheepGameHandler = (socket: Socket, handler = startSheepGam
         const startSheepGameHandlerWithDependencies = handler({ setSheepGameStarted, history });
 
         startSheepGameHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setSheepGameStarted, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

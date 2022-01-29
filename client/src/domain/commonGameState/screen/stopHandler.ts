@@ -23,5 +23,6 @@ export const useStopHandler = (socket: Socket, handler = stopHandler) => {
         if (!roomId) return;
         const stopHandlerWithDependencies = handler({ history });
         stopHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

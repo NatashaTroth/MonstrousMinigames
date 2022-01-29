@@ -1,7 +1,6 @@
 import { History } from 'history';
 import React from 'react';
 
-import { Game3Context } from '../../../contexts/game3/Game3ContextProvider';
 import { GameContext } from '../../../contexts/GameContextProvider';
 import { screenLobbyRoute } from '../../../utils/routes';
 import history from '../../history/history';
@@ -18,13 +17,13 @@ export const resetHandler = messageHandler(resetTypeGuard, (message, dependencie
 });
 
 export const useResetHandler = (socket: Socket, handler = resetHandler) => {
-    const { roomId, resetGame } = React.useContext(GameContext);
-    const { resetGame3 } = React.useContext(Game3Context);
+    const { roomId } = React.useContext(GameContext);
 
     React.useEffect(() => {
         if (!roomId) return;
 
         const resetHandlerWithDependencies = handler({ history });
         resetHandlerWithDependencies(socket, roomId);
-    }, [handler, resetGame, resetGame3, roomId, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

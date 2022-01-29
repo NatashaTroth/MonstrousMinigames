@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import * as React from 'react';
-import styled from 'styled-components';
+import * as React from "react";
+import styled from "styled-components";
 
-import Character from '../../../../components/common/Character';
-import FullScreenContainer from '../../../../components/common/FullScreenContainer';
-import { Game1Context } from '../../../../contexts/game1/Game1ContextProvider';
-import { GameContext } from '../../../../contexts/GameContextProvider';
-import { PlayerContext } from '../../../../contexts/PlayerContextProvider';
-import history from '../../../history/history';
-import { handlePlayerGetsWindmill } from '../gameState/handlePlayerGetsWindmill';
-import { ObstacleInstructions } from './obstacles/ObstacleStyles.sc';
+import Character from "../../../../components/common/Character";
+import FullScreenContainer from "../../../../components/common/FullScreenContainer";
+import { Game1Context } from "../../../../contexts/game1/Game1ContextProvider";
+import { GameContext } from "../../../../contexts/GameContextProvider";
+import { PlayerContext } from "../../../../contexts/PlayerContextProvider";
+import history from "../../../history/history";
+import { handlePlayerGetsWindmill } from "../gameState/handlePlayerGetsWindmill";
+import { ObstacleInstructions } from "./obstacles/ObstacleStyles.sc";
 
 const PlayerDead: React.FC = () => {
     const { roomId } = React.useContext(GameContext);
@@ -19,15 +19,23 @@ const PlayerDead: React.FC = () => {
     const { exceededChaserPushes } = React.useContext(Game1Context);
 
     React.useEffect(() => {
-        if (!exceededChaserPushes) {
+        let mounted = true;
+        let windmillTimeoutId: ReturnType<typeof setTimeout>;
+
+        if (!exceededChaserPushes && mounted) {
             if (counter > 0) {
-                const windmillTimeoutId = setTimeout(() => setCounter(counter - 1), 1000);
+                windmillTimeoutId = setTimeout(() => setCounter(counter - 1), 1000);
                 sessionStorage.setItem('windmillTimeoutId', String(windmillTimeoutId));
                 return;
             }
 
             handlePlayerGetsWindmill(history, roomId);
         }
+
+        return () => {
+            mounted = false;
+            clearTimeout(windmillTimeoutId);
+        };
     }, [counter]);
 
     return (

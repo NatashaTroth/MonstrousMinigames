@@ -31,5 +31,6 @@ export const useStartPhaserGameHandler = (socket: Socket, handler = startPhaserG
 
         const startPhaserGameHandlerWithDependencies = handler({ setGameStarted, history });
         startPhaserGameHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setGameStarted, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [[roomId, socket]]);
 };

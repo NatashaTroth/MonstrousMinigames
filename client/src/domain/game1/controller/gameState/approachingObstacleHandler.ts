@@ -38,5 +38,6 @@ export const useApproachingObstacleHandler = (socket: Socket, handler = approach
 
         const approachingObstacleHandlerWithDependencies = handler({ setEarlySolvableObstacle });
         approachingObstacleHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setEarlySolvableObstacle, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

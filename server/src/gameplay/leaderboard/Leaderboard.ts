@@ -1,12 +1,10 @@
-import { EventEmitter } from 'stream';
+import { EventEmitter } from "stream";
 
-import { localDevelopment } from '../../../constants';
 // import { PlayerRank as GameOnePlayerRank } from '../GameOne/interfaces';
-import { IPlayerRank } from '../interfaces/IPlayerRank';
-import RankPoints from './classes/RankPoints';
-import { GameType } from './enums/GameType';
-import { GamePlayed, LeaderboardInfo, UserPoints } from './interfaces';
-import { gameHistory, userPoints } from './mockData';
+import { IPlayerRank } from "../interfaces/IPlayerRank";
+import RankPoints from "./classes/RankPoints";
+import { GameType } from "./enums/GameType";
+import { GamePlayed, LeaderboardInfo, UserPoints } from "./interfaces";
 
 // TODO handle when user disconnected - remove user? or cross through?
 
@@ -55,15 +53,6 @@ export default class Leaderboard extends EventEmitter {
     }
 
     getLeaderboardInfo(): LeaderboardInfo {
-        if (localDevelopment) {
-            //mockData
-            return {
-                roomId: this.roomId,
-                gameHistory,
-                userPoints,
-            };
-        }
-
         return {
             roomId: this.roomId,
             gameHistory: [...this.gameHistory],

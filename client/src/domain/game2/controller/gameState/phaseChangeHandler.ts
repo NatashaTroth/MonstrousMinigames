@@ -41,5 +41,6 @@ export const usePhaseChangedHandler = (socket: Socket, handler = phaseChangedHan
 
         const phaseChangeHandlerWithDependencies = handler({ setPhase, setRoundIdx, history });
         phaseChangeHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setPhase, setRoundIdx, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

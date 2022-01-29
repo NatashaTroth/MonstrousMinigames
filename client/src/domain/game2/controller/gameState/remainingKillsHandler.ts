@@ -23,5 +23,6 @@ export const useRemainingKillsHandler = (socket: Socket, handler = remainingKill
 
         const remainingKillsHandlerWithDependencies = handler({ setRemainingKills });
         remainingKillsHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setRemainingKills, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

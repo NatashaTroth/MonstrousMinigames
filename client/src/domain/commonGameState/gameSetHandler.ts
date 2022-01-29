@@ -25,5 +25,6 @@ export const useGameSetHandler = (socket: Socket, handler = gameSetHandler) => {
         });
 
         gameSetHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setChosenGame, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

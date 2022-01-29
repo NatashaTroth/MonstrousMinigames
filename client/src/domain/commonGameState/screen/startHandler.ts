@@ -34,5 +34,6 @@ export const useStartHandler = (socket: Socket, handler = startHandler) => {
         if (!roomId) return;
         const startHandlerWithDependencies = handler({ history, setCountdownTime, setGameStarted });
         startHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setCountdownTime, setGameStarted, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };
