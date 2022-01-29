@@ -22,11 +22,11 @@ const dateNow = 1618665766156;
 /* Only call private functions/properties in this file and only when necessary */
 /***********************************************************************************/
 
-export function advanceCountdown(gameOne: GameOne, time: number) {
-    gameOne['update'](10, time);
+export function advanceCountdown(gameOne: GameOne, timeMs: number) {
+    gameOne['update'](10, timeMs);
     const previousNow = Date.now;
-    Date.now = () => previousNow() + time;
-    jest.advanceTimersByTime(time);
+    Date.now = () => previousNow() + timeMs;
+    jest.advanceTimersByTime(timeMs);
 }
 
 export function finishPlayer(gameOne: GameOne, userId: string) {
@@ -116,6 +116,7 @@ export function finishGame(gameOne: GameOne): GameOne {
     for (let i = 1; i <= numberOfUsers; i++) {
         finishPlayer(gameOne, i.toString());
     }
+    advanceCountdown(gameOne, 10); //call update to check if game has finished and to handle game finished
     return gameOne;
 }
 
@@ -163,6 +164,13 @@ export async function startAndFinishGameDifferentTimes(gameOne: GameOne, timesFi
     return gameOne;
 }
 
+export async function startAndAllPlayersCaughtSameTime(gameOne: GameOne) {
+    Date.now = jest.fn(() => dateNow);
+    startGameAndAdvanceCountdown(gameOne);
+    advanceCountdown(gameOne, 10000);
+    return gameOne;
+}
+
 export async function getGameFinishedDataDifferentTimes(gameOne: GameOne, timesFinished?: number[]) {
     let eventData = {
         roomId: '',
@@ -175,6 +183,23 @@ export async function getGameFinishedDataDifferentTimes(gameOne: GameOne, timesF
         }
     });
     gameOne = await startAndFinishGameDifferentTimes(gameOne, timesFinished);
+    advanceCountdown(gameOne, 10); //call update to check if game has finished and to handle game finished
+    return eventData;
+}
+
+export async function getGameFinishedDataAllCaughtSameTime(gameOne: GameOne, timesFinished?: number[]) {
+    let eventData = {
+        roomId: '',
+        gameState: GameState.Started,
+        playerRanks: [] as PlayerRank[],
+    };
+    gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
+        if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
+            eventData = message.data as any;
+        }
+    });
+    gameOne = await startAndAllPlayersCaughtSameTime(gameOne);
+    advanceCountdown(gameOne, 10); //call update to check if game has finished and to handle game finished
     return eventData;
 }
 
@@ -197,6 +222,7 @@ export function getGameFinishedDataSameRanks(gameOne: GameOne) {
     finishPlayer(gameOne, '1');
     finishPlayer(gameOne, '2');
     finishPlayer(gameOne, '3');
+    advanceCountdown(gameOne, 10); //call update to check if game has finished and to handle game finished
 
     return eventData;
 }

@@ -11,7 +11,7 @@ import {
 } from '../../../../src/gameplay/interfaces/GlobalEventMessages';
 import { leaderboard, roomId } from '../../mockData';
 import {
-    clearTimersAndIntervals, finishPlayer, startGameAndAdvanceCountdown
+    advanceCountdown, clearTimersAndIntervals, finishPlayer, startGameAndAdvanceCountdown
 } from '../gameOneHelperFunctions';
 import { playerHasCompletedObstacleMessage, runForwardMessage } from '../gameOneMockData';
 
@@ -75,7 +75,7 @@ describe('Disconnect Player tests', () => {
         gameOne.disconnectPlayer('4');
         finishPlayer(gameOne, '1');
         finishPlayer(gameOne, '2');
-
+        advanceCountdown(gameOne, 10); //call update to check if game has finished and to handle game finished
         expect(eventData.playerRanks[0].isActive).toBeTruthy();
         expect(eventData.playerRanks[1].isActive).toBeTruthy();
         expect(eventData.playerRanks[2].isActive).toBeFalsy();
@@ -105,9 +105,7 @@ describe('Disconnect Player tests', () => {
         finishPlayer(gameOne, '1');
         Date.now = jest.fn(() => dateNow + 20000);
         finishPlayer(gameOne, '2');
-
-        // console.log(Array.from(gameOne.players.values()).map(pl => pl.rank));
-
+        advanceCountdown(gameOne, 10); //call update to check if game has finished and to handle game finished
         expect(eventData.playerRanks[0].rank).toBe(1);
         expect(eventData.playerRanks[1].rank).toBe(2);
         expect(eventData.playerRanks[2].rank).toBe(3);

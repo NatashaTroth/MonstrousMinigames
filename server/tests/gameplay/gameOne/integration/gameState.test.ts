@@ -6,7 +6,7 @@ import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitia
 import { verifyGameState } from '../../../../src/gameplay/helperFunctions/verifyGameState';
 import { leaderboard, roomId, users } from '../../mockData';
 import {
-    clearTimersAndIntervals, finishGame, finishPlayer, goToNextUnsolvableObstacle,
+    advanceCountdown, clearTimersAndIntervals, finishGame, finishPlayer,
     startGameAndAdvanceCountdown
 } from '../gameOneHelperFunctions';
 import { playerHasCompletedObstacleMessage, runForwardMessage } from '../gameOneMockData';
@@ -93,6 +93,7 @@ describe('Change and verify game state', () => {
         gameOne.disconnectPlayer('4');
         finishPlayer(gameOne, '1');
         finishPlayer(gameOne, '2');
+        advanceCountdown(gameOne, 10); //call update to check if game has finished and to handle game finished
         expect(gameOne.gameState).toBe(GameState.Finished);
     });
 
