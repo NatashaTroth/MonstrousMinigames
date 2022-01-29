@@ -26,14 +26,6 @@ describe('Get Obstacle Positions test', () => {
         expect(true).toBeTruthy();
     });
 
-    it.todo('Flakey:');
-    it.skip('should return the correct number of obstacles', async () => {
-        expect(obstacles['1'].length).toBe(players.get('1')!.obstacles.length);
-        expect(obstacles['1'].length).toBe(
-            InitialGameParameters.NUMBER_OBSTACLES + InitialGameParameters.NUMBER_STONES
-        );
-    });
-
     it('should contain the key obstacle positionX', async () => {
         expect(Object.keys(obstacles['1'][0])).toContain('positionX');
     });

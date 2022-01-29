@@ -1,18 +1,20 @@
 import 'reflect-metadata';
 
-import { CharacterNotAvailableError, GameAlreadyStartedError, UsersNotReadyError } from '../../src/customErrors';
-import { GameOne, GameThree, GameTwo } from '../../src/gameplay';
-import { clearTimersAndIntervals } from '../gameplay/gameOne/gameOneHelperFunctions';
 import Room, { RoomStates } from '../../src/classes/room';
 import User from '../../src/classes/user';
+import {
+    CharacterNotAvailableError, GameAlreadyStartedError, UsersNotReadyError
+} from '../../src/customErrors';
 import CannotStartEmptyGameError from '../../src/customErrors/CannotStartEmptyGameError';
 import { GameNames } from '../../src/enums/gameNames';
 import { Globals } from '../../src/enums/globals';
 import { ScreenStates } from '../../src/enums/screenStates';
-import Game from '../../src/gameplay/Game';
+import { GameOne, GameThree, GameTwo } from '../../src/gameplay';
 import { MaxNumberUsersExceededError } from '../../src/gameplay/customErrors';
 import { GameState } from '../../src/gameplay/enums';
+import Game from '../../src/gameplay/Game';
 import Parameters from '../../src/gameplay/gameTwo/constants/Parameters';
+import { clearTimersAndIntervals } from '../gameplay/gameOne/gameOneHelperFunctions';
 
 describe('Room ID', () => {
     it("creates a room with id 'ABCD'", () => {
@@ -149,7 +151,7 @@ describe('Room: Users', () => {
         user1.setReady(true);
         user2.setReady(true);
 
-        const setState = jest.spyOn(Room.prototype, "setState");
+        const setState = jest.spyOn(Room.prototype, 'setState');
 
         room.createNewGame();
         expect(setState).toHaveBeenCalledWith(RoomStates.CREATED);
@@ -162,17 +164,17 @@ describe('Room: Users', () => {
         user1.setReady(true);
         user2.setReady(true);
 
-        const stopGameUserClosed = jest.spyOn(Game.prototype, "stopGameUserClosed");
+        const stopGameUserClosed = jest.spyOn(Game.prototype, 'stopGameUserClosed');
         room.setGame(GameNames.GAME2);
         room.createNewGame();
 
         room.startGame();
         jest.useFakeTimers();
 
-        jest.advanceTimersByTime(Parameters.COUNTDOWN_TIME)
+        jest.advanceTimersByTime(Parameters.COUNTDOWN_TIME);
 
         room.stopGame();
-        expect(stopGameUserClosed).toHaveBeenCalled()
+        expect(stopGameUserClosed).toHaveBeenCalled();
         stopGameUserClosed.mockClear();
     });
 
@@ -186,10 +188,10 @@ describe('Room: Users', () => {
         room.startGame();
         jest.useFakeTimers();
 
-        jest.advanceTimersByTime(Parameters.COUNTDOWN_TIME)
+        jest.advanceTimersByTime(Parameters.COUNTDOWN_TIME);
 
         room.pauseGame();
-        expect(room.game.gameState).toEqual(GameState.Paused)
+        expect(room.game.gameState).toEqual(GameState.Paused);
     });
 
     it('should have game with gameState Started on resumeGame', () => {
@@ -202,24 +204,23 @@ describe('Room: Users', () => {
         room.startGame();
         jest.useFakeTimers();
 
-        jest.advanceTimersByTime(Parameters.COUNTDOWN_TIME)
+        jest.advanceTimersByTime(Parameters.COUNTDOWN_TIME);
 
         room.pauseGame();
         room.resumeGame();
 
-        expect(room.game.gameState).toEqual(GameState.Started)
+        expect(room.game.gameState).toEqual(GameState.Started);
     });
 
     it('should call clear on resetGame', () => {
         user1.setActive(false);
         user2.setReady(true);
-        const clear = jest.spyOn(User.prototype, "clear");
+        const clear = jest.spyOn(User.prototype, 'clear');
 
         room.resetGame();
-        expect(clear).toHaveBeenCalled()
+        expect(clear).toHaveBeenCalled();
         clear.mockClear();
     });
-
 
     it('isFinished should return true after setFinished', () => {
         expect(room.isFinished()).toBeFalsy();
@@ -248,7 +249,7 @@ describe('Room: Users', () => {
         expect(room.getAdminScreenId()).toEqual('one');
     });
 
-    it('should be able to set and get a screen state', () => { 
+    it('should be able to set and get a screen state', () => {
         room.setScreenState(ScreenStates.LOBBY);
         expect(room.getScreenState()).toEqual(ScreenStates.LOBBY);
     });

@@ -81,5 +81,3 @@ describe('Leaderboard tests for Game Three', () => {
         expect(leaderboard.gameHistory[0].playerRanks).toMatchObject(eventData.data.playerRanks);
     });
 });
-
-it.todo('TEST POINTs!!');

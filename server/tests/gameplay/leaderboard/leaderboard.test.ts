@@ -286,8 +286,6 @@ describe('Get Leaderboard Info', () => {
         expect(leaderboardInfo.gameHistory[0].playerRanks).toMatchObject(playerRanks);
     });
 
-    it.todo('test ranks');
-
     it('Returns the userPointsArray (sorted by points)', async () => {
         expect(leaderboardInfo.userPoints).toMatchObject([
             {
