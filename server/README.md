@@ -61,5 +61,3 @@ howFarCanRun = 0.12\*timeLeftForRunning
 https://gameprogrammingpatterns.com/command.html
 https://gameprogrammingpatterns.com/component.html
 https://gameprogrammingpatterns.com
-
-test
