@@ -115,25 +115,8 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             this.initialPlayerPositionX,
             this.numberOfStones
         );
-        // protected postProcessPlayers(playersIterable: IterableIterator<GameOnePlayer>) {
-        //     const players = Array.from(playersIterable);
-        //     const obstacles: Obstacle[] = [];
-        //     players.forEach(player => obstacles.push(...player.obstacles));
-        //     const stones =
-        //         players.length > 1
-        //             ? getStonesForObstacles(
-        //                   obstacles,
-        //                   this.trackLength,
-        //                   this.initialPlayerPositionX,
-        //                   100,
-        //                   this.numberOfStones
-        //               )
-        //             : [];
-
-        //     for (const player of players) {
-        //         player.obstacles = sortBy([...player.obstacles, ...stones.map(stone => ({ ...stone }))], 'positionX');
-        //     }
     }
+
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
         if (this.cameraPositionX < this.trackLength)
             this.cameraPositionX += (timeElapsedSinceLastFrame / 33) * this.cameraSpeed;

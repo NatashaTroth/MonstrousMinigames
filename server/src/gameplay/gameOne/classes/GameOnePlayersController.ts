@@ -18,7 +18,10 @@ class GameOnePlayersController {
         const playersArray = Array.from(players.values());
         const obstacles: Obstacle[] = [];
         playersArray.forEach(player => obstacles.push(...player.obstacles));
-        const stones = getStonesForObstacles(obstacles, trackLength, initialPlayerPositionX, 100, numberOfStones);
+        const stones =
+            this.players.size > 1
+                ? getStonesForObstacles(obstacles, trackLength, initialPlayerPositionX, 100, numberOfStones)
+                : [];
 
         for (const player of playersArray) {
             player.obstacles = sortBy([...player.obstacles, ...stones.map(stone => ({ ...stone }))], 'positionX');
