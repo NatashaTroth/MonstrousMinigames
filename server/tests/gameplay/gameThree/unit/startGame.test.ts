@@ -3,7 +3,6 @@ import 'reflect-metadata';
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameState } from '../../../../src/gameplay/enums';
-import Game from '../../../../src/gameplay/Game';
 import { StageController } from '../../../../src/gameplay/gameThree/classes/StageController';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
@@ -33,7 +32,7 @@ describe('Start', () => {
     });
 
     it('should call start super function', async () => {
-        const spy = jest.spyOn(Game.prototype as any, 'startGame').mockImplementation(() => {
+        const spy = jest.spyOn(gameThree, 'startGame').mockImplementation(() => {
             Promise.resolve();
         });
 

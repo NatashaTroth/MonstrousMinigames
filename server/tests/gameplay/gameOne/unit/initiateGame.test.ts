@@ -1,6 +1,9 @@
 import 'reflect-metadata';
 
+import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
+import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
+import Chasers from '../../../../src/gameplay/gameOne/classes/Chasers';
 import {
     ObstacleType, regularObstacleTypes
 } from '../../../../src/gameplay/gameOne/enums/ObstacleType';
@@ -8,8 +11,13 @@ import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitia
 import {
     createObstacles
 } from '../../../../src/gameplay/gameOne/helperFunctions/initiatePlayerState';
-import { Obstacle } from '../../../../src/gameplay/gameOne/interfaces';
-import { leaderboard, roomId, users } from '../../mockData';
+import {
+    GameStateInfo, InitialGameStateInfo, Obstacle
+} from '../../../../src/gameplay/gameOne/interfaces';
+import {
+    GAME_ONE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, GameOneEventMessage
+} from '../../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
+import { leaderboard, roomId, trackLength, users } from '../../mockData';
 
 const InitialGameParameters = getInitialParams();
 // import {
@@ -18,27 +26,46 @@ const InitialGameParameters = getInitialParams();
 
 let gameOne: GameOne;
 const REGULAR_OBSTACLE_TYPE_KEYS = regularObstacleTypes;
+let gameStateInfo: GameStateInfo;
+let initialGameStateInfo: InitialGameStateInfo;
+let gameEventEmitter: GameEventEmitter;
+// let gameOnePlayer: GameOnePlayer;
+let chasers: Chasers;
 
 describe('Change and verify game state', () => {
+    beforeAll(() => {
+        gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
     beforeEach(async () => {
         gameOne = new GameOne(roomId, leaderboard);
+        gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameOneEventMessage) => {
+            if (message.type === GAME_ONE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE) {
+                initialGameStateInfo = message.data;
+            }
+        });
         gameOne.createNewGame(users);
+        gameStateInfo = gameOne.getGameStateInfo();
+        chasers = new Chasers(trackLength, roomId, getInitialParams());
     });
 
-    it('initiates gameStartedTime with 0', async () => {
-        expect(gameOne['_gameStartedAt']).toBe(0);
+    afterAll(() => {
+        gameEventEmitter.removeAllListeners();
+    });
+
+    afterEach(() => {
+        DI.clearInstances();
     });
 
     it('initiates chasersPositionX with correct value', async () => {
-        expect(gameOne['chasersPositionX']).toBe(InitialGameParameters.CHASERS_POSITION_X);
+        expect(gameStateInfo.chasersPositionX).toBe(InitialGameParameters.CHASERS_POSITION_X);
     });
 
     it('initiates cameraPositionX with correct value', async () => {
-        expect(gameOne['cameraPositionX']).toBe(InitialGameParameters.CAMERA_POSITION_X);
+        expect(gameStateInfo.cameraPositionX).toBe(InitialGameParameters.CAMERA_POSITION_X);
     });
 
     it('initiates trackLength with correct length', async () => {
-        expect(gameOne.trackLength).toBe(InitialGameParameters.TRACK_LENGTH);
+        expect(initialGameStateInfo.trackLength).toBe(InitialGameParameters.TRACK_LENGTH);
     });
 
     it('throws an error if the track length is too short', async () => {
@@ -50,11 +77,11 @@ describe('Change and verify game state', () => {
     });
 
     it('initiates maxNumberOfChaserPushes with the correct value', async () => {
-        expect(gameOne.maxNumberOfChaserPushes).toBe(InitialGameParameters.MAX_NUMBER_CHASER_PUSHES);
+        expect(gameOne.players.get('1')!.maxNumberOfChaserPushes).toBe(InitialGameParameters.MAX_NUMBER_CHASER_PUSHES);
     });
 
     it('initiates chaserPushAmount with the correct value', async () => {
-        expect(gameOne.chaserPushAmount).toBe(InitialGameParameters.CHASER_PUSH_AMOUNT);
+        expect(chasers.chaserPushAmount).toBe(InitialGameParameters.CHASER_PUSH_AMOUNT);
     });
 
     it('initiates speed with the correct value', async () => {
@@ -70,18 +97,16 @@ describe('Change and verify game state', () => {
     });
 
     it('initiates chasersSpeed with the correct value', async () => {
-        expect(gameOne.chasersSpeed).toBe(InitialGameParameters.CHASERS_SPEED);
+        expect(chasers.chasersSpeed).toBe(InitialGameParameters.CHASERS_SPEED);
     });
 
     it('initiates stunnedTime with the correct value', async () => {
-        expect(gameOne.stunnedTime).toBe(InitialGameParameters.STUNNED_TIME);
+        expect(gameOne.players.get('1')!.stunnedTime).toBe(InitialGameParameters.STUNNED_TIME);
     });
 
-    it('initiates approachSolvableObstacleDistance with the correct value', async () => {
-        expect(gameOne.approachSolvableObstacleDistance).toBe(
-            InitialGameParameters.APPROACH_SOLVABLE_OBSTACLE_DISTANCE
-        );
-    });
+    // it('initiates approachSolvableObstacleDistance with the correct value', async () => {
+    //     expect(gameOnePlayer.approachSolvableObstacleDistance).toBe(InitialGameParameters.APPROACH_SOLVABLE_OBSTACLE_DISTANCE);
+    // });
 
     it.todo('Flakey:');
     it.skip('initiates player with correct number of stones', () => {

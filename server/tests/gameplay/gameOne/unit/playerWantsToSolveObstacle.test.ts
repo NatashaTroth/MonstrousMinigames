@@ -2,35 +2,40 @@ import 'reflect-metadata';
 
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
-import { GameOne } from '../../../../src/gameplay';
-import { GameState } from '../../../../src/gameplay/enums';
+import GameOnePlayer from '../../../../src/gameplay/gameOne/GameOnePlayer';
 import { Obstacle } from '../../../../src/gameplay/gameOne/interfaces';
 import {
     GAME_ONE_EVENT_MESSAGE__OBSTACLE_WILL_BE_SOLVED, GameOneEventMessage
 } from '../../../../src/gameplay/gameOne/interfaces/GameOneEventMessages';
-import { leaderboard, roomId, users } from '../../mockData';
+import { users } from '../../mockData';
+import { players } from '../gameOneMockData';
 
-let gameOne: GameOne;
 let gameEventEmitter: GameEventEmitter;
 let firstObstacleId: number;
 let firstObstacle: Obstacle;
+let gameOnePlayer: GameOnePlayer;
 
 describe('Player wants to Solve Obstacle', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
-
     beforeEach(async () => {
-        gameOne = new GameOne(roomId, leaderboard);
-        gameOne.createNewGame(users);
-        gameOne.gameState = GameState.Started;
-        firstObstacleId = gameOne.players.get(users[0].id)!.obstacles[0].id;
-        firstObstacle = gameOne.players.get(users[0].id)!.obstacles[0];
+        gameOnePlayer = players.get(users[0].id)!;
+        firstObstacle = gameOnePlayer.obstacles[0];
+        firstObstacleId = gameOnePlayer.obstacles[0].id;
+    });
+
+    afterAll(() => {
+        gameEventEmitter.removeAllListeners();
+    });
+
+    afterEach(() => {
+        DI.clearInstances();
     });
 
     it("should set the obstacle's solvable property to false", async () => {
         firstObstacle.solvable = true;
-        gameOne['playerWantsToSolveObstacle'](users[0].id, firstObstacleId);
+        gameOnePlayer.playerWantsToSolveObstacle(firstObstacleId);
         expect(firstObstacle.solvable).toBeFalsy();
     });
 
@@ -41,7 +46,7 @@ describe('Player wants to Solve Obstacle', () => {
                 eventCalled = true;
             }
         });
-        gameOne['playerWantsToSolveObstacle'](users[0].id, firstObstacleId);
+        gameOnePlayer.playerWantsToSolveObstacle(firstObstacleId);
         expect(eventCalled).toBeTruthy();
     });
 });

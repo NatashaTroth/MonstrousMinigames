@@ -1,5 +1,5 @@
 import { ObstacleType, TrashType } from '../enums';
-import { GameStateInfo } from './';
+import { InitialGameStateInfo } from './InitialGameStateInfo';
 
 export const GAME_ONE_EVENT_MESSAGE__OBSTACLE_REACHED = 'game1/obstacle';
 export const GAME_ONE_EVENT_MESSAGE__OBSTACLE_SKIPPED = 'game1/obstacleSkipped';
@@ -78,7 +78,7 @@ export interface GameOnePlayerHasFinished {
 export interface GameOneInitialGameState {
     type: typeof GAME_ONE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE;
     roomId: string;
-    data: GameStateInfo;
+    data: InitialGameStateInfo;
 }
 export interface GameOneStunnablePlayers {
     type: typeof GAME_ONE_EVENT_MESSAGE__STUNNABLE_PLAYERS;

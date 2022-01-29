@@ -14,6 +14,7 @@ const InitialGameParameters = getInitialParams();
 describe('Get Obstacle Positions test', () => {
     beforeEach(async () => {
         jest.useFakeTimers();
+
         gameOne = new GameOne(roomId, leaderboard);
         gameOne.createNewGame(
             users,
@@ -36,13 +37,12 @@ describe('Get Obstacle Positions test', () => {
         expect(gameStateInfo.roomId).toBe(users[0].roomId);
     });
 
-    //TODO test initial game state info
     // it('should return the track length', async () => {
-    //     expect(gameStateInfo.trackLength).toBe(TRACKLENGTH);
+    //     expect(initialGameStateInfo.trackLength).toBe(InitialParameters.TRACK_LENGTH);
     // });
 
     // it('should return the number of obstacles', async () => {
-    //     expect(gameStateInfo.numberOfObstacles).toBe(NUMBER_OF_OBSTACLES);
+    //     expect(initialGameStateInfo.numberOfObstacles).toBe(InitialParameters.NUMBER_OBSTACLES);
     // });
 
     it('should return the playersState as an Array', async () => {
@@ -82,6 +82,6 @@ describe('Get Obstacle Positions test', () => {
     });
 
     it('returns chaser position', async () => {
-        expect(gameStateInfo.chasersPositionX).toBe(gameOne.chasersPositionX);
+        expect(gameStateInfo.chasersPositionX).toBe(InitialGameParameters.CHASERS_POSITION_X);
     });
 });

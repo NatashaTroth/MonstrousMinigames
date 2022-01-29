@@ -12,7 +12,9 @@ import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
 } from '../../../../src/gameplay/interfaces/GlobalEventMessages';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
-import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperFunctions';
+import {
+    advanceCountdown, startGameAdvanceCountdown, switchToSecondToLastRound
+} from '../gameThreeHelperFunctions';
 import { photoMessage, receiveMultiplePhotos } from '../gameThreeMockData';
 
 let gameThree: GameThree;
@@ -27,7 +29,7 @@ describe('Initiate stage', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
-        gameThree['stageController']!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(gameThree);
         receiveMultiplePhotos(gameThree);
         advanceCountdown(
             gameThree,
@@ -58,7 +60,6 @@ describe('Initiate stage', () => {
         let suggestions = [];
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GameThreeEventMessage) => {
             if (message.type === GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN) {
-                console.log(message);
                 suggestions = message.photoTopics;
             }
         });
@@ -75,7 +76,7 @@ describe('Taking Photo', () => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.createNewGame(users);
         startGameAdvanceCountdown(gameThree);
-        gameThree['stageController']!['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(gameThree);
         receiveMultiplePhotos(gameThree);
         advanceCountdown(
             gameThree,

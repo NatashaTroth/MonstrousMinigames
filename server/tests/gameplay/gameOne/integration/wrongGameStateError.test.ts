@@ -8,6 +8,9 @@ import {
     clearTimersAndIntervals, getToCreatedGameState, getToFinishedGameState, getToPausedGameState,
     getToStartedGameState, getToStoppedGameState, startGameAndAdvanceCountdown
 } from '../gameOneHelperFunctions';
+import {
+    playerHasCompletedObstacleMessageWitObstacleId, runForwardMessage
+} from '../gameOneMockData';
 
 let gameOne: GameOne;
 
@@ -176,89 +179,93 @@ describe('Stop game', () => {
     });
 });
 
-describe('Run forward', () => {
-    beforeEach(() => {
-        gameOne = new GameOne(roomId, leaderboard);
-        jest.useFakeTimers();
-    });
+it.todo(
+    'change these tests, because handleinput is only called when game started is true - so error is no longer thrown '
+);
+// describe('Run forward', () => {
+//     beforeEach(() => {
+//         gameOne = new GameOne(roomId, leaderboard);
+//         jest.useFakeTimers();
+//     });
 
-    it('throws an error with requiredGameStates property on runForward when wrong game state', () => {
-        let errorThrown = false;
-        try {
-            gameOne['runForward']('1');
-        } catch (e: any) {
-            errorThrown = true;
-            expect([GameState.Started].sort()).toEqual(e.requiredGameStates.sort());
-        }
-        expect(errorThrown).toBeTruthy();
-    });
-    it('should throw a WrongGameStateError on runForward when game state is Initialised', async () => {
-        expect(gameOne.gameState).toBe(GameState.Initialised);
-        expect(() => gameOne['runForward']('1')).toThrow(WrongGameStateError);
-    });
+//     fit('throws an error with requiredGameStates property on runForward when wrong game state', () => {
+//         let errorThrown = false;
+//         try {
+//             gameOne.receiveInput(runForwardMessage);
+//         } catch (e: any) {
+//             errorThrown = true;
+//             expect([GameState.Started].sort()).toEqual(e.requiredGameStates.sort());
+//         }
+//         expect(errorThrown).toBeTruthy();
+//     });
 
-    it('should throw a WrongGameStateError on runForward when game state is Created', async () => {
-        getToCreatedGameState(gameOne);
-        expect(() => gameOne['runForward']('1')).toThrow(WrongGameStateError);
-    });
+//     it('should throw a WrongGameStateError on runForward when game state is Initialised', async () => {
+//         expect(gameOne.gameState).toBe(GameState.Initialised);
+//         expect(() => gameOne.receiveInput(runForwardMessage)).toThrow(WrongGameStateError);
+//     });
 
-    it('should throw a WrongGameStateError on runForward when game state is Paused', async () => {
-        getToPausedGameState(gameOne);
-        expect(() => gameOne['runForward']('1')).toThrow(WrongGameStateError);
-    });
+//     it('should throw a WrongGameStateError on runForward when game state is Created', async () => {
+//         getToCreatedGameState(gameOne);
+//         expect(() => gameOne.receiveInput(runForwardMessage)).toThrow(WrongGameStateError);
+//     });
 
-    it('should throw a WrongGameStateError on runForward when game state is Stopped', async () => {
-        getToStoppedGameState(gameOne);
-        expect(() => gameOne['runForward']('1')).toThrow(WrongGameStateError);
-    });
+//     it('should throw a WrongGameStateError on runForward when game state is Paused', async () => {
+//         getToPausedGameState(gameOne);
+//         expect(() => gameOne.receiveInput(runForwardMessage)).toThrow(WrongGameStateError);
+//     });
 
-    it('should throw a WrongGameStateError on runForward when game state is Finished', async () => {
-        getToFinishedGameState(gameOne);
-        expect(() => gameOne['runForward']('1')).toThrow(WrongGameStateError);
-    });
-});
+//     it('should throw a WrongGameStateError on runForward when game state is Stopped', async () => {
+//         getToStoppedGameState(gameOne);
+//         expect(() => gameOne.receiveInput(runForwardMessage)).toThrow(WrongGameStateError);
+//     });
 
-describe('Player has completed obstacle', () => {
-    beforeEach(() => {
-        gameOne = new GameOne(roomId, leaderboard);
-        jest.useFakeTimers();
-    });
+//     it('should throw a WrongGameStateError on runForward when game state is Finished', async () => {
+//         getToFinishedGameState(gameOne);
+//         expect(() => gameOne.receiveInput(runForwardMessage)).toThrow(WrongGameStateError);
+//     });
+// });
 
-    it('throws an error with requiredGameStates property on playerHasCompletedObstacle when wrong game state', () => {
-        let errorThrown = false;
-        try {
-            gameOne['playerHasCompletedObstacle']('1', 1);
-        } catch (e: any) {
-            errorThrown = true;
-            expect([GameState.Started].sort()).toEqual(e.requiredGameStates.sort());
-        }
-        expect(errorThrown).toBeTruthy();
-    });
-    it('should throw a WrongGameStateError on playerHasCompletedObstacle when game state is Initialised', async () => {
-        expect(gameOne.gameState).toBe(GameState.Initialised);
-        expect(() => gameOne['playerHasCompletedObstacle']('1', 1)).toThrow(WrongGameStateError);
-    });
+// describe('Player has completed obstacle', () => {
+//     beforeEach(() => {
+//         gameOne = new GameOne(roomId, leaderboard);
+//         jest.useFakeTimers();
+//     });
 
-    it('should throw a WrongGameStateError on playerHasCompletedObstacle when game state is Created', async () => {
-        getToCreatedGameState(gameOne);
-        expect(() => gameOne['playerHasCompletedObstacle']('1', 1)).toThrow(WrongGameStateError);
-    });
+//     it('throws an error with requiredGameStates property on playerHasCompletedObstacle when wrong game state', () => {
+//         let errorThrown = false;
+//         try {
+//             gameOne.receiveInput(playerHasCompletedObstacleMessageWitObstacleId);
+//         } catch (e: any) {
+//             errorThrown = true;
+//             expect([GameState.Started].sort()).toEqual(e.requiredGameStates.sort());
+//         }
+//         expect(errorThrown).toBeTruthy();
+//     });
+//     it('should throw a WrongGameStateError on playerHasCompletedObstacle when game state is Initialised', async () => {
+//         expect(gameOne.gameState).toBe(GameState.Initialised);
+//         expect(() => gameOne.receiveInput(playerHasCompletedObstacleMessageWitObstacleId)).toThrow(WrongGameStateError);
+//     });
 
-    it('should throw a WrongGameStateError on playerHasCompletedObstacle when game state is Paused', async () => {
-        getToPausedGameState(gameOne);
-        expect(() => gameOne['playerHasCompletedObstacle']('1', 1)).toThrow(WrongGameStateError);
-    });
+//     it('should throw a WrongGameStateError on playerHasCompletedObstacle when game state is Created', async () => {
+//         getToCreatedGameState(gameOne);
+//         expect(() => gameOne.receiveInput(playerHasCompletedObstacleMessageWitObstacleId)).toThrow(WrongGameStateError);
+//     });
 
-    it('should throw a WrongGameStateError on playerHasCompletedObstacle when game state is Stopped', async () => {
-        getToStoppedGameState(gameOne);
-        expect(() => gameOne['playerHasCompletedObstacle']('1', 1)).toThrow(WrongGameStateError);
-    });
+//     it('should throw a WrongGameStateError on playerHasCompletedObstacle when game state is Paused', async () => {
+//         getToPausedGameState(gameOne);
+//         expect(() => gameOne.receiveInput(playerHasCompletedObstacleMessageWitObstacleId)).toThrow(WrongGameStateError);
+//     });
 
-    it('should throw a WrongGameStateError on playerHasCompletedObstacle when game state is Finished', async () => {
-        getToFinishedGameState(gameOne);
-        expect(() => gameOne['playerHasCompletedObstacle']('1', 1)).toThrow(WrongGameStateError);
-    });
-});
+//     it('should throw a WrongGameStateError on playerHasCompletedObstacle when game state is Stopped', async () => {
+//         getToStoppedGameState(gameOne);
+//         expect(() => gameOne.receiveInput(playerHasCompletedObstacleMessageWitObstacleId)).toThrow(WrongGameStateError);
+//     });
+
+//     it('should throw a WrongGameStateError on playerHasCompletedObstacle when game state is Finished', async () => {
+//         getToFinishedGameState(gameOne);
+//         expect(() => gameOne.receiveInput(playerHasCompletedObstacleMessageWitObstacleId)).toThrow(WrongGameStateError);
+//     });
+// });
 
 describe('Disconnect player', () => {
     beforeEach(() => {

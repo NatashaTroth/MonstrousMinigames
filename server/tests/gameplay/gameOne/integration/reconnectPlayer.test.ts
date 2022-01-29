@@ -27,8 +27,8 @@ describe('Reconnect Player tests', () => {
 
     it('should not finish game until reconnected player is finished', async () => {
         // finish game
-        gameOne.disconnectPlayer('3');
         gameOne.disconnectPlayer('4');
+        // gameOne.disconnectPlayer('3');
         finishPlayer(gameOne, '1');
         gameOne.reconnectPlayer('4');
         finishPlayer(gameOne, '2');
@@ -54,10 +54,10 @@ describe('Reconnect Player tests', () => {
         });
         // finish game
         Date.now = jest.fn(() => dateNow + 10000);
-        gameOne.disconnectPlayer('3');
         gameOne.disconnectPlayer('4');
         finishPlayer(gameOne, '1');
         gameOne.reconnectPlayer('4');
+        gameOne.disconnectPlayer('3');
         finishPlayer(gameOne, '2');
         finishPlayer(gameOne, '4');
 

@@ -26,10 +26,6 @@ describe('Create new game tests', () => {
         expect(gameOne.trackLength).toBe(NEW_TRACKLENGTH);
     });
 
-    it('should have the correct current rank', async () => {
-        expect(gameOne['currentRank']).toBe(1);
-    });
-
     it('should have the correct name for player 1', async () => {
         expect(gameOne.players.get('1')!.name).toBe(users[0].name);
     });

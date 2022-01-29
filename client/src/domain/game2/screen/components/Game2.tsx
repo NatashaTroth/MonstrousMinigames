@@ -1,17 +1,17 @@
-import { Pause, PlayArrow, Stop, VolumeOff, VolumeUp } from "@material-ui/icons";
-import * as React from "react";
-import { useParams } from "react-router";
+import { Pause, PlayArrow, Stop, VolumeOff, VolumeUp } from '@material-ui/icons';
+import * as React from 'react';
+import { useParams } from 'react-router';
 
-import { RouteParams } from "../../../../App";
-import { MyAudioContext, Sound } from "../../../../contexts/AudioContextProvider";
-import { GameContext } from "../../../../contexts/GameContextProvider";
-import { ScreenSocketContext } from "../../../../contexts/screen/ScreenSocketContextProvider";
+import { RouteParams } from '../../../../App';
+import { MyAudioContext, Sound } from '../../../../contexts/AudioContextProvider';
+import { GameContext } from '../../../../contexts/GameContextProvider';
+import { ScreenSocketContext } from '../../../../contexts/screen/ScreenSocketContextProvider';
 import {
     AudioButton, Container, PauseButton, StopButton
-} from "../../../game1/screen/components/Game.sc";
-import GameEventEmitter from "../../../phaser/GameEventEmitter";
-import { PhaserGame } from "../../../phaser/PhaserGame";
-import { FakeInMemorySocket } from "../../../socket/InMemorySocketFake";
+} from '../../../game1/screen/components/Game.sc';
+import GameEventEmitter from '../../../phaser/GameEventEmitter';
+import { PhaserGame } from '../../../phaser/PhaserGame';
+import { FakeInMemorySocket } from '../../../socket/InMemorySocketFake';
 
 const Game2: React.FunctionComponent = () => {
     const { roomId, hasPaused, screenAdmin } = React.useContext(GameContext);

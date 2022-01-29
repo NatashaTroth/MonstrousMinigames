@@ -17,6 +17,7 @@ import {
 import { VotingStage } from '../../../../src/gameplay/gameThree/classes/VotingStage';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
 import { roomId, users } from '../../mockData';
+import { switchRound, switchToSecondToLastRound } from '../gameThreeHelperFunctions';
 import {
     finishPresentingMessage, photoMessage, players, receiveMultiplePhotos, votingMessage
 } from '../gameThreeMockData';
@@ -83,7 +84,7 @@ describe('Stage order after countdown', () => {
     });
 
     it('should switch to taking final photos stage after final viewing results stage', async () => {
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -93,7 +94,7 @@ describe('Stage order after countdown', () => {
     });
 
     it('should switch to null stage (finish game) after taking final photos stage if no photos were received', async () => {
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -106,7 +107,7 @@ describe('Stage order after countdown', () => {
     });
 
     it('should switch to presentation stage taking final photos stage', async () => {
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -120,7 +121,7 @@ describe('Stage order after countdown', () => {
     });
 
     it('should stay on the presentation stage after a presentation', async () => {
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -135,7 +136,7 @@ describe('Stage order after countdown', () => {
     });
 
     it('should switch to final voting stage after all presentations', async () => {
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -152,7 +153,7 @@ describe('Stage order after countdown', () => {
     });
 
     it('should switch to no stage after final voting stage', async () => {
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -171,14 +172,14 @@ describe('Stage order after countdown', () => {
     });
 
     it('should end game when roundIdx is higher than number of rounds', async () => {
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS;
+        switchRound(stageController, InitialParameters.NUMBER_ROUNDS);
         stageController.handleNewRound();
 
         expect(stageController.currentStage!).toBe(null);
     });
 
     it('should emit game finished when roundIdx is higher than number of rounds', async () => {
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS;
+        switchRound(stageController, InitialParameters.NUMBER_ROUNDS);
 
         let eventCalled = false;
         stageEventEmitter.on(StageEventEmitter.GAME_FINISHED, () => {
@@ -230,7 +231,7 @@ describe('Stage order before countdown over', () => {
 
     it('should not switch to taking final photos stage after final viewing results stage if countdown is not over', async () => {
         receiveMultiplePhotos(stageController);
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -241,7 +242,7 @@ describe('Stage order before countdown over', () => {
 
     it('should not switch to presentation stage taking final photos stage if countdown is not over', async () => {
         receiveMultiplePhotos(stageController);
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -255,7 +256,7 @@ describe('Stage order before countdown over', () => {
     });
 
     it('should not stay on the presentation stage after a presentation if countdown is not over', async () => {
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -270,7 +271,7 @@ describe('Stage order before countdown over', () => {
     });
 
     it('should not switch to final voting stage after all presentations if countdown is not over', async () => {
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -290,7 +291,7 @@ describe('Stage order before countdown over', () => {
     });
 
     it('should not switch to no stage after final voting stage if countdown is not over', async () => {
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -364,7 +365,7 @@ describe('Stage change events', () => {
     it('should emit stage change event after final viewing results stage', async () => {
         receiveMultiplePhotos(stageController);
         let eventCalledTimes = 0;
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -378,7 +379,7 @@ describe('Stage change events', () => {
 
     it('should emit stage change event after taking final photos stage', async () => {
         let eventCalledTimes = 0;
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -395,7 +396,7 @@ describe('Stage change events', () => {
 
     it('should not emit stage change event after a single presentation', async () => {
         let eventCalledTimes = 0;
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -414,7 +415,7 @@ describe('Stage change events', () => {
 
     it('should emit stage change event  after all presentations', async () => {
         let eventCalledTimes = 0;
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -435,7 +436,7 @@ describe('Stage change events', () => {
 
     it('should emit stage change event after final voting stage', async () => {
         let eventCalledTimes = 0;
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -488,7 +489,7 @@ describe('Stage order after input', () => {
     });
 
     it('should switch to presentation stage taking final photos stage', async () => {
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -504,7 +505,7 @@ describe('Stage order after input', () => {
     });
 
     it('should stay on the presentation stage after finishing a presentation', async () => {
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -519,7 +520,7 @@ describe('Stage order after input', () => {
     });
 
     it('should switch to final voting stage after finishing all presentations', async () => {
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
@@ -536,7 +537,7 @@ describe('Stage order after input', () => {
     });
 
     it('should switch to no stage after final voting stage', async () => {
-        stageController['roundIdx'] = InitialParameters.NUMBER_ROUNDS - 1;
+        switchToSecondToLastRound(stageController);
         stageController.update(
             InitialParameters.COUNTDOWN_TIME_TAKE_PHOTO + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );

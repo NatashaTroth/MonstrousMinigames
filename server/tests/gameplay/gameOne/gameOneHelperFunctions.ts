@@ -5,17 +5,67 @@ import { GameOne } from '../../../src/gameplay';
 import { GameState } from '../../../src/gameplay/enums';
 import Game from '../../../src/gameplay/Game';
 import { getInitialParams } from '../../../src/gameplay/gameOne/GameOneInitialParameters';
-import { PlayerRank } from '../../../src/gameplay/gameOne/interfaces';
+import GameOnePlayer from '../../../src/gameplay/gameOne/GameOnePlayer';
+import { IMessageObstacle, PlayerRank } from '../../../src/gameplay/gameOne/interfaces';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
 } from '../../../src/gameplay/interfaces/GlobalEventMessages';
 import { users } from '../mockData';
+import { playerHasCompletedObstacleMessage, runForwardMessage } from './gameOneMockData';
 
 const InitialGameParameters = getInitialParams();
-
 const TRACK_LENGTH = InitialGameParameters.TRACK_LENGTH;
 const gameEventEmitter = DI.resolve(GameEventEmitter);
 const dateNow = 1618665766156;
+
+/***********************************************************************************/
+/* Only call private functions/properties in this file and only when necessary */
+/***********************************************************************************/
+
+export function advanceCountdown(gameOne: GameOne, time: number) {
+    gameOne['update'](10, time);
+    const previousNow = Date.now;
+    Date.now = () => previousNow() + time;
+    jest.advanceTimersByTime(time);
+}
+
+export function finishPlayer(gameOne: GameOne, userId: string) {
+    //MAX FRAME PROBLEM
+    const player = [...gameOne.gameOnePlayersController!.getPlayerValues()][Number(userId) - 1];
+    completeObstacles(gameOne, player);
+    runToEnd(gameOne, player);
+}
+
+export function completeObstacles(gameOne: GameOne, player: GameOnePlayer) {
+    const obstacles = [...player.obstacles];
+    for (let i = 0; i < obstacles.length; i++) {
+        goToNextUnsolvableObstacle(gameOne, player);
+        gameOne.receiveInput({
+            ...playerHasCompletedObstacleMessage,
+            userId: player.id,
+            obstacleId: obstacles[i].id,
+        } as IMessageObstacle);
+    }
+}
+
+export function runToEnd(gameOne: GameOne, player: GameOnePlayer) {
+    let counter = 0;
+    while (
+        !player.atObstacle &&
+        player.positionX < gameOne.trackLength &&
+        !player.finished &&
+        gameOne.gameState === GameState.Started
+    ) {
+        runForwardNoLimit(gameOne, player);
+        counter++;
+        if (counter > gameOne.trackLength) break;
+    }
+}
+
+export function runForwardNoLimit(gameOne: GameOne, player: GameOnePlayer) {
+    player.countRunsPerFrame = 0;
+    gameOne.receiveInput({ ...runForwardMessage, userId: player.id }); // should be 1st (fastest to finish)
+}
 
 export const releaseThread = () => new Promise<void>(resolve => resolve());
 export const releaseThreadN = async (n: number) => {
@@ -27,13 +77,11 @@ export const releaseThreadN = async (n: number) => {
 export function clearTimersAndIntervals(game: Game) {
     //to clear intervals
     jest.advanceTimersByTime((game as GameOne).countdownTime || 0);
-    // jest.advanceTimersByTime(gameOne.timeOutLimit);
     try {
         game.stopGameUserClosed();
     } catch (e) {
         //no need to handle, game is already finished
     }
-    // jest.runAllTimers();
     jest.clearAllMocks();
 }
 
@@ -42,9 +90,9 @@ export function startGameAndAdvanceCountdown(gameOne: GameOne, afterCreate: () =
     gameOne.createNewGame(users, TRACK_LENGTH, 4);
     afterCreate();
     gameOne.startGame();
-    advanceCountdown(gameOne.countdownTime);
+    advanceStartCountdown(gameOne.countdownTime);
 }
-export function advanceCountdown(time: number) {
+export function advanceStartCountdown(time: number) {
     //run countdown
     const previousNow = Date.now;
     Date.now = () => previousNow() + time;
@@ -52,7 +100,7 @@ export function advanceCountdown(time: number) {
 }
 
 export function finishCreatedGame(gameOne: GameOne) {
-    advanceCountdown(gameOne.countdownTime);
+    advanceCountdown(gameOne, gameOne.countdownTime);
     return finishGame(gameOne);
 }
 
@@ -71,77 +119,51 @@ export function finishGame(gameOne: GameOne): GameOne {
     return gameOne;
 }
 
-export function finishPlayer(gameOne: GameOne, userId: string) {
-    completePlayersObstacles(gameOne, userId);
-    gameOne['runForward'](userId, gameOne.trackLength - gameOne.players.get(userId)!.positionX);
-}
-
-export function completePlayersObstacles(gameOne: GameOne, userId: string) {
-    const player = gameOne.players.get(userId)!;
-    if (player.obstacles.length > 0) {
-        player.positionX = player.obstacles.pop()!.positionX;
-        player.obstacles = [];
-    }
-
-    // gameOne.maxRunsPerFrame = Infinity; //To prevent going over speed limit
-    // while (player.obstacles.length) {
-    //     gameOne['runForward'](userId, distanceToNextObstacle(gameOne, userId));
-    //     if (player.atObstacle) gameOne['playerHasCompletedObstacle'](userId, player.obstacles[0].id);
-    // }
-}
-
-export function goToNextUnsolvableObstacle(gameOne: GameOne, userId: string) {
-    const player = gameOne.players.get(userId)!;
+export function goToNextUnsolvableObstacle(gameOne: GameOne, player: GameOnePlayer) {
     // gameOne.maxRunsPerFrame = Infinity; //To prevent going over speedlimit
-    while (player.obstacles.length && !player.atObstacle) {
-        gameOne['runForward'](userId, distanceToNextObstacle(gameOne, userId));
+    let counter = 0;
+    while (
+        !player.atObstacle &&
+        player.positionX < gameOne.trackLength &&
+        !player.finished &&
+        gameOne.gameState === GameState.Started
+    ) {
+        runForwardNoLimit(gameOne, player);
+        counter++;
+        if (counter > gameOne.trackLength) break;
         player.countRunsPerFrame = 0; //To prevent going over speed limit
     }
 }
 
-export function completeNextObstacle(gameOne: GameOne, userId: string) {
-    gameOne['runForward'](userId, distanceToNextObstacle(gameOne, userId));
-    if (gameOne['playerHasReachedObstacle'](userId))
-        gameOne['playerHasCompletedObstacle'](userId, gameOne.players.get(userId)!.obstacles[0].id);
-}
-
-export function distanceToNextObstacle(gameOne: GameOne, userId: string) {
-    return gameOne.players.get(userId)!.obstacles[0].positionX - gameOne.players.get(userId)!.positionX;
-}
-
-export function runToNextObstacle(gameOne: GameOne, userId: string) {
-    gameOne['runForward']('1', distanceToNextObstacle(gameOne, userId));
-}
-
-export async function startAndFinishGameDifferentTimes(gameOne: GameOne) {
+export async function startAndFinishGameDifferentTimes(gameOne: GameOne, timesFinished = [1000, 5000, 10000, 15000]) {
     const dateNow = 1618665766156;
     Date.now = jest.fn(() => dateNow);
     startGameAndAdvanceCountdown(gameOne);
-    // finish game
-    for (let i = 1; i <= gameOne.numberOfObstacles; i++) {
-        completePlayersObstacles(gameOne, i.toString());
-    }
 
-    advanceCountdown(1000);
+    advanceCountdown(gameOne, timesFinished[0]);
     await releaseThreadN(3);
-    gameOne['runForward']('1', TRACK_LENGTH);
+    finishPlayer(gameOne, '1');
+
     await releaseThreadN(3);
-    advanceCountdown(4000);
+    advanceCountdown(gameOne, timesFinished[1] - timesFinished[0]);
     await releaseThreadN(3);
-    gameOne['runForward']('2', TRACK_LENGTH);
+    finishPlayer(gameOne, '2');
+
     await releaseThreadN(3);
-    advanceCountdown(5000);
+    advanceCountdown(gameOne, timesFinished[2] - timesFinished[1]);
     await releaseThreadN(3);
-    gameOne['runForward']('3', TRACK_LENGTH);
+    finishPlayer(gameOne, '3');
+
     await releaseThreadN(3);
-    advanceCountdown(5000);
+    advanceCountdown(gameOne, timesFinished[3] - timesFinished[2]);
     await releaseThreadN(3);
-    gameOne['runForward']('4', TRACK_LENGTH);
+    finishPlayer(gameOne, '4');
+
     await releaseThreadN(3);
     return gameOne;
 }
 
-export async function getGameFinishedDataDifferentTimes(gameOne: GameOne) {
+export async function getGameFinishedDataDifferentTimes(gameOne: GameOne, timesFinished?: number[]) {
     let eventData = {
         roomId: '',
         gameState: GameState.Started,
@@ -152,7 +174,7 @@ export async function getGameFinishedDataDifferentTimes(gameOne: GameOne) {
             eventData = message.data as any;
         }
     });
-    gameOne = await startAndFinishGameDifferentTimes(gameOne);
+    gameOne = await startAndFinishGameDifferentTimes(gameOne, timesFinished);
     return eventData;
 }
 
@@ -170,32 +192,12 @@ export function getGameFinishedDataSameRanks(gameOne: GameOne) {
     });
 
     startGameAndAdvanceCountdown(gameOne);
+
     // finish game
-    for (let i = 1; i <= gameOne.numberOfObstacles; i++) {
-        completePlayersObstacles(gameOne, i.toString());
-    }
+    finishPlayer(gameOne, '1');
+    finishPlayer(gameOne, '2');
+    finishPlayer(gameOne, '3');
 
-    gameOne['runForward']('1', TRACK_LENGTH);
-    gameOne['runForward']('2', TRACK_LENGTH);
-    gameOne['runForward']('3', TRACK_LENGTH);
-    Date.now = jest.fn(() => dateNow + 15000);
-    gameOne['runForward']('4', TRACK_LENGTH);
-
-    return eventData;
-}
-
-export async function getGameFinishedDataWithSomeDead(gameOne: GameOne) {
-    let eventData = {
-        roomId: '',
-        gameState: GameState.Started,
-        playerRanks: [] as PlayerRank[],
-    };
-    gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
-        if (message.type === GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED) {
-            eventData = message.data as any;
-        }
-    });
-    gameOne = await startAndFinishGameDifferentTimes(gameOne);
     return eventData;
 }
 

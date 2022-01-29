@@ -15,14 +15,6 @@ describe('Initiates game correctly', () => {
         expect(game.players.size).toBe(users.length);
     });
 
-    it('initiates currentRank with correct number', async () => {
-        expect(game['currentRank']).toBe(1);
-    });
-
-    it('initiates _currentBackRank with correct number', async () => {
-        expect(game['_currentBackRank']).toBe(users.length);
-    });
-
     it('initiates roomId with correct room', async () => {
         expect(game.roomId).toBe(users[0].roomId);
     });
