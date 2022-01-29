@@ -3,7 +3,6 @@ import 'reflect-metadata';
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameState } from '../../../../src/gameplay/enums';
-import Game from '../../../../src/gameplay/Game';
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED, GLOBAL_EVENT_MESSAGE__GAME_HAS_RESUMED,
@@ -27,11 +26,11 @@ describe('Pause', () => {
     });
 
     it('should call pause super function', async () => {
-        const spy = jest.spyOn(Game.prototype as any, 'pauseGame').mockImplementation(() => {
+        const spy = jest.spyOn(gameThree, 'pauseGame').mockImplementation(() => {
             Promise.resolve();
         });
 
-        gameThree['pauseGame']();
+        gameThree.pauseGame();
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
@@ -42,7 +41,7 @@ describe('Pause', () => {
                 eventCalled = true;
             }
         });
-        gameThree['pauseGame']();
+        gameThree.pauseGame();
         expect(eventCalled).toBeTruthy();
     });
 });
@@ -54,17 +53,18 @@ describe('Resume', () => {
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.gameState = GameState.Started;
+        gameThree.pauseGame();
     });
     afterEach(() => {
         jest.clearAllMocks();
     });
 
     it('should call resume super function', async () => {
-        const spy = jest.spyOn(Game.prototype as any, 'resumeGame').mockImplementation(() => {
+        const spy = jest.spyOn(gameThree, 'resumeGame').mockImplementation(() => {
             Promise.resolve();
         });
 
-        gameThree['resumeGame']();
+        gameThree.resumeGame();
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
@@ -75,7 +75,7 @@ describe('Resume', () => {
                 eventCalled = true;
             }
         });
-        gameThree['resumeGame']();
+        gameThree.resumeGame();
         expect(eventCalled).toBeTruthy();
     });
 });
