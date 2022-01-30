@@ -117,7 +117,7 @@ describe('GuessingService Tests', () => {
                 id: user2.id,
                 name: user2.name,
                 rank: 2,
-                isActive: user.active,
+                isActive: user2.active,
                 points: 2,
                 previousRank: 0,
                 finishedRank: true
@@ -125,6 +125,111 @@ describe('GuessingService Tests', () => {
         ];
         expect(guessingService.getPlayerRanks()).toEqual(response);
 
+    });
+
+    it('should have 2 second ranks if two guesses have the same difference', () => {
+        guessingService = new GuessingService(3);
+        const user2 = new User('ABCD', '23434', 'Maria', 2, '2');
+        const user3 = new User('ABCD', '234312', 'Peter', 3, '3');
+        guessingService.init([user, user2, user3]);
+
+        guessingService.addGuess(1, 10, user.id);
+        guessingService.addGuess(1, 19, user2.id);
+        guessingService.addGuess(1, 1, user3.id);
+
+        guessingService.saveSheepCount(1, 10);
+        guessingService.calculatePlayerRanks();
+
+        const response = [
+            {
+                id: user.id,
+                name: user.name,
+                rank: 1,
+                isActive: user.active,
+                points: 3,
+                previousRank: 0,
+                finishedRank: true
+            },
+            {
+                id: user2.id,
+                name: user2.name,
+                rank: 2,
+                isActive: user2.active,
+                points: 2,
+                previousRank: 0,
+                finishedRank: true
+            },
+            {
+                id: user3.id,
+                name: user3.name,
+                rank: 2,
+                isActive: user3.active,
+                points: 2,
+                previousRank: 0,
+                finishedRank: true
+            }
+        ];
+        expect(guessingService.getPlayerRanks()).toEqual(response);
+    });
+
+
+    it('should have the right amount of points after 3 rounds of guessing', () => {
+        guessingService = new GuessingService(3);
+        const user2 = new User('ABCD', '23434', 'Maria', 2, '2');
+        const user3 = new User('ABCD', '234312', 'Peter', 3, '3');
+        guessingService.init([user, user2, user3]);
+
+        guessingService.addGuess(1, 10, user.id);
+        guessingService.addGuess(1, 19, user2.id);
+        guessingService.addGuess(1, 1, user3.id);
+
+        guessingService.saveSheepCount(1, 10);
+        guessingService.calculatePlayerRanks();
+
+        guessingService.addGuess(2, 9, user.id);
+        guessingService.addGuess(2, 20, user2.id);
+        guessingService.addGuess(2, 1, user3.id);
+
+        guessingService.saveSheepCount(2, 9);
+        guessingService.calculatePlayerRanks();
+
+        guessingService.addGuess(3, 8, user.id);
+        guessingService.addGuess(3, 7, user2.id);
+        guessingService.addGuess(3, 2, user3.id);
+
+        guessingService.saveSheepCount(3, 8);
+        guessingService.calculatePlayerRanks();
+
+        const response = [
+            {
+                id: user.id,
+                name: user.name,
+                rank: 1,
+                isActive: user.active,
+                points: 9,
+                previousRank: 1,
+                finishedRank: true
+            },
+            {
+                id: user2.id,
+                name: user2.name,
+                rank: 2,
+                isActive: user2.active,
+                points: 5,
+                previousRank: 3,
+                finishedRank: true
+            },
+            {
+                id: user3.id,
+                name: user3.name,
+                rank: 2,
+                isActive: user3.active,
+                points: 5,
+                previousRank: 2,
+                finishedRank: true
+            }
+        ];
+        expect(guessingService.getPlayerRanks()).toEqual(response);
     });
 
     it('allGuessesSubmitted() should return true if every user submitted a guess in the round', () => {

@@ -125,16 +125,21 @@ export default class GuessingService {
         const round = this.getCurrendRound();
 
         const differences = [...this.guesses].map(([id, guesses]) => {
-            const difference = Math.abs(this.counts[round - 1] - guesses[round - 1]);
+            const difference = guesses[round - 1] ? Math.abs(this.counts[round - 1] - guesses[round - 1]) : 10000;
             return { id, difference }
         }).sort((a, b) => (a.difference - b.difference));
-
         let newPoints = 3;
+        let lastDifference: number;
         differences.forEach((entry) => {
             const currentRank = this.playerRanks.get(entry.id);
             if (currentRank) {
-                currentRank.points += newPoints;
+                if (entry.difference !== lastDifference){  
+                    currentRank.points += newPoints;
+                }else{
+                    currentRank.points += newPoints + 1;
+                }
                 newPoints--;
+                lastDifference = entry.difference;
             }
         });
     }
