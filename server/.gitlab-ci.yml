@@ -83,6 +83,7 @@ staging:server:
     only:
         refs:
             - dev
+            - staging
         changes:
             - server/**/*
 
