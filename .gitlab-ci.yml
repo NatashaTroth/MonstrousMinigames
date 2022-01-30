@@ -4,8 +4,9 @@ stages:
   - lint
   - test-unit
   - test-integration
+  - test-component
   - staging
-  - end-to-end
+  - test-e2e
   - production
 
 include:
