@@ -144,7 +144,14 @@ export const Lobby: React.FunctionComponent = () => {
                                 <Button onClick={() => history.push(screenLeaderboardRoute(roomId))}>
                                     Leaderboard
                                 </Button>
-                                <Button onClick={() => history.push(Routes.screen)}>Back</Button>
+                                <Button
+                                    onClick={() => {
+                                        history.push(Routes.screen);
+                                        location.reload();
+                                    }}
+                                >
+                                    Back
+                                </Button>
                             </RightButtonContainer>
                         </RightContainer>
                     </ContentContainer>
