@@ -61,20 +61,6 @@ test-integration:client:
         changes:
             - client/**/*
 
-test-component:client:
-    stage: test-component
-    tags:
-        - node
-    script:
-        - cd client/
-        - echo "Testing.."
-        - npm run test:component
-    except:
-        - staging
-    only:
-        changes:
-            - client/**/*
-
 test-e2e-staging:client:
     stage: test-e2e-staging
     image: mcr.microsoft.com/playwright:focal

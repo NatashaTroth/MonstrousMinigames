@@ -18,16 +18,6 @@ configure({ adapter: new Adapter() });
 afterEach(cleanup);
 
 describe('Guess', () => {
-    it('renders one input', () => {
-        const container = mount(
-            <ThemeProvider theme={theme}>
-                <Guess />
-            </ThemeProvider>
-        );
-
-        expect(container.find('input')).toHaveLength(1);
-    });
-
     it('guess should be submitted to socket if submit button is pressed', () => {
         const controllerSocket = new FakeInMemorySocket();
         const userId = '1';
@@ -40,7 +30,6 @@ describe('Guess', () => {
                         <Guess />
                     </PlayerContext.Provider>
                 </ControllerSocketContext.Provider>
-                ControllerS
             </ThemeProvider>
         );
 

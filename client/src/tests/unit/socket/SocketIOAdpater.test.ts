@@ -4,9 +4,11 @@ describe('SocketIOAdapter', () => {
     const roomId = 'SDFS';
     const device = 'controller';
 
-    it('when creating socket, connect should be called', () => {
+    it('when calling emit on socket, waitUntilConnected should be called', () => {
         const socket = new SocketIOAdapter(roomId, device);
-        const spy = jest.spyOn(socket, 'connect');
+        const spy = jest.spyOn(socket, 'waitUntilConnected');
+        const callback = jest.fn();
+        socket.emit(callback);
 
         expect(spy).toHaveBeenCalledTimes(1);
     });

@@ -1,6 +1,6 @@
 /* eslint-disable simple-import-sort/imports */
 import 'jest-styled-components';
-import { act, cleanup, fireEvent, render } from '@testing-library/react';
+import { cleanup } from '@testing-library/react';
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
@@ -82,29 +82,5 @@ describe('Trash', () => {
             </ThemeProvider>
         );
         expect(container.findWhere(node => node.prop('src') === food)).toBeTruthy();
-    });
-
-    it('when SkipButton is clicked, solveObstacle should be called', () => {
-        const setObstacle = jest.fn();
-        jest.useFakeTimers(); // mock timers
-        const obstacle = { id: 1, type: ObstacleTypes.trash };
-        const { container } = render(
-            <ThemeProvider theme={theme}>
-                <Game1Context.Provider value={{ ...defaultValue, setObstacle, obstacle }}>
-                    <Trash />
-                </Game1Context.Provider>
-            </ThemeProvider>
-        );
-
-        act(() => {
-            jest.runAllTimers(); // trigger setTimeout
-        });
-
-        const button = container.querySelector('button');
-
-        if (button) {
-            fireEvent.click(button);
-            expect(setObstacle).toHaveBeenCalledTimes(1);
-        }
     });
 });

@@ -57,38 +57,4 @@ describe('Vote', () => {
             voteForPhotoMessage.photoUrls.length - 1
         );
     });
-
-    it('displays instructions after submit', async () => {
-        const givenText = 'Your vote has been submitted, waiting for the others...';
-        const userId = '1';
-        const voteForPhotoMessage = {
-            photoUrls: [
-                {
-                    photographerId: '1',
-                    photoId: 1,
-                    url: '',
-                },
-                {
-                    photographerId: '2',
-                    photoId: 2,
-                    url: '',
-                },
-            ],
-            countdownTime: 30000,
-        };
-        const container = mount(
-            <ThemeProvider theme={theme}>
-                <PlayerContext.Provider value={{ ...playerDefaultValue, userId }}>
-                    <Game3Context.Provider value={{ ...defaultValue, voteForPhotoMessage }}>
-                        <Vote />
-                    </Game3Context.Provider>
-                </PlayerContext.Provider>
-            </ThemeProvider>
-        );
-
-        const button = container.find('button').first();
-        button.simulate('click');
-
-        expect(container.findWhere(node => node.text() === givenText && node.type() === 'p').length).toEqual(1);
-    });
 });

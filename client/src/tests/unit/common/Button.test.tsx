@@ -1,6 +1,6 @@
+// eslint-disable-next-line simple-import-sort/imports
 import 'jest-styled-components';
-
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount } from 'enzyme';
 import React from 'react';
@@ -23,22 +23,6 @@ describe('Button', () => {
             </ThemeProvider>
         );
         expect(getByText(/A Button/i).closest('button')?.disabled).toBeTruthy();
-    });
-
-    it('when the button is clicked, it calls the onClick handler', () => {
-        const givenText = 'A Button';
-        const onClick = jest.fn();
-        const { container } = render(
-            <ThemeProvider theme={theme}>
-                <Button onClick={onClick}>{givenText}</Button>
-            </ThemeProvider>
-        );
-        const button = container.querySelector('button');
-
-        if (button) {
-            fireEvent.click(button);
-            expect(onClick).toHaveBeenCalledTimes(1);
-        }
     });
 
     it('uses handed button type', () => {
