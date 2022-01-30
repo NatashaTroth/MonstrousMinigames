@@ -15,20 +15,18 @@ describe('play', () => {
     const audioCtx = new AudioContext();
     const setIsPlaying = jest.fn();
 
-    it('should call onPlay function of track', () => {
-        const onPlay = jest.fn();
+    it('should save playingMusic to localStorage', () => {
         const playingTracks = {
             name: 'lobby',
             tracks: [
                 {
                     src: new Audio(),
-                    onPlay,
                 },
             ],
         };
 
         play({ playingTracks, setIsPlaying, audioCtx });
 
-        expect(onPlay).toHaveBeenCalledTimes(1);
+        expect(localStorage.getItem('playingMusic')).toEqual('true');
     });
 });

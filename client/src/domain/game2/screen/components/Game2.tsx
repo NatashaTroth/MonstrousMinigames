@@ -45,12 +45,6 @@ const Game2: React.FunctionComponent = () => {
     }, []);
 
     async function handleAudio() {
-        if (isPlaying) {
-            GameEventEmitter.emitPauseAudioEvent();
-        } else {
-            GameEventEmitter.emitPlayAudioEvent();
-        }
-
         togglePlaying();
     }
 
