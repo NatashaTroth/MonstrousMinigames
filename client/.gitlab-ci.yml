@@ -133,6 +133,7 @@ staging:client:
     only:
         refs:
             - dev
+            - staging
         changes:
             - client/**/*
 
