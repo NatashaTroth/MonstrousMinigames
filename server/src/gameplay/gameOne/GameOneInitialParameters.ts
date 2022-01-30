@@ -67,7 +67,7 @@ const mediumParams = () => {
         NUMBER_STONES: shorterGame && localDevelopment ? 2 : 5, //when alive
         MAX_NUMBER_CHASER_PUSHES: 3,
         CHASER_PUSH_AMOUNT: 20 * mediumParamsModifier,
-        SPEED: shorterGame && localDevelopment ? 2 : 1,
+        SPEED: 2,
         CAMERA_SPEED: shorterGame && localDevelopment ? 1 : 1.7 * mediumParamsModifier,
         CHASERS_SPEED: 1.75 * mediumParamsModifier,
         CHASERS_PUSH_SPEED: 3 * mediumParamsModifier,
