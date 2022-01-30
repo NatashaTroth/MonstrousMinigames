@@ -51,7 +51,7 @@ const easyParams = () => {
         NUMBER_STONES: shorterGame && localDevelopment ? 0 : 4, //when alive
         MAX_NUMBER_CHASER_PUSHES: 3,
         CHASER_PUSH_AMOUNT: 20,
-        SPEED: 1,
+        SPEED: 2,
         CAMERA_SPEED: 1.7,
         CHASERS_SPEED: 1.75,
         CHASERS_PUSH_SPEED: 3,
@@ -83,7 +83,7 @@ const hardParams = () => {
         NUMBER_STONES: shorterGame && localDevelopment ? 0 : 6, //when alive
         MAX_NUMBER_CHASER_PUSHES: 4,
         CHASER_PUSH_AMOUNT: 20 * hardParamsModifier,
-        SPEED: 1,
+        SPEED: 2,
         CAMERA_SPEED: 1.7 * hardParamsModifier,
         CHASERS_SPEED: 1.75 * hardParamsModifier,
         CHASERS_PUSH_SPEED: 3 * hardParamsModifier,
