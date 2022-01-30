@@ -35,12 +35,12 @@ lint:server:
 # --- Testing ---
 .test_coverage_template: &test_coverage_report_configuration
     coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
-    artifacts:
-        when: always
-        reports:
-            junit:
-                - junit.xml
-            cobertura: coverage/cobertura-coverage.xml
+    # artifacts:
+    #     when: always
+    #     reports:
+    #         junit:
+    #             - junit.xml
+    #         cobertura: coverage/cobertura-coverage.xml
 
 test-unit:server:
     <<: *test_coverage_report_configuration
