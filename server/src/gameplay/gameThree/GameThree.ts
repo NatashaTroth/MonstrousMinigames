@@ -131,6 +131,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                 votes: playerPoints.get(player.id) || 0,
                 rank: 0,
                 isActive: player.isActive,
+                finished: true,
             };
         });
 

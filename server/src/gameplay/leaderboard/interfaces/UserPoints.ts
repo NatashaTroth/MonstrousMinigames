@@ -3,4 +3,5 @@ export interface UserPoints {
     name: string;
     points: number;
     rank: number;
+    playedGame: boolean;
 }
