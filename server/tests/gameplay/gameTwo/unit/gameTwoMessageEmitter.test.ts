@@ -1,14 +1,22 @@
 import 'reflect-metadata';
 
-import { leaderboard, roomId, users } from '../../mockData';
+import { container } from 'tsyringe';
+
+import Room from '../../../../src/classes/room';
 import DI from '../../../../src/di';
 import { GameTwo } from '../../../../src/gameplay';
-import Room from '../../../../src/classes/room';
 import { GameState } from '../../../../src/gameplay/enums';
+import {
+    GameTwoMessageEmitter
+} from '../../../../src/gameplay/gameTwo/classes/GameTwoMessageEmitter';
 import { NamespaceAdapter, PlayerRank } from '../../../../src/gameplay/gameTwo/interfaces';
-import { GameTwoMessageEmitter } from '../../../../src/gameplay/gameTwo/classes/GameTwoMessageEmitter';
-import { GameTwoGuessHint, GameTwoInitialGameState, GameTwoPhaseHasChanged, GameTwoPlayerRanks, GameTwoRemainingKills, GAME_TWO_EVENT_MESSAGE__GUESS_HINT, GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE, GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED, GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS, GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS } from '../../../../src/gameplay/gameTwo/interfaces/GameTwoEventMessages';
-
+import {
+    GAME_TWO_EVENT_MESSAGE__GUESS_HINT, GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
+    GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED, GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS,
+    GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS, GameTwoGuessHint, GameTwoInitialGameState,
+    GameTwoPhaseHasChanged, GameTwoPlayerRanks, GameTwoRemainingKills
+} from '../../../../src/gameplay/gameTwo/interfaces/GameTwoEventMessages';
+import { leaderboard, roomId, users } from '../../mockData';
 
 let gameTwo: GameTwo;
 let gameTwoMessageEmitter: GameTwoMessageEmitter;
@@ -35,7 +43,6 @@ const screenNamespace: NamespaceAdapter = {
     emit: screenSpaceEmit,
 };
 
-
 const room = new Room('roomSocketId');
 users.forEach(user => {
     room.addUser(user);
@@ -52,7 +59,7 @@ const gameStateInfoData = {
     phase: 'counting',
     timeLeft: 1000,
     aliveSheepCounts: [],
-    brightness: 100
+    brightness: 100,
 };
 
 const playerRanks: PlayerRank[] = [
@@ -62,7 +69,7 @@ const playerRanks: PlayerRank[] = [
         isActive: users[0].active,
         rank: 1,
         points: 10,
-        previousRank: 1
+        previousRank: 1,
     },
     {
         id: users[1].id,
@@ -70,7 +77,7 @@ const playerRanks: PlayerRank[] = [
         isActive: users[1].active,
         rank: 2,
         points: 9,
-        previousRank: 2
+        previousRank: 2,
     },
     {
         id: users[2].id,
@@ -78,7 +85,7 @@ const playerRanks: PlayerRank[] = [
         isActive: users[2].active,
         points: 8,
         rank: 3,
-        previousRank: 3
+        previousRank: 3,
     },
     {
         id: users[2].id,
@@ -86,14 +93,17 @@ const playerRanks: PlayerRank[] = [
         isActive: users[2].active,
         rank: 4,
         points: 7,
-        previousRank: 4
-    }
+        previousRank: 4,
+    },
 ];
-
 
 describe('Can handle message', () => {
     beforeAll(() => {
         gameTwoMessageEmitter = DI.resolve(GameTwoMessageEmitter);
+    });
+
+    afterAll(() => {
+        container.resolve(GameTwoMessageEmitter).cleanUpListeners();
     });
 
     beforeEach(async () => {
@@ -120,6 +130,10 @@ describe('Handle function send to screens', () => {
         gameTwoMessageEmitter = DI.resolve(GameTwoMessageEmitter);
     });
 
+    afterAll(() => {
+        container.resolve(GameTwoMessageEmitter).cleanUpListeners();
+    });
+
     beforeEach(async () => {
         gameTwo = new GameTwo(roomId, leaderboard);
         gameTwo.createNewGame(users);
@@ -127,7 +141,6 @@ describe('Handle function send to screens', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
-
 
     it(`should emit ${GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE} for screens`, () => {
         const message: GameTwoInitialGameState = {
@@ -158,7 +171,7 @@ describe('Handle function send to screens', () => {
             type: GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED,
             roomId,
             round: 1,
-            phase: 'guessing'
+            phase: 'guessing',
         };
 
         gameTwoMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
@@ -171,7 +184,7 @@ describe('Handle function send to screens', () => {
             type: GAME_TWO_EVENT_MESSAGE__GUESS_HINT,
             roomId,
             userId: users[0].id,
-            hint: 'too low'
+            hint: 'too low',
         };
 
         gameTwoMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
@@ -185,7 +198,7 @@ describe('Handle function send to screens', () => {
             type: GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS,
             roomId,
             userId: users[0].id,
-            remainingKills: 3
+            remainingKills: 3,
         };
 
         gameTwoMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
@@ -193,5 +206,4 @@ describe('Handle function send to screens', () => {
         expect(controllerSpaceEmit).toHaveBeenCalledWith('message', message);
         expect(controllerSpaceTo).toHaveBeenCalledWith(room.users[0].socketId);
     });
-
 });

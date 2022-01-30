@@ -6,8 +6,9 @@ stages:
   - test-integration
   - test-component
   - staging
-  - test-e2e
+  - test-e2e-staging
   - production
+  - test-e2e-production
 
 include:
   - local: "/server/.gitlab-ci.yml"

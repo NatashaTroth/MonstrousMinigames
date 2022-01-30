@@ -8,7 +8,6 @@ import { GameToScreenMapper } from '../../../phaser/game1/GameToScreenMapper';
 import { initialGameInput } from '../../../phaser/game1/initialGameInput';
 import { Player } from '../../../phaser/game1/Player';
 import { PhaserPlayerRenderer } from '../../../phaser/game1/renderer/PhaserPlayerRenderer';
-import { GameAudio } from '../../../phaser/GameAudio';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import { GameEventTypes } from '../../../phaser/GameEventTypes';
 import { GameData } from '../../../phaser/gameInterfaces';
@@ -17,7 +16,7 @@ import { PhaserGameRenderer } from '../../../phaser/renderer/PhaserGameRenderer'
 import { Socket } from '../../../socket/Socket';
 import { initSockets } from '../gameState/initSockets';
 import { moveLanesToCenter } from '../gameState/moveLanesToCenter';
-import { audioFiles, characters, fireworkFlares, images } from './GameAssets';
+import { characters, fireworkFlares, images } from './GameAssets';
 
 class MainScene extends Phaser.Scene {
     windowWidth: number;
@@ -33,7 +32,6 @@ class MainScene extends Phaser.Scene {
     gameStarted: boolean;
     paused: boolean;
     gameRenderer?: PhaserGameRenderer;
-    gameAudio?: GameAudio;
     camera?: Phaser.Cameras.Scene2D.Camera;
     cameraSpeed: number;
     gameEventEmitter: GameEventEmitter;
@@ -107,8 +105,6 @@ class MainScene extends Phaser.Scene {
             });
         }
 
-        audioFiles.forEach(audio => this.load.audio(audio.name, audio.file));
-
         characters.forEach(character => {
             this.load.spritesheet(character.name, character.file, character.properties);
         });
@@ -144,9 +140,6 @@ class MainScene extends Phaser.Scene {
             roomId: this.roomId,
         });
 
-        this.gameAudio = new GameAudio(this.sound);
-        this.gameAudio.initAudio();
-
         if (localDevelopment && designDevelopment) {
             this.initiateGame(initialGameInput);
         }
@@ -168,14 +161,6 @@ class MainScene extends Phaser.Scene {
     }
 
     initiateEventEmitters() {
-        this.gameEventEmitter.on(GameEventTypes.PauseAudio, () => {
-            this.gameAudio?.pause();
-        });
-
-        this.gameEventEmitter.on(GameEventTypes.PlayAudio, () => {
-            this.gameAudio?.resume();
-        });
-
         this.gameEventEmitter.on(GameEventTypes.PauseResume, () => {
             this.handlePauseResumeButton();
         });

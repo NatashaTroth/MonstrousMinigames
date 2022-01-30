@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import { container } from 'tsyringe';
+
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import GameOnePlayer from '../../../../src/gameplay/gameOne/GameOnePlayer';
@@ -19,6 +21,11 @@ describe('Player wants to Solve Obstacle', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
+
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
+    });
+
     beforeEach(async () => {
         gameOnePlayer = players.get(users[0].id)!;
         firstObstacle = gameOnePlayer.obstacles[0];

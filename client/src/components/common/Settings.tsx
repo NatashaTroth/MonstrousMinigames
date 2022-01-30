@@ -22,7 +22,7 @@ import IconButton from './IconButton';
 
 const Settings: React.FunctionComponent = () => {
     const { isPlaying, setVolume, volume, togglePlaying } = React.useContext(MyAudioContext);
-    const { difficulty, setDifficulty } = React.useContext(GameContext);
+    const { difficulty, setDifficulty, screenAdmin } = React.useContext(GameContext);
 
     const handleChange = (event: React.ChangeEvent<unknown>, newValue: number | number[]): void => {
         setVolume(typeof newValue === 'number' ? newValue : newValue[0]);
@@ -55,21 +55,31 @@ const Settings: React.FunctionComponent = () => {
                             </IconButton>
                         </StyledGridContainer>
                     </VolumeContainer>
-                    <SubHeading>Game 1</SubHeading>
-                    <VolumeContainer>
-                        <Typography gutterBottom>Difficulty</Typography>
-                        <StyledGridContainer container spacing={2}>
-                            <Grid item>
-                                <Typography>Easy</Typography>
-                            </Grid>
-                            <Grid item xs>
-                                <Slider value={difficulty} onChange={handleDifficultyChange} step={1} min={0} max={2} />
-                            </Grid>
-                            <Grid item>
-                                <Typography>Hard</Typography>
-                            </Grid>
-                        </StyledGridContainer>
-                    </VolumeContainer>
+                    {screenAdmin && (
+                        <>
+                            <SubHeading>Game 1</SubHeading>
+                            <VolumeContainer>
+                                <Typography gutterBottom>Difficulty</Typography>
+                                <StyledGridContainer container spacing={2}>
+                                    <Grid item>
+                                        <Typography>Easy</Typography>
+                                    </Grid>
+                                    <Grid item xs>
+                                        <Slider
+                                            value={difficulty}
+                                            onChange={handleDifficultyChange}
+                                            step={1}
+                                            min={0}
+                                            max={2}
+                                        />
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography>Hard</Typography>
+                                    </Grid>
+                                </StyledGridContainer>
+                            </VolumeContainer>
+                        </>
+                    )}
                 </ContentBase>
             </ContentContainer>
             <BackButtonContainer>

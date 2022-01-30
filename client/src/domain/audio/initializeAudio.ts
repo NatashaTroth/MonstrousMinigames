@@ -10,12 +10,16 @@ interface InitializeAudioProps {
     lobbyMusic: Track[];
     owlMusic: Track[];
     finishedMusic: Track[];
+    gameOneMusic: Track[];
+    gameTwoMusic: Track[];
     gameThreeMusic: Track[];
     owlSoundsTimeout: ReturnType<typeof setTimeout>;
     setAudioCtx: (val: null | AudioContext) => void;
     setLobbyMusic: (val: Track[]) => void;
     setOwlMusic: (val: Track[]) => void;
     setFinishedMusic: (val: Track[]) => void;
+    setGameOneMusic: (val: Track[]) => void;
+    setGameTwoMusic: (val: Track[]) => void;
     setGameThreeMusic: (val: Track[]) => void;
     setPlayingTracks: (val: PlayingTracks) => void;
     setIsPlaying: (val: boolean) => void;
@@ -26,6 +30,8 @@ export async function initializeAudio({
     volume,
     setAudioCtx,
     setFinishedMusic,
+    setGameOneMusic,
+    setGameTwoMusic,
     setGameThreeMusic,
     setLobbyMusic,
     setOwlMusic,
@@ -36,6 +42,8 @@ export async function initializeAudio({
     lobbyMusic,
     finishedMusic,
     gameThreeMusic,
+    gameOneMusic,
+    gameTwoMusic,
     owlSoundsTimeout,
 }: InitializeAudioProps) {
     const w = window as WindowProps;
@@ -47,6 +55,8 @@ export async function initializeAudio({
     const lobby = initializeTracks(lobbyMusic, volume, true);
     const owl = initializeTracks(owlMusic, volume);
     const finished = initializeTracks(finishedMusic, volume);
+    const gameOne = initializeTracks(gameOneMusic, volume, true);
+    const gameTwo = initializeTracks(gameTwoMusic, volume, true);
     const gameThree = initializeTracks(gameThreeMusic, volume, true);
 
     owl[0].onPlay = () => playOwlSounds(owlMusic, owlSoundsTimeout, setOwlSoundsTimeout);
@@ -54,6 +64,8 @@ export async function initializeAudio({
     setLobbyMusic(lobby);
     setOwlMusic(owl);
     setFinishedMusic(finished);
+    setGameOneMusic(gameOne);
+    setGameTwoMusic(gameTwo);
     setGameThreeMusic(gameThree);
 
     const initialMusic = { name: Sound.lobby, tracks: [...lobby, ...owl] };

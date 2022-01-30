@@ -75,9 +75,30 @@ test-component:client:
         changes:
             - client/**/*
 
-test-e2e:client:
-    stage: test-e2e
+test-e2e-staging:client:
+    stage: test-e2e-staging
     image: mcr.microsoft.com/playwright:focal
+    variables:
+        REACT_APP_FRONTEND_URL: 'https://staging-monsters.web.app/'
+        REACT_APP_BACKEND_URL: 'https://monstrous-minigames-staging.herokuapp.com/'
+    script:
+        - sleep 30
+        - cd client/
+        - npx playwright install --with-deps
+        - echo "End to End testing.."
+        - npm run test:e2e
+    only:
+        refs:
+            - dev
+        changes:
+            - client/**/*
+
+test-e2e-production:client:
+    stage: test-e2e-production
+    image: mcr.microsoft.com/playwright:focal
+    variables:
+        REACT_APP_FRONTEND_URL: 'https://monstrous-minigames.web.app/'
+        REACT_APP_BACKEND_URL: 'https://monstrous-minigames.herokuapp.com/'
     script:
         - sleep 30
         - cd client/
@@ -112,6 +133,7 @@ staging:client:
     only:
         refs:
             - dev
+            - staging
         changes:
             - client/**/*
 

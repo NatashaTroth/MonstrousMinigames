@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import { container } from 'tsyringe';
+
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
@@ -18,12 +20,20 @@ import {
 } from '../gameThreeHelperFunctions';
 
 let gameThree: GameThree;
-const gameEventEmitter = DI.resolve(GameEventEmitter);
+let gameEventEmitter: GameEventEmitter;
 
 const mockPhotoUrl = 'https://mockPhoto.com';
 const message: IMessagePhoto = { type: GameThreeMessageTypes.PHOTO, url: mockPhotoUrl, photographerId: users[0].id };
 
 describe('Taking Photo', () => {
+    beforeAll(() => {
+        gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
+
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
+    });
+
     beforeEach(() => {
         Date.now = () => dateNow;
         jest.useFakeTimers();

@@ -9,4 +9,8 @@ export default class GameEventEmitter extends EventEmitter {
         super();
         this.setMaxListeners(20);
     }
+
+    cleanUpListeners() {
+        this.removeAllListeners();
+    }
 }

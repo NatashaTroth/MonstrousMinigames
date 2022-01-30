@@ -1,29 +1,25 @@
 import { singleton } from 'tsyringe';
 
-import { NamespaceAdapter } from '../interfaces';
-import Game from '../../Game';
-import Player from '../../Player';
-import {
-    GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
-    GAME_TWO_EVENT_MESSAGES,
-    GameTwoEventMessage,
-    GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED,
-    GAME_TWO_EVENT_MESSAGE__GUESS_HINT,
-    GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS,
-    GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS,
-    GAME_TWO_EVENT_MESSAGE__CHOOSE_RESPONSE
-} from '../interfaces/GameTwoEventMessages';
-import { GlobalEventMessage } from '../../interfaces/GlobalEventMessages';
-import { IGameStateBase } from '../../interfaces/IGameStateBase';
 import GameEventEmitter from '../../../classes/GameEventEmitter';
 import Room from '../../../classes/room';
 import User from '../../../classes/user';
 import { EventMessage } from '../../../interfaces/EventMessage';
 import { EventMessageEmitter } from '../../../interfaces/EventMessageEmitter';
+import Game from '../../Game';
+import { GlobalEventMessage } from '../../interfaces/GlobalEventMessages';
+import { IGameStateBase } from '../../interfaces/IGameStateBase';
+import Player from '../../Player';
+import { NamespaceAdapter } from '../interfaces';
+import {
+    GAME_TWO_EVENT_MESSAGE__CHOOSE_RESPONSE, GAME_TWO_EVENT_MESSAGE__GUESS_HINT,
+    GAME_TWO_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
+    GAME_TWO_EVENT_MESSAGE__PHASE_HAS_CHANGED, GAME_TWO_EVENT_MESSAGE__PLAYER_RANKS,
+    GAME_TWO_EVENT_MESSAGE__REMAINING_KILLS, GAME_TWO_EVENT_MESSAGES, GameTwoEventMessage
+} from '../interfaces/GameTwoEventMessages';
 
 @singleton()
 export class GameTwoMessageEmitter implements EventMessageEmitter {
-    constructor(private readonly gameEventEmitter: GameEventEmitter) { }
+    constructor(private readonly gameEventEmitter: GameEventEmitter) {}
 
     emit(message: GameTwoEventMessage | GlobalEventMessage): void {
         this.gameEventEmitter.emit(GameEventEmitter.EVENT_MESSAGE_EVENT, message);
@@ -31,6 +27,11 @@ export class GameTwoMessageEmitter implements EventMessageEmitter {
     canHandle(message: EventMessage, game: Game<Player, IGameStateBase>): boolean {
         return GAME_TWO_EVENT_MESSAGES.includes(message.type);
     }
+
+    cleanUpListeners() {
+        this.removeAllListeners();
+    }
+
     handle(
         controllerNameSpace: NamespaceAdapter,
         screenNameSpace: NamespaceAdapter,

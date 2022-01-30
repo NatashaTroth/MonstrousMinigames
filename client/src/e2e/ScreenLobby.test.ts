@@ -14,8 +14,7 @@ test('When creating new room on screen, room code should be rendered at lobby he
         // Waits for the next response matching some conditions
         page.waitForResponse(
             response =>
-                response.url() === 'https://monstrous-minigames-staging.herokuapp.com/create-room' &&
-                response.status() === 200
+                response.url() === `${process.env.REACT_APP_BACKEND_URL}/create-room` && response.status() === 200
         ),
         // Triggers the response
         page.locator('button:has-text("Create New Room")').click(),
@@ -40,8 +39,7 @@ test('When joining room on screen, room code should be rendered at lobby header'
         // Waits for the next response matching some conditions
         createRoomPage.waitForResponse(
             response =>
-                response.url() === 'https://monstrous-minigames-staging.herokuapp.com/create-room' &&
-                response.status() === 200
+                response.url() === `${process.env.REACT_APP_BACKEND_URL}/create-room` && response.status() === 200
         ),
         // Triggers the response
         createRoomPage.locator('button:has-text("Create New Room")').click(),

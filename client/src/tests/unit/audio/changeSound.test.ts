@@ -14,6 +14,8 @@ describe('changeSound', () => {
     const owlMusic: Track[] = [];
     const finishedMusic: Track[] = [];
     const gameThreeMusic: Track[] = [];
+    const gameOneMusic: Track[] = [];
+    const gameTwoMusic: Track[] = [];
 
     const dependencies = {
         pause: jest.fn(),
@@ -32,6 +34,8 @@ describe('changeSound', () => {
             /*do nothing*/
         }, 0),
         owlMusic,
+        gameOneMusic,
+        gameTwoMusic,
         gameThreeMusic,
     };
 

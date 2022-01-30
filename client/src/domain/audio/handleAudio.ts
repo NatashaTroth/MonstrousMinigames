@@ -65,6 +65,8 @@ interface ChangeSoundDependencies {
     lobbyMusic: Track[];
     finishedMusic: Track[];
     owlMusic: Track[];
+    gameOneMusic: Track[];
+    gameTwoMusic: Track[];
     gameThreeMusic: Track[];
     volume: number;
     isPlaying: boolean;
@@ -88,6 +90,8 @@ export function changeSound(dependencies: ChangeSoundDependencies) {
             owlSoundsTimeout,
             owlMusic,
             gameThreeMusic,
+            gameOneMusic,
+            gameTwoMusic,
         } = dependencies;
 
         if (playingTracks.name === sound) {
@@ -103,6 +107,10 @@ export function changeSound(dependencies: ChangeSoundDependencies) {
             tracks = { name: Sound.lobby, tracks: [...lobbyMusic, ...owlMusic] };
         } else if (sound === Sound.finished) {
             tracks = { name: Sound.finished, tracks: finishedMusic };
+        } else if (sound === Sound.game1) {
+            tracks = { name: Sound.game1, tracks: gameOneMusic };
+        } else if (sound === Sound.game2) {
+            tracks = { name: Sound.game2, tracks: gameTwoMusic };
         } else if (sound === Sound.game3) {
             tracks = { name: Sound.game3, tracks: gameThreeMusic };
         }

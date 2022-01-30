@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import { container } from 'tsyringe';
+
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
@@ -20,6 +22,10 @@ describe('Leaderboard tests for Game One', () => {
 
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
+
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
     });
 
     beforeEach(() => {

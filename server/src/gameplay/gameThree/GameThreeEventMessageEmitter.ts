@@ -1,17 +1,15 @@
 //TODO Events/Messages 3
 import { singleton } from 'tsyringe';
 
-import Game from '../Game';
-import Player from '../Player';
-import { GlobalEventMessage } from '../interfaces/GlobalEventMessages';
-import { IGameStateBase } from '../interfaces/IGameStateBase';
 import GameEventEmitter from '../../classes/GameEventEmitter';
 import Room from '../../classes/room';
 import { EventMessage } from '../../interfaces/EventMessage';
 import { EventMessageEmitter } from '../../interfaces/EventMessageEmitter';
-
+import Game from '../Game';
+import { GlobalEventMessage } from '../interfaces/GlobalEventMessages';
+import { IGameStateBase } from '../interfaces/IGameStateBase';
+import Player from '../Player';
 import { NamespaceAdapter } from './interfaces';
-
 import {
     GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC, GAME_THREE_EVENT_MESSAGE__NEW_ROUND,
     GAME_THREE_EVENT_MESSAGE__PHOTO_VOTING_RESULTS, GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS,
@@ -30,6 +28,10 @@ export class GameThreeEventMessageEmitter implements EventMessageEmitter {
     }
     canHandle(message: EventMessage, game: Game<Player, IGameStateBase>): boolean {
         return GAME_THREE_EVENT_MESSAGES.includes(message.type);
+    }
+
+    cleanUpListeners() {
+        this.removeAllListeners();
     }
 
     handle(

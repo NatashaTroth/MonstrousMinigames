@@ -47,6 +47,8 @@ export class GameTwoRenderer {
                     fontSize: `30px`,
                     color: colors.orange,
                     fontStyle: 'bold',
+                    stroke: colors.black,
+                    strokeThickness: 2,
                 },
             });
             this.roundText.setOrigin(0.5);
