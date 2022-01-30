@@ -2,6 +2,7 @@
 import Phaser from 'phaser';
 
 import { depthDictionary } from '../../../../config/depthDictionary';
+import { PlayerRank } from '../../../../contexts/game2/Game2ContextProvider';
 import SheepGameScene from '../../../game2/screen/components/SheepGameScene';
 import * as colors from '../../colors';
 import { loadingTextStyleProperties } from '../../textStyleProperties';
@@ -11,8 +12,9 @@ export class GameTwoRenderer {
     guessInstructionText?: Phaser.GameObjects.Text;
     roundText?: Phaser.GameObjects.Text;
     sheepCountText?: Phaser.GameObjects.Text;
+    playerRanksText?: Phaser.GameObjects.Text;
 
-    constructor(private scene: SheepGameScene) {}
+    constructor(private scene: SheepGameScene) { }
 
     renderBrightnessOverlay(width: number, height: number) {
         this.brightnessOverlay = this.scene.add.rectangle(0, 0, width, height, 0x000000, 1);
@@ -48,7 +50,7 @@ export class GameTwoRenderer {
                 },
             });
             this.roundText.setOrigin(0.5);
-            this.roundText.setDepth(depthDictionary.percentText);
+            this.roundText.setDepth(depthDictionary.game2Text);
         }
     }
 
@@ -69,7 +71,7 @@ export class GameTwoRenderer {
                     },
                 });
                 this.guessInstructionText.setOrigin(0.5);
-                this.guessInstructionText.setDepth(depthDictionary.percentText);
+                this.guessInstructionText.setDepth(depthDictionary.game2Text);
             } else {
                 this.guessInstructionText.setVisible(true);
             }
@@ -88,11 +90,11 @@ export class GameTwoRenderer {
 
     renderInitialSheepCount(count: number) {
         const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
-        const screenCenterHeight = this.scene.cameras.main.worldView.y + this.scene.cameras.main.height / 2;
+        const screenCenterHeight = this.scene.cameras.main.worldView.y + 150;
         this.sheepCountText = this.scene.make.text({
             x: screenCenterWidth,
-            y: screenCenterHeight - 50,
-            text: `${count} sheeps are on the meadow`,
+            y: screenCenterHeight,
+            text: `${count} sheep are on the meadow`,
             style: {
                 ...loadingTextStyleProperties,
                 fontSize: `${60}px`,
@@ -103,10 +105,43 @@ export class GameTwoRenderer {
         });
         this.sheepCountText.setPadding(10);
         this.sheepCountText.setOrigin(0.5);
-        this.sheepCountText.setDepth(depthDictionary.percentText);
+        this.sheepCountText.setDepth(depthDictionary.game2Text);
     }
 
     destroyInitialSheepCount() {
         this.sheepCountText?.destroy();
+    }
+
+    renderLeaderboard(data: PlayerRank[]) {
+        const ranks: string[] = [];
+        data.forEach(element => {
+            ranks.push(element.name);
+        });
+
+        let ranksText = `LEADERBOARD\n`;
+
+        for (let i = 0; i < ranks.length; i++) {
+            ranksText = ranksText.concat(`${i + 1}. ${ranks[i]}\n`);
+        }
+
+        const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
+        const screenCenterHeight = this.scene.cameras.main.worldView.y + this.scene.cameras.main.height / 2;
+        this.playerRanksText = this.scene.make.text({
+            x: screenCenterWidth,
+            y: screenCenterHeight - 50,
+            text: ranksText,
+            style: {
+                ...loadingTextStyleProperties,
+                fontSize: `${40}px`,
+                color: colors.orange,
+                fontStyle: 'bold',
+            },
+        });
+        this.playerRanksText.setOrigin(0.5);
+        this.playerRanksText.setDepth(depthDictionary.game2Text);
+    }
+
+    destroyLeaderboard() {
+        this.playerRanksText?.destroy();
     }
 }
