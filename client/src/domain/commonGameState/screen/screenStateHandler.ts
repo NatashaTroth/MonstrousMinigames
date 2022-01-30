@@ -23,5 +23,6 @@ export const useScreenStateHandler = (socket: Socket, handler = screenStateHandl
         const screenStateHandlerWithDependencies = handler({ setScreenState });
 
         screenStateHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setScreenState, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

@@ -36,7 +36,6 @@ class Screen {
 
             this.emitter.sendConnectedUsers([this.screenNamespace], this.room);
             this.emitter.sendScreenAdmin(this.screenNamespace, this.socket.id, this.room.isAdminScreen(this.socket.id));
-            //TODO natasha test
             this.emitter.sendLeaderboardState(this.screenNamespace, this.room.leaderboard.getLeaderboardInfo());
             console.info(this.room.id + ' | Sending Leaderboard State | ' + this.socket.id);
 

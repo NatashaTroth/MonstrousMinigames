@@ -38,5 +38,6 @@ export const useVoteForFinalPhotosHandler = (socket: Socket, handler = voteForFi
         });
 
         voteForFinalPhotosHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setVoteForPhotoMessage, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

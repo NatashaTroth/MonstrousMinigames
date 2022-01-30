@@ -44,5 +44,6 @@ export const useResetHandler = (socket: Socket, handler = resetHandler) => {
         });
 
         resetHandlerWithDependencies(socket, roomId);
-    }, [handler, resetGame1, resetGame2, resetGame3, resetPlayer, roomId, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [socket, roomId]);
 };

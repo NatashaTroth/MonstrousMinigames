@@ -1,28 +1,24 @@
-import * as React from 'react';
+import * as React from "react";
 
-import Button from '../../../../../components/common/Button';
-import { StyledParticles } from '../../../../../components/common/Particles.sc';
-import { ComponentToTest } from '../../../../../components/controller/Tutorial';
-import { treeParticlesConfig } from '../../../../../config/particlesConfig';
-import { ControllerSocketContext } from '../../../../../contexts/controller/ControllerSocketContextProvider';
-import { Game1Context, Obstacle } from '../../../../../contexts/game1/Game1ContextProvider';
-import { GameContext } from '../../../../../contexts/GameContextProvider';
-import wood from '../../../../../images/obstacles/wood/wood.svg';
-import { MessageTypesGame1 } from '../../../../../utils/constants';
-import { Socket } from '../../../../socket/Socket';
-import LinearProgressBar from './LinearProgressBar';
-import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from './ObstacleStyles.sc';
+import Button from "../../../../../components/common/Button";
+import { StyledParticles } from "../../../../../components/common/Particles.sc";
+import { ComponentToTest } from "../../../../../components/controller/Tutorial";
+import { treeParticlesConfig } from "../../../../../config/particlesConfig";
 import {
-    DragItem,
-    Line,
-    ObstacleItem,
-    ProgressBarContainer,
-    StyledObstacleImage,
-    StyledSkipButton,
-    StyledTouchAppIcon,
-    TouchContainer,
-} from './TreeTrunk.sc';
-import { handleTouchEnd, handleTouchStart, newTrunk, setTranslate } from './TreeTrunkFunctions';
+    ControllerSocketContext
+} from "../../../../../contexts/controller/ControllerSocketContextProvider";
+import { Game1Context, Obstacle } from "../../../../../contexts/game1/Game1ContextProvider";
+import { GameContext } from "../../../../../contexts/GameContextProvider";
+import wood from "../../../../../images/obstacles/wood/wood.svg";
+import { MessageTypesGame1 } from "../../../../../utils/constants";
+import { Socket } from "../../../../socket/Socket";
+import LinearProgressBar from "./LinearProgressBar";
+import { ObstacleContainer, ObstacleContent, ObstacleInstructions } from "./ObstacleStyles.sc";
+import {
+    DragItem, Line, ObstacleItem, ProgressBarContainer, StyledObstacleImage, StyledSkipButton,
+    StyledTouchAppIcon, TouchContainer
+} from "./TreeTrunk.sc";
+import { handleTouchEnd, handleTouchStart, newTrunk, setTranslate } from "./TreeTrunkFunctions";
 
 export type Orientation = 'vertical' | 'horizontal';
 
@@ -74,13 +70,27 @@ const TreeTrunk: React.FunctionComponent<TreeTrunkProps> = ({
     let xOffset = orientation === 'vertical' ? 0 : 20;
     let yOffset = orientation === 'horizontal' ? 0 : 20;
 
-    React.useEffect(() => {
-        setTimeout(() => {
+    let handleSkip: ReturnType<typeof setTimeout>;
+
+    function initializeSkip() {
+        handleSkip = setTimeout(() => {
             setSkip(true);
         }, 10000);
+    }
+
+    React.useEffect(() => {
+        let mounted = true;
+
+        if (mounted) {
+            initializeSkip();
+        }
 
         newTrunk(orientationOptions, setOrientation);
 
+        return () => {
+            mounted = false;
+            clearTimeout(handleSkip);
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -145,6 +155,7 @@ const TreeTrunk: React.FunctionComponent<TreeTrunkProps> = ({
                     roomId,
                     setObstacle,
                     setShowInstructions,
+                    handleSkip,
                 }),
             trunksToFinish,
             tutorial,
@@ -178,7 +189,14 @@ const TreeTrunk: React.FunctionComponent<TreeTrunkProps> = ({
                 <StyledSkipButton>
                     <Button
                         onClick={() =>
-                            solveObstacle({ controllerSocket, obstacle, roomId, setObstacle, setShowInstructions })
+                            solveObstacle({
+                                controllerSocket,
+                                obstacle,
+                                roomId,
+                                setObstacle,
+                                setShowInstructions,
+                                handleSkip,
+                            })
                         }
                     >
                         Skip
@@ -197,12 +215,14 @@ interface SolveObstacle {
     roomId: string | undefined;
     setShowInstructions: (val: boolean) => void;
     setObstacle: (roomId: string | undefined, obstacle: Obstacle | undefined) => void;
+    handleSkip: ReturnType<typeof setTimeout>;
 }
 
 export const solveObstacle = (props: SolveObstacle) => {
-    const { controllerSocket, obstacle, roomId, setObstacle, setShowInstructions } = props;
+    const { controllerSocket, obstacle, roomId, setObstacle, setShowInstructions, handleSkip } = props;
 
     controllerSocket?.emit({ type: MessageTypesGame1.obstacleSolved, obstacleId: obstacle!.id });
     setShowInstructions(false);
     setObstacle(roomId, undefined);
+    clearTimeout(handleSkip);
 };

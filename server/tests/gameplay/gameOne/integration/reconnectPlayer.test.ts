@@ -9,7 +9,7 @@ import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage
 } from '../../../../src/gameplay/interfaces/GlobalEventMessages';
 import { leaderboard, roomId, users } from '../../mockData';
-import { finishPlayer } from '../gameOneHelperFunctions';
+import { advanceCountdown, finishPlayer } from '../gameOneHelperFunctions';
 
 let gameOne: GameOne;
 let gameEventEmitter: GameEventEmitter;
@@ -20,9 +20,14 @@ describe('Reconnect Player tests', () => {
     });
 
     beforeEach(() => {
+        jest.useFakeTimers();
         gameOne = new GameOne(roomId, leaderboard);
         gameOne.createNewGame(users);
         gameOne.gameState = GameState.Started;
+    });
+
+    afterEach(() => {
+        jest.runAllTimers();
     });
 
     it('should not finish game until reconnected player is finished', async () => {
@@ -35,6 +40,7 @@ describe('Reconnect Player tests', () => {
 
         expect(gameOne.gameState).toBe(GameState.Started);
         finishPlayer(gameOne, '4');
+        advanceCountdown(gameOne, 10); //call update to check if game has finished and to handle game finished
         expect(gameOne.gameState).toBe(GameState.Finished);
     });
 
@@ -60,7 +66,7 @@ describe('Reconnect Player tests', () => {
         gameOne.disconnectPlayer('3');
         finishPlayer(gameOne, '2');
         finishPlayer(gameOne, '4');
-
+        advanceCountdown(gameOne, 10); //call update to check if game has finished and to handle game finished
         expect(eventData.playerRanks[0].isActive).toBeTruthy();
         expect(eventData.playerRanks[1].isActive).toBeTruthy();
         expect(eventData.playerRanks[2].isActive).toBeFalsy();

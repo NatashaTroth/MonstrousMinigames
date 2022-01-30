@@ -23,5 +23,6 @@ export const useVotingResultsHandler = (socket: Socket, handler = votingResultsH
 
         const votingResultsHandlerWithDependencies = handler({ setVotingResults });
         votingResultsHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setVotingResults, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

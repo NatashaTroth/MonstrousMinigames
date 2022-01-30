@@ -30,5 +30,6 @@ export const useFinishedHandler = (socket: Socket, handler = finishedHandler) =>
 
         const finishedHandlerWithDependencies = handler({ setFinished, setPlayerRanks, history });
         finishedHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setFinished, setPlayerRanks, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

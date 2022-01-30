@@ -26,5 +26,6 @@ export const useStunnablePlayersHandler = (socket: Socket, handler = stunnablePl
 
         const stunnablePlayersHandlerWithDependencies = handler({ setStunnablePlayers });
         stunnablePlayersHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setStunnablePlayers, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

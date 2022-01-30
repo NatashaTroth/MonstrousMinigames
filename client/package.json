@@ -48,14 +48,17 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest --maxWorkers=50%",
-    "test:watch:all": "jest --watchAll --coverage --config ./jest.config.js",
-    "test:watch": "jest --watch",
     "eject": "react-scripts eject",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --fix",
     "tsc": "tsc --project ./tsconfig.json && :",
-    "end2end": "npx playwright test"
+    "test": "jest --maxWorkers=50%",
+    "test:watch:all": "jest --watchAll --coverage --config ./jest.config.js",
+    "test:watch": "jest --watch",
+    "test:e2e": "npx playwright test",
+    "test:unit": "jest ./src/tests/unit",
+    "test:integration": "jest ./src/tests/integration",
+    "test:component": "jest ./src/tests/component"
   },
   "eslintConfig": {
     "extends": [

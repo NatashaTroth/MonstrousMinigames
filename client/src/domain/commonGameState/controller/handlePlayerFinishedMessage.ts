@@ -50,5 +50,6 @@ export const usePlayerFinishedHandler = (socket: Socket, handler = playerFinishe
         });
 
         playerFinishedHandlerWithDependencies(socket, roomId);
-    }, [handler, playerFinished, roomId, setPlayerFinished, setPlayerRank, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

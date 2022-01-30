@@ -32,5 +32,6 @@ export const usePresentFinalPhotosHandler = (socket: Socket, handler = presentFi
         const presentFinalPhotosHandlerWithDependencies = handler({ setPresentFinalPhotos });
 
         presentFinalPhotosHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setPresentFinalPhotos, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

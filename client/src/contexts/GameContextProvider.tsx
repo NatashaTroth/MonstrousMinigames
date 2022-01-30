@@ -121,8 +121,6 @@ interface GameContextProps {
     setChosenGame: (val: undefined | GameNames) => void;
     leaderboardState: undefined | LeaderboardState;
     setLeaderboardState: (val: undefined | LeaderboardState) => void;
-    tutorial: boolean;
-    setTutorial: (val: boolean) => void;
     screenAdmin: boolean;
     setScreenAdmin: (val: boolean) => void;
     screenState: string;
@@ -147,7 +145,6 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
     const [hasPaused, setHasPaused] = React.useState<boolean>(defaultValue.hasPaused);
     const [chosenGame, setChosenGame] = React.useState<undefined | GameNames>();
     const [leaderboardState, setLeaderboardState] = React.useState<undefined | LeaderboardState>();
-    const [tutorial, setTutorial] = React.useState(defaultValue.tutorial);
     const [screenAdmin, setScreenAdmin] = React.useState<boolean>(defaultValue.screenAdmin);
     const [screenState, setScreenState] = React.useState<string>(ScreenStates.lobby);
     const [availableCharacters, setAvailableCharacters] = React.useState<number[]>(defaultAvailableCharacters);
@@ -177,7 +174,6 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
             setSheepGameStarted(defaultValue.sheepGameStarted);
             setShowInstructions(defaultValue.showInstructions);
             setHasPaused(defaultValue.hasPaused);
-            setTutorial(defaultValue.tutorial);
         },
         showInstructions,
         setShowInstructions,
@@ -191,8 +187,6 @@ const GameContextProvider: React.FunctionComponent = ({ children }) => {
         setChosenGame,
         leaderboardState,
         setLeaderboardState,
-        tutorial,
-        setTutorial,
         screenAdmin,
         setScreenAdmin,
         screenState,

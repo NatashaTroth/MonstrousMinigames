@@ -52,5 +52,6 @@ export const useUserInitHandler = (socket: Socket, handler = userInitHandler) =>
         });
 
         userInitHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setName, setPlayerNumber, setReady, setScreenState, setUserId, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

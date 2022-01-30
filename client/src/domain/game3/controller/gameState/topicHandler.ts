@@ -24,5 +24,6 @@ export const useTopicHandler = (socket: Socket, handler = topicHandler) => {
         const topicHandlerWithDependencies = handler({ setTopicMessage });
 
         topicHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setTopicMessage, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

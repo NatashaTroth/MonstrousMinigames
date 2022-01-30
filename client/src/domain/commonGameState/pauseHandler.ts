@@ -24,5 +24,6 @@ export const usePauseHandler = (socket: Socket, handler = pauseHandler) => {
         });
 
         pausedHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setHasPaused, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

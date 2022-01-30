@@ -1,4 +1,4 @@
-import { localDevelopment, pushChasers } from '../../../constants';
+import { localDevelopment, pushChasers, showErrors } from '../../../constants';
 import User from '../../classes/user';
 import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
@@ -18,6 +18,7 @@ import { getInitialParams, InitialParams } from './GameOneInitialParameters';
 import GameOnePlayer from './GameOnePlayer';
 import { createObstacles, getObstacleTypes } from './helperFunctions/initiatePlayerState';
 import { GameStateInfo, ObstacleTypeObject } from './interfaces';
+import { GameOnePlayerRank } from './interfaces/GameOnePlayerRank';
 import { IMessageObstacle } from './interfaces/messageObstacle';
 import { IMessageStunPlayer } from './interfaces/messageStunPlayer';
 
@@ -129,6 +130,8 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         if (localDevelopment) {
             this.updateLocalDev();
         }
+
+        if (this.gameHasFinished()) this.handleGameFinished();
     }
 
     protected handleInput(message: IMessage) {
@@ -163,7 +166,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
                     console.info(message);
             }
         } catch (e: any) {
-            console.info(e.Message);
+            if (showErrors) console.info(e.Message);
         }
     }
 
@@ -251,7 +254,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         player.handlePlayerFinishedGame(finishedTime, this.rankSuccessfulUser(finishedTime));
         GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.gameOnePlayersController!.getStunnablePlayers());
 
-        if (this.gameHasFinished()) this.handleGameFinished();
+        // if (this.gameHasFinished()) this.handleGameFinished();
     }
 
     private stunPlayer(userIdStunned: string, userIdThrown: string) {
@@ -376,12 +379,11 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.gameOnePlayersController!.getStunnablePlayers());
 
         //todo duplicate
-        if (localDevelopment) return;
 
-        const activeUnfinishedPlayers = this.gameOnePlayersController!.getActiveUnfinishedPlayers();
-        if (activeUnfinishedPlayers.length <= 1 || this.gameHasFinished()) {
-            this.handleGameFinished();
-        }
+        // const activeUnfinishedPlayers = this.gameOnePlayersController!.getActiveUnfinishedPlayers();
+        // if (activeUnfinishedPlayers.length <= 1 || this.gameHasFinished()) {
+        //     this.handleGameFinished();
+        // }
     }
 
     // private chaserHasCaughtPlayer(player: GameOnePlayer) {
@@ -401,10 +403,12 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
 
     // ***** game state *****
     private gameHasFinished(): boolean {
-        return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 1; //TODO - test, does game finish when only 1 player??
+        if (localDevelopment) return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 0; //TODO - test, does game finish when only 1 player??
+        return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length <= 1; //TODO - test, does game finish when only 1 player??
     }
 
     private handleGameFinished(): void {
+        // verifyGameState(this.gameState, [GameState.Started]);
         this.gameState = GameState.Finished;
         const playerRanks = this.gameOnePlayersController!.createPlayerRanks(
             this.currentRank,
@@ -414,11 +418,15 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             this,
             Date.now()
         );
-        this.leaderboard.addGameToHistory(GameType.GameOne, [...playerRanks]);
+        const gamePoints = this.leaderboard.addGameToHistory(GameType.GameOne, [...playerRanks]);
 
         const currentGameStateInfo = this.getGameStateInfo();
+        // this.gameOnePlayersController?.getPlayerById(playerRank.id).points
+        const playerRanksWithPoints: GameOnePlayerRank[] = playerRanks.map(playerRank => {
+            return { ...playerRank, points: gamePoints.get(playerRank.id) || 0 };
+        });
         GameOneEventEmitter.emitGameHasFinishedEvent(currentGameStateInfo.roomId, currentGameStateInfo.gameState, [
-            ...playerRanks,
+            ...playerRanksWithPoints,
         ]);
         //Broadcast, stop game, return ranks
     }

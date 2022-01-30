@@ -41,6 +41,7 @@ const ConnectDialog: React.FunctionComponent<ConnectDialog> = ({ handleClose, ..
                         <StyledInput
                             type="text"
                             name="roomId"
+                            id="joinRoom"
                             value={formState?.roomId}
                             onChange={e => setFormState({ ...formState, roomId: e.target.value })}
                             autoFocus

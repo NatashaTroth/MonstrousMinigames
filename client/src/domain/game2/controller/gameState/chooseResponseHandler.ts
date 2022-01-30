@@ -24,5 +24,6 @@ export const useChooseResponseHandler = (socket: Socket, handler = chooseRespons
         if (!roomId) return;
         const chooseResponseHandlerWithDependencies = handler({ history });
         chooseResponseHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

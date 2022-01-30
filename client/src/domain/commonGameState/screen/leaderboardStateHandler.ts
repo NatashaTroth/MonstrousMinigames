@@ -24,5 +24,6 @@ export const useLeaderboardStateHandler = (socket: Socket, handler = leaderboard
 
         const leaderboardStateHandlerWithDependencies = handler({ setLeaderboardState });
         leaderboardStateHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setLeaderboardState, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

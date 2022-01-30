@@ -6,7 +6,7 @@ import { getInitialParams } from '../../../../src/gameplay/gameOne/GameOneInitia
 import { verifyGameState } from '../../../../src/gameplay/helperFunctions/verifyGameState';
 import { leaderboard, roomId, users } from '../../mockData';
 import {
-    clearTimersAndIntervals, finishGame, finishPlayer, goToNextUnsolvableObstacle,
+    advanceCountdown, clearTimersAndIntervals, finishGame, finishPlayer,
     startGameAndAdvanceCountdown
 } from '../gameOneHelperFunctions';
 import { playerHasCompletedObstacleMessage, runForwardMessage } from '../gameOneMockData';
@@ -60,17 +60,6 @@ describe('Change and verify game state', () => {
         expect(gameOne.players.get('1')!.obstacles.length).toBe(obstaclesCompletedLength);
     });
 
-    it.todo('Flakey:');
-    xit('should be able to complete obstacle when game has started', async () => {
-        startGameAndAdvanceCountdown(gameOne);
-        const player = gameOne.players.get('1')!;
-        const obstaclesCompletedLength = player.obstacles.length;
-        goToNextUnsolvableObstacle(gameOne, player);
-        gameOne.receiveInput({ ...playerHasCompletedObstacleMessage, userId });
-
-        expect(player.obstacles.length).toBe(obstaclesCompletedLength - 1);
-    });
-
     it("shouldn't be able to complete obstacle when game is paused", async () => {
         startGameAndAdvanceCountdown(gameOne);
         const obstaclesCompletedLength = gameOne.players.get('1')!.obstacles.length;
@@ -104,6 +93,7 @@ describe('Change and verify game state', () => {
         gameOne.disconnectPlayer('4');
         finishPlayer(gameOne, '1');
         finishPlayer(gameOne, '2');
+        advanceCountdown(gameOne, 10); //call update to check if game has finished and to handle game finished
         expect(gameOne.gameState).toBe(GameState.Finished);
     });
 

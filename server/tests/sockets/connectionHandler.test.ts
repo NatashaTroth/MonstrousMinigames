@@ -1,11 +1,8 @@
 import 'reflect-metadata';
 
 import dotenv from 'dotenv';
-
 import express from 'express';
-
 import client from 'socket.io-client';
-
 import { Server as HttpServer } from 'http';
 
 import GameEventEmitter from '../../src/classes/GameEventEmitter';
@@ -15,10 +12,10 @@ import Server from '../../src/classes/Server';
 import SocketIOServer from '../../src/classes/SocketIOServer';
 import { GameAlreadyStartedError, InvalidRoomCodeError } from '../../src/customErrors/';
 import { MessageTypes } from '../../src/enums/messageTypes';
+import { GameOneEventMessageEmitter } from '../../src/gameplay/gameOne/GameOneEventMessageEmitter';
 import emitter from '../../src/helpers/emitter';
 import ConnectionHandler from '../../src/services/connectionHandler';
 import RoomService from '../../src/services/roomService';
-import { GameOneEventMessageEmitter } from '../../src/gameplay/gameOne/GameOneEventMessageEmitter';
 
 dotenv.config({
     path: '.env',
@@ -39,8 +36,6 @@ let socket: SocketIOServer;
 const app = express();
 
 describe('connectionHandler', () => {
-
-
     beforeEach(done => {
         server = new HttpServer(app);
         console.error = jest.fn();
@@ -54,12 +49,10 @@ describe('connectionHandler', () => {
                 httpServer: server,
                 app: app,
             } as Server);
-            ch = new ConnectionHandler(
-                socket,
-                rs,
-                gameEventEmitter,
-                [new GlobalEventMessageEmitter(gameEventEmitter), new GameOneEventMessageEmitter(gameEventEmitter)]
-            );
+            ch = new ConnectionHandler(socket, rs, gameEventEmitter, [
+                new GlobalEventMessageEmitter(gameEventEmitter),
+                new GameOneEventMessageEmitter(gameEventEmitter),
+            ]);
             ch.handle();
             done();
         });
@@ -73,7 +66,6 @@ describe('connectionHandler', () => {
         server.listening ? server.close(() => done()) : done();
 
         done();
-
     });
     afterEach(async done => {
         controller.close();
@@ -85,7 +77,6 @@ describe('connectionHandler', () => {
         jest.clearAllMocks();
         jest.clearAllTimers();
         ch.shutdown();
-
 
         server.removeAllListeners();
         server.listening ? server.close(() => done()) : done();
@@ -347,7 +338,7 @@ describe('connectionHandler', () => {
             reconnectionDelayMax: 5000,
         });
         setTimeout(() => {
-            expect(room.screens[0].id).toEqual(screen.id);
+            if (room.screens.length > 0) expect(room.screens[0].id).toEqual(screen.id);
             screen.disconnect();
             setTimeout(() => {
                 expect(room.screens.length).toEqual(0);
@@ -357,7 +348,7 @@ describe('connectionHandler', () => {
     });
 
     it('should call Screen init function on screen socket connect', async done => {
-        const screenInit = jest.spyOn(Screen.prototype, "init");
+        const screenInit = jest.spyOn(Screen.prototype, 'init');
 
         screen = client(`http://${url}/screen?roomId=${roomCode}`, {
             secure: true,
@@ -366,7 +357,6 @@ describe('connectionHandler', () => {
             reconnectionDelayMax: 5000,
         });
 
-
         setTimeout(() => {
             expect(screenInit).toHaveBeenCalled();
             screenInit.mockClear();
@@ -374,9 +364,8 @@ describe('connectionHandler', () => {
         }, 100);
     });
 
-
     it('should call Screen onMessage function with message', async done => {
-        const onMessage = jest.spyOn(Screen.prototype, "onMessage");
+        const onMessage = jest.spyOn(Screen.prototype, 'onMessage');
 
         screen = client(`http://${url}/screen?roomId=${roomCode}`, {
             secure: true,
@@ -387,8 +376,8 @@ describe('connectionHandler', () => {
 
         const message = {
             type: MessageTypes.SCREEN_STATE,
-            state: "choose-game",
-        }
+            state: 'choose-game',
+        };
 
         setTimeout(() => {
             screen.send(message);

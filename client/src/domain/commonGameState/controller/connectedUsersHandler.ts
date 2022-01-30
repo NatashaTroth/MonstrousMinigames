@@ -30,5 +30,6 @@ export const useConnectedUsersHandler = (socket: Socket, handler = connectedUser
         });
 
         connectedUserHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setAvailableCharacters, setConnectedUsers, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

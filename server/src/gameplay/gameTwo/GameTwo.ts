@@ -1,16 +1,13 @@
-import Game from '../Game';
-import Player from '../Player';
-import { GameState } from '../enums';
-import { IGameInterface } from '../interfaces';
-import Leaderboard from '../leaderboard/Leaderboard';
+import { showErrors } from '../../../constants';
 import User from '../../classes/user';
 import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
+import { GameState } from '../enums';
+import Game from '../Game';
+import { IGameInterface } from '../interfaces';
 import { GameType } from '../leaderboard/enums/GameType';
-
-import GameTwoPlayer from './GameTwoPlayer';
-import { GameStateInfo } from './interfaces';
-
+import Leaderboard from '../leaderboard/Leaderboard';
+import Player from '../Player';
 import Brightness from './classes/Brightness';
 import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
 import GuessingService from './classes/GuessingServices';
@@ -20,6 +17,8 @@ import SheepService from './classes/SheepService';
 import Parameters from './constants/Parameters';
 import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
 import { Phases } from './enums/Phases';
+import GameTwoPlayer from './GameTwoPlayer';
+import { GameStateInfo } from './interfaces';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -38,7 +37,12 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     countdownTime = Parameters.COUNTDOWN_TIME;
     gameName = GameNames.GAME2;
 
-    constructor(roomId: string, public leaderboard: Leaderboard, minSheepCount = Parameters.MIN_SHEEP_COUNT, maxSheepCount = Parameters.MAX_SHEEP_COUNT) {
+    constructor(
+        roomId: string,
+        public leaderboard: Leaderboard,
+        minSheepCount = Parameters.MIN_SHEEP_COUNT,
+        maxSheepCount = Parameters.MAX_SHEEP_COUNT
+    ) {
         super(roomId);
         this.gameStateMessage = GameTwoMessageTypes.GAME_STATE;
         this.lengthX = Parameters.LENGTH_X;
@@ -48,7 +52,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.roundService = new RoundService(this.roundEventEmitter);
         this.guessingService = new GuessingService(Parameters.ROUNDS);
         this.brightness = new Brightness();
-
     }
 
     getGameStateInfo(): GameStateInfo {
@@ -71,7 +74,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
             phase: this.roundService.phase,
             timeLeft: this.roundService.getTimeLeft(),
             aliveSheepCounts: this.guessingService.counts,
-            brightness: this.brightness.value
+            brightness: this.brightness.value,
         };
     }
 
@@ -103,10 +106,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         this.sheepService.initSheep();
         this.guessingService.init(users);
         this.listenToEvents();
-        GameTwoEventEmitter.emitInitialGameStateInfoUpdate(
-            this.roomId,
-            this.getGameStateInfo()
-        )
+        GameTwoEventEmitter.emitInitialGameStateInfoUpdate(this.roomId, this.getGameStateInfo());
     }
 
     startGame(): void {
@@ -175,11 +175,11 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 this.movePlayer(message.userId!, message.direction!);
                 break;
             case GameTwoMessageTypes.CHOOSE:
-                console.info(message)
+                console.info(message);
                 this.chooseSheep(message.userId!);
                 break;
             case GameTwoMessageTypes.KILL:
-                console.info(message)
+                console.info(message);
                 this.killSheep(message.userId!);
                 break;
             case GameTwoMessageTypes.GUESS:
@@ -187,7 +187,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 this.handleGuess(message.userId!, message.guess!);
                 break;
             default:
-                console.info(message);
+                if (showErrors) console.info(message);
         }
     }
 
@@ -226,7 +226,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 if (this.guessingService.allGuessesSubmitted(round)) this.roundService.skipPhase();
             }
         }
-
     }
 
     // *************** phases *************
@@ -249,7 +248,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     protected initCountingPhase(): void {
         this.setPlayersMoving();
         this.emitPlayerRemainingKills();
-        this.sheepService.startMoving()
+        this.sheepService.startMoving();
         this.brightness.start();
     }
 
@@ -264,7 +263,7 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     protected initResultsPhase(): void {
         this.guessingService.calculatePlayerRanks();
-        GameTwoEventEmitter.emitPlayerRanks(this.roomId, this.guessingService.getPlayerRanks())
+        GameTwoEventEmitter.emitPlayerRanks(this.roomId, this.guessingService.getPlayerRanks());
     }
 
     protected handleGameFinished(): void {
@@ -276,15 +275,14 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
         GameTwoEventEmitter.emitGameHasFinishedEvent(this.roomId, this.gameState, playerRanks);
     }
 
-
     // *************** players *************
 
     protected stopPlayersMoving(): void {
-        [...this.players].forEach(player => player[1].moving = false);
+        [...this.players].forEach(player => (player[1].moving = false));
     }
 
     protected setPlayersMoving(): void {
-        [...this.players].forEach(player => player[1].moving = true);
+        [...this.players].forEach(player => (player[1].moving = true));
     }
 
     protected resetPlayers(): void {
@@ -294,6 +292,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     }
 
     protected emitPlayerRemainingKills(): void {
-        [...this.players].forEach(player => GameTwoEventEmitter.emitRemainingKills(this.roomId, player[0], player[1].killsLeft));
+        [...this.players].forEach(player =>
+            GameTwoEventEmitter.emitRemainingKills(this.roomId, player[0], player[1].killsLeft)
+        );
     }
 }

@@ -33,5 +33,6 @@ export const useNewRoundHandler = (socket: Socket, handler = newRoundHandler) =>
         });
 
         newRoundHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setRoundIdx, setVoteForPhotoMessage, setVotingResults, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

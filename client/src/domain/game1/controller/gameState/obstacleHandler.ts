@@ -29,5 +29,6 @@ export const useObstacleHandler = (socket: Socket, handler = obstacleHandler) =>
 
         const obstacleHandlerWithDependencies = handler({ setObstacle });
         obstacleHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setObstacle, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

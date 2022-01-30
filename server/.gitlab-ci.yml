@@ -82,8 +82,7 @@ staging:server:
         HEROKU_APP: $HEROKU_APP_STAGING
     only:
         refs:
-            - master
-            - staging
+            - dev
         changes:
             - server/**/*
 
@@ -98,6 +97,7 @@ production:server:
     only:
         refs:
             - dev
+            - master
         changes:
             - server/**/*
     when: manual

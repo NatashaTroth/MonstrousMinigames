@@ -29,5 +29,6 @@ export const useExceededMaxChaserPushesHandler = (socket: Socket, handler = exce
         });
 
         exceededMaxChaserPushesHandlerWithDependencies(socket, roomId);
-    }, [handler, roomId, setExceededChaserPushes, socket]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, socket]);
 };

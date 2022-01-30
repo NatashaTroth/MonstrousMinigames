@@ -55,6 +55,7 @@ export class SocketIOAdapter implements Socket {
                 rejectUnauthorized: false,
                 reconnectionDelayMax: 10000,
                 transports: ['websocket'],
+                upgrade: false,
             }
         );
     }

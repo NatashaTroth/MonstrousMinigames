@@ -1,12 +1,10 @@
 import { EventEmitter } from 'stream';
 
-import { localDevelopment } from '../../../constants';
 // import { PlayerRank as GameOnePlayerRank } from '../GameOne/interfaces';
 import { IPlayerRank } from '../interfaces/IPlayerRank';
 import RankPoints from './classes/RankPoints';
 import { GameType } from './enums/GameType';
 import { GamePlayed, LeaderboardInfo, UserPoints } from './interfaces';
-import { gameHistory, userPoints } from './mockData';
 
 // TODO handle when user disconnected - remove user? or cross through?
 
@@ -38,7 +36,8 @@ export default class Leaderboard extends EventEmitter {
     // }
 
     //TODO add points to game history playerranks!!
-    addGameToHistory(game: GameType, playerRanks: IPlayerRank[]): void {
+    addGameToHistory(game: GameType, playerRanks: IPlayerRank[]): Map<string, number> {
+        const currentGamePoints = new Map<string, number>();
         this.gameHistory.push({
             game,
             playerRanks: playerRanks.map(playerRank => {
@@ -46,24 +45,17 @@ export default class Leaderboard extends EventEmitter {
 
                 if (playerRank.finished) {
                     points = RankPoints.getPointsFromRank(playerRank.rank);
+                    currentGamePoints.set(playerRank.id, points);
                 }
                 return { ...playerRank, points };
             }),
         });
         this.updateUserPointsAfterGame(playerRanks);
         this.sendUpdatedLeaderboardState();
+        return currentGamePoints;
     }
 
     getLeaderboardInfo(): LeaderboardInfo {
-        if (localDevelopment) {
-            //mockData
-            return {
-                roomId: this.roomId,
-                gameHistory,
-                userPoints,
-            };
-        }
-
         return {
             roomId: this.roomId,
             gameHistory: [...this.gameHistory],
