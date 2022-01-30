@@ -79,6 +79,7 @@ test-e2e:client:
     stage: test-e2e
     image: mcr.microsoft.com/playwright:focal
     script:
+        - sleep 30
         - cd client/
         - npx playwright install --with-deps
         - echo "End to End testing.."
@@ -108,7 +109,6 @@ staging:client:
         url: https://staging-monsters.web.app/
     script:
         - *deployment-script
-
     only:
         refs:
             - dev
@@ -126,10 +126,10 @@ production:client:
         url: https://monstrous-minigames.web.app/
     script:
         - *deployment-script
-
     only:
         refs:
             - dev
+            - master
         changes:
             - client/**/*
     when: manual
