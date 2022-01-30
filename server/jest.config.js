@@ -5,9 +5,16 @@ module.exports = {
     // collectCoverage: true,
     collectCoverageFrom: ['src/**/*.{ts,js}'],
     coveragePathIgnorePatterns: ['src/gameplay/--newGameTemplate--', 'tests/gameplay/gameThree'], //'server/src/**/index.ts'
+    coverageReporters: ['html', 'text', 'text-summary', 'cobertura'],
+    testMatch: ['**/*.test.js'],
     // collectCoverageFrom: ['src/**/*.{js,ts}', '!tests/**/*.ts', '!src/gameplay/--newGameTemplate--/*.ts '],
     // collectCoverageFrom: ['<rootDir>/src/gameplay/gameOne/GameOne.ts '],
 };
+
+// module.exports = {
+//     "collectCoverageFrom": ["src/**/*.js", "!**/node_modules/**"],
+
+//   }
 
 // preset: 'ts-jest',
 //     testEnvironment: 'jsdom',

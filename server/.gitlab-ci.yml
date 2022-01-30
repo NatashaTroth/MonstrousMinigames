@@ -34,12 +34,19 @@ lint:server:
 
 test-unit:server:
     stage: test-unit
+    coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
     tags:
         - node
     script:
         - cd server/
         - echo "Testing.."
         - npm run test:unit
+    artifacts:
+        when: always
+        reports:
+            junit:
+                - junit.xml
+            cobertura: coverage/cobertura-coverage.xml
     except:
         - staging
     only:
