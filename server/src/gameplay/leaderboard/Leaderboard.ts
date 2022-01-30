@@ -1,19 +1,14 @@
 import { EventEmitter } from 'stream';
 
-// import { PlayerRank as GameOnePlayerRank } from '../GameOne/interfaces';
 import { IPlayerRank } from '../interfaces/IPlayerRank';
 import RankPoints from './classes/RankPoints';
 import { GameType } from './enums/GameType';
 import { GamePlayed, LeaderboardInfo, UserPoints } from './interfaces';
 
-// TODO handle when user disconnected - remove user? or cross through?
-
 export default class Leaderboard extends EventEmitter {
     public static readonly LEADERBOARD_UPDATED_EVENT = 'leaderboardUpdatedEvent';
     gameHistory: GamePlayed[];
     userPoints: Map<string, UserPoints>; //<userId, userPoints>
-
-    // rankPointsDictionary: HashTable<number>; //dicionary[rank] = points
 
     constructor(private roomId: string) {
         super();
@@ -28,14 +23,6 @@ export default class Leaderboard extends EventEmitter {
         }
     }
 
-    // addUsers(users: User[]): void {
-    //     users.forEach(user => {
-    //         this.addUser(user.id, user.name);
-    //     });
-
-    // }
-
-    //TODO add points to game history playerranks!!
     addGameToHistory(game: GameType, playerRanks: IPlayerRank[]): Map<string, number> {
         const currentGamePoints = new Map<string, number>();
         this.gameHistory.push({

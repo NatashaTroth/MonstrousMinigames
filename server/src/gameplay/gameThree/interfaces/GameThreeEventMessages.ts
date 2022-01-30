@@ -1,5 +1,3 @@
-//TODO Events/Messages 1
-
 import { PhotoPhotographerMapper, PlayerNameId, VotesPhotographerMapper } from './';
 import { GameThreePlayerRank } from './GameThreePlayerRank';
 

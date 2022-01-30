@@ -5,7 +5,7 @@ export interface GameOnePlayerRank extends IPlayerRank {
     name: string;
     rank: number;
     finished: boolean;
-    dead: boolean; //TODO test
+    dead: boolean;
     totalTimeInMs: number;
     positionX: number;
     isActive: boolean;

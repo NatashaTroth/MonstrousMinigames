@@ -62,7 +62,7 @@ class Screen {
         if (timedOut) {
             const notReadyScreens = this.room!.getScreensPhaserNotReady();
             notReadyScreens.forEach(screen => {
-                this.emitter.sendScreenPhaserGameLoadedTimedOut(this.screenNamespace, screen.id, game); //TODO natasha
+                this.emitter.sendScreenPhaserGameLoadedTimedOut(this.screenNamespace, screen.id, game);
             });
         }
     }
@@ -73,7 +73,6 @@ class Screen {
                 case MessageTypes.CHOOSE_GAME:
                     if (this.room?.isAdminScreen(this.socket.id) && message.game) {
                         console.info(this.room.id + ' | Choose Game' + ' | ' + message.game);
-                        //todo error handling
                         this.room?.setGame(message.game, message.difficulty);
 
                         this.emitter.sendGameSet(
@@ -130,12 +129,6 @@ class Screen {
                         console.info(this.room.id + ' | Reset Game');
                         this.room!.setAllScreensPhaserGameReady(false);
                         this.room!.sentAllScreensLoaded = false;
-                        //TODO natasha test
-                        // this.emitter.sendLeaderboardState(
-                        //     this.screenNamespace,
-                        //     this.room.leaderboard.getLeaderboardInfo()
-                        // );
-
                         this.room.resetGame().then(() => {
                             this.emitter.sendMessage(
                                 MessageTypes.GAME_HAS_RESET,
@@ -172,7 +165,6 @@ class Screen {
                         this.room.firstPhaserScreenLoaded = true;
                         this.room.allScreensLoadedTimeout = setTimeout(() => {
                             this.trySendAllScreensPhaserGameLoaded(GameNames.GAME1, true);
-                            ///TODO natasha - send timedout to other screens
                         }, 10000);
                     }
 
@@ -189,7 +181,6 @@ class Screen {
                         this.room.firstPhaserScreenLoaded = true;
                         this.room.allScreensLoadedTimeout = setTimeout(() => {
                             this.trySendAllScreensPhaserGameLoaded(GameNames.GAME2, true);
-                            ///TODO natasha - send timedout to other screens
                         }, 10000);
                     }
 

@@ -1,4 +1,3 @@
-//TODO Events/Messages 3
 import { singleton } from 'tsyringe';
 
 import GameEventEmitter from '../../classes/GameEventEmitter';

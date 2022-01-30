@@ -9,7 +9,6 @@ import { SinglePhotoStage } from './SinglePhotoStage';
 import { Stage } from './Stage';
 import StageEventEmitter from './StageEventEmitter';
 
-//TODO maybe also a round handler class
 export class StageController {
     private roundIdx = 0;
     private stageEventEmitter: StageEventEmitter;

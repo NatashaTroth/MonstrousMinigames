@@ -79,7 +79,7 @@ function sendScreenPhaserGameLoadedTimedOut(nsp: Namespace, socketId: string, ga
             type = GameTwoMessageTypes.PHASER_LOADING_TIMED_OUT;
             break;
     }
-    //TODO
+
     nsp.to(socketId).emit('message', {
         type,
     });
@@ -134,25 +134,12 @@ function sendMessage(type: MessageTypes | GameOneMsgType, nsps: Array<Namespace>
     });
 }
 
-//Todo natasha test
 function sendLeaderboardState(nsp: Namespace | Socket, leaderboardState: LeaderboardInfo): void {
     nsp.emit('message', {
         type: MessageTypes.LEADERBOARD_STATE,
         leaderboardState,
     });
 }
-
-// function sendPlayerExceededMaxNumberChaserPushes(
-//     nsp: Namespace,
-//     user: User,
-//     data: GameEvents.PlayerHasExceededMaxNumberChaserPushes
-// ): void {
-//     console.log('SEENDING YEES');
-//     nsp.to(user.socketId).emit('message', {
-//         type: GameOneMsgType.PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
-//     });
-// }
-
 export default {
     sendUserInit,
     sendGameState,
@@ -162,7 +149,6 @@ export default {
     sendStartPhaserGame,
     sendConnectedUsers,
     sendMessage,
-    // sendPlayerExceededMaxNumberChaserPushes,
     sendScreenAdmin,
     sendScreenState,
     sendGameSet,

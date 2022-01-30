@@ -1,5 +1,3 @@
-//TODO Events/Messages 2
-
 import DI from '../../di';
 import { GameNames } from '../../enums/gameNames';
 import { GameState } from '../enums';
@@ -25,15 +23,6 @@ import {
 
 export default class GameThreeEventEmitter {
     private static readonly GameThreeEventMessageEmitter = DI.resolve(GameThreeEventMessageEmitter);
-
-    //TODO is this used?
-    // public static emitInitialGameStateInfoUpdate(roomId: string, gameState: InitialGameStateInfo) {
-    //     this.GameThreeEventMessageEmitter.emit({
-    //         type: GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE,
-    //         roomId,
-    //         data: gameState,
-    //     });
-    // }
 
     public static emitGameHasStartedEvent(roomId: string, countdownTime: number, game: GameNames) {
         this.GameThreeEventMessageEmitter.emit({

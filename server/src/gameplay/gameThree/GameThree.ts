@@ -19,17 +19,9 @@ import { GameThreePlayerRank } from './interfaces/GameThreePlayerRank';
 
 type GameThreeGameInterface = IGameInterface<GameThreePlayer, GameStateInfo>;
 
-//Object calisthenics
-//God object anti pattern
-//welche daten gehören zusammen - countdown objekt - hat eigene update methode - wenn was keine überschneidung dann rausziehen
-//tdd as if you meant it
-// extract class refactoring martin fowler
 export default class GameThree extends Game<GameThreePlayer, GameStateInfo> implements GameThreeGameInterface {
-    // TODO set in create new game so workds for reset
     private stageController?: StageController;
     private stageEventEmitter?: StageEventEmitter;
-    // private roundIdx = -1;
-    // private playerPresentOrder: string[] = [];
     gameName = GameNames.GAME3;
 
     constructor(roomId: string, public leaderboard: Leaderboard, private testNumber = 1) {
@@ -38,7 +30,6 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     getGameStateInfo(): GameStateInfo {
-        //TODO do i need to send this? think not
         return {
             gameState: this.gameState,
             roomId: this.roomId,
@@ -56,15 +47,12 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
     protected update(timeElapsed: number, timeElapsedSinceLastFrame: number): void | Promise<void> {
         this.stageController?.update(timeElapsedSinceLastFrame);
-        // if(this.stageController!.stage === GameThreeGameState.ViewingFinalResults){
-
-        // }
     }
 
     // *** Round Change ***
 
     protected postProcessPlayers(playersIterable: IterableIterator<Player>): void {
-        //TODO
+        //do nothing
     }
 
     createNewGame(users: Array<User>) {
@@ -82,7 +70,6 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             InitialParameters.COUNTDOWN_TIME_GAME_START,
             this.gameName
         );
-        // this.stageController?.handleNewRound();
     }
 
     startGameAfterTimeout() {

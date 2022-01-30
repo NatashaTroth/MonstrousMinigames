@@ -19,7 +19,6 @@ class Chasers {
     }
 
     private updateChasersPosition(timeElapsedSinceLastFrame: number) {
-        //10000 to 90000  * timePassed //TODO - make faster over time??
         if (this.chasersPositionX > this.trackLength) return;
         this.chasersPositionX += (timeElapsedSinceLastFrame / 33) * this.chasersSpeed;
     }
@@ -29,7 +28,6 @@ class Chasers {
     }
 
     push() {
-        //TODO Test
         this.chasersPositionX += this.chaserPushAmount;
         this.chasersSpeed = this.InitialParameters.CHASERS_PUSH_SPEED;
         setTimeout(() => {

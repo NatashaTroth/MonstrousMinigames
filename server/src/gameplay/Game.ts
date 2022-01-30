@@ -57,14 +57,6 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
             this.players.set(user.id, this.mapUserToPlayer(user));
         }
 
-        // TODO delete: add extra players for local dev
-        // if (localDevelopment && users.length <= 2) {
-        //     for (let i = 0; i < 2; i++) {
-        //         const newUser = users[0];
-        //         newUser.id = i.toString() + 'lkjhgkljhg';
-        //         this.players.set(newUser.id, this.mapUserToPlayer(newUser));
-        //     }
-        // }
         this.postProcessPlayers(this.players.values(), this.players);
 
         this.gameState = GameState.Created;
@@ -235,7 +227,6 @@ abstract class Game<TPlayer extends Player = Player, TGameState extends IGameSta
     private async _gameLoop() {
         if (this._gameLoopActive) return;
         this._gameLoopActive = true;
-        // TODO: lag catch up see https://gameprogrammingpatterns.com/game-loop.html#play-catch-up
         while (this.gameState === GameState.Started) {
             await this._update();
             await new Promise(resolve => setTimeout(resolve, this.fps_ms));

@@ -1,7 +1,6 @@
 import { VotesPhotographerMapper } from '../interfaces';
 
 export class Votes {
-    //TODO make URL type
     private votes: Map<string, number>;
     private voterIds: string[]; //voters
 

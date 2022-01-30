@@ -60,7 +60,6 @@ class MainScene extends Phaser.Scene {
         this.screenAdmin = false;
         this.firstGameStateReceived = false;
         this.allScreensLoaded = false;
-        // this.setAllVars() //TODO use to remove duplicate code
 
         this.initiateEventEmitters();
     }

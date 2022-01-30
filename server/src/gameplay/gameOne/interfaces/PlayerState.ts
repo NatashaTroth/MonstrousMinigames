@@ -9,7 +9,7 @@ export interface PlayerState extends IPlayerState {
     atObstacle: boolean;
     finished: boolean;
     finishedTimeMs: number;
-    dead: boolean; //TODO test
+    dead: boolean;
     rank: number;
     isActive: boolean;
     stunned: boolean;

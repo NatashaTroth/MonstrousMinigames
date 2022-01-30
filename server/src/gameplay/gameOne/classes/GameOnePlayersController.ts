@@ -52,7 +52,6 @@ class GameOnePlayersController {
 
     getPlayerState(): Array<PlayerStateForClient> {
         return Array.from(this.players.values()).map(player => ({
-            //TODO renive
             id: player.id,
             name: player.name,
             positionX: player.positionX,

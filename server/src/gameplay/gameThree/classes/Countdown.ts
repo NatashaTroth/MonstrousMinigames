@@ -1,5 +1,3 @@
-// todo VL eher gemeloop
-
 export class Countdown {
     private static instance: Countdown;
 

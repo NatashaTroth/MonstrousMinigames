@@ -3,7 +3,6 @@ import validator from 'validator';
 import { PhotosPhotographerMapper } from '../interfaces';
 
 export class Photos {
-    //TODO make URL type
     private photos: Map<string, string[]>;
 
     constructor(private maxNumberPhotos: number) {
