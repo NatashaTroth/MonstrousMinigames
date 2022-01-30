@@ -8,8 +8,8 @@ import { Router } from 'react-router-dom';
 import 'jest-canvas-mock';
 import React from 'react';
 
-import Game from '../../../domain/game1/screen/components/Game';
 import { AudioButton, PauseButton } from '../../../domain/game1/screen/components/Game.sc';
+import Game2 from '../../../domain/game2/screen/components/Game2';
 import history from '../../../domain/history/history';
 import theme from '../../../styles/theme';
 
@@ -17,12 +17,12 @@ configure({ adapter: new Adapter() });
 
 afterEach(cleanup);
 
-describe('Game1', () => {
+describe('Game2', () => {
     it('renders pause button', () => {
         const container = mount(
             <ThemeProvider theme={theme}>
                 <Router history={history}>
-                    <Game />
+                    <Game2 />
                 </Router>
             </ThemeProvider>
         );
@@ -34,7 +34,7 @@ describe('Game1', () => {
         const container = mount(
             <ThemeProvider theme={theme}>
                 <Router history={history}>
-                    <Game />
+                    <Game2 />
                 </Router>
             </ThemeProvider>
         );

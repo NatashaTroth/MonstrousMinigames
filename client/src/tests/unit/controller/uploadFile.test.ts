@@ -4,7 +4,21 @@ import { cleanup } from '@testing-library/react';
 
 import { uploadFile } from '../../../domain/game3/controller/gameState/handleFiles';
 import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
-import { FakeRemoteStorage } from '../../../domain/storage/RemoteStorage';
+import { RemoteStorage } from '../../../domain/storage/RemoteStorage';
+
+export class FakeRemoteStorage implements RemoteStorage {
+    async uploadImage(path: string, picture: File | Blob): Promise<string> {
+        return new Promise(resolve => {
+            resolve('path');
+        });
+    }
+
+    async deleteImages(path: string): Promise<void> {
+        return new Promise(resolve => {
+            resolve();
+        });
+    }
+}
 
 afterEach(cleanup);
 

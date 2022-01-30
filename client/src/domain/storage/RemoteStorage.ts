@@ -53,17 +53,3 @@ async function deleteFile(pathToFile: string, fileName: string, storage: Firebas
         console.log(error);
     });
 }
-
-export class FakeRemoteStorage implements RemoteStorage {
-    async uploadImage(path: string, picture: File | Blob): Promise<string> {
-        return new Promise(resolve => {
-            resolve('path');
-        });
-    }
-
-    async deleteImages(path: string): Promise<void> {
-        return new Promise(resolve => {
-            resolve();
-        });
-    }
-}

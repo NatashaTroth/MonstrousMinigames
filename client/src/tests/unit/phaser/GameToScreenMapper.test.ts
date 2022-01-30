@@ -7,10 +7,9 @@ import { GameToScreenMapper } from '../../../domain/phaser/game1/GameToScreenMap
 afterEach(cleanup);
 
 describe('GameToScreenMapper Game1', () => {
-    it('handleStartGame should emit startGame to socket', () => {
+    it('result of mapGameMeasurementToScreen should be 25 * value', () => {
         const mapper = new GameToScreenMapper(10, 500);
-        // (result should be value * (1/x) * center --> 25 * value
 
-        expect(mapper.mapGameMeasurementToScreen(200)).toEqual(5000);
+        expect(mapper.mapGameMeasurementToScreen(200)).toEqual(200 * 25);
     });
 });
