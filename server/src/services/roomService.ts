@@ -60,7 +60,10 @@ class RoomService {
     }
     public cleanupRooms(): void {
         const closedRooms = this.rooms.filter((room: Room) => {
-            return room.isClosed() || Date.now() - room.timestamp > Globals.ROOM_TIME_OUT_HOURS * 360000;
+            return (
+                (room.isClosed() && Date.now() - room.timestamp > Globals.ROOM_CLOSED_TIMEOUT_MIN * 60000) ||
+                Date.now() - room.timestamp > Globals.ROOM_TIME_OUT_HOURS * 360000
+            );
         });
         closedRooms.forEach((room: Room) => {
             this.removeRoom(room.id);

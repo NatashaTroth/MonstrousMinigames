@@ -523,7 +523,6 @@ example:
   "type": "game2/move",
   "userId": "XXxXX",
   "direction": "S",
-  "sneaking" false
 }
 ```
 

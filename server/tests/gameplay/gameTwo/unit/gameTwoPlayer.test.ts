@@ -119,12 +119,4 @@ describe('GameTwoPlyer Tests', () => {
 
         expect(player.posX).toEqual(initialPositionX);
         expect(player.posY).toEqual(initialPositionY);
-    });
-
-    it(`should have a speed of ${Parameters.SNEAKING_SPEED} after setting sneaking`, () => {
-        expect(player.speed).toEqual(Parameters.SPEED);
-        player.setSneaking(true)
-        expect(player.speed).toEqual(Parameters.SNEAKING_SPEED);
-    });
-
-});
+    });});

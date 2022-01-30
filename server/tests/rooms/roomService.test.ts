@@ -54,7 +54,9 @@ describe('RoomService', () => {
         for (let i = 1; i < 5; i++) {
             rs.createRoom()
         }
+        room.timestamp = Date.now() - 60000 * Globals.ROOM_CLOSED_TIMEOUT_MIN - 1;
         room.setClosed()
+        
         rs.cleanupRooms()
         expect([room.id]).toEqual(rs.roomCodes);
     });
