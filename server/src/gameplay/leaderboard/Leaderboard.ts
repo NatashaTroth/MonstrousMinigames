@@ -23,7 +23,7 @@ export default class Leaderboard extends EventEmitter {
 
     addUser(userId: string, username: string): void {
         if (!this.userPoints.has(userId)) {
-            this.userPoints.set(userId, { userId: userId, name: username, points: 0, rank: 0 });
+            this.userPoints.set(userId, { userId: userId, name: username, points: 0, rank: 0, playedGame: false });
             this.sendUpdatedLeaderboardState();
         }
     }
@@ -66,7 +66,9 @@ export default class Leaderboard extends EventEmitter {
     private addUserPoints(userId: string, username: string, points: number): void {
         //if user not yet added, add user to leaderboard
         if (!this.userPoints.has(userId)) this.addUser(userId, username);
-        this.userPoints.get(userId)!.points += points;
+        const user = this.userPoints.get(userId)!;
+        user.points += points;
+        user.playedGame = true;
     }
 
     private updateUserPointsAfterGame(playerRanks: IPlayerRank[]): void {
@@ -78,16 +80,18 @@ export default class Leaderboard extends EventEmitter {
     }
 
     private getUserPointsArray(): UserPoints[] {
-        const userPointsArray: UserPoints[] = [];
+        let userPointsArray: UserPoints[] = [];
         this.userPoints.forEach(userPoint => {
-            userPointsArray.push(userPoint);
+            if (userPoint.playedGame) userPointsArray.push(userPoint);
         });
 
         //sort by points (descending)
         userPointsArray.sort((a, b) => {
             return b.points - a.points;
         });
-        userPointsArray.map((userPoints, idx) => ({ ...userPoints, rank: idx }));
+        userPointsArray = userPointsArray.map((userPoints, idx) => {
+            return { ...userPoints, rank: idx + 1 };
+        });
         return [...userPointsArray];
     }
 

@@ -128,20 +128,28 @@ interface HandleCreateNewRoomProps {
 }
 
 export async function handleCreateNewRoom({ setLoading, handleSocketConnection, fetch }: HandleCreateNewRoomProps) {
-    setLoading(true);
+    try {
+        setLoading(true);
 
-    const response = await fetch(`${localDevelopment ? localBackend : process.env.REACT_APP_BACKEND_URL}create-room`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
+        const response = await fetch(
+            `${localDevelopment ? localBackend : process.env.REACT_APP_BACKEND_URL}create-room`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
 
-    if (response) {
-        setLoading(false);
+        if (response) {
+            setLoading(false);
+        }
+
+        const data = await response.json();
+
+        handleSocketConnection(data.roomId, 'lobby');
+    } catch (e: any) {
+        // eslint-disable-next-line no-console
+        console.info(e.message);
     }
-
-    const data = await response.json();
-
-    handleSocketConnection(data.roomId, 'lobby');
 }
