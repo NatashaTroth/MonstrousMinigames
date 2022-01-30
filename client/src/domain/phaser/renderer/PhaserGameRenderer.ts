@@ -1,7 +1,6 @@
 import Phaser, { GameObjects } from 'phaser';
 
 import { depthDictionary } from '../../../config/depthDictionary';
-import { PlayerRank } from '../../../contexts/game2/Game2ContextProvider';
 import { designDevelopment } from '../../../utils/constants';
 import { getRandomInt } from '../../../utils/getRandomInt';
 import MainScene from '../../game1/screen/components/MainScene';
@@ -29,7 +28,6 @@ export class PhaserGameRenderer {
     loadingText?: Phaser.GameObjects.Text;
     percentText?: Phaser.GameObjects.Text;
     assetText?: Phaser.GameObjects.Text; //only for local dev -> to see which assets take long to load
-    playerRanksText?: Phaser.GameObjects.Text;
 
     constructor(private scene: MainScene | SheepGameScene) {
         this.scene = scene;
@@ -39,40 +37,10 @@ export class PhaserGameRenderer {
         this.progressBoxHeight = 50;
     }
 
-    renderCountdown(text: string) {
+    renderCountdown(text: string, depth: number = depthDictionary.countdown) {
         this.countdownText = handleRenderCountdown(this.scene, this.countdownText, text);
-        this.countdownText.setDepth(depthDictionary.countdown);
+        this.countdownText.setDepth(depth);
     }
-
-    renderLeaderboard(data: PlayerRank[]) {
-        const ranks: string[] = [];
-        data.forEach(element => {
-            ranks.push(element.name);
-        });
-
-        let ranksText = `LEADERBOARD\n`;
-
-        for (let i = 0; i < ranks.length; i++) {
-            ranksText = ranksText.concat(`${i + 1}. ${ranks[i]}\n`);
-        }
-
-        const screenCenterWidth = this.scene.cameras.main.worldView.x + this.scene.cameras.main.width / 2;
-        const screenCenterHeight = this.scene.cameras.main.worldView.y + this.scene.cameras.main.height / 2;
-        this.playerRanksText = this.scene.make.text({
-            x: screenCenterWidth,
-            y: screenCenterHeight - this.progressBoxHeight,
-            text: ranksText,
-            style: {
-                ...loadingTextStyleProperties,
-                fontSize: `${40}px`,
-                color: colors.orange,
-                fontStyle: 'bold',
-            },
-        });
-        this.playerRanksText.setOrigin(0.5);
-        this.playerRanksText.setDepth(depthDictionary.percentText);
-    }
-
     renderLoadingScreen() {
         //progress bar: https://gamedevacademy.org/creating-a-preloading-screen-in-phaser-3/?a=13#Loading_Our_Assets
 
@@ -172,9 +140,6 @@ export class PhaserGameRenderer {
         this.countdownText?.destroy();
     }
 
-    destroyLeaderboard() {
-        this.playerRanksText?.destroy();
-    }
 }
 
 export function handleRenderCountdown(scene: Scene, countdownText: GameObjectText | undefined, text: string) {

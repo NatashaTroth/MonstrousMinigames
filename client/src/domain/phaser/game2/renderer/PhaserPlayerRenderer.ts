@@ -46,6 +46,8 @@ export class PhaserPlayerRenderer {
         } else {
             this.player.body.x = coordinates.x;
             this.player.body.y = coordinates.y;
+            this.player.body.setDepth(coordinates.y + depthDictionary.game2PlayerOffset);
+            
 
             this.player.name.x = coordinates.x - this.player.name.displayWidth / 2;
             this.player.name.y = coordinates.y - this.player.body.displayHeight / 2 - 20;
@@ -100,6 +102,7 @@ export class PhaserPlayerRenderer {
             );
             this.player.body.x = newXPosition;
             this.player.body.y = newYPosition;
+            this.player.body.setDepth(newYPosition + depthDictionary.game2PlayerOffset);
 
             if (this.player.name) {
                 this.player.name.x = newXPosition - this.player.name.displayWidth / 2;
@@ -163,7 +166,7 @@ export class PhaserPlayerRenderer {
                 strokeThickness: 2,
             },
         });
-        this.player.name.setDepth(depthDictionary.percentText);
+        this.player.name.setDepth(depthDictionary.game2NameTag);
         this.player.name.x = coordinates.x - this.player.name.displayWidth / 2;
     }
 
@@ -192,7 +195,7 @@ export function handleRenderPlayer(
 ) {
     const player = scene.physics.add.sprite(coordinates.x, coordinates.y, monsterSpriteSheetName);
     player.setScale(0.00013 * gameWidth);
-    player.setDepth(depthDictionary.player);
+    player.setDepth(coordinates.y + depthDictionary.game2PlayerOffset);
     player.setCollideWorldBounds(true);
 
     return player as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;

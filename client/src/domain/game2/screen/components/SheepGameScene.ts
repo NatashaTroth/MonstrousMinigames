@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import Phaser from 'phaser';
 
+import { depthDictionary } from '../../../../config/depthDictionary';
 import { GamePhases, PlayerRank } from '../../../../contexts/game2/Game2ContextProvider';
 import sheepSpritesheet from '../../../../images/characters/spritesheets/sheep/sheep_spritesheet.png';
 import { designDevelopment, localDevelopment, MessageTypes, MessageTypesGame2 } from '../../../../utils/constants';
@@ -347,7 +348,7 @@ class SheepGameScene extends Phaser.Scene {
                 this.gameTwoRenderer?.renderGuessText(false);
                 return;
             default:
-                this.gameRenderer?.destroyLeaderboard();
+                this.gameTwoRenderer?.destroyLeaderboard();
                 this.sheep.forEach(sheep => {
                     sheep.renderer.setSheepVisible(true);
                 });
@@ -358,7 +359,7 @@ class SheepGameScene extends Phaser.Scene {
 
     updatePlayerRanks(data: PlayerRanksMessage) {
         this.playerRanks = data.playerRanks;
-        this.gameRenderer?.renderLeaderboard(this.playerRanks);
+        this.gameTwoRenderer?.renderLeaderboard(this.playerRanks);
         this.controllerSocket?.emit({
             type: MessageTypesGame2.playerRanks,
             roomId: this.roomId,
@@ -398,11 +399,11 @@ class SheepGameScene extends Phaser.Scene {
 
         const updateCountdown = () => {
             if (countdownValue > 0) {
-                this.gameRenderer?.renderCountdown((countdownValue / 1000).toString());
+                this.gameRenderer?.renderCountdown((countdownValue / 1000).toString(), depthDictionary.game2Countdown);
                 countdownValue = decrementCounter(countdownValue);
             } else if (countdownValue === 0) {
                 //only render go for 1 sec
-                this.gameRenderer?.renderCountdown('Go!');
+                this.gameRenderer?.renderCountdown('Go!', depthDictionary.game2Countdown);
                 countdownValue = decrementCounter(countdownValue);
             } else {
                 this.gameRenderer?.destroyCountdown();

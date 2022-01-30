@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 
-import { depthDictionary } from '../../../../config/depthDictionary';
 import SheepGameScene from '../../../game2/screen/components/SheepGameScene';
 import { CharacterAnimationFrames } from '../../gameInterfaces/Character';
 import { Coordinates } from '../../gameTypes';
@@ -115,6 +114,8 @@ export class PhaserSheepRenderer {
 
         this.sheep?.setY(posY);
         this.sheep?.setX(posX);
+        if(posY)this.sheep?.setDepth(posY);
+        
     }
 
     destroySheep() {
@@ -141,7 +142,7 @@ export class PhaserSheepRenderer {
         this.initiateAnimation('sheepSpritesheet', 'sheep_walkSouthWest', { start: 33, end: 37 });
         this.sheep.setScale(0.0006 * gameWidth);
 
-        this.sheep.setDepth(depthDictionary.sheep);
+        this.sheep.setDepth(coordinates.y);
         this.sheep.setCollideWorldBounds(true);
     }
 
