@@ -1,17 +1,15 @@
 import { singleton } from 'tsyringe';
 
-import Game from '../Game';
-import Player from '../Player';
-import { GlobalEventMessage } from '../interfaces/GlobalEventMessages';
-import { IGameStateBase } from '../interfaces/IGameStateBase';
 import GameEventEmitter from '../../classes/GameEventEmitter';
 import Room from '../../classes/room';
 import User from '../../classes/user';
 import { EventMessage } from '../../interfaces/EventMessage';
 import { EventMessageEmitter } from '../../interfaces/EventMessageEmitter';
-
+import Game from '../Game';
+import { GlobalEventMessage } from '../interfaces/GlobalEventMessages';
+import { IGameStateBase } from '../interfaces/IGameStateBase';
+import Player from '../Player';
 import { NamespaceAdapter } from './interfaces';
-
 import {
     GAME_ONE_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE,
     GAME_ONE_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE_ONCE,
@@ -27,7 +25,7 @@ import {
 
 @singleton()
 export class GameOneEventMessageEmitter implements EventMessageEmitter {
-    constructor(private readonly gameEventEmitter: GameEventEmitter) { }
+    constructor(private readonly gameEventEmitter: GameEventEmitter) {}
 
     emit(message: GameOneEventMessage | GlobalEventMessage): void {
         this.gameEventEmitter.emit(GameEventEmitter.EVENT_MESSAGE_EVENT, message);
@@ -35,6 +33,11 @@ export class GameOneEventMessageEmitter implements EventMessageEmitter {
     canHandle(message: EventMessage, game: Game<Player, IGameStateBase>): boolean {
         return GAME_ONE_EVENT_MESSAGES.includes(message.type);
     }
+
+    cleanUpListeners() {
+        this.removeAllListeners();
+    }
+
     handle(
         controllerNameSpace: NamespaceAdapter,
         screenNameSpace: NamespaceAdapter,

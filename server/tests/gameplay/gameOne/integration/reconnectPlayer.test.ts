@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import { container } from 'tsyringe';
+
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameOne } from '../../../../src/gameplay';
@@ -17,6 +19,10 @@ let gameEventEmitter: GameEventEmitter;
 describe('Reconnect Player tests', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
+
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
     });
 
     beforeEach(() => {

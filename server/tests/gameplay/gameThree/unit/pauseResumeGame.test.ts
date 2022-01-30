@@ -1,8 +1,11 @@
 import 'reflect-metadata';
 
+import { container } from 'tsyringe';
+
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import { GameState } from '../../../../src/gameplay/enums';
+import Game from '../../../../src/gameplay/Game';
 import GameThree from '../../../../src/gameplay/gameThree/GameThree';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_PAUSED, GLOBAL_EVENT_MESSAGE__GAME_HAS_RESUMED,
@@ -17,6 +20,10 @@ describe('Pause', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
+    });
+
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.gameState = GameState.Started;
@@ -50,6 +57,11 @@ describe('Resume', () => {
     beforeAll(() => {
         gameEventEmitter = DI.resolve(GameEventEmitter);
     });
+
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
+    });
+
     beforeEach(() => {
         gameThree = new GameThree(roomId, leaderboard);
         gameThree.gameState = GameState.Started;

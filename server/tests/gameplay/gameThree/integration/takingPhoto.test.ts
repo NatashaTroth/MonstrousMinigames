@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import { container } from 'tsyringe';
+
 import GameEventEmitter from '../../../../src/classes/GameEventEmitter';
 import DI from '../../../../src/di';
 import InitialParameters from '../../../../src/gameplay/gameThree/constants/InitialParameters';
@@ -14,9 +16,17 @@ import { advanceCountdown, startGameAdvanceCountdown } from '../gameThreeHelperF
 import { photoMessage, receiveMultiplePhotos, receiveSinglePhoto } from '../gameThreeMockData';
 
 let gameThree: GameThree;
-const gameEventEmitter = DI.resolve(GameEventEmitter);
+let gameEventEmitter: GameEventEmitter;
 
 describe('Initiate stage', () => {
+    beforeAll(() => {
+        gameEventEmitter = DI.resolve(GameEventEmitter);
+    });
+
+    afterAll(() => {
+        container.resolve(GameEventEmitter).cleanUpListeners();
+    });
+
     beforeEach(() => {
         Date.now = () => dateNow;
         jest.useFakeTimers();
