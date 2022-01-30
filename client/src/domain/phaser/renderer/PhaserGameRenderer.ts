@@ -1,7 +1,6 @@
 import Phaser, { GameObjects } from 'phaser';
 
 import { depthDictionary } from '../../../config/depthDictionary';
-import { PlayerRank } from '../../../contexts/game2/Game2ContextProvider';
 import { designDevelopment } from '../../../utils/constants';
 import { getRandomInt } from '../../../utils/getRandomInt';
 import MainScene from '../../game1/screen/components/MainScene';
