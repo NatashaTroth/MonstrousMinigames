@@ -6,7 +6,7 @@ module.exports = {
     collectCoverageFrom: ['src/**/*.{ts,js}'],
     coveragePathIgnorePatterns: ['src/gameplay/--newGameTemplate--', 'tests/gameplay/gameThree'], //'server/src/**/index.ts'
     coverageReporters: ['html', 'text', 'text-summary', 'cobertura'],
-    testMatch: ['**/*.test.js'],
+    // testMatch: ['**/*.test.ts'],
     // collectCoverageFrom: ['src/**/*.{js,ts}', '!tests/**/*.ts', '!src/gameplay/--newGameTemplate--/*.ts '],
     // collectCoverageFrom: ['<rootDir>/src/gameplay/gameOne/GameOne.ts '],
 };
