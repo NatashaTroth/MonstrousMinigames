@@ -41,6 +41,7 @@ test-unit:server:
         - cd server/
         - echo "Testing.."
         - npm run test:unit
+        - ls -la
     artifacts:
         when: always
         reports:
