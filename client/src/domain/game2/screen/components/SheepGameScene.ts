@@ -13,7 +13,6 @@ import { initialGameInput } from '../../../phaser/game2/initialGameInput';
 import { Player } from '../../../phaser/game2/Player';
 import { GameTwoRenderer } from '../../../phaser/game2/renderer/GameTwoRenderer';
 import { Sheep, SheepState } from '../../../phaser/game2/Sheep';
-import { GameAudio } from '../../../phaser/GameAudio';
 import GameEventEmitter from '../../../phaser/GameEventEmitter';
 import { GameEventTypes } from '../../../phaser/GameEventTypes';
 import { PhaserGame } from '../../../phaser/PhaserGame';
@@ -40,7 +39,7 @@ import { SheepGameHasStartedMessage, sheepGameStartedTypeGuard } from '../../../
 import { GameHasPausedMessage, pausedTypeGuard } from '../../../typeGuards/paused';
 import { GameHasStoppedMessage, stoppedTypeGuard } from '../../../typeGuards/stopped';
 import { resumeHandler } from '../gameState/resumeHandler';
-import { audioFiles, characters, images } from './GameAssets';
+import { characters, images } from './GameAssets';
 
 class SheepGameScene extends Phaser.Scene {
     windowWidth: number;
@@ -54,7 +53,6 @@ class SheepGameScene extends Phaser.Scene {
     gameStarted: boolean;
     paused: boolean;
     gameRenderer?: PhaserGameRenderer;
-    gameAudio?: GameAudio;
     camera?: Phaser.Cameras.Scene2D.Camera;
     gameEventEmitter: GameEventEmitter;
     screenAdmin: boolean;
@@ -127,8 +125,6 @@ class SheepGameScene extends Phaser.Scene {
             });
         }
 
-        audioFiles.forEach(audio => this.load.audio(audio.name, audio.file));
-
         characters.forEach(character => {
             this.load.spritesheet(character.name, character.file, character.properties);
         });
@@ -152,9 +148,6 @@ class SheepGameScene extends Phaser.Scene {
             type: MessageTypesGame2.phaserLoaded,
             roomId: this.roomId,
         });
-
-        this.gameAudio = new GameAudio(this.sound);
-        this.gameAudio.initAudio();
 
         if (localDevelopment && designDevelopment) {
             this.initiateGame(initialGameInput);
@@ -234,14 +227,14 @@ class SheepGameScene extends Phaser.Scene {
         const gameHasFinishedSocket = new MessageSocket(finishedTypeGuard, this.socket);
         gameHasFinishedSocket.listen((data: GameHasFinishedMessage) => {
             if (this.notCurrentGameScene()) return;
-            this.gameAudio?.stopMusic();
+
             this.scene.stop();
         });
 
         const stoppedSocket = new MessageSocket(stoppedTypeGuard, this.socket);
         stoppedSocket.listen((data: GameHasStoppedMessage) => {
             if (this.notCurrentGameScene()) return;
-            this.gameAudio?.stopMusic();
+
             this.scene.stop();
         });
     }
@@ -251,14 +244,6 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     initiateEventEmitters() {
-        this.gameEventEmitter.on(GameEventTypes.PauseAudio, () => {
-            this.gameAudio?.pause();
-        });
-
-        this.gameEventEmitter.on(GameEventTypes.PlayAudio, () => {
-            this.gameAudio?.resume();
-        });
-
         this.gameEventEmitter.on(GameEventTypes.PauseResume, () => {
             this.handlePauseResumeButton();
         });
@@ -429,7 +414,6 @@ class SheepGameScene extends Phaser.Scene {
             player.stopRunning();
         });
         this.scene.pause();
-        this.gameAudio?.pause();
     }
 
     handlePauseResumeButton() {

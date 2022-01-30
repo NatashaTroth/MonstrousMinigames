@@ -15,6 +15,8 @@ describe('initializeAudio', () => {
         volume: 0.5,
         setAudioCtx: jest.fn(),
         setFinishedMusic: jest.fn(),
+        setGameOneMusic: jest.fn(),
+        setGameTwoMusic: jest.fn(),
         setGameThreeMusic: jest.fn(),
         setLobbyMusic: jest.fn(),
         setOwlMusic: jest.fn(),
@@ -28,6 +30,8 @@ describe('initializeAudio', () => {
         ],
         lobbyMusic: [],
         finishedMusic: [],
+        gameOneMusic: [],
+        gameTwoMusic: [],
         gameThreeMusic: [],
         owlSoundsTimeout: setTimeout(() => {
             /*do nothing*/

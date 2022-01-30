@@ -1,6 +1,8 @@
 import * as React from 'react';
 
 import campfireSoundsFile from '../assets/audio/Campfire_Loop.wav';
+import gameOneMusicFile from '../assets/audio/Game_1_Sound_Loop.wav';
+import gameTwoMusicFile from '../assets/audio/Game_2_Sound_Loop.wav';
 import gameThreeMusicFile from '../assets/audio/Game_3_Sound_Loop.wav';
 import lobbyMusicFile from '../assets/audio/LobbySound2_Loop.wav';
 import owlSoundsFile from '../assets/audio/Owl_Loop.wav';
@@ -17,6 +19,8 @@ const lobbyTracks = [
 const owlTracks = [{ src: new Audio(owlSoundsFile), volumeFactor: 0.15 }];
 const finishedTracks = [{ src: new Audio(finishedMusicFile) }];
 const gameThreeTracks = [{ src: new Audio(gameThreeMusicFile) }];
+const gameOneTracks = [{ src: new Audio(gameOneMusicFile) }];
+const gameTwoTracks = [{ src: new Audio(gameTwoMusicFile) }];
 
 export type Track = { src: HTMLAudioElement; volumeFactor?: number; onPlay?: () => Promise<void> };
 export type PlayingTracks = { name: string; tracks: Track[] };
@@ -62,6 +66,8 @@ const MyAudioContextProvider: React.FunctionComponent = ({ children }) => {
     const [lobbyMusic, setLobbyMusic] = React.useState<Track[]>(lobbyTracks);
     const [finishedMusic, setFinishedMusic] = React.useState<Track[]>(finishedTracks);
     const [owlMusic, setOwlMusic] = React.useState<Track[]>(owlTracks);
+    const [gameOneMusic, setGameOneMusic] = React.useState<Track[]>(gameOneTracks);
+    const [gameTwoMusic, setGameTwoMusic] = React.useState<Track[]>(gameTwoTracks);
     const [gameThreeMusic, setGameThreeMusic] = React.useState<Track[]>(gameThreeTracks);
 
     const [playingTracks, setPlayingTracks] = React.useState<PlayingTracks>({ name: '', tracks: [] });
@@ -80,6 +86,8 @@ const MyAudioContextProvider: React.FunctionComponent = ({ children }) => {
                     setAudioCtx,
                     setFinishedMusic,
                     setGameThreeMusic,
+                    setGameOneMusic,
+                    setGameTwoMusic,
                     setLobbyMusic,
                     setOwlMusic,
                     setPlayingTracks,
@@ -89,6 +97,8 @@ const MyAudioContextProvider: React.FunctionComponent = ({ children }) => {
                     owlMusic,
                     owlSoundsTimeout,
                     finishedMusic,
+                    gameOneMusic,
+                    gameTwoMusic,
                     gameThreeMusic,
                 }),
             { once: true }
@@ -122,6 +132,8 @@ const MyAudioContextProvider: React.FunctionComponent = ({ children }) => {
             setIsPlaying,
             owlSoundsTimeout,
             owlMusic,
+            gameOneMusic,
+            gameTwoMusic,
             gameThreeMusic,
         }),
     };
