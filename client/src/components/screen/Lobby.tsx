@@ -1,43 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Dialog, IconButton } from '@material-ui/core';
-import { Assignment, ZoomOutMap } from '@material-ui/icons';
-import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { Dialog, IconButton } from "@material-ui/core";
+import { Assignment, ZoomOutMap } from "@material-ui/icons";
+import * as React from "react";
+import { useParams } from "react-router-dom";
 
-import { RouteParams } from '../../App';
-import Button from '../../components/common/Button';
-import { characters } from '../../config/characters';
-import { ScreenStates } from '../../config/screenStates';
-import { MyAudioContext, Sound } from '../../contexts/AudioContextProvider';
-import { GameContext } from '../../contexts/GameContextProvider';
-import { ScreenSocketContext } from '../../contexts/screen/ScreenSocketContextProvider';
-import history from '../../domain/history/history';
-import { FakeInMemorySocket } from '../../domain/socket/InMemorySocketFake';
-import { MessageTypes } from '../../utils/constants';
-import { generateQRCode } from '../../utils/generateQRCode';
-import { Routes, screenChooseGameRoute, screenLeaderboardRoute } from '../../utils/routes';
+import { RouteParams } from "../../App";
+import Button from "../../components/common/Button";
+import { characters } from "../../config/characters";
+import { ScreenStates } from "../../config/screenStates";
+import { MyAudioContext, Sound } from "../../contexts/AudioContextProvider";
+import { GameContext } from "../../contexts/GameContextProvider";
+import { ScreenSocketContext } from "../../contexts/screen/ScreenSocketContextProvider";
+import history from "../../domain/history/history";
+import { FakeInMemorySocket } from "../../domain/socket/InMemorySocketFake";
+import { MessageTypes } from "../../utils/constants";
+import { generateQRCode } from "../../utils/generateQRCode";
+import { Routes, screenChooseGameRoute, screenLeaderboardRoute } from "../../utils/routes";
 import {
-    Character,
-    CharacterContainer,
-    ConnectedUserCharacter,
-    ConnectedUserContainer,
-    ConnectedUsers,
-    ConnectedUserStatus,
-    Content,
-    ContentContainer,
-    ContentWrapper,
-    CopyToClipboard,
-    DialogContent,
-    FullScreenIcon,
-    LeftContainer,
-    LobbyContainer,
-    QRCode,
-    QRCodeInstructions,
-    QRCodeWrapper,
-    RightButtonContainer,
-    RightContainer,
-} from './Lobby.sc';
-import LobbyHeader from './LobbyHeader';
+    Character, CharacterContainer, ConnectedUserCharacter, ConnectedUserContainer, ConnectedUsers,
+    ConnectedUserStatus, Content, ContentContainer, ContentWrapper, CopyToClipboard, DialogContent,
+    FullScreenIcon, LeftContainer, LobbyContainer, QRCode, QRCodeInstructions, QRCodeWrapper,
+    RightButtonContainer, RightContainer
+} from "./Lobby.sc";
+import LobbyHeader from "./LobbyHeader";
 
 export const Lobby: React.FunctionComponent = () => {
     const { roomId, connectedUsers, screenAdmin, screenState } = React.useContext(GameContext);
@@ -147,7 +132,8 @@ export const Lobby: React.FunctionComponent = () => {
                                 <Button
                                     onClick={() => {
                                         history.push(Routes.screen);
-                                        location.reload();
+                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                        (location as any).reload();
                                     }}
                                 >
                                     Back
