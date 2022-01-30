@@ -89,7 +89,7 @@ export default class GuessingService {
     }
 
     public saveSheepCount(round: number, count: number): boolean {
-        if (!this.counts[round - 1] && round <= this.roundCount - 1) {
+        if (!this.counts[round - 1] && round <= this.roundCount) {
             this.counts[round - 1] = count;
             return true;
         }

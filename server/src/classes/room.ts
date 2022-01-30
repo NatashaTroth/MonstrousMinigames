@@ -299,8 +299,7 @@ class Room {
     public getScreenState(): string {
         return this.screenState;
     }
-    public checkIfClosing(): void {
-        console.log(this.users)
+    private checkIfClosing(): void {
         if (this.screens.length === 0 && !this.hasActiveUsers()) {
             this.setClosed();
         }
