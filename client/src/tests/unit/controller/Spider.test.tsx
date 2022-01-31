@@ -1,17 +1,15 @@
 /* eslint-disable simple-import-sort/imports */
-import 'jest-styled-components';
-import { act, cleanup, fireEvent, render } from '@testing-library/react';
-import React from 'react';
-import { ThemeProvider } from 'styled-components';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount } from 'enzyme';
+import "jest-styled-components";
+import { cleanup } from "@testing-library/react";
+import React from "react";
+import { ThemeProvider } from "styled-components";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
+import { configure, mount } from "enzyme";
 
-import { defaultValue, Game1Context } from '../../../contexts/game1/Game1ContextProvider';
-import LinearProgressBar from '../../../domain/game1/controller/components/obstacles/LinearProgressBar';
-import Spider from '../../../domain/game1/controller/components/obstacles/Spider';
-import { Navigator, UserMediaProps } from '../../../domain/navigator/Navigator';
-import theme from '../../../styles/theme';
-import { ObstacleTypes } from '../../../utils/constants';
+import LinearProgressBar from "../../../domain/game1/controller/components/obstacles/LinearProgressBar";
+import Spider from "../../../domain/game1/controller/components/obstacles/Spider";
+import { Navigator, UserMediaProps } from "../../../domain/navigator/Navigator";
+import theme from "../../../styles/theme";
 
 configure({ adapter: new Adapter() });
 
@@ -32,30 +30,6 @@ describe('Spider', () => {
             </ThemeProvider>
         );
         expect(container.find(LinearProgressBar)).toBeTruthy();
-    });
-
-    it('when SkipButton is clicked, solveObstacle should be called', () => {
-        const setObstacle = jest.fn();
-        jest.useFakeTimers(); // mock timers
-        const obstacle = { id: 1, type: ObstacleTypes.spider };
-        const { container } = render(
-            <ThemeProvider theme={theme}>
-                <Game1Context.Provider value={{ ...defaultValue, setObstacle, obstacle }}>
-                    <Spider navigator={new NavigatorFake('granted')} />
-                </Game1Context.Provider>
-            </ThemeProvider>
-        );
-
-        act(() => {
-            jest.runAllTimers(); // trigger setTimeout
-        });
-
-        const button = container.querySelector('button');
-
-        if (button) {
-            fireEvent.click(button);
-            expect(setObstacle).toHaveBeenCalledTimes(1);
-        }
     });
 });
 

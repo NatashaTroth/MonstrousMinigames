@@ -1,21 +1,20 @@
-import 'reflect-metadata';
+import "reflect-metadata";
+import dotenv from "dotenv";
+import express from "express";
+import client from "socket.io-client";
+import { Server as HttpServer } from "http";
 
-import dotenv from 'dotenv';
-import express from 'express';
-import client from 'socket.io-client';
-import { Server as HttpServer } from 'http';
-
-import GameEventEmitter from '../../src/classes/GameEventEmitter';
-import { GlobalEventMessageEmitter } from '../../src/classes/GlobalEventMessageEmitter';
-import Screen from '../../src/classes/Screen';
-import Server from '../../src/classes/Server';
-import SocketIOServer from '../../src/classes/SocketIOServer';
-import { GameAlreadyStartedError, InvalidRoomCodeError } from '../../src/customErrors/';
-import { MessageTypes } from '../../src/enums/messageTypes';
-import { GameOneEventMessageEmitter } from '../../src/gameplay/gameOne/GameOneEventMessageEmitter';
-import emitter from '../../src/helpers/emitter';
-import ConnectionHandler from '../../src/services/connectionHandler';
-import RoomService from '../../src/services/roomService';
+import GameEventEmitter from "../../src/classes/GameEventEmitter";
+import { GlobalEventMessageEmitter } from "../../src/classes/GlobalEventMessageEmitter";
+import Screen from "../../src/classes/Screen";
+import Server from "../../src/classes/Server";
+import SocketIOServer from "../../src/classes/SocketIOServer";
+import { GameAlreadyStartedError, InvalidRoomCodeError } from "../../src/customErrors/";
+import { MessageTypes } from "../../src/enums/messageTypes";
+import { GameOneEventMessageEmitter } from "../../src/gameplay/gameOne/GameOneEventMessageEmitter";
+import emitter from "../../src/helpers/emitter";
+import ConnectionHandler from "../../src/services/connectionHandler";
+import RoomService from "../../src/services/roomService";
 
 dotenv.config({
     path: '.env',
@@ -90,7 +89,7 @@ describe('connectionHandler', () => {
     it('should send a message of type userinit with the given username on connection', async done => {
         const username = 'John';
 
-        controller = client(`http://${url}/controller?roomId=${roomCode}&name=${username}&userId=`, {
+        controller = await client(`http://${url}/controller?roomId=${roomCode}&name=${username}&userId=`, {
             secure: true,
             reconnection: true,
             rejectUnauthorized: false,
@@ -124,7 +123,7 @@ describe('connectionHandler', () => {
         roomCode = 'INVALID';
         const consoleSpy = jest.spyOn(console, 'error');
 
-        controller = client(`http://${url}/controller?roomId=${roomCode}&name=${username}&userId=`, {
+        controller = await client(`http://${url}/controller?roomId=${roomCode}&name=${username}&userId=`, {
             secure: true,
             reconnection: true,
             rejectUnauthorized: false,
@@ -137,10 +136,11 @@ describe('connectionHandler', () => {
             done();
         });
     });
+
     it('should add a user to the room after joining', async done => {
         const username = 'John';
 
-        controller = client(`http://${url}/controller?roomId=${roomCode}&name=${username}&userId=`, {
+        controller = await client(`http://${url}/controller?roomId=${roomCode}&name=${username}&userId=`, {
             secure: true,
             reconnection: true,
             rejectUnauthorized: false,

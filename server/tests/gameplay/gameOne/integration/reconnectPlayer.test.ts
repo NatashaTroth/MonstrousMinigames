@@ -46,6 +46,7 @@ describe('Reconnect Player tests', () => {
 
         expect(gameOne.gameState).toBe(GameState.Started);
         finishPlayer(gameOne, '4');
+        finishPlayer(gameOne, '3');
         advanceCountdown(gameOne, 10); //call update to check if game has finished and to handle game finished
         expect(gameOne.gameState).toBe(GameState.Finished);
     });
