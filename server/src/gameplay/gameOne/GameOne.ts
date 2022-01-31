@@ -403,9 +403,9 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
 
     // ***** game state *****
     private gameHasFinished(): boolean {
-        if (this.players.size === 1 || localDevelopment)
-            return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 0; //TODO - test, does game finish when only 1 player??
-        return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length <= 1; //TODO - test, does game finish when only 1 player??
+        // if (this.players.size === 1 || localDevelopment)
+        //     return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 0; //TODO - test, does game finish when only 1 player??
+        return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 0; //TODO - test, does game finish when only 1 player??
     }
 
     private handleGameFinished(): void {
