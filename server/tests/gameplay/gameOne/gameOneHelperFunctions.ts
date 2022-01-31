@@ -222,6 +222,7 @@ export function getGameFinishedDataSameRanks(gameOne: GameOne) {
     finishPlayer(gameOne, '1');
     finishPlayer(gameOne, '2');
     finishPlayer(gameOne, '3');
+    finishPlayer(gameOne, '4');
     advanceCountdown(gameOne, 10); //call update to check if game has finished and to handle game finished
 
     return eventData;

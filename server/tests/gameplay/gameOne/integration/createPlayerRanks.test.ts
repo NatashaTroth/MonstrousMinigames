@@ -39,7 +39,7 @@ describe('createPlayerRanks tests', () => {
         expect(eventData.playerRanks[0].totalTimeInMs).toBe(timesFinished[0]);
         expect(eventData.playerRanks[1].totalTimeInMs).toBe(timesFinished[1]);
         expect(eventData.playerRanks[2].totalTimeInMs).toBe(timesFinished[2]);
-        expect(eventData.playerRanks[3].totalTimeInMs).toBe(timesFinished[2]); // same time as the third player, since the game automatically ends when there is only one player left
+        expect(eventData.playerRanks[3].totalTimeInMs).toBe(timesFinished[3]); // same time as the third player, since the game automatically ends when there is only one player left
     });
 
     it('creates game finished event with the correct playerRanks', async () => {
@@ -60,13 +60,13 @@ describe('createPlayerRanks tests', () => {
         expect(eventData.playerRanks[3].points).toBe(RankPoints.getPointsFromRank(4));
     });
 
-    it('creates game finished event where first 3 players have the same ranks', async () => {
+    it('creates game finished event where first 4 players have the same ranks', async () => {
         Date.now = jest.fn(() => dateNow);
         const eventData = getGameFinishedDataSameRanks(gameOne);
         expect(eventData.playerRanks[0].rank).toBe(1);
         expect(eventData.playerRanks[1].rank).toBe(1);
         expect(eventData.playerRanks[2].rank).toBe(1);
-        expect(eventData.playerRanks[3].rank).toBe(4);
+        expect(eventData.playerRanks[3].rank).toBe(1);
     });
 
     it('creates game finished event where first 3 players have the same points', async () => {
@@ -75,7 +75,7 @@ describe('createPlayerRanks tests', () => {
         expect(eventData.playerRanks[0].points).toBe(RankPoints.getPointsFromRank(1));
         expect(eventData.playerRanks[1].points).toBe(RankPoints.getPointsFromRank(1));
         expect(eventData.playerRanks[2].points).toBe(RankPoints.getPointsFromRank(1));
-        expect(eventData.playerRanks[3].points).toBe(RankPoints.getPointsFromRank(4));
+        expect(eventData.playerRanks[3].points).toBe(RankPoints.getPointsFromRank(1));
     });
 
     it('creates game finished event with isActive property', async () => {
