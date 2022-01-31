@@ -54,6 +54,11 @@ export class PhaserPlayerRenderer {
         }
     }
 
+    setPlayerVisible(isVisible: boolean) {
+        this.player?.body?.setVisible(isVisible);
+        this.player?.name?.setVisible(isVisible);
+    }
+
     destroyPlayer() {
         this.player.body?.destroy();
         this.player.name?.destroy();

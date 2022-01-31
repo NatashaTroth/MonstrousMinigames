@@ -328,6 +328,9 @@ class SheepGameScene extends Phaser.Scene {
                     sheep.renderer.setSheepVisible(false);
                 });
                 this.gameTwoRenderer?.renderGuessText(true);
+                this.players.forEach(player => {
+                    player.renderer.setPlayerVisible(false);
+                });
                 return;
             case GamePhases.results:
                 this.gameTwoRenderer?.renderGuessText(false);
@@ -336,6 +339,9 @@ class SheepGameScene extends Phaser.Scene {
                 this.gameTwoRenderer?.destroyLeaderboard();
                 this.sheep.forEach(sheep => {
                     sheep.renderer.setSheepVisible(true);
+                });
+                this.players.forEach(player => {
+                    player.renderer.setPlayerVisible(true);
                 });
                 this.gameTwoRenderer?.renderRoundCount(data.round);
                 return;
