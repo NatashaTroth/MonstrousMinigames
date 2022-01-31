@@ -50,7 +50,6 @@ class GameOnePlayer extends Player implements PlayerState {
     }
 
     runForward(speed: number): void {
-        if (this.playerIsNotAllowedToRun()) return;
         this.positionX += speed;
         this.countRunsPerFrame++;
 

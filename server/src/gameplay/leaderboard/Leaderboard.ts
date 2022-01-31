@@ -91,9 +91,20 @@ export default class Leaderboard extends EventEmitter {
         userPointsArray.sort((a, b) => {
             return b.points - a.points;
         });
-        userPointsArray = userPointsArray.map((userPoints, idx) => {
-            return { ...userPoints, rank: idx + 1 };
-        });
+
+        let rank = 1;
+        for (let i = 0; i < userPointsArray.length; i++) {
+            if (i === 0) userPointsArray[i].rank = rank;
+            else if (userPointsArray[i].points === userPointsArray[i - 1].points) {
+                userPointsArray[i].rank = rank;
+            } else {
+                userPointsArray[i].rank = ++rank;
+            }
+        }
+
+        // userPointsArray = userPointsArray.map((userPoints, idx) => {
+        //     return { ...userPoints, rank: idx + 1 };
+        // });
         return [...userPointsArray];
     }
 

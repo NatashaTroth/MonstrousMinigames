@@ -38,6 +38,7 @@ class GameOnePlayersController {
 
     getActiveUnfinishedPlayers() {
         const players = Array.from(this.players.values());
+        // console.log(players.filter(player => player.isActive && !player.finished));
         return players.filter(player => player.isActive && !player.finished);
     }
 
@@ -92,7 +93,24 @@ class GameOnePlayersController {
         gameOneArg: GameOne,
         currentTime: number
     ): Array<PlayerRank> {
+        console.log('CREATing player ranks');
+        console.log(this.players);
+        console.log('-------------------');
         this.rankUnrankedPlayers(rankSuccessfulUser, rankFailedUser, gameOneArg, currentTime);
+        console.log(
+            Array.from(this.players.values()).map(player => {
+                return {
+                    id: player.id,
+                    name: player.name,
+                    rank: player.rank,
+                    finished: player.finished,
+                    dead: player.dead,
+                    totalTimeInMs: (player.finishedTimeMs > 0 ? player.finishedTimeMs : Date.now()) - gameStartedAt,
+                    positionX: player.positionX,
+                    isActive: player.isActive,
+                };
+            })
+        );
         return Array.from(this.players.values()).map(player => {
             return {
                 id: player.id,
@@ -118,15 +136,17 @@ class GameOnePlayersController {
         currentTime: number
     ) {
         this.players.forEach(player => {
-            if (!player.isActive && !player.finished) {
-                player.handlePlayerCaught(currentTime);
-                player.rank = rankFailedUser.call(gameOneArg, player.finishedTimeMs);
-            } else if (!player.finished) {
-                player.handlePlayerFinishedGame(
-                    currentTime,
-                    rankSuccessfulUser.call(gameOneArg, player.finishedTimeMs)
-                );
-                player.finished = true;
+            if (player.rank === 0) {
+                if (player.dead) {
+                    player.handlePlayerCaught(currentTime);
+                    player.rank = rankFailedUser.call(gameOneArg, player.finishedTimeMs);
+                } else {
+                    player.handlePlayerFinishedGame(
+                        currentTime,
+                        rankSuccessfulUser.call(gameOneArg, player.finishedTimeMs)
+                    );
+                    player.finished = true;
+                }
             }
         });
     }

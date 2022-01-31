@@ -1,4 +1,7 @@
-import { localDevelopment, pushChasers, showErrors } from '../../../constants';
+import {
+    localDevelopment, monstersRunDifferentPace, pushChasers, showErrors
+} from '../../../constants';
+import { runForwardMessage } from '../../../tests/gameplay/gameOne/gameOneMockData';
 import User from '../../classes/user';
 import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
@@ -243,9 +246,12 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     // ***** player *****
     private movePlayer(message: IMessage) {
         const player = this.getValidPlayer(message.userId!);
+        if (player?.playerIsNotAllowedToRun()) return;
         player?.runForward(parseInt(`${process.env.SPEED}`, 10) || this.InitialGameParameters.SPEED);
         if (player?.playerHasPassedGoal()) {
             this.handlePlayerFinished(player);
+            console.log('*************** PASSED GOAL ********* ' + player.name);
+            console.log(player);
         }
     }
 
@@ -375,6 +381,8 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     private handlePlayerCaught(player: GameOnePlayer, currentTime: number) {
         player.handlePlayerCaught(currentTime);
         player.rank = this.rankFailedUser(player.finishedTimeMs);
+        console.log('*************** CAUGHT ********* ' + player.name);
+        console.log(player);
 
         GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.gameOnePlayersController!.getStunnablePlayers());
 
@@ -403,12 +411,13 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
 
     // ***** game state *****
     private gameHasFinished(): boolean {
-        if (this.players.size === 1 || localDevelopment)
-            return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 0; //TODO - test, does game finish when only 1 player??
-        return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length <= 1; //TODO - test, does game finish when only 1 player??
+        // if (this.players.size === 1 || localDevelopment)
+        return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 0; //TODO - test, does game finish when only 1 player??
+        // return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length <= 1; //TODO - test, does game finish when only 1 player??
     }
 
     private handleGameFinished(): void {
+        console.log('Game finished.....');
         // verifyGameState(this.gameState, [GameState.Started]);
         this.gameState = GameState.Finished;
         const playerRanks = this.gameOnePlayersController!.createPlayerRanks(
@@ -467,11 +476,19 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
 
     private updateLocalDev() {
         for (const player of this.gameOnePlayersController!.getPlayerValues()) {
+            const mulitplier = monstersRunDifferentPace ? player.characterNumber : 2;
             if (player.positionX < this.trackLength) {
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < 1 * mulitplier; i++) {
                     // to test speed limit
-                    player.runForward(parseInt(`${process.env.SPEED}`, 10) || this.InitialGameParameters.SPEED);
-                    // if (player.playerHasPassedGoal()) this.playerHasFinishedGame(); //TODO!!
+                    this.movePlayer({ ...runForwardMessage, userId: player.id });
+                    // player.runForward(
+                    //     parseInt(`${process.env.SPEED}`, 10) || this.InitialGameParameters.SPEED * mulitplier
+                    // );
+                    // if (player.playerHasPassedGoal()) {
+                    //     this.handlePlayerFinished(player);
+                    //     console.log('*************** PASSED GOAL ********* ' + player.name);
+                    //     console.log(player);
+                    // }
 
                     // this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
                 }
