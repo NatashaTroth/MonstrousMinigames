@@ -33,7 +33,12 @@ lint:client:
         changes:
             - client/**/*
 
+# --- Testing ---
+.test_coverage_template: &test_coverage_report_configuration
+    coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+
 test-unit:client:
+    <<: *test_coverage_report_configuration
     stage: test-unit
     tags:
         - node
@@ -48,6 +53,7 @@ test-unit:client:
             - client/**/*
 
 test-integration:client:
+    <<: *test_coverage_report_configuration
     stage: test-integration
     tags:
         - node
@@ -119,6 +125,7 @@ staging:client:
     only:
         refs:
             - dev
+            - staging
         changes:
             - client/**/*
 

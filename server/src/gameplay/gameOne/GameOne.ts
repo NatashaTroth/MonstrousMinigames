@@ -403,7 +403,8 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
 
     // ***** game state *****
     private gameHasFinished(): boolean {
-        if (localDevelopment) return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 0; //TODO - test, does game finish when only 1 player??
+        if (this.players.size === 1 || localDevelopment)
+            return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 0; //TODO - test, does game finish when only 1 player??
         return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length <= 1; //TODO - test, does game finish when only 1 player??
     }
 
@@ -469,7 +470,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
             if (player.positionX < this.trackLength) {
                 for (let i = 0; i < 5; i++) {
                     // to test speed limit
-                    player.runForward(parseInt(`${process.env.SPEED}`, 10) || this.InitialGameParameters.SPEED * 2);
+                    player.runForward(parseInt(`${process.env.SPEED}`, 10) || this.InitialGameParameters.SPEED);
                     // if (player.playerHasPassedGoal()) this.playerHasFinishedGame(); //TODO!!
 
                     // this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);

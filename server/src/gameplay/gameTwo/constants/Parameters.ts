@@ -45,7 +45,7 @@ type phaseTimes = {
 
 const PHASE_TIMES: phaseTimes = {
     counting: shorterGame ? 5000 : 50000,
-    guessing: shorterGame ? 5000 : 10000,
+    guessing: shorterGame ? 5000 : 15000,
     results: shorterGame ? 2000 : 5000,
 };
 

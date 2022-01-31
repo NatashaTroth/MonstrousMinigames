@@ -171,7 +171,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
     protected handleInput(message: IMessage) {
         switch (message.type) {
             case GameTwoMessageTypes.MOVE:
-                //console.info(message)
                 this.movePlayer(message.userId!, message.direction!);
                 break;
             case GameTwoMessageTypes.CHOOSE:
@@ -183,7 +182,6 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
                 this.killSheep(message.userId!);
                 break;
             case GameTwoMessageTypes.GUESS:
-                // console.info(message)
                 this.handleGuess(message.userId!, message.guess!);
                 break;
             default:
@@ -268,8 +266,8 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     protected handleGameFinished(): void {
         const playerRanks = this.guessingService.getPlayerRanks();
-
-        this.leaderboard.addGameToHistory(GameType.GameTwo, [...playerRanks]);
+        console.info(playerRanks);
+        this.leaderboard.addGameToHistory(GameType.GameTwo, playerRanks);
         this.gameState = GameState.Finished;
 
         GameTwoEventEmitter.emitGameHasFinishedEvent(this.roomId, this.gameState, playerRanks);

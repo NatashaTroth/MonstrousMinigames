@@ -32,7 +32,18 @@ lint:server:
         changes:
             - server/**/*
 
+# --- Testing ---
+.test_coverage_template: &test_coverage_report_configuration
+    coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+    # artifacts:
+    #     when: always
+    #     reports:
+    #         junit:
+    #             - junit.xml
+    #         cobertura: coverage/cobertura-coverage.xml
+
 test-unit:server:
+    <<: *test_coverage_report_configuration
     stage: test-unit
     tags:
         - node
@@ -47,6 +58,7 @@ test-unit:server:
             - server/**/*
 
 test-integration:server:
+    <<: *test_coverage_report_configuration
     stage: test-integration
     tags:
         - node
@@ -61,7 +73,7 @@ test-integration:server:
             - server/**/*
 
 # --- Deployment ---
-.job_template: &deployment_configuration
+.deployment_template: &deployment_configuration
     tags:
         - node
     image: ruby:latest
@@ -83,6 +95,7 @@ staging:server:
     only:
         refs:
             - dev
+            - staging
         changes:
             - server/**/*
 
