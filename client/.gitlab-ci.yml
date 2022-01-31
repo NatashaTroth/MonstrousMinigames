@@ -80,7 +80,7 @@ test-e2e-staging:client:
         - echo "End to End testing.."
         - npm run test:e2e
     except:
-            - staging
+        - staging
     only:
         # refs:
         #     - dev
