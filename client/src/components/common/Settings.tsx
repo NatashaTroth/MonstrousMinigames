@@ -7,6 +7,7 @@ import VolumeUp from '@material-ui/icons/VolumeUp';
 import * as React from 'react';
 import styled from 'styled-components';
 
+import { games } from '../../config/games';
 import { MyAudioContext } from '../../contexts/AudioContextProvider';
 import { GameContext } from '../../contexts/GameContextProvider';
 import history from '../../domain/history/history';
@@ -57,7 +58,7 @@ const Settings: React.FunctionComponent = () => {
                     </VolumeContainer>
                     {screenAdmin && (
                         <>
-                            <SubHeading>Game 1</SubHeading>
+                            <SubHeading>{games[0].name}</SubHeading>
                             <VolumeContainer>
                                 <Typography gutterBottom>Difficulty</Typography>
                                 <StyledGridContainer container spacing={2}>
