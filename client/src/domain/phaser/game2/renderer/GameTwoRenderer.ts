@@ -115,6 +115,7 @@ export class GameTwoRenderer {
     }
 
     renderLeaderboard(data: PlayerRank[]) {
+        data.sort((a, b) => a.rank < b.rank ? -1 : a.rank > b.rank ? 1 : 0)
         const ranks: string[] = [];
         data.forEach(element => {
             ranks.push(element.name);
