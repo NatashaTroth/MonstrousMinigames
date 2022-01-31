@@ -12,7 +12,7 @@
         "test:gameThree": "jest --watch /gameThree/",
         "test:gameplay": "jest --watchAll ./tests/gameplay",
         "test:unit": "jest --testPathIgnorePatterns /integration/ --config ./jest.config.js --collectCoverage --coverageDirectory=\"./coverage\" --ci --reporters=default --reporters=jest-junit --watchAll=false",
-        "test:integration": "jest /integration/",
+        "test:integration": "jest /integration/ --config ./jest.config.js --collectCoverage --coverageDirectory=\"./coverage\" --ci --reporters=default --reporters=jest-junit --watchAll=false",
         "dev": "nodemon src/app.ts",
         "prettier": "prettier --write src/**/*.ts",
         "lint": "eslint \"**/*.ts\" --fix && npm run tsc && rm -rf dist/",
