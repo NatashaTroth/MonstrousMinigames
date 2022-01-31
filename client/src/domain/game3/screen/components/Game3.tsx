@@ -103,7 +103,7 @@ const Game3: React.FunctionComponent = () => {
                         )}
                         {finalRound && (
                             <RandomWord size={voteForPhotoMessage || presentFinalPhotos ? 'small' : 'default'}>
-                                {finalRoundPhotoTopics.join(', ')}
+                                {finalRoundPhotoTopics?.join(', ')}
                             </RandomWord>
                         )}
                     </InstructionContainer>

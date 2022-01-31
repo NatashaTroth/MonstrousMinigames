@@ -89,11 +89,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
                                         </StyledInstruction>
 
                                         {index === 0 ? (
-                                            <StyledInstruction variant="primary" chosenGame={chosenGame}>
-                                                <InstructionText>
-                                                    {`${formatMs(player.totalTimeInMs)}`}{' '}
-                                                </InstructionText>
-                                            </StyledInstruction>
+                                            <StyledInstruction variant="secondary" chosenGame={chosenGame} />
                                         ) : (
                                             <StyledInstruction variant="secondary" chosenGame={chosenGame}>
                                                 <InstructionText>
