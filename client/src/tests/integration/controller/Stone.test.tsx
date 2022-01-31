@@ -1,26 +1,31 @@
 /* eslint-disable simple-import-sort/imports */
-import 'jest-styled-components';
-import { cleanup } from '@testing-library/react';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount } from 'enzyme';
-import { createMemoryHistory } from 'history';
-import { ThemeProvider } from 'styled-components';
-import React from 'react';
-import { Router } from 'react-router-dom';
+import "jest-styled-components";
+import { cleanup } from "@testing-library/react";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
+import { configure, mount } from "enzyme";
+import { createMemoryHistory } from "history";
+import { ThemeProvider } from "styled-components";
+import React from "react";
+import { Router } from "react-router-dom";
 
 import {
-    ControllerSocketContext,
-    defaultValue as socketDefaultValue,
-} from '../../../contexts/controller/ControllerSocketContextProvider';
-import { defaultValue as game1DefaultValue, Game1Context } from '../../../contexts/game1/Game1ContextProvider';
-import { defaultValue as gameDefaultValue, GameContext } from '../../../contexts/GameContextProvider';
-import { defaultValue as playerDefaultValue, PlayerContext } from '../../../contexts/PlayerContextProvider';
-import Stone from '../../../domain/game1/controller/components/obstacles/Stone';
-import { StyledStone } from '../../../domain/game1/controller/components/obstacles/Stone.sc';
-import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
-import theme from '../../../styles/theme';
-import { MessageTypesGame1, ObstacleTypes } from '../../../utils/constants';
-import { controllerObstacleRoute } from '../../../utils/routes';
+    ControllerSocketContext, defaultValue as socketDefaultValue
+} from "../../../contexts/controller/ControllerSocketContextProvider";
+import {
+    defaultValue as game1DefaultValue, Game1Context
+} from "../../../contexts/game1/Game1ContextProvider";
+import {
+    defaultValue as gameDefaultValue, GameContext
+} from "../../../contexts/GameContextProvider";
+import {
+    defaultValue as playerDefaultValue, PlayerContext
+} from "../../../contexts/PlayerContextProvider";
+import Stone from "../../../domain/game1/controller/components/obstacles/Stone";
+import { StyledStone } from "../../../domain/game1/controller/components/obstacles/Stone.sc";
+import { FakeInMemorySocket } from "../../../domain/socket/InMemorySocketFake";
+import theme from "../../../styles/theme";
+import { MessageTypesGame1, ObstacleTypes } from "../../../utils/constants";
+import { controllerObstacleRoute } from "../../../utils/routes";
 
 configure({ adapter: new Adapter() });
 
