@@ -89,7 +89,7 @@ test-e2e-staging:client:
         REACT_APP_FRONTEND_URL: 'https://staging-monsters.web.app/'
         REACT_APP_BACKEND_URL: 'https://monstrous-minigames-staging.herokuapp.com/'
     script:
-        - sleep 30
+        # - sleep 30
         - cd client/
         - npx playwright install --with-deps
         - echo "End to End testing.."
