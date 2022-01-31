@@ -60,7 +60,7 @@ export const FinishedScreen: React.FunctionComponent = () => {
                             {chosenGame === GameNames.game1 && (
                                 <>
                                     <Header chosenGame={chosenGame}>
-                                        <HeaderText>Total Time in MS</HeaderText>
+                                        <HeaderText>Total Time</HeaderText>
                                     </Header>
 
                                     <Header chosenGame={chosenGame}>
