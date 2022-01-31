@@ -79,9 +79,9 @@ test-e2e-staging:client:
         - npx playwright install --with-deps
         - echo "End to End testing.."
         - npm run test:e2e
-    only:
-        except:
+    except:
             - staging
+    only:
         # refs:
         #     - dev
         changes:
