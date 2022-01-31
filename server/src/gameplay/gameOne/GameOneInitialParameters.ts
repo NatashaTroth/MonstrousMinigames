@@ -59,12 +59,12 @@ const easyParams = () => {
 };
 
 const mediumParams = () => {
-    const mediumParamsModifier = 1.4;
+    const mediumParamsModifier = 1.3;
     return {
         TRACK_LENGTH: shorterGame && localDevelopment ? 1000 : 5000 * mediumParamsModifier,
-        NUMBER_OBSTACLES: shorterGame && localDevelopment ? 0 : 5,
+        NUMBER_OBSTACLES: shorterGame && localDevelopment ? 0 : 4,
         STUNNED_TIME: 3000 * mediumParamsModifier,
-        NUMBER_STONES: shorterGame && localDevelopment ? 0 : 5, //when alive
+        NUMBER_STONES: shorterGame && localDevelopment ? 0 : 4, //when alive
         MAX_NUMBER_CHASER_PUSHES: 3,
         CHASER_PUSH_AMOUNT: 20 * mediumParamsModifier,
         SPEED: 2,
@@ -75,12 +75,12 @@ const mediumParams = () => {
 };
 
 const hardParams = () => {
-    const hardParamsModifier = 1.65;
+    const hardParamsModifier = 1.55;
     return {
         TRACK_LENGTH: 5000 * hardParamsModifier,
-        NUMBER_OBSTACLES: 6,
+        NUMBER_OBSTACLES: 5,
         STUNNED_TIME: 3000 * hardParamsModifier,
-        NUMBER_STONES: 6, //when alive
+        NUMBER_STONES: 5, //when alive
         MAX_NUMBER_CHASER_PUSHES: 4,
         CHASER_PUSH_AMOUNT: 20 * hardParamsModifier,
         SPEED: 2,
