@@ -24,12 +24,12 @@ const JoyStick: React.FunctionComponent<JoyStickProps> = ({ sessionStorage }) =>
         sessionStorage.getItem('countdownTime') ? Number(sessionStorage.getItem('countdownTime')) / 1000 : null
     );
 
-    const { remainingKills, roundIdx } = React.useContext(Game2Context);
+    const { setGuessHint, remainingKills, roundIdx } = React.useContext(Game2Context);
     const { controllerSocket } = React.useContext(ControllerSocketContext);
     const { userId } = React.useContext(PlayerContext);
 
     let direction: string | undefined = 'C';
-
+    React.useEffect(() => setGuessHint(''));
     React.useEffect(() => {
         let mounted = true;
 
