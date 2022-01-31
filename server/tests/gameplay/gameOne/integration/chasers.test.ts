@@ -29,15 +29,6 @@ describe('Chasers', () => {
         expect(gameOne.chasers!.getPosition()).toBeGreaterThan(initialChasersPositionX);
     });
 
-    it('should test that the game stops when only one player was not caught', async () => {
-        for (let i = 0; i < users.length - 1; i++) {
-            gameOne.players.get(users[i].id)!.positionX = 0;
-        }
-
-        advanceCountdown(gameOne, 1000);
-        expect(gameOne.gameState).toBe(GameState.Finished);
-    });
-
     it('have the last rank when first to be caught', async () => {
         gameOne.players.get(users[0].id)!.positionX = 0;
         for (let i = 1; i < users.length; i++) {
@@ -94,7 +85,8 @@ describe('Chasers', () => {
         gameOne.players.get(users[1].id)!.positionX = 0; //should be 3rd (caught second)
         advanceCountdown(gameOne, 100);
 
-        //last player should finish automatically
+        finishPlayer(gameOne, users[2].id); // should be 2nd (2nd fastest to finish)
+
         expect(gameOne.players.get(users[0].id)!.rank).toBe(4);
         expect(gameOne.players.get(users[1].id)!.rank).toBe(3);
         expect(gameOne.players.get(users[2].id)!.rank).toBe(2);

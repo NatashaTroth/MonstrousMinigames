@@ -40,15 +40,17 @@ export default class Leaderboard extends EventEmitter {
         const currentGamePoints = new Map<string, number>();
         this.gameHistory.push({
             game,
-            playerRanks: playerRanks.map(playerRank => {
-                let points = 0;
+            playerRanks: playerRanks
+                .map(playerRank => {
+                    let points = 0;
 
-                if (playerRank.finished) {
-                    points = RankPoints.getPointsFromRank(playerRank.rank);
-                    currentGamePoints.set(playerRank.id, points);
-                }
-                return { ...playerRank, points };
-            }),
+                    if (playerRank.finished) {
+                        points = RankPoints.getPointsFromRank(playerRank.rank);
+                        currentGamePoints.set(playerRank.id, points);
+                    }
+                    return { ...playerRank, points };
+                })
+                .sort((a, b) => a.rank - b.rank),
         });
         this.updateUserPointsAfterGame(playerRanks);
         this.sendUpdatedLeaderboardState();
