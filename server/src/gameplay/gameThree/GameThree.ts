@@ -123,6 +123,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
     }
 
     handleGameFinished() {
+        this.gameState = GameState.Finished;
         const playerPoints = this.stageController!.getPlayerPoints();
         const playerRanks: GameThreePlayerRank[] = Array.from(this.players.values()).map(player => {
             return {
@@ -144,8 +145,10 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
                 return result;
             });
 
-        this.leaderboard.addGameToHistory(GameType.GameThree, [...playerRanks]);
-        this.gameState = GameState.Finished;
-        GameThreeEventEmitter.emitGameHasFinishedEvent(this.roomId, GameState.Finished, playerRanks);
+        const gamePoints = this.leaderboard.addGameToHistory(GameType.GameThree, [...playerRanks]);
+        const playerRanksWithPoints: GameThreePlayerRank[] = playerRanks.map(playerRank => {
+            return { ...playerRank, points: gamePoints.get(playerRank.id) || 0 };
+        });
+        GameThreeEventEmitter.emitGameHasFinishedEvent(this.roomId, GameState.Finished, playerRanksWithPoints);
     }
 }
