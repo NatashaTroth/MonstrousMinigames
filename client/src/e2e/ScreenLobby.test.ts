@@ -3,6 +3,9 @@ import { expect, test } from "@playwright/test";
 test('test', async ({ page, baseURL }) => {
     await page.goto('/');
 
+    // eslint-disable-next-line no-console
+    console.log(process.env.REACT_APP_BACKEND_URL);
+
     const [response] = await Promise.all([
         // Waits for the next response matching some conditions
         page.waitForResponse(
