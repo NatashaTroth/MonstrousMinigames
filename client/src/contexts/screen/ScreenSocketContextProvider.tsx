@@ -36,6 +36,7 @@ export interface PlayerRank {
     dead?: boolean;
     points?: number;
     votes?: number;
+    difference?: number;
 }
 
 const ScreenSocketContextProvider: React.FunctionComponent = ({ children }) => {

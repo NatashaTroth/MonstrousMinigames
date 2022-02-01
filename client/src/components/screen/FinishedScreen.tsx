@@ -68,6 +68,11 @@ export const FinishedScreen: React.FunctionComponent = () => {
                                     </Header>
                                 </>
                             )}
+                            {chosenGame === GameNames.game2 && (
+                                <Header chosenGame={chosenGame}>
+                                    <HeaderText>Average Error</HeaderText>
+                                </Header>
+                            )}
                             {chosenGame !== GameNames.game1 && (
                                 <Header chosenGame={chosenGame}>
                                     <HeaderText>Points</HeaderText>
@@ -100,6 +105,13 @@ export const FinishedScreen: React.FunctionComponent = () => {
                                             </StyledInstruction>
                                         )}
                                     </>
+                                )}
+                                {chosenGame === GameNames.game2 && (
+                                    <StyledInstruction variant="light" chosenGame={chosenGame}>
+                                        <InstructionText>
+                                            {player.difference ? player.difference.toFixed(2) : ''}
+                                        </InstructionText>
+                                    </StyledInstruction>
                                 )}
                                 {chosenGame !== GameNames.game1 && (
                                     <StyledInstruction variant="light" chosenGame={chosenGame}>
