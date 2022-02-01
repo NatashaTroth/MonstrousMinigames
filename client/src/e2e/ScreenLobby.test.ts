@@ -26,32 +26,6 @@ test('test', async ({ baseURL }) => {
     await expect(roomCode).toHaveText(roomId);
 });
 
-// test('When creating new room on screen, room code should be rendered at lobby header', async ({ baseURL }) => {
-//     const browser = await chromium.launch({
-//         args: ['--disable-dev-shm-usage'],
-//     });
-
-//     const context = await browser.newContext({ baseURL });
-//     const page = await context.newPage();
-
-//     await page.goto(`/`);
-
-//     const [response] = await Promise.all([
-//         // Waits for the next response matching some conditions
-//         page.waitForResponse(
-//             response =>
-//                 response.url() === `${process.env.REACT_APP_BACKEND_URL}/create-room` && response.status() === 200
-//         ),
-//         // Triggers the response
-//         page.locator('button:has-text("Create New Room")').click(),
-//     ]);
-
-//     const { roomId } = await response.json();
-
-//     const roomCode = page.locator('.roomCode');
-//     await expect(roomCode).toHaveText(roomId);
-// });
-
 test('When joining room on screen, room code should be rendered at lobby header', async ({ baseURL }) => {
     const browser = await chromium.launch({
         args: ['--disable-dev-shm-usage'],
@@ -65,7 +39,7 @@ test('When joining room on screen, room code should be rendered at lobby header'
         // Waits for the next response matching some conditions
         createRoomPage.waitForResponse(
             response =>
-                response.url() === `${process.env.REACT_APP_BACKEND_URL}/create-room` && response.status() === 200
+                response.url() === `${process.env.REACT_APP_BACKEND_URL}create-room` && response.status() === 200
         ),
         // Triggers the response
         createRoomPage.locator('button:has-text("Create New Room")').click(),

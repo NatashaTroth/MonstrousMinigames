@@ -92,10 +92,11 @@ test-e2e-production:client:
     image: mcr.microsoft.com/playwright:focal
     variables:
         REACT_APP_FRONTEND_URL: 'https://monstrous-minigames.web.app/'
-        REACT_APP_BACKEND_URL: 'https://monstrous-minigames.herokuapp.com/'
+        REACT_APP_BACKEND_URL: 'http://localhost:5000/'
     script:
         - sleep 30
-        - cd client/
+        - cd server/ && npm run dev
+        - cd ../client/
         - npx playwright install --with-deps
         - echo "End to End testing.."
         - npm run test:e2e
