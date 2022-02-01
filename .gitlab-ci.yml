@@ -4,10 +4,10 @@ stages:
   - lint
   - test-unit
   - test-integration
-  - staging
-  - test-e2e-staging
+  - staging-server
+  - test-e2e
+  - staging-client
   - production
-  - test-e2e-production
 
 include:
   - local: "/server/.gitlab-ci.yml"

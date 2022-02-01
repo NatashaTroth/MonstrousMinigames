@@ -55,9 +55,9 @@
     "test": "jest --maxWorkers=50%",
     "test:watch:all": "jest --watchAll --coverage --config ./jest.config.js",
     "test:watch": "jest --watch",
-    "test:e2e": "npx playwright test",
-    "test:unit": "jest ./src/tests/unit",
-    "test:integration": "jest ./src/tests/integration",
+    "test:e2e": "DEBUG=pw:webserver npx playwright test",
+    "test:unit": "jest ./src/tests/unit --config ./jest.config.js",
+    "test:integration": "jest ./src/tests/integration --config ./jest.config.js",
     "test:component": "jest ./src/tests/component"
   },
   "eslintConfig": {
