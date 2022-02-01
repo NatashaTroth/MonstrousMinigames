@@ -1,12 +1,12 @@
-import { Typography } from '@material-ui/core';
-import styled from 'styled-components';
+import { Typography } from "@material-ui/core";
+import styled from "styled-components";
 
-import { GameNames } from '../../config/games';
-import { Instruction } from '../common/Instruction.sc';
-import { Label } from '../common/Label.sc';
+import { GameNames } from "../../config/games";
+import { Instruction } from "../common/Instruction.sc";
+import { Label } from "../common/Label.sc";
 
 export const RankTable = styled.div`
-    width: 50%;
+    width: 80%;
     display: flex;
     flex-direction: column;
     margin-top: 60px;
@@ -59,13 +59,13 @@ interface Props {
 
 export const StyledInstruction = styled(Instruction)<Props>`
     && {
-        width: 30%;
+        width: ${({ chosenGame }) => (chosenGame === GameNames.game1 ? '22.5%' : '30%')};
     }
 `;
 
 export const Header = styled.div<Props>`
      {
-        width: 30%;
+        width: ${({ chosenGame }) => (chosenGame === GameNames.game1 ? '22.5%' : '30%')};
         display: flex;
         justify-content: center;
         align-items: center;

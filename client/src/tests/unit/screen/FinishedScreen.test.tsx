@@ -34,6 +34,7 @@ describe('Screen FinishedScreen', () => {
                 positionX: 0,
                 isActive: true,
                 dead: false,
+                points: 3,
             },
             {
                 id: '2',
@@ -44,6 +45,7 @@ describe('Screen FinishedScreen', () => {
                 positionX: 0,
                 isActive: true,
                 dead: false,
+                points: 5,
             },
         ];
 
@@ -77,6 +79,7 @@ describe('Screen FinishedScreen', () => {
                 positionX: 0,
                 isActive: true,
                 dead: false,
+                points: 3,
             },
             {
                 id: '2',
@@ -87,6 +90,7 @@ describe('Screen FinishedScreen', () => {
                 positionX: 0,
                 isActive: true,
                 dead: false,
+                points: 4,
             },
         ];
 
@@ -142,6 +146,7 @@ describe('Screen FinishedScreen', () => {
                 positionX: 0,
                 isActive: true,
                 dead: true,
+                points: 2,
             },
             {
                 id: '2',
@@ -152,6 +157,7 @@ describe('Screen FinishedScreen', () => {
                 positionX: 0,
                 isActive: true,
                 dead: false,
+                points: 2,
             },
         ];
 
