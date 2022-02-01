@@ -1,13 +1,17 @@
+import Game from '../Game';
+import Player from '../Player';
+import { GameState } from '../enums';
+import { IGameInterface } from '../interfaces';
+import Leaderboard from '../leaderboard/Leaderboard';
 import { showErrors } from '../../../constants';
 import User from '../../classes/user';
 import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
-import { GameState } from '../enums';
-import Game from '../Game';
-import { IGameInterface } from '../interfaces';
 import { GameType } from '../leaderboard/enums/GameType';
-import Leaderboard from '../leaderboard/Leaderboard';
-import Player from '../Player';
+
+import GameTwoPlayer from './GameTwoPlayer';
+import { GameStateInfo } from './interfaces';
+
 import Brightness from './classes/Brightness';
 import GameTwoEventEmitter from './classes/GameTwoEventEmitter';
 import GuessingService from './classes/GuessingServices';
@@ -17,8 +21,6 @@ import SheepService from './classes/SheepService';
 import Parameters from './constants/Parameters';
 import { GameTwoMessageTypes } from './enums/GameTwoMessageTypes';
 import { Phases } from './enums/Phases';
-import GameTwoPlayer from './GameTwoPlayer';
-import { GameStateInfo } from './interfaces';
 
 interface GameTwoGameInterface extends IGameInterface<GameTwoPlayer, GameStateInfo> {
     lengthX: number;
@@ -266,8 +268,15 @@ export default class GameTwo extends Game<GameTwoPlayer, GameStateInfo> implemen
 
     protected handleGameFinished(): void {
         const playerRanks = this.guessingService.getPlayerRanks();
-        console.info(playerRanks);
-        this.leaderboard.addGameToHistory(GameType.GameTwo, playerRanks);
+        const currentGamePoints = this.leaderboard.addGameToHistory(GameType.GameTwo, playerRanks);
+
+        playerRanks.forEach(rank => {
+            rank.difference = this.guessingService.getAverageDifference(rank.id)
+            const points = currentGamePoints.get(rank.id);
+            if (points) {
+                rank.points = points;
+            }
+        });
         this.gameState = GameState.Finished;
 
         GameTwoEventEmitter.emitGameHasFinishedEvent(this.roomId, this.gameState, playerRanks);

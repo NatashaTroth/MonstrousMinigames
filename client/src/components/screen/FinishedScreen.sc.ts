@@ -59,13 +59,13 @@ interface Props {
 
 export const StyledInstruction = styled(Instruction)<Props>`
     && {
-        width: ${({ chosenGame }) => (chosenGame === GameNames.game1 ? '30%' : '45%')};
+        width: 30%;
     }
 `;
 
 export const Header = styled.div<Props>`
      {
-        width: ${({ chosenGame }) => (chosenGame === GameNames.game1 ? '30%' : '45%')}
+        width: 30%;
         display: flex;
         justify-content: center;
         align-items: center;

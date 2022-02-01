@@ -41,6 +41,18 @@ export default class GuessingService {
         return '';
     }
 
+    public getAverageDifference(userId: string){
+        const guesses = this.guesses.get(userId);
+        let differences = 0;
+        if(guesses){
+            for(let i = 0; i < this.roundCount; i++){
+                differences += ((guesses[i] - this.counts[i]) * -1);
+            }
+        }
+        return differences / this.roundCount;
+    }
+
+
     public getHint(miss: number): string {
         if (miss > 0) {
             if (miss <= Parameters.GOOD_GUESS_THRESHOLD) {
@@ -170,7 +182,6 @@ export default class GuessingService {
             }
         })
     }
-
     private getCurrendRound() {
         return this.counts.filter(count => {
             return count !== undefined;

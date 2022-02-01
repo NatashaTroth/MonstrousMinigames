@@ -7,4 +7,5 @@ export interface GameTwoPlayerRank extends IPlayerRank {
     isActive: boolean;
     points: number;
     previousRank: number|null;
+    difference? : number|null;
 }
