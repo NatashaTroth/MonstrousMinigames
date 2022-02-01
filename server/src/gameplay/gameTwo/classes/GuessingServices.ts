@@ -113,7 +113,7 @@ export default class GuessingService {
         return count === this.guesses.size;
     }
     public getPlayerRanks() {
-        return [...this.playerRanks].map(([name, value]) => (value));
+        return [...this.playerRanks].map(([name, value]) => (value)).sort((a: { rank: number; }, b: { rank: number; }) => (a.rank - b.rank));
     }
 
     public calculatePlayerRanks() {
