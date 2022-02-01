@@ -7,7 +7,7 @@ import { users } from '../../mockData';
 let playerPoints: PlayerPoints;
 const points = 50;
 const players: PlayerNameId[] = users.map(user => {
-    return { id: user.id, name: user.name };
+    return { id: user.id, name: user.name, isActive: true };
 });
 
 describe('Add Points To Player', () => {
@@ -91,7 +91,7 @@ describe('Get all player points', () => {
     it('should not add points for a player that does not exist', async () => {
         const newPoints = 30;
         const fakeUserId = 'xxxxxx';
-        const playerPoints2 = new PlayerPoints([{ id: fakeUserId, name: 'James P. Not Me' }]);
+        const playerPoints2 = new PlayerPoints([{ id: fakeUserId, name: 'James P. Not Me', isActive: true }]);
         playerPoints2.addPointsToPlayer(fakeUserId, newPoints);
 
         playerPoints.addPointsToMultiplePlayers(playerPoints2.getAllPlayerPoints());

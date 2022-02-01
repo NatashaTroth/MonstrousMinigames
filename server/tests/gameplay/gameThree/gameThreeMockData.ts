@@ -8,7 +8,7 @@ import { IMessage } from '../../../src/interfaces/messages';
 import { mockPhotoUrl, users } from '../mockData';
 
 export const players: PlayerNameId[] = users.map(user => {
-    return { id: user.id, name: user.name };
+    return { id: user.id, name: user.name, isActive: true };
 });
 export const photoMessage: IMessagePhoto = {
     type: GameThreeMessageTypes.PHOTO,

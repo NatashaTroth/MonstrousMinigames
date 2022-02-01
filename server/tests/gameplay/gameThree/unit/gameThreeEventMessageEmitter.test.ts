@@ -179,7 +179,7 @@ describe('Handle function send to controller', () => {
             type: GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS,
             roomId,
             countdownTime,
-            photographers: [{ id: users[0].id, name: users[0].name }],
+            photographers: [{ id: users[0].id, name: users[0].name, isActive: true }],
         };
 
         gameThreeEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);
@@ -294,7 +294,7 @@ describe('Handle function send to screen', () => {
             type: GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS,
             roomId,
             countdownTime,
-            photographers: [{ id: users[0].id, name: users[0].name }],
+            photographers: [{ id: users[0].id, name: users[0].name, isActive: true }],
         };
 
         gameThreeEventMessageEmitter.handle(controllerNamespace, screenNamespace, room, message);

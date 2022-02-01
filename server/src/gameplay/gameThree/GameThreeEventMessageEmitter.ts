@@ -43,18 +43,6 @@ export class GameThreeEventMessageEmitter implements EventMessageEmitter {
         // let user: User;
 
         switch (message.type) {
-            // send to single user's controller
-            // case GAME_THREE_EVENT_MESSAGE__APPROACHING_SOLVABLE_OBSTACLE:
-            //     user = room.getUserById(message.userId);
-            //     if (!user) {
-            //         break;
-            //     }
-            //     controllerNameSpace.to(user.socketId).emit('message', message);
-            //     break;
-            // send to room's screens
-            // case GAME_THREE_EVENT_MESSAGE__INITIAL_GAME_STATE_INFO_UPDATE:
-            //     this.sendToAll(message, screenNameSpace, room);
-            //     break;
             // send to room's screens and controllers
             case GAME_THREE_EVENT_MESSAGE__NEW_ROUND:
             case GAME_THREE_EVENT_MESSAGE__NEW_PHOTO_TOPIC:
@@ -64,7 +52,6 @@ export class GameThreeEventMessageEmitter implements EventMessageEmitter {
             case GAME_THREE_EVENT_MESSAGE__TAKE_FINAL_PHOTOS_COUNTDOWN:
             case GAME_THREE_EVENT_MESSAGE__PRESENT_FINAL_PHOTOS:
             case GAME_THREE_EVENT_MESSAGE__VOTE_FOR_FINAL_PHOTOS:
-                // console.log('Sending to all');
                 this.sendToAll(message, screenNameSpace, room);
                 this.sendToAll(message, controllerNameSpace, room);
                 break;

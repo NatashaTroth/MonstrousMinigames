@@ -89,7 +89,7 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
         this.stageController = new StageController(
             this.roomId,
             Array.from(this.players.values()).map(player => {
-                return { id: player.id, name: player.name };
+                return { id: player.id, name: player.name, isActive: player.isActive };
             }),
             this.testNumber
         );
@@ -150,5 +150,17 @@ export default class GameThree extends Game<GameThreePlayer, GameStateInfo> impl
             return { ...playerRank, points: gamePoints.get(playerRank.id) || 0 };
         });
         GameThreeEventEmitter.emitGameHasFinishedEvent(this.roomId, GameState.Finished, playerRanksWithPoints);
+    }
+
+    disconnectPlayer(userId: string) {
+        const resp = super.disconnectPlayer(userId);
+        if (resp) this.stageController?.disconnectPlayer(userId);
+        return resp;
+    }
+
+    reconnectPlayer(userId: string) {
+        const resp = super.reconnectPlayer(userId);
+        if (resp) this.stageController?.reconnectPlayer(userId);
+        return resp;
     }
 }
