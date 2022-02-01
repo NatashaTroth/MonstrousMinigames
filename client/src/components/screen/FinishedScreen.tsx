@@ -1,29 +1,19 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { GameNames } from '../../config/games';
-import { MyAudioContext, Sound } from '../../contexts/AudioContextProvider';
-import { FirebaseContext } from '../../contexts/FirebaseContextProvider';
-import { GameContext } from '../../contexts/GameContextProvider';
-import { ScreenSocketContext } from '../../contexts/screen/ScreenSocketContextProvider';
-import { handleResetGame } from '../../domain/commonGameState/screen/handleResetGame';
-import { formatMs } from '../../utils/formatMs';
-import Button from '../common/Button';
-import { FullScreenContainer, OrangeContainerBase } from '../common/FullScreenStyles.sc';
-import { InstructionText } from '../common/Instruction.sc';
+import { GameNames } from "../../config/games";
+import { MyAudioContext, Sound } from "../../contexts/AudioContextProvider";
+import { FirebaseContext } from "../../contexts/FirebaseContextProvider";
+import { GameContext } from "../../contexts/GameContextProvider";
+import { ScreenSocketContext } from "../../contexts/screen/ScreenSocketContextProvider";
+import { handleResetGame } from "../../domain/commonGameState/screen/handleResetGame";
+import { formatMs } from "../../utils/formatMs";
+import Button from "../common/Button";
+import { FullScreenContainer, OrangeContainerBase } from "../common/FullScreenStyles.sc";
+import { InstructionText } from "../common/Instruction.sc";
 import {
-    ButtonContainer,
-    ContentContainer,
-    Header,
-    HeaderRow,
-    HeaderText,
-    Headline,
-    LeaderBoardRow,
-    RankTable,
-    StyledInstruction,
-    StyledLabel,
-    StyledTypography,
-    UnfinishedUserRow,
-} from './FinishedScreen.sc';
+    ButtonContainer, ContentContainer, Header, HeaderRow, HeaderText, Headline, LeaderBoardRow,
+    RankTable, StyledInstruction, StyledLabel, StyledTypography, UnfinishedUserRow
+} from "./FinishedScreen.sc";
 
 export const FinishedScreen: React.FunctionComponent = () => {
     const { screenAdmin, roomId, playerRanks, chosenGame } = React.useContext(GameContext);
@@ -73,11 +63,15 @@ export const FinishedScreen: React.FunctionComponent = () => {
                                     <HeaderText>Average Error</HeaderText>
                                 </Header>
                             )}
-                            {chosenGame !== GameNames.game1 && (
+                            {chosenGame === GameNames.game3 && (
                                 <Header chosenGame={chosenGame}>
-                                    <HeaderText>Points</HeaderText>
+                                    <HeaderText>Game Points</HeaderText>
                                 </Header>
                             )}
+
+                            <Header chosenGame={chosenGame}>
+                                <HeaderText>Leaderboard Points</HeaderText>
+                            </Header>
                         </HeaderRow>
                         {sortedPlayerRanks?.map((player, index) => (
                             <LeaderBoardRow key={`LeaderBoardRow${index}`}>
@@ -113,11 +107,15 @@ export const FinishedScreen: React.FunctionComponent = () => {
                                         </InstructionText>
                                     </StyledInstruction>
                                 )}
-                                {chosenGame !== GameNames.game1 && (
+                                {chosenGame === GameNames.game3 && (
                                     <StyledInstruction variant="light" chosenGame={chosenGame}>
-                                        <InstructionText>{player.votes ?? player.points}</InstructionText>
+                                        <InstructionText>{player.votes}</InstructionText>
                                     </StyledInstruction>
                                 )}
+
+                                <StyledInstruction variant="light" chosenGame={chosenGame}>
+                                    <InstructionText>{player.points}</InstructionText>
+                                </StyledInstruction>
                             </LeaderBoardRow>
                         ))}
                         {deadPlayers?.length > 0 && (

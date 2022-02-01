@@ -1,15 +1,11 @@
-import * as React from 'react';
-import styled from 'styled-components';
+import * as React from "react";
+import styled from "styled-components";
 
-import history from '../../domain/history/history';
-import Button from './Button';
+import history from "../../domain/history/history";
+import Button from "./Button";
 import {
-    BackButtonContainer,
-    ContentBase,
-    ContentContainer,
-    FullScreenContainer,
-    Headline,
-} from './FullScreenStyles.sc';
+    BackButtonContainer, ContentBase, ContentContainer, FullScreenContainer, Headline
+} from "./FullScreenStyles.sc";
 
 const Credits: React.FunctionComponent = () => (
     <FullScreenContainer>
@@ -21,7 +17,8 @@ const Credits: React.FunctionComponent = () => (
                     University of Applied Sciences Salzburg. The students Natasha Troth, Robin Fellinger, Ash
                     Spiegelmayr and Magdalena Maislinger are responsible for the technical implementation. All game
                     elements and the design for the user interface were created by MultiMediaArt student Kerstin
-                    Schaumberger. The music and sound elements were created by the MultiMediaArt artist Tobias Türk.
+                    Schaumberger. The music and sound elements were created by the MultiMediaArt artist Tobias Türk. For
+                    the game design we got support from the MultiMediaTechnology student Nicolas Vana.
                 </TextContainer>
                 <Headline>Privacy Policy</Headline>
                 Last updated: December 28, 2021

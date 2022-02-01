@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import * as React from "react";
+import { useHistory } from "react-router-dom";
 
-import { FakeInMemorySocket } from '../../domain/socket/InMemorySocketFake';
-import { Socket } from '../../domain/socket/Socket';
-import { SocketIOAdapter } from '../../domain/socket/SocketIOAdapter';
-import { Routes } from '../../utils/routes';
-import { GameContext } from '../GameContextProvider';
-import { useGame1Handler } from './useGame1Handler';
-import { useGame2Handler } from './useGame2Handler';
-import { useGame3Handler } from './useGame3Handler';
-import { useGameHandler } from './useGameHandler';
+import { FakeInMemorySocket } from "../../domain/socket/InMemorySocketFake";
+import { Socket } from "../../domain/socket/Socket";
+import { SocketIOAdapter } from "../../domain/socket/SocketIOAdapter";
+import { Routes } from "../../utils/routes";
+import { GameContext } from "../GameContextProvider";
+import { useGame1Handler } from "./useGame1Handler";
+import { useGame2Handler } from "./useGame2Handler";
+import { useGame3Handler } from "./useGame3Handler";
+import { useGameHandler } from "./useGameHandler";
 
 interface ScreenSocketContextProps {
     screenSocket: Socket | undefined;
@@ -34,7 +34,7 @@ export interface PlayerRank {
     positionX?: number;
     isActive: boolean;
     dead?: boolean;
-    points?: number;
+    points: number;
     votes?: number;
     difference?: number;
 }
