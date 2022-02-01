@@ -1,0 +1,42 @@
+/* eslint-disable simple-import-sort/imports */
+import 'jest-styled-components';
+import { act, cleanup, fireEvent, render } from '@testing-library/react';
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure } from 'enzyme';
+
+import { defaultValue, Game1Context } from '../../../contexts/game1/Game1ContextProvider';
+import Trash from '../../../domain/game1/controller/components/obstacles/Trash';
+import theme from '../../../styles/theme';
+import { ObstacleTypes } from '../../../utils/constants';
+
+configure({ adapter: new Adapter() });
+
+afterEach(cleanup);
+
+describe('Trash', () => {
+    it('when SkipButton is clicked, solveObstacle should be called', () => {
+        const setObstacle = jest.fn();
+        jest.useFakeTimers(); // mock timers
+        const obstacle = { id: 1, type: ObstacleTypes.trash };
+        const { container } = render(
+            <ThemeProvider theme={theme}>
+                <Game1Context.Provider value={{ ...defaultValue, setObstacle, obstacle }}>
+                    <Trash />
+                </Game1Context.Provider>
+            </ThemeProvider>
+        );
+
+        act(() => {
+            jest.runAllTimers(); // trigger setTimeout
+        });
+
+        const button = container.querySelector('button');
+
+        if (button) {
+            fireEvent.click(button);
+            expect(setObstacle).toHaveBeenCalledTimes(1);
+        }
+    });
+});

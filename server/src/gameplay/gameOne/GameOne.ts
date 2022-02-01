@@ -250,8 +250,6 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         player?.runForward(parseInt(`${process.env.SPEED}`, 10) || this.InitialGameParameters.SPEED);
         if (player?.playerHasPassedGoal()) {
             this.handlePlayerFinished(player);
-            console.log('*************** PASSED GOAL ********* ' + player.name);
-            console.log(player);
         }
     }
 
@@ -381,8 +379,6 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     private handlePlayerCaught(player: GameOnePlayer, currentTime: number) {
         player.handlePlayerCaught(currentTime);
         player.rank = this.rankFailedUser(player.finishedTimeMs);
-        console.log('*************** CAUGHT ********* ' + player.name);
-        console.log(player);
 
         GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.gameOnePlayersController!.getStunnablePlayers());
 
@@ -412,12 +408,11 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     // ***** game state *****
     private gameHasFinished(): boolean {
         // if (this.players.size === 1 || localDevelopment)
+        //     return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 0; //TODO - test, does game finish when only 1 player??
         return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 0; //TODO - test, does game finish when only 1 player??
-        // return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length <= 1; //TODO - test, does game finish when only 1 player??
     }
 
     private handleGameFinished(): void {
-        console.log('Game finished.....');
         // verifyGameState(this.gameState, [GameState.Started]);
         this.gameState = GameState.Finished;
         const playerRanks = this.gameOnePlayersController!.createPlayerRanks(

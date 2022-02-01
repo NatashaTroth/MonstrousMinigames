@@ -14,7 +14,7 @@ export class GameTwoRenderer {
     sheepCountText?: Phaser.GameObjects.Text;
     playerRanksText?: Phaser.GameObjects.Text;
 
-    constructor(private scene: SheepGameScene) { }
+    constructor(private scene: SheepGameScene) {}
 
     renderBrightnessOverlay(width: number, height: number) {
         this.brightnessOverlay = this.scene.add.rectangle(0, 0, width, height, 0x000000, 1);
@@ -115,6 +115,7 @@ export class GameTwoRenderer {
     }
 
     renderLeaderboard(data: PlayerRank[]) {
+        data.sort((a, b) => (a.rank < b.rank ? -1 : a.rank > b.rank ? 1 : 0));
         const ranks: string[] = [];
         data.forEach(element => {
             ranks.push(element.name);

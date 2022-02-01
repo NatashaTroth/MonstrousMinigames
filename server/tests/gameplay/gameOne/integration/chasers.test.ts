@@ -84,6 +84,7 @@ describe('Chasers', () => {
         Date.now = jest.fn(() => dateNow + 3000);
         gameOne.players.get(users[1].id)!.positionX = 0; //should be 3rd (caught second)
         advanceCountdown(gameOne, 100);
+        finishPlayer(gameOne, users[2].id); // should be 2nd (2nd fastest to finish)
 
         finishPlayer(gameOne, users[2].id); // should be 2nd (2nd fastest to finish)
 

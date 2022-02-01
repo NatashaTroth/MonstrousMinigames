@@ -5,26 +5,13 @@ import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount } from 'enzyme';
-import Carousel from 'react-multi-carousel';
 
-import ChooseCharacter, { CustomLeftArrow, CustomRightArrow } from '../../../components/controller/ChooseCharacter';
+import { CustomLeftArrow, CustomRightArrow } from '../../../components/controller/ChooseCharacter';
 import theme from '../../../styles/theme';
 
 configure({ adapter: new Adapter() });
 
 afterEach(cleanup);
-
-describe('Choose Character', () => {
-    it('renders as a carousel', () => {
-        const container = mount(
-            <ThemeProvider theme={theme}>
-                <ChooseCharacter />
-            </ThemeProvider>
-        );
-
-        expect(container.find(Carousel)).toBeTruthy();
-    });
-});
 
 describe('CustomRightArrow', () => {
     it('handed handleOnClick should be called when button gets clicked', () => {

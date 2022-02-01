@@ -47,7 +47,6 @@ export class PhaserPlayerRenderer {
             this.player.body.x = coordinates.x;
             this.player.body.y = coordinates.y;
             this.player.body.setDepth(coordinates.y + depthDictionary.game2PlayerOffset);
-            
 
             this.player.name.x = coordinates.x - this.player.name.displayWidth / 2;
             this.player.name.y = coordinates.y - this.player.body.displayHeight / 2 - 20;

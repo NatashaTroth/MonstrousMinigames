@@ -50,18 +50,4 @@ describe('MasterHeader', () => {
 
         expect(container.find(VolumeOff)).toBeTruthy();
     });
-
-    it('redirects to settings when settings icon is clicked', () => {
-        const container = mount(
-            <ThemeProvider theme={theme}>
-                <MyAudioContext.Provider value={{ ...defaultValue, isPlaying: false }}>
-                    <MasterHeader history={history} />
-                </MyAudioContext.Provider>
-            </ThemeProvider>
-        );
-
-        container.find('button').first().simulate('click');
-
-        expect(history.location).toHaveProperty('pathname', `/settings`);
-    });
 });
