@@ -52,7 +52,7 @@ function sendErrorMessage(socket: Socket, e: Error): void {
     });
 }
 
-function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room, game: string): void {
+function sendAllScreensPhaserGameLoaded(nsp: Namespace, room: Room, game: string, tempAdminId: string): void {
     let type = '';
     switch (game) {
         case GameNames.GAME1:
@@ -62,11 +62,27 @@ function sendAllScreensPhaserGameLoaded(nsps: Array<Namespace>, room: Room, game
             type = GameTwoMessageTypes.ALL_SCREENS_PHASER_GAME_LOADED;
             break;
     }
-    nsps.forEach(function (namespace: Namespace) {
-        namespace.to(room.id).emit('message', {
-            type,
+
+    room.screens
+        .filter(screen => screen.phaserGameReady)
+        .forEach(screen => {
+            let screenIsTempAdmin = false;
+            if (screen.id === tempAdminId) screenIsTempAdmin = true;
+            nsp.to(screen.id).emit('message', {
+                type,
+                screenIsTempAdmin,
+            });
+            // screen.id.emit('message', {
+            //     type,
+            //     screenIsTempAdmin,
+            // });
         });
-    });
+
+    // nsps.forEach(function (namespace: Namespace) {
+    //     namespace.to(room.id).emit('message', {
+    //         type,
+    //     });
+    // });
 }
 
 function sendScreenPhaserGameLoadedTimedOut(nsp: Namespace, socketId: string, game: string): void {
@@ -79,7 +95,7 @@ function sendScreenPhaserGameLoadedTimedOut(nsp: Namespace, socketId: string, ga
             type = GameTwoMessageTypes.PHASER_LOADING_TIMED_OUT;
             break;
     }
-    //TODO
+
     nsp.to(socketId).emit('message', {
         type,
     });

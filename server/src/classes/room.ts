@@ -4,17 +4,16 @@ import {
     GameAlreadyStartedError,
     UsersNotReadyError,
 } from '../customErrors';
-import { GameOne, GameTwo } from '../gameplay';
 import { GameNames } from '../enums/gameNames';
 import { Globals } from '../enums/globals';
 import { ScreenStates } from '../enums/screenStates';
-import Game from '../gameplay/Game';
+import { GameOne, GameTwo } from '../gameplay';
 import { MaxNumberUsersExceededError } from '../gameplay/customErrors';
 import { Difficulty } from '../gameplay/enums';
-import { ScreenInfo } from '../interfaces/interfaces';
+import Game from '../gameplay/Game';
 import GameThree from '../gameplay/gameThree/GameThree';
 import Leaderboard from '../gameplay/leaderboard/Leaderboard';
-
+import { ScreenInfo } from '../interfaces/interfaces';
 import User from './user';
 
 class Room {
@@ -158,8 +157,7 @@ class Room {
 
     public allPhaserGamesReady() {
         return this.screens.every(screen => {
-            if (screen.phaserGameReady) return true;
-            return false;
+            return screen.phaserGameReady;
         });
     }
 
@@ -174,6 +172,10 @@ class Room {
 
     public getScreensPhaserNotReady(): ScreenInfo[] {
         return this.screens.filter(screen => screen.phaserGameReady === false);
+    }
+
+    public getNextReadyAdminScreen(): ScreenInfo | undefined {
+        return this.screens.find(screen => screen.phaserGameReady === true);
     }
 
     public startGame() {
