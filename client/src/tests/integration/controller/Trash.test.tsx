@@ -1,15 +1,15 @@
 /* eslint-disable simple-import-sort/imports */
-import "jest-styled-components";
-import { act, cleanup, fireEvent, render } from "@testing-library/react";
-import React from "react";
-import { ThemeProvider } from "styled-components";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure } from "enzyme";
+import 'jest-styled-components';
+import { act, cleanup, fireEvent, render } from '@testing-library/react';
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure } from 'enzyme';
 
-import { defaultValue, Game1Context } from "../../../contexts/game1/Game1ContextProvider";
-import Trash from "../../../domain/game1/controller/components/obstacles/Trash";
-import theme from "../../../styles/theme";
-import { ObstacleTypes } from "../../../utils/constants";
+import { defaultValue, Game1Context } from '../../../contexts/game1/Game1ContextProvider';
+import Trash from '../../../domain/game1/controller/components/obstacles/Trash';
+import theme from '../../../styles/theme';
+import { ObstacleTypes } from '../../../utils/constants';
 
 configure({ adapter: new Adapter() });
 

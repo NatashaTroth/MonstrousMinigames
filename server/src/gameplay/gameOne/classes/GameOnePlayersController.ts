@@ -93,6 +93,7 @@ class GameOnePlayersController {
         currentTime: number
     ): Array<PlayerRank> {
         this.rankUnrankedPlayers(rankSuccessfulUser, rankFailedUser, gameOneArg, currentTime);
+
         return Array.from(this.players.values()).map(player => {
             return {
                 id: player.id,
@@ -118,15 +119,17 @@ class GameOnePlayersController {
         currentTime: number
     ) {
         this.players.forEach(player => {
-            if (!player.isActive && !player.finished) {
-                player.handlePlayerCaught(currentTime);
-                player.rank = rankFailedUser.call(gameOneArg, player.finishedTimeMs);
-            } else if (!player.finished) {
-                player.handlePlayerFinishedGame(
-                    currentTime,
-                    rankSuccessfulUser.call(gameOneArg, player.finishedTimeMs)
-                );
-                player.finished = true;
+            if (player.rank === 0) {
+                if (player.dead) {
+                    player.handlePlayerCaught(currentTime);
+                    player.rank = rankFailedUser.call(gameOneArg, player.finishedTimeMs);
+                } else {
+                    player.handlePlayerFinishedGame(
+                        currentTime,
+                        rankSuccessfulUser.call(gameOneArg, player.finishedTimeMs)
+                    );
+                    player.finished = true;
+                }
             }
         });
     }

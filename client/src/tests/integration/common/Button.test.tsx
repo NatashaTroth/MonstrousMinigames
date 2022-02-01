@@ -1,13 +1,13 @@
 /* eslint-disable simple-import-sort/imports */
-import "jest-styled-components";
-import { cleanup, fireEvent, render } from "@testing-library/react";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure } from "enzyme";
-import React from "react";
-import { ThemeProvider } from "styled-components";
+import 'jest-styled-components';
+import { cleanup, fireEvent, render } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure } from 'enzyme';
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
 
-import Button from "../../../components/common/Button";
-import theme from "../../../styles/theme";
+import Button from '../../../components/common/Button';
+import theme from '../../../styles/theme';
 
 configure({ adapter: new Adapter() });
 

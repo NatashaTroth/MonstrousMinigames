@@ -10,6 +10,7 @@ import GameThree from '../../../../src/gameplay/gameThree/GameThree';
 import {
     GLOBAL_EVENT_MESSAGE__GAME_HAS_FINISHED, GlobalEventMessage, GlobalGameHasFinished
 } from '../../../../src/gameplay/interfaces/GlobalEventMessages';
+import RankPoints from '../../../../src/gameplay/leaderboard/classes/RankPoints';
 import { dateNow, leaderboard, roomId, users } from '../../mockData';
 import {
     addPointsToPlayer, advanceCountdown, startGameAdvanceCountdown, startNewRound,
@@ -76,7 +77,7 @@ describe('Final results', () => {
             playerRanks: [],
         },
     };
-    let pointsArray: number[] = [];
+    let votesArray: number[] = [];
 
     beforeEach(() => {
         Date.now = () => dateNow;
@@ -96,9 +97,9 @@ describe('Final results', () => {
             InitialParameters.COUNTDOWN_TIME_TAKE_MULTIPLE_PHOTOS + InitialParameters.RECEIVE_PHOTOS_BUFFER_TIME
         );
         users.forEach(() => advanceCountdown(gameThree, InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS));
-        // add points
+        // add votes
 
-        pointsArray = addPointsToPlayer(gameThree, users);
+        votesArray = addPointsToPlayer(gameThree, users);
 
         // get final results
         gameEventEmitter.on(GameEventEmitter.EVENT_MESSAGE_EVENT, (message: GlobalEventMessage) => {
@@ -114,24 +115,29 @@ describe('Final results', () => {
         jest.clearAllMocks();
     });
 
-    it('should emit the points sorted in descending order', async () => {
-        expect(eventData.data.playerRanks.map(result => result.votes)).toStrictEqual(pointsArray.sort((a, b) => b - a));
+    it('should emit the votes sorted in descending order', async () => {
+        expect(eventData.data.playerRanks.map(result => result.votes)).toStrictEqual(votesArray.sort((a, b) => b - a));
     });
 
-    it('should emit the points sorted in descending order (0 and 1st place)', async () => {
+    it('should emit the votes sorted in descending order (0 and 1st place)', async () => {
         expect(eventData.data.playerRanks[0].votes).toBeGreaterThanOrEqual(eventData.data.playerRanks[1].votes);
     });
 
-    it('should emit the points sorted in descending order (1st and 2nd place)', async () => {
+    it('should emit the votes sorted in descending order (1st and 2nd place)', async () => {
         expect(eventData.data.playerRanks[1].votes).toBeGreaterThanOrEqual(eventData.data.playerRanks[2].votes);
     });
 
-    it('should emit the points sorted in descending order (2nd and 3rd place)', async () => {
+    it('should emit the votes sorted in descending order (2nd and 3rd place)', async () => {
         expect(eventData.data.playerRanks[2].votes).toBeGreaterThanOrEqual(eventData.data.playerRanks[3].votes);
     });
 
-    it('should emit the points sorted in descending order (2nd and 3rd place)', async () => {
+    it('should emit the votes sorted in descending order (2nd and 3rd place)', async () => {
         expect(eventData.data.playerRanks[2].votes).toBeGreaterThanOrEqual(eventData.data.playerRanks[3].votes);
+    });
+
+    it('should emit the points sorted in descending order', async () => {
+        const pointsArray = eventData.data.playerRanks.map(result => result.points);
+        expect(pointsArray).toStrictEqual(pointsArray.sort((a, b) => b - a));
     });
 
     it('should emit the rank 1', async () => {
@@ -148,5 +154,21 @@ describe('Final results', () => {
 
     it('should emit the rank 4', async () => {
         expect(eventData.data.playerRanks[3].rank).toBe(4);
+    });
+
+    it('should emit the points for rank 1', async () => {
+        expect(eventData.data.playerRanks[0].points).toBe(RankPoints.getPointsFromRank(1));
+    });
+
+    it('should emit the points for rank 2', async () => {
+        expect(eventData.data.playerRanks[1].points).toBe(RankPoints.getPointsFromRank(2));
+    });
+
+    it('should emit the points for rank 3', async () => {
+        expect(eventData.data.playerRanks[2].points).toBe(RankPoints.getPointsFromRank(3));
+    });
+
+    it('should emit the points for rank 4', async () => {
+        expect(eventData.data.playerRanks[3].points).toBe(RankPoints.getPointsFromRank(4));
     });
 });

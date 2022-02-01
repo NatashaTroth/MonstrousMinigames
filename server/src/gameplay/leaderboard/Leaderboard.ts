@@ -40,15 +40,17 @@ export default class Leaderboard extends EventEmitter {
         const currentGamePoints = new Map<string, number>();
         this.gameHistory.push({
             game,
-            playerRanks: playerRanks.map(playerRank => {
-                let points = 0;
+            playerRanks: playerRanks
+                .map(playerRank => {
+                    let points = 0;
 
-                if (playerRank.finished) {
-                    points = RankPoints.getPointsFromRank(playerRank.rank);
-                    currentGamePoints.set(playerRank.id, points);
-                }
-                return { ...playerRank, points };
-            }),
+                    if (playerRank.finished) {
+                        points = RankPoints.getPointsFromRank(playerRank.rank);
+                        currentGamePoints.set(playerRank.id, points);
+                    }
+                    return { ...playerRank, points };
+                })
+                .sort((a, b) => a.rank - b.rank),
         });
         this.updateUserPointsAfterGame(playerRanks);
         this.sendUpdatedLeaderboardState();
@@ -80,7 +82,7 @@ export default class Leaderboard extends EventEmitter {
     }
 
     private getUserPointsArray(): UserPoints[] {
-        let userPointsArray: UserPoints[] = [];
+        const userPointsArray: UserPoints[] = [];
         this.userPoints.forEach(userPoint => {
             if (userPoint.playedGame) userPointsArray.push(userPoint);
         });
@@ -89,9 +91,20 @@ export default class Leaderboard extends EventEmitter {
         userPointsArray.sort((a, b) => {
             return b.points - a.points;
         });
-        userPointsArray = userPointsArray.map((userPoints, idx) => {
-            return { ...userPoints, rank: idx + 1 };
-        });
+
+        let rank = 1;
+        for (let i = 0; i < userPointsArray.length; i++) {
+            if (i === 0) userPointsArray[i].rank = rank;
+            else if (userPointsArray[i].points === userPointsArray[i - 1].points) {
+                userPointsArray[i].rank = rank;
+            } else {
+                userPointsArray[i].rank = ++rank;
+            }
+        }
+
+        // userPointsArray = userPointsArray.map((userPoints, idx) => {
+        //     return { ...userPoints, rank: idx + 1 };
+        // });
         return [...userPointsArray];
     }
 

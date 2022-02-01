@@ -1,10 +1,10 @@
-import { queryByText, render } from "@testing-library/react";
-import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import { ThemeProvider } from "styled-components";
+import { queryByText, render } from '@testing-library/react';
+import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
 
-import Credits from "../../../components/common/Credits";
-import theme from "../../../styles/theme";
+import Credits from '../../../components/common/Credits';
+import theme from '../../../styles/theme';
 
 describe('Credits', () => {
     it('renders back button', () => {

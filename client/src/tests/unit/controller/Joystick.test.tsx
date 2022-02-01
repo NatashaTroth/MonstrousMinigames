@@ -1,14 +1,14 @@
 // eslint-disable-next-line simple-import-sort/imports
-import "jest-styled-components";
-import { cleanup, queryByText, render } from "@testing-library/react";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure, mount } from "enzyme";
-import { ThemeProvider } from "styled-components";
-import React from "react";
+import 'jest-styled-components';
+import { cleanup, queryByText, render } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure, mount } from 'enzyme';
+import { ThemeProvider } from 'styled-components';
+import React from 'react';
 
-import JoyStick from "../../../domain/game2/controller/components/Joystick";
-import theme from "../../../styles/theme";
-import { LocalStorageFake } from "../../integration/storage/LocalFakeStorage";
+import JoyStick from '../../../domain/game2/controller/components/Joystick';
+import theme from '../../../styles/theme';
+import { LocalStorageFake } from '../../integration/storage/LocalFakeStorage';
 
 configure({ adapter: new Adapter() });
 

@@ -1,4 +1,7 @@
-import { localDevelopment, pushChasers, showErrors } from '../../../constants';
+import {
+    localDevelopment, monstersRunDifferentPace, pushChasers, showErrors
+} from '../../../constants';
+import { runForwardMessage } from '../../../tests/gameplay/gameOne/gameOneMockData';
 import User from '../../classes/user';
 import { GameNames } from '../../enums/gameNames';
 import { IMessage } from '../../interfaces/messages';
@@ -243,6 +246,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
     // ***** player *****
     private movePlayer(message: IMessage) {
         const player = this.getValidPlayer(message.userId!);
+        if (player?.playerIsNotAllowedToRun()) return;
         player?.runForward(parseInt(`${process.env.SPEED}`, 10) || this.InitialGameParameters.SPEED);
         if (player?.playerHasPassedGoal()) {
             this.handlePlayerFinished(player);
@@ -467,11 +471,19 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
 
     private updateLocalDev() {
         for (const player of this.gameOnePlayersController!.getPlayerValues()) {
+            const mulitplier = monstersRunDifferentPace ? player.characterNumber : 2;
             if (player.positionX < this.trackLength) {
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < 1 * mulitplier; i++) {
                     // to test speed limit
-                    player.runForward(parseInt(`${process.env.SPEED}`, 10) || this.InitialGameParameters.SPEED);
-                    // if (player.playerHasPassedGoal()) this.playerHasFinishedGame(); //TODO!!
+                    this.movePlayer({ ...runForwardMessage, userId: player.id });
+                    // player.runForward(
+                    //     parseInt(`${process.env.SPEED}`, 10) || this.InitialGameParameters.SPEED * mulitplier
+                    // );
+                    // if (player.playerHasPassedGoal()) {
+                    //     this.handlePlayerFinished(player);
+                    //     console.log('*************** PASSED GOAL ********* ' + player.name);
+                    //     console.log(player);
+                    // }
 
                     // this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
                 }

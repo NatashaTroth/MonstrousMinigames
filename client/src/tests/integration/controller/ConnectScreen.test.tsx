@@ -1,17 +1,15 @@
 // eslint-disable-next-line simple-import-sort/imports
-import "jest-styled-components";
-import { cleanup } from "@testing-library/react";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure, mount } from "enzyme";
-import { ThemeProvider } from "styled-components";
-import { createMemoryHistory } from "history";
-import React from "react";
+import 'jest-styled-components';
+import { cleanup } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure, mount } from 'enzyme';
+import { ThemeProvider } from 'styled-components';
+import { createMemoryHistory } from 'history';
+import React from 'react';
 
-import { ConnectScreen, IFrameContent } from "../../../components/controller/ConnectScreen";
-import {
-    ControllerSocketContext, defaultValue
-} from "../../../contexts/controller/ControllerSocketContextProvider";
-import theme from "../../../styles/theme";
+import { ConnectScreen, IFrameContent } from '../../../components/controller/ConnectScreen';
+import { ControllerSocketContext, defaultValue } from '../../../contexts/controller/ControllerSocketContextProvider';
+import theme from '../../../styles/theme';
 
 configure({ adapter: new Adapter() });
 

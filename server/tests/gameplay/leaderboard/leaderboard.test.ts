@@ -99,6 +99,7 @@ describe('Add Game to Game History', () => {
             leaderboard.addUser(user.id, user.name);
         });
         playerRanks = createPlayerRanksArray(users, [1, 2, 3, 4]);
+        playerRanks.sort((a, b) => a.rank - b.rank);
     });
 
     it('adds the gameType the history object', async () => {
@@ -275,6 +276,7 @@ describe('Get Leaderboard Info', () => {
         });
         leaderboard.addGameToHistory(GameType.GameOne, playerRanks);
         leaderboardInfo = leaderboard.getLeaderboardInfo();
+        playerRanks.sort((a, b) => a.rank - b.rank);
     });
 
     it('Returns the room id', async () => {
@@ -284,6 +286,12 @@ describe('Get Leaderboard Info', () => {
     it('Returns the game history', async () => {
         expect(leaderboardInfo.gameHistory[0].game).toBe(GameType.GameOne);
         expect(leaderboardInfo.gameHistory[0].playerRanks).toMatchObject(playerRanks);
+    });
+
+    it('Returns the game history player ranks sorted by rank', async () => {
+        const playerRanks = leaderboardInfo.gameHistory[0].playerRanks.map(playerRank => playerRank.rank);
+
+        expect(playerRanks).toMatchObject(playerRanks.sort((a, b) => a - b));
     });
 
     it('Returns the userPointsArray (sorted by points)', async () => {

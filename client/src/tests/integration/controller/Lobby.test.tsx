@@ -1,21 +1,19 @@
 /* eslint-disable simple-import-sort/imports */
-import "jest-styled-components";
-import { cleanup } from "@testing-library/react";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure, mount } from "enzyme";
-import React from "react";
-import { ThemeProvider } from "styled-components";
+import 'jest-styled-components';
+import { cleanup } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure, mount } from 'enzyme';
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
 
-import { Lobby } from "../../../components/controller/Lobby";
-import { ReadyButton } from "../../../components/controller/Lobby.sc";
-import { GameNames } from "../../../config/games";
-import {
-    defaultValue as defaultGameValue, GameContext
-} from "../../../contexts/GameContextProvider";
-import { defaultValue, PlayerContext } from "../../../contexts/PlayerContextProvider";
-import history from "../../../domain/history/history";
-import theme from "../../../styles/theme";
-import { controllerChooseCharacterRoute } from "../../../utils/routes";
+import { Lobby } from '../../../components/controller/Lobby';
+import { ReadyButton } from '../../../components/controller/Lobby.sc';
+import { GameNames } from '../../../config/games';
+import { defaultValue as defaultGameValue, GameContext } from '../../../contexts/GameContextProvider';
+import { defaultValue, PlayerContext } from '../../../contexts/PlayerContextProvider';
+import history from '../../../domain/history/history';
+import theme from '../../../styles/theme';
+import { controllerChooseCharacterRoute } from '../../../utils/routes';
 
 configure({ adapter: new Adapter() });
 

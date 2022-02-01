@@ -86,6 +86,8 @@ describe('Chasers', () => {
         advanceCountdown(gameOne, 100);
         finishPlayer(gameOne, users[2].id); // should be 2nd (2nd fastest to finish)
 
+        finishPlayer(gameOne, users[2].id); // should be 2nd (2nd fastest to finish)
+
         expect(gameOne.players.get(users[0].id)!.rank).toBe(4);
         expect(gameOne.players.get(users[1].id)!.rank).toBe(3);
         expect(gameOne.players.get(users[2].id)!.rank).toBe(2);

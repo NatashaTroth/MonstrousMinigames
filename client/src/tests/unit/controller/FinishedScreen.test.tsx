@@ -1,15 +1,15 @@
-import { cleanup, queryByText, render } from "@testing-library/react";
-import React from "react";
-import { ThemeProvider } from "styled-components";
+import { cleanup, queryByText, render } from '@testing-library/react';
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
 
-import { FinishedScreen } from "../../../components/controller/FinishedScreen";
+import { FinishedScreen } from '../../../components/controller/FinishedScreen';
 import {
-    ControllerSocketContext, defaultValue as controllerDefaultValue
-} from "../../../contexts/controller/ControllerSocketContextProvider";
-import { defaultValue, PlayerContext } from "../../../contexts/PlayerContextProvider";
-import history from "../../../domain/history/history";
-import { FakeInMemorySocket } from "../../../domain/socket/InMemorySocketFake";
-import theme from "../../../styles/theme";
+    ControllerSocketContext,
+    defaultValue as controllerDefaultValue,
+} from '../../../contexts/controller/ControllerSocketContextProvider';
+import { defaultValue, PlayerContext } from '../../../contexts/PlayerContextProvider';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
+import theme from '../../../styles/theme';
 
 afterEach(cleanup);
 

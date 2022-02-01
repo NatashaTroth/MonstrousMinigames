@@ -1,19 +1,17 @@
 // eslint-disable-next-line simple-import-sort/imports
-import "jest-styled-components";
-import { cleanup, queryByText, render } from "@testing-library/react";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { configure, mount } from "enzyme";
-import { ThemeProvider } from "styled-components";
-import React from "react";
+import 'jest-styled-components';
+import { cleanup, queryByText, render } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { configure, mount } from 'enzyme';
+import { ThemeProvider } from 'styled-components';
+import React from 'react';
 
-import {
-    ControllerSocketContext, defaultValue
-} from "../../../contexts/controller/ControllerSocketContextProvider";
-import JoyStick from "../../../domain/game2/controller/components/Joystick";
-import { FakeInMemorySocket } from "../../../domain/socket/InMemorySocketFake";
-import theme from "../../../styles/theme";
-import { MessageTypesGame2 } from "../../../utils/constants";
-import { LocalStorageFake } from "../../integration/storage/LocalFakeStorage";
+import { ControllerSocketContext, defaultValue } from '../../../contexts/controller/ControllerSocketContextProvider';
+import JoyStick from '../../../domain/game2/controller/components/Joystick';
+import { FakeInMemorySocket } from '../../../domain/socket/InMemorySocketFake';
+import theme from '../../../styles/theme';
+import { MessageTypesGame2 } from '../../../utils/constants';
+import { LocalStorageFake } from '../../integration/storage/LocalFakeStorage';
 
 configure({ adapter: new Adapter() });
 
