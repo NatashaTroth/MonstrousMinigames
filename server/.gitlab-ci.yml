@@ -84,9 +84,9 @@ test-integration:server:
         - cd server/
         - dpl --provider=heroku --app=$HEROKU_APP --api-key=$HEROKU_API_KEY --skip-cleanup
 
-staging:server:
+staging-server:server:
     <<: *deployment_configuration
-    stage: staging
+    stage: staging-server
     environment:
         name: staging-server
         url: https://monstrous-minigames-staging.herokuapp.com/

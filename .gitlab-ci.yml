@@ -2,12 +2,12 @@ image: node:15
 stages:
   - npm
   - lint
-  - test-e2e-staging
   - test-unit
   - test-integration
-  - staging
+  - staging-server
+  - test-e2e
+  - staging-client
   - production
-  - test-e2e-production
 
 include:
   - local: "/server/.gitlab-ci.yml"
