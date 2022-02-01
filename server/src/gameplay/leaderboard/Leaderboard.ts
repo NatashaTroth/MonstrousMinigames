@@ -82,7 +82,7 @@ export default class Leaderboard extends EventEmitter {
     }
 
     private getUserPointsArray(): UserPoints[] {
-        let userPointsArray: UserPoints[] = [];
+        const userPointsArray: UserPoints[] = [];
         this.userPoints.forEach(userPoint => {
             if (userPoint.playedGame) userPointsArray.push(userPoint);
         });
