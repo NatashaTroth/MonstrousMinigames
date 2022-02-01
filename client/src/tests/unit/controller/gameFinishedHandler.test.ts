@@ -28,6 +28,7 @@ describe('gameFinishedHandler', () => {
             positionX: 0,
             isActive: true,
             dead: false,
+            points: 3,
         },
     ];
     const message: GameHasFinishedMessage = {

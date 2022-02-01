@@ -14,7 +14,10 @@ afterEach(cleanup);
 describe('Leaderboard', () => {
     const state: LeaderboardState = {
         gameHistory: [
-            { game: GameType.GameOne, playerRanks: [{ id: '1', name: 'Mock', finished: true, isActive: true }] },
+            {
+                game: GameType.GameOne,
+                playerRanks: [{ id: '1', name: 'Mock', finished: true, isActive: true, points: 3 }],
+            },
         ],
         userPoints: [{ userId: '1', name: 'Mock', points: 5, rank: 1 }],
     };
