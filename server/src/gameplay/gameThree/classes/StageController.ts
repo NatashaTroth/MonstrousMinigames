@@ -26,7 +26,6 @@ export class StageController {
 
     private initStageEventEmitter() {
         this.stageEventEmitter.on(StageEventEmitter.STAGE_CHANGE_EVENT, message => {
-            // console.log('NEW STAGE');
             this.playerPoints.addPointsToMultiplePlayers(this.stage?.updatePlayerPoints());
             this.stage = this.stage?.switchToNextStage();
             if (!this.stage) {
@@ -56,12 +55,21 @@ export class StageController {
     }
 
     handleInput(message: IMessage) {
-        // console.log(message);
         this.stage!.handleInput(message);
     }
 
     getPlayerPoints(): Map<string, number> {
         return this.playerPoints.getAllPlayerPoints();
+    }
+
+    disconnectPlayer(userId: string) {
+        const player = this.players.find(player => player.id === userId);
+        if (player) player.isActive = false;
+    }
+
+    reconnectPlayer(userId: string) {
+        const player = this.players.find(player => player.id === userId);
+        if (player) player.isActive = true;
     }
 
     public get currentStage(): Stage | null | undefined {

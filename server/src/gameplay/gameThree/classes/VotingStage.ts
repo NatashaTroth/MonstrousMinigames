@@ -37,7 +37,7 @@ export abstract class VotingStage extends Stage {
     }
 
     getVoters(): string[] {
-        return this.players.map(player => player.id);
+        return this.players.filter(player => player.isActive).map(player => player.id);
     }
     // abstract getVoters(): string[];
     abstract switchToNextStage(): Stage | null;
@@ -53,7 +53,6 @@ export abstract class VotingStage extends Stage {
 
     private setPointPerReceivedVote() {
         this.votes.getAllVotes().forEach(votesPerPlayer => {
-            // console.log('Allowed vote ', this.photographerIsAllowedPoint(votesPerPlayer.photographerId));
             if (this.photographerIsAllowedPoint(votesPerPlayer.photographerId))
                 this.playerPoints.addPointsToPlayer(
                     votesPerPlayer.photographerId,

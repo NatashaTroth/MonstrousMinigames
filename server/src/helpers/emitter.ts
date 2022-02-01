@@ -142,17 +142,6 @@ function sendLeaderboardState(nsp: Namespace | Socket, leaderboardState: Leaderb
     });
 }
 
-// function sendPlayerExceededMaxNumberChaserPushes(
-//     nsp: Namespace,
-//     user: User,
-//     data: GameEvents.PlayerHasExceededMaxNumberChaserPushes
-// ): void {
-//     console.log('SEENDING YEES');
-//     nsp.to(user.socketId).emit('message', {
-//         type: GameOneMsgType.PLAYER_HAS_EXCEEDED_MAX_NUMBER_CHASER_PUSHES,
-//     });
-// }
-
 export default {
     sendUserInit,
     sendGameState,

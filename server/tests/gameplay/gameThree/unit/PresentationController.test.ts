@@ -11,7 +11,7 @@ jest.mock('../../../../src/gameplay/gameThree/classes/StageController');
 
 let presentationController: PresentationController;
 const players: PlayerNameId[] = users.map(user => {
-    return { id: user.id, name: user.name };
+    return { id: user.id, name: user.name, isActive: true };
 });
 
 // const playerIds = users.map(user => user.id)

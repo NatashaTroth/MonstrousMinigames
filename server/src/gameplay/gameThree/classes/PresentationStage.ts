@@ -13,7 +13,10 @@ export class PresentationStage extends Stage {
     constructor(roomId: string, players: PlayerNameId[], private photoUrls: string[]) {
         super(roomId, players, InitialParameters.COUNTDOWN_TIME_PRESENT_PHOTOS);
 
-        this.presentationController = new PresentationController(players, photoUrls);
+        this.presentationController = new PresentationController(
+            players.filter(player => player.isActive),
+            photoUrls
+        );
         this.handleNewPresentationRound();
     }
 

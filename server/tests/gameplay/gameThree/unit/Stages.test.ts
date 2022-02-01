@@ -10,7 +10,7 @@ import { PlayerNameId } from '../../../../src/gameplay/gameThree/interfaces';
 import { roomId, users } from '../../mockData';
 
 const players: PlayerNameId[] = users.map(user => {
-    return { id: user.id, name: user.name };
+    return { id: user.id, name: user.name, isActive: true };
 });
 
 describe('Stages without next stage', () => {
