@@ -3,6 +3,7 @@ import { MessageDataGame2 } from '../MessageDataGame2';
 
 export interface AllScreensSheepGameLoadedMessage {
     type: MessageTypesGame2.allScreensSheepGameLoaded;
+    screenIsTempAdmin: boolean;
 }
 
 export const allScreensSheepGameLoadedTypeGuard = (data: MessageDataGame2): data is AllScreensSheepGameLoadedMessage =>

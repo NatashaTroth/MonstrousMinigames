@@ -11,7 +11,7 @@ interface Dependencies {
 export const allScreensPhaserGameLoadedHandler = messageHandler(
     allScreensPhaserGameLoadedTypeGuard,
     (message, dependencies: Dependencies) => {
-        if (dependencies.screenAdmin) {
+        if (dependencies.screenAdmin || message.screenIsTempAdmin) {
             dependencies.sendCreateNewGame();
         }
     }

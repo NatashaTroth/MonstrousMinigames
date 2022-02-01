@@ -6,6 +6,7 @@ import { MessageTypesGame1 } from '../../../utils/constants';
 describe('allScreensPhaserGameLoadedHandler Game1', () => {
     const message: AllScreensPhaserGameLoadedMessage = {
         type: MessageTypesGame1.allScreensPhaserGameLoaded,
+        screenIsTempAdmin: true,
     };
 
     it('when message type is allScreensPhaserGameLoaded, sendCreateNewGame should be called', async () => {
