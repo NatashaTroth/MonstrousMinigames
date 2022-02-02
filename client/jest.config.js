@@ -1,8 +1,5 @@
 /* eslint-disable no-undef */
 module.exports = {
-    globals: {
-      baseURL: "http://localhost:3000"
-    },
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
     testPathIgnorePatterns: ['lib/', 'node_modules/', 'src/config', 'src/e2e'],
