@@ -186,7 +186,7 @@ class SheepGameScene extends Phaser.Scene {
 
         const allScreensSheepGameLoaded = new MessageSocket(allScreensSheepGameLoadedTypeGuard, this.socket);
         allScreensSheepGameLoaded.listen((data: AllScreensSheepGameLoadedMessage) => {
-            if (this.screenAdmin) this.sendCreateNewGame();
+            if (this.screenAdmin || data.screenIsTempAdmin) this.sendCreateNewGame();
         });
 
         const phaserLoadedTimedOut = new MessageSocket(phaserLoadingTimedOutTypeGuard, this.socket);
@@ -349,7 +349,6 @@ class SheepGameScene extends Phaser.Scene {
     }
 
     updatePlayerRanks(data: PlayerRanksMessage) {
-        console.log(data.playerRanks);
         this.playerRanks = data.playerRanks;
         this.gameTwoRenderer?.renderLeaderboard(this.playerRanks);
         this.controllerSocket?.emit({
