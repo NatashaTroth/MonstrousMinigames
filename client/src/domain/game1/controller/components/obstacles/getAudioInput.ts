@@ -61,13 +61,13 @@ export async function getAudioInput(
 }
 
 function handleInput(analyser: AnalyserNode, dependencies: { setProgress: (val: number) => void }) {
-    const array = new Uint8Array(analyser.frequencyBinCount);
-    analyser.getByteFrequencyData(array);
+    const frequencyArray = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(frequencyArray);
     let values = 0;
 
-    const length = array.length;
+    const length = frequencyArray.length;
     for (let i = 0; i < length; i++) {
-        values += array[i];
+        values += frequencyArray[i];
     }
 
     const average = values / length;
