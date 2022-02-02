@@ -79,8 +79,8 @@ test-e2e:client:
         - echo "End to End testing.."
         - npm run test:e2e
     only:
-        refs:
-            - dev
+        # refs:
+        #     - dev
         changes:
             - client/**/*
 
