@@ -186,7 +186,7 @@ class SheepGameScene extends Phaser.Scene {
 
         const allScreensSheepGameLoaded = new MessageSocket(allScreensSheepGameLoadedTypeGuard, this.socket);
         allScreensSheepGameLoaded.listen((data: AllScreensSheepGameLoadedMessage) => {
-            if (this.screenAdmin || data.screenIsTempAdmin) this.sendCreateNewGame();
+            if (this.screenAdmin) this.sendCreateNewGame();
         });
 
         const phaserLoadedTimedOut = new MessageSocket(phaserLoadingTimedOutTypeGuard, this.socket);

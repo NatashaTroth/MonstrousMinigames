@@ -66,16 +66,9 @@ function sendAllScreensPhaserGameLoaded(nsp: Namespace, room: Room, game: string
     room.screens
         .filter(screen => screen.phaserGameReady)
         .forEach(screen => {
-            let screenIsTempAdmin = false;
-            if (screen.id === tempAdminId) screenIsTempAdmin = true;
             nsp.to(screen.id).emit('message', {
                 type,
-                screenIsTempAdmin,
             });
-            // screen.id.emit('message', {
-            //     type,
-            //     screenIsTempAdmin,
-            // });
         });
 
     // nsps.forEach(function (namespace: Namespace) {
