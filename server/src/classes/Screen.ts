@@ -57,15 +57,15 @@ class Screen {
             this.room!.sentAllScreensLoaded = true;
             if (this.room?.allScreensLoadedTimeout) clearTimeout(this.room.allScreensLoadedTimeout);
 
-            let tempAdmin = ''; // if admin screen timedOut
+            const tempAdmin = ''; // if admin screen timedOut
             if (timedOut) {
                 const notReadyScreens = this.room!.getScreensPhaserNotReady();
-                if (notReadyScreens.find(screen => this.room?.isAdminScreen(screen.id))) {
-                    const nextScreen = this.room?.getNextReadyAdminScreen();
-                    if (nextScreen) {
-                        tempAdmin = nextScreen.id;
-                    }
-                }
+                // if (notReadyScreens.find(screen => this.room?.isAdminScreen(screen.id))) {
+                //     const nextScreen = this.room?.getNextReadyAdminScreen();
+                //     if (nextScreen) {
+                //         tempAdmin = nextScreen.id;
+                //     }
+                // }
                 notReadyScreens.forEach(screen => {
                     this.emitter.sendScreenPhaserGameLoadedTimedOut(this.screenNamespace, screen.id, game); //TODO natasha
                 });

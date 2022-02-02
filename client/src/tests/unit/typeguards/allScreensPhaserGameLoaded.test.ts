@@ -8,7 +8,6 @@ describe('allScreensPhaserGameLoaded TypeGuard', () => {
     it('when type is started, it should return true', () => {
         const data: AllScreensPhaserGameLoadedMessage = {
             type: MessageTypesGame1.allScreensPhaserGameLoaded,
-            screenIsTempAdmin: true,
         };
 
         expect(allScreensPhaserGameLoadedTypeGuard(data)).toEqual(true);

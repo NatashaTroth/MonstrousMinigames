@@ -6,7 +6,6 @@ import { MessageTypesGame1 } from '../../../utils/constants';
 describe('allScreensPhaserGameLoadedHandler Game1', () => {
     const message: AllScreensPhaserGameLoadedMessage = {
         type: MessageTypesGame1.allScreensPhaserGameLoaded,
-        screenIsTempAdmin: true,
     };
 
     it('when message type is allScreensPhaserGameLoaded, sendCreateNewGame should be called', async () => {
@@ -21,7 +20,7 @@ describe('allScreensPhaserGameLoadedHandler Game1', () => {
         expect(sendCreateNewGame).toHaveBeenCalledTimes(1);
     });
 
-    it('when message type is allScreensPhaserGameLoaded,when screen is not admin, sendCreateNewGame should not be called', async () => {
+    it('when message type is allScreensPhaserGameLoaded, when screen is not admin, sendCreateNewGame should not be called', async () => {
         const socket = new FakeInMemorySocket();
         const sendCreateNewGame = jest.fn();
 
