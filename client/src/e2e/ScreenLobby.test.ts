@@ -60,56 +60,6 @@ test.describe('ScreenLobby', () => {
         await expect(roomCode).toHaveText(roomId);
     });
 
-    test('When joining with controller, username should be rendered at lobby', async ({ baseURL }) => {
-        const browser = await chromium.launch({
-            args: ['--disable-dev-shm-usage', '--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream'],
-        });
-
-        const screenBrowser = await browser.newContext({ baseURL });
-        const screenPage = await screenBrowser.newPage();
-        await screenPage.goto(`/`);
-
-        const [response] = await Promise.all([
-            // Waits for the next response matching some conditions
-            screenPage.waitForResponse(
-                response =>
-                    response.url() === `${process.env.REACT_APP_BACKEND_URL}create-room` && response.status() === 200
-            ),
-            // Triggers the response
-            screenPage.locator('button:has-text("Create New Room")').click(),
-        ]);
-
-        const { roomId } = await response.json();
-
-        const phone = devices['iPhone 11 Pro'];
-
-        const controllerBrowser = await browser.newContext({
-            baseURL,
-            ...phone,
-        });
-
-        const controllerPage = await controllerBrowser.newPage();
-        await controllerPage.goto(`/`);
-
-        await controllerPage.locator('button:has-text("Skip")').click();
-
-        const elementHandle = await controllerPage.waitForSelector('iframe');
-        const frame = await elementHandle.contentFrame();
-
-        await frame?.waitForSelector('#controllerName');
-        const username = await frame?.$('#controllerName');
-        await username?.type('NameToTest');
-
-        await frame?.waitForSelector('#controllerRoomId');
-        const room = await frame?.$('#controllerRoomId');
-        await room?.type(roomId);
-
-        await controllerPage.locator('button:has-text("Enter")').click();
-
-        const userName = await screenPage.$("text='NameToTest'");
-        await expect(userName).toBeTruthy();
-    });
-
     test('When user is connected and ready, start button should be enabled', async ({ baseURL }) => {
         const browser = await chromium.launch({
             args: ['--disable-dev-shm-usage', '--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream'],
