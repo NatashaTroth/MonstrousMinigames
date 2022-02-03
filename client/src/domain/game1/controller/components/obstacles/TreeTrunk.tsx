@@ -69,28 +69,13 @@ const TreeTrunk: React.FunctionComponent<TreeTrunkProps> = ({
     let initialY: number;
     let xOffset = orientation === 'vertical' ? 0 : 20;
     let yOffset = orientation === 'horizontal' ? 0 : 20;
-
-    let handleSkip: ReturnType<typeof setTimeout>;
-
-    function initializeSkip() {
-        handleSkip = setTimeout(() => {
+  
+    React.useEffect(() => {
+        setTimeout(() => {
             setSkip(true);
         }, 10000);
-    }
-
-    React.useEffect(() => {
-        let mounted = true;
-
-        if (mounted) {
-            initializeSkip();
-        }
 
         newTrunk(orientationOptions, setOrientation);
-
-        return () => {
-            mounted = false;
-            clearTimeout(handleSkip);
-        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -155,7 +140,6 @@ const TreeTrunk: React.FunctionComponent<TreeTrunkProps> = ({
                     roomId,
                     setObstacle,
                     setShowInstructions,
-                    handleSkip,
                 }),
             trunksToFinish,
             tutorial,
@@ -195,7 +179,6 @@ const TreeTrunk: React.FunctionComponent<TreeTrunkProps> = ({
                                 roomId,
                                 setObstacle,
                                 setShowInstructions,
-                                handleSkip,
                             })
                         }
                     >
@@ -215,14 +198,12 @@ interface SolveObstacle {
     roomId: string | undefined;
     setShowInstructions: (val: boolean) => void;
     setObstacle: (roomId: string | undefined, obstacle: Obstacle | undefined) => void;
-    handleSkip: ReturnType<typeof setTimeout>;
 }
 
 export const solveObstacle = (props: SolveObstacle) => {
-    const { controllerSocket, obstacle, roomId, setObstacle, setShowInstructions, handleSkip } = props;
+    const { controllerSocket, obstacle, roomId, setObstacle, setShowInstructions } = props;
 
     controllerSocket?.emit({ type: MessageTypesGame1.obstacleSolved, obstacleId: obstacle!.id });
     setShowInstructions(false);
     setObstacle(roomId, undefined);
-    clearTimeout(handleSkip);
 };

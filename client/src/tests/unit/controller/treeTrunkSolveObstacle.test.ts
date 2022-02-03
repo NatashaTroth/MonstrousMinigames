@@ -19,9 +19,6 @@ describe('treeTrunk solveObstacle', () => {
             setObstacle: jest.fn(),
             setShowInstructions: jest.fn(),
             roomId: 'ABCD',
-            handleSkip: setTimeout(() => {
-                // do nothing
-            }, 1000),
         });
 
         expect(controllerSocket.emitedVals).toStrictEqual([

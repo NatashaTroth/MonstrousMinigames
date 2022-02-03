@@ -39,11 +39,8 @@ const Spider: React.FunctionComponent<SpiderProps> = ({ navigator, tutorial = fa
 
     React.useEffect(() => {
         let mounted = true;
-
-        if (mounted) {
-            resetCurrentCount();
-            initializeSkip();
-        }
+        resetCurrentCount();
+        initializeSkip();
 
         getAudioInput(
             MAX,
