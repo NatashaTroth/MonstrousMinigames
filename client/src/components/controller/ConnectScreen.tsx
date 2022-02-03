@@ -82,6 +82,7 @@ export const IFrameContent: React.FunctionComponent<IFrameContentProps> = ({ roo
         <input
             type="text"
             name="name"
+            id="controllerName"
             value={formState?.name}
             onChange={e => setFormState({ ...formState, name: e.target.value })}
             placeholder="James P."
@@ -95,6 +96,7 @@ export const IFrameContent: React.FunctionComponent<IFrameContentProps> = ({ roo
                 <input
                     type="text"
                     name="roomId"
+                    id="controllerRoomId"
                     value={formState?.roomId}
                     onChange={e => setFormState({ ...formState, roomId: e.target.value })}
                     placeholder="ABCD"

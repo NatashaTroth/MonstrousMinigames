@@ -82,6 +82,7 @@ const PlayersGetReady: React.FC = () => {
                         <Tooltip title={message}>
                             <span>
                                 <Button
+                                    id="startGame"
                                     disabled={!canStart}
                                     onClick={() => {
                                         if (getUserArray(connectedUsers || []).length > 0 && chosenGame) {
