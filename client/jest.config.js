@@ -2,7 +2,7 @@
 module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
-    testPathIgnorePatterns: ['lib/', 'node_modules/', 'src/config', 'src/e2e'],
+    testPathIgnorePatterns: ['lib/', '<rootDir>/node_modules/', 'src/config', 'src/e2e'],
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
     moduleDirectories: ['node_modules', '<rootDir>/src'],
     transform: {
@@ -18,5 +18,5 @@ module.exports = {
     collectCoverageFrom: ['src/**/*.{ts,tsx}'],
     watchPathIgnorePatterns: ['src/config', 'src/serviceWorker', 'src/index.tsx', 'src/e2e'],
     coveragePathIgnorePatterns: ['src/config', 'src/serviceWorker', 'src/index.tsx', 'src/e2e'],
-    setupFiles: ["jest-canvas-mock"]
+    setupFiles: ['jest-canvas-mock'],
 };
