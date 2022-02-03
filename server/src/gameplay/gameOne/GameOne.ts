@@ -228,7 +228,6 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         GameOneEventEmitter.emitGameHasStoppedEvent(this.roomId);
     }
 
-    // TODO Test
     stopGameAllUsersDisconnected() {
         super.stopGameAllUsersDisconnected();
     }
@@ -266,107 +265,6 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         const playerStunned = this.getValidPlayer(userIdStunned);
         playerThrown?.throwStone();
         playerStunned?.stun();
-        //     verifyGameState(this.gameState, [GameState.Started]);
-        //     verifyUserId(this.players, userIdStunned);
-        //     verifyUserId(this.players, userIdThrown);
-        //     verifyUserIsActive(userIdStunned, this.players.get(userIdStunned)!.isActive);
-
-        //     const playerThrown = this.players.get(userIdThrown)!;
-
-        //     this.verifyUserCanThrowCollectedStone(playerThrown);
-        //     playerThrown.stonesCarrying--;
-
-        //     const playerStunned = this.players.get(userIdStunned)!;
-        //     if (this.playerIsNotAllowedToRun(userIdStunned)) return;
-        //     if (playerStunned.stunned || playerStunned.atObstacle) return;
-        //     playerStunned.stunned = true;
-        //     playerStunned.stunnedSeconds = this.stunnedTime;
-
-        //     GameOneEventEmitter.emitPlayerIsStunned(this.roomId, userIdStunned);
-        // }
-
-        // private pushChasers(userIdPushing: string) {
-        //     verifyGameState(this.gameState, [GameState.Started]);
-        //     verifyUserId(this.players, userIdPushing);
-
-        //     const userPushing = this.players.get(userIdPushing)!;
-        //     if (!pushChasers) if (!userPushing.finished) return;
-        //     if (this.maxNumberPushChasersExceeded(userPushing)) return;
-
-        //     //TODO Test
-        //     this.chasersPositionX += this.chaserPushAmount;
-        //     this.chasersSpeed = this.InitialGameParameters.CHASERS_PUSH_SPEED;
-        //     setTimeout(() => {
-        //         this.chasersSpeed = this.InitialGameParameters.CHASERS_SPEED;
-        //     }, 1300);
-        //     userPushing.chaserPushesUsed++;
-
-        //     if (this.maxNumberPushChasersExceeded(userPushing)) {
-        //         GameOneEventEmitter.emitPlayerHasExceededMaxNumberChaserPushes(this.roomId, userPushing.id);
-        //     }
-
-        //     this.checkIfPlayersCaught();
-
-        //     GameOneEventEmitter.emitChasersWerePushed(this.roomId, this.chaserPushAmount);
-        // }
-
-        // private maxNumberPushChasersExceeded(player: GameOnePlayer) {
-        //     return player.chaserPushesUsed >= this.maxNumberOfChaserPushes;
-        // }
-
-        // //TODO test & move to player
-        // private onPlayerUnstunned(userId: string) {
-        //     GameOneEventEmitter.emitPlayerIsUnstunned(this.roomId, userId);
-        // }
-
-        // private playerWantsToSolveObstacle(userId: string, obstacleId: number): void {
-        //     verifyGameState(this.gameState, [GameState.Started]);
-        //     verifyUserId(this.players, userId);
-        //     verifyUserIsActive(userId, this.players.get(userId)!.isActive);
-
-        //     const player = this.players.get(userId)!;
-        //     const obstacle = player.obstacles.find(obstacle => obstacle.id === obstacleId);
-
-        //     if (!obstacle) return;
-
-        //     obstacle.solvable = false;
-        //     GameOneEventEmitter.emitPlayerWantsToSolveObstacle({ roomId: this.roomId, userId });
-        // }
-
-        // private playerHasCompletedObstacle(userId: string, obstacleId: number): void {
-        //     verifyGameState(this.gameState, [GameState.Started]);
-        //     verifyUserId(this.players, userId);
-        //     verifyUserIsActive(userId, this.players.get(userId)!.isActive);
-
-        //     this.verifyUserIsAtObstacle(userId);
-
-        //     const player = this.players.get(userId)!;
-
-        //     if (player.obstacles[0].id === obstacleId) {
-        //         player.atObstacle = false;
-
-        //         if (player.obstacles[0].type === ObstacleType.Stone) {
-        //             player.stonesCarrying++;
-        //         }
-
-        //         player.obstacles.shift();
-        //     } else {
-        //         throw new WrongObstacleIdError(`${obstacleId} is not the id for the next obstacle.`, userId, obstacleId);
-        //     }
-        // }
-
-        // private verifyUserIsAtObstacle(userId: string) {
-        //     const player = this.players.get(userId);
-        //     const solvableObstacleInReach = player && this.playerIsApproachingSolvableObstacle(player!);
-
-        //     if (
-        //         !player?.atObstacle &&
-        //         !solvableObstacleInReach
-        //         // ||
-        //         // player?.positionX !== player?.obstacles?.[0]?.positionX
-        //     ) {
-        //         throw new NotAtObstacleError(`User ${userId} is not at an obstacle`, userId);
-        //     }
     }
 
     // ***** chasers *****
@@ -381,18 +279,7 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         player.rank = this.rankFailedUser(player.finishedTimeMs);
 
         GameOneEventEmitter.emitStunnablePlayers(this.roomId, this.gameOnePlayersController!.getStunnablePlayers());
-
-        //todo duplicate
-
-        // const activeUnfinishedPlayers = this.gameOnePlayersController!.getActiveUnfinishedPlayers();
-        // if (activeUnfinishedPlayers.length <= 1 || this.gameHasFinished()) {
-        //     this.handleGameFinished();
-        // }
     }
-
-    // private chaserHasCaughtPlayer(player: GameOnePlayer) {
-    //     return !player.finished && player.positionX <= this.chasers!.getPosition();
-    // }
 
     private pushChasers(userIdPushing: string) {
         this.gameOnePlayersController!.verifyUserId(userIdPushing);
@@ -407,13 +294,10 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
 
     // ***** game state *****
     private gameHasFinished(): boolean {
-        // if (this.players.size === 1 || localDevelopment)
-        //     return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 0; //TODO - test, does game finish when only 1 player??
-        return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 0; //TODO - test, does game finish when only 1 player??
+        return this.gameOnePlayersController!.getActiveUnfinishedPlayers().length === 0;
     }
 
     private handleGameFinished(): void {
-        // verifyGameState(this.gameState, [GameState.Started]);
         this.gameState = GameState.Finished;
         const playerRanks = this.gameOnePlayersController!.createPlayerRanks(
             this.currentRank,
@@ -426,7 +310,6 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
         const gamePoints = this.leaderboard.addGameToHistory(GameType.GameOne, [...playerRanks]);
 
         const currentGameStateInfo = this.getGameStateInfo();
-        // this.gameOnePlayersController?.getPlayerById(playerRank.id).points
         const playerRanksWithPoints: GameOnePlayerRank[] = playerRanks.map(playerRank => {
             return { ...playerRank, points: gamePoints.get(playerRank.id) || 0 };
         });
@@ -476,19 +359,9 @@ export default class GameOne extends Game<GameOnePlayer, GameStateInfo> implemen
                 for (let i = 0; i < 1 * mulitplier; i++) {
                     // to test speed limit
                     this.movePlayer({ ...runForwardMessage, userId: player.id });
-                    // player.runForward(
-                    //     parseInt(`${process.env.SPEED}`, 10) || this.InitialGameParameters.SPEED * mulitplier
-                    // );
-                    // if (player.playerHasPassedGoal()) {
-                    //     this.handlePlayerFinished(player);
-                    //     console.log('*************** PASSED GOAL ********* ' + player.name);
-                    //     console.log(player);
-                    // }
-
-                    // this.runForward(player.id, ((this.speed / 14) * timeElapsedSinceLastFrame) / 1);
                 }
             }
-            // push chasers TODO delete
+
             if (pushChasers) {
                 if (pushChasersPeriodicallyCounter >= 100) {
                     pushChasersPeriodicallyCounter = 0;
